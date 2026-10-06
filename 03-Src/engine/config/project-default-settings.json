@@ -1,0 +1,355 @@
+{
+  "version": 3,
+  "workspaceLayout": {
+    "_说明": "原布局默认保留；智算主窗口仅在桌面宽屏生效，页面切换只影响本次会话。",
+    "defaultMode": "classic",
+    "agentWidthPercent": 55,
+    "previewOpen": true
+  },
+  "weknoraQa": {
+    "enabled": false,
+    "_说明": "本机聊天区的增强问答初始关闭；服务端还需显式设置 WEKNORA_QA_ENABLED 和受保护凭证。"
+  },
+  "updated_at": "2026-09-08",
+  "_说明": [
+    "这是造价智算的项目默认设置文件，可以手动修改。",
+    "注意：JSON 标准不支持 // 或 /* */ 注释；需要说明时请使用这种以下划线开头的说明字段。",
+    "程序只读取 workspaceLayout、previewColumns、zhisuanWindow、knowledgeMemory、knowledgeRetrieval、professionalSkills、aiMatching、project_spatial_map、inputMapping、workloadCapture、feishuAppBot 内的有效配置项，未知说明字段会被忽略。",
+    "修改后请保持 JSON 格式合法；如果格式错误，程序会回退到代码内置默认值。"
+  ],
+  "previewColumns": {
+    "_说明": "表格预览默认设置：控制默认显示哪些列、每个 sheet 读取第几行作为列名、单元格最大显示字符数和手动列宽。",
+    "defaultLabels": [
+      "要素1",
+      "要素2",
+      "要素3",
+      "要素4",
+      "要素5",
+      "单位",
+      "单价",
+      "实物工作费调整系数",
+      "技术工作费调整系数",
+      "预警参数",
+      "预警细节"
+    ],
+    "sheetOverrides": {
+      "_说明": ["这里按 sheet 名单独指定默认打开列；数组里的文字需要尽量匹配该 sheet 的表头名称。"],
+      "表1-长输管道工程勘测费用": [
+        "单位",
+        "基价（元）",
+        "类别或级别",
+        "划分",
+        "数量",
+        "附加调整系数",
+        "小计"
+      ],
+      "费用汇总": [
+        "序号",
+        "项目",
+        "费用（万元）",
+        "备注"
+      ],
+      "表2-通用工程测量费用": [
+        "单位",
+        "基价（元）",
+        "实物工作费调整系数",
+        "技术工作费调整系数",
+        "预警参数",
+        "预警细节",
+        "项目",
+        "类别",
+        "内容",
+        "比例尺",
+        "金额合计（元）",
+        "工程量合计"
+      ],
+      "表3-地质测绘": [
+        "单位",
+        "基价（元）",
+        "实物工作费调整系数",
+        "技术工作费调整系数",
+        "预警细节",
+        "级别",
+        "列3",
+        "项目",
+        "类别",
+        "内容",
+        "工程量合计",
+        "预警信息"
+      ],
+      "表4-通用工程勘察费用": [
+        "单位",
+        "基价（元）",
+        "实物工作费调整系数",
+        "技术工作费调整系数",
+        "预警参数",
+        "预警细节",
+        "项目",
+        "类别",
+        "内容",
+        "列3",
+        "级别",
+        "工程量合计"
+      ],
+      "表5-其他费用": [
+        "单位",
+        "基价（元）",
+        "工程量合计",
+        "小计",
+        "列3"
+      ]
+    },
+    "headerRows": {
+      "_说明": "这里按 sheet 名指定读取第几行作为列名。",
+      "表1-长输管道工程勘测费用": 3,
+      "费用汇总": 3,
+      "表2-通用工程测量费用": 3,
+      "表3-地质测绘": 3,
+      "表4-通用工程勘察费用": 3,
+      "表5-其他费用": 3
+    },
+    "maxDisplayChars": 8,
+    "columnWidths": {
+      "_说明": "这里按 sheet 名和列标题记录预览列宽，单位是像素；通常由界面拖拽后固化到项目默认。",
+      "表2-通用工程测量费用": {
+        "实物工作费调整系数": 109,
+        "技术工作费调整系数": 117,
+        "工程量合计": 74,
+        "基价（元）": 94
+      },
+      "表3-地质测绘": {
+        "实物工作费调整系数": 113,
+        "技术工作费调整系数": 117,
+        "基价（元）": 90,
+        "工程量合计": 102
+      },
+      "表4-通用工程勘察费用": {
+        "实物工作费调整系数": 109,
+        "技术工作费调整系数": 118,
+        "基价（元）": 87,
+        "工程量合计": 92
+      }
+    }
+  },
+  "zhisuanWindow": {
+    "_说明": "问问智算窗口的项目默认设置：聊天区、右侧 Dock、欢迎语、消息头像、显示项和快捷指令都统一从这里读取；设置页内调整只在当前会话生效。",
+    "chatHeight": 430,
+    "dockWidth": 400,
+    "useViewportHeight": false,
+    "showAssistantAvatar": false,
+    "avatarMotion": "on",
+    "_avatarMotion说明": "on 默认开启动效；system 跟随系统减少动态效果；off 静态表情。设置页修改仅当前会话有效。",
+    "quickSettings": {
+      "_说明": "enabledIds 控制启用的内置快捷指令；customPrompts 是逐行显示的自定义快捷指令；autoHide 控制快捷指令是否默认收起。",
+      "enabledIds": [
+        "batch-match",
+        "fee-analysis",
+        "experience-warning",
+        "risk-report",
+        "download-excel",
+        "download-word",
+        "send-review"
+      ],
+      "customPrompts": [
+        "#知识库："
+      ],
+      "autoHide": true,
+      "version": 4
+    },
+    "dockVisibility": {
+      "rowReview": false,
+      "conclusion": false,
+      "review": false,
+      "warning": false,
+      "ruleNotice": false,
+      "debugInfo": false
+    },
+    "welcomeMessage": "您好，我是 **造价智算智能体**。当前已接入正式上线的 **勘察测量最高投标限价编制 Skill**。\n我可以在同一会话中协助您完成 **Excel 上传与列识别、基价和两类调整系数匹配复核、经验池预警、知识库问答与知识记忆、工作量抓取，以及 Excel / Word 成果输出**。复杂列映射、宽表核对和逐行人工复核也可以继续进入专业页面处理。\n\n### 开始编制\n我上传一份控制价 Excel，请检查列映射并开始转换。\n\n### 规则与行级复核\n解释这一行的基价、实物工作费调整系数和技术工作费调整系数来自哪里。\n\n### 风险与经验对比\n运行经验池预警，告诉我哪些行需要优先复核。\n\n### 知识库与项目记忆\n#知识库 附加调整系数为什么不能连乘？\n\n接下来请上传 .xlsx 文件，或直接说明您想完成的任务。",
+    "dockStyle": "default",
+    "commonQuestions": [
+      "勘察测量，技术工作费调整系数如何确定？",
+      "走向图编制、地图编制、Ⅱ类、1:50000，价格如何确定？以及相邻比例尺价格如何确定？",
+      "对比清单编码10504014、10504015、10504016，只回答管径、单位、清单单价和来源定位，用Markdown表格。",
+      "查询清单编码10504001至10504016的过路过桥费，按管径从小到大输出柱状图，并指出价格平台区间和最高单价，只使用造价通用知识库数据，不进行区间插值。",
+      "表4水文地质勘察简单、中等、复杂技术工作费调整系数分别是多少？请用表格回答。",
+      "新疆地区场（站）和输送管道地区差异调整系数分别是多少？请用表格回答。",
+      "查清单编码11301001，只回答清单名称、单位、清单单价、规费、安全生产费和来源定位。",
+      "对比清单编码11301001、11301002、11301003，只回答清单名称、单位、清单单价、规费、安全生产费和来源定位。",
+      "附加调整系数为什么不能连乘？",
+      "第二层经验提示是什么意思？",
+      "查清单编码10101002，只回答清单名称、单位、清单单价、规费、安全生产费和来源定位。",
+      "GPS测量E级中等的基价是多少？请说明来源定位。",
+      "为什么价格和调整系数不能由大模型直接修改？",
+      "项目正式知识库、造价通用知识库和已确认知识记忆有什么区别？",
+      "表2中的线路航测、走向图编制和其他普通项目，技术工作费调整系数分别如何处理？请用表格回答项目类型、系数、是否参与金额和规则优先级。",
+      "第一层标准规则未命中、第二层经验提示命中时，为什么结果必须标黄？请说明正式性、报告标注和人工复核要求。",
+      "查平均海拔大于等于2500米时的高原地区施工增加费，只回答场站系数、输送管道系数、西藏地区说明和来源定位，用Markdown表格。",
+      "查清单编码10701035，只回答清单名称、项目特征、单位、清单单价、规费、安全生产费和来源定位，用Markdown表格。"
+    ],
+    "_常见问题说明": "直接增删 commonQuestions 数组中的文字即可；页面每页显示 6 条，按总条数自动分页；保存后刷新页面生效。"
+  },
+  "knowledgeMemory": {
+    "_说明": [
+      "知识记忆默认审核策略：只有 autoApproveTypes 中的通用知识类型可自动通过。",
+      "项目/任务知识、同范围冲突知识以及未列入自动通过的类型始终需要人工确认。",
+      "duplicateSimilarityThreshold 用于识别高度相似的重复知识，可填 0.8 到 1.0。"
+    ],
+    "autoApproveTypes": [
+      "operation",
+      "general_explanation"
+    ],
+    "duplicateSimilarityThreshold": 0.92
+  },
+  "knowledgeRetrieval": {
+    "_说明": [
+      "知识问答检索默认使用 classic；hybrid 只在用户主动切换时生效。",
+      "hybrid 使用本地离线确定性哈希向量和规则重排，不接外部向量服务，不参与结构化计价或三个数字裁决。",
+      "索引是 Codex-Temp/runtime 下的可重建缓存，正式 Markdown/Excel/CSV、规则和已确认记忆仍是真源。"
+    ],
+    "defaultMode": "classic",
+    "hybridEnabled": true,
+    "embedding": {
+      "provider": "local-hash",
+      "model": "local-hash-embedding-v1",
+      "dimensions": 384
+    },
+    "rerank": {
+      "enabled": true,
+      "provider": "local-rule",
+      "model": "local-rule-rerank-v1",
+      "timeoutMs": 180
+    },
+    "limits": {
+      "bm25TopK": 40,
+      "structuredTopK": 40,
+      "vectorTopK": 40,
+      "candidateTopK": 60
+    }
+  },
+  "professionalSkills": {
+    "_说明": "专业能力默认设置；这里只保存非秘密选择，运行秘密不得写入本文件。",
+    "defaultSkillId": "survey-measurement-limit-price"
+  },
+  "project_spatial_map": {
+    "_说明": "全国项目地图默认设置；正式底图、审图号和密钥只从受保护的运行环境配置读取，不写入本文件。",
+    "enabled": true,
+    "default_scope": "demo_when_real_empty",
+    "max_visible_projects": 500,
+    "ai_enabled": true,
+    "area_centroid": true,
+    "corridor_disclaimer": true
+  },
+  "aiMatching": {
+    "_说明": [
+      "AI 增强匹配只负责表格结构理解、受限候选建议和证据展示；基价与两个调整系数仍由可信规则资产决定。",
+      "defaultMode 只用于升级后的交互式填价入口；旧接口和未携带模式的调用仍按 mechanical 兼容。",
+      "凭据不写入配置文件，模型不可用时必须保留机械降级和人工复核边界。"
+    ],
+    "defaultMode": "ai_enhanced",
+    "fallbackMode": "mechanical",
+    "requireSemanticConfirmation": true,
+    "totalModelBudgetSeconds": 60,
+    "requestTimeoutSeconds": 20,
+    "maxConcurrency": 3,
+    "maxTransientRetries": 1,
+    "maxRowsPerBlock": 25,
+    "maxInputRows": 500,
+    "maxCandidatesPerField": 5,
+    "maxOutputTokens": 1800
+  },
+  "inputMapping": {
+    "_说明": "主填价模块的列映射默认设置：控制默认映射行、是否输出逐行匹配报告、是否跳过指定列无值行、合并单元格读取口径和字段别名。",
+    "headerRow": 4,
+    "outputMatchReport": true,
+    "onlyMatchRowsWithValue": true,
+    "matchValueFilterField": "数量",
+    "mergeVerticalCells": true,
+    "mergeHorizontalCells": true,
+    "fieldPreferences": {
+      "_说明": ["每个字段后面的数组是自动识别列名时优先匹配的表头别名。"],
+      "要素1": ["要素1", "项目名称", "项目", "专业"],
+      "要素2": ["要素2", "工作内容", "作业内容", "内容"],
+      "要素3": ["要素3", "类别", "类别名称"],
+      "要素4": ["要素4", "比例尺", "规格", "方法"],
+      "要素5": ["要素5", "复杂程度", "等级"],
+      "单位": ["单位", "计量单位"],
+      "输出-价格列": ["单价匹配-测试", "基价测试列", "基价", "单价", "价格"],
+      "输出-实物工作费调整系数": ["实物工作费调整系数", "输出-实物工作费调整系数"],
+      "输出-技术工作费调整系数": ["技术工作费调整系数", "输出-技术工作费调整系数"]
+    }
+  },
+  "feishuAppBot": {
+    "network": {"mode": "direct", "_说明": "机器人 REST 与长连接默认直连，不继承桌面代理；确需环境代理时显式改为 environment，修改后重启机器人。"},
+    "_说明": "第二层普通飞书与企业 WeAct 使用两条独立长连接，可分别启停并共用全局单任务顺序队列。已验证的 App ID 和域名在 expectedProfiles 中集中登记；每个同名平台 App ID 在本地与云端仍只允许一个实例在线。App Secret 只保存在 Codex-Temp/runtime/feishu-robot-settings.json，不得写入本文件。",
+    "enabled": true,
+    "concurrency": 1,
+    "retentionDays": 30,
+    "allowedExtensions": [".xlsx"],
+    "maxFileSizeMb": 50,
+    "apiBaseUrl": "http://127.0.0.1:8000",
+    "expectedProfiles": {
+      "default": {
+        "appId": "cli_aad888f5be781cca",
+        "domain": "https://open.feishu.cn"
+      },
+      "weact_cost": {
+        "appId": "cli_a961a5cb3ab8d353",
+        "domain": "https://open.weact.pipechina.com.cn"
+      }
+    },
+    "authorizedDispatchGroupName": "智算测试",
+    "directDeliveryVerifiedProfiles": ["weact_cost"],
+    "enableLlmRiskNarrative": true,
+    "retryCount": 2,
+    "retryDelaySeconds": 2
+  },
+  "workloadCapture": {
+    "_说明": "工作量抓取模块的默认设置：控制默认抓取字段、写入模式、过滤字段，以及工作量表和控制价表的列识别别名。",
+    "selectedFields": [
+      "数量(信息抓取)",
+      "实物工作费调整系数(信息抓取)",
+      "技术工作费调整系数(信息抓取)",
+      "委托方备注(信息抓取)"
+    ],
+    "writeMode": "conservative",
+    "onlyCaptureRowsWithValue": true,
+    "valueFilterField": "数量",
+    "source": {
+      "_说明": "source 是委托方工作量表的字段识别默认设置。",
+      "adjacentFallbackEnabled": true,
+      "elementSequenceEnabled": true,
+      "fieldPreferences": {
+        "_说明": ["每个字段后面的数组是工作量表自动识别列名时优先匹配的表头别名。"],
+        "要素1": ["要素1", "项目", "工作任务", "项目名称", "专业"],
+        "要素2": ["要素2", "工作内容", "作业内容"],
+        "要素3": ["要素3", "内容"],
+        "要素4": ["要素4", "类别", "比例尺", "成图比例", "规格"],
+        "要素5": ["要素5", "级别", "复杂程度", "等级"],
+        "单位": ["单位", "计量单位"],
+        "数量": ["数量", "工程量合计", "工程量"],
+        "实物工作费调整系数": ["实物工作费调整系数-测试", "实物工作费调整系数", "实物系数", "调整系数", "附加系数"],
+        "技术工作费调整系数": ["技术工作费调整系数-测试", "技术工作费调整系数", "技术系数"],
+        "委托方备注": ["委托方备注", "备注", "说明"]
+      }
+    },
+    "target": {
+      "_说明": "target 是当前控制价计算表中待写入字段的识别默认设置。",
+      "adjacentFallbackEnabled": true,
+      "elementSequenceEnabled": false,
+      "fieldPreferences": {
+        "_说明": ["每个字段后面的数组是控制价计算表自动识别列名时优先匹配的表头别名。"],
+        "要素1": ["要素1", "项目", "工作任务", "项目名称", "专业"],
+        "要素2": ["要素2", "内容", "工作内容", "作业内容"],
+        "要素3": ["要素3", "类别", "类别名称"],
+        "要素4": ["要素4", "比例尺", "成图比例", "规格"],
+        "要素5": ["要素5", "级别", "复杂程度", "等级"],
+        "单位": ["单位", "计量单位"],
+        "数量(信息抓取)": ["数量", "数量(信息抓取)", "工程量"],
+        "实物工作费调整系数(信息抓取)": ["实物工作费调整系数-测试", "实物工作费调整系数(信息抓取)", "实物工作费调整系数"],
+        "技术工作费调整系数(信息抓取)": ["技术工作费调整系数-测试", "技术工作费调整系数(信息抓取)", "技术工作费调整系数"],
+        "委托方备注(信息抓取)": ["委托方备注(信息抓取)", "委托方备注", "备注"],
+        "抓取日志": ["抓取日志"]
+      }
+    }
+  }
+}

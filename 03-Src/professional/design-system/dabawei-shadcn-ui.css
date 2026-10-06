@@ -1,0 +1,214 @@
+/*
+ * 大尾巴 Shadcn UI v1.0.0
+ *
+ * 视觉母版：shadcn/ui preset b1au7YYAi
+ * 转译原则：Rhea + Neutral + Blue + Lucide + Inter 比例语言，
+ * 运行时使用项目自托管苹方，不要求 Tailwind / components.json。
+ *
+ * Token architecture: primitive -> semantic -> component.
+ */
+
+:root {
+  /* Primitive · font */
+  --dws-font-family-ui:
+    "Zaojia PingFang SC",
+    "PingFang SC",
+    "Microsoft YaHei UI",
+    sans-serif;
+  --dws-font-size-11: 11px;
+  --dws-font-size-12: 12px;
+  --dws-font-size-13: 13px;
+  --dws-font-size-14: 14px;
+  --dws-font-size-16: 16px;
+  --dws-font-size-18: 18px;
+  --dws-font-size-20: 20px;
+  --dws-font-size-24: 24px;
+  --dws-font-size-28: 28px;
+  --dws-font-weight-regular: 400;
+  --dws-font-weight-medium: 500;
+  --dws-font-weight-semibold: 600;
+  --dws-font-weight-bold: 700;
+  --dws-line-height-tight: 1.25;
+  --dws-line-height-ui: 1.4;
+  --dws-line-height-body: 1.6;
+
+  /* Primitive · neutral */
+  --dws-neutral-0: #ffffff;
+  --dws-neutral-25: #fafbfc;
+  --dws-neutral-50: #f8fafc;
+  --dws-neutral-100: #f1f5f9;
+  --dws-neutral-200: #e2e8f0;
+  --dws-neutral-300: #cbd5e1;
+  --dws-neutral-400: #94a3b8;
+  --dws-neutral-500: #64748b;
+  --dws-neutral-600: #475569;
+  --dws-neutral-700: #334155;
+  --dws-neutral-900: #0f172a;
+
+  /* Primitive · blue */
+  --dws-blue-50: #eff6ff;
+  --dws-blue-100: #dbeafe;
+  --dws-blue-200: #bfdbfe;
+  --dws-blue-300: #93c5fd;
+  --dws-blue-400: #60a5fa;
+  --dws-blue-500: #3b82f6;
+  --dws-blue-600: #2563eb;
+  --dws-blue-700: #1d4ed8;
+  --dws-blue-800: #1e40af;
+
+  /* Primitive · business status */
+  --dws-green-50: #f0fdf4;
+  --dws-green-600: #15803d;
+  --dws-green-chart: rgb(117, 188, 146);
+  --dws-amber-50: #fffbeb;
+  --dws-amber-600: #d97706;
+  --dws-red-50: #fff0ed;
+  --dws-red-700: #b42318;
+  --dws-teal-50: #e8f7f4;
+  --dws-teal-700: #0f766e;
+
+  /* Primitive · geometry */
+  --dws-space-1: 4px;
+  --dws-space-2: 8px;
+  --dws-space-3: 12px;
+  --dws-space-4: 16px;
+  --dws-space-5: 20px;
+  --dws-space-6: 24px;
+  --dws-space-8: 32px;
+  --dws-radius-4: 4px;
+  --dws-radius-6: 6px;
+  --dws-radius-8: 8px;
+  --dws-radius-10: 10px;
+  --dws-radius-12: 12px;
+  --dws-radius-full: 999px;
+  --dws-border-width: 1px;
+  --dws-duration-fast: 150ms;
+  --dws-duration-normal: 200ms;
+
+  /* Semantic · foundation */
+  --dws-color-background: var(--dws-neutral-0);
+  --dws-color-app-background: var(--dws-neutral-0);
+  --dws-color-surface: var(--dws-neutral-0);
+  --dws-color-surface-subtle: var(--dws-neutral-25);
+  --dws-color-muted: var(--dws-neutral-50);
+  --dws-color-foreground: var(--dws-neutral-700);
+  --dws-color-foreground-strong: var(--dws-neutral-900);
+  --dws-color-foreground-muted: var(--dws-neutral-500);
+  --dws-color-foreground-weak: var(--dws-neutral-400);
+  --dws-color-border: var(--dws-neutral-200);
+  --dws-color-border-soft: #eef2f7;
+  --dws-color-border-strong: var(--dws-neutral-300);
+
+  /* Semantic · action and focus */
+  --dws-color-primary: var(--dws-blue-600);
+  --dws-color-primary-hover: var(--dws-blue-700);
+  --dws-color-primary-active: var(--dws-blue-800);
+  --dws-color-primary-soft: var(--dws-blue-50);
+  --dws-color-primary-weak: #f5f8fc;
+  --dws-color-focus: var(--dws-blue-600);
+  --dws-color-secondary: var(--dws-teal-700);
+  --dws-color-secondary-soft: var(--dws-teal-50);
+  --dws-color-accent: var(--dws-amber-600);
+
+  /* Semantic · business status */
+  --dws-color-success: var(--dws-green-600);
+  --dws-color-success-soft: var(--dws-green-50);
+  --dws-color-warning: var(--dws-amber-600);
+  --dws-color-warning-soft: var(--dws-amber-50);
+  --dws-color-danger: var(--dws-red-700);
+  --dws-color-danger-soft: var(--dws-red-50);
+  --dws-color-info: var(--dws-blue-600);
+  --dws-color-info-soft: var(--dws-blue-50);
+
+  /* Semantic · charts */
+  --dws-chart-blue-strong: var(--dws-blue-600);
+  --dws-chart-blue: var(--dws-blue-500);
+  --dws-chart-blue-soft: var(--dws-blue-300);
+  --dws-chart-blue-pale: var(--dws-blue-200);
+  --dws-chart-blue-wash: var(--dws-blue-50);
+  --dws-chart-positive: var(--dws-green-chart);
+
+  /* Component · button */
+  --dws-button-height-sm: 30px;
+  --dws-button-height: 34px;
+  --dws-button-padding-x: 14px;
+  --dws-button-radius: var(--dws-radius-8);
+  --dws-button-bg: var(--dws-color-primary);
+  --dws-button-bg-hover: var(--dws-color-primary-hover);
+  --dws-button-fg: #ffffff;
+  --dws-button-border: var(--dws-color-border);
+
+  /* Component · input */
+  --dws-input-height: 34px;
+  --dws-input-padding-x: 12px;
+  --dws-input-radius: var(--dws-radius-8);
+  --dws-input-bg: var(--dws-color-surface);
+  --dws-input-border: var(--dws-color-border);
+  --dws-input-focus: var(--dws-color-focus);
+
+  /* Component · panel and card */
+  --dws-panel-bg: var(--dws-color-surface);
+  --dws-panel-border: var(--dws-color-border);
+  --dws-panel-radius: var(--dws-radius-8);
+  --dws-panel-padding: var(--dws-space-4);
+  --dws-panel-shadow: none;
+
+  /* Component · segmented switcher */
+  --dws-segmented-height: 36px;
+  --dws-segmented-padding: 3px;
+  --dws-segmented-gap: 2px;
+  --dws-segmented-radius: var(--dws-radius-10);
+  --dws-segmented-bg: var(--dws-neutral-50);
+  --dws-segmented-item-height: 30px;
+  --dws-segmented-item-padding-x: 12px;
+  --dws-segmented-item-radius: var(--dws-radius-8);
+  --dws-segmented-min-width-2: 148px;
+
+  /* Component · table */
+  --dws-table-row-height: 40px;
+  --dws-table-cell-padding-x: 12px;
+  --dws-table-header-bg: var(--dws-neutral-50);
+  --dws-table-row-hover: var(--dws-neutral-50);
+  --dws-table-row-selected: var(--dws-blue-50);
+
+  /* Component · dialog / sheet */
+  --dws-dialog-radius: var(--dws-radius-12);
+  --dws-dialog-padding: var(--dws-space-5);
+  --dws-dialog-shadow: 0 24px 72px rgb(15 23 42 / 18%);
+  --dws-dialog-width-sm: 420px;
+  --dws-dialog-width: 640px;
+  --dws-dialog-width-lg: 820px;
+
+  /* Component · interaction */
+  --dws-focus-ring-width: 2px;
+  --dws-focus-ring-offset: 2px;
+  --dws-transition-interactive:
+    color var(--dws-duration-fast) ease-in-out,
+    background-color var(--dws-duration-fast) ease-in-out,
+    border-color var(--dws-duration-fast) ease-in-out,
+    box-shadow var(--dws-duration-fast) ease-in-out;
+}
+
+:is(.dabawei-shadcn-ui, .shell.layout-daweiba) {
+  color: var(--dws-color-foreground);
+  background: var(--dws-color-background);
+  font-family: var(--dws-font-family-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:is(.dabawei-shadcn-ui, .shell.layout-daweiba) :focus-visible {
+  outline: var(--dws-focus-ring-width) solid var(--dws-color-focus);
+  outline-offset: var(--dws-focus-ring-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.dabawei-shadcn-ui, .shell.layout-daweiba) *,
+  :is(.dabawei-shadcn-ui, .shell.layout-daweiba) *::before,
+  :is(.dabawei-shadcn-ui, .shell.layout-daweiba) *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

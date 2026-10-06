@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "updated_at": "2026-06-20T07:31:24",
+  "settings": {
+    "low_risk_warning_ratio": 5.0,
+    "high_risk_warning_ratio": 20.0,
+    "only_check_rows_with_value": true,
+    "value_filter_field": "数量"
+  }
+}

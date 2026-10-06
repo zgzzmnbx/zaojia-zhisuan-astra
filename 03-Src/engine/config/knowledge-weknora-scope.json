@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "library_id": "cost-aiw",
+  "instance": "windows-docker",
+  "kb_id": "ebc7e790-739f-4332-80b5-a19621dc8942",
+  "documents": [
+    {
+      "asset_id": "9676a4c3b58749c6",
+      "name": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+      "knowledge_id": "6d992a8a-bd03-43cb-85e2-775efdb077d9",
+      "content_sha256": "d2cd9b53ae3f1818ec704a91455a63918303e3f0b54b1ed48a9c4f868da33de3",
+      "content_md5": "d4b70eb649786ed3035f3c237ddccfbd"
+    },
+    {
+      "asset_id": "5c6d5e9151ba548e",
+      "name": "2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md",
+      "knowledge_id": "ccdc5ef7-47c1-4b08-ab17-ad346f79f622",
+      "content_sha256": "a72909e86003a74e1419b1196de33b49157277bd6b9caa645f032f1408b87f87",
+      "content_md5": "f9bef40f43b0534fc0f5ecc493edc62a"
+    },
+    {
+      "asset_id": "c3f7eda0d116e2cc",
+      "name": "2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+      "knowledge_id": "072c3585-3e61-41a6-9af7-130652a6b784",
+      "content_sha256": "08676046d8c98d5f3205d3f6c0c0cca2d89a2e6706d8656f7ce64c1937279604",
+      "content_md5": "26ee8e5dba9a9937aaca3dd08e870573"
+    },
+    {
+      "asset_id": "ef1142901d94a9a9",
+      "name": "2024全费用清单单价-第4册其他工程-Excel问答版.md",
+      "knowledge_id": "3ee9a4ca-df42-43f5-ad39-346a9d20eacf",
+      "content_sha256": "47c652b922aec0b0212e900857a0e1f40daaef8eab51515ac4a0b832b43c72ca",
+      "content_md5": "2124efc8db2fc460aed0fb9c53a36d57"
+    },
+    {
+      "asset_id": "6df81e7f127e93a8",
+      "name": "2024全费用清单单价-第5册参考计价依据-Excel问答版.md",
+      "knowledge_id": "7786f31a-47e0-4007-b7ac-121d8abb8fb7",
+      "content_sha256": "81ba882686fdd62080ef9d79e92ffe0e937a568343be515ce641c41f14878460",
+      "content_md5": "1aa86e78c5974d0f1db5dab0bf2c1713"
+    },
+    {
+      "asset_id": "ccbbfa9365e29784",
+      "name": "2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+      "knowledge_id": "c2444237-08e9-4d9e-a409-095bb88ce90e",
+      "content_sha256": "1157d21956fb0813da5eee6f02d44d0d63555b08c209ab29c705979e0c7b9005",
+      "content_md5": "60dc1c4f8e9b6d73a3c2074c363e880d"
+    },
+    {
+      "asset_id": "3d16701618141b48",
+      "name": "2024建设项目其他费用及相关费用计价依据-正文问答版.md",
+      "knowledge_id": "ac3897ca-fada-4ead-bbaf-cdf88cf324f6",
+      "content_sha256": "c0e68f6ea1dd5aa0f5e9f5605652a0c14e4226e05877e57e7a72e2717d6d8b64",
+      "content_md5": "2b2e09ac8e72ac4333b10b028062be70"
+    },
+    {
+      "asset_id": "ffb4af8c045bcebc",
+      "name": "2024数字与信息化项目投资计价依据-正文问答版.md",
+      "knowledge_id": "d8f2ebe5-8adb-4467-9ee1-29bee81862ee",
+      "content_sha256": "b40a702ea93be6ca0895e19ecf9cb108efd21c94c8cc7b338ddf900e2f75c4dc",
+      "content_md5": "2cbdf20c914b32b1dada0d75d70c6bd2"
+    },
+    {
+      "asset_id": "d9280c86ba95e6bb",
+      "name": "2005石油建设安装工程概算指标说明-正文问答版.md",
+      "knowledge_id": "89ab785b-880d-496a-9912-056bd265a55a",
+      "content_sha256": "4d9cef9f563b755b5375e08d7229acd071bdd624b794794a3b6493f566c91990",
+      "content_md5": "dcc137f2489ccacabf4eaf2d345e433c"
+    },
+    {
+      "asset_id": "a8e01d63f42cb606",
+      "name": "2012石油建设项目其他费用和相关费用规定-正文问答版.md",
+      "knowledge_id": "db1e262d-ef17-44e9-a02d-27deed57c620",
+      "content_sha256": "eaea1a6f470523034045e5722cfd94e6a3c3f4a8af89be98e6f81faf25ea27ab",
+      "content_md5": "0c2668e3e1a4f35a964cbfbafa3ca00c"
+    },
+    {
+      "asset_id": "ac47f68129c5ea29",
+      "name": "2005石油建设安装工程费用定额-正文问答版.md",
+      "knowledge_id": "b8803c5b-a17e-41ac-94be-8ab0b10ed027",
+      "content_sha256": "ccedc23c24be7105cf265d836c2d056015f9c1c96936e6b7bd34d8b41e2e1b3a",
+      "content_md5": "0e367cc9193b9bc3d142117e8ae6d384"
+    },
+    {
+      "asset_id": "b004c6bfe24f2c9b",
+      "name": "2015石油建设安装工程费用定额-正文问答版.md",
+      "knowledge_id": "c4023379-a279-4a73-bcf4-d6e5407cc6f3",
+      "content_sha256": "2f499b5a9039cc8a8425feb099a7427f33d4b9b936af50d440649446daa1e00a",
+      "content_md5": "f4537c1003ba6980f79ea67c7d789dda"
+    },
+    {
+      "asset_id": "7c385d19f1706319",
+      "name": "2025中国软件行业基准数据-正文问答版.md",
+      "knowledge_id": "1ba7f16c-c136-45f8-ada9-543bc8be1267",
+      "content_sha256": "93501d6d21c593ff3f78b2972b72053c80fe14e20cbdacc32e1c3e292c590f98",
+      "content_md5": "a73b51ee38b4c407c8d5b68cacbcdf02"
+    }
+  ]
+}

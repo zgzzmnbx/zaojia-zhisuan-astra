@@ -1,0 +1,72 @@
+.knowledge-demo-chart {
+  margin: 16px 0 6px;
+  border: 1px solid var(--db-border, #e2e8f0);
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--db-surface, #fff);
+}
+
+.knowledge-demo-chart > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.knowledge-demo-chart > header > div {
+  display: grid;
+  gap: 2px;
+}
+
+.knowledge-demo-chart > header span {
+  color: var(--db-primary, #2563eb);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.knowledge-demo-chart > header strong {
+  color: var(--db-text-strong, #0f172a);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.knowledge-demo-chart > header small,
+.knowledge-demo-chart > p {
+  color: var(--db-text-muted, #64748b);
+  font-size: 12px;
+}
+
+.knowledge-demo-chart__scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.knowledge-demo-chart__canvas {
+  min-width: 720px;
+  color: var(--db-text, #334155);
+}
+
+.knowledge-demo-chart__label {
+  fill: var(--db-text-muted, #64748b);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.knowledge-demo-chart > p {
+  margin: 4px 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.shell.layout-daweiba.theme-dark .knowledge-demo-chart {
+  border-color: var(--db-border);
+  background: var(--db-surface-tint);
+}
+
+.shell.layout-daweiba.theme-dark .knowledge-demo-chart .recharts-cartesian-grid line {
+  stroke: rgb(148 163 184 / 22%);
+}
+
+.shell.layout-daweiba.theme-dark .knowledge-demo-chart :is(.recharts-cartesian-axis-tick-value, .recharts-label-list text) {
+  fill: var(--db-text-muted);
+}

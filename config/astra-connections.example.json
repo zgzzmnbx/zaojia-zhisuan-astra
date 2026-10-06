@@ -1,0 +1,14 @@
+{
+  "models": {
+    "deepseek": {
+      "enabled": false,
+      "key_file": ""
+    },
+    "siliconflow": {
+      "enabled": false,
+      "key_file": ""
+    }
+  },
+  "external_enabled": false,
+  "collaboration_file": ""
+}

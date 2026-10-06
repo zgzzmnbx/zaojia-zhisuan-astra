@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <title>智算Astra · 智能体工作室 / UI 设计预览</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232745cf'/%3E%3Cpath d='M8 9h16L8 23h16M16 6v20' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E" />
+  <script type="module" src="/03-Src/app.js"></script>
+</head>
+<body class="studio">
+  <div class="app-shell" id="shell">
+    <aside class="sidebar" aria-label="项目与会话">
+      <a class="brand" href="#" data-action="home"><span class="brand-mark astra-mark">A</span><span><strong>智算<span class="astra-word">Astra</span></strong><small>专业智能体工作室</small></span></a>
+      <button class="btn new-task" data-action="new"><span data-icon="plus"></span>新建任务</button>
+      <nav class="primary-nav menu">
+        <button class="nav-item" data-action="home"><span data-icon="message"></span>智能体工作室</button>
+        <button class="nav-item" data-view="universe"><span data-icon="orbit"></span>项目星图<span class="badge badge-ghost">3D</span></button>
+        <button class="nav-item" data-view="projects"><span data-icon="folder"></span>我的项目<span class="nav-count">03</span></button>
+        <button class="nav-item" data-action="catalog"><span data-icon="grid"></span>专业能力与工具</button>
+        <button class="nav-item" data-view="knowledge"><span data-icon="book"></span>知识与经验</button>
+      </nav>
+      <div class="agent-switch"><span class="agent-symbol" data-icon="spark"></span><div><strong>造价工程师</strong><small>勘察测量专业</small></div><button class="btn btn-ghost btn-square" data-action="skill" aria-label="选择智能体"><span data-icon="chevron"></span></button></div>
+      <div class="sidebar-label"><span>当前项目</span><span data-icon="chevron"></span></div>
+      <button class="project-item" data-action="home"><span class="project-dot"></span><span>西部管道勘察测量<small>可行性研究 · 示例项目</small></span></button>
+      <div class="session-list">
+        <button class="session active" data-scene="review"><span class="status-dot amber"></span>最高投标限价编制<span class="tiny-count">3</span></button>
+        <button class="session" data-scene="knowledge"><span data-icon="message"></span>计价依据与适用范围</button>
+        <button class="session" data-scene="report"><span data-icon="message"></span>风险报告与成果交付</button>
+      </div>
+      <div class="sidebar-label"><span>最近项目</span></div>
+      <button class="history-project" data-view="projects"><span data-icon="folder"></span>东部支线改线工程</button>
+      <button class="history-project" data-view="projects"><span data-icon="folder"></span>站场改扩建工程</button>
+      <div class="sidebar-bottom">
+        <button class="nav-item" data-view="trace"><span data-icon="route"></span>任务轨迹与依据</button>
+        <button class="nav-item" data-action="settings"><span data-icon="settings"></span>偏好设置</button>
+        <div class="profile"><span class="avatar avatar-placeholder"><span class="profile-avatar">石</span></span><div><strong>石萌</strong><small>个人工作空间</small></div><span class="badge badge-ghost">本地预览</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumb"><button class="btn btn-ghost btn-square mobile-menu" data-action="sidebar" aria-label="打开项目菜单"><span data-icon="menu"></span></button><span>工作空间</span><span class="slash">/</span><strong id="top-project">西部管道勘察测量</strong><span class="badge stage-badge">可研阶段</span></div>
+        <div class="top-actions"><span class="preview-label"><span class="status-dot"></span>UI 设计预览 · 示例数据</span><button class="btn btn-ghost btn-square" data-action="theme" aria-label="切换明暗主题" title="切换明暗主题"><span data-icon="moon"></span></button><button class="btn btn-ghost btn-square" data-action="design" aria-label="设计说明" title="设计说明"><span data-icon="info"></span></button></div>
+      </header>
+      <div class="workbench" id="workbench">
+        <section class="conversation" aria-label="智算任务对话">
+          <div class="conversation-heading"><div><div class="eyebrow">与智算一起完成</div><h1 id="conversation-title">最高投标限价编制</h1></div><button class="btn btn-ghost btn-square" data-action="new" aria-label="开始新会话"><span data-icon="edit"></span></button></div>
+          <div class="context-line" id="context-line"><span class="badge skill-badge"><span data-icon="spark"></span>勘察测量</span><span>任务 ZS-026 · 示例</span><button data-view="trace" class="text-button">查看轨迹<span data-icon="arrow-right"></span></button></div>
+          <div class="messages" id="messages" aria-live="polite"></div>
+          <div class="composer-wrap">
+            <div class="suggestions" id="suggestions"><button class="btn btn-ghost" data-prompt="查看待复核项">查看待复核项<span data-icon="arrow-up-right"></span></button><button class="btn btn-ghost" data-prompt="生成风险报告">生成风险报告<span data-icon="arrow-up-right"></span></button><button class="btn btn-ghost" data-action="catalog">更多操作<span data-icon="dots"></span></button></div>
+            <form class="composer" id="composer"><div class="attachment-preview" id="attachment-preview" hidden></div><textarea class="textarea" id="prompt" aria-label="告诉智算你的任务" placeholder="继续描述你的需求，或拖入 Excel 文件…" rows="2"></textarea><div class="composer-toolbar"><div class="composer-tools"><button type="button" class="btn btn-ghost btn-square" data-action="attach" aria-label="添加 Excel 附件"><span data-icon="plus"></span></button><button type="button" class="btn btn-ghost skill-selector" data-action="skill"><span data-icon="spark"></span>勘察测量<span data-icon="chevron"></span></button><span class="tool-divider"></span><select class="select mode-select" id="mode" aria-label="执行模式"><option>AI 增强</option><option>机械模式</option></select></div><button class="btn btn-primary btn-square send" type="submit" aria-label="发送任务"><span data-icon="arrow-up"></span></button></div></form>
+            <div class="composer-note"><span><span data-icon="shield"></span>价格与系数来自可信规则，关键变更由你确认</span><span class="enter-hint">Enter 发送</span></div>
+          </div>
+        </section>
+        <section class="artifact" id="artifact" aria-label="专业成果区">
+          <div class="artifact-heading"><div class="artifact-title"><span class="artifact-mark" data-icon="sheet"></span><div><h2 id="artifact-title">控制价计算表</h2><small id="artifact-subtitle">西部管道 · 当前任务成果</small></div></div><div class="artifact-tools"><button class="btn btn-ghost btn-square" data-action="expand" aria-label="放大成果区" title="放大成果区"><span data-icon="expand"></span></button><button class="btn btn-ghost btn-square" data-action="close-artifact" aria-label="收起成果区" title="收起成果区"><span data-icon="close"></span></button></div></div>
+          <div class="tabs artifact-tabs" role="tablist" aria-label="成果类型"><button class="tab tab-active" role="tab" data-view="table">计算表</button><button class="tab" role="tab" data-view="risk">风险复核<span class="tab-count" id="risk-count">3</span></button><button class="tab" role="tab" data-view="report">报告</button><button class="tab" role="tab" data-view="sources">依据</button></div>
+          <div class="artifact-body" id="artifact-body"></div>
+          <footer class="artifact-footer"><span><span class="status-dot"></span>仅预览示例 · 不写入正式项目</span><button class="text-button" data-action="catalog">全部工具<span data-icon="arrow-right"></span></button></footer>
+        </section>
+      </div>
+      <button class="btn btn-primary reopen" id="reopen" data-view="table" hidden><span data-icon="panel"></span>展开成果区</button>
+    </main>
+  </div>
+  <dialog class="modal" id="dialog"><div class="modal-box"><div class="modal-heading"><h2 id="dialog-title"></h2><button class="btn btn-ghost btn-square" data-action="close-dialog" aria-label="关闭弹窗"><span data-icon="close"></span></button></div><div id="dialog-content"></div></div><form method="dialog" class="modal-backdrop"><button aria-label="关闭弹窗背景">关闭</button></form></dialog>
+  <input type="file" id="file-input" accept=".xlsx" hidden />
+  <div class="toast toast-end" id="toast" role="status" hidden></div>
+</body>
+</html>

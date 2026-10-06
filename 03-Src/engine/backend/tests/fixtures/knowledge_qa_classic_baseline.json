@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "mode": "classic",
+  "generated_at": "2026-08-06T20:17:02+0800",
+  "environment": {
+    "python": "3.14.3",
+    "platform": "win32",
+    "index_cache": "Codex-Temp/runtime/knowledge-qa-index-【codex】.json及按资料库选择派生缓存",
+    "source_of_truth": "正式 Markdown/Excel/CSV、规则资产、结构化计价库和已确认知识记忆"
+  },
+  "dataset": {
+    "all_items": 12,
+    "retrieval_items": 8,
+    "curated_demo_items": 4,
+    "rewrite_items": 2,
+    "conflict_items": 2,
+    "unsupported_items": 1
+  },
+  "metrics": {
+    "golden_evidence_recall_at_5": 1.0,
+    "retrieval_precision_at_5": 0.4,
+    "citation_support_rate_at_5": 1.0,
+    "citation_accuracy_at_5": 1.0,
+    "precision_code_protection_recall_at_5": 1.0,
+    "ndcg_at_10": 0.950597,
+    "unsupported_false_answer_rate": 0.0,
+    "hot_retrieval_p95_ms": 969.823
+  },
+  "items": [
+    {
+      "case_id": "demo_technical_fee",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 1
+    },
+    {
+      "case_id": "demo_route_map_price",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 560
+    },
+    {
+      "case_id": "demo_cost_codes",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 1
+    },
+    {
+      "case_id": "demo_bridge_chart",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 1
+    },
+    {
+      "case_id": "project_table2_simple",
+      "variant_id": null,
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 0.850345,
+      "evidence_found": true,
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 127.06
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md::md-3-3",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md",
+          "title_path": "二、本次任务目标",
+          "score": 112.0
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-24-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 规则总览",
+          "score": 106.66
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-工程勘察设计收费标准使用手册_2066075621047238656.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-工程勘察设计收费标准使用手册_2066075621047238656.md",
+          "title_path": "2 工程测量 / 2.1 技术工作",
+          "score": 100.556
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 91.86
+        }
+      ],
+      "latency_ms": {
+        "median": 169.629,
+        "p95": 182.26,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table2_simple",
+      "variant_id": "rewrite_table2_exceptions",
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 0.877215,
+      "evidence_found": true,
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 108.32
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md::md-3-3",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md",
+          "title_path": "二、本次任务目标",
+          "score": 101.6
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-24-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 规则总览",
+          "score": 93.92
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 83.12
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-工程勘察设计收费标准使用手册_2066075621047238656.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-工程勘察设计收费标准使用手册_2066075621047238656.md",
+          "title_path": "2 工程测量 / 2.1 技术工作",
+          "score": 80.317
+        }
+      ],
+      "latency_ms": {
+        "median": 499.696,
+        "p95": 513.739,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table2_complex",
+      "variant_id": null,
+      "evaluation_class": "conflict_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": true,
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 177.1
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 149.46
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-24-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 规则总览",
+          "score": 147.7
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-28-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表4-通用工程勘察费用规则",
+          "score": 136.9
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md::md-3-3",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md",
+          "title_path": "二、本次任务目标",
+          "score": 136.9
+        }
+      ],
+      "latency_ms": {
+        "median": 465.782,
+        "p95": 471.655,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table2_complex",
+      "variant_id": "conflict_historical_value_vs_current_rule",
+      "evaluation_class": "conflict_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 0.877215,
+      "evidence_found": true,
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 121.06
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md::md-3-3",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md",
+          "title_path": "二、本次任务目标",
+          "score": 112.0
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-24-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 规则总览",
+          "score": 106.66
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 97.91
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-2-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 结论摘要",
+          "score": 87.05
+        }
+      ],
+      "latency_ms": {
+        "median": 534.693,
+        "p95": 543.289,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table3_levels",
+      "variant_id": null,
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 1,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.2,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": true,
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 156.18
+        },
+        {
+          "id": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx::xlsx-【母表】-24",
+          "source_file": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+          "title_path": "【母表】 / 第24行规则卡片",
+          "score": 141.94
+        },
+        {
+          "id": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx::xlsx-【母表】-433",
+          "source_file": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+          "title_path": "【母表】 / 第433行规则卡片",
+          "score": 136.64
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 134.1
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md::md-3-3",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md",
+          "title_path": "二、本次任务目标",
+          "score": 131.2
+        }
+      ],
+      "latency_ms": {
+        "median": 521.697,
+        "p95": 527.653,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "cost_code_10101002",
+      "variant_id": null,
+      "evaluation_class": "exact_code_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 1,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.2,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": true,
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md::md-81-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+          "title_path": "2024年建设项目全费用工程量清单单价：第1册 油气输送管道工程 / 工作表：《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》 / 第一章 土石方工程 / 清单内容：作业带±30cm 以内场地平整及零星附着物清理",
+          "score": 113.84
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-正文问答版.md::md-83-10",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+          "title_path": "国家石油天然气管网集团有限公司建设项目全费用工程量清单单价 / 四、工程量计算规则",
+          "score": 94.38
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第3册通用安装工程-Excel问答版.md::md-330-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "title_path": "2024年建设项目全费用工程量清单单价：第3册 通用安装工程 / 工作表：《建设项目全费用工程量清单单价》-第3册《通用安装工程》 / 第七章 采暖、通风、给排水及消防、燃气安装工程 / （二）蒸汽分汽缸制作安装",
+          "score": 67.44
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第3册通用安装工程-Excel问答版.md::md-338-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "title_path": "2024年建设项目全费用工程量清单单价：第3册 通用安装工程 / 工作表：《建设项目全费用工程量清单单价》-第3册《通用安装工程》 / 第七章 采暖、通风、给排水及消防、燃气安装工程 / （六）除尘设备安装",
+          "score": 67.44
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第3册通用安装工程-Excel问答版.md::md-339-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "title_path": "2024年建设项目全费用工程量清单单价：第3册 通用安装工程 / 工作表：《建设项目全费用工程量清单单价》-第3册《通用安装工程》 / 第七章 采暖、通风、给排水及消防、燃气安装工程 / （七）整体式空调机（冷风机）安装",
+          "score": 67.44
+        }
+      ],
+      "latency_ms": {
+        "median": 841.073,
+        "p95": 863.135,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "cost_digital_management_5000",
+      "variant_id": null,
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 1,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.2,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": true,
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-56-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "数字与信息化项目投资计价依据 / 1. 建设单位管理费",
+          "score": 128.33
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-61-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "数字与信息化项目投资计价依据 / 1. 软件功能与性能测评费",
+          "score": 111.44
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-24-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "数字与信息化项目投资计价依据 / 一、为合理确定和有效控制国家石油天然气管网集团有限公司（以下简称国家管网集团）数字与",
+          "score": 111.35
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-2-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "2024年数字与信息化项目投资计价依据",
+          "score": 107.52
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-1-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "2024数字与信息化项目投资计价依据-正文问答版",
+          "score": 102.47
+        }
+      ],
+      "latency_ms": {
+        "median": 946.74,
+        "p95": 969.823,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_no_evidence",
+      "variant_id": null,
+      "evaluation_class": "unsupported",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 0,
+      "golden_evidence_recall_at_5": null,
+      "retrieval_precision_at_5": 1.0,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": false,
+      "unsupported_correct": true,
+      "top_results": [],
+      "latency_ms": {
+        "median": 404.825,
+        "p95": 414.809,
+        "samples": 5
+      }
+    }
+  ],
+  "notes": [
+    "四道预置演示题按设计在检索前返回人工审核答案，未计入 classic 检索召回分母。",
+    "retrieval_precision_at_5 是 top-5 检索结果中黄金证据的比例；citation_support_rate_at_5 是有黄金证据题目被 top-5 支撑的比例，二者均不冒充模型正文引用准确率。",
+    "citation_accuracy_at_5 在本评测中定义为黄金证据被 top-5 引用集合支撑的比例；检索结果纯度另由 retrieval_precision_at_5 单列。",
+    "当前 classic 报告先冻结，不能因为后续 hybrid 评测不达标而修改题面、黄金证据或阈值。"
+  ]
+}

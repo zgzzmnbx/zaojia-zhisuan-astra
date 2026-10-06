@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "description": "混合 RAG 评测标注。黄金证据只引用正式来源、标题路径和正文事实；不改写现有知识问答回归题的题目或 expected。",
+  "sourceCases": "knowledge_qa_regression_cases.json",
+  "cases": [
+    {
+      "caseId": "demo_technical_fee",
+      "evaluationClass": "curated_demo",
+      "goldenEvidence": [
+        {"sourceContains": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md", "contentContains": ["0.22", "1.2", "0.27"]}
+      ]
+    },
+    {
+      "caseId": "demo_route_map_price",
+      "evaluationClass": "curated_demo",
+      "goldenEvidence": [
+        {"sourceContains": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx"}
+      ]
+    },
+    {
+      "caseId": "demo_cost_codes",
+      "evaluationClass": "curated_demo",
+      "goldenEvidence": [
+        {"sourceContains": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md", "contentContains": ["10504014", "10504015", "10504016"]}
+      ]
+    },
+    {
+      "caseId": "demo_bridge_chart",
+      "evaluationClass": "curated_demo",
+      "goldenEvidence": [
+        {"sourceContains": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md", "contentContains": ["10504001", "10504016"]}
+      ]
+    },
+    {
+      "caseId": "project_table2_simple",
+      "evaluationClass": "exact_numeric_guard",
+      "goldenEvidence": [
+        {"sourceContains": "20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md", "titleContains": "表2-通用工程测量费用规则", "contentContains": ["线路航测", "0.22"]},
+        {"sourceContains": "【重要匹配规则】项目以及总体匹配规则介绍.md", "titleContains": "技术工作费调整系数", "contentContains": ["线路航测", "走向图编制", "0"]}
+      ],
+      "variants": [
+        {"id": "rewrite_table2_exceptions", "question": "表二里哪些测绘项目虽然显示技术费比例，最终不再计取技术工作费？"}
+      ]
+    },
+    {
+      "caseId": "project_table2_complex",
+      "evaluationClass": "conflict_guard",
+      "goldenEvidence": [
+        {"sourceContains": "20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md", "titleContains": "表2-通用工程测量费用规则", "contentContains": ["线路航测", "0.22"]},
+        {"sourceContains": "【重要匹配规则】项目以及总体匹配规则介绍.md", "titleContains": "技术工作费调整系数", "contentContains": ["线路航测", "走向图编制", "0"]},
+        {"sourceContains": "【重要匹配规则】项目以及总体匹配规则介绍.md", "titleContains": "技术工作费调整系数", "contentContains": ["第二层", "待复核"]}
+      ],
+      "variants": [
+        {"id": "conflict_historical_value_vs_current_rule", "question": "历史样表把线路航测和走向图编制写成0.22时，当前规则为什么仍输出0且不再计取技术工作费？"}
+      ]
+    },
+    {
+      "caseId": "project_table3_levels",
+      "evaluationClass": "exact_numeric_guard",
+      "goldenEvidence": [
+        {"sourceContains": "【重要匹配规则】项目以及总体匹配规则介绍.md", "titleContains": "技术工作费调整系数", "contentContains": ["甲级", "乙级", "丙级", "1.2", "1.0", "0.8"]}
+      ]
+    },
+    {
+      "caseId": "cost_code_10101002",
+      "evaluationClass": "exact_code_guard",
+      "goldenEvidence": [
+        {"sourceContains": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md", "contentContains": ["10101002", "作业带扫线", "1.66", "0.07", "0.03"]}
+      ]
+    },
+    {
+      "caseId": "cost_digital_management_5000",
+      "evaluationClass": "exact_numeric_guard",
+      "goldenEvidence": [
+        {"sourceContains": "2024数字与信息化项目投资计价依据-正文问答版.md", "titleContains": "建设单位管理费", "contentContains": ["5000", "1.04"]}
+      ]
+    },
+    {
+      "caseId": "project_no_evidence",
+      "evaluationClass": "unsupported",
+      "goldenEvidence": [],
+      "mustRemainUnsupported": true
+    }
+  ]
+}

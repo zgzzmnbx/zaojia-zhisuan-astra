@@ -1,0 +1,46 @@
+@font-face{font-family:Astra PingFang;src:url('/assets/pingfang-sc-regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Astra PingFang;src:url('/assets/pingfang-sc-medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Astra PingFang;src:url('/assets/pingfang-sc-semibold.woff2') format('woff2');font-weight:600 900;font-display:swap}
+:root{font-family:Astra PingFang,system-ui,sans-serif;color-scheme:light}
+html,body,#root{margin:0;min-width:0;width:100%;height:100%;overflow:hidden;background:transparent}
+.shell.layout-daweiba{--dws-font-family:Astra PingFang,system-ui,sans-serif;--dws-font-size-xs:12px;--dws-font-size-sm:13px;--dws-font-size-base:14px;--dws-font-size-lg:16px;--dws-font-size-xl:20px;--dws-font-size-2xl:28px;--dws-primary:#3157d5;--dws-primary-foreground:#fff;font-family:var(--dws-font-family);font-size:14px;width:100%;max-width:none;height:100%;min-height:0;padding:0;margin:0;border:0;border-radius:0;overflow:auto;background:#fff}
+.shell.layout-daweiba.theme-dark{background:#151a23;color:#e8edf8;color-scheme:dark}
+.shell.layout-daweiba :is(button,input,select,textarea){font-family:inherit;font-size:13px}
+.shell.layout-daweiba :is(small,.field-label){font-size:12px;line-height:1.6}
+.shell.layout-daweiba :is(.global-nav,.daweiba-nav,.daweiba-agent-rail,.welcome-screen,.ai-dock,.daweiba-workspace-topbar,.mobile-bottom-nav){display:none!important}
+.shell.layout-daweiba .daweiba-layout-shell{display:block!important;height:100%;min-height:0;padding:0;margin:0;overflow:auto}
+.shell.layout-daweiba .daweiba-main-content{display:block!important;grid-column:auto;min-width:0;height:100%;margin:0;padding:0;overflow:auto}
+.shell.layout-daweiba .daweiba-workspace-frame{margin:0;padding:16px;border:0;border-radius:0;box-shadow:none;min-width:0;min-height:100%;height:auto;background:transparent}
+.shell.layout-daweiba :is(.panel,.section-card,.workload-card,.knowledge-panel){box-shadow:none;border-radius:12px}
+.shell.layout-daweiba .fill-workspace-view-nav{display:none!important}
+.shell.layout-daweiba .modal-backdrop{padding:12px}
+.shell.layout-daweiba :is(.settings-modal,.knowledge-memory-modal){max-height:calc(100dvh - 24px);max-width:100%;border-radius:14px}
+.shell.layout-daweiba :is(h1,h2,h3){font-family:inherit;letter-spacing:0}
+.shell.layout-daweiba h1{font-size:28px}.shell.layout-daweiba h2{font-size:20px}.shell.layout-daweiba h3{font-size:16px}
+html[data-astra-view='memory'] .daweiba-layout-shell,html[data-astra-view='configuration'] .daweiba-layout-shell,html[data-astra-view='skills'] .daweiba-layout-shell{visibility:hidden}
+html[data-astra-view='memory'] .daweiba-settings-backdrop,html[data-astra-view='configuration'] .daweiba-settings-backdrop{position:absolute;inset:0;padding:0;background:transparent}
+html[data-astra-view='memory'] .unified-settings-modal,html[data-astra-view='configuration'] .unified-settings-modal{width:100%;max-width:none;min-height:100%;max-height:100%;border:0;border-radius:0;box-shadow:none}
+html[data-astra-view='originalqa'] .daweiba-main-content{display:none!important}
+html[data-astra-view='originalqa'] .shell.layout-daweiba .ai-dock{display:flex!important;position:relative!important;width:100%!important;height:100%!important;max-width:none;max-height:none;inset:auto;margin:0;border:0;border-radius:0}
+html[data-astra-view='originalqa'] :is(.ai-dock-avatar-frame,.ai-dock-actions,.ai-dock-status-grid){display:none!important}
+html[data-astra-active='false'] *{animation-play-state:paused!important}
+@media(max-width:760px){.shell.layout-daweiba .daweiba-workspace-frame{padding:12px}.shell.layout-daweiba :is(.fill-grid,.workload-grid,.experience-grid){grid-template-columns:minmax(0,1fr)}.shell.layout-daweiba .modal-backdrop{padding:6px}}
+
+.astra-fee-charts{padding:16px}.astra-fee-charts .fee-analysis{width:100%;max-width:none}html[data-astra-view="analysis"] .daweiba-workspace-frame{min-height:0!important}.shell.layout-daweiba .professional-skill-modal{padding:8px}.shell.layout-daweiba .professional-skill-modal__dialog{width:100%;max-height:calc(100dvh - 16px)}.shell.layout-daweiba .daweiba-fill-view-tabs{display:none!important}
+
+html[data-astra-view="memory"] .unified-settings-tabs,html[data-astra-view="memory"] .unified-settings-modal>.modal-title{display:none}html[data-astra-view="memory"] .daweiba-settings-backdrop{background:transparent}.shell.layout-daweiba .unified-settings-modal{box-shadow:none}
+
+.shell.layout-daweiba :is(.daweiba-workspace-title,.daweiba-rail-expand,.workspace-expand-handle){display:none!important}
+
+.settlement-charts{margin:16px 0;border:1px solid var(--dws-border,#e5e8ee);border-radius:12px;padding:14px}.settlement-charts>summary{cursor:pointer;font-size:13px;font-weight:500}.settlement-charts .recharts-surface{width:100%;height:100%}.settlement-sheet-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.settlement-sheet-charts button{display:grid;gap:10px;text-align:left;padding:12px;border:1px solid var(--dws-border,#e5e8ee);border-radius:8px;color:inherit;background:transparent}.settlement-sheet-charts strong{font-size:13px;line-height:1.6}.settlement-risk-track{display:flex;height:7px;background:#e6ebf4;border-radius:4px;overflow:hidden}.settlement-risk-track .is-high{background:#d27162}.settlement-risk-track .is-medium{background:#d7ac66}.settlement-risk-track .is-low{background:#70a99a}
+html[data-astra-view="memory"] .shell .unified-settings-tabs{display:none!important}
+
+.professional-error{padding:24px;font:14px/1.6 Astra PingFang,system-ui;color:#334155}.professional-error h2{font-size:20px}.professional-error button{font:inherit;border:1px solid #c8d2e6;background:#eef3ff;border-radius:8px;padding:8px 14px;color:#3157d5}
+
+/* Candidate editor sits above the memory settings surface, within this iframe. */
+.shell.layout-daweiba .knowledge-memory-backdrop{z-index:60}
+html[data-astra-view="memory"] .shell.layout-daweiba .daweiba-settings-backdrop{padding:0;background:transparent;backdrop-filter:none}
+
+.shell.layout-daweiba.theme-dark .knowledge-candidate-modal>.modal-title,
+.shell.layout-daweiba.theme-dark .knowledge-candidate-modal__body>.knowledge-memory-modal-actions{background:var(--db-surface);color:var(--db-text-strong)}
+.shell.layout-daweiba.theme-dark .knowledge-candidate-modal>.modal-title button{background:var(--db-surface-tint);color:var(--db-text)}

@@ -1,0 +1,395 @@
+.shell.layout-daweiba .status-carousel {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 100px 84px 32px;
+  row-gap: 10px;
+  width: 206px;
+  height: 252px;
+  margin: -2px -4px 0;
+  padding-block: 8px;
+  overflow: hidden;
+  color: var(--db-text);
+  font-family: var(--dws-font-family-ui);
+  outline: none;
+}
+
+.shell.layout-daweiba .status-carousel__viewport,
+.shell.layout-daweiba .status-carousel__slide {
+  min-width: 0;
+  height: 100px;
+}
+
+.shell.layout-daweiba .status-carousel__slide {
+  animation: status-carousel-enter 240ms ease-out both;
+}
+
+@keyframes status-carousel-enter {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.shell.layout-daweiba .status-carousel__dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+}
+
+.shell.layout-daweiba .status-carousel__dots button {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.shell.layout-daweiba .status-carousel__dots button i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--db-border-strong);
+  transition: width 180ms ease-out, background-color 180ms ease-out;
+}
+
+.shell.layout-daweiba .status-carousel__dots button.is-active i {
+  width: 14px;
+  background: var(--db-primary);
+}
+
+.shell.layout-daweiba .status-carousel__dots button:focus-visible {
+  outline: 2px solid var(--db-primary);
+  outline-offset: -3px;
+}
+
+.shell.layout-daweiba .status-carousel__donut {
+  position: relative;
+  width: 206px;
+  height: 84px;
+}
+
+.shell.layout-daweiba .status-carousel__donut-svg {
+  display: block;
+  width: 206px;
+  height: 84px;
+  margin-top: 0;
+  overflow: visible;
+}
+
+.shell.layout-daweiba .status-carousel__donut-track,
+.shell.layout-daweiba .status-carousel__donut-segment {
+  fill: none;
+  stroke-width: 10;
+}
+
+.shell.layout-daweiba .status-carousel__donut-track {
+  stroke: url("#status-carousel-blue-gradient");
+}
+
+.shell.layout-daweiba .status-carousel__donut-segment {
+  stroke-linecap: butt;
+}
+
+.shell.layout-daweiba .status-carousel__donut-lines path {
+  fill: none;
+  stroke: var(--db-chart-blue-faint, #dbeafe);
+  stroke-width: 1.2;
+}
+
+.shell.layout-daweiba .status-carousel__donut-center {
+  position: absolute;
+  left: 50%;
+  top: 42px;
+  display: grid;
+  justify-items: center;
+  transform: translate(-50%, -50%);
+}
+
+.shell.layout-daweiba .status-carousel__donut-center strong {
+  color: var(--db-text-muted);
+  font-family: var(--dws-font-family-ui);
+  font-size: var(--dws-font-size-20);
+  font-weight: var(--dws-font-weight-semibold);
+  font-synthesis: none;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.shell.layout-daweiba .status-carousel__donut-callouts i {
+  color: var(--db-text-muted);
+  font-size: var(--dws-font-size-12);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.shell.layout-daweiba .status-carousel__donut-callouts i {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.shell.layout-daweiba .status-carousel__donut-callouts i::before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  border-radius: 999px;
+  background: var(--status-callout-color);
+  content: "";
+  vertical-align: 1px;
+}
+
+.shell.layout-daweiba .status-carousel__donut-callouts .is-left-top { left: 0; top: 3px; }
+.shell.layout-daweiba .status-carousel__donut-callouts .is-right { right: 0; top: 34px; }
+.shell.layout-daweiba .status-carousel__donut-callouts .is-left-bottom { left: 0; bottom: 3px; }
+
+.shell.layout-daweiba .status-carousel__workflow-view {
+  box-sizing: border-box;
+  width: 206px;
+  height: 100px;
+  padding: 2px 4px 0;
+}
+
+.shell.layout-daweiba .status-carousel__filmstrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.shell.layout-daweiba .status-carousel__film-frame {
+  position: relative;
+  display: grid;
+  height: 45px;
+  align-content: center;
+  justify-items: center;
+  gap: 3px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--db-surface);
+  color: var(--db-text-muted);
+}
+
+.shell.layout-daweiba .status-carousel__film-frame i {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--db-bg-alt);
+  color: currentColor;
+}
+
+.shell.layout-daweiba .status-carousel__film-frame b,
+.shell.layout-daweiba .status-carousel__workflow-view p,
+.shell.layout-daweiba .status-carousel__workflow-view p span {
+  font-size: var(--dws-font-size-12);
+  line-height: 1.25;
+}
+
+.shell.layout-daweiba .status-carousel__film-frame b { font-weight: 600; }
+.shell.layout-daweiba .status-carousel__film-frame.is-completed { color: #15803d; }
+.shell.layout-daweiba .status-carousel__film-frame:is(.is-current, .is-running) { background: var(--db-primary-soft); color: var(--db-primary); }
+.shell.layout-daweiba .status-carousel__film-arrow { position: absolute; right: -10px; top: 16px; z-index: 1; color: var(--db-text-weak); }
+
+.shell.layout-daweiba .status-carousel__workflow-view.is-filmstrip p {
+  position: relative;
+  top: -2px;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  text-align: center;
+}
+
+.shell.layout-daweiba .status-carousel__workflow-view.is-filmstrip p b { color: var(--db-text-strong); font-weight: 600; }
+.shell.layout-daweiba .status-carousel__workflow-view.is-filmstrip p span { color: var(--db-text-muted); }
+
+.shell.layout-daweiba .status-carousel__metro {
+  display: grid;
+  gap: 0;
+  margin: 2px 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.shell.layout-daweiba .status-carousel__metro li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  min-height: 19px;
+  align-items: center;
+  gap: 5px;
+  color: var(--db-text-muted);
+}
+
+.shell.layout-daweiba .status-carousel__metro li:not(:last-child)::after {
+  position: absolute;
+  left: 5px;
+  top: 13px;
+  width: 1px;
+  height: 13px;
+  background: var(--db-border-strong);
+  content: "";
+}
+
+.shell.layout-daweiba .status-carousel__metro li i {
+  display: grid;
+  width: 11px;
+  height: 11px;
+  z-index: 1;
+  place-items: center;
+  border: 2px solid var(--db-border-strong);
+  border-radius: 999px;
+  background: var(--db-surface);
+  color: #fff;
+}
+
+.shell.layout-daweiba .status-carousel__metro li b,
+.shell.layout-daweiba .status-carousel__metro li span {
+  font-size: var(--dws-font-size-12);
+  line-height: 1.25;
+}
+
+.shell.layout-daweiba .status-carousel__metro li b { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.shell.layout-daweiba .status-carousel__metro li span { color: var(--db-text-muted); }
+.shell.layout-daweiba .status-carousel__metro li.is-completed i { border-color: #75bc92; background: #75bc92; }
+.shell.layout-daweiba .status-carousel__metro li:is(.is-current, .is-running) { color: var(--db-primary); }
+.shell.layout-daweiba .status-carousel__metro li:is(.is-current, .is-running) i { border-color: var(--db-primary); background: var(--db-primary); }
+
+.shell.layout-daweiba .status-carousel__metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.shell.layout-daweiba .status-carousel__metric-grid > span {
+  display: grid;
+  min-height: 43px;
+  align-content: center;
+  justify-items: center;
+  border: 1px solid var(--db-border);
+  border-radius: 6px;
+  background: var(--db-surface);
+}
+
+.shell.layout-daweiba .status-carousel__metric-grid strong {
+  color: var(--db-text-strong);
+  font-size: var(--dws-font-size-16);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.shell.layout-daweiba .status-carousel__metric-grid small {
+  margin-top: 3px;
+  color: var(--db-text-muted);
+  font-size: var(--dws-font-size-12);
+  line-height: 1.2;
+}
+
+.shell.layout-daweiba .status-carousel__metric-grid .is-review strong { color: #b42318; }
+.shell.layout-daweiba .status-carousel__metric-grid .is-warning strong { color: #b7791f; }
+.shell.layout-daweiba .status-carousel__metric-grid .is-success strong { color: #15803d; }
+.shell.layout-daweiba .status-carousel__metric-grid .is-neutral strong { color: var(--db-text-muted); font-size: var(--dws-font-size-12); }
+
+.shell.layout-daweiba .status-carousel__relay {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 11px;
+}
+
+.shell.layout-daweiba .status-carousel__relay::before {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 13px;
+  height: 1px;
+  background: var(--db-border-strong);
+  content: "";
+}
+
+.shell.layout-daweiba .status-carousel__relay > span {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  color: var(--db-text-muted);
+}
+
+.shell.layout-daweiba .status-carousel__relay > span i {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  z-index: 1;
+  place-items: center;
+  border: 1px solid var(--db-border-strong);
+  border-radius: 999px;
+  background: var(--db-surface);
+}
+
+.shell.layout-daweiba .status-carousel__relay > span b { font-size: var(--dws-font-size-12); font-weight: 600; line-height: 1; }
+.shell.layout-daweiba .status-carousel__relay > span.is-completed { color: #15803d; }
+.shell.layout-daweiba .status-carousel__relay > span.is-completed i { border-color: #75bc92; background: #eaf8ef; }
+.shell.layout-daweiba .status-carousel__relay > span.is-current { color: var(--db-primary); }
+.shell.layout-daweiba .status-carousel__relay > span.is-current i { border-color: var(--db-primary); background: var(--db-primary-soft); }
+
+.shell.layout-daweiba .status-carousel__relay > span em {
+  position: absolute;
+  top: -5px;
+  width: 6px;
+  height: 6px;
+  border: 2px solid var(--db-surface);
+  border-radius: 999px;
+  background: var(--db-primary);
+}
+
+.shell.layout-daweiba .status-carousel__workflow-view.is-relay p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 14px 0 0;
+  color: var(--db-text-muted);
+}
+
+.shell.layout-daweiba .status-carousel__workflow-view.is-relay p b { color: var(--db-text-strong); font-weight: 600; }
+
+.shell.layout-daweiba.theme-dark .status-carousel__film-frame,
+.shell.layout-daweiba.theme-dark .status-carousel__metric-grid > span,
+.shell.layout-daweiba.theme-dark .status-carousel__metro li i,
+.shell.layout-daweiba.theme-dark .status-carousel__relay > span i {
+  background: var(--db-surface);
+}
+
+.shell.layout-daweiba.theme-dark .status-carousel__film-frame:is(.is-current, .is-running),
+.shell.layout-daweiba.theme-dark .status-carousel__relay > span.is-current i {
+  background: #172b4d;
+}
+
+.shell.layout-daweiba.theme-dark .status-carousel__donut-track {
+  stroke: #244d82;
+}
+
+.shell.layout-daweiba.theme-dark .status-carousel__donut-lines path {
+  stroke: var(--db-border-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell.layout-daweiba .status-carousel__slide {
+    animation: none !important;
+  }
+
+  .shell.layout-daweiba .status-carousel__slide {
+    transform: none;
+  }
+
+  .shell.layout-daweiba .status-carousel__dots button i {
+    transition: none;
+  }
+}

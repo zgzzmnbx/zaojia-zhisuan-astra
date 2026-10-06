@@ -1,0 +1,1089 @@
+{
+  "schema_version": 1,
+  "mode": "hybrid",
+  "generated_at": "2026-08-06T20:17:44+0800",
+  "environment": {
+    "python": "3.14.3",
+    "platform": "win32",
+    "index_cache": "Codex-Temp/runtime/knowledge-qa-index-【codex】.json及按资料库选择派生 hybrid 缓存",
+    "source_of_truth": "正式 Markdown/Excel/CSV、规则资产、结构化计价库和已确认知识记忆",
+    "embedding": "local-hash-embedding-v1 / 384 dimensions / no external model artifact",
+    "reranker": "local-rule-rerank-v1 / stdlib-only"
+  },
+  "dataset": {
+    "all_items": 12,
+    "retrieval_items": 8,
+    "curated_demo_items": 4,
+    "rewrite_items": 2,
+    "conflict_items": 2,
+    "unsupported_items": 1
+  },
+  "metrics": {
+    "golden_evidence_recall_at_5": 1.0,
+    "retrieval_precision_at_5": 0.4375,
+    "citation_support_rate_at_5": 1.0,
+    "citation_accuracy_at_5": 1.0,
+    "precision_code_protection_recall_at_5": 1.0,
+    "ndcg_at_10": 0.951188,
+    "unsupported_false_answer_rate": 0.0,
+    "hot_retrieval_p95_ms": 1428.589,
+    "degradation_count": 0
+  },
+  "comparison": {
+    "classic_report": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\backend\\tests\\fixtures\\knowledge_qa_classic_baseline.json",
+    "default_mode_remains": "classic",
+    "hybrid_is_not_allowed_to_change_price_or_coefficient_decisions": true
+  },
+  "items": [
+    {
+      "case_id": "demo_technical_fee",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 1
+    },
+    {
+      "case_id": "demo_route_map_price",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 560
+    },
+    {
+      "case_id": "demo_cost_codes",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 1
+    },
+    {
+      "case_id": "demo_bridge_chart",
+      "variant_id": null,
+      "evaluation_class": "curated_demo",
+      "excluded_from_retrieval_metrics": true,
+      "reason": "curated_demo 在检索前确定性返回人工审核答案",
+      "golden_evidence_count": 1
+    },
+    {
+      "case_id": "project_table2_simple",
+      "variant_id": null,
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 0.850345,
+      "evidence_found": true,
+      "evidence_status": "sufficient",
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 1.775397,
+          "channels": [
+            "structured"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx::xlsx-技术工作费调整系数-第一层-6",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+          "title_path": "技术工作费调整系数-第一层 / 第6行规则卡片",
+          "score": 1.540652,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx::xlsx-技术工作费调整系数-第一层-4",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+          "title_path": "技术工作费调整系数-第一层 / 第4行规则卡片",
+          "score": 1.52061,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx::xlsx-技术工作费调整系数-第一层-3",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+          "title_path": "技术工作费调整系数-第一层 / 第3行规则卡片",
+          "score": 1.520124,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 1.494634,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        }
+      ],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 60
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [],
+            "numeric": [],
+            "ratios": [],
+            "scales": [],
+            "units": []
+          },
+          "eligible_chunks": 2323,
+          "rejected_chunks": 1691,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "sufficient",
+        "evidence_sufficient": true,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 973.9,
+        "p95": 1293.246,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table2_simple",
+      "variant_id": "rewrite_table2_exceptions",
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 0.919721,
+      "evidence_found": true,
+      "evidence_status": "sufficient",
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 2.298148,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-2-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 结论摘要",
+          "score": 1.47008,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 1.450956,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx::xlsx-技术工作费调整系数-第一层-6",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+          "title_path": "技术工作费调整系数-第一层 / 第6行规则卡片",
+          "score": 1.184131,
+          "channels": [
+            "bm25",
+            "structured"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx::xlsx-【母表】-24",
+          "source_file": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+          "title_path": "【母表】 / 第24行规则卡片",
+          "score": 1.174747,
+          "channels": [
+            "bm25",
+            "structured"
+          ],
+          "authority_level": "structured_rule"
+        }
+      ],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 60
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [],
+            "numeric": [],
+            "ratios": [],
+            "scales": [],
+            "units": []
+          },
+          "eligible_chunks": 2030,
+          "rejected_chunks": 1984,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "sufficient",
+        "evidence_sufficient": true,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 1293.387,
+        "p95": 1307.4,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table2_complex",
+      "variant_id": null,
+      "evaluation_class": "conflict_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 0.919721,
+      "evidence_found": true,
+      "evidence_status": "sufficient",
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 2.036633,
+          "channels": [
+            "bm25",
+            "structured"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx::xlsx-【母表】-24",
+          "source_file": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+          "title_path": "【母表】 / 第24行规则卡片",
+          "score": 1.572698,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "structured_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 1.495315,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx::xlsx-技术工作费调整系数-第一层-6",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+          "title_path": "技术工作费调整系数-第一层 / 第6行规则卡片",
+          "score": 1.384958,
+          "channels": [
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx::xlsx-【母表】-18",
+          "source_file": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+          "title_path": "【母表】 / 第18行规则卡片",
+          "score": 1.256614,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "structured_rule"
+        }
+      ],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 60
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [],
+            "numeric": [
+              "0.22"
+            ],
+            "ratios": [],
+            "scales": [],
+            "units": []
+          },
+          "eligible_chunks": 165,
+          "rejected_chunks": 3849,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "sufficient",
+        "evidence_sufficient": true,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 344.009,
+        "p95": 349.822,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table2_complex",
+      "variant_id": "conflict_historical_value_vs_current_rule",
+      "evaluation_class": "conflict_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 2,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.4,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 0.919721,
+      "evidence_found": true,
+      "evidence_status": "conflict",
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 2.177868,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-2-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 结论摘要",
+          "score": 1.339175,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-26-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 表2-通用工程测量费用规则",
+          "score": 1.312964,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-24-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 技术工作费调整系数规则.md / 规则总览",
+          "score": 1.293095,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md::md-41-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+          "title_path": "长输管道勘察测量调整系数规则交付稿 / 需要人工补充或确认的资料清单",
+          "score": 1.260378,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "project_rule"
+        }
+      ],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 9,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 9,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 9,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 9
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [],
+            "numeric": [
+              "0.22",
+              "0"
+            ],
+            "ratios": [],
+            "scales": [],
+            "units": []
+          },
+          "eligible_chunks": 9,
+          "rejected_chunks": 4005,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "conflict",
+        "evidence_sufficient": true,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 287.339,
+        "p95": 295.379,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_table3_levels",
+      "variant_id": null,
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 1,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.2,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": true,
+      "evidence_status": "sufficient",
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md::md-9-1",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+          "title_path": "【重要匹配规则】项目以及总体匹配规则介绍 / 8. 技术工作费调整系数",
+          "score": 2.371845,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx::xlsx-技术工作费调整系数-第一层-8",
+          "source_file": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+          "title_path": "技术工作费调整系数-第一层 / 第8行规则卡片",
+          "score": 1.582689,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "authoritative_rule"
+        },
+        {
+          "id": "backend/app/rules/technical_fee_rules.csv::csv-7",
+          "source_file": "backend/app/rules/technical_fee_rules.csv",
+          "title_path": "technical_fee_rules / 第7行规则卡片",
+          "score": 1.547116,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "structured_rule"
+        },
+        {
+          "id": "backend/app/rules/technical_fee_rules.xlsx::xlsx-rules-7",
+          "source_file": "backend/app/rules/technical_fee_rules.xlsx",
+          "title_path": "rules / 第7行规则卡片",
+          "score": 1.544295,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "structured_rule"
+        },
+        {
+          "id": "backend/app/rules/technical_fee_rules.csv::csv-5",
+          "source_file": "backend/app/rules/technical_fee_rules.csv",
+          "title_path": "technical_fee_rules / 第5行规则卡片",
+          "score": 1.535056,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "structured_rule"
+        }
+      ],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 40,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 60
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [],
+            "numeric": [],
+            "ratios": [],
+            "scales": [],
+            "units": []
+          },
+          "eligible_chunks": 2605,
+          "rejected_chunks": 1409,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "sufficient",
+        "evidence_sufficient": true,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 1396.877,
+        "p95": 1428.589,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "cost_code_10101002",
+      "variant_id": null,
+      "evaluation_class": "exact_code_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 1,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.5,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": true,
+      "evidence_status": "sufficient",
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md::md-81-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+          "title_path": "2024年建设项目全费用工程量清单单价：第1册 油气输送管道工程 / 工作表：《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》 / 第一章 土石方工程 / 清单内容：作业带±30cm 以内场地平整及零星附着物清理",
+          "score": 1.380738,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "general_reference"
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-正文问答版.md::md-83-10",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+          "title_path": "国家石油天然气管网集团有限公司建设项目全费用工程量清单单价 / 四、工程量计算规则",
+          "score": 0.923539,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "general_reference"
+        }
+      ],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 2,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 2,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 2,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 2
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [
+              "10101002"
+            ],
+            "numeric": [],
+            "ratios": [],
+            "scales": [],
+            "units": []
+          },
+          "eligible_chunks": 2,
+          "rejected_chunks": 3964,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "sufficient",
+        "evidence_sufficient": true,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 577.166,
+        "p95": 585.731,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "cost_digital_management_5000",
+      "variant_id": null,
+      "evaluation_class": "exact_numeric_guard",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 1,
+      "golden_evidence_recall_at_5": 1.0,
+      "retrieval_precision_at_5": 0.2,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": true,
+      "evidence_status": "sufficient",
+      "unsupported_correct": null,
+      "top_results": [
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-56-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "数字与信息化项目投资计价依据 / 1. 建设单位管理费",
+          "score": 1.415738,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "general_reference"
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024建设项目其他费用及相关费用计价依据-正文问答版.md::md-71-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024建设项目其他费用及相关费用计价依据-正文问答版.md",
+          "title_path": "2024年建设项目其他费用及相关费用计价依据 / 2.计算方法",
+          "score": 1.41413,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "general_reference"
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2012石油建设项目其他费用和相关费用规定-正文问答版.md::md-11-2",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2012石油建设项目其他费用和相关费用规定-正文问答版.md",
+          "title_path": "2. 计算方法",
+          "score": 1.413685,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "general_reference"
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-61-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "数字与信息化项目投资计价依据 / 1. 软件功能与性能测评费",
+          "score": 1.209632,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "general_reference"
+        },
+        {
+          "id": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md::md-57-1",
+          "source_file": "06-知识库问答资料/造价AIW资料库/2024数字与信息化项目投资计价依据-正文问答版.md",
+          "title_path": "数字与信息化项目投资计价依据 / 2. 造价咨询费",
+          "score": 1.204551,
+          "channels": [
+            "bm25",
+            "structured",
+            "vector"
+          ],
+          "authority_level": "general_reference"
+        }
+      ],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 11,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 11,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 11,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 11
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [],
+            "numeric": [
+              "5000"
+            ],
+            "ratios": [],
+            "scales": [],
+            "units": [
+              "万元"
+            ]
+          },
+          "eligible_chunks": 11,
+          "rejected_chunks": 3955,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "sufficient",
+        "evidence_sufficient": true,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 852.317,
+        "p95": 878.191,
+        "samples": 5
+      }
+    },
+    {
+      "case_id": "project_no_evidence",
+      "variant_id": null,
+      "evaluation_class": "unsupported",
+      "excluded_from_retrieval_metrics": false,
+      "golden_evidence_count": 0,
+      "golden_evidence_recall_at_5": null,
+      "retrieval_precision_at_5": 1.0,
+      "citation_support_rate_at_5": 1.0,
+      "ndcg_at_10": 1.0,
+      "evidence_found": false,
+      "evidence_status": "insufficient",
+      "unsupported_correct": true,
+      "top_results": [],
+      "trace": {
+        "requested_mode": "hybrid",
+        "retrieval_mode_used": "hybrid",
+        "fallback_mode": null,
+        "fallback_reason": null,
+        "degraded": false,
+        "degradation_reasons": [],
+        "channels": {
+          "bm25": {
+            "available": true,
+            "hits": 0,
+            "top_k": 40
+          },
+          "structured": {
+            "available": true,
+            "hits": 0,
+            "top_k": 40
+          },
+          "vector": {
+            "available": true,
+            "hits": 0,
+            "top_k": 40,
+            "error": null
+          }
+        },
+        "fusion": {
+          "algorithm": "weighted reciprocal rank fusion",
+          "rrf_k": 60,
+          "channel_weights": {
+            "bm25": 1.0,
+            "structured": 1.6,
+            "vector": 0.8
+          },
+          "candidate_count": 0
+        },
+        "rerank": {
+          "enabled": true,
+          "available": true,
+          "algorithm": "local-rule-rerank-v1",
+          "error": null
+        },
+        "hard_gate": {
+          "constraints": {
+            "codes": [],
+            "numeric": [],
+            "ratios": [],
+            "scales": [],
+            "units": []
+          },
+          "eligible_chunks": 0,
+          "rejected_chunks": 4014,
+          "rule": "authority + exact number/code/scale/unit gates; no generated evidence"
+        },
+        "evidence_status": "insufficient",
+        "evidence_sufficient": false,
+        "source_truth": "formal Markdown/Excel/CSV, rules and confirmed memory remain the source of truth"
+      },
+      "latency_ms": {
+        "median": 503.107,
+        "p95": 506.841,
+        "samples": 5
+      }
+    }
+  ],
+  "notes": [
+    "四道预置演示题按设计在检索前返回人工审核答案，未计入 hybrid 检索召回分母。",
+    "citation_support_rate_at_5 表示黄金证据被 top-5 支撑的比例；retrieval_precision_at_5 另列 top-5 结果纯度，均不冒充模型正文引用准确率。",
+    "citation_accuracy_at_5 在本评测中定义为黄金证据被 top-5 引用集合支撑的比例；检索结果纯度另由 retrieval_precision_at_5 单列。",
+    "local-hash-embedding-v1 和 local-rule-rerank-v1 不产生新证据，不参与价格或三个数字裁决。"
+  ]
+}

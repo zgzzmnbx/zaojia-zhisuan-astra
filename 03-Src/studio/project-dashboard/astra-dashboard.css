@@ -1,0 +1,76 @@
+/* Astra adapter: retain the migrated chart structure, use the studio's own tokens. */
+.studio .project-dashboard {
+  --dws-color-primary:var(--blue);--dws-color-primary-hover:var(--blue);
+  --dws-color-surface:var(--paper);--dws-color-background:var(--paper);
+  --dws-color-muted:var(--soft);--dws-color-surface-subtle:var(--soft);
+  --dws-color-border:var(--line);--dws-color-border-soft:var(--line);
+  --dws-color-foreground-strong:var(--ink);--dws-color-foreground:var(--ink);
+  --dws-color-foreground-muted:var(--muted);--dws-chart-blue-soft:#93b5ff;
+  --dws-panel-shadow:none;--font-ui:var(--dws-font-family-ui);
+  --dws-neutral-900:var(--ink);--dws-neutral-700:var(--ink);--dws-neutral-500:var(--muted);
+  --dws-border:var(--line);--dws-warning:var(--amber);--dws-danger:var(--red);
+  --dws-surface:var(--paper);--dws-text-body:var(--ink);--dws-text-muted:var(--muted);
+  padding:20px;line-height:1.6;font-size:var(--dws-font-size-13);
+}
+.studio .astra-dashboard-host {min-width:0}
+.studio .astra-dashboard-tabs {margin:12px 20px 0;justify-content:flex-start}
+.studio .project-dashboard__header {flex-wrap:wrap;gap:16px;margin-bottom:20px}
+.studio .project-dashboard__header h1 {font-size:var(--dws-font-size-20);line-height:1.4}
+.studio .project-dashboard__header p {color:var(--muted);font-size:var(--dws-font-size-13)}
+.studio .project-dashboard__header-actions {flex-wrap:wrap;gap:8px}
+.studio .project-dashboard__metric {border-radius:12px;padding:16px;text-align:left}
+.studio .project-dashboard__metric strong {font-size:var(--dws-font-size-28);line-height:1.4}
+.studio .project-dashboard__metric small {line-height:1.6}
+.studio .project-dashboard__chart,.studio .project-dashboard__history {border-radius:12px;box-shadow:none}
+.studio .project-dashboard .recharts-wrapper>svg.recharts-surface {width:100%;height:100%;stroke-width:initial}
+.studio .project-dashboard .recharts-legend-item svg.recharts-surface {width:12px;height:12px;stroke-width:initial}
+.studio .project-dashboard .recharts-legend-item-text {color:var(--ink)!important}
+.studio .project-dashboard__chart-empty {min-height:130px}
+.studio .project-dashboard__analysis:has(.project-dashboard__chart-empty) {min-height:240px}
+.studio .project-dashboard .recharts-text {font-family:var(--dws-font-family-ui);font-size:var(--dws-font-size-12)}
+.studio .project-dashboard .recharts-default-tooltip {background:var(--paper)!important;color:var(--ink)!important;border-color:var(--line)!important;border-radius:8px;font-size:var(--dws-font-size-12)}
+.studio .project-dashboard__table-wrap {max-width:100%;overscroll-behavior:contain}
+.studio .project-dashboard__row-actions {min-width:164px}
+.studio .project-dashboard__table-wrap table {min-width:1150px}
+.studio .project-dashboard__table-wrap th {font-size:var(--dws-font-size-13);background:var(--soft)}
+.studio .project-dashboard__table-wrap tbody tr:hover {background:var(--soft)}
+.studio .project-dashboard .recharts-tooltip-cursor {fill:var(--soft);stroke:var(--line)}
+.studio .project-dashboard__filter-dialog {margin:auto;inset:0;max-height:calc(100dvh - 40px);border:1px solid var(--line);color:var(--ink);background:var(--paper)}
+.studio .project-dashboard__filter-dialog::backdrop,.studio .astra-dashboard-detail::backdrop,.studio .astra-dashboard-presentation::backdrop {background:#10182866;backdrop-filter:blur(3px)}
+.studio .project-dashboard--modal-root {padding:0;background:transparent;pointer-events:none}
+.studio .project-dashboard__filter-dialog {pointer-events:auto}
+.studio .astra-dashboard-detail {container-type:normal;position:fixed;inset:0;margin:0 0 0 auto;padding:0;width:min(560px,100vw);max-width:100vw;height:100dvh;max-height:100dvh;border:0;background:var(--paper);overflow:hidden}
+.studio .astra-dashboard-detail .project-dashboard__drawer {width:100%;height:100%;box-shadow:none}
+.studio .project-dashboard__drawer header h2 {overflow-wrap:anywhere}
+.studio .project-dashboard__drawer footer {flex-wrap:wrap;gap:8px}
+.studio .project-dashboard__drawer footer button {min-height:36px}
+.studio .astra-dashboard-presentation {inset:0;margin:0;padding:0;border:0;width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;overflow:hidden;background:var(--paper);color:var(--ink)}
+.studio .project-dashboard.is-presentation {position:relative;inset:auto;height:100dvh;overflow:auto;padding:28px 36px}
+.studio .project-dashboard.is-presentation .project-dashboard__header {top:-28px;background:var(--paper);margin:-28px -36px 16px;padding:20px 36px;z-index:2}
+.studio .project-dashboard.is-presentation .project-dashboard__header h1 {font-size:var(--dws-font-size-28)}
+.studio[data-dark] .project-dashboard {--dws-color-primary:#6486ff;--dws-color-primary-hover:#7694ff}
+.studio[data-dark] .project-dashboard :is(.project-dashboard__status,.project-dashboard__warning-state) {background:var(--soft);color:var(--ink)}
+.studio[data-dark] .project-dashboard :is(.project-dashboard__classification-note,.project-dashboard__warning-note,.project-dashboard__drawer-error,.project-dashboard__unavailable) {background:var(--soft);color:var(--ink)}
+.studio[data-dark] .project-dashboard__filter-dialog>footer .project-dashboard__filter-apply,
+.studio[data-dark] .project-dashboard__filter-dialog>footer .project-dashboard__filter-apply:hover {background:#365cd8;color:#fff}
+.studio[data-dark] .project-dashboard :is(.project-dashboard__lifecycle button,.project-dashboard__field input,.project-dashboard__field select) {background:var(--soft);color:var(--ink);border-color:var(--line)}
+.studio[data-dark] .project-dashboard .project-dashboard__lifecycle button.is-selected {background:#365cd8;color:#fff}
+.studio[data-dark] .project-dashboard :is(.project-dashboard__lifecycle-meta,.project-dashboard__lifecycle-value,.project-dashboard__lifecycle-index) {color:var(--muted)}
+.studio[data-dark] .project-dashboard :is(.project-dashboard__chips button,.project-dashboard__source) {color:#a9baff;background:var(--soft);border-color:var(--line)}
+.studio[data-dark] .project-dashboard :is(.project-dashboard__backfill,.project-dashboard__presentation,.project-dashboard__filter-button):hover,
+.studio[data-dark] .project-dashboard__filter-dialog>footer button:hover {background:#2c3545;color:var(--ink)}
+.studio[data-dark] .project-dashboard__filter-dialog>footer .project-dashboard__filter-apply:hover {background:#365cd8;color:#fff}
+@container (max-width:620px) {
+  .studio .project-dashboard__metrics {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .studio .project-dashboard__metric:last-child {grid-column:1/-1}
+  .studio .project-dashboard__header-actions {width:100%;justify-content:flex-start}
+}
+@media(max-width:650px) {
+  .studio .project-dashboard {padding:16px 12px}
+  .studio .astra-dashboard-detail {padding:0}
+  .studio .project-dashboard.is-presentation {padding:20px 12px}
+  .studio .project-dashboard.is-presentation .project-dashboard__header {top:-20px;margin:-20px -12px 16px;padding:16px 12px}
+  .studio .project-dashboard__filter-dialog {width:calc(100vw - 24px);max-height:calc(100dvh - 24px)}
+  .studio .project-dashboard__header-actions {gap:6px}
+  .studio .project-dashboard__detail-grid {grid-template-columns:1fr}
+}

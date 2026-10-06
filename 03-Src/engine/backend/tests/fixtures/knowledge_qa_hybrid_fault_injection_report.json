@@ -1,0 +1,27 @@
+{
+  "red": {
+    "fault": "corrupt_vector_index",
+    "signal": "hybrid_vector_index_corrupt: invalid JSON"
+  },
+  "degraded": {
+    "vector": [
+      "vector_backend_unavailable"
+    ],
+    "rerank": [
+      "rerank_timeout:250.622ms>180ms"
+    ],
+    "model": {
+      "status_code": 200,
+      "answer_mode": "evidence_fallback",
+      "reasons": [
+        "model_unavailable:RuntimeError"
+      ]
+    }
+  },
+  "restored": {
+    "rebuild_chunks": 4020,
+    "search_results": 5,
+    "evidence_status": "sufficient",
+    "green": true
+  }
+}

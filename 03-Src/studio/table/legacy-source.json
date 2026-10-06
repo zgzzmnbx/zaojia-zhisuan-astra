@@ -1,0 +1,164 @@
+{
+  "source": "造价智算 V2.0",
+  "date": "2026-10-05",
+  "files": [
+    {
+      "file": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\App.tsx",
+      "sha256": "04adc54a70ba34547613788978b5d4903fdd778237bcea537646b11bdbe6e570"
+    },
+    {
+      "file": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\config\\project-default-settings.json",
+      "sha256": "7b4a265765ba542fadafded922618f729598c223146e2206864c221bf087522d"
+    }
+  ],
+  "entries": [
+    {
+      "name": "PreviewColumn",
+      "line": 1252
+    },
+    {
+      "name": "PreviewColumnPreferences",
+      "line": 1268
+    },
+    {
+      "name": "DEFAULT_PREVIEW_CELL_MAX_DISPLAY_CHARS",
+      "line": 1973
+    },
+    {
+      "name": "MIN_PREVIEW_COLUMN_WIDTH_PX",
+      "line": 1974
+    },
+    {
+      "name": "MAX_PREVIEW_COLUMN_WIDTH_PX",
+      "line": 1975
+    },
+    {
+      "name": "DEFAULT_CORE_PREVIEW_LABELS",
+      "line": 1976
+    },
+    {
+      "name": "clampPreviewColumnWidth",
+      "line": 2052
+    },
+    {
+      "name": "previewColumnWidthKeys",
+      "line": 2058
+    },
+    {
+      "name": "normalizePreviewColumnPreferences",
+      "line": 2065
+    },
+    {
+      "name": "previewCellText",
+      "line": 9198
+    },
+    {
+      "name": "warningCellValues",
+      "line": 9208
+    },
+    {
+      "name": "warningCellState",
+      "line": 9217
+    },
+    {
+      "name": "previewDisplayText",
+      "line": 9225
+    },
+    {
+      "name": "previewHeaderText",
+      "line": 9230
+    },
+    {
+      "name": "compactPreviewHeader",
+      "line": 9234
+    },
+    {
+      "name": "previewSheetLabel",
+      "line": 9238
+    },
+    {
+      "name": "isMatchedNumberCell",
+      "line": 9243
+    },
+    {
+      "name": "previewCellClass",
+      "line": 9249
+    },
+    {
+      "name": "previewCellTitle",
+      "line": 9260
+    },
+    {
+      "name": "isEditablePreviewColumn",
+      "line": 9267
+    },
+    {
+      "name": "PreviewRowItem",
+      "line": 15864
+    },
+    {
+      "name": "normalizePreviewSheetName",
+      "line": 15869
+    },
+    {
+      "name": "previewExcelRowNumber",
+      "line": 15873
+    },
+    {
+      "name": "filterPreviewRows",
+      "line": 15923
+    },
+    {
+      "name": "warningFilterColumnIndex",
+      "line": 15931
+    },
+    {
+      "name": "hasWarningFilterValue",
+      "line": 15937
+    },
+    {
+      "name": "isTotalSummaryRow",
+      "line": 15947
+    },
+    {
+      "name": "buildAvailablePreviewColumns",
+      "line": 15951
+    },
+    {
+      "name": "buildPreviewColumns",
+      "line": 15974
+    },
+    {
+      "name": "previewSheetKey",
+      "line": 15993
+    },
+    {
+      "name": "previewSheetsFromTablePreview",
+      "line": 15997
+    },
+    {
+      "name": "isCorePreviewSheet",
+      "line": 16001
+    },
+    {
+      "name": "resolvePreviewPreferenceLabels",
+      "line": 16006
+    },
+    {
+      "name": "previewColumnMatchesPreference",
+      "line": 16025
+    },
+    {
+      "name": "findPriceIndex",
+      "line": 16050
+    },
+    {
+      "name": "compactHeader",
+      "line": 16079
+    },
+    {
+      "name": "isWarningHeader",
+      "line": 16083
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\03-知识库-二维数据库制作\\05-260729-【结算】【前辈经验】结算和投标限价相关资料\\【结算模板】260723-勘察测量结算统一报价模板-v1.0.xlsx",
+    "target": "03-Src/professional-assets/settlement-reference.xlsx",
+    "sha256": "20aede1af39c986b49b611a495bca372903f5104d41cbb312de8d7c4223f91c8"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\backend\\feishu_bot_runner.py",
+    "target": "03-Src\\professional-assets\\feishu_bot_runner.py",
+    "sha256": "3686e87bb988e7b5762fdbdecf861ce4da2e6377c6fa166a797706d1904446b9"
+  }
+]

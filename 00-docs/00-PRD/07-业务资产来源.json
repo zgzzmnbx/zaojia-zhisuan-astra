@@ -1,0 +1,1545 @@
+{
+  "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0",
+  "files": [
+    {
+      "path": "00-PRD/00-PRD工作方式说明.md",
+      "sha256": "819662f28bba8f4d3efd832a15f8a40bc9fd5136c6b3564ad49b5fdf9d7973a1",
+      "bytes": 4515
+    },
+    {
+      "path": "00-PRD/00-产品总览.md",
+      "sha256": "820c93fcc2155ab7bf770bb234ead5c9082e34fa5646ecb2485b52441462e2e4",
+      "bytes": 24698
+    },
+    {
+      "path": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "sha256": "350dda7c9856c4b72973bcc1a5ed76a2423f2da5aee82934cdd74cf21b366bf2",
+      "bytes": 16255
+    },
+    {
+      "path": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "sha256": "7bb62c2fa406ab8fce7b5e7bcb778396115d9d1f58f8b21c3c1fe2941051646b",
+      "bytes": 10364
+    },
+    {
+      "path": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "sha256": "b607ae0753b30a25143dfa5aca6166c3728e1443e2c7be23727d04faa7d66485",
+      "bytes": 6314
+    },
+    {
+      "path": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "sha256": "b45b1b1e4bf9076d3b0ef44316e637cdab8b3502f6a3af70e08392b716b395f0",
+      "bytes": 46442
+    },
+    {
+      "path": "00-PRD/01-模块PRD/04-问问智算AI助手/RRD-智算助手形象.md",
+      "sha256": "8510a26b315bceb0ee5c00b9a7732199d448ecf71c36bdca79ace44d7b6ff044",
+      "bytes": 13900
+    },
+    {
+      "path": "00-PRD/01-模块PRD/04-问问智算AI助手/可信经验进化闭环-开发提示词.md",
+      "sha256": "efe551c27c14b1dbdecf68477c02eb139ad051a6655414217fd7bf5d81251ebb",
+      "bytes": 8218
+    },
+    {
+      "path": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "sha256": "706384dc11ea4e38708d6ff4415c68172af19a1e095ff92558d5a5e753f0e681",
+      "bytes": 9149
+    },
+    {
+      "path": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "sha256": "986aeb82a523738e5ed2411b7b90aa7da207c3f51b69be83bab9c8f04dbd59c7",
+      "bytes": 4170
+    },
+    {
+      "path": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "sha256": "1149aff7ba845187c6dec543433602ffdd5d22e45f6503b9b9e205179d5c2dd6",
+      "bytes": 4733
+    },
+    {
+      "path": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "sha256": "ba644f25e30fbd7585f68857409d23449c8425f754d3e5631499c20cac3e4ad4",
+      "bytes": 7495
+    },
+    {
+      "path": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "sha256": "37ebcb3e7aad684575e2fc75c251f1cc12adc18496ea21c062014bbd7480f184",
+      "bytes": 13467
+    },
+    {
+      "path": "00-PRD/01-模块PRD/10-结算审核助手模块/evals/README.md",
+      "sha256": "cb3a500fb32510f64e9792c69db589215b93d56f5ea33953478c5582a52b79b5",
+      "bytes": 623
+    },
+    {
+      "path": "00-PRD/01-模块PRD/10-结算审核助手模块/evals/结算审核演示样例-v0.1.xlsx",
+      "sha256": "e6da80ba755d8c924a2548ac1e74b2db3ee32c9b296e3bb25724a8c9f410dfae",
+      "bytes": 413462
+    },
+    {
+      "path": "00-PRD/01-模块PRD/10-结算审核助手模块/evals/结算审核演示样例-预期结果.json",
+      "sha256": "0ccab83608393f3396ee3732fd8292bd40e7f2094f312acdcac16f9621607716",
+      "bytes": 1338
+    },
+    {
+      "path": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "sha256": "2124b5d42d8afbd6b5b6adc5c9e570f96d56fc7ea58633661b098f7fec03cf65",
+      "bytes": 15287
+    },
+    {
+      "path": "00-PRD/01-模块PRD/10-结算审核助手模块/需求参考资料/05-260729-【结算】【前辈经验】结算和投标限价相关资料 - 快捷方式.lnk",
+      "sha256": "136f956e4b383f88766baa4fdf395e63484168149ed8c73ee133ce7c7dd64565",
+      "bytes": 1738
+    },
+    {
+      "path": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "sha256": "f9dec4317a9b983013b3a7df3916104726d2e3c3f7189e0f490fa2ddc35b4f0b",
+      "bytes": 21750
+    },
+    {
+      "path": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "sha256": "0f18f7e84b98e8b056942833c8961b96811db7239159d824af882839f70d2fa4",
+      "bytes": 86807
+    },
+    {
+      "path": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/外部任务主动派发模拟-P0-开发提示词.md",
+      "sha256": "40f271b5006a28a8c063f7e80f18ecab661e489a4a5c030d179fa66956474544",
+      "bytes": 15486
+    },
+    {
+      "path": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/第二层本机长连接机器人设计规格.md",
+      "sha256": "9542fbff3311afcf291fed742a2b5fdbb6579e60c21726cc30315ce0beab6449",
+      "bytes": 15696
+    },
+    {
+      "path": "00-PRD/01-模块PRD/14-功能点助手模块/PRD.md",
+      "sha256": "57a3932e1dc467b0ee62d1cdfb12259b7fb3253eac707cfef3823f7bdb602999",
+      "bytes": 4233
+    },
+    {
+      "path": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "sha256": "bb22265d7eb64b19ffabf065a8341f491f2a0a6459880d1a8eb310b80ee61c49",
+      "bytes": 31967
+    },
+    {
+      "path": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "sha256": "a2c5cc2c7939f1b2f1c2ff4b5645086003d48a6f3e7cfbf876d5e816afccd3cd",
+      "bytes": 36837
+    },
+    {
+      "path": "00-PRD/01-模块PRD/16-对话式智能体工作台/原界面智算主窗口改造方案与实施提示词.md",
+      "sha256": "d2f3c146021d5163107aea5abfa675b0cc3dc283ce89c5fce602b23e4056f50c",
+      "bytes": 18166
+    },
+    {
+      "path": "00-PRD/01-模块PRD/16-对话式智能体工作台/原界面智算主窗口验收-20261003.md",
+      "sha256": "5b20682e2f5d9261ae42cc36298fbfb2e5d8b67d8491eeab4da338ed179c24e5",
+      "bytes": 6738
+    },
+    {
+      "path": "00-PRD/01-模块PRD/16-对话式智能体工作台/开发提示词.md",
+      "sha256": "a419178200ea65313200897840f4faab110cc9a7493b02558589b2740bd07b8b",
+      "bytes": 10568
+    },
+    {
+      "path": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "sha256": "90ae543d9e53985026a17547712fb6aae10f9cb9fccf8b546070bae377f8eb50",
+      "bytes": 36611
+    },
+    {
+      "path": "00-PRD/01-模块PRD/17-项目看板与历史项目/开发提示词.md",
+      "sha256": "10d6421e8fd9ac1fd2e4693e382a538da25651aafbfe6dc248c6ecf11cba44a6",
+      "bytes": 23116
+    },
+    {
+      "path": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "sha256": "b863f02f8201111f0ae622f81af5e36b62051f6ebf641f1f9f20f8443e595293",
+      "bytes": 30286
+    },
+    {
+      "path": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/开发提示词.md",
+      "sha256": "8fb651a6701e989124b2bd60cb5af289e972e9250a39b3be73e64fcde2e70db5",
+      "bytes": 13364
+    },
+    {
+      "path": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/知识库检索讲解手册.md",
+      "sha256": "86ea605fd51b1b3079fe89e298066c327c4bed94f13c8203282ba94c63e8b634",
+      "bytes": 22672
+    },
+    {
+      "path": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "sha256": "90f936aa8a0353440a430d67d5243365fd7841b2601a407c1fad845a879e0183",
+      "bytes": 29038
+    },
+    {
+      "path": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/实施进度.md",
+      "sha256": "eee18d7a5abf22ec9dac17a621685bed73eb07f330edaae73c314ba744dbca2a",
+      "bytes": 4593
+    },
+    {
+      "path": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/目标模式开发提示词.md",
+      "sha256": "fcfacbf7ad466923ca06e79d3a4a301743b6e164e13c220ea62e144ffce8e997",
+      "bytes": 23569
+    },
+    {
+      "path": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "sha256": "def8c4c0ae55e9418bb9b761db052f9ee8a59647ee921a7daf9ac02461a802b4",
+      "bytes": 37062
+    },
+    {
+      "path": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/实施进度.md",
+      "sha256": "a3da22c9978175ed882de60793520c9761459e80f5c647f7f0bfb8b815678762",
+      "bytes": 5968
+    },
+    {
+      "path": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/目标模式开发提示词.md",
+      "sha256": "69e1161f71c3d5626b66daf605bf7f625f2698eef345502ce78bec331560d451",
+      "bytes": 35010
+    },
+    {
+      "path": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "sha256": "3c18212e9d180e0b6c5dddec31717e058af1285e546888ba3f0315f483b69d36",
+      "bytes": 7090
+    },
+    {
+      "path": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "sha256": "e8ede2a66d0ebea255d9e2a033993f1c1945b5eb0288e474fc36309db7c09442",
+      "bytes": 5793
+    },
+    {
+      "path": "00-PRD/01-模块PRD/22-数智员工上岗证据包/实施进度.md",
+      "sha256": "798cc5e595c8569682fcfbc5db4f800875a4b27a6b456310a86041aa59893630",
+      "bytes": 2334
+    },
+    {
+      "path": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/Luna实施提示词.md",
+      "sha256": "219a1f1edef1872a95f3a2230cb70818910d21f7a3c5967d57d6ad9ae5949dd9",
+      "bytes": 15437
+    },
+    {
+      "path": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "sha256": "c311474244d852204ffbb55f65565f6cd560ebb45f625ff1f77735047ecd0f37",
+      "bytes": 25361
+    },
+    {
+      "path": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/Luna-Max修复目标任务书-20260909.md",
+      "sha256": "a7cebba4b76ef59cad3e1897ed33f35e10c684a570cb1a0277cd736d1a982040",
+      "bytes": 20765
+    },
+    {
+      "path": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/Luna-Max目标模式任务书.md",
+      "sha256": "e17d1d88c2c4c664fc57ee0c513bd42037fa67fcb7a35c3ad4db2f5a6a7b29ad",
+      "bytes": 8722
+    },
+    {
+      "path": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "sha256": "3eedea1833258e1f8c9d271fb3748ee553f6e1a99bc162ce692d5b2219060876",
+      "bytes": 22951
+    },
+    {
+      "path": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/修复进度-20260909.md",
+      "sha256": "300a17cb133d4805b078d5fa7e8cbe026ae0f00c5d44895d6ab69183677bbd44",
+      "bytes": 5236
+    },
+    {
+      "path": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/实施方案.md",
+      "sha256": "103d4109493299c707d86462cd93c2349e0315ea6f37d9f7a63d6327372923ba",
+      "bytes": 17281
+    },
+    {
+      "path": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/实施进度.md",
+      "sha256": "4c86f95673f28d3f13a7a40f8a122592b19d1d40b24c7884a8189d0a2fce4d68",
+      "bytes": 7177
+    },
+    {
+      "path": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/Luna-Max目标任务书-展示地图双主题.md",
+      "sha256": "961aee1431b86d13fa2b74291fa11377a3771cd6e6e3e70d0ba00b76d060e183",
+      "bytes": 6754
+    },
+    {
+      "path": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/Luna-Max目标模式任务书.md",
+      "sha256": "01f6065315d79095b677f4934ab0c9031cb36a03c41940d497d58123d31efdab",
+      "bytes": 10426
+    },
+    {
+      "path": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "sha256": "961738e4d6f9659a22dad37c08e643343582a64bb93aec26f4c8508bd2e7bf91",
+      "bytes": 47245
+    },
+    {
+      "path": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/实施进度.md",
+      "sha256": "e49f1f101d8a66c6d76aacb6dfd739923689538be29a8075201badcd045b1139",
+      "bytes": 20625
+    },
+    {
+      "path": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/展示地图双主题-实施方案.md",
+      "sha256": "758c0f273f149972989395a45a8751280871ac4e938ae797697eeb3b2986e8e8",
+      "bytes": 23729
+    },
+    {
+      "path": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/展示地图双主题-实施进度.md",
+      "sha256": "b94b8f66940e7fcae369ccc1a852d09d559337747ef2f15f2b36faad52f8a136",
+      "bytes": 31529
+    },
+    {
+      "path": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "sha256": "602a549abf8ba5539ff910f71d06d8006d76df9c540767cda3fee1b64823b5ea",
+      "bytes": 4321
+    },
+    {
+      "path": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "sha256": "912e922773ce4ffdaf0619dc34a64eeb97b38ea9e8a0c62a5004584ac1936dc4",
+      "bytes": 4395
+    },
+    {
+      "path": "00-PRD/01-模块PRD/27-WeKnora问答接入/完整任务包.md",
+      "sha256": "3cfb536fdc37a5962c075824b93af9ccdf6800ad304901e903912253dff172c7",
+      "bytes": 96687
+    },
+    {
+      "path": "00-PRD/01-模块PRD/27-WeKnora问答接入/本机联调验收-20260929.md",
+      "sha256": "6045fdd6a9b1c4c3c99e8ecd64a9dbcfb549ff66197eca15db3eaa29e25f45ef",
+      "bytes": 3332
+    },
+    {
+      "path": "00-PRD/02-当前版本计划.md",
+      "sha256": "813e734c5d24b0a3f3dde0489e379cf345d3f9c662c29694b7bcbf930b7db110",
+      "bytes": 70592
+    },
+    {
+      "path": "00-PRD/03-UI设计规范.md",
+      "sha256": "75dd39e3b58abc17203e6396fd154cf1b2e9aed00291183616926a87af4e41ab",
+      "bytes": 73057
+    },
+    {
+      "path": "00-PRD/03-整体UI设计PRD.md",
+      "sha256": "a02ade79e323c399d4fb98343df0c3f86a1699fb7632d14ea58608eef05531f2",
+      "bytes": 44990
+    },
+    {
+      "path": "00-PRD/04-PRD一致性巡检.md",
+      "sha256": "39b57665c720a248c5362d33a9bc5e3750e580027cd06765e8b10f3272f25d53",
+      "bytes": 3883
+    },
+    {
+      "path": "00-PRD/05-线程交接提示词/专业能力Skill-P0-开发提示词.md",
+      "sha256": "88a56ed72c6d459a258c30c9515c03c382365e7ab407bc19a2a757e719bb8f92",
+      "bytes": 20034
+    },
+    {
+      "path": "00-PRD/05-线程交接提示词/云端发布专用线程-交接提示词.md",
+      "sha256": "e1e1eddc26dbf1678274f256f057dc11b55821ea15f4b066be230901ac57c4e8",
+      "bytes": 6937
+    },
+    {
+      "path": "00-PRD/05-线程交接提示词/报告预览模块-file-viewer-实现提示词.md",
+      "sha256": "3d3353b32fca8a9aa437cc2f6ef20ce8d694ef043333bb2420455eee47fdf094",
+      "bytes": 13213
+    },
+    {
+      "path": "00-PRD/05-线程交接提示词/智能协同-第一层Webhook简单机器人-实现提示词.md",
+      "sha256": "8429fe06a149a8d48017f65797b034cdb99e21eff315a2ef3325f5e32b8e6d42",
+      "bytes": 17575
+    },
+    {
+      "path": "00-PRD/05-线程交接提示词/问问智算-查库强制知识库模式-交接提示词.md",
+      "sha256": "36a0e1af26279c4e213ed187d1ae0e1e9dc7041a25ba2cd29fc0d4f7fe2c77be",
+      "bytes": 4780
+    },
+    {
+      "path": "00-PRD/05-线程交接提示词/问问智算-知识候选池与项目知识记忆P0-开发提示词.md",
+      "sha256": "fe810c418a81bc40bb921796e36ba74080474bb4e124bf2b8769ad84089d9500",
+      "bytes": 15429
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/00-README-本次Claude建议包说明.md",
+      "sha256": "1f9171466d114f2d95281c85a6e59e4fa9733baeb60d4bfca0d7e2d65bf1bbbc",
+      "bytes": 6995
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/01-项目理解与现状判断.md",
+      "sha256": "efa48ba810cc79d67ddef8d7b98391307e1398a7e2f51b620af999af5e5e6f4b",
+      "bytes": 15801
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/02-未来功能发散清单.md",
+      "sha256": "93cdad31aa672f886220b9f75d0aaafd6d1cf022a0946b68de230fcdd9bf9bf5",
+      "bytes": 27963
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/03-近期功能优先级与版本路线.md",
+      "sha256": "f32990590eda263d6b023300a12b68d51ba991bf89802e14ba1fb483d57fd2de",
+      "bytes": 15481
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/04-辅助填价功能PRD建议.md",
+      "sha256": "331a6d90816774676d1e2224761f83598c8361fa0065d60d8bcfc38e42c9e359",
+      "bytes": 17992
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/05-结算审核助手PRD建议.md",
+      "sha256": "7c8ab31c408ded4a78ec5e29b441443ea29698799431295bed0b1004b0c46c33",
+      "bytes": 16671
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/06-统信UOS迁移预备建议.md",
+      "sha256": "53a40ccaf20381cb2ce3862c83352a7dccfde3a58f2d7200c13d71e975b39bf2",
+      "bytes": 16919
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/07-核心技术路线建议-给Codex消化.md",
+      "sha256": "101d8aae8bcb47c90443fdb950f7fa11d600230fe086927ff12ac8f3954c2527",
+      "bytes": 11626
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/08-UI优化PRD建议.md",
+      "sha256": "48308e4565ea8eb004b9f27948d4c1248aac9ddc3a5607e7a3a3697c1730bd2d",
+      "bytes": 22017
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/09-Codex后续消化提示词.md",
+      "sha256": "be6590a7ddd22b95caf273bbc3744055814ae68491f44d89eeae25653f1334f3",
+      "bytes": 13914
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/Claude建议包吸收评估报告-2026-07-04.md",
+      "sha256": "d5f3bfd122a466704d1192892a184bbe5794d689e0700e3b7f556f3914dccc66",
+      "bytes": 21248
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/claude的界面建议-ChatGPT Image 2026年7月4日 23_17_17 (1).png",
+      "sha256": "a2fd7923f7e60271a5a5b12783f60a9177c56dc5b0e2cda68b5e584f96077f22",
+      "bytes": 1331317
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/claude的界面建议-ChatGPT Image 2026年7月4日 23_17_17 (2).png",
+      "sha256": "ff83f4cba5f1baa67f51874937d8b1716a91d2949e51eb1ddd3aebc285fdcd54",
+      "bytes": 1380719
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/【合并版】Claude建议包-合并版-2026年7月3日.md",
+      "sha256": "74c0ffadfe5344fdd9325946f0f7d7208ce9b5b3de70f5fb188c5f87c6a54531",
+      "bytes": 113375
+    },
+    {
+      "path": "00-PRD/PRD-Claude建议包-2026年7月3日/【合并版】Claude建议包-合并版-2026年7月3日.zip",
+      "sha256": "aee9de94766b52f64374afcf6269e88c307358732b2a9c3b2fd4d6be3b5088aa",
+      "bytes": 39355
+    },
+    {
+      "path": "00-PRD/PRD-sol建议-2026年7月10日/06-项目战略评估与未来功能路线-2026-07-10.md",
+      "sha256": "0d703577c2e871ca91e57ef0af71fedb4a571324ec0cd43269ab24f64dca1553",
+      "bytes": 21367
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/【业务知识】【主】勘察测量限价和结算-收集到的一些基础业务知识-2026年7月8日【AIW】.md",
+      "sha256": "990fe23e47951ee5ac4eabe5638aecec20911060342ba92c857b32ad2c6b767e",
+      "bytes": 23360
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-国家计委、建设部关于发布《工程勘察设计收费管理规定》的通知.pdf",
+      "sha256": "f81674ad76ac13a24646e451fe37cb787f54dff94df08f9361b79179a371bfe4",
+      "bytes": 124470
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-工程勘察设计收费标准使用手册.pdf",
+      "sha256": "19eebdb58c342d5254083a706e8c1bd444c006a6ba0f1f28ef202de86b02b0e6",
+      "bytes": 25559027
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-工程勘察设计收费标准使用手册_2066075621047238656.md",
+      "sha256": "033844c59e8efe41a3d2455d87304907bb115ef88bf705aeb2cb1c1138736a6a",
+      "bytes": 738717
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/计价格[2002]10号-工程勘察设计收费标准使用手册_表格提取-【批注】.xlsx",
+      "sha256": "86682d6b7e40774f53e9fe1251e5e04ef38e57020f31ea67973111228949fc31",
+      "bytes": 258839
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/财建[2009]17号-测绘生产成本费用定额.pdf",
+      "sha256": "28fa0bf36d49931a1d7e3fccf1c465c962fda5cbff6a3d939ad38fbb2e87c7c9",
+      "bytes": 5684517
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/财建[2009]17号-测绘生产成本费用定额_2066075546099212288.md",
+      "sha256": "f612f8bcfa2efd37bdd1bf93481246a994cf1ff049b517812266c1c05d432294",
+      "bytes": 70649
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料/财建[2009]17号-测绘生产成本费用定额_表格提取【批注】.xlsx",
+      "sha256": "750d28a484d302ad290eee6c6a927d2a045832d3ccbe610d73eab0127f0b0642",
+      "bytes": 43456
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/02-ai生成资料/研究报告-chatgpt2026年6月8日生成-长输管道工程勘察测量最高投标限价智能体开发分析报告.docx",
+      "sha256": "1f1d961345125feafcbd2c79178c161440dd42500b1290417e49806ab2302066",
+      "bytes": 264451
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究【交付】-长输管道勘察测量调整系数规则交付稿.md",
+      "sha256": "d939046f5bfcce5f7202a746347406a089c2b6a978839cb5143a2bce6a472cda",
+      "bytes": 48457
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付/20260614-深度研究提示词-调整系数规则提炼-【codex】.md",
+      "sha256": "110cf08190b697bacf1ca26c91b79c9af1ca7f75063e9ea041363ba5167877b8",
+      "bytes": 9991
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/04-整理成要给codex的规则表/chatgpt生成-管勘智算_规则清单交接包.xlsx",
+      "sha256": "871176bf333ddf7063bd1d957648c7b3ce89b3de759f856a8ca916348f90836c",
+      "bytes": 137268
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/大模型问答知识库方案设计-2026年6月21日.md",
+      "sha256": "32899059e81a8cd5341c2401484abc724589c40c705f041efb41e79266dd41fd",
+      "bytes": 14560
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/能问大模型的问题.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库/问问智算功能知识卡.md",
+      "sha256": "02ca0dc6cdbcc3c5e4285f71578e7406ef549859875f4b7e18e85e7c6c236b84",
+      "bytes": 4549
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【外包给workbuddy】-260616-表格处理 - 快捷方式.lnk",
+      "sha256": "072999bfa60a66d89fa675b2be7b50b6b0beb22ab4e85fb9eaecf3bbb0e77698",
+      "bytes": 1145
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【术语归并】术语归并与匹配放宽规则表 - 副本 (2).xlsx",
+      "sha256": "8f1e01b0edd2df8d44df001e4ff6cf35b36b3b31b1c0fde6c9092b66bcfded8b",
+      "bytes": 20096
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【术语归并】术语归并与匹配放宽规则表.xlsx",
+      "sha256": "dd887544529e6e77326d82515c2560e868bc7daf0e58b8ad39b5d4bbd40cde6d",
+      "bytes": 23616
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+      "sha256": "7ee644cd455472ab9afa7cb750d962f46f93825b4968a9d52a2a524467801feb",
+      "bytes": 15777
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】要素1-5和单位的匹配模式介绍.md",
+      "sha256": "3e43ba05b4af763f466480ff4bd132aae10cc48bcc56bb1a77e68a1f28fd944d",
+      "bytes": 9272
+    },
+    {
+      "path": "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+      "sha256": "399dee4afac912a2181d1f7997b3505b1240aa288cb3d3bec641cb4d83a0876d",
+      "bytes": 17895
+    },
+    {
+      "path": "03-知识库-二维数据库制作/01-报告模板-招标控制价报告模板/【模板勿动】控制价报告模板-yyyy-mm-dd.docx",
+      "sha256": "9dd3a3a4c7cbf61ebdc5a2ee8064415e3d7211b6f91b20786de97a1c9cb587f5",
+      "bytes": 213750
+    },
+    {
+      "path": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+      "sha256": "5bf2f4277a4b57249c31db687806d6f9da16ba2d0bccf144671a1e0652fc22ff",
+      "bytes": 48692
+    },
+    {
+      "path": "03-知识库-二维数据库制作/【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v3.1【批注-完备】.xlsx",
+      "sha256": "58736e3bce4670fda6d5408acc189d51ed2902e0ffddeb531750cf8da8a0a667",
+      "bytes": 127612
+    },
+    {
+      "path": "05-经验池-预警数据/experience-field-preferences-【codex】.json",
+      "sha256": "53f4d6a3b0d2b218c422849c5e0380bb80d5dea1c74859dea3caec99397c8fb3",
+      "bytes": 1633
+    },
+    {
+      "path": "05-经验池-预警数据/experience-warning-settings-【codex】.json",
+      "sha256": "18d021577736ee772dc41dc45d6d36d3364583c2523839173eee1f47e28fae28",
+      "bytes": 234
+    },
+    {
+      "path": "05-经验池-预警数据/workload-field-preferences-【codex】.json",
+      "sha256": "3d20a34e7f16503c33c115df48fef742e6016482cc44c0565b73dce45fdafd8f",
+      "bytes": 1207
+    },
+    {
+      "path": "05-经验池-预警数据/workload-target-field-preferences-【codex】.json",
+      "sha256": "b7fc47e0cf3a688f0dfbf1528a827c57693c5e7ed21f34debf2482bb991b9552",
+      "bytes": 1379
+    },
+    {
+      "path": "05-经验池-预警数据/【经验池】-管勘智算-【codex】.xlsx",
+      "sha256": "4747985a54ee4b2fd3eec7a3758b60fc01bce7e327cfac1179f37169ad88dc57",
+      "bytes": 64919
+    },
+    {
+      "path": "05-经验池-预警数据/【经验池】【模板勿动】-管勘智算.xlsx",
+      "sha256": "eca22137f2834420862c366f60af174786625c82231ee3c104a0612e0160e04b",
+      "bytes": 14685
+    },
+    {
+      "path": "05-经验池-预警数据/经验池备份/【经验池】-管勘智算-【codex】-2026年6月18日.xlsx",
+      "sha256": "a5038550157ec742f1cd695d5c28e3e3eb845e498ada734fbe647e6ca1c79441",
+      "bytes": 51316
+    },
+    {
+      "path": "05-经验池-预警数据/经验池备份/【经验池】-管勘智算-【codex】.xlsx",
+      "sha256": "fd0b56e16c61865a747d990973621170b4b40ed4f64d2a1f66d4cb7a9ebe65ed",
+      "bytes": 64933
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-001-油气输送管道工程适用范围.md",
+      "sha256": "3b2c8d28cca843712b4760c0e2caa34d6499e97884d2a763403af02cb3fed08b",
+      "bytes": 1543
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-002-油气输送管道土石方清单阅读.md",
+      "sha256": "c20e5fa2694a037dbe30fe27c8a021710da749d6f0750ce4d21406645a70273a",
+      "bytes": 1552
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-003-管段组装焊接清单阅读.md",
+      "sha256": "54bf86d0fbc666c57df9ea6079b5a9e15bdd819ff5352748a294d9ae824c62f8",
+      "bytes": 1600
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-004-冬季施工增加费使用边界.md",
+      "sha256": "6a159bf211af91bc38e92db97f146ca058f1d7b69638de6f6fd5dc3e12f77991",
+      "bytes": 1611
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-005-管道清管试压与干燥置换.md",
+      "sha256": "b7010043fcaab1c43f4be20c912bde0b1d4a775e82aa0f6b874e3a2b81e1e4f2",
+      "bytes": 1623
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-006-低温储罐项目特征阅读.md",
+      "sha256": "c789369366be31335bf0cb09d9176fbdf2d556b79524280040a6359635965330",
+      "bytes": 1581
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-007-储罐焊缝检测清单边界.md",
+      "sha256": "7b72156a954a59a63d925a5f61abb305e5d7662f4c1838ad7c23d40b29b94eaf",
+      "bytes": 1638
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-008-储罐试验与沉降观测.md",
+      "sha256": "6307d6091331bfb52cf0d66f43a9fc656cf580c09f4e16248a97f49d1343fec7",
+      "bytes": 1608
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-009-金属储罐制作安装内容.md",
+      "sha256": "28e24e0c7567e63621654906f26fb03e7055dfd3f6676182aee9ef0061a799a1",
+      "bytes": 1563
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-010-储罐保冷与机械作业.md",
+      "sha256": "a04b54c08e12ac69783b74a9466d9406b6b6b80e3d018fe15b7fadf30c13a2a3",
+      "bytes": 1617
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-011-机械设备安装清单内容.md",
+      "sha256": "74510f8605deeac497a4ad9f1d341578754fefdaa8bb09ab9ad5cb72838b666b",
+      "bytes": 1644
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-012-工艺管道安装清单阅读.md",
+      "sha256": "762f66b5cf44d0ec01537dd62fa86aa87c419dbbfd7cd0675469f934b8164332",
+      "bytes": 1578
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-013-阀门安装清单特征.md",
+      "sha256": "ba47df2e79e8e57906552bb088f27d1f47037a247f25a8cc1de63926790b14a3",
+      "bytes": 1640
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-014-自动化控制仪表安装边界.md",
+      "sha256": "62573ef509fc0c6ae442fd884f1ff9085ad82557e9675e743d26b260690eace6",
+      "bytes": 1545
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-015-通用安装章节如何定位.md",
+      "sha256": "ce820d931885b776e757c33b0c018d01adbe6a87d8e0b3310e1cf6939edbf121",
+      "bytes": 1584
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-016-通信线路工程清单阅读.md",
+      "sha256": "97c711495518986f2d722ed190e5b7f1f0f84a2742b5474d9b05e9765aaf1094",
+      "bytes": 1559
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-017-伴行与巡检道路工程.md",
+      "sha256": "5277815cd87cf1ba72ee5dc164759e4f99d667bbcc307e7bfc1089570b7b957f",
+      "bytes": 1580
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-018-智能化建设清单结构.md",
+      "sha256": "b39c4a260cb1771f9d2301a9597a379edd70b6b5c7f6814e7916ac40defda6aa",
+      "bytes": 1575
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-019-投产前管道内检测.md",
+      "sha256": "6fb3d5713d62fbe1b64530bf82c9cf2a5865eb74e801df4c8ae984a875335434",
+      "bytes": 1571
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-020-中转站与其他工程章节.md",
+      "sha256": "ec57cddb084ec21d48b85c86ece8055859748c8da03e1694300179cfb93af6f0",
+      "bytes": 1577
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-021-第五册参考计价依据的用途.md",
+      "sha256": "c348945b0ea3a39353f103a27ba8e64f4c41f4940ffd62138fbab0a5235d864d",
+      "bytes": 1683
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-022-柔性内焊与全自动外焊.md",
+      "sha256": "c88c794b979cb5806fdc1568ed919a4d0a1bb68aa2351be616452011bacfe9ab",
+      "bytes": 1632
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-023-移动式天然气放空回收.md",
+      "sha256": "2702021f1a55798375e5f28d95710c318c72c7df379ec2dea1286d2ca0213c65",
+      "bytes": 1623
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-024-场站绿化工程阅读.md",
+      "sha256": "1e12fc271b6b12f88cd8a4077296a1927b6e4680d25d53e181e31d56b2f87856",
+      "bytes": 1635
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-025-完整性管理技术服务.md",
+      "sha256": "0e0e28e79f742a269f8e3e43bd9290e7a50032c6a1e042b8b8a0a925f0c159f6",
+      "bytes": 1671
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-026-全费用清单单价五册结构.md",
+      "sha256": "d534f8245acfc66189e0a41ff62f8c520b555b8d723ca944ae60347880c5de17",
+      "bytes": 1597
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-027-全费用综合单价构成.md",
+      "sha256": "57fb326271aa2885e8ec8af1c05adcbc85256d769db7cb1d622f7990bffb4149",
+      "bytes": 1542
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-028-清单名称阈值表达.md",
+      "sha256": "c778d7f09fe4c71734dd72be312d51e2aeef91594e83c5c17a7ed13b0b96b913",
+      "bytes": 1808
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-029-子目不足时补充清单单价.md",
+      "sha256": "539d02c9e9526f4c5af95d425d0a833520d560b5c89eae4e4b324c6c8a592ac3",
+      "bytes": 1539
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-030-清单工程量与计量单位.md",
+      "sha256": "f709040bf3bff490cd9c081927c2f8eb4f1cdc5331a379a4da168698e61c550d",
+      "bytes": 1569
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-031-建设用地与赔补费用.md",
+      "sha256": "7d0adb5dbaacde4cec9d5b6a48d449a0a8b1df252992277bdc87d31dbb2b0bf1",
+      "bytes": 1542
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-032-前期工作费用阅读.md",
+      "sha256": "7461f1b1193b2c602abb7439a155973f3e664ce6a298fd260cc640d1da62ef78",
+      "bytes": 1584
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-033-建设管理监理与造价咨询费用.md",
+      "sha256": "ea13460023e81d29005ac3daab0787db0e0d61afbaefd2d06c4a07913c861ca9",
+      "bytes": 1593
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-034-专项评价及验收费.md",
+      "sha256": "b6aca1c0e4c1d693b1daf22e1d56a981b400fb0ad1a1108e6c62089c025ecb64",
+      "bytes": 1581
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-035-生产准备与培训费用.md",
+      "sha256": "846afb48d55b7657e1f8bf8a91e8fdd3a84ed832ee19754934f5cc061268a13f",
+      "bytes": 1584
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-036-概算指标的费用组成.md",
+      "sha256": "62d62bbe76b6c370ebf060ff595853bdd6b2d0f8196d5b3b2001367dbcf733c9",
+      "bytes": 1552
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-037-设备储罐与工艺管道指标定位.md",
+      "sha256": "becec289e3a90ad0f44f84cf572862f06993f880bb72c4d518ad1bd699c9642e",
+      "bytes": 1604
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-038-费用定额版本阅读.md",
+      "sha256": "4696fd05de99de6fd59c3804b0b026dd30cfea6146c6f87481d66e92c149b4fa",
+      "bytes": 1573
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-039-地区与施工条件调整.md",
+      "sha256": "616ba87834d28a6db16eb12879cc121ab9beea2d418775f53423f5d34463dd3f",
+      "bytes": 1559
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-040-人工工日价格阅读.md",
+      "sha256": "1c9beba851042906ec302af3286970979ee922c97391ce64956e68154660d40d",
+      "bytes": 1913
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-041-建设项目总投资组成.md",
+      "sha256": "3bccc522123c6c9f8223a7383283c6ccaf98053e2d2591cb7ebbec747f3d7321",
+      "bytes": 1599
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-042-数字项目税费与估算口径.md",
+      "sha256": "941f186396a113092836a30e650adfb54deae9dcb286ffcdec05442e4349d0ff",
+      "bytes": 1551
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-043-软件开发成本组成.md",
+      "sha256": "c423cf88fd0149599e11f6c8f5697a477f8f6e6e08c0bd356de75e7027458447",
+      "bytes": 1580
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-044-功能点与开发成本测算.md",
+      "sha256": "d247be6e3931a972aa0fdee0f853ba8e567cd1a7657527ae66eb13360a241661",
+      "bytes": 1551
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-045-数字项目实施与培训费用.md",
+      "sha256": "fbd76da749850d4991fc0e690238fcd53a172ad0e0856b1dbe0e923cdd3ee9e1",
+      "bytes": 1590
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-046-软件基准数据来源与样本.md",
+      "sha256": "904311a6089470f9f3a0e61877a8172540ef5cbba4774d0a439d802c9babf054",
+      "bytes": 1591
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-047-软件生产率与功能点单价.md",
+      "sha256": "fe2e1e6bc91184473ee578fcf8e177817ea501622c93660d1a7de04855ee4ef0",
+      "bytes": 1620
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-048-软件质量与工作量指标.md",
+      "sha256": "20cb2e11b8406700fc1b87ec9d9747ff83265808b2e1f3c6829aaa223ad7754e",
+      "bytes": 1563
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-049-软件规模与调整因素.md",
+      "sha256": "8542f074243c6f45fc3dae7c8e5a263d2a499d07125f8e1b79a15e1c8d69a5a0",
+      "bytes": 1614
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/articles/cost-050-软件基准数据的使用边界.md",
+      "sha256": "08943ea4358980c406581f0e43b82a43e655aeb10ab89b566b10913b6cded317",
+      "bytes": 1563
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/manifest.json",
+      "sha256": "1ab2b2f2df697f370093c4d1c2da83712fed6596aad29477779dc1eb8b79bc9c",
+      "bytes": 43441
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/README.md",
+      "sha256": "a74ecc3bae893905ac06f0c48b9c1f0cdd99c797c845372c3b0ffe729f57daa9",
+      "bytes": 2494
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/reports/关系完整性报告.md",
+      "sha256": "0e60a8bf539f97cb8bb81076404fc5e7b538d309a1f876c37701d0121d5e10b5",
+      "bytes": 1233
+    },
+    {
+      "path": "06-知识库问答资料/造价知识文章库/reports/内容质量报告.md",
+      "sha256": "69eeb1cd52ce29e954d50a63fe89c29188db4c5cfbca0a1080fafa1b54e0884b",
+      "bytes": 4822
+    },
+    {
+      "path": "08-测试与演示/测试-V3.1-260802/【演示命令】260728-造价智算三层知识库实例问题.md",
+      "sha256": "209c555b14290a81b8ab7af1dadd58db7c964cbd6e5644b64fa04f1be20e8296",
+      "bytes": 23935
+    },
+    {
+      "path": "08-测试与演示/测试-V3.1-260802/【答案-对应版本v3.1】【输出】-控制价报告-.docx",
+      "sha256": "b3e107087080adf8ab058fd5c1b185a99ab9a465ea2800b9ca0f901c19ec9dd5",
+      "bytes": 220869
+    },
+    {
+      "path": "08-测试与演示/测试-V3.1-260802/【答案-对应版本v3.1】【输出】-控制价计算表-20260802-0123-隐藏空行.xlsx",
+      "sha256": "671351f7a542c9ea4bc604621fee95dd0535f0614fe3c7b458b62681c4717b91",
+      "bytes": 99628
+    },
+    {
+      "path": "08-测试与演示/测试-V3.1-260802/【结算审核演示】结算审核演示样例-v0.1.xlsx",
+      "sha256": "e6da80ba755d8c924a2548ac1e74b2db3ee32c9b296e3bb25724a8c9f410dfae",
+      "bytes": 413462
+    },
+    {
+      "path": "08-测试与演示/测试-V3.1-260802/【项目例子】【测试输入-短】可行性研究勘察测量控制价计算 -v3.1【演示】.xlsx",
+      "sha256": "cc0b9270a46ec246d89384485ed11f470bff0560c922e25a7f43807e71f0f7ae",
+      "bytes": 73232
+    },
+    {
+      "path": "08-测试与演示/测试-V3.1-260802/【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v3.1【演示】 .xlsx",
+      "sha256": "58736e3bce4670fda6d5408acc189d51ed2902e0ffddeb531750cf8da8a0a667",
+      "bytes": 127612
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "e38fe48828989318dc1a224de53527f4addb63c499e5b1cd56ba7e0328f75fd7",
+      "bytes": 45643
+    },
+    {
+      "path": "backend/app/__init__.py",
+      "sha256": "57b1a8e3a507c857e2fa6cd483816b99c9aa2c06df47bba5df3bebccbb1b9016",
+      "bytes": 37
+    },
+    {
+      "path": "backend/app/adjustment_rules.py",
+      "sha256": "8ed1ca396903f34d40752c0ab1c10c8e9bcdd65b9c826947612d2f7e15e2172c",
+      "bytes": 12301
+    },
+    {
+      "path": "backend/app/ai_matching/__init__.py",
+      "sha256": "0adc6ae24ff0a5009569329ce632ed1fefa19014df5ca1e8f3c1d205dbf1392f",
+      "bytes": 680
+    },
+    {
+      "path": "backend/app/ai_matching/client.py",
+      "sha256": "aec1075d1a79dff590f7395c021e0eefd0d39f1cd30157ba4ebc4faaab6a2f46",
+      "bytes": 10427
+    },
+    {
+      "path": "backend/app/ai_matching/contracts.py",
+      "sha256": "10214cb728a4b1e230f4f236358f275a38a9bef7226669ecc6257a0e77ae680f",
+      "bytes": 2895
+    },
+    {
+      "path": "backend/app/ai_matching/orchestrator.py",
+      "sha256": "e51e9962d3ca8afa179f25ac7f362bbc2b9da4fc8b6a17c97df656757f202615",
+      "bytes": 87883
+    },
+    {
+      "path": "backend/app/ai_matching/store.py",
+      "sha256": "bbcc74147e2f612825d5782ac5795ef2727e3f1df600e5e3a55b1de4e7a9e01f",
+      "bytes": 3375
+    },
+    {
+      "path": "backend/app/ai_matching/workbook_reader.py",
+      "sha256": "b5f636cdca670bd99649236fe0f1bdc81a281ffadfefdc71bb1e701046809c04",
+      "bytes": 11590
+    },
+    {
+      "path": "backend/app/assets/admin_divisions/approved-admin-v1.json",
+      "sha256": "1ac84e544c78bba63681e7918d605e81b5526de58ad85284497756680a991de9",
+      "bytes": 9392
+    },
+    {
+      "path": "backend/app/batch_operation.py",
+      "sha256": "3f6d04d061b58c0acb0dc904c2c712e90cef7ca19ac8be766c9b8ca318a35cf5",
+      "bytes": 1793
+    },
+    {
+      "path": "backend/app/business_tasks.py",
+      "sha256": "5621bae6cc61004bfb590f90db16eb582e9c232ebe8dc8b906a7de6b2b3b71c1",
+      "bytes": 23438
+    },
+    {
+      "path": "backend/app/digital_employee_evidence.py",
+      "sha256": "d925260f5c648792899207c4323b8d00189aad33344a861e39706269d4433175",
+      "bytes": 16317
+    },
+    {
+      "path": "backend/app/excel_recalc.py",
+      "sha256": "374340fe25e7ed3ae706212d11a1cb322a1f23487441ffbf4a9695117696427a",
+      "bytes": 1063
+    },
+    {
+      "path": "backend/app/experience_governance.py",
+      "sha256": "ccd1adab1bc4800bf25df219ecd1883d18317dc514ad4042fb08129a00e73153",
+      "bytes": 13078
+    },
+    {
+      "path": "backend/app/experience_warning.py",
+      "sha256": "fc557565966c1df623d83adcc1cf0fc6737fb5ec35b4bc780294c76a73a22acb",
+      "bytes": 63184
+    },
+    {
+      "path": "backend/app/external_task_dispatch.py",
+      "sha256": "937d86ea5bf49aa76c053d0e4a30c4a3a4833947f3a1cf026656ef0ba4f28f97",
+      "bytes": 121161
+    },
+    {
+      "path": "backend/app/feishu_app_bot.py",
+      "sha256": "d902d254d2af92011efff91e2cb9e86451e4205806b4bd36bff1dce1b7211de2",
+      "bytes": 133980
+    },
+    {
+      "path": "backend/app/feishu_connection.py",
+      "sha256": "f24f13c65444f82710984bc352fe41ce4453bdd1ee192603cfbd96ac83f04849",
+      "bytes": 6447
+    },
+    {
+      "path": "backend/app/feishu_reliability.py",
+      "sha256": "4024cddf689087c69a769faae74d700cc10157e186cd86845ba68460b8951ff2",
+      "bytes": 10182
+    },
+    {
+      "path": "backend/app/feishu_robot_settings.py",
+      "sha256": "ed7029ddff2858c913b87f1543783013e99a1384dbb23fc353754347f7b9c205",
+      "bytes": 2289
+    },
+    {
+      "path": "backend/app/feishu_webhook.py",
+      "sha256": "5cf5997c7bf38cca64d48d41a115d3e4190f4810b15e7000f4c2994931052f28",
+      "bytes": 20637
+    },
+    {
+      "path": "backend/app/fill_assist.py",
+      "sha256": "e0a2cf5fca2bfff4670052176ea9f62de0d90ae1d418ef948aa5fee6494ca622",
+      "bytes": 11739
+    },
+    {
+      "path": "backend/app/fill_engine.py",
+      "sha256": "b933d882c693e2145f9a9f8aa3ec15c217ba72fc414a6c7ed74c2465931dbe87",
+      "bytes": 42024
+    },
+    {
+      "path": "backend/app/formula_resolver.py",
+      "sha256": "0da0a5a9e3bc9af52e677071bbc2667a8f469ba6aa6822f41a1cb13386e2570e",
+      "bytes": 7565
+    },
+    {
+      "path": "backend/app/knowledge_articles.py",
+      "sha256": "1783d6acbc48dceed054ab6b104c0a1d011fda9943f3a2cafe6ec8a3e5a6bb45",
+      "bytes": 10512
+    },
+    {
+      "path": "backend/app/knowledge_base.py",
+      "sha256": "12608af9e2892aa495e34d8eee4035424420dbf4bf1b0a1c0a6385dd746076c3",
+      "bytes": 5605
+    },
+    {
+      "path": "backend/app/knowledge_demo_answers.py",
+      "sha256": "a336b418172f29c697bc29dd7b881c3f9b4e6af2c1f5ff70835eb7cbc9025165",
+      "bytes": 11677
+    },
+    {
+      "path": "backend/app/knowledge_libraries.py",
+      "sha256": "cd187ab139ab7a189e6678a328c3bb5e2b88d8eb4c722fe55875b4f29f9ef840",
+      "bytes": 12211
+    },
+    {
+      "path": "backend/app/knowledge_memory.py",
+      "sha256": "74faa8e5fb9b18f25852b6dba65d584892da5a9329fe8745f97ec625580af9d2",
+      "bytes": 46629
+    },
+    {
+      "path": "backend/app/knowledge_qa.py",
+      "sha256": "7cbd39eba3bfa9f7cbe7fb1b00e379b2a23de9f3be4156118be83cc411701734",
+      "bytes": 97059
+    },
+    {
+      "path": "backend/app/llm.py",
+      "sha256": "16e2ec9f4c449c44008f567e17fdc5af506c343eca774b6f8d22a11bb4905030",
+      "bytes": 7381
+    },
+    {
+      "path": "backend/app/llm_usage.py",
+      "sha256": "c020c5f9d03f58fee5967eb0fa21c36c69f5c73729a4a932789326121e502d3e",
+      "bytes": 11925
+    },
+    {
+      "path": "backend/app/main.py",
+      "sha256": "c964440f915725400a9eb9caf96bcd14f814f5a907f8cd025d5a9cade5c27ed0",
+      "bytes": 334548
+    },
+    {
+      "path": "backend/app/normalization.py",
+      "sha256": "d5b11f168816aa24ce82caaa2f115bb0543b0825ca3aa0cd785262b543cc7fe9",
+      "bytes": 1403
+    },
+    {
+      "path": "backend/app/paths.py",
+      "sha256": "c5a8c75c53635b304721954ef29919e00a7f38602dfec4daf25ab873672a028c",
+      "bytes": 2788
+    },
+    {
+      "path": "backend/app/professional_skills.py",
+      "sha256": "6d0849453eb8234cbf26a782a931e91e12bd88a844c3270cbac06233f2f63c9b",
+      "bytes": 39730
+    },
+    {
+      "path": "backend/app/project_dashboard.py",
+      "sha256": "6f80cb202c84c7b0348d5db3844bd28b53c72576892b5602781d56ab1a26aac8",
+      "bytes": 3552
+    },
+    {
+      "path": "backend/app/project_ledger.py",
+      "sha256": "1b10ec00a237fce3a2f6696d0e31e34e0a7421ce8ec6c4f7cda33903ff6ba139",
+      "bytes": 55195
+    },
+    {
+      "path": "backend/app/project_spatial.py",
+      "sha256": "109ade973fcaf44a0602e305df36172b50536c33ee694c3b9a5ca7f14236286f",
+      "bytes": 86118
+    },
+    {
+      "path": "backend/app/project_spatial_ai.py",
+      "sha256": "6327afe760a0270299615fb8fdab515b6f0d6450515b567b322cf9084c0e0bea",
+      "bytes": 7310
+    },
+    {
+      "path": "backend/app/report.py",
+      "sha256": "0d5111a1b37164fea473e4055b989c50e3db7baf740b5ad4f46dfaef72b06af5",
+      "bytes": 15179
+    },
+    {
+      "path": "backend/app/risk_items.py",
+      "sha256": "b1de37ab995a9cf8cab8a2bcf06c3ed3c0f4497cdbe68b5655d68cd0b6ef435d",
+      "bytes": 6245
+    },
+    {
+      "path": "backend/app/rules/manual_review_rules.csv",
+      "sha256": "f78439969623362fea85ee4b6fb2a2f87b80ee1702ce8817cefb9efcdcbd75e7",
+      "bytes": 362
+    },
+    {
+      "path": "backend/app/rules/physical_factor_overrides.csv",
+      "sha256": "81d39a526ff12783f046cabdb417e9671d568ec2ce4203394be3c664854e62c0",
+      "bytes": 104
+    },
+    {
+      "path": "backend/app/rules/physical_factor_overrides.xlsx",
+      "sha256": "30760a05fc4ec56f8ef3f6a9767fafd8b4ec8ed89a5e3250fa27de0a6930f04e",
+      "bytes": 4932
+    },
+    {
+      "path": "backend/app/rules/physical_factor_rules.csv",
+      "sha256": "81d39a526ff12783f046cabdb417e9671d568ec2ce4203394be3c664854e62c0",
+      "bytes": 104
+    },
+    {
+      "path": "backend/app/rules/physical_factor_rules.xlsx",
+      "sha256": "30760a05fc4ec56f8ef3f6a9767fafd8b4ec8ed89a5e3250fa27de0a6930f04e",
+      "bytes": 4932
+    },
+    {
+      "path": "backend/app/rules/technical_fee_rules.csv",
+      "sha256": "bd5652d8c0f1ab73fd118174b348db6072b32b9567e84a622b1fdc1a06a231b9",
+      "bytes": 5138
+    },
+    {
+      "path": "backend/app/rules/technical_fee_rules.xlsx",
+      "sha256": "fb1df14f000617e29976d41d930baa58b56c463454cd7f7692bd3051343f1a89",
+      "bytes": 7196
+    },
+    {
+      "path": "backend/app/rules/【说人话版】第一层-标准规则命中-技术工作费调整系数.xlsx - 快捷方式.lnk",
+      "sha256": "bd94e0ef9cc4255c71a92ee151812a1aebe9ebf69e83d2dc44040daf8a2170fe",
+      "bytes": 2274
+    },
+    {
+      "path": "backend/app/schemas.py",
+      "sha256": "3d624cc2351bd3fed67d57be960c71e14f11411f7781e028c047b6b0454ee9f2",
+      "bytes": 2788
+    },
+    {
+      "path": "backend/app/sentinel_events.py",
+      "sha256": "7d61fe658679b0e2ed450cdcbd48ac4ce57b0bb84372fa2e4542df11b39dd901",
+      "bytes": 1719
+    },
+    {
+      "path": "backend/app/settlement_audit.py",
+      "sha256": "27ef34563ec877d66360e3f8eb29c9959c4fb322a68e495e2eafe64d234f97a9",
+      "bytes": 59364
+    },
+    {
+      "path": "backend/app/settlement_audit_api.py",
+      "sha256": "067b72fe63066a3f0897a5aeee18b97b51ceb1b0246a0483032202810c8e2782",
+      "bytes": 6548
+    },
+    {
+      "path": "backend/app/task_monitoring.py",
+      "sha256": "b3acdf49bb5d13d8e7f4387ad77e0216628a42a3ca699a7e86d2f32bf0d65fc8",
+      "bytes": 9981
+    },
+    {
+      "path": "backend/app/trusted_experience.py",
+      "sha256": "d170db60de9f0f17ff4878ff8913424357b542e720136a0ba1993108d737cb61",
+      "bytes": 26095
+    },
+    {
+      "path": "backend/app/weknora_qa.py",
+      "sha256": "089aaeceb77769d77458194d78a713ab373622a8f966208683cec0893384588e",
+      "bytes": 21915
+    },
+    {
+      "path": "backend/app/workload_capture.py",
+      "sha256": "735f12369894df9752b3edb9527e99a347af10c1d6e84cfb40cc7ffef9b1c976",
+      "bytes": 39793
+    },
+    {
+      "path": "backend/app/workload_term_rules.py",
+      "sha256": "e485408a610e75e2cf29891eb94627276f7aaf5b5c4d7c1be052f3cb87c44e37",
+      "bytes": 9720
+    },
+    {
+      "path": "backend/requirements-runtime.txt",
+      "sha256": "ede70e3040200025526bde04e7677ca463c1e36f085f0f93a7897e42d4b6fd01",
+      "bytes": 135
+    },
+    {
+      "path": "backend/requirements.txt",
+      "sha256": "640be70045c87a21b37ff97c117e569040ce95f5261f500c6affd4e8b29137df",
+      "bytes": 149
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "sha256": "83654e055c40b20b661a82074825a29f797271a3ea4f745999adab31991e98fd",
+      "bytes": 417
+    },
+    {
+      "path": "backend/tests/fixtures/knowledge_qa_classic_baseline.json",
+      "sha256": "3dfa4fdd1cefc5a6b441d0c76f17022a105d0db5d8e4ac0358b528d8e7f225c9",
+      "bytes": 26481
+    },
+    {
+      "path": "backend/tests/fixtures/knowledge_qa_hybrid_fault_injection.py",
+      "sha256": "e4d35d11926a28f5c4cf358e79f237f4d06a3eaa2f3d0115ec66c43716aea21e",
+      "bytes": 4893
+    },
+    {
+      "path": "backend/tests/fixtures/knowledge_qa_hybrid_fault_injection_report.json",
+      "sha256": "2472dbd84cfb525caf3fc39870a4ef6029ab78a6c10ba4a7745200e7e52a053e",
+      "bytes": 568
+    },
+    {
+      "path": "backend/tests/fixtures/knowledge_qa_hybrid_report.json",
+      "sha256": "4c04cc63d7526c3b90c05c752f781b8a4e7d0f442f938e001e8e0f23ca5083bd",
+      "bytes": 42264
+    },
+    {
+      "path": "backend/tests/fixtures/knowledge_qa_rag_evaluation.json",
+      "sha256": "5ede2e593c61116ce1462fbbe8ba6433ab961620c5635856d5107c4d2ac2aac2",
+      "bytes": 4239
+    },
+    {
+      "path": "backend/tests/fixtures/knowledge_qa_rag_evaluation.py",
+      "sha256": "994bc20973949d9a2b7590f1e7a977a269d7e90235b17440320770203b56fcd9",
+      "bytes": 21919
+    },
+    {
+      "path": "backend/tests/fixtures/knowledge_qa_regression_cases.json",
+      "sha256": "e1b16745a7d14d4d4fdff0890a58698e3883af987103e86b1af04787d962dfaa",
+      "bytes": 6696
+    },
+    {
+      "path": "backend/tests/fixtures/project_spatial_recognition_cases.json",
+      "sha256": "1d8e6c3b2910fdb505ae1c200c4cc08929222af2835703cd696b784cc89ff921",
+      "bytes": 3686
+    },
+    {
+      "path": "backend/tests/runtime_skill_test_utils.py",
+      "sha256": "e5926bcc1c9527b7e9137f2913080bb7ba25e4f2f5be40277be15d8f2c71fc99",
+      "bytes": 4225
+    },
+    {
+      "path": "backend/tests/test_ai_matching.py",
+      "sha256": "ce8495d518607c7c2308cc657fffda23774633ca6a151263fa6ba59df5b6ebb9",
+      "bytes": 19351
+    },
+    {
+      "path": "backend/tests/test_ai_matching_repair.py",
+      "sha256": "ec334ada94ab2e6ce42b52712046b00e462c2fa9419db17d88be26457326bbd9",
+      "bytes": 10314
+    },
+    {
+      "path": "backend/tests/test_api.py",
+      "sha256": "e5c3268ba6cfa7d8b7554befb34d5263d915d28408987385bc6f311a025046c0",
+      "bytes": 139693
+    },
+    {
+      "path": "backend/tests/test_archive_code.py",
+      "sha256": "56136bc06504797664b1944cf32cceff158ce8a6e801185c6a53b2f33915e33f",
+      "bytes": 3403
+    },
+    {
+      "path": "backend/tests/test_batch_reliability.py",
+      "sha256": "6044637fdef247518b8a19312a8c49761eff34b5df5cba9a44946e335ac4067a",
+      "bytes": 8997
+    },
+    {
+      "path": "backend/tests/test_build_cloud_release.py",
+      "sha256": "d6574a21f465c78bc8e325822ade06f8b3d6ff47608e31a3207d71378489cbf0",
+      "bytes": 6134
+    },
+    {
+      "path": "backend/tests/test_build_green_release.py",
+      "sha256": "20017aaa5a9eb08d2f0c7964759338a0da4ebfd98400241c1a996b6b712b5261",
+      "bytes": 4942
+    },
+    {
+      "path": "backend/tests/test_business_tasks.py",
+      "sha256": "6a96591c044a0fde93b82da4a85aaf8a6f0d7abf6a3d71142b808bb3a920fbef",
+      "bytes": 12734
+    },
+    {
+      "path": "backend/tests/test_check_cloud_release.py",
+      "sha256": "89344ec8f58427993cdc83b0d03bd6cf0c18789f17aac21997994bc03b655832",
+      "bytes": 2869
+    },
+    {
+      "path": "backend/tests/test_deploy_cloud_release.py",
+      "sha256": "9c56e3b1d26183bf5c0633cad8e7168a1828171f4dc900e6645c6658221a3267",
+      "bytes": 1718
+    },
+    {
+      "path": "backend/tests/test_digital_employee_evidence.py",
+      "sha256": "b107b18129106bc9a7d9bae97726ec50876391b482938d85cc9510f80cb3c101",
+      "bytes": 9029
+    },
+    {
+      "path": "backend/tests/test_experience_warning.py",
+      "sha256": "c12a259871e5ed0931e777642e63ad1f06a868ceaa9f25d148698e0229e940f6",
+      "bytes": 31377
+    },
+    {
+      "path": "backend/tests/test_external_task_dispatch.py",
+      "sha256": "26c3be4e8d84113daade14f4628521c5a08ae7c1c657bf09404d2873d8f491c5",
+      "bytes": 58549
+    },
+    {
+      "path": "backend/tests/test_feishu_app_bot.py",
+      "sha256": "f22758200ef620cd904b6d2f554be070f20e61b5e2c464f60e10400c144b284e",
+      "bytes": 83482
+    },
+    {
+      "path": "backend/tests/test_feishu_bot_runner.py",
+      "sha256": "77512a992832431c1007817062e8a0946523f425111a9073aba88d70164ad324",
+      "bytes": 3053
+    },
+    {
+      "path": "backend/tests/test_feishu_bot_supervisor.py",
+      "sha256": "623ac82c1e3eb4553878096906cc59c08f3f5f61bc5572e8fda41c93b4fab4f5",
+      "bytes": 2544
+    },
+    {
+      "path": "backend/tests/test_feishu_deployment_check.py",
+      "sha256": "68d7cde091edd720ab03987b9a52842594d8320d0ce850d4b062e5f6fe971c63",
+      "bytes": 4198
+    },
+    {
+      "path": "backend/tests/test_feishu_reliability.py",
+      "sha256": "2e833b05260d5f8557707e04d347ab186f61ebbe783bf703ae284c05db9ded61",
+      "bytes": 17515
+    },
+    {
+      "path": "backend/tests/test_feishu_robot_settings.py",
+      "sha256": "1bf6f82e0a20572a715e1838d1e509a5c6d47ed674d2e2fbae6c82dbd37b164f",
+      "bytes": 1832
+    },
+    {
+      "path": "backend/tests/test_feishu_webhook.py",
+      "sha256": "9b04d25c20cf35206c0ca7f248c92a7c725d20d1dfd96af4915d858c02ddd76a",
+      "bytes": 11883
+    },
+    {
+      "path": "backend/tests/test_governance_fill_assist.py",
+      "sha256": "1d564fb0127100689920a868420f26a3b6dcaa25acf3d2550ac6b7b6b57ae4ff",
+      "bytes": 20184
+    },
+    {
+      "path": "backend/tests/test_knowledge_answer_structure.py",
+      "sha256": "edc4d03243f767c9adf544896a4a86be29bd45503056066f89059c355ba268eb",
+      "bytes": 9131
+    },
+    {
+      "path": "backend/tests/test_knowledge_articles.py",
+      "sha256": "84e4aa521116ea21271a12d1764569d57b521af31020407fdd51a6c6381a6207",
+      "bytes": 5121
+    },
+    {
+      "path": "backend/tests/test_knowledge_demo_answers.py",
+      "sha256": "599a57bd56591b20ca4d2b5a877160b278ca6c96a928a90d2679d8da0a737659",
+      "bytes": 3802
+    },
+    {
+      "path": "backend/tests/test_knowledge_hybrid.py",
+      "sha256": "2e8f4154e3d386ae3d53d766f2d4e82694f06ea2e5740c293087e5571e2df091",
+      "bytes": 4242
+    },
+    {
+      "path": "backend/tests/test_knowledge_hybrid_api.py",
+      "sha256": "2cbeaaa8be9da8c813be641cf9159bdefe5b6acd9b870ccc6326f21473fc4ead",
+      "bytes": 3683
+    },
+    {
+      "path": "backend/tests/test_knowledge_libraries.py",
+      "sha256": "321cf84bf471fa24829cbeff2e4c3a4a7f42fab233d4a6f0258d3f929ba4b05a",
+      "bytes": 21525
+    },
+    {
+      "path": "backend/tests/test_knowledge_memory.py",
+      "sha256": "62fb228b9d09ad248b1f854ef6242204495ba5de99d122bb876e41aa36dec03a",
+      "bytes": 31756
+    },
+    {
+      "path": "backend/tests/test_knowledge_rag.py",
+      "sha256": "82f0a1e3308405f7a002dc3c2605ebb1a7086e3980ff459eab113b669849078a",
+      "bytes": 1887
+    },
+    {
+      "path": "backend/tests/test_llm.py",
+      "sha256": "ce6afed5b8fcda961a5c32ccd2ba43107cb07536bdadd386be459ef47a16c2e5",
+      "bytes": 1773
+    },
+    {
+      "path": "backend/tests/test_llm_usage.py",
+      "sha256": "6ce0b0168cccb756f4bf56a060c4f2db95b054b8e5e92c02924c48e7bbba5ea4",
+      "bytes": 5367
+    },
+    {
+      "path": "backend/tests/test_matching.py",
+      "sha256": "d259d5c5133605f1e952df7f42cf607986f63d1e8b51acac0ed922c40b619eb4",
+      "bytes": 64289
+    },
+    {
+      "path": "backend/tests/test_platform_compat.py",
+      "sha256": "e79455df10a8ba7d266ce79a84ae462e782bdb9f78b5496e146534a70bed2017",
+      "bytes": 900
+    },
+    {
+      "path": "backend/tests/test_professional_skills.py",
+      "sha256": "8d48b9af1046e7895f99358073a62e4cf6b2e5523307ff1c29db431ea2d95b2b",
+      "bytes": 30141
+    },
+    {
+      "path": "backend/tests/test_project_dashboard.py",
+      "sha256": "959d3c2035ae52901ba20f0fd32d6f2154e387fd2e956c0865f4df68f142da82",
+      "bytes": 15573
+    },
+    {
+      "path": "backend/tests/test_project_spatial.py",
+      "sha256": "ac9275e34febaf1e446d7f5d5d4fd38b166c004a99fd87be45b2f4e1f6ad545a",
+      "bytes": 15341
+    },
+    {
+      "path": "backend/tests/test_settlement_audit.py",
+      "sha256": "654274c68026164375eae645c499ef747c0cc65a97a5debcbb95c03f579820f2",
+      "bytes": 11499
+    },
+    {
+      "path": "backend/tests/test_task_monitoring.py",
+      "sha256": "6bbbe3c8e5b7ba4a5ec9a47aa62e4ed0bd2df056ac0a9f37d1d51b3f2d3aec7d",
+      "bytes": 6979
+    },
+    {
+      "path": "backend/tests/test_trusted_experience.py",
+      "sha256": "be60a5b05d5ed679fd4a2c989197b46a44a73ccce60967a613cb4afaa03fdea4",
+      "bytes": 15619
+    },
+    {
+      "path": "backend/tests/test_weknora_qa.py",
+      "sha256": "e8d5209b0faf3e102346b843c87f9812e8ea4203904527ca55d6ebdfe0437a47",
+      "bytes": 3694
+    },
+    {
+      "path": "backend/tests/test_workload_capture.py",
+      "sha256": "21339443a3b9791853d1ac5bfedacadba988344b872a0793b8704fa6414e6893",
+      "bytes": 33832
+    },
+    {
+      "path": "backend/tests/test_workspace_layout_settings.py",
+      "sha256": "68dc72385a006276d548a26456dc7e5b0f8e65a7e6981b942c1445cddfdfb208",
+      "bytes": 1479
+    },
+    {
+      "path": "business-skills/general-service-cost-estimation/manifest.json",
+      "sha256": "a7ba58510f4a4e9e05b30f51a1708fd7436a5a7ec01c69e46f861bd702531584",
+      "bytes": 3293
+    },
+    {
+      "path": "business-skills/general-service-cost-estimation/SKILL.md",
+      "sha256": "3d2f31a813619d3c559a9e01b415582623cf19aeba8694d1d36df6e48da37e06",
+      "bytes": 801
+    },
+    {
+      "path": "business-skills/more-cost-professions/manifest.json",
+      "sha256": "8d6ba6885109b8088f11931f4f6645c35d07f8b0b93f4feea758ca674ec75be3",
+      "bytes": 1007
+    },
+    {
+      "path": "business-skills/more-cost-professions/SKILL.md",
+      "sha256": "c84aa739ea4bfc538079b8dac2137f6a17f3570c80001366f39b3ee8805b68a1",
+      "bytes": 711
+    },
+    {
+      "path": "business-skills/survey-measurement-limit-price/evals/V3.1正式成对验收事实.json",
+      "sha256": "f13f68b57b2aeb774bb70fa80b5788055f2f178544c0c8a362dc768346c3f462",
+      "bytes": 1076
+    },
+    {
+      "path": "business-skills/survey-measurement-limit-price/evals/回归验收说明.md",
+      "sha256": "b3db36ccee75e5acc0fecd10f4f93e0d2dd11911d6bbde6adbe0d245d70c6c31",
+      "bytes": 570
+    },
+    {
+      "path": "business-skills/survey-measurement-limit-price/manifest.json",
+      "sha256": "dc5e17a9c075b8667517778ff33a8689f16722a032a18f20ba137d5ce4f0e9af",
+      "bytes": 7233
+    },
+    {
+      "path": "business-skills/survey-measurement-limit-price/references/现有资产引用说明.md",
+      "sha256": "29220ae28be446f9a8187d5f9389f909889d722ed7aca1f5bd992b3a76f5b19b",
+      "bytes": 229
+    },
+    {
+      "path": "business-skills/survey-measurement-limit-price/SKILL.md",
+      "sha256": "625049536dad1c26246b7acaf8599b1b18a6e5a54205f93635f0f31bf910da96",
+      "bytes": 1452
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "2f3eb68815979d3168db7ca3f7a3009330ce766c4a226cdf204987af6452e607",
+      "bytes": 2103
+    },
+    {
+      "path": "config/knowledge-qa-libraries.json",
+      "sha256": "4e11b9aa750f1472a6a573279cac1c6dd6a6bd05b02b4b2c06e98e9c8272ece8",
+      "bytes": 1656
+    },
+    {
+      "path": "config/knowledge-weknora-scope.json",
+      "sha256": "cd2cb7416cdd580a2ebb34176e5cd094fa9f2b2c7ffe0c373dc28f1f633f9250",
+      "bytes": 4760
+    },
+    {
+      "path": "config/project-default-settings.json",
+      "sha256": "7b4a265765ba542fadafded922618f729598c223146e2206864c221bf087522d",
+      "bytes": 17026
+    },
+    {
+      "path": "README.md",
+      "sha256": "84052ba101f688fbf3872e7c83748b4c19583b384576588bd1b19cf4147a468d",
+      "bytes": 90083
+    },
+    {
+      "path": "tools/verify_v31_ai_mode.py",
+      "sha256": "0427a55e825fee2befa59d62c2815f4f1a6b84f5a221d639070066a7534ea4bf",
+      "bytes": 6465
+    },
+    {
+      "path": "tools/verify_v31_task_acceptance.py",
+      "sha256": "b2fe483a3f69d5265dd06460c051b91ea12a55019c1814aa15c17bbc6adaac1e",
+      "bytes": 18458
+    }
+  ]
+}

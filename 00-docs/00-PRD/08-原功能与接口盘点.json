@@ -1,0 +1,4706 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "",
+      "handler": "list_knowledge_articles",
+      "source": "backend/app/knowledge_articles.py",
+      "line": 189,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/graph",
+      "handler": "get_knowledge_article_graph",
+      "source": "backend/app/knowledge_articles.py",
+      "line": 205,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/{article_id}",
+      "handler": "get_knowledge_article",
+      "source": "backend/app/knowledge_articles.py",
+      "line": 230,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "handler": "health",
+      "source": "backend/app/main.py",
+      "line": 317,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/dashboard",
+      "handler": "get_projects_dashboard",
+      "source": "backend/app/main.py",
+      "line": 352,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects",
+      "handler": "list_projects",
+      "source": "backend/app/main.py",
+      "line": 400,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "POST",
+      "path": "/api/projects/backfill",
+      "handler": "backfill_projects",
+      "source": "backend/app/main.py",
+      "line": 438,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/map",
+      "handler": "get_project_spatial_map",
+      "source": "backend/app/main.py",
+      "line": 454,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/unlocated",
+      "handler": "get_unlocated_projects",
+      "source": "backend/app/main.py",
+      "line": 482,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/spatial-candidates",
+      "handler": "get_project_spatial_candidates",
+      "source": "backend/app/main.py",
+      "line": 506,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/{project_id}/spatial",
+      "handler": "get_project_spatial",
+      "source": "backend/app/main.py",
+      "line": 517,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/projects/{project_id}/spatial/analyze",
+      "handler": "analyze_project_spatial_route",
+      "source": "backend/app/main.py",
+      "line": 527,
+      "astra": "待接入"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/projects/{project_id}/spatial",
+      "handler": "update_project_spatial",
+      "source": "backend/app/main.py",
+      "line": 548,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/{project_id}",
+      "handler": "get_project",
+      "source": "backend/app/main.py",
+      "line": 580,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/{project_id}/tasks",
+      "handler": "get_project_tasks",
+      "source": "backend/app/main.py",
+      "line": 588,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tasks/{task_id}",
+      "handler": "get_business_task",
+      "source": "backend/app/main.py",
+      "line": 597,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/task-monitor/current",
+      "handler": "get_current_monitored_task",
+      "source": "backend/app/main.py",
+      "line": 609,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tasks/{task_id}/monitor",
+      "handler": "get_monitored_task",
+      "source": "backend/app/main.py",
+      "line": 618,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tasks/{task_id}/timeline",
+      "handler": "get_business_task_timeline",
+      "source": "backend/app/main.py",
+      "line": 628,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/{project_id}/runs",
+      "handler": "get_project_runs",
+      "source": "backend/app/main.py",
+      "line": 642,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/{project_id}/artifacts",
+      "handler": "get_project_artifacts",
+      "source": "backend/app/main.py",
+      "line": 650,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/{project_id}/runs/{run_id}/result",
+      "handler": "get_project_run_result",
+      "source": "backend/app/main.py",
+      "line": 658,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/{project_id}/artifacts/{artifact_id}/download",
+      "handler": "download_project_artifact",
+      "source": "backend/app/main.py",
+      "line": 699,
+      "astra": "v0.5.0 已接通独立台账；成果恢复与回填使用 Astra 适配器，见 17-项目看板迁移与验收.md"
+    },
+    {
+      "method": "POST",
+      "path": "/api/inspect",
+      "handler": "inspect_excel",
+      "source": "backend/app/main.py",
+      "line": 710,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/project-default-settings",
+      "handler": "get_project_default_settings",
+      "source": "backend/app/main.py",
+      "line": 763,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/professional-skills",
+      "handler": "list_professional_skills",
+      "source": "backend/app/main.py",
+      "line": 768,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/professional-skills/recommend",
+      "handler": "recommend_professional_skill",
+      "source": "backend/app/main.py",
+      "line": 776,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/professional-skills/open-format",
+      "handler": "get_professional_skill_open_format",
+      "source": "backend/app/main.py",
+      "line": 785,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/professional-skills/management",
+      "handler": "get_professional_skill_management",
+      "source": "backend/app/main.py",
+      "line": 790,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/professional-skills/management/plan",
+      "handler": "plan_professional_skill_lifecycle",
+      "source": "backend/app/main.py",
+      "line": 798,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/professional-skills/{skill_id}/onboarding-evidence",
+      "handler": "get_professional_skill_onboarding_evidence",
+      "source": "backend/app/main.py",
+      "line": 810,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/professional-skills/{skill_id}",
+      "handler": "get_professional_skill",
+      "source": "backend/app/main.py",
+      "line": 866,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/input/field-preferences",
+      "handler": "get_input_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 874,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/input/field-preferences",
+      "handler": "save_input_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 879,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-preferences",
+      "handler": "get_ui_preferences",
+      "source": "backend/app/main.py",
+      "line": 890,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ui-preferences",
+      "handler": "save_ui_preferences",
+      "source": "backend/app/main.py",
+      "line": 895,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/preview-column-preferences",
+      "handler": "get_preview_column_preferences",
+      "source": "backend/app/main.py",
+      "line": 907,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/preview-column-preferences",
+      "handler": "save_preview_column_preferences",
+      "source": "backend/app/main.py",
+      "line": 912,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/collaboration/feishu-webhook/status",
+      "handler": "get_feishu_webhook_status",
+      "source": "backend/app/main.py",
+      "line": 923,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/collaboration/feishu-webhook/settings",
+      "handler": "update_feishu_webhook_settings",
+      "source": "backend/app/main.py",
+      "line": 928,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/collaboration/feishu-webhook/test",
+      "handler": "test_feishu_webhook",
+      "source": "backend/app/main.py",
+      "line": 936,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/collaboration/feishu-webhook/history",
+      "handler": "get_feishu_webhook_history",
+      "source": "backend/app/main.py",
+      "line": 946,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/collaboration/feishu-app-bot/status",
+      "handler": "get_feishu_app_bot_status",
+      "source": "backend/app/main.py",
+      "line": 951,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/collaboration/feishu-app-bot/tasks",
+      "handler": "get_feishu_app_bot_tasks",
+      "source": "backend/app/main.py",
+      "line": 956,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/collaboration/feishu-app-bot/logs",
+      "handler": "get_feishu_app_bot_logs",
+      "source": "backend/app/main.py",
+      "line": 962,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/collaboration/feishu-app-bot/settings",
+      "handler": "update_feishu_app_bot_settings",
+      "source": "backend/app/main.py",
+      "line": 967,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/collaboration/external-dispatch/options",
+      "handler": "get_external_dispatch_options",
+      "source": "backend/app/main.py",
+      "line": 1002,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/collaboration/external-dispatch/tasks",
+      "handler": "get_external_dispatch_tasks",
+      "source": "backend/app/main.py",
+      "line": 1027,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/collaboration/external-dispatch/tasks",
+      "handler": "create_external_dispatch_task",
+      "source": "backend/app/main.py",
+      "line": 1035,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/collaboration/external-dispatch/web-review",
+      "handler": "create_web_result_review",
+      "source": "backend/app/main.py",
+      "line": 1112,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/collaboration/external-dispatch/tasks/{task_id}/retry",
+      "handler": "retry_external_dispatch_task",
+      "source": "backend/app/main.py",
+      "line": 1203,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/collaboration/feishu-webhook/notify",
+      "handler": "send_feishu_webhook_notification",
+      "source": "backend/app/main.py",
+      "line": 1220,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/process",
+      "handler": "process_excel",
+      "source": "backend/app/main.py",
+      "line": 1231,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/process/{job_id}/batch-match-status",
+      "handler": "batch_match_status",
+      "source": "backend/app/main.py",
+      "line": 1531,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/process/batch-match",
+      "handler": "batch_match_process",
+      "source": "backend/app/main.py",
+      "line": 1548,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/process/{job_id}/ai-matching",
+      "handler": "get_ai_matching_state",
+      "source": "backend/app/main.py",
+      "line": 1680,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/process/{job_id}/ai-matching/analyze",
+      "handler": "analyze_ai_matching",
+      "source": "backend/app/main.py",
+      "line": 1689,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/process/{job_id}/ai-matching/confirm",
+      "handler": "confirm_ai_matching",
+      "source": "backend/app/main.py",
+      "line": 1754,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/process/{job_id}/ai-matching/cancel",
+      "handler": "cancel_ai_matching",
+      "source": "backend/app/main.py",
+      "line": 1786,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/demo/load-sample",
+      "handler": "load_demo_sample",
+      "source": "backend/app/main.py",
+      "line": 1801,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/quality/experience-pool",
+      "handler": "experience_pool_quality",
+      "source": "backend/app/main.py",
+      "line": 1809,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/risk/summary",
+      "handler": "risk_summary",
+      "source": "backend/app/main.py",
+      "line": 1817,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/standard-trace",
+      "handler": "standard_trace",
+      "source": "backend/app/main.py",
+      "line": 1833,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/fill-assist/candidates",
+      "handler": "fill_assist_candidates",
+      "source": "backend/app/main.py",
+      "line": 1848,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/fill-assist/confirm",
+      "handler": "confirm_fill_assist",
+      "source": "backend/app/main.py",
+      "line": 1890,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/experience-warnings/run",
+      "handler": "run_experience_warnings",
+      "source": "backend/app/main.py",
+      "line": 1906,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/preview/refresh",
+      "handler": "refresh_table_preview",
+      "source": "backend/app/main.py",
+      "line": 2009,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/preview/cell",
+      "handler": "update_preview_cell",
+      "source": "backend/app/main.py",
+      "line": 2045,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/preview/recalculate",
+      "handler": "recalculate_preview_workbook",
+      "source": "backend/app/main.py",
+      "line": 2163,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "GET",
+      "path": "/api/experience-warnings/progress/{job_id}",
+      "handler": "get_experience_warning_progress",
+      "source": "backend/app/main.py",
+      "line": 2218,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/experience-pool/inspect",
+      "handler": "inspect_experience_pool_excel",
+      "source": "backend/app/main.py",
+      "line": 2227,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/experience-pool/field-preferences",
+      "handler": "get_experience_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 2253,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/experience-pool/field-preferences",
+      "handler": "save_experience_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 2258,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/experience-warnings/settings",
+      "handler": "get_experience_warning_settings",
+      "source": "backend/app/main.py",
+      "line": 2270,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/experience-warnings/settings",
+      "handler": "save_experience_warning_settings",
+      "source": "backend/app/main.py",
+      "line": 2275,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/experience-pool/import",
+      "handler": "import_experience_pool_endpoint",
+      "source": "backend/app/main.py",
+      "line": 2287,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workload-capture/inspect",
+      "handler": "inspect_workload_capture_excel",
+      "source": "backend/app/main.py",
+      "line": 2324,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workload-capture/inspect-current-target",
+      "handler": "inspect_current_workload_target",
+      "source": "backend/app/main.py",
+      "line": 2363,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workload-capture/field-preferences",
+      "handler": "get_workload_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 2404,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workload-capture/field-preferences",
+      "handler": "save_workload_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 2409,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workload-capture/target-field-preferences",
+      "handler": "get_workload_target_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 2426,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workload-capture/target-field-preferences",
+      "handler": "save_workload_target_field_preferences",
+      "source": "backend/app/main.py",
+      "line": 2431,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workload-capture/run",
+      "handler": "run_workload_capture",
+      "source": "backend/app/main.py",
+      "line": 2448,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workload-capture/apply-to-current",
+      "handler": "apply_workload_capture_to_current",
+      "source": "backend/app/main.py",
+      "line": 2505,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workload-capture/current-download/{job_id}/{kind}",
+      "handler": "download_current_workload_capture",
+      "source": "backend/app/main.py",
+      "line": 2603,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workload-capture/download/{job_id}/{kind}",
+      "handler": "download_workload_capture",
+      "source": "backend/app/main.py",
+      "line": 2621,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/download/{job_id}/{kind}",
+      "handler": "download",
+      "source": "backend/app/main.py",
+      "line": 2638,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/risk-report",
+      "handler": "generate_risk_report",
+      "source": "backend/app/main.py",
+      "line": 2666,
+      "astra": "v0.2 宿主已挂载；仅按当前 UI 与验收覆盖核销"
+    },
+    {
+      "method": "POST",
+      "path": "/api/llm-chat",
+      "handler": "llm_chat",
+      "source": "backend/app/main.py",
+      "line": 2817,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/knowledge/libraries",
+      "handler": "knowledge_libraries",
+      "source": "backend/app/main.py",
+      "line": 3074,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge/search",
+      "handler": "knowledge_search",
+      "source": "backend/app/main.py",
+      "line": 3136,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge/ask",
+      "handler": "knowledge_ask",
+      "source": "backend/app/main.py",
+      "line": 3186,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/candidates",
+      "handler": "create_knowledge_memory_candidate",
+      "source": "backend/app/main.py",
+      "line": 3341,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/knowledge-memory/items",
+      "handler": "list_knowledge_memory_items",
+      "source": "backend/app/main.py",
+      "line": 3379,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/knowledge-memory/items/{item_id}",
+      "handler": "get_knowledge_memory_item",
+      "source": "backend/app/main.py",
+      "line": 3397,
+      "astra": "待接入"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/knowledge-memory/items/{item_id}",
+      "handler": "update_knowledge_memory_item",
+      "source": "backend/app/main.py",
+      "line": 3409,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/items/{item_id}/revise",
+      "handler": "revise_knowledge_memory_item",
+      "source": "backend/app/main.py",
+      "line": 3425,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/items/{item_id}/promote-general",
+      "handler": "promote_knowledge_memory_item_to_general",
+      "source": "backend/app/main.py",
+      "line": 3446,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/items/{item_id}/submit",
+      "handler": "submit_knowledge_memory_item",
+      "source": "backend/app/main.py",
+      "line": 3468,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/items/{item_id}/confirm",
+      "handler": "confirm_knowledge_memory_item",
+      "source": "backend/app/main.py",
+      "line": 3476,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/items/{item_id}/reject",
+      "handler": "reject_knowledge_memory_item",
+      "source": "backend/app/main.py",
+      "line": 3484,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/items/{item_id}/revoke",
+      "handler": "revoke_knowledge_memory_item",
+      "source": "backend/app/main.py",
+      "line": 3492,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/knowledge-memory/items/{item_id}/mark-stale",
+      "handler": "mark_knowledge_memory_item_stale",
+      "source": "backend/app/main.py",
+      "line": 3500,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/knowledge-memory/items/{item_id}/audit",
+      "handler": "get_knowledge_memory_audit",
+      "source": "backend/app/main.py",
+      "line": 3508,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/trusted-experience/events",
+      "handler": "list_trusted_experience_events",
+      "source": "backend/app/main.py",
+      "line": 3520,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/trusted-experience/events/{event_id}",
+      "handler": "get_trusted_experience_event",
+      "source": "backend/app/main.py",
+      "line": 3537,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/trusted-experience/events/{event_id}/retry",
+      "handler": "retry_trusted_experience_event",
+      "source": "backend/app/main.py",
+      "line": 3545,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/trusted-experience/capsules/{project_id}",
+      "handler": "get_trusted_experience_capsule",
+      "source": "backend/app/main.py",
+      "line": 3561,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/api/trusted-experience/capsules/{project_id}/refresh",
+      "handler": "refresh_trusted_experience_capsule",
+      "source": "backend/app/main.py",
+      "line": 3574,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/api/trusted-experience/metrics",
+      "handler": "get_trusted_experience_metrics",
+      "source": "backend/app/main.py",
+      "line": 3589,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/profile",
+      "handler": "settlement_audit_profile",
+      "source": "backend/app/settlement_audit_api.py",
+      "line": 50,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/sample",
+      "handler": "download_settlement_audit_sample",
+      "source": "backend/app/settlement_audit_api.py",
+      "line": 75,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/review",
+      "handler": "review_settlement_workbook",
+      "source": "backend/app/settlement_audit_api.py",
+      "line": 86,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/download/{job_id}/{kind}",
+      "handler": "download_settlement_audit_artifact",
+      "source": "backend/app/settlement_audit_api.py",
+      "line": 132,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/capabilities",
+      "handler": "capabilities",
+      "source": "backend/app/weknora_qa.py",
+      "line": 236,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/ask-stream",
+      "handler": "ask_stream",
+      "source": "backend/app/weknora_qa.py",
+      "line": 246,
+      "astra": "待接入"
+    },
+    {
+      "method": "POST",
+      "path": "/requests/{request_id}/cancel",
+      "handler": "cancel",
+      "source": "backend/app/weknora_qa.py",
+      "line": 398,
+      "astra": "待接入"
+    },
+    {
+      "method": "GET",
+      "path": "/citations/{citation_id}",
+      "handler": "citation",
+      "source": "backend/app/weknora_qa.py",
+      "line": 417,
+      "astra": "待接入"
+    }
+  ],
+  "requirements": [
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 基线 · 三数字确定性填价 | 读取标准 Excel，识别表2、表3、表4；基价读取结构化计价库，技术工作费调整系数使用第一层规则，第一层未命中时按既定边界读取第二层经验提示 | 两阶段批量匹配可生成 Excel / Word；第一层绿、第二层黄、待复核红；多候选、无候选或冲突不强行填值 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | 基线 · 基价辅助填价与轻量追溯 | 待复核行可在结果预览弹窗查看知识库和经验池候选、当前价格依据线索，并经人工确认写入输出副本 | 大模型不造数；候选不改变主匹配；写入保留批注和 JSON 留痕；完整出处未维护时明确提示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 17,
+      "requirement": "| [待开发] | P0 · 编制前资料与场景确认 | 在上传与批量匹配前确认采购计划通知及计划表、任务委托书、经审定的采购技术要求、工作量清单，并登记可研 / 初设、框架内外等项目场景 | 缺失资料不得被系统伪造或默认视为齐全；允许带“待补充”继续试算，但结果页、报告和导出前检查必须持续提示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 18,
+      "requirement": "| [待开发] | P0 · 项目级计价参数卡与任务冻结 | 由用户确认并冻结适用标准版本、2024 版下浮口径、框架合同下浮率、航测综合单价、市场询价口径及其来源 | 参数带来源文件、适用范围、确认状态和任务快照；未确认参数不得自动参与最终写值；重新转换不偷偷漂移 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 19,
+      "requirement": "| [待开发] | P0 · 实物工作费调整系数第一层规则 | 根据正式依据补齐附加调整系数的触发条件、互斥 / 组合关系、取值和依据，重点识别错计、多计、重复计取和就高计取 | 规则表、说人话说明、程序资产和测试一致；正式依据及覆盖样例未确认前先以风险提示模式运行，不直接确定写值 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 20,
+      "requirement": "| [待开发] | P0 · 三数字匹配后专项自检与规则冲突治理 | 在主匹配结束后独立检查线路航测、走向图、超深钻孔、室内试验及项目下浮参数；当模板、规则表、前辈经验或项目参数冲突时并列展示来源 | 专项自检不静默覆盖主匹配；冲突项统一进入人工确认；模型不得选择最终数字；每项保留 sheet、行号、规则编号和依据 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 21,
+      "requirement": "| [待开发] | P0 · 导出前质量门禁 | 汇总无候选、多候选、单位冲突、资料缺失、项目参数未确认、专项规则异常和人工未处理项 | 支持带风险导出，但必须明确标识未完成复核事项；无未处理高风险时才能显示“编制检查完成”，不得表述为自动审定 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 22,
+      "requirement": "| [待开发] | P1 · 工作量与计价方法一致性核验 | 在现有工作量抓取基础上，检查源工作量与控制价项目的单位、钻探进尺、岩石类别、深度分段、重复项、漏项及报告采用方法与计价项目的一致性 | 只生成差异和待核清单，不擅自改工程量；能追溯源表行、目标表行、匹配模式和人工处置 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 23,
+      "requirement": "| [待开发] | P1 · 标准外取价路径与其他费用依据 | 对 2002 收费标准无法覆盖的项目，区分公司核定指引、框架综合单价、成本要素、市场询价和其他人工依据；投标限价阶段记录测算 / 询价依据，不照搬结算发票核验 | 无结构化依据时不得自动定价；其他费用明确区分“限价编制依据”和“结算实际发生凭证”；所有人工值必须填写依据备注 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "01-Excel填价与三数字匹配",
+      "source": "00-PRD/01-模块PRD/01-Excel填价与三数字匹配/PRD.md",
+      "line": 24,
+      "requirement": "| [待开发] | P1 · 完整标准出处与分字段人工复核 | 将轻量追溯扩展为标准名称、版本、章节 / 表号、规则编号、项目参数和人工确认记录，并按基价、实物系数、技术费系数分别复核 | 三个字段逐项确认，不一键批量采用；完整出处缺失时保留待复核；与 `09-辅助填价与人工复核闭环/PRD.md` 共用写回和留痕边界 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 11,
+      "requirement": "| [已完成] | 结果表格预览 | 展示输出 Excel 的主要 sheet | 页面可切换 sheet 并查看结果 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 12,
+      "requirement": "| [已完成] | 公式值兜底显示 | 预览和报告读取公式缓存，必要时程序侧计算 | 费用汇总与 Excel 打开结果一致 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 13,
+      "requirement": "| [已完成] | 数字最多显示 2 位小数 | 用于预览和报告金额显示 | 预览表格不出现长串小数 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 14,
+      "requirement": "| [已完成] | 隐藏指定列无值的行 | 表2/表3/表4 第5行起生效，合计行保留 | 下载 Excel 与预览口径一致 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 每个 sheet 保存表头行和列宽偏好 | 支持像 Excel 一样在表头右边缘拖拽调节列宽，列宽按 `sheet 名 + 列标题` 单独保存 | 刷新页面或再次进入同名 sheet 时自动恢复该列标题的手动列宽，不需要再点一次保存 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | AI 操作列固定易点击 | 固定 `AI` 列内同时承载结构化候选和 AI填价两个圆形图标按钮 | 滚动宽表时 `AI` 列仍固定在右侧；书本图标查看结构化候选，机器人图标打开弹窗并自动启动 AI填价 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 17,
+      "requirement": "| [已完成] | 大尾巴主题下结果预览独占中间区 | 表格预览模块不再被填价页和摘要区挤压 | 点击“结果预览”后表格窗口铺满中间工作区 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | 预览表格人工修改 | 在结果预览中允许用户修改输出 Excel 副本的普通值单元格内容 | 回车或失焦快速保存当前单元格；必要时点击“重算公式”刷新汇总公式和 Word 报告，并保留人工修改记录 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | 辅助填价人工确认入口 | 在预览中承接辅助填价候选、解释和人工采用动作；详情以弹窗呈现，不在主页面下方追加内容 | 用户明确确认后才写入输出副本，并保留来源和修改记录；关闭弹窗后结果预览表格布局不被改变 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 20,
+      "requirement": "| [已完成] | 批量匹配统一入口 | 待匹配预览生成后不自动跳转；右侧智算先显示“跳转到表格预览”，首次跳转后介绍表格预览功能并提供“批量匹配”按钮；预览窗口顶部和快捷指令也提供同名入口 | 三个入口都复用同一批量匹配动作；输入框直接发送“批量匹配”也立即执行；完成前下载按钮不可用，完成后按钮保留为“已完成匹配”禁用态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "02-填价结果预览与输出",
+      "source": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "line": 21,
+      "requirement": "| [待开发] | 预览性能专项优化 | 面向更大 Excel 的滚动和渲染优化 | 大表预览不卡顿，阶段提示明确 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 13,
+      "requirement": "| [已完成] | 导入历史控制价到经验池 | 使用独立经验池，不改正式知识库 | 能生成经验池文件并保留模板样式 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 14,
+      "requirement": "| [已完成] | 手动触发经验池预警 | 初次转换不自动运行预警 | 点击后显示进度和结果 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 同类记录比选 | 按字段完全匹配和非空要素顺序匹配 | 输出候选数、可比选数、未找到同类数 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | 偏离率风险分级 | 默认低风险 5%、高风险 20% | 预警参数和细节写回输出 Excel |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 17,
+      "requirement": "| [已完成] | 只核查指定列有值的行 | 默认按数量字段筛选候选行 | 空白、0、公式结果 0 按无值处理 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | 大尾巴主题经验池页拆分 | 预警分析和经验池导入成为独立模块 | 预警模块在上，导入模块在下且默认折叠 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | 风险摘要跳转到表格 | 经验池页预警明细和智算风险摘要均提供“跳到表格”入口 | 跨模块切到结果预览后定位指定 sheet、行和指标，并让目标行闪烁提示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 20,
+      "requirement": "| [进行中] | 预警结果展示体验优化 | 让风险雷达表达更直观 | 两张分析图使用统一标题和轻边框；点击任一风险明细可同步聚焦其偏离率与经验区间，低风险不得因高风险数值跨度过大而不可见；摘要、明细和行级复核衔接清楚 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 21,
+      "requirement": "| [已完成] | 经验池治理 MVP | 对经验池重复记录、单位不一致、同类样本不足、极端离散、关键字段空值和经验数不可解析进行只读检查 | `/api/quality/experience-pool` 能生成结构化结果和 Markdown 治理报告；提示问题行和人工处理建议；不自动清洗、不反写正式知识库 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "03-经验池预警",
+      "source": "00-PRD/01-模块PRD/03-经验池预警/PRD.md",
+      "line": 22,
+      "requirement": "| [待开发] | 经验池治理增强 | 在 MVP 稳定后评估导出治理清单、人工处理状态和治理前后对比 | 只能辅助人工治理，不得自动删除记录、自动改经验池或升级为正式知识库 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 随行 Dock 与宽屏智能体共用一套会话 | 右侧 Dock、左侧“智算助手”、消息、草稿、任务、行级上下文和等待状态全部复用 | 不新建第二套聊天；切换形态不丢当前任务，不遮挡专业工作台 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | 证据型问答与三层知识库选择 | 支持强制查库、项目正式知识库、造价通用知识库和已确认知识记忆按需组合 | 无依据时明确标识“已自动转为大模型回答”并输出通用模型兜底；不得伪造来源，知识选择和模型回答均不参与三个数字裁决 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 17,
+      "requirement": "| [已完成] | 检索意图拆分与标准答案回归 | 复杂问题先拆为业务检索问题、回答与展示要求、补充说明要求；维护简单题、复杂题和人工确认答案 | 只有业务问题进入扩词与召回；格式词和聊天附加词不污染检索；典型问答可运行语义回归 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | 预置演示标准答案与报告旁路 | 常见问题前四项使用人工审核答案，第四题返回16种管径的结构化柱状图；输入文件名含 `【演示】` 时，生成风险报告直接使用程序内置的审核定稿正文 | 原题发送时不运行检索、不调用大模型；报告旁路只按输入文件名令牌触发，不读取外部 Word、不检索知识库、不调用模型、不写模型调用台账；其他文件回到正常问答或风险报告流程 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | 行级解释、风险摘要与 AI填价联动 | 行级机器人按钮打开 AI填价弹窗并自动分析，固定检索当前专业 Skill 绑定的项目正式规则知识库，风险可跳表，回答可进入同一行详情 | 不检索造价通用知识库或通用知识记忆；模型只解释程序已排序候选，不生成候选外数值、不自动写值；最终修改仍由人工在专业页面确认 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 20,
+      "requirement": "| [已完成] | 结构化风险与轻量依据追溯 MVP | 汇总待复核、经验偏离、匹配说明、经验池来源和规则说明入口 | 风险等级由结构化规则产生；模型只解释，不伪造标准出处 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 21,
+      "requirement": "| [已完成] | P0：可治理知识记忆 | 支持候选、类型审核、同范围去重 / 冲突提示、确认、驳回、撤销、更正版本、提升通用和审计 | 只有已确认且未过期的通用知识或同项目知识参与问答；正式依据始终优先 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 22,
+      "requirement": "| [已完成] | P1：事件驱动知识候选首版 | v5.20.0 已接人工改单 / AI填价确认和多人复核意见两个真实触发；问答纠错、风险关闭和项目结项自动提取留待下一增量 | 幂等事件保留项目 / 隔离任务、Skill、Sheet / 行 / 字段、成果版本 / 哈希和原因；敏感类型及全部项目 / 任务候选仍须人工确认 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 23,
+      "requirement": "| [已完成] | P1：项目记忆胶囊与可解释复用首版 | 已完成项目可显式生成 / 刷新受控引用胶囊；跨项目先提升为通用候选并再次人工审核，命中记录来源与目标项目 | 无可靠 `project_id` 不按名称合并；胶囊不复制文件或聊天，撤销后停止命中，正式依据仍优先 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 24,
+      "requirement": "| [进行中] | P1：记忆失效治理与成效度量 | 已统计真实候选来源、确认 / 驳回 / 撤销、检索命中、版本更正和疑似失效；正式依据 / Skill 版本变化后的批量扫描待下一增量 | 指标只使用真实审计，不估算节省工时；撤销和疑似失效项不得参与回答 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 25,
+      "requirement": "| [进行中] | 回答体验、集中配置与模型安全边界 | v5.19.5 已完成 classic / hybrid 双模式、个人偏好、消息实际模式冻结、通道与降级轨迹；v5.19.6 将含图表回答改为按段呈现，费用洞察分八阶段展开并自动跟随底部，减少动态效果时立即完整展示；继续优化等待阶段、常见问题、窗口默认值和虚拟形象状态 | Markdown、列表和图表说明不被逐字动画割裂；API Key 不进前端和代码存档；模型故障不阻断 Excel、预警、报告和下载；hybrid 仍只影响知识问答 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "04-问问智算AI助手",
+      "source": "00-PRD/01-模块PRD/04-问问智算AI助手/PRD.md",
+      "line": 26,
+      "requirement": "| [进行中] | 企业身份、授权范围与 WeAct 提醒 | 当前已有本地操作人、确认角色和审计，尚未接入企业登录、项目授权与安全提醒 | 明确“本地试点身份不等于企业认证”；WeAct 只提醒和跳转，不在消息内批准正式知识 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 11,
+      "requirement": "| [已完成] | 上传工作量表并写入当前预览控制价表 | 不再要求重复上传控制价计算表，目标表取当前 job 的输出 Excel | 抓取后表格预览直接刷新 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 12,
+      "requirement": "| [已完成] | 按要素1-5和单位匹配抓取 | 采用字段完全匹配和非空要素顺序匹配 | 成功写入数量、系数、备注等字段 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 13,
+      "requirement": "| [已完成] | 术语归并旁路规则 | 只作用于工作量抓取 | 不影响主匹配和经验池预警 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 14,
+      "requirement": "| [已完成] | 只抓取指定列有值的行 | 默认按数量/工程量判断 | 空白、0、公式结果 0 跳过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 可选抓取字段 | 支持数量、实物工作费调整系数、技术工作费调整系数、委托方备注 | 用户可勾选本次写入字段 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | 写入模式 | 支持保守模式和覆盖模式 | 保守模式跳过已有值，覆盖模式允许覆盖已有值 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 17,
+      "requirement": "| [已完成] | 抓取报告和诊断 | 成功、一对多、未命中、跳过、覆盖都有说明 | 页面显示填写、覆盖、跳过、预警等统计 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | 结果区失败行摘要 | 页面结果卡片只展示工作量源表中抓取失败的行 | 成功行、保守跳过行和控制价目标表失败行不进入摘要；最多显示前 20 条并可滚动 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "05-原始工作量抓取",
+      "source": "00-PRD/01-模块PRD/05-原始工作量抓取/PRD.md",
+      "line": 19,
+      "requirement": "| [待开发] | 抓取前预览和候选确认 | 避免一对多时直接写入争议值 | 用户可确认候选后再写入 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 13,
+      "requirement": "| [已完成] | 按模板生成 Word 报告 | 自动填日期、项目名、金额等 | 输出 docx 可打开 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 14,
+      "requirement": "| [已完成] | 报告金额与费用汇总一致 | 读取输出 Excel 费用汇总 | 合计、增值税与表格一致 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 公式缓存为空时兜底计算 | 常见汇总公式由程序侧计算 | 不再出现报告金额与表格不一致 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | 匹配摘要不输出过长逐行日志 | 报告只写摘要和风险 | 报告正文长度可读 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 17,
+      "requirement": "| [已完成] | 风险报告使用大模型润色 | 不发送逐行明细重新裁决 | 风险提示围绕常规风险和造价风险 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | 风险报告增强为结构化风险清单 MVP | 从待复核行和经验池偏离生成结构化风险项 | 报告页可查看风险项，等级由规则生成，支持跳转定位；后续筛选、导出和处理状态另按 P2 推进 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | 当前实际 DOCX 的只读预览闭环 | 下游预览模块读取本模块产出的同一份当前报告，报告重算、预警和风险写回后使旧预览失效 | Word 报告页可核对标题、正文、金额、表格与风险写回；预览失败不改变报告文件，下载仍可用 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "06-Word报告生成",
+      "source": "00-PRD/01-模块PRD/06-Word报告生成/PRD.md",
+      "line": 20,
+      "requirement": "| [待开发] | 风险报告模板 Markdown 化 | 方便人工调试和维护 | 模板可读、可改、可复用 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "07-桌面端与评委版",
+      "source": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 传统开发版 | FastAPI 后端 `8000` + Vite 前端 `5174`，沿用源码目录和本机开发环境 | 开发机可双击或手动启动，浏览器访问 `http://127.0.0.1:5174/` |",
+      "astra": "待核销"
+    },
+    {
+      "module": "07-桌面端与评委版",
+      "source": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "line": 16,
+      "requirement": "| [暂缓] | Windows 绿色版 | 历史功能已完成，但不再作为默认交付；如明确要求，仍采用后端 `8000` + Vite 前端 `5174` 双服务并随包携带运行依赖 | 按需构建时，目标 Windows 电脑无需安装 Python / Node / npm，可双击 `启动造价智算.bat` 使用完整网页功能 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "07-桌面端与评委版",
+      "source": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "line": 17,
+      "requirement": "| [暂缓] | Tauri 桌面路线 | 源码、脚本、说明已归档；未经用户明确要求不构建和维护 | 不纳入当前交付、版本同步和验收 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "07-桌面端与评委版",
+      "source": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | 启动、停止和状态检查 | 按需绿色版提供启动、停止、状态检查脚本 | 报错可读，服务窗口可见，必要时可停止已启动服务 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "07-桌面端与评委版",
+      "source": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | 大模型 Key 配置与随包 | 按需绿色版打包时复制项目根目录现有 `.env.local`；按需绿色版仍提供配置脚本 | 未配置 Key 时核心 Excel / Word 流程不受影响；已随包或手动配置 Key 后，智算问答类功能可直接读取 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "07-桌面端与评委版",
+      "source": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "line": 20,
+      "requirement": "| [待开发] | 本地网页版统信兼容 | 不动核心匹配引擎，优先验证 FastAPI 后端 + React 前端在统信 UOS 本地运行 | 统信环境可通过浏览器访问本机服务，完成上传、匹配、预览、下载和报告生成主流程 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "07-桌面端与评委版",
+      "source": "00-PRD/01-模块PRD/07-桌面端与评委版/PRD.md",
+      "line": 21,
+      "requirement": "| [待开发] | 平台化服务接口规划 | 面向统一平台和数据治理 | API、权限、安全边界明确 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 参赛作品申报书 v1.7 | 已形成产品主线和价值表达 | 可作为对外汇报基础材料 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | 产品名称升级为造价智算 | 对外统一为工程造价辅助智能体 | 页面、报告、文档主口径一致 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 17,
+      "requirement": "| [已完成] | 深色科技风 PPT 视觉素材 | 用于参赛展示和汇报 | 素材与项目主线一致 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | PRD 吸收申报书核心口径 | 四类痛点、三链融合、可信 AI 等 | PRD 可指导后续开发和验收 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | 现场展示与答辩赛制固化 | 赛事通知明确采用“8 分钟作品介绍（含展示）+ 2 分钟答辩” | PPT、逐页讲稿、现场演示脚本和排练计时均按 8+2 分钟独立编制；8 分钟已包含展示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 20,
+      "requirement": "| [进行中] | 参赛展示页面和 UI 叙事优化 | 强化数字员工和三链融合表达 | 领导能快速看懂痛点、方案和价值 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 21,
+      "requirement": "| [已完成] | 演示 / 评委样例模式 MVP | 一键加载预置样例，复用正常前端的候选 sheet 识别和列映射，按正式转换链路生成结果 | 可直接看到结果，并进入“看结果 -> 跑预警 -> 风险清单 -> 输出报告”轻引导；不改变日常工作流和匹配逻辑 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 22,
+      "requirement": "| [已完成] | 数智员工上岗证据包 P0 | 在专业能力中心用同一真实 Task 串联 Skill、Tool、成果、复核、Experience 与 V3.1 正式验收 | 现场可集中证明“能上岗、能干活、能成长、不越权”，并导出同源 Markdown；不新增菜单或平行状态机 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 23,
+      "requirement": "| [待开发] | 演示 / 评委 5 步讲解路线 | 对齐 Claude 建议中的“上传 -> 转换 -> 预警 -> 问答 -> 输出”讲解节奏 | 评委能按 5 步逐项理解规则裁决、经验预警、知识问答、风险清单和成果输出 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 24,
+      "requirement": "| [待开发] | 演示讲解点高亮和脱敏提示 | 在演示模式突出绿色命中、黄色经验、红色待复核、风险偏离和依据追溯等评分点 | 讲解点只做一次性提示或轻高亮；演示数据需明确“非真实价格 / 脱敏样例”，不干扰日常工作态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 25,
+      "requirement": "| [待开发] | 智算虚拟形象辅助讲解 | 在演示 / 评委模式中复用问问智算可动形象，用状态动作提示“正在识别表格、正在检索依据、发现风险、生成报告”等关键节点 | 只服务现场讲解节奏和状态感，不做营销页吉祥物，不新增独立桌宠窗口；退出演示模式后回到常规工作态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "08-参赛展示与申报材料",
+      "source": "00-PRD/01-模块PRD/08-参赛展示与申报材料/PRD.md",
+      "line": 26,
+      "requirement": "| [待开发] | 演示脚本和评委讲解稿 | 形成正式讲解稿、截图、现场口径、逐段计时和故障兜底话术 | PPT 讲述与现场展示在 8 分钟内讲清同一闭环；2 分钟答辩另备短答与备份页 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 23,
+      "requirement": "| [已完成] | 基价 / 单价辅助填价 MVP | 待复核行通过结果预览 `AI` 列书本图标打开弹窗，展示知识库相似候选和经验池同类均值候选 | 用户选择候选并确认后，写入输出副本，保留浅蓝底、批注和 `preview-manual-edits.json` 留痕 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 24,
+      "requirement": "| [已完成] | 弹窗式交互 | 辅助填价详情使用 Dialog / Modal，不在主页面或表格下方追加内容；v5.19.6 已统一三栏字体、字号、间距、候选卡和依据区边界，并在 `1100px` 以下按“当前记录 → 建议值 → 大模型辅助”纵向排列 | 长文本、候选、进度和依据层级清晰；关闭弹窗后结果预览布局不变；宽表横向滚动时 `AI` 列仍固定在右侧；视觉调整不改变排序、写值和人工确认逻辑 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 25,
+      "requirement": "| [已完成] | 候选来源标签 | 知识库候选显示绿色“知识库”，经验池候选显示蓝色“经验池” | 候选列表能区分来源，详细相似度、样本数、basis 和风险提示进入候选说明 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 26,
+      "requirement": "| [已完成] | 候选排序 | 当前按相似度降序；同相似度知识库优先于经验池；再按置信度和样本数排序 | 100% 相似度排在 75% 前；同为 100% 时知识库候选排在经验池候选前 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 27,
+      "requirement": "| [已完成] | 价格轻量追溯合并展示 | 同一弹窗展示价格候选和当前行价格依据追溯线索 | 追溯能展示匹配过程、经验池来源或项目规则入口；没有完整出处时明示“暂无标准出处映射”或等价提示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 28,
+      "requirement": "| [已完成] | AI填价结构化排序与模型解释 | 机器人入口直接打开辅助填价弹窗并自动分析；程序稳定排序候选，把前三名与完整行要素交给模型，回答顶部确定性展示排序首选 | 用户能同屏核对候选、当前行和模型解释；模型不得生成候选外数值或自动写入，最终由人工采用候选 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 29,
+      "requirement": "| [待开发] | 实物工作费调整系数候选 | 针对实物工作费调整系数展示第二层经验提示、经验池同类值和规则说明候选 | 分字段打开或切换目标字段；用户逐项确认后才写入；没有候选时显示明确空态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 30,
+      "requirement": "| [待开发] | 技术工作费调整系数候选 | 针对技术工作费调整系数展示第一层规则、第二层经验提示、经验池同类值和规则说明候选 | 候选必须说明来源层级和规则 / 经验依据；不得让大模型补系数 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 31,
+      "requirement": "| [待开发] | 自定义值与备注必填 | 用户可选择“自定义输入”作为候选，但必须填写人工依据备注 | 未填写备注时不能确认；写入日志和 Excel 批注必须记录自定义值、备注和原值 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 32,
+      "requirement": "| [待开发] | 候选配置 | 候选上限、置信度阈值、来源排序权重等进入独立配置，避免长期硬编码 | 默认配置可直接使用；调整配置不影响主匹配、经验池预警和第二层经验提示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 33,
+      "requirement": "| [待开发] | 历史人工确认候选 | 从人工修改 / 辅助填价留痕中读取同要素组合的历史确认值作为候选 | 历史候选只作为参考来源，不自动反写正式知识库或经验池 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 34,
+      "requirement": "| [待开发] | 复核处理状态 | 辅助填价确认后，该行可进入“人工已处理 / 待重算 / 待复核完成”等状态 | 状态只影响复核闭环和筛选，不改变原始输入或主匹配结论 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 35,
+      "requirement": "| [待开发] | 风险清单入口联动 | 从结构化风险清单或待复核筛选中直接打开目标行辅助填价弹窗 | 风险卡片只提供“去处理 / 打开辅助填价”，不在 AI 聊天流中直接写值 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "09-辅助填价与人工复核闭环",
+      "source": "00-PRD/01-模块PRD/09-辅助填价与人工复核闭环/PRD.md",
+      "line": 36,
+      "requirement": "| [暂缓] | 一键批量采用候选 | 暂不做一键批量填入所有推荐候选 | 防止绕过逐行人工判断 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 33,
+      "requirement": "| [已完成] | 独立结算审核工作台 | 左侧新增“结算审核”入口，上传、审核、风险查看和成果下载均在独立页面完成 | 不复用或改写现有填价任务状态；进入其他模块后原功能行为不变 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 34,
+      "requirement": "| [已完成] | 统一模板识别与安全校验 | 只接收 `.xlsx`，识别汇总表、测量费、勘察费和其他费用表 | 模板结构缺失、文件损坏或超限时返回清晰错误，不产生半成品 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 35,
+      "requirement": "| [已完成] | 确定性明细审核 | 校核工程量参与计算、基价、实物工作费系数、技术工作费系数和金额公式 | 每条异常包含 sheet、Excel 行号、当前值、建议值、依据和处置建议 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 36,
+      "requirement": "| [已完成] | 前辈经验规则卡 | 落地深孔、室内试验、航测/走向图、合同下浮、其他费用凭证等已明确经验 | 自动可判定项给出建议值；依赖合同或证据的事项只标记待人工核验 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 37,
+      "requirement": "| [已完成] | 审核后 Excel | 保留原表及样式，在“造价审核”栏写入审核建议，并新增“审核结果”总表 | 不覆盖承包商上报与专业审核栏；修改单元格带颜色、批注和审核原因 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 38,
+      "requirement": "| [已完成] | Word 辅助审核报告 | 输出项目概况、审核范围、汇总指标、问题清单、待核资料、结论边界和人工签认栏 | 标题和正文明确“辅助审核、待人工审定”，不得表述为最终审定 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 39,
+      "requirement": "| [已完成] | 自编演示样例 | 基于统一模板生成可重复构建的演示结算表，植入已知风险和一条正确记录 | 专项测试能稳定命中预期风险；原始模板哈希保持不变 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 40,
+      "requirement": "| [已完成] | 审核工作台与审核发现双视图 | 顶部使用“审核工作台 / 审核发现”标签分离上传、成果概览与逐项问题详情 | 两个视图自适应填满中央工作区；审核发现页隐藏重复标题和四步流程，保留完成提示与双成果入口；完成审核后自动进入审核发现 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 41,
+      "requirement": "| [已完成] | 演示结果可视化 | 结果页展示审核行数、高风险、待人工核验、建议审减额和风险详情 | 1280×720 可完整演示；窄屏无横向溢出；主操作层级符合 UI 规范 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "10-结算审核助手模块",
+      "source": "00-PRD/01-模块PRD/10-结算审核助手模块/PRD.md",
+      "line": 42,
+      "requirement": "| [待开发] | 任意格式映射与多专业扩展 | 后续通过字段映射和专业 Skill 资产支持更多结算格式与专业 | P0 不为展示伪造通用兼容能力 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 99,
+      "requirement": "| [已完成] | 在现有 Word 报告页接入真实 DOCX 预览 | 用实际文件预览替换当前由摘要字段拼出的模拟报告页；保留下载、风险清单和右侧智算 | 左侧菜单名称和顺序不变；页面内能看到本次实际生成 Word 的正文和表格；长风险正文能自动续页并完整显示，不再把摘要卡或前 3 个结构页当成完整 Word 预览 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 100,
+      "requirement": "| [已完成] | 复用当前报告下载接口获取文件 | 通过 `/api/download/{job_id}/report` 获取二进制，使用 `summary.output_report` 或响应文件名构造带 `.docx` 扩展名的 `File` | 不向前端暴露磁盘路径；不存在时显示明确空态 / 错误；下载 Word 原功能继续可用 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 101,
+      "requirement": "| [已完成] | 按需接入 File Viewer Word renderer | 使用 `@file-viewer/react` + `@file-viewer/renderer-word`，`rendererMode: 'replace'`，显式注入 `wordRenderer`；组件只在进入 Word 报告页且报告存在时加载 | 不安装全格式 `react-full` / `preset-all`；首页和结果预览不因 Word renderer 阻塞；React / TypeScript 构建通过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 102,
+      "requirement": "| [已完成] | 本地化 DOCX Worker 与依赖资产 | 同源提供 `vendor/docx/docx.worker.js`、`vendor/docx/jszip.min.js` 等实际所需资产，并使用稳定的相对 / 根路径配置 | 断开公网后，开发版、绿色版和 Tauri 桌面版均能读取报告；控制台无 Worker / JSZip 404，静态资源请求不回落为 SPA HTML |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 103,
+      "requirement": "| [已完成] | 报告版本刷新与陈旧状态治理 | job 切换、手动重算、风险报告写回后使当前预览失效；取消旧请求并重新获取当前报告，避免缓存旧 DOCX | 新任务不会显示上一个任务报告；刷新后能看到最新写回内容；重复切换不串任务、不永久转圈 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 104,
+      "requirement": "| [已完成] | 完整加载、错误和下载兜底 | 对 HTTP 错误、空文件、格式识别失败、renderer 异常和离线资产缺失分别转成用户可理解提示 | 任一预览失败不影响 Excel / Word 下载、风险清单、填价和预警；用户始终可重试或直接下载 Word |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 105,
+      "requirement": "| [已完成] | 预览器资源与生命周期管理 | 使用 `AbortController` 取消过期获取；如创建 object URL，切换任务和卸载时必须 `URL.revokeObjectURL`；避免重复挂载 controller | 连续切换模块、连续刷新和切换任务无明显内存持续增长，无重复事件、过期内容覆盖和控制台未处理异常 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 106,
+      "requirement": "| [已完成] | 响应式成果工作区与基础可访问性 | 预览容器有稳定高度，桌面宽度优先铺满；按钮有禁用态、焦点态和可读标签；状态不能只靠颜色 | 1366px、宽屏显示器和 Tauri 窗口下可滚动、无遮挡；左 / 右侧栏折叠后自然扩宽；键盘可聚焦顶部操作 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "12-报告预览模块",
+      "source": "00-PRD/01-模块PRD/12-报告预览模块/PRD.md",
+      "line": 107,
+      "requirement": "| [暂缓] | 网页内编辑 Word、批注和多人协同 | 本期只做只读预览和下载，修改仍通过现有 Excel 人工修改、重算和报告生成链路完成 | 页面不出现伪编辑入口，不把浏览器预览宣称为 Word 排版编辑器 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 244,
+      "requirement": "| [已完成] | Webhook 通知与智能协同页 | 第一层完成多 Webhook 配置、任务阶段通知、完成摘要和工作台跳转 | 只能单向通知；秘密不下发前端；发送失败不影响专业主流程 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 245,
+      "requirement": "| [已完成] | 第二层收件、建任务与自动处理 | 企业应用机器人通过长连接接收受控消息和标准 Excel，顺序调用现有专业接口并回传 Excel、Word 和风险摘要 | 事件与消息双重幂等；过期事件受控拦截；不复制匹配逻辑；映射不可靠时停止而不猜测 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 246,
+      "requirement": "| [已完成] | 第二层问答、任务查询与成果触达 | 支持知识库问答、普通问答、群成员查询、任务进度 / 风险查询、成果重发和经典完成卡片；`#知识库` 的正文、分点和表格统一使用蓝色知识卡片，普通飞书表格使用原生表格组件，企业 WeAct 使用兼容经典卡片；普通大模型回答仅在含 Markdown 表格时转卡片 | 查询按会话隔离；卡片失败自动降级为原文字或移动端分组清单；转换只改变展示格式，不改变原答案、依据或网页端 Markdown 表格；成果重发不重新计算、不改变任务状态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 247,
+      "requirement": "| [已完成] | 第二层双平台独立连接、身份与运行安全 | 普通飞书 / 企业 WeAct 使用两个独立运行器和两套启停状态，不再通过下拉框互相替换；页面提供两个独立开关，右上角以蓝色小标签持续显示两平台状态；任务、收件窗口、会话查询、成果重发和卡片回调均带 `platform_profile_id`；两侧继续共用一个全局单任务顺序队列、预期身份校验、云端端口覆盖、部署检查和统一只读控制台 | 两平台可以同时在线但专业任务严格顺序处理；任一平台关闭或异常不影响另一平台；任务不能被另一平台同名会话读取或回调；同一平台 App ID 在本地与云端仍只允许一个实例在线；身份不一致拒绝启动；卡片处理异常必须返回明确提示并写入脱敏日志；长连接断开后采用秒级快速重连，尽量缩短按钮回调不可用窗口；凭证、令牌和连接票据不回显；机器人故障不拖垮网页专业主流程 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 248,
+      "requirement": "| [已完成] | 第二层任务队列锁竞争自恢复 | 空队列轮询只读 SQLite，仅在存在待处理任务时申请写锁；数据库短时繁忙或工作周期异常时，Worker 记录脱敏日志、退避后自动重试，不得在长连接进程仍存活时静默退出 | 双平台空队列并行轮询不产生周期性写锁竞争；`database is locked` 不杀死工作线程；已入队任务在运行器重启后无需重新上传即可继续处理 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 249,
+      "requirement": "| [已完成] | P0-A：外部任务主动派发与领取模拟 | “智能协同”已提供受控模拟器；外部任务编号自动生成，项目名留空时自动补为“项目-XXXXXX”；点击“读取群与成员”后由当前第二层机器人实时读取已加入群及成员，可从当前群成员或去重后的全部已读取人员中选择编制人和复核人，目录按机器人配置临时缓存供下次复用；标准 `TaskEnvelope` 先持久化任务、Skill 快照、人员映射、模板版本和文件哈希；任务专属 Excel 成功投递后才开放并发送“待领取”卡片，复核卡、完成／退回通知再按阶段分别投递到工作群、对应人员单聊或双通道 | 读取目录不发送任何消息；断网或目录接口暂不可用时可回用最近一次缓存；业务幂等键不重复建任务或发文件；每个阶段至少选择一个通道，个人通道未验证时不可选；同一阶段同一人员去重；部分目标失败后仅重试未完成目标；卡片首次点击不受文件落库竞态和首次运行库初始化影响；卡片 / Excel / 复核卡 / 结果通知状态、流程人员和领取时间可追溯；前端不回显群 ID、用户 ID、文件 Key 和密钥；普通飞书群名不受限但必须由用户本次明确选择并通过成员安全校验，企业 WeAct 仍只允许唯一“智算测试”，个人投递只允许已进入实测白名单的平台配置 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 250,
+      "requirement": "| [已完成] | P0：简易多人复核 | 派发时选择一名或多名复核人；编制人领取后从经典卡片提交复核；每名指定复核人用真实平台身份选择通过或退回；全员通过后完成，任一人退回则回到编制并允许开启下一轮。测试阶段允许同一人兼任编制和复核，正式生产恢复岗位分离 | 复核人、轮次、逐人结论和时间独立落库；非编制人不得提交、非复核人不得复核、重复操作幂等；任务台账展示完整流程人员和状态。结构化意见、冻结成果版本和网页复核工作台留作后续增强 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 251,
+      "requirement": "| [已完成] | 网页填价成果一键发起多人复核与进度查询 | 填价工作台及会话工作台提供“发送同事复核”；会话入口在当前消息流中嵌入发送前设置卡，按“选择方式—确认人员—发起复核”三步组织信息；飞书与 WeAct 使用独立折叠面板、发送方式复选框和人员配置，支持双平台及单个平台群聊 + 私聊同时勾选，“补充复核要求”默认折叠。后端读取真实输出并冻结 SHA256 快照，直接进入现有待复核、评论、通过 / 退回和完成流程；“审核进度查询”只读查询同一任务库，按平台展示轮次、投递状态、逐人结论和复核意见 | 不上传客户端任意路径；切换平台、工作群或投递方式后自动清空名单；首次重复提交不重复发送，重复触发设置时把既有设置卡移动到最新会话位置，不复制第二张活动卡；显式确认的新轮次沿用原任务编号并递增轮次，保留旧轮快照、评论和审计动作；同一确认请求保持幂等，当前轮进行中不得并行再开；同一名单中个别个人目标不可达时继续向其余可达人员投递成果和复核卡，失败人员保持待审核与可重试，恢复后只补发其缺失步骤；主动私聊只对已验证平台开放，工作群必须明确选择、成员可核验且实际受众不超过 10 人；进度查询与原卡刷新不触发外部消息、不生成模拟审核结论 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 252,
+      "requirement": "| [待开发] | P1：风险派单、提醒与可选审批 | 将风险项分配到复核人并定位 sheet / 行；支持截止时间、催办、转交；任务可选择标准审批流程 | 高风险处理有完整留痕；简易任务不强制审批；标准任务审批通过后才形成审批发布版 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 253,
+      "requirement": "| [待开发] | P1：成果冻结、正式发布与归档 | 在现有 WeAct 领取、提交、通过和退回卡片闭环上，补充不可变成果版本、版本差异、可选原生审批、唯一发布版和归档位置 | 身份、权限、版本和幂等校验通过；旧卡片不能改变新版本；没有审批和冻结证据时不得标记正式发布 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 254,
+      "requirement": "| [待开发] | P2：场景智能助手 | 自动检查材料、推荐流程与复核人、生成审核摘要、比较版本差异并把退回意见转为待办 | 建议有依据且可人工覆盖；大模型不批准成果、不生成最终数字 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 255,
+      "requirement": "| [待开发] | P2：管理台账、统计与生产治理 | 多维表格只同步必要元数据；建设对账、监控、权限审计、时效统计和知识候选闭环 | 台账不是业务真相；同步失败可重试；人工结果未经治理不得进入正式资产 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 279,
+      "requirement": "| [进行中] | 不可变成果版本 | 网页一键复核已按任务真实输出和 SHA256 冻结只读快照，机器人编制成果也已保存文件、复核轮次和审计；尚未建立统一成果版本号、版本差异和旧卡失效的完整版本模型 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 280,
+      "requirement": "| [进行中] | 结构化复核意见 | 已有任务级复核评论，尚未支持定位 sheet / 行 / 字段、逐条意见回复、意见汇总和问题关闭状态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 281,
+      "requirement": "| [待开发] | 风险派单与过程管理 | 尚未把具体风险项分配到人员并支持截止时间、催办、转交、逾期和处理时长统计 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 282,
+      "requirement": "| [待开发] | 企业原生审批 | 尚未接入可配置的正式审批流程、审批通过 / 退回 / 撤回同步和审批权限治理 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 283,
+      "requirement": "| [待开发] | 正式成果发布与归档 | 尚未形成唯一审批发布版、发布清单、正式发送记录和受控归档位置；当前“完成”只表示简易复核流程完成 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 286,
+      "requirement": "| [待开发] | 多维表格与管理镜像 | 尚未建设任务元数据镜像、双向对账、同步告警和统计看板；未来也不复制完整计价库和敏感逐行结果 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 287,
+      "requirement": "| [待开发] | 生产级身份权限 | 当前平台身份校验和任务参与人校验适合试点，尚未形成企业角色、项目授权、数据分级和管理员审计体系 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 288,
+      "requirement": "| [待开发] | 常驻生产运维 | 已有单实例、健康检查和部署保护，但尚未补齐高可用、集中监控、断线 / 积压告警、备份恢复、日志保留和灾难切换 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 289,
+      "requirement": "| [待开发] | 多文件与批量协同 | 当前只接收单个标准 `.xlsx`；多附件、批量任务、卡片内复杂表格编辑和群内逐行改值均未实现 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 290,
+      "requirement": "| [待开发] | 场景智能助手增强 | 尚未实现自动材料检查、复核人推荐、流程推荐、版本差异摘要和把退回意见自动拆成受控待办；大模型仍不得批准成果或裁决最终数字 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 339,
+      "requirement": "- 用户角色权限、多维表格台账、风险派单、审批和多文件任务继续保持 `[待开发]`；领取、提交成果、复核通过和退回的经典卡片回调已进入本机试点完成范围。",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 345,
+      "requirement": "1. **[已完成] P0-A｜外部任务主动派发模拟**：模拟外部造价系统产生标准 `TaskEnvelope`；建立内部任务和任务专用待填表；通过第二层应用机器人向授权群投递经典任务卡和 Excel；记录目标编制人平台 ID，并让群聊 / 单聊共用同一投递接口和审计。",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 346,
+      "requirement": "2. **[进行中] P0-B｜业务任务与冻结版本**：已建立独立协同任务、复核轮次、编制成果文件绑定和审计；不可变成果版本、版本差异与正式冻结仍待补齐。",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 347,
+      "requirement": "3. **[进行中] P0-B｜简易多人复核与意见汇总**：已支持编制成果 Excel 回传、多人并行通过 / 退回、全部通过后完成、退回再提交，以及按复核人和轮次保存评论；面向 sheet / 行的结构化意见、意见汇总与逐条回复仍待补齐。",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 348,
+      "requirement": "4. **[待开发] P1｜风险派单与标准审批**：建立用户角色映射、目标行跳转、截止时间、催办和可选审批；普通任务继续允许不设审批节点。",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 349,
+      "requirement": "5. **[待开发] P1｜成果冻结、正式发布与归档**：在已经可用的 WeAct 领取、提交、通过和退回卡片闭环之上，补正式冻结版本、版本差异、可选原生审批、唯一发布版和归档位置。",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 350,
+      "requirement": "6. **[待开发] P2｜场景智能与管理镜像**：增加材料检查、审核摘要、流程 / 复核人推荐、版本差异、多维表格元数据镜像和统计分析。",
+      "astra": "待核销"
+    },
+    {
+      "module": "13-飞书连接的场景智能体",
+      "source": "00-PRD/01-模块PRD/13-飞书连接的场景智能体/PRD.md",
+      "line": 351,
+      "requirement": "7. **[进行中] P2｜生产化运行与统一审计**：双平台独立长连接、按平台运行日志、任务绑定和全局顺序队列已完成；仍需补齐常驻监控、断线与积压告警、跨环境同 App ID 自动互斥、权限审计、日志留存和灾难恢复。第一层 Webhook、任一第二层平台或飞书平台故障均不得拖垮本地专业主流程。",
+      "astra": "待核销"
+    },
+    {
+      "module": "14-功能点助手模块",
+      "source": "00-PRD/01-模块PRD/14-功能点助手模块/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | 左侧菜单入口 | 在“智能协同”下方显示“数字化项目助手” | 点击后挂载独立项目页面，不改变其他菜单顺序和功能 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "14-功能点助手模块",
+      "source": "00-PRD/01-模块PRD/14-功能点助手模块/PRD.md",
+      "line": 20,
+      "requirement": "| [已完成] | iframe 薄适配 | 宿主只注册路由、页面 URL 和可降级 iframe 容器 | 已具备加载中、超时、重试和新窗口打开；宿主中没有功能点规则、公式、提示词和 API 代理 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "14-功能点助手模块",
+      "source": "00-PRD/01-模块PRD/14-功能点助手模块/PRD.md",
+      "line": 21,
+      "requirement": "| [已完成] | 独立应用与服务 | 独立项目提供 React 页面、FastAPI 后端、健康检查和 `?embed=1` 嵌入模式 | 独立前端 `5175`、后端 `8010` 可脱离造价智算运行，业务代码和版本均独立维护 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "14-功能点助手模块",
+      "source": "00-PRD/01-模块PRD/14-功能点助手模块/PRD.md",
+      "line": 22,
+      "requirement": "| [待开发] | 双项目联合验收 | 同时启动宿主和独立服务，验证嵌入主题、上传、测算、导出和异常降级 | 独立业务闭环可用；停止独立服务不影响造价智算其他模块 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "14-功能点助手模块",
+      "source": "00-PRD/01-模块PRD/14-功能点助手模块/PRD.md",
+      "line": 23,
+      "requirement": "| [待开发] | 发布启动编排 | 明确绿色版 / Tauri 是否自动启动独立服务并形成发布清单 | 不把子项目代码散落复制到造价智算前后端目录 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "14-功能点助手模块",
+      "source": "00-PRD/01-模块PRD/14-功能点助手模块/PRD.md",
+      "line": 24,
+      "requirement": "| [暂缓] | 独立安装包 | 为数字化项目造价助手提供正式独立安装或部署包 | 复用现有独立业务代码，只新增发布壳和部署资产 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 21,
+      "requirement": "| [已完成] | P0：选择专业能力入口 | 在全局导航栏提供默认折叠的“专业能力”入口，点击后展开专业能力选择菜单 | 默认选中勘察测量 Skill；用户能查看、切换和确认，不新增第二套主流程 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 22,
+      "requirement": "| [已完成] | P0：勘察测量 Skill 清单化 | 用结构化 Manifest 登记当前场景的名称、版本、能力、资产引用、适用输入和验证状态 | Manifest 只引用现有资产，不搬动知识库、规则表、模板和样例，不改变当前路径 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 23,
+      "requirement": "| [已完成] | P0：当前 Skill 状态可见 | 全局导航栏持续显示当前专业能力、版本和任务快照锁定状态 | 用户在上传、预览、报告等关键阶段都能确认本次任务使用的专业 Skill |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 24,
+      "requirement": "| [已完成] | P0：默认兼容与安全降级 | 未显式传入 Skill 的旧请求继续使用当前勘察测量能力 | 现有开发版、绿色版、Tauri、云端和 WeAct 专业任务保持兼容；Manifest 异常时拒绝错误切换并回退当前默认能力 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 25,
+      "requirement": "| [已完成] | P0：任务隔离与可追溯 | v5.12.0 已冻结完整运行时上下文；测试专用双 Skill 已验证计价库、规则、经验池、知识和模板不串用 | 默认 Skill 改变后历史任务仍使用创建时上下文；状态文件只保存项目内相对路径，公开接口不泄露资产路径 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 26,
+      "requirement": "| [已完成] | P0：评委展示与真实状态 | 能力菜单展示已上线、规划中 / 内测中、即将开放三层状态 | 勘察测量标记“已上线”；通用服务类标记“规划中”；更多造价专业标记“即将开放”，后两者均不能创建任务 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 27,
+      "requirement": "| [已完成] | P0-B：完整专业能力包运行时路由接口 | 建立 `SkillRuntimeContext`，让输入规范、处理器、计价库、规则、风险、知识、报告模板和验证资产真实参与运行 | `/api/process`、批量匹配、预警、问答、报告和下载使用任务冻结上下文；处理器只使用代码白名单；测试专用第二 Skill 已证明真实切换和隔离 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 28,
+      "requirement": "| [待开发] | P1：通用服务类真实 Skill | 建立独立输入、计价依据、规则、风险检查、报告模板和样例，跑通最小业务闭环 | 与勘察测量 Skill 使用同一底座但专业资产隔离；至少完成一组确定性样例回归 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 29,
+      "requirement": "| [已完成] | P1：Skill 推荐与开放格式包装 | v5.14.0 根据 Excel 文件名、sheet 和有限表头特征给出可解释推荐；三个能力目录均提供 `SKILL.md`，并公开只读格式说明 | 推荐不自动切换，必须由用户确认；只读取有限结构特征；程序不从自然语言 `SKILL.md` 解析价格规则 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 30,
+      "requirement": "| [进行中] | P2：Skill 管理中心与能力市场 | v5.14.0 已提供本机能力盘点、Manifest / SKILL.md / 运行时状态和安装、启停、升级、回滚、卸载、导出的审核计划接口 | 当前处于 `governed-interface` 模式，所有写操作关闭；可信签名、发布审批、组织授权、真实包导入导出和内部市场仍待生产化，不执行任意外部脚本 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "15-专业能力包与Skill管理",
+      "source": "00-PRD/01-模块PRD/15-专业能力包与Skill管理/PRD.md",
+      "line": 412,
+      "requirement": "- 测试专用第二 Skill、当前勘察测量 Skill 和旧请求均通过隔离与回归；“任务隔离与可追溯”已标记 `[已完成]`，第二真实专业仍单独保持 `[待开发]`。",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 34,
+      "requirement": "| [已完成] | P0：原入口与会话共用状态 | 保持左侧“智算助手”、右侧 Dock 和原宽屏会话入口，复用同一消息流、草稿、任务和成果 | v5.11.0 已实现同一工作台及共享状态；原布局进入/退出不刷新页面，现有 `Esc` 规则继续保留；新布局通过统一设置显式选择 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 35,
+      "requirement": "| [已完成] | P0：底部专业能力选择器 | 在会话输入区底部提供专业能力包选择、状态和版本显示 | 已读取 Registry 真实状态；采用自绘向上菜单和统一浅蓝 `Skill包` 标签，规划中能力禁用；当前任务锁定快照，用户仍可为下一个任务选择可用能力 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 36,
+      "requirement": "| [已完成] | P0：会话内文件与任务入口 | 支持在输入区上传当前 Skill 允许的文件，并用自然语言说明任务目标 | 当前已上线 Skill 按现有 `.xlsx` 输入链路校验与 inspect；同时支持按钮选择与拖拽上传，上传动作形成右侧用户指令并保留文件 / 任务上下文 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 37,
+      "requirement": "| [已完成] | P0：结构化动作、进度和成果入口 | 聊天流内展示文件、执行阶段、风险、待复核和成果入口 | 已接通真实上传、开始转换、批量匹配、经验池预警、风险清单、报告、Excel / Word 下载和专业页跳转；v5.19.6 让含图表结果按段呈现、费用洞察分八阶段展开并自动跟随，减少动态效果时立即完成；任务操作默认折叠，点击后先写入右侧用户指令，再由助手反馈真实执行结果 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 38,
+      "requirement": "| [已完成] | P0：会话内复核设置与进度查询 | “发送同事复核”不直接发送、不跳出会话；“审核进度查询”读取同一任务库，不建立第二份状态 | Dock 与宽屏工作台共用设置卡和进度卡；设置卡以清晰三步层级组织信息，飞书 / WeAct 分别折叠、分别配置方式和 1 至 10 名明确复核人，支持双平台及群聊 + 私聊同时勾选；补充要求默认折叠，完成受众确认才启用发送；重复触发只移动原卡到最新会话位置；个别个人目标不可达时，原卡显示脱敏失败原因，可达人员仍收到成果和复核按钮，重试只补发失败人员；进度卡按平台展示审核轮次、投递状态、逐人复核结论和已有意见，待审核状态明确写明尚未提交结论，原卡可刷新；取消设置和查询均不产生外部消息 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 39,
+      "requirement": "| [已完成] | P0：确定性指令路由与当前写操作边界 | 规则优先识别已有动作，模型只做意图理解和文字组织；当前专业动作由既有 API 与状态机校验 | v5.11.0 已复用确定性命令和现有 API / 状态机，模型不裁决最终价格、系数和风险等级；当前已有动作均走白名单链路，通用动作卡和更完整的高风险确认协议列入 P1 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 40,
+      "requirement": "| [待开发] | P1：可恢复会话与通用动作协议 | 会话保存 Skill 快照、任务、文件、消息、动作和成果引用，支持刷新后继续，并统一动作卡 / 确认 / 取消协议 | 会话记录和项目知识记忆分库存放；补齐命名、搜索、保留策略和高风险写操作确认，不把普通聊天自动沉淀为知识 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 41,
+      "requirement": "| [已完成] | P0：专业页面安全接力与可切换布局 | 复杂映射、宽表复核和报告精查复用原专业页面；可选左智算/右专业双窗并返回原布局 | 默认原布局；同一会话、任务和成果。支持收起/调整/放大；返回恢复展示状态，表格已存修改及结算草稿保留。14 组原布局关键样式与真实业务回归通过，见本模块验收记录 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 42,
+      "requirement": "| [待开发] | P1：第二个真实 Skill 的会话闭环 | 使用通用服务类真实专业能力验证底部选择、运行时路由和会话动作 | 两个 Skill 使用不同输入、计价库、规则、风险、知识和模板，任务与成果不串用 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "16-对话式智能体工作台",
+      "source": "00-PRD/01-模块PRD/16-对话式智能体工作台/PRD.md",
+      "line": 43,
+      "requirement": "| [暂缓] | P2：多 Skill 任务规划与协同智能体 | 在可信权限和真实多 Skill 基础上支持多步骤计划、多人复核和跨能力编排 | 计划需逐步确认和审计；不执行任意外部脚本，不替代网页业务状态和人工责任 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 31,
+      "requirement": "| [已完成] | P0：填价工作台双视图 | 在现有左侧“填价工作台”内部增加“项目看板｜新建填价”二级页签；现有上传与列映射界面作为“新建填价”视图原样保留 | 不新增一级菜单；切换视图不清空文件、映射、当前任务、结果和下载状态；其他模块切换行为不变 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 32,
+      "requirement": "| [已完成] | P0：统一项目台账 | 建立持久化的 `ProjectRecord`、`ProjectRun` 和成果引用，区分业务项目、一次处理任务和文件版本 | 项目数按唯一 `project_id` 去重；重试、重算和重新生成报告不得虚增项目数；运行库异常时不影响核心填价 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 33,
+      "requirement": "| [已完成] | P0：真实 KPI 与全局筛选 | 展示累计项目、本月新增、已完成、待复核、存在高风险等指标；日期、Skill、状态、来源、风险、质量和项目名筛选集中在居中设置弹窗中 | 指标、图表和列表使用同一统计口径；弹窗内修改在“应用筛选”后统一刷新；点击 KPI 可筛选历史项目；没有数据时显示真实空状态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 34,
+      "requirement": "| [已完成] | P0：现代分析图表 | 展示处理趋势柱状图、项目状态环形图、风险项目横向堆叠柱状图、整体匹配质量 100% 堆叠条形图、本机大模型请求次数波形图、请求模型种类环形图，以及条件式项目来源环形图 | 图表来自真实后端聚合；项目图表可联动历史列表，模型图表随时间范围同步并明确本机审计口径；来源少于 2 种或项目少于 3 个时省略来源图；数值、图例、悬浮说明和无障碍文本齐全 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 35,
+      "requirement": "| [已完成] | P0：历史项目表与最小详情 | 展示项目名称、来源、专业能力、状态、输入行、匹配率、待复核、风险、版本、更新时间和成果状态 | 支持搜索、排序、分页或有限虚拟滚动；可查看项目详情、打开现有预览 / 报告和下载仍存在的成果 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 36,
+      "requirement": "| [已完成] | P0：历史任务诚实回填 | 对既有 `process-state.json` 和智能协同任务做受控回填；没有可靠项目标识的旧记录只标记为“历史处理任务” | 不按同名文件猜测合并项目；缺少创建时间、项目名或预警结果时明确显示未知 / 未运行；回填可重复执行且幂等 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 37,
+      "requirement": "| [已完成] | P0：现代响应式 Dashboard 视觉 | 以“大尾巴 Shadcn UI v1.0.0”和 shadcn/ui preset `b1au7YYAi` 的 Rhea 风格作为组件视觉基准，吸收指定 Mobbin Dashboard 的分析网格、强数字和图表节奏；页头使用紧凑动作，并提供纯白全屏汇报模式；颜色、字体、边框、圆角和状态色服从项目 UI 规范 | 视觉完成度达到现代生产级 SaaS 工作台；汇报模式可用按钮或 `Esc` 退出；复用公共 `--dws-*` 令牌并采用局部组件作用域，不全量执行 shadcn preset、不引入第二套全局样式；纯白底、规范字号、浅蓝同色系图表，无固定分辨率写死 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 38,
+      "requirement": "| [已完成] | P0：看板静默预加载 | 进入主程序 5 秒后，在不展示看板、不抢占首屏关键加载的前提下，后台加载看板代码与默认首屏数据 | 用户在 5 秒后首次打开项目看板时复用已加载组件和数据；5 秒内主动打开则立即加载并取消后台定时器；不得重复请求或让隐藏图表持续渲染 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 39,
+      "requirement": "| [已完成] | P0：后端聚合 API 与安全边界 | 提供项目列表、项目详情和看板聚合接口；前端不扫描运行目录、不接收真实本机绝对路径 | API 返回脱敏成果状态和下载入口；项目名、文件名按本机当前用户范围展示；无权限或文件失效时失败关闭 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 40,
+      "requirement": "| [待开发] | P1：项目恢复、版本与智算查询 | 支持继续处理历史任务、关联已有项目、版本时间线、收藏 / 归档，以及问问智算确定性查询项目统计 | 恢复历史任务不复制项目；问问智算的数量与风险回答来自项目 API，不让大模型自由统计 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "17-项目看板与历史项目",
+      "source": "00-PRD/01-模块PRD/17-项目看板与历史项目/PRD.md",
+      "line": 41,
+      "requirement": "| [待开发] | P2：组织级项目驾驶舱 | 增加团队工作量、处理周期、复核退回率、多专业 Skill 分布、同类项目指标和权限审计 | 接入可信身份和授权后再开放；不同人员、项目和组织范围严格隔离 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 8,
+      "requirement": "| 当前状态 | [已完成] |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 441,
+      "requirement": "| [已完成] | 黄金题集与经典基线 | 扩充简单、复杂、改写、冲突和无依据题，标注黄金证据 | 经典与 hybrid 报告可复现输出 Recall@K、nDCG、误答率、时延和失败清单 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 442,
+      "requirement": "| [已完成] | BM25 与结构化召回 | 建立标准词法统计和字段硬约束召回 | 编码、数字、比例尺、单位和等级保护集不退化 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 443,
+      "requirement": "| [已完成] | 本地向量语义召回 | 建立可离线、可版本化、可重建的 384 维确定性向量索引 | 不依赖外部服务；索引签名和模型版本可检查 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 444,
+      "requirement": "| [已完成] | 融合、去重与可选重排 | 多通道按 RRF 排名融合，再执行权威与冲突门控 | hybrid nDCG@10 0.951188，高于 classic 0.950597；重排失败保留融合结果 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 445,
+      "requirement": "| [已完成] | 证据门控与分层降级 | 有证据时受约束生成；零证据时显式转普通大模型兜底；证据冲突仍交人工复核；费率回答再校验命中表格行 | 零证据响应无来源且明确标识模型兜底；数字、编码、比例尺、单位和费率门控可测试 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 446,
+      "requirement": "| [已完成] | 双模式切换按钮 | 大小窗口共享“经典检索｜混合 RAG”分段切换 | 默认 classic；偏好本地持久化、每条消息冻结实际模式并显示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 447,
+      "requirement": "| [已完成] | 兼容 API 与可解释追踪 | 请求携带模式，响应返回实际模式、通道和降级原因 | 旧客户端继续 classic；问答响应可追溯模式与证据状态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 448,
+      "requirement": "| [已完成] | 索引治理、发布与故障降级 | 版本签名、显式重建、能力探测、离线运行和故障注入验证 | 索引损坏、模型缺失、向量 / 重排超时均不阻断 classic 和专业主流程 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "18-完整混合RAG检索底座",
+      "source": "00-PRD/01-模块PRD/18-完整混合RAG检索底座/PRD.md",
+      "line": 480,
+      "requirement": "只有同时满足以下条件，才可把本模块从 `[待开发]` 改为 `[已完成]`：",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 38,
+      "requirement": "| [已完成] | P0：统一业务 Task 身份与兼容映射 | 在不破坏现有 `job_id`、`run_id`、协同 `task_id` 和上游 `source_task_id` 的前提下，为一次完整业务目标建立稳定 `task_id`，并保存各旧编号的关联关系 | 同一项任务在智算助手、专业工作台、项目详情、智能协同、成果和经验来源中显示同一 Task 身份；重试、重算、刷新预览和重新生成同版本报告不得虚增 Task |",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 39,
+      "requirement": "| [已完成] | P0：任务定义快照 | 任务创建时冻结项目、来源、目标、输入、Skill、预期成果、成功标准、人工闸门和必要责任信息；对话可以辅助预填，但不能虚构业务事实 | 能查看创建时的真实任务定义；Skill ID、版本和清单哈希可追溯；任务执行后不得被当前默认 Skill 漂移改写 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 40,
+      "requirement": "| [已完成] | P0：当前任务条与任务详情 | 在智算助手和专业工作区顶部复用紧凑“当前任务”组件，展示任务名称、编号、来源、Skill、真实状态、当前阶段、复核轮次和成果状态；窄 Dock 使用折叠摘要 | 页面切换不丢任务；点击“查看任务”打开同一任务详情；没有任务时明确显示“尚未发起任务”，不制造演示数据 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 41,
+      "requirement": "| [已完成] | P0：真实执行轨迹 | 把任务定义、Skill 冻结、输入接收、结构识别、规则处理、风险检查、人工复核、成果生成、协同复核和经验治理组织为可点击时间线 | 每个完成节点都有真实事件、时间和来源；未执行显示“未运行 / 不适用”，失败显示原因与可用动作，不允许按前端计时器伪造完成 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 42,
+      "requirement": "| [已完成] | P0：跨模块一致接力 | 执行轨迹节点只跳转到现有专业页面或成果，不复制字段映射、逐行复核、报告预览、协同卡片和知识治理逻辑 | 从任务轨迹进入结果预览、Word 报告、智能协同或知识记忆后仍保持同一任务；返回时上下文和当前成果不丢失 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 43,
+      "requirement": "| [已完成] | P0：任务—成果—Experience 血缘 | 将 Excel / Word / JSON 等成果版本、哈希、复核轮次、知识候选和项目记忆胶囊挂到同一 Task 详情 | 用户能从成果追到任务、Skill 和复核记录，也能从知识候选追到来源任务和成果；撤销、疑似失效等治理状态实时反映，不把候选显示成已确认经验 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 44,
+      "requirement": "| [待开发] | P1：可恢复任务与开放任务摘要 | 支持刷新后恢复当前任务、任务搜索、继续处理、只读历史，以及受控导出人类可读 `task.md` / 机器可读任务摘要 | 导出只含脱敏任务定义、状态、引用和审计摘要，不复制敏感原文件、密钥或内部绝对路径；恢复不会新建重复任务 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "19-Task任务对象与执行轨迹",
+      "source": "00-PRD/01-模块PRD/19-Task任务对象与执行轨迹/PRD.md",
+      "line": 45,
+      "requirement": "| [暂缓] | P2：组织级任务编排与智能建议 | 在可信身份、权限和第二个真实 Skill 具备后，再支持任务模板、SLA、催办、转交、跨 Skill 计划和组织统计 | 所有计划、派发和高风险动作可确认、可审计、可取消；不把通用 BPMN、多智能体自治或在线自训练包装成当前已交付能力 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 91,
+      "requirement": "| [已完成] | P0：统一图形基础组件与数据口径 | 已建立共享 ChartFrame、图形 token、格式化、完整状态和可访问文本摘要，并完成已有图表字体审计 | 未引入第二套主题或大型图形库；新增图形使用自托管苹方和唯一字号，现有业务图形未变形或失效 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 92,
+      "requirement": "| [已完成] | P0：Task 执行轨迹与成果—经验血缘 | 已复用模块 19 的真实 Task 事件、成果、协同和 Experience 血缘，不复制 Task 系统 | 每个节点来自真实事件；未运行 / 不适用不标绿，安全入口继续回到原责任模块 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 93,
+      "requirement": "| [已完成] | P0：经验偏离与 AI填价候选可视化 | 已完成偏离率—样本数散点图、经验区间子弹图和候选价格点图 | 阈值、均值、范围、价格和来源与现有 API 一致；点选候选不自动写值 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 94,
+      "requirement": "| [已完成] | P0：结果预览逐行风险导航 | 已增加行风险迷你地图，保留 Excel 主表宽度、固定 AI 列和原编辑能力 | 主状态使用冻结优先级，点击定位真实 Excel 行，原始多状态仍保留在数据与明细中 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 95,
+      "requirement": "| [已完成] | P0：结算差额与分 Sheet 风险可视化 | 已完成支持审减 / 建议增加的金额瀑布图和同尺度分 Sheet 风险小多图 | 金额按同次审核结果核对等式；后端仅增加向后兼容只读 `sheet_summaries`，不改变审核裁决 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 96,
+      "requirement": "| [已完成] | P1：工作量与智能协同过程可视化 | 已完成工作量独立计数条形图、复核人状态矩阵和真实轮次阶段带 | 重叠计数不做 100% 分区；不触发外部发送、通过或退回动作，缺少历史轮次时诚实显示当前轮 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 97,
+      "requirement": "| [已完成] | P1：知识进化与 RAG 证据可视化 | 已完成可信经验来源 / 治理双条图和调试态检索通道并列图 | 不估算节省工时；并行召回不画漏斗；普通问答不展示调试图，正式依据优先级不变 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "20-跨模块专业数据可视化",
+      "source": "00-PRD/01-模块PRD/20-跨模块专业数据可视化/PRD.md",
+      "line": 98,
+      "requirement": "| [已完成] | P1：项目版本与 Skill 能力可视化 | 已完成项目版本阶段趋势和 Skill 能力矩阵 | 金额与数量分图；少于 2 个真实版本显示不足态，规划 Skill 不可创建任务，测试 Skill 不进入生产清单 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 10,
+      "requirement": "- 当前状态：`[已完成]` 首版。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 22,
+      "requirement": "- [已完成] 新增独立 `compact-touch.css`，在现有主样式之后加载；所有规则只存在于 `max-width: 1024px` 或更窄媒体查询中。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 23,
+      "requirement": "- [已完成] 桌面端继续只由现有 `styles.css` 和模块样式控制，不修改现有主壳 DOM、桌面折叠状态、桌面宽度设置和本地偏好。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 24,
+      "requirement": "- [已完成] iPad / 手机将左侧模块入口收敛为横向触控导航带；保留全部真实模块入口，当前模块同时显示图标和名称，导航带可独立横向滚动。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 25,
+      "requirement": "- [已完成] 右侧智算在窄屏展开时变为覆盖式 Sheet：iPad 最大宽度 `440px / 92vw`，手机为全宽；收起后保留不遮挡主流程的触控入口。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 26,
+      "requirement": "- [已完成] 中间工作区改为单列可滚动区域；填价工作台的上传、转换概览和工作状态依次纵向排列，业务组件和处理状态不复制。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 27,
+      "requirement": "- [已完成] Excel 结果预览保持真实表格形态，仅允许表格、Sheet 标签和工具条在自身容器内受控横向滚动，不把宽表转换成可能丢字段的卡片。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 28,
+      "requirement": "- [已完成] Word、知识库、智能协同、结算审核和对话式工作台保留真实组件，并在剩余动态视口中运行。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 29,
+      "requirement": "- [已完成] 使用 `100dvh`、`env(safe-area-inset-*)`、`overscroll-behavior` 和 iOS 惯性滚动处理动态地址栏、安全区与触摸滚动。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 30,
+      "requirement": "- [已完成] 主要触控按钮和表单控件最小高度 `44px`；窄屏文本输入使用 `16px`，避免 iOS Safari 聚焦时自动放大；所有主操作继续使用可点击控件，不依赖 hover。",
+      "astra": "待核销"
+    },
+    {
+      "module": "21-竖屏与触控适配",
+      "source": "00-PRD/01-模块PRD/21-竖屏与触控适配/PRD.md",
+      "line": 31,
+      "requirement": "- [已完成] 深浅色、减少动态效果和既有业务状态色继续沿用当前设计系统，不增加第二套主题。",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 岗位证据界面 | 在专业能力中心聚合岗位、Skill、职责、成果和边界 | 已上线 Skill 可看到完整证据；规划中 Skill 只显示不足态且不可创建任务 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 16,
+      "requirement": "| [已完成] | 四项上岗判断 | 分别展示能上岗、能干活、能成长、不越权 | 每项均来自 Registry、Manifest、Task、实际 Tool、Artifact、Experience 或验证事实，不展示估算指标 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 17,
+      "requirement": "| [已完成] | Task—Skill—Tool—Artifact—Experience 血缘 | 只读复用既有任务详情、事件、成果版本、复核与经验血缘 | 有真实 Task 时可展开冻结 Skill、实际 Tool、成果、复核和 Experience；无 Task 时显示诚实空态 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 18,
+      "requirement": "| [已完成] | V3.1 正式验证事实 | Manifest 只引用安全的机器可读验收摘要 | 页面显示验证日期、样例、1254 个目标单元格及差异为 0 的事实，并明确已知限制 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 19,
+      "requirement": "| [已完成] | Experience 状态隔离 | 候选、已确认、已撤销、疑似失效分别呈现 | 候选不冒充已确认；聚合失败时按候选保守显示并给出降级提示 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 20,
+      "requirement": "| [已完成] | 同源 Markdown 导出 | 页面和导出共用同一个只读证据响应 | 导出包含生成时间、Skill ID / 版本、数据来源、完成证据、事实边界、不足项和免责声明 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 21,
+      "requirement": "| [已完成] | 安全聚合与降级 | 新增只读聚合接口；各来源可独立失败 | 不返回绝对路径、Manifest 哈希、平台 ID、秘密或个人敏感信息；聚合异常不阻断专业主流程 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 22,
+      "requirement": "| [已完成] | UI 与可访问性 | 使用局部 CSS、自托管苹方和 `--dws-*` 令牌 | 28 / 20 / 16 / 14 / 13 / 12px；深浅色、键盘、减少动态、1366 / 1440 / 1920 与窄屏通过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "22-数智员工上岗证据包",
+      "source": "00-PRD/01-模块PRD/22-数智员工上岗证据包/PRD.md",
+      "line": 23,
+      "requirement": "| [待开发] | 生产级身份与组织授权证明 | 当前证据仅证明本机原型的能力与治理边界 | 接入可信企业身份、岗位授权、审批策略与组织级审计后另行验收 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 8,
+      "requirement": "| 当前状态 | [已完成] v5.23.8 轻联动与动态布局适配；首期业务、浏览器运行态、发布资产检查和 V3.1 成对回归均已通过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 62,
+      "requirement": "| [已完成] | 生成 50 篇造价知识文章 | 按主题矩阵生成真实、互不重复、来源可追溯的通俗文章 | 50 篇；每篇正文 450—650 个汉字；独立质量校验和 human-writing 硬规则通过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 63,
+      "requirement": "| [已完成] | 建立统一文章清单 | 使用独立 `manifest.json` 管理 ID、标题、分类、标签、摘要、文件、来源和关系 | ID 与文件唯一；正文和清单一一对应；后端不返回本机绝对路径 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 64,
+      "requirement": "| [已完成] | 自动建立文章连接 | 构建期建立每篇 2—5 条可解释关系并冻结 | 50 个节点、74 条关系；无悬空、自环、重复边和孤立节点；图整体连通 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 65,
+      "requirement": "| [已完成] | 文章目录与全文阅读 | 在现有知识库问答模块内增加文章页签，支持搜索、分类、标签、文章详情和相关文章跳转 | 目录只取元数据；点击文章才取正文；上一篇、下一篇和相关文章可操作 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 66,
+      "requirement": "| [已完成] | Obsidian 风格关系网络 | 使用 `react-force-graph-2d` 展示深空星云、自然聚类、缩放、拖动、悬停、搜索、高亮、轻量动效和节点点击 | 50 个节点完整可见；画布随 Dock 伸缩；节点可拖动并带短时惯性；空白点击可取消选择；`1.5×` 起名称渐显；选中卡片列出并可打开关联笔记；关系列表位于右侧并默认折叠 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 67,
+      "requirement": "| [已完成] | 延后加载与性能隔离 | 图谱代码、图数据和正文均按需加载，离开图谱页签时卸载图形子树 | 图谱形成独立异步 chunk；非文章页不请求文章接口，图谱组件采用 `React.lazy` |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 68,
+      "requirement": "| [已完成] | 独立接口与故障降级 | 使用独立只读 API 和独立服务文件，不改写现有知识接口 | 清单或正文异常只显示本模块错误；现有问答、填价、预警、报告和协同接口保持独立 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 69,
+      "requirement": "| [暂缓] | 接入现有知识问答或 RAG | 后续经过内容审核、来源授权和性能评估后另立需求 | 首期文章不进入现有索引，不参与 `/api/knowledge/search` 或 `/api/knowledge/ask` |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 70,
+      "requirement": "| [不做] | 图数据库与运行时智能建图 | 50 篇规模不引入 Neo4j、GraphRAG、LightRAG 或在线向量关系计算 | 发布包不增加独立图数据库、外部图服务或运行时大模型建边 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "23-造价知识文章库与关系网络",
+      "source": "00-PRD/01-模块PRD/23-造价知识文章库与关系网络/PRD.md",
+      "line": 71,
+      "requirement": "| [不做] | 参与专业裁决 | 文章只用于阅读和辅助理解 | 不能反写三个数字、正式规则、经验池、风险等级、知识记忆或成果文件 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 38,
+      "requirement": "| [已完成] | AIM-01 双模式与任务冻结 | 新建交互式填价任务默认 AI 增强，机械模式可选；冻结请求模式、实际模式、版本与输入 | 受控入口、配置、sidecar 和历史机械兼容通过；G4 本地交付完成 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 39,
+      "requirement": "| [已完成] | AIM-02 复杂表格理解 | 读取数据块、表头、上下级标题、合并关系、备注作用域，提出映射与要素建议 | 顺序读取、来源证据、分块边界和结构化建议通过 G2/G3 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 40,
+      "requirement": "| [已完成] | AIM-03 有证据的候选辨析 | 原规则之外的语义要素与适用条目建议；允许拒绝推荐、发现缺失条件 | 12 个冻结案例全部通过，含真实模型有效解决与正确拒绝；有限样本不外推 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 41,
+      "requirement": "| [已完成] | AIM-04 三字段人工确认与写回 | 基价/单价、实物系数、技术系数分别确认；守住标准、经验来源层级 | 确认、审计、可信候选写回和安全边界专项通过，正式数字仍来自可信资产 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 42,
+      "requirement": "| [已完成] | AIM-05 受限模型执行与提速 | 表级理解、按上下文去重、有限并行、短结构化输出、独立总时限与缓存 | 20 次复杂语义冷缓存通过，中位数 9.415 秒、P95 9.857 秒，实际 20 个唯一语义组、模型墙钟未超限 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 43,
+      "requirement": "| [已完成] | AIM-06 离线降级与故障恢复 | 自动回退、部分失败隔离、取消、刷新恢复、重复点击防重 | 取消/revision、失败隔离、缓存和机械独立路径专项通过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 44,
+      "requirement": "| [已完成] | AIM-07 原界面与真实证据呈现 | 现有入口增加局部模式设置、理解确认和证据详情；保留原按钮与状态 | 生产构建、深浅色、1440/1024/375 宽度、字体和控制台检查通过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 45,
+      "requirement": "| [已完成] | AIM-08 无损回归及 AI 增量评测 | 旧业务 V3.1 成对回归，新能力独立离线、真实模型与陌生格式评测 | 后端 563/5、V3.1 Excel/Word 零业务差异、G2/G3 证据齐全 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 46,
+      "requirement": "| [已完成] | AIM-09 配置、交付与执行留痕 | 任务内审计、默认配置、Skill 隔离、绿色版/云包资产检查、版本文档 | 绿色版 r2 启动与 Skill 200、云包 checker 通过；本地版本文档已同步 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 184,
+      "requirement": "- [已完成] 同一任务的批量匹配使用操作系统文件锁；进程退出自动释放。已完成任务的重复请求返回现有成果，不重写人工修改后的结果。",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 185,
+      "requirement": "- [已完成] 规则匹配、重算、预览和报告处理在独立新成果文件上执行，最后原子更新任务状态引用；失败保留原成果；提交前核对源文件与任务状态是否变化。",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 186,
+      "requirement": "- [已完成] 批量处理在线程池执行，保持事件循环可响应；响应丢失时前端只查询状态，不自动重复提交。状态无法确认时不得当作执行失败向协同平台发通知。",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 187,
+      "requirement": "- [已完成] 失败记录任务、尝试编号、具体阶段与错误类别；状态查询可识别中断，前端区分处理失败、未知结果和成果已生成但页面展示失败。",
+      "astra": "待核销"
+    },
+    {
+      "module": "24-AI增强匹配与离线双模式",
+      "source": "00-PRD/01-模块PRD/24-AI增强匹配与离线双模式/PRD.md",
+      "line": 188,
+      "requirement": "- [待开发] 页面刷新后自动恢复整个聊天会话；跨模块所有写入操作的统一事务调度；跨机器同时访问同一运行目录的分布式执行。这些均不属于本轮已完成承诺。",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 50,
+      "requirement": "| [已完成] | MAP-01 全国项目独立视图 | 在填价工作台内保留原“全国项目”二级页签，并与新增“地图展示”页并列；原页宽屏显示 L7 地图与详情区，窄容器使用抽屉 | 不新增一级菜单；原项目看板、新建填价和原地理地图状态不丢失；原地图退出后资源释放 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 51,
+      "requirement": "| [已完成] | MAP-02 测试地图与 L7 隔离加载 | 测试项目直接使用 AntV L7 + MapLibre 适配器与 OpenFreeMap Positron 测试底图；L7 只在进入地图视图时懒加载，正式地图审批不属于本轮门禁 | L7 版本、测试底图 attribution、POC 和实际 Canvas 运行证据已留存；主入口不加载地图 chunk；无网 / WebGL 有明确降级 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 52,
+      "requirement": "| [进行中] | MAP-03 演示项目与真实项目双数据域 | 提供 8 个脱敏演示项目和本机真实项目切换，演示数据独立只读 | 演示标识常驻可见；不写入项目台账、不改变 KPI、不生成成果；真实范围只显示已确认位置 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 53,
+      "requirement": "| [进行中] | MAP-04 三类空间数据模型 | 增加项目空间档案、地点节点和修订审计，支持 POINT / AREA / CORRIDOR | 多地点顺序、证据、行政代码、坐标系、确认状态和版本可追溯；迁移可重复执行 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 54,
+      "requirement": "| [进行中] | MAP-05 Excel 项目名称与地点识别 | 上传检查阶段提取项目名称、显式地点字段、标题 / 文件名中的行政区和线路顺序 | 显式字段优先；来源保留到 sheet / 单元格；合并单元格口径不变；错误与歧义不强行命中 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 55,
+      "requirement": "| [进行中] | MAP-06 受限 AI 语义消歧 | 仅对机械方法不足的候选调用模型，返回短结构化建议、原文证据和拒绝原因 | 模型不得返回坐标和任意行政代码；候选必须由服务器词典复核；超时 / 非法响应转人工 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 56,
+      "requirement": "| [进行中] | MAP-07 人工确认、修正与审计 | 上传阶段和项目详情都能确认、改选、拒绝或清除位置；使用乐观锁保护并发修改 | 未确认不进入真实地图；旧值、新值、证据、操作人、时间、revision 全部留痕；操作幂等 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 57,
+      "requirement": "| [进行中] | MAP-08 地图交互与项目联动 | 聚合点、悬浮摘要、点击选中、状态 / 风险双通道视觉、项目详情与成果入口；筛选默认收进弹窗；完整世界底图默认聚焦中国，中国浅蓝、有项目省份蓝色高亮、台湾岛轮廓和南海群岛测试示意层已接入 | 地图项目能打开既有项目详情 / 成果；状态不只靠颜色；无假按钮；键盘和减少动效可用 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 58,
+      "requirement": "| [进行中] | MAP-09 旧功能无损与完整验收 | 完成专项、全量、V3.1、浏览器、深浅色、宽窄屏、资源释放和故障降级验证 | G0—G6 全部通过后才升级版本和标记完成；未通过项必须留在实施进度中 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 59,
+      "requirement": "| [进行中] | MAP-10 地理页与展示页共存 | 按正式附录实施 DMT-01—06，保留原 L7“全国项目”页，新增独立“地图展示”页；共享既有项目 API 数据，页面状态隔离 | S0—S6 逐阶段留证；旧主题无损；标签避让、真实交互、深浅色及宽窄屏通过；不冒充整个模块完成 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "25-全国项目地图与地点识别",
+      "source": "00-PRD/01-模块PRD/25-全国项目地图与地点识别/PRD.md",
+      "line": 738,
+      "requirement": "只有 MAP-01—09 和 G0—G6 全部通过，才可把模块标记为 `[已完成]`。小样成功、静态页面、8 个演示点、前端构建、mock AI 或单次截图均不能替代完整验收。",
+      "astra": "待核销"
+    },
+    {
+      "module": "26-Gork任务哨兵只读接口",
+      "source": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "line": 7,
+      "requirement": "| [已完成] | 当前任务发现 | `GET /api/task-monitor/current` 只返回真实持有批量匹配进程锁、且运行记录为 `running` 的最新任务；否则返回 `task: null`。 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "26-Gork任务哨兵只读接口",
+      "source": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "line": 8,
+      "requirement": "| [已完成] | 短任务终态补报 | 同一只读接口的 `recent` 字段按时间倒序返回最近 20 条有 attempt 的真实批量匹配完成、失败或中断快照；`task` 仍仅表示当前运行任务。Gork 首次读取建立基线，后续按任务与 attempt 去重。 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "26-Gork任务哨兵只读接口",
+      "source": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "line": 9,
+      "requirement": "| [已完成] | 指定任务快照 | `GET /api/tasks/{task_id}/monitor` 分别返回任务登记状态、批量匹配 attempt 状态与已提交结果计数。 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "26-Gork任务哨兵只读接口",
+      "source": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "line": 10,
+      "requirement": "| [已完成] | 只读和未知值 | 查询不创建任务、不同步台账、不打开工作簿、不触发匹配或风险检查；缺失数量返回 `null`。 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "26-Gork任务哨兵只读接口",
+      "source": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "line": 11,
+      "requirement": "| [已完成] | attempt 隔离 | 新批次运行期间，旧批次的已提交结果不能冒充本批次；通过 `batch_attempt` 关联。 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "26-Gork任务哨兵只读接口",
+      "source": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "line": 12,
+      "requirement": "| [已完成] | 七类业务节点 | 转换开始、匹配开始与结果、经验池预警开始与结果、最终 Word 风险报告生成、协同复核发起均由真实业务入口写入持久化节点；`events` 最多返回最近 50 条。 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "26-Gork任务哨兵只读接口",
+      "source": "00-PRD/01-模块PRD/26-Gork任务哨兵只读接口/PRD.md",
+      "line": 13,
+      "requirement": "| [已完成] | 投递确认 | 只有协同任务的成果与复核卡片均记录为 `sent`，监控才派生 `review_sent`；发起请求本身不等于飞书送达。 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "27-WeKnora问答接入",
+      "source": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "line": 13,
+      "requirement": "| [已完成] | 原聊天区显示增强开关与手动引擎选择 | 默认原有问答；关闭时不调用 WeKnora；旧资料库和 classic/hybrid 偏好保留 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "27-WeKnora问答接入",
+      "source": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "line": 14,
+      "requirement": "| [进行中] | 对比输出模式 | 同一普通问题并行请求原有问答与 WeKnora，在同一会话按引擎标明两份回答；停止同时取消两路。业务指令和行级复核仍走原流程；前端构建、不可用禁用态及隔离模拟双路浏览器输出已核验，Windows 主用实例真实双引擎问答待启动后联调 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "27-WeKnora问答接入",
+      "source": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "line": 15,
+      "requirement": "| [已完成] | 宿主独立问答入口与 Windows 资料白名单 | `ask-stream` 仅接受 `cost-aiw` 普通问答；逐请求核对文件 ID、状态、名称和 MD5，不传宽知识库 ID；本机 13/13 核对通过 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "27-WeKnora问答接入",
+      "source": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "line": 16,
+      "requirement": "| [进行中] | 完整 WeKnora 回答、引用与停止 | 正例完整回答和 2 条实际引用已通过；停止尽力调用上游 stop，竞态仍待联调 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "27-WeKnora问答接入",
+      "source": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "line": 17,
+      "requirement": "| [进行中] | 来源查看与历史可用性 | 浏览器片段弹窗和 WeKnora 原文页已打开；引用持久化到本机 SQLite，服务重启与失效门禁待回归 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "27-WeKnora问答接入",
+      "source": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "line": 18,
+      "requirement": "| [进行中] | 主用 Windows 实例真实问答验收 | 凭证、会话、正例、无依据反例、浏览器来源已实测；断流、故障和性能矩阵仍待完成 |",
+      "astra": "待核销"
+    },
+    {
+      "module": "27-WeKnora问答接入",
+      "source": "00-PRD/01-模块PRD/27-WeKnora问答接入/PRD.md",
+      "line": 19,
+      "requirement": "| [待开发] | QG0—QG4 全部门禁 | 按任务包验收矩阵记录实际通过、失败或阻塞；不得用单元测试代替本机问答 |",
+      "astra": "待核销"
+    }
+  ],
+  "frontend_operations": [
+    {
+      "line": 3716,
+      "source": "async function loadUiPreferences(openAfterLoad = false) {"
+    },
+    {
+      "line": 3739,
+      "source": "function openUiTuner() {"
+    },
+    {
+      "line": 3744,
+      "source": "function openUnifiedSettings(tab: \"page\" | \"zhisuan\" | \"memory\" = \"page\") {"
+    },
+    {
+      "line": 3769,
+      "source": "async function saveUiPreferences(nextDraft: UiPreferences = uiPreferencesDraft): Promise<boolean> {"
+    },
+    {
+      "line": 3797,
+      "source": "function saveKnowledgeQuestions(questions: string[]) {"
+    },
+    {
+      "line": 3860,
+      "source": "function handleUiPick(event: MouseEvent<HTMLElement>) {"
+    },
+    {
+      "line": 4153,
+      "source": "function openDownload(url: string, label: string) {"
+    },
+    {
+      "line": 4267,
+      "source": "function openKnowledgeCandidate(seed: KnowledgeCandidateSeed) {"
+    },
+    {
+      "line": 4310,
+      "source": "async function saveKnowledgeCandidate() {"
+    },
+    {
+      "line": 4464,
+      "source": "async function handleKnowledgeNaturalCommand(command: KnowledgeNaturalCommand) {"
+    },
+    {
+      "line": 4574,
+      "source": "async function loadKnowledgeMemoryItems(projectKey = knowledgeProjectKey) {"
+    },
+    {
+      "line": 4625,
+      "source": "async function openKnowledgeMemory() {"
+    },
+    {
+      "line": 4636,
+      "source": "async function loadTrustedExperienceCapsule(refresh = false) {"
+    },
+    {
+      "line": 4659,
+      "source": "async function loadTrustedExperienceMetrics() {"
+    },
+    {
+      "line": 4677,
+      "source": "function openKnowledgeMemorySection(section: \"records\" | \"capsule\" | \"metrics\") {"
+    },
+    {
+      "line": 4813,
+      "source": "async function openReviewProgressCard() {"
+    },
+    {
+      "line": 4834,
+      "source": "async function handleZhisuanCommand(command: ZhisuanCommand) {"
+    },
+    {
+      "line": 4920,
+      "source": "async function runZhisuanQuickCommand(command: ZhisuanCommand, prompt: string) {"
+    },
+    {
+      "line": 4925,
+      "source": "async function runZhisuanSuggestion(prompt: string) {"
+    },
+    {
+      "line": 4977,
+      "source": "async function runZhisuanQuickItem(item: ZhisuanQuickItem) {"
+    },
+    {
+      "line": 5024,
+      "source": "function saveCustomZhisuanQuickCommands() {"
+    },
+    {
+      "line": 5032,
+      "source": "function saveZhisuanChatHeightSetting() {"
+    },
+    {
+      "line": 5038,
+      "source": "function saveZhisuanDockWidthSetting() {"
+    },
+    {
+      "line": 5044,
+      "source": "function saveZhisuanWelcomeMessage() {"
+    },
+    {
+      "line": 5078,
+      "source": "function handleFileChange(event: ChangeEvent<HTMLInputElement>) {"
+    },
+    {
+      "line": 5082,
+      "source": "function handleAgentFileChange(event: ChangeEvent<HTMLInputElement>) {"
+    },
+    {
+      "line": 5095,
+      "source": "function handleAgentFileDrop(nextFile: File) {"
+    },
+    {
+      "line": 5177,
+      "source": "async function loadProjectDefaultSettings() {"
+    },
+    {
+      "line": 5204,
+      "source": "async function loadFeishuAppBotStatus() {"
+    },
+    {
+      "line": 5216,
+      "source": "async function loadFeishuWebhookData() {"
+    },
+    {
+      "line": 5304,
+      "source": "async function loadExternalDispatchData(profileId?: string, refreshDirectory = false) {"
+    },
+    {
+      "line": 5507,
+      "source": "async function loadWebReviewOptions(profileId?: string, refreshDirectory = false, silent = false) {"
+    },
+    {
+      "line": 5649,
+      "source": "async function loadInlineWebReviewOptions(profileId?: string, refreshDirectory = false) {"
+    },
+    {
+      "line": 5772,
+      "source": "async function openWebReviewDialog() {"
+    },
+    {
+      "line": 5777,
+      "source": "async function openInlineWebReviewSetup() {"
+    },
+    {
+      "line": 6107,
+      "source": "async function loadFeishuBotConsole(silent = false) {"
+    },
+    {
+      "line": 6125,
+      "source": "function openFeishuBotConsole() {"
+    },
+    {
+      "line": 6136,
+      "source": "async function saveFeishuWebhookSettings() {"
+    },
+    {
+      "line": 6346,
+      "source": "async function loadInputFieldPreferences(openAfterLoad = false) {"
+    },
+    {
+      "line": 6372,
+      "source": "function openInputFieldSettings() {"
+    },
+    {
+      "line": 6384,
+      "source": "async function saveInputFieldPreferences() {"
+    },
+    {
+      "line": 6400,
+      "source": "function openPreviewSettings() {"
+    },
+    {
+      "line": 6677,
+      "source": "function handlePreviewEditKeyDown(event: KeyboardEvent<HTMLInputElement>, edit: PreviewCellEditState | null) {"
+    },
+    {
+      "line": 6689,
+      "source": "function handlePreviewEditBlur(edit: PreviewCellEditState | null, value: string) {"
+    },
+    {
+      "line": 6732,
+      "source": "async function savePreviewColumnPreferences() {"
+    },
+    {
+      "line": 6786,
+      "source": "function handleExperienceFileChange(event: ChangeEvent<HTMLInputElement>) {"
+    },
+    {
+      "line": 6817,
+      "source": "async function loadExperienceFieldPreferences(openAfterLoad = false) {"
+    },
+    {
+      "line": 6842,
+      "source": "function openExperienceFieldSettings() {"
+    },
+    {
+      "line": 6846,
+      "source": "async function loadExperienceWarningSettings(openAfterLoad = false) {"
+    },
+    {
+      "line": 6871,
+      "source": "function openExperienceWarningSettings() {"
+    },
+    {
+      "line": 6901,
+      "source": "async function saveExperienceWarningSettings() {"
+    },
+    {
+      "line": 6954,
+      "source": "async function saveExperienceFieldPreferences() {"
+    },
+    {
+      "line": 7088,
+      "source": "async function loadWorkloadFieldPreferences(openAfterLoad = false) {"
+    },
+    {
+      "line": 7115,
+      "source": "async function openWorkloadFieldSettings() {"
+    },
+    {
+      "line": 7131,
+      "source": "async function saveWorkloadFieldPreferences() {"
+    },
+    {
+      "line": 7151,
+      "source": "async function loadWorkloadTargetFieldPreferences(openAfterLoad = false) {"
+    },
+    {
+      "line": 7178,
+      "source": "function openWorkloadTargetFieldSettings() {"
+    },
+    {
+      "line": 7190,
+      "source": "async function saveWorkloadTargetFieldPreferences() {"
+    },
+    {
+      "line": 7205,
+      "source": "function handleWorkloadFileChange(event: ChangeEvent<HTMLInputElement>) {"
+    },
+    {
+      "line": 7209,
+      "source": "function handleWorkloadTargetFileChange(event: ChangeEvent<HTMLInputElement>) {"
+    },
+    {
+      "line": 7398,
+      "source": "async function runWorkloadCapture() {"
+    },
+    {
+      "line": 7640,
+      "source": "function handleDragOver(event: DragEvent<HTMLLabelElement>) {"
+    },
+    {
+      "line": 7646,
+      "source": "function handleDragLeave(event: DragEvent<HTMLLabelElement>) {"
+    },
+    {
+      "line": 7651,
+      "source": "function handleDrop(event: DragEvent<HTMLLabelElement>) {"
+    },
+    {
+      "line": 7657,
+      "source": "function handleExperienceDragOver(event: DragEvent<HTMLDivElement>) {"
+    },
+    {
+      "line": 7663,
+      "source": "function handleExperienceDragLeave(event: DragEvent<HTMLDivElement>) {"
+    },
+    {
+      "line": 7668,
+      "source": "function handleExperienceDrop(event: DragEvent<HTMLDivElement>) {"
+    },
+    {
+      "line": 7674,
+      "source": "function handleWorkloadDragOver(event: DragEvent<HTMLDivElement>, role: WorkloadRole) {"
+    },
+    {
+      "line": 7680,
+      "source": "function handleWorkloadDragLeave(event: DragEvent<HTMLDivElement>, role: WorkloadRole) {"
+    },
+    {
+      "line": 7685,
+      "source": "function handleWorkloadDrop(event: DragEvent<HTMLDivElement>, role: WorkloadRole) {"
+    },
+    {
+      "line": 7691,
+      "source": "async function loadProfessionalSkills() {"
+    },
+    {
+      "line": 7897,
+      "source": "async function runBatchMatch() {"
+    },
+    {
+      "line": 7998,
+      "source": "async function confirmAiMatching() {"
+    },
+    {
+      "line": 8042,
+      "source": "async function cancelAiMatching() {"
+    },
+    {
+      "line": 8066,
+      "source": "async function loadDemoSample() {"
+    },
+    {
+      "line": 8106,
+      "source": "async function loadRiskSummary() {"
+    },
+    {
+      "line": 8135,
+      "source": "async function loadExperienceGovernance() {"
+    },
+    {
+      "line": 8155,
+      "source": "async function openFillAssist("
+    },
+    {
+      "line": 8242,
+      "source": "async function confirmFillAssist() {"
+    },
+    {
+      "line": 8285,
+      "source": "async function runExperienceWarnings(fromZhisuan = false) {"
+    },
+    {
+      "line": 8901,
+      "source": "function openRowAi(row: Array<string | number | null>, rowIndex: number) {"
+    },
+    {
+      "line": 8905,
+      "source": "function openRowAiDetail(context: RowAiContext | null = rowAiDetailPrompt) {"
+    },
+    {
+      "line": 9355,
+      "source": "onClick={(event) => event.stopPropagation()}"
+    },
+    {
+      "line": 9455,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 9466,
+      "source": "function openPreviewFromZhisuanGuide() {"
+    },
+    {
+      "line": 9478,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 9496,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 9514,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 9526,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 9868,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 9898,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 9972,
+      "source": "<button key={citation.citation_id} type=\"button\" onClick={async () => {"
+    },
+    {
+      "line": 9984,
+      "source": "<div className=\"weknora-preview-backdrop\" role=\"presentation\" onClick={() => setWeknoraPreview(null)}>"
+    },
+    {
+      "line": 9985,
+      "source": "<div className=\"weknora-preview\" role=\"dialog\" aria-modal=\"true\" aria-label=\"WeKnora 来源片段\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 9986,
+      "source": "<header><strong>{weknoraPreview.title}</strong><button type=\"button\" onClick={() => setWeknoraPreview(null)}>关闭</button></header>"
+    },
+    {
+      "line": 10001,
+      "source": "<button type=\"button\" aria-pressed={knowledgeEngine === \"legacy\"} disabled={isChatting} onClick={() => setKnowledgeEngine(\"legacy\")}>原有问答</button>"
+    },
+    {
+      "line": 10002,
+      "source": "<button type=\"button\" aria-pressed={knowledgeEngine === \"enhanced\"} disabled={isChatting || !weknoraCapabilities?.available} onClick={() => { setKnowledgeEngine(\"enhanced\"); setWeknoraConversationId(null); }}>WeKnora 增强</button>"
+    },
+    {
+      "line": 10003,
+      "source": "<button type=\"button\" aria-pressed={knowledgeEngine === \"compare\"} disabled={isChatting || !weknoraCapabilities?.available} onClick={() => { setKnowledgeEngine(\"compare\"); setWeknoraConversationId(null); }}>对比输出</button>"
+    },
+    {
+      "line": 10051,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 10092,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 10192,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 10395,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 10445,
+      "source": "onClick={() => setActiveName(config.sheet_name)}"
+    },
+    {
+      "line": 10462,
+      "source": "onChange={(event) => toggleActiveWorkloadSheet(role, event.target.checked)}"
+    },
+    {
+      "line": 10475,
+      "source": "onChange={(event) => updateActiveWorkloadHeaderRow(role, Math.max(1, Number(event.target.value) || 1))}"
+    },
+    {
+      "line": 10480,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 10506,
+      "source": "onChange={(event) => updateActiveWorkloadMapping(role, field, event.target.value)}"
+    },
+    {
+      "line": 10560,
+      "source": "function openAgentWorkspace() {"
+    },
+    {
+      "line": 10683,
+      "source": "function openDaweibaKnowledge() {"
+    },
+    {
+      "line": 10887,
+      "source": "<input ref={agentFileInputRef} hidden accept=\".xlsx\" type=\"file\" onChange={handleAgentFileChange} />"
+    },
+    {
+      "line": 10888,
+      "source": "<button type=\"button\" disabled={agentTaskBusy} onClick={() => agentFileInputRef.current?.click()}><Upload size={14} />上传 Excel</button>"
+    },
+    {
+      "line": 10889,
+      "source": "<button className={agentGuidedAction === \"start-conversion\" ? \"is-primary\" : undefined} aria-current={agentGuidedAction === \"start-conversion\" ? \"step\" : undefined} type=\"button\" disabled={!file || agentTaskBusy || Boolean(result)} onClick={() => { appendUserCommand(\"开始转换\"); void processFile(isAgentPrimary ? \"agent\" : undefined); }}>"
+    },
+    {
+      "line": 10892,
+      "source": "<button className={agentGuidedAction === \"batch-match\" ? \"is-primary\" : undefined} aria-current={agentGuidedAction === \"batch-match\" ? \"step\" : undefined} type=\"button\" disabled={!isBatchMatchPending || agentTaskBusy} onClick={() => void runZhisuanQuickCommand(\"batch-match\", \"批量匹配\")}>"
+    },
+    {
+      "line": 10895,
+      "source": "<button type=\"button\" disabled={agentTaskBusy} onClick={() => void runZhisuanQuickCommand(\"fee-analysis\", \"图表分析\")}>"
+    },
+    {
+      "line": 10898,
+      "source": "<button className={agentGuidedAction === \"experience-warning\" ? \"is-primary\" : undefined} aria-current={agentGuidedAction === \"experience-warning\" ? \"step\" : undefined} type=\"button\" disabled={!result || isBatchMatchPending || agentTaskBusy} onClick={() => void runZhisuanQuickCommand(\"experience-warning\", \"运行经验池预警\")}>"
+    },
+    {
+      "line": 10901,
+      "source": "<button type=\"button\" disabled={!result || isBatchMatchPending || agentTaskBusy} onClick={() => { appendUserCommand(\"查看风险清单\"); void loadRiskSummary(); }}>"
+    },
+    {
+      "line": 10904,
+      "source": "<button className={agentGuidedAction === \"risk-report\" ? \"is-primary\" : undefined} aria-current={agentGuidedAction === \"risk-report\" ? \"step\" : undefined} type=\"button\" disabled={!result || isBatchMatchPending || agentTaskBusy} onClick={() => void runZhisuanQuickCommand(\"risk-report\", \"生成风险报告\")}>"
+    },
+    {
+      "line": 10907,
+      "source": "<button type=\"button\" disabled={!result} onClick={() => { appendUserCommand(\"查看结果预览\"); setActiveDaweibaModule(\"preview\"); }}><FileSpreadsheet size={14} />结果预览</button>"
+    },
+    {
+      "line": 10908,
+      "source": "<button className={agentGuidedAction === \"word-preview\" ? \"is-primary\" : undefined} aria-current={agentGuidedAction === \"word-preview\" ? \"step\" : undefined} type=\"button\" disabled={!hasCurrentReport} onClick={() => { appendUserCommand(\"查看 Word 预览\"); if (result?.job_id) setAgentWordPreviewedJobId(result.job_id); setActiveDaweibaModule(\"report\"); }}><FileText size={14} />Word 预览</button>"
+    },
+    {
+      "line": 10909,
+      "source": "<button className={agentGuidedAction === \"send-review\" ? \"is-primary\" : undefined} aria-current={agentGuidedAction === \"send-review\" ? \"step\" : undefined} type=\"button\" disabled={!canDownloadOutputs || agentTaskBusy} onClick={() => void runZhisuanQuickCommand(\"send-review\", \"发布同事复核\")}><Send size={14} />发布同事复核</button>"
+    },
+    {
+      "line": 10910,
+      "source": "<button className={agentGuidedAction === \"review-progress\" ? \"is-primary\" : undefined} aria-current={agentGuidedAction === \"review-progress\" ? \"step\" : undefined} type=\"button\" disabled={!result || agentTaskBusy} onClick={() => void runZhisuanQuickCommand(\"review-progress\", \"审核进度查询\")}><Clock3 size={14} />审核进度查询</button>"
+    },
+    {
+      "line": 10916,
+      "source": "<a href={excelDownloadHref} aria-disabled={!result.downloads.excel} onClick={(event) => { if (!result.downloads.excel) event.preventDefault(); }}>下载 Excel</a>"
+    },
+    {
+      "line": 10917,
+      "source": "<a href={reportDownloadHref || \"#\"} aria-disabled={!reportDownloadHref} onClick={(event) => { if (!reportDownloadHref) event.preventDefault(); }}>下载 Word</a>"
+    },
+    {
+      "line": 10988,
+      "source": "async function openProjectRun("
+    },
+    {
+      "line": 11054,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={activeLlmSettingsTab === \"model\"} className={activeLlmSettingsTab === \"model\" ? \"is-active\" : \"\"} onClick={() => setActiveLlmSettingsTab(\"model\")}>模型接入</button>"
+    },
+    {
+      "line": 11055,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={activeLlmSettingsTab === \"window\"} className={activeLlmSettingsTab === \"window\" ? \"is-active\" : \"\"} onClick={() => setActiveLlmSettingsTab(\"window\")}>智算窗口</button>"
+    },
+    {
+      "line": 11056,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={activeLlmSettingsTab === \"commands\"} className={activeLlmSettingsTab === \"commands\" ? \"is-active\" : \"\"} onClick={() => setActiveLlmSettingsTab(\"commands\")}>快捷指令</button>"
+    },
+    {
+      "line": 11068,
+      "source": "onChange={(event) => applyLlmPreset(event.target.value)}"
+    },
+    {
+      "line": 11078,
+      "source": "<input value={llmSettings.provider} onChange={(event) => setLlmSettings((current) => ({ ...current, provider: event.target.value }))} />"
+    },
+    {
+      "line": 11082,
+      "source": "<input value={llmSettings.model} onChange={(event) => setLlmSettings((current) => ({ ...current, model: event.target.value }))} />"
+    },
+    {
+      "line": 11086,
+      "source": "<input value={llmSettings.baseUrl} onChange={(event) => setLlmSettings((current) => ({ ...current, baseUrl: event.target.value }))} />"
+    },
+    {
+      "line": 11101,
+      "source": "onChange={(event) => setZhisuanChatHeightDraft(event.target.value)}"
+    },
+    {
+      "line": 11112,
+      "source": "onChange={(event) => setZhisuanDockWidthDraft(event.target.value)}"
+    },
+    {
+      "line": 11123,
+      "source": "onChange={(event) => setUseZhisuanDockViewportHeight(event.target.checked)}"
+    },
+    {
+      "line": 11134,
+      "source": "onChange={(event) => updateZhisuanQuickAutoHide(event.target.checked)}"
+    },
+    {
+      "line": 11145,
+      "source": "onChange={(event) => setShowZhisuanAssistantAvatar(event.target.checked)}"
+    },
+    {
+      "line": 11153,
+      "source": "onChange={(event) => setZhisuanDockStyle(event.target.value as ZhisuanDockStyle)}"
+    },
+    {
+      "line": 11174,
+      "source": "onChange={(event) => updateZhisuanDockVisibility(option.id, event.target.checked)}"
+    },
+    {
+      "line": 11185,
+      "source": "onChange={(event) => setZhisuanWelcomeDraft(event.target.value)}"
+    },
+    {
+      "line": 11189,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetZhisuanWelcomeMessage}>"
+    },
+    {
+      "line": 11192,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={restoreZhisuanWindowProjectDefaults}>"
+    },
+    {
+      "line": 11195,
+      "source": "<button className=\"primary-button\" type=\"button\" onClick={() => {"
+    },
+    {
+      "line": 11215,
+      "source": "onChange={(event) => toggleZhisuanQuickItem(item.id, event.target.checked)}"
+    },
+    {
+      "line": 11227,
+      "source": "onChange={(event) => setCustomQuickCommandDraft(event.target.value)}"
+    },
+    {
+      "line": 11231,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetZhisuanQuickSettings}>"
+    },
+    {
+      "line": 11234,
+      "source": "<button className=\"primary-button\" type=\"button\" onClick={saveCustomZhisuanQuickCommands}>"
+    },
+    {
+      "line": 11252,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={knowledgeMemorySection === \"records\"} className={knowledgeMemorySection === \"records\" ? \"is-active\" : \"\"} onClick={() => openKnowledgeMemorySection(\"records\")}><Database size={16} />知识记录</button>"
+    },
+    {
+      "line": 11253,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={knowledgeMemorySection === \"capsule\"} className={knowledgeMemorySection === \"capsule\" ? \"is-active\" : \"\"} onClick={() => openKnowledgeMemorySection(\"capsule\")}><ShieldCheck size={16} />项目胶囊</button>"
+    },
+    {
+      "line": 11254,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={knowledgeMemorySection === \"metrics\"} className={knowledgeMemorySection === \"metrics\" ? \"is-active\" : \"\"} onClick={() => openKnowledgeMemorySection(\"metrics\")}><Sparkles size={16} />进化成效</button>"
+    },
+    {
+      "line": 11259,
+      "source": "<label><span>当前知识范围</span><input value={knowledgeProjectName} onChange={(event) => setKnowledgeProjectName(event.target.value)} /></label>"
+    },
+    {
+      "line": 11260,
+      "source": "<label><span>scope_key</span><input value={knowledgeProjectKey} onChange={(event) => setKnowledgeProjectKey(event.target.value)} /></label>"
+    },
+    {
+      "line": 11261,
+      "source": "<label><span>操作人</span><input value={knowledgeOperator} onChange={(event) => setKnowledgeOperator(event.target.value)} /></label>"
+    },
+    {
+      "line": 11264,
+      "source": "<select value={knowledgeActorRole} onChange={(event) => setKnowledgeActorRole(event.target.value)}>"
+    },
+    {
+      "line": 11270,
+      "source": "<select value={knowledgeMemoryStatus} onChange={(event) => setKnowledgeMemoryStatus(event.target.value as KnowledgeMemoryStatus | \"all\")}>"
+    },
+    {
+      "line": 11273,
+      "source": "<input placeholder=\"关键词查询\" value={knowledgeMemoryQuery} onChange={(event) => setKnowledgeMemoryQuery(event.target.value)} />"
+    },
+    {
+      "line": 11274,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isKnowledgeMemoryLoading} onClick={() => { const projectKey = applyKnowledgeProjectScope(); if (projectKey) void loadKnowledgeMemoryItems(projectKey); }}><RefreshCw className={isKnowledgeMemoryLoading ? \"spin\" : \"\"} size={16} />查询</button>"
+    },
+    {
+      "line": 11279,
+      "source": "<button className={selectedKnowledgeMemory?.id === item.id ? \"is-active\" : \"\"} key={item.id} type=\"button\" onClick={() => void selectKnowledgeMemory(item)}>"
+    },
+    {
+      "line": 11291,
+      "source": "<button className=\"ghost-button knowledge-memory-audit-link\" type=\"button\" onClick={() => document.getElementById(\"knowledge-memory-audit\")?.scrollIntoView({ behavior: \"smooth\", block: \"start\" })}>查看审计</button>"
+    },
+    {
+      "line": 11304,
+      "source": "<label><span>状态变更原因</span><textarea value={knowledgeTransitionReason} onChange={(event) => setKnowledgeTransitionReason(event.target.value)} placeholder=\"驳回、撤销或标记疑似失效时必须填写\" /></label>"
+    },
+    {
+      "line": 11306,
+      "source": "{[\"candidate\", \"pending\"].includes(selectedKnowledgeMemory.status) && <button className=\"ghost-button\" type=\"button\" onClick={() => editKnowledgeMemory(selectedKnowledgeMemory)}>编辑候选</button>}"
+    },
+    {
+      "line": 11307,
+      "source": "{selectedKnowledgeMemory.status === \"candidate\" && <button className=\"primary-button\" type=\"button\" onClick={() => void transitionKnowledgeMemory(\"submit\")}>提交确认</button>}"
+    },
+    {
+      "line": 11308,
+      "source": "{selectedKnowledgeMemory.status === \"pending\" && <button className=\"primary-button\" type=\"button\" onClick={() => void transitionKnowledgeMemory(\"confirm\")}>确认</button>}"
+    },
+    {
+      "line": 11309,
+      "source": "{[\"candidate\", \"pending\"].includes(selectedKnowledgeMemory.status) && <button className=\"ghost-button danger\" type=\"button\" onClick={() => void transitionKnowledgeMemory(\"reject\")}>驳回</button>}"
+    },
+    {
+      "line": 11310,
+      "source": "{selectedKnowledgeMemory.status === \"confirmed\" && <>{selectedKnowledgeMemory.scope_type !== \"general\" && <button className=\"primary-button\" type=\"button\" onClick={() => void promoteKnowledgeMemoryToGeneral()}>提升为通用知识</button>}<button className=\"ghost-button danger\" type=\"button\" onClick={() => void transitionKnowledgeMemory(\"mark-stale\")}>标记疑似失效</button><button className=\"ghost-button danger\" typ"
+    },
+    {
+      "line": 11311,
+      "source": "{selectedKnowledgeMemory.status === \"suspected_stale\" && <button className=\"ghost-button danger\" type=\"button\" onClick={() => void transitionKnowledgeMemory(\"revoke\")}>撤销</button>}"
+    },
+    {
+      "line": 11320,
+      "source": "<header><span><strong>项目记忆胶囊</strong><small>只汇总项目台账、Skill、成果、知识和复核意见的受控引用，不复制文件或聊天。</small></span>{capsuleProjectId && <button className=\"ghost-button\" type=\"button\" disabled={isTrustedExperienceLoading} onClick={() => void loadTrustedExperienceCapsule(true)}><RefreshCw className={isTrustedExperienceLoading ? \"spin\" : \"\"} size={16} />生成 / 刷新</button>}</header>"
+    },
+    {
+      "line": 11334,
+      "source": "<header><span><strong>进化成效</strong><small>{capsuleProjectId ? \"当前可靠项目范围\" : \"当前本机实例范围\"}；只统计真实审计，不估算节省工时。</small></span><button className=\"ghost-button\" type=\"button\" disabled={isTrustedExperienceLoading} onClick={() => void loadTrustedExperienceMetrics()}><RefreshCw className={isTrustedExperienceLoading ? \"spin\" : \"\"} size={16} />刷新</button></header>"
+    },
+    {
+      "line": 11382,
+      "source": "<button className=\"nav-text-button\" type=\"button\" onClick={showWelcomeScreen}>"
+    },
+    {
+      "line": 11388,
+      "source": "<button type=\"button\" aria-pressed={!isAgentPrimary} title=\"使用原布局\" onClick={() => changeWorkspaceLayout(\"classic\")}>传统</button>"
+    },
+    {
+      "line": 11389,
+      "source": "<button type=\"button\" aria-pressed={isAgentPrimary} title=\"智算在左侧，专业预览在右侧\" onClick={() => changeWorkspaceLayout(\"agent-primary\")}>对话</button>"
+    },
+    {
+      "line": 11397,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 11411,
+      "source": "onClick={toggleColorMode}"
+    },
+    {
+      "line": 11420,
+      "source": "onClick={() => openUnifiedSettings(\"page\")}"
+    },
+    {
+      "line": 11431,
+      "source": "onClick={() => setIsSystemArchitectureOpen(false)}"
+    },
+    {
+      "line": 11438,
+      "source": "onClick={(event) => event.stopPropagation()}"
+    },
+    {
+      "line": 11452,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 11463,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 11482,
+      "source": "<button type=\"button\" aria-label=\"关闭系统架构\" title=\"关闭\" onClick={() => setIsSystemArchitectureOpen(false)}>"
+    },
+    {
+      "line": 11523,
+      "source": "<button className=\"welcome-primary\" type=\"button\" onClick={enterAppFromWelcome}>"
+    },
+    {
+      "line": 11531,
+      "source": "onChange={(event) => setHideWelcomeNextTime(event.target.checked)}"
+    },
+    {
+      "line": 11674,
+      "source": "<button className=\"daweiba-mark\" type=\"button\" title={APP_NAME} onClick={() => setActiveDaweibaModule(\"fill\")}>智</button>"
+    },
+    {
+      "line": 11682,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 11693,
+      "source": "<button className=\"daweiba-icon-link\" type=\"button\" title=\"统一设置\" onClick={() => openUnifiedSettings(\"page\")}>"
+    },
+    {
+      "line": 11708,
+      "source": "onClick={() => setIsLeftColumnCollapsed(true)}"
+    },
+    {
+      "line": 11719,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 11765,
+      "source": "onClick={() => setIsLeftColumnCollapsed(false)}"
+    },
+    {
+      "line": 11787,
+      "source": "onClick={() => setFillWorkspaceView(\"dashboard\")}"
+    },
+    {
+      "line": 11795,
+      "source": "onClick={() => setFillWorkspaceView(\"spatial\")}"
+    },
+    {
+      "line": 11803,
+      "source": "onClick={() => setFillWorkspaceView(\"showcase\")}"
+    },
+    {
+      "line": 11811,
+      "source": "onClick={() => setFillWorkspaceView(\"new\")}"
+    },
+    {
+      "line": 11883,
+      "source": "<input accept=\".xlsx\" ref={fileInputRef} type=\"file\" onChange={handleFileChange} />"
+    },
+    {
+      "line": 11919,
+      "source": "onClick={() => setIsProjectNameEditorOpen((current) => !current)}"
+    },
+    {
+      "line": 11936,
+      "source": "onChange={(event) => {"
+    },
+    {
+      "line": 11958,
+      "source": "onChange={(event) => setMatchingMode(event.target.value as \"ai_enhanced\" | \"mechanical\")}"
+    },
+    {
+      "line": 11967,
+      "source": "<button className=\"primary-button\" data-ui-key=\"primary-button\" data-ui-text-key={isProcessing ? \"button.process.running\" : \"button.process.ready\"} style={uiStyle(\"primary-button\")} disabled={isProcessing || isInspecting || !file || !selectedProfessionalSkill} onClick={() => void processFile(\"web\")}>"
+    },
+    {
+      "line": 11971,
+      "source": "<button className=\"ghost-button\" data-ui-key=\"secondary-button\" style={uiStyle(\"secondary-button\")} type=\"button\" disabled={isDemoLoading || isProcessing} onClick={loadDemoSample}>"
+    },
+    {
+      "line": 11982,
+      "source": "onClick={() => setIsMappingOpen((current) => !current)}"
+    },
+    {
+      "line": 12002,
+      "source": "onClick={() => setIsMappingOpen(false)}"
+    },
+    {
+      "line": 12018,
+      "source": "onClick={() => setIsMappingOpen(false)}"
+    },
+    {
+      "line": 12040,
+      "source": "<button className=\"experience-settings-button\" data-ui-key=\"settings-button\" style={uiStyle(\"settings-button\")} type=\"button\" onClick={openInputFieldSettings}>"
+    },
+    {
+      "line": 12052,
+      "source": "onClick={() => setActiveSheetName(config.sheet_name)}"
+    },
+    {
+      "line": 12064,
+      "source": "onChange={(event) => toggleActiveSheet(event.target.checked)}"
+    },
+    {
+      "line": 12078,
+      "source": "onChange={(event) => updateActiveHeaderRow(Math.max(1, Number(event.target.value) || 1))}"
+    },
+    {
+      "line": 12083,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 12097,
+      "source": "onChange={(event) => setOutputMatchReport(event.target.checked)}"
+    },
+    {
+      "line": 12105,
+      "source": "onChange={(event) => setOnlyMatchRowsWithValue(event.target.checked)}"
+    },
+    {
+      "line": 12115,
+      "source": "onChange={(event) => setMatchValueFilterField(event.target.value as WarningFilterField)}"
+    },
+    {
+      "line": 12128,
+      "source": "onChange={(event) => setMergeVerticalCells(event.target.checked)}"
+    },
+    {
+      "line": 12136,
+      "source": "onChange={(event) => setMergeHorizontalCells(event.target.checked)}"
+    },
+    {
+      "line": 12152,
+      "source": "onChange={(event) => updateActiveMapping(field, event.target.value)}"
+    },
+    {
+      "line": 12254,
+      "source": "onClick={() => void openWebReviewDialog()}"
+    },
+    {
+      "line": 12353,
+      "source": "<button type=\"button\" onClick={() => setActiveDaweibaModule(\"preview\")}>"
+    },
+    {
+      "line": 12358,
+      "source": "<button type=\"button\" onClick={() => setActiveDaweibaModule(\"experience\")}>"
+    },
+    {
+      "line": 12363,
+      "source": "<button type=\"button\" onClick={() => setActiveDaweibaModule(\"report\")}>"
+    },
+    {
+      "line": 12441,
+      "source": "onClick={runBatchMatch}"
+    },
+    {
+      "line": 12452,
+      "source": "onClick={recalculatePreviewWorkbook}"
+    },
+    {
+      "line": 12457,
+      "source": "<button className=\"window-settings-button\" type=\"button\" aria-label=\"预览列设置\" onClick={openPreviewSettings}>"
+    },
+    {
+      "line": 12487,
+      "source": "<button type=\"button\" className=\"window-primary-button\" disabled={isAiMatchingBusy} onClick={() => void analyzeAiMatching()}>"
+    },
+    {
+      "line": 12491,
+      "source": "<button type=\"button\" className=\"window-settings-button\" disabled={isAiMatchingBusy} onClick={() => void cancelAiMatching()}>"
+    },
+    {
+      "line": 12531,
+      "source": "onChange={(event) => setSelectedAiProposalIds((current) => event.target.checked"
+    },
+    {
+      "line": 12551,
+      "source": "<button type=\"button\" className=\"window-primary-button\" disabled={isAiMatchingBusy || (!selectedAiProposalIds.some((proposalId) => (aiMatchingState.proposals ?? []).some((proposal) => proposal.proposal_id === proposalId && proposal.can_confirm === true)) && !Object.keys(aiMatchingState.model_result?.mapping ?? {}).length)} onClick={() => void confirmAiMatching()}>"
+    },
+    {
+      "line": 12555,
+      "source": "<button type=\"button\" className=\"window-settings-button\" disabled={isAiMatchingBusy} onClick={() => void cancelAiMatching()}>"
+    },
+    {
+      "line": 12585,
+      "source": "onClick={() => setActivePreviewSheetName(sheet.sheet_name || sheetName)}"
+    },
+    {
+      "line": 12682,
+      "source": "onChange={(event) => updateEditingPreviewCell(event.target.value)}"
+    },
+    {
+      "line": 12715,
+      "source": "onClick={() => openFillAssist(row, sourceIndex)}"
+    },
+    {
+      "line": 12724,
+      "source": "onClick={() => openRowAi(row, sourceIndex)}"
+    },
+    {
+      "line": 12743,
+      "source": "<button className=\"primary-button\" type=\"button\" onClick={() => setActiveDaweibaModule(\"fill\")}>"
+    },
+    {
+      "line": 12771,
+      "source": "<button className=\"experience-settings-button\" type=\"button\" onClick={openExperienceWarningSettings}>"
+    },
+    {
+      "line": 12775,
+      "source": "<button className=\"experience-settings-button\" type=\"button\" disabled={isExperienceGovernanceLoading} onClick={loadExperienceGovernance}>"
+    },
+    {
+      "line": 12779,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={!result || isRunningWarnings || isBatchMatchPending} onClick={() => runExperienceWarnings()}>"
+    },
+    {
+      "line": 12924,
+      "source": "onClick={() => setSelectedWarningKey(warningKey)}"
+    },
+    {
+      "line": 12951,
+      "source": "onClick={(event) => {"
+    },
+    {
+      "line": 12964,
+      "source": "<button className=\"warning-more-button\" type=\"button\" onClick={() => setShowAllWarnings((current) => !current)}>"
+    },
+    {
+      "line": 12992,
+      "source": "onClick={() => setIsExperienceImportCollapsed((current) => !current)}"
+    },
+    {
+      "line": 12997,
+      "source": "<button className=\"experience-settings-button\" type=\"button\" onClick={openExperienceFieldSettings}>"
+    },
+    {
+      "line": 13019,
+      "source": "onChange={handleExperienceFileChange}"
+    },
+    {
+      "line": 13021,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => experienceFileInputRef.current?.click()}>"
+    },
+    {
+      "line": 13025,
+      "source": "<button className=\"primary-button\" disabled={!experienceFile || isImportingExperience} type=\"button\" onClick={importExperienceFile}>"
+    },
+    {
+      "line": 13039,
+      "source": "onChange={(event) => toggleExperienceField(field, event.target.checked)}"
+    },
+    {
+      "line": 13052,
+      "source": "onClick={() => setIsExperienceMappingOpen((current) => !current)}"
+    },
+    {
+      "line": 13078,
+      "source": "onClick={() => setActiveExperienceSheetName(config.sheet_name)}"
+    },
+    {
+      "line": 13091,
+      "source": "onChange={(event) => toggleActiveExperienceSheet(event.target.checked)}"
+    },
+    {
+      "line": 13104,
+      "source": "onChange={(event) => updateActiveExperienceHeaderRow(Math.max(1, Number(event.target.value) || 1))}"
+    },
+    {
+      "line": 13109,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 13131,
+      "source": "onChange={(event) => updateActiveExperienceMapping(field, event.target.value)}"
+    },
+    {
+      "line": 13187,
+      "source": "<button className=\"experience-settings-button\" type=\"button\" onClick={openWorkloadFieldSettings}>"
+    },
+    {
+      "line": 13232,
+      "source": "onChange={handleWorkloadFileChange}"
+    },
+    {
+      "line": 13234,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => workloadFileInputRef.current?.click()}>"
+    },
+    {
+      "line": 13255,
+      "source": "onChange={(event) => toggleWorkloadField(field, event.target.checked)}"
+    },
+    {
+      "line": 13269,
+      "source": "onChange={() => setWorkloadWriteMode(\"conservative\")}"
+    },
+    {
+      "line": 13278,
+      "source": "onChange={() => setWorkloadWriteMode(\"overwrite\")}"
+    },
+    {
+      "line": 13292,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 13322,
+      "source": "onClick={runWorkloadCapture}"
+    },
+    {
+      "line": 13366,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 13425,
+      "source": "onClick={(event) => { if (!canDownloadOutputs) event.preventDefault(); }}"
+    },
+    {
+      "line": 13436,
+      "source": "onClick={(event) => { if (!reportDownloadHref) event.preventDefault(); }}"
+    },
+    {
+      "line": 13446,
+      "source": "onClick={refreshCurrentReportPreview}"
+    },
+    {
+      "line": 13451,
+      "source": "<button className=\"download-button secondary\" type=\"button\" disabled={isRiskSummaryLoading || isBatchMatchPending} aria-label=\"查看当前报告风险清单\" onClick={loadRiskSummary}>"
+    },
+    {
+      "line": 13472,
+      "source": "<button type=\"button\" disabled={isRecalculatingPreview} onClick={recalculatePreviewWorkbook}>"
+    },
+    {
+      "line": 13494,
+      "source": "onClick={() => setIsReportDocumentDark((current) => !current)}"
+    },
+    {
+      "line": 13530,
+      "source": "<button className=\"primary-button\" type=\"button\" onClick={() => setActiveDaweibaModule(\"fill\")}>"
+    },
+    {
+      "line": 13555,
+      "source": "<button className={`knowledge-workspace-tab ${knowledgeWorkspaceTab === \"status\" ? \"is-active\" : \"\"}`} type=\"button\" role=\"tab\" aria-selected={knowledgeWorkspaceTab === \"status\"} aria-controls=\"knowledge-workspace-status\" onClick={() => selectKnowledgeWorkspaceTab(\"status\")}>"
+    },
+    {
+      "line": 13558,
+      "source": "<button className={`knowledge-workspace-tab ${knowledgeWorkspaceTab === \"articles\" ? \"is-active\" : \"\"}`} type=\"button\" role=\"tab\" aria-selected={knowledgeWorkspaceTab === \"articles\"} aria-controls=\"knowledge-workspace-articles\" onClick={() => selectKnowledgeWorkspaceTab(\"articles\")}>"
+    },
+    {
+      "line": 13561,
+      "source": "<button className={`knowledge-workspace-tab ${knowledgeWorkspaceTab === \"network\" ? \"is-active\" : \"\"}`} type=\"button\" role=\"tab\" aria-selected={knowledgeWorkspaceTab === \"network\"} aria-controls=\"knowledge-workspace-network\" onClick={() => selectKnowledgeWorkspaceTab(\"network\")}>"
+    },
+    {
+      "line": 13571,
+      "source": "onChange={setSelectedKnowledgeLibraryIds}"
+    },
+    {
+      "line": 13577,
+      "source": "onChange={updateKnowledgeRetrievalMode}"
+    },
+    {
+      "line": 13610,
+      "source": "<button className=\"primary-button\" type=\"button\" onClick={openDaweibaKnowledge}>"
+    },
+    {
+      "line": 13614,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => setActiveDaweibaModule(\"preview\")}>"
+    },
+    {
+      "line": 13661,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={openFeishuBotConsole}>"
+    },
+    {
+      "line": 13665,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isLoadingFeishuWebhook} onClick={() => void loadFeishuWebhookData()}>"
+    },
+    {
+      "line": 13685,
+      "source": "onClick={() => setActiveCollaborationTab(id)}"
+    },
+    {
+      "line": 13713,
+      "source": "<label><span>外部任务编号</span><input value={externalDispatchSourceTaskId} placeholder=\"留空自动生成\" onChange={(event) => setExternalDispatchSourceTaskId(event.target.value)} /><small>默认自动编写，也可手动修改。</small></label>"
+    },
+    {
+      "line": 13714,
+      "source": "<label><span>任务名称</span><input value={externalDispatchTaskName} onChange={(event) => setExternalDispatchTaskName(event.target.value)} /></label>"
+    },
+    {
+      "line": 13715,
+      "source": "<label><span>项目名称</span><input value={externalDispatchProjectName} placeholder=\"留空自动生成“项目-XXXXXX”\" onChange={(event) => setExternalDispatchProjectName(event.target.value)} /><small>清空后提交时会自动补写。</small></label>"
+    },
+    {
+      "line": 13716,
+      "source": "<label><span>专业能力</span><select value={externalDispatchSkill} onChange={(event) => setExternalDispatchSkill(event.target.value)}>{externalDispatchOptions?.skills.map((skill) => <option key={skill.id} value={skill.id}>{skill.display_name} · {skill.version}</option>)}</select></label>"
+    },
+    {
+      "line": 13717,
+      "source": "<label><span>截止时间</span><input type=\"datetime-local\" value={externalDispatchDeadline} onChange={(event) => setExternalDispatchDeadline(event.target.value)} /></label>"
+    },
+    {
+      "line": 13718,
+      "source": "<label><span>投递平台</span><select value={externalDispatchProfile} disabled={isLoadingExternalDispatch} onChange={(event) => { setExternalDispatchProfile(event.target.value); void loadExternalDispatchData(event.target.value); }}>{externalDispatchPlatforms.map((platform) => <option key={platform.profile_id} value={platform.profile_id} disabled={!platform.configuration_ok}>{platform.label}{platform.con"
+    },
+    {
+      "line": 13719,
+      "source": "<label><span>目标群／成员来源群</span><select value={externalDispatchGroup} disabled={isLoadingExternalDispatch} onChange={(event) => applyExternalDispatchGroup(event.target.value)}>{externalDispatchOptions?.directory.groups.map((group) => <option key={group.group_ref} value={group.group_ref}>{group.name} · {group.member_count} 人{group.authorized ? \"\" : \"（仅人员来源）\"}{group.members_available ? \"\" : \"（成员待读取）\"}<"
+    },
+    {
+      "line": 13720,
+      "source": "<label><span>人员选择范围</span><select value={externalDispatchPeopleSource} onChange={(event) => applyExternalDispatchPeopleSource(event.target.value as \"group\" | \"all\")}><option value=\"group\">从当前群成员选择</option><option value=\"all\">从全部已读取人员选择</option></select><small>全部人员会按平台身份去重，最终投递位置由下方策略决定。</small></label>"
+    },
+    {
+      "line": 13721,
+      "source": "<label><span>目标编制人</span><select value={externalDispatchPerson} onChange={(event) => setExternalDispatchPerson(event.target.value)}>{externalDispatchPeople().map((person) => <option key={person.person_ref} value={person.person_ref}>{person.display_name}</option>)}</select></label>"
+    },
+    {
+      "line": 13722,
+      "source": "<fieldset className=\"is-wide daweiba-external-dispatch-reviewers\"><legend>多人复核</legend><small>测试阶段允许编制人兼任复核人；至少选择 1 人，编制人和复核人合计最多 10 名。机器人只向这里明确勾选并完成姓名映射的人员发送个人消息。</small><div>{externalDispatchPeople().map((person) => <label key={person.person_ref}><input type=\"checkbox\" checked={externalDispatchReviewers.includes(person.person_ref)} onChange={(event) => setExternalDispatchReviewers((current) => e"
+    },
+    {
+      "line": 13727,
+      "source": "<label><span>快捷方案</span><select value={externalDeliveryPreset} onChange={(event) => applyExternalDeliveryPreset(event.target.value as ExternalDeliveryPreset)}><option value=\"mixed\">混合模式（推荐）</option><option value=\"group\">全部群内协作</option><option value=\"direct\" disabled={externalDispatchOptions?.direct_delivery.status !== \"available\"}>全部个人私聊</option><option value=\"custom\">自定义</option></select></label>"
+    },
+    {
+      "line": 13731,
+      "source": "{EXTERNAL_DELIVERY_STAGES.map((stage) => <div role=\"row\" key={stage.id}><span><strong>{stage.label}</strong></span><span>{stage.audience}</span><span className=\"daweiba-external-delivery-channels\"><label><input type=\"checkbox\" checked={externalDeliveryPolicy[stage.id].group} onChange={() => toggleExternalDeliveryChannel(stage.id, \"group\")} />工作群</label><label className={externalDispatchOptions?.di"
+    },
+    {
+      "line": 13735,
+      "source": "<label><span>模板版本</span><input value={externalDispatchTemplateVersion} onChange={(event) => setExternalDispatchTemplateVersion(event.target.value)} /></label>"
+    },
+    {
+      "line": 13736,
+      "source": "<label className=\"is-wide\"><span>任务说明</span><textarea rows={2} value={externalDispatchInstructions} onChange={(event) => setExternalDispatchInstructions(event.target.value)} /></label>"
+    },
+    {
+      "line": 13737,
+      "source": "<div className=\"is-wide daweiba-external-dispatch-file\"><span>待填 Excel 模板</span><div className=\"daweiba-external-dispatch-file-control\"><label htmlFor=\"external-dispatch-file\"><Upload size={15} />{externalDispatchFile || file?.name.toLowerCase().endsWith(\".xlsx\") ? \"更换文件\" : \"选择文件\"}</label><strong>{externalDispatchFile?.name ?? (file?.name.toLowerCase().endsWith(\".xlsx\") ? `${file.name}（沿用刚刚上传）` : "
+    },
+    {
+      "line": 13740,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isCreatingExternalDispatch || !externalDispatchOptions || (externalGroupDeliveryRequested() && (!externalDispatchOptions.target_group.available || !externalDispatchSelectedGroup()?.members_available))} onClick={() => void createExternalDispatchTask()}>{isCreatingExternalDispatch ? <Loader2 size={16} className=\"spin\" /> : <Send size={16} />"
+    },
+    {
+      "line": 13741,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isLoadingExternalDispatch} onClick={() => void loadExternalDispatchData(undefined, true)}><RefreshCw size={16} className={isLoadingExternalDispatch ? \"spin\" : \"\"} />读取群与成员</button>"
+    },
+    {
+      "line": 13744,
+      "source": "{externalDispatchTasks.length ? <div className=\"daweiba-external-dispatch-table\" role=\"table\"><div className=\"is-header\" role=\"row\"><span>任务</span><span>项目</span><span>流程人员</span><span>状态</span><span>投递步骤</span><span>操作</span></div>{externalDispatchTasks.slice(0, 8).map((task) => <div role=\"row\" key={task.task_id}><span title={task.task_id}><strong>{task.source_task_id}</strong><small>{task.task_i"
+    },
+    {
+      "line": 13768,
+      "source": "onChange={(event) => void toggleFeishuAppBot(profile.profile_id, event.target.checked)}"
+    },
+    {
+      "line": 13799,
+      "source": "onChange={(event) => void selectFeishuWebhookProfile(event.target.value)}"
+    },
+    {
+      "line": 13814,
+      "source": "onChange={(event) => void toggleFeishuWebhook(event.target.checked)}"
+    },
+    {
+      "line": 13829,
+      "source": "onChange={(event) => setFeishuWebhookDraft(event.target.value)}"
+    },
+    {
+      "line": 13839,
+      "source": "onChange={(event) => setFeishuSecretDraft(event.target.value)}"
+    },
+    {
+      "line": 13848,
+      "source": "onChange={(event) => setFeishuAppUrlDraft(event.target.value)}"
+    },
+    {
+      "line": 13855,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isSavingFeishuWebhook} onClick={() => void saveFeishuWebhookSettings()}>"
+    },
+    {
+      "line": 13863,
+      "source": "onClick={() => void testFeishuWebhookConnection()}"
+    },
+    {
+      "line": 13868,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isSavingFeishuWebhook || !feishuWebhookStatus.configured} onClick={() => void clearFeishuWebhookSettings()}>"
+    },
+    {
+      "line": 13903,
+      "source": "onChange={(event) => setFeishuNotificationDraft((current) => ({ ...current, [id]: event.target.checked }))}"
+    },
+    {
+      "line": 13920,
+      "source": "<button className=\"ghost-button daweiba-inline-console-toggle\" type=\"button\" aria-expanded={isFeishuBotConsoleInlineOpen} onClick={toggleFeishuBotConsoleInline}>"
+    },
+    {
+      "line": 13935,
+      "source": "<input type=\"checkbox\" checked={isFeishuBotConsoleLive} onChange={(event) => setIsFeishuBotConsoleLive(event.target.checked)} />"
+    },
+    {
+      "line": 13938,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isLoadingFeishuBotConsole} onClick={() => void loadFeishuBotConsole()}>"
+    },
+    {
+      "line": 13942,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={openFeishuBotConsole}>"
+    },
+    {
+      "line": 14004,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 14066,
+      "source": "headerActions={isAgentPrimary ? <button type=\"button\" aria-expanded={isWorkspacePreviewOpen} onClick={() => setIsWorkspacePreviewOpen(current => !current)}><PanelTop size={15} />{isWorkspacePreviewOpen ? \"收起右侧\" : \"打开右侧\"}</button> : undefined}"
+    },
+    {
+      "line": 14072,
+      "source": "<select aria-label=\"右侧专业窗口\" value={activeDaweibaModule} onChange={event => { setActiveDaweibaModule(event.target.value as DaweibaModuleId); setIsWorkspacePreviewOpen(true); }}>"
+    },
+    {
+      "line": 14077,
+      "source": "{isCompactWorkspace ? <button type=\"button\" onClick={() => setIsWorkspacePreviewOpen(false)}>返回对话</button> : <button type=\"button\" onClick={() => setIsProfessionalWorkspaceFocused(current => !current)} aria-label={isProfessionalWorkspaceFocused ? \"恢复双窗口\" : \"放大专业窗口\"} title={isProfessionalWorkspaceFocused ? \"恢复双窗口\" : \"放大专业窗口\"}>{isProfessionalWorkspaceFocused ? <Minimize2 size={15} /> : <Maximize2 si"
+    },
+    {
+      "line": 14078,
+      "source": "<button type=\"button\" onClick={() => changeWorkspaceLayout(\"classic\")} aria-label=\"右侧回到原布局\" title=\"回到原布局\"><X size={15} /></button>"
+    },
+    {
+      "line": 14094,
+      "source": "<button className=\"ai-dock-rail\" type=\"button\" aria-label=\"展开智算\" title=\"展开智算\" onClick={() => setIsAiDockCollapsed(false)}>"
+    },
+    {
+      "line": 14111,
+      "source": "<button className=\"icon-button ai-focus-mode-button\" type=\"button\" aria-label=\"进入智算助手\" title=\"进入智算助手\" onClick={openAgentWorkspace}>"
+    },
+    {
+      "line": 14114,
+      "source": "<button className=\"ai-collapse-button\" type=\"button\" onClick={() => setIsAiDockCollapsed(true)}>"
+    },
+    {
+      "line": 14121,
+      "source": "<button className=\"llm-window-toggle\" type=\"button\" onClick={() => setIsChatOpen((current) => !current)}>"
+    },
+    {
+      "line": 14143,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 14181,
+      "source": "onClick={() => void runZhisuanQuickItem(command)}"
+    },
+    {
+      "line": 14205,
+      "source": "onChange={(event) => setChatInput(event.target.value)}"
+    },
+    {
+      "line": 14230,
+      "source": "<button className=\"chat-send-button\" disabled={isChatting} type=\"button\" onClick={sendChatMessage}>"
+    },
+    {
+      "line": 14250,
+      "source": "<button type=\"button\" onClick={() => setRowAiContext(null)}>"
+    },
+    {
+      "line": 14268,
+      "source": "onChange={(event) => setRowAiQuestion(event.target.value)}"
+    },
+    {
+      "line": 14270,
+      "source": "<button className=\"chat-send-button row-ai-send-button\" disabled={isRowAiLoading} type=\"button\" onClick={() => askRowAi()}>"
+    },
+    {
+      "line": 14330,
+      "source": "onClick={() => setIsLlmDebugOpen((current) => !current)}"
+    },
+    {
+      "line": 14354,
+      "source": "<div className=\"modal-backdrop daweiba-bot-console-backdrop\" role=\"presentation\" onClick={() => setIsFeishuBotConsoleOpen(false)}>"
+    },
+    {
+      "line": 14355,
+      "source": "<div className=\"settings-modal daweiba-bot-console-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"feishu-bot-console-title\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 14364,
+      "source": "<input type=\"checkbox\" checked={isFeishuBotConsoleLive} onChange={(event) => setIsFeishuBotConsoleLive(event.target.checked)} />"
+    },
+    {
+      "line": 14367,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isLoadingFeishuBotConsole} onClick={() => void loadFeishuBotConsole()}>"
+    },
+    {
+      "line": 14371,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => setIsFeishuBotConsoleOpen(false)} autoFocus>"
+    },
+    {
+      "line": 14393,
+      "source": "<div className=\"modal-backdrop row-ai-detail-backdrop\" role=\"presentation\" onClick={() => setRowAiDetailPrompt(null)}>"
+    },
+    {
+      "line": 14394,
+      "source": "<div className=\"settings-modal row-ai-detail-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"AI填价详情\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 14400,
+      "source": "<button type=\"button\" onClick={() => setRowAiDetailPrompt(null)}>"
+    },
+    {
+      "line": 14418,
+      "source": "<button type=\"button\" className=\"secondary-button\" onClick={() => setRowAiDetailPrompt(null)}>"
+    },
+    {
+      "line": 14421,
+      "source": "<button type=\"button\" className=\"primary-button\" onClick={() => openRowAiDetail()}>"
+    },
+    {
+      "line": 14431,
+      "source": "<div className=\"modal-backdrop fill-assist-backdrop\" role=\"presentation\" onClick={() => setFillAssistDialog(null)}>"
+    },
+    {
+      "line": 14438,
+      "source": "onClick={(event) => event.stopPropagation()}"
+    },
+    {
+      "line": 14457,
+      "source": "<button className=\"icon-button\" type=\"button\" aria-label=\"关闭AI填价\" onClick={() => setFillAssistDialog(null)}>"
+    },
+    {
+      "line": 14504,
+      "source": "onChange={() => {"
+    },
+    {
+      "line": 14647,
+      "source": "onChange={(event) => setFillAssistDialog((current) => current ? { ...current, note: event.target.value } : current)}"
+    },
+    {
+      "line": 14669,
+      "source": "onClick={() => void askRowAi("
+    },
+    {
+      "line": 14700,
+      "source": "onClick={() => setIsFillAssistAiAnswerExpanded((expanded) => !expanded)}"
+    },
+    {
+      "line": 14728,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => setFillAssistDialog(null)}>取消</button>"
+    },
+    {
+      "line": 14729,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={fillAssistDialog.isLoading || fillAssistDialog.isConfirming || fillAssistDialog.candidates.length === 0} onClick={confirmFillAssist}>"
+    },
+    {
+      "line": 14749,
+      "source": "<div className=\"modal-backdrop web-review-backdrop\" role=\"presentation\" onClick={closeWebReviewDialog}>"
+    },
+    {
+      "line": 14755,
+      "source": "onClick={(event) => event.stopPropagation()}"
+    },
+    {
+      "line": 14766,
+      "source": "onClick={closeWebReviewDialog}"
+    },
+    {
+      "line": 14787,
+      "source": "onChange={(event) => {"
+    },
+    {
+      "line": 14806,
+      "source": "onChange={(event) => applyWebReviewDeliveryMode(event.target.value as \"group\" | \"direct\")}"
+    },
+    {
+      "line": 14821,
+      "source": "onChange={(event) => applyWebReviewGroup(event.target.value)}"
+    },
+    {
+      "line": 14838,
+      "source": "onChange={(event) => setWebReviewDeadline(event.target.value)}"
+    },
+    {
+      "line": 14856,
+      "source": "onChange={(event) => toggleWebReviewReviewer(person.person_ref, event.target.checked)}"
+    },
+    {
+      "line": 14883,
+      "source": "onChange={(event) => setWebReviewInstructions(event.target.value)}"
+    },
+    {
+      "line": 14892,
+      "source": "onChange={(event) => setWebReviewAudienceConfirmed(event.target.checked)}"
+    },
+    {
+      "line": 14921,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isSendingWebReview} onClick={() => void retryWebReviewTask()}>"
+    },
+    {
+      "line": 14936,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isSendingWebReview} onClick={closeWebReviewDialog}>取消</button>"
+    },
+    {
+      "line": 14941,
+      "source": "onClick={() => void loadWebReviewOptions(webReviewProfile, true)}"
+    },
+    {
+      "line": 14955,
+      "source": "onClick={() => {"
+    },
+    {
+      "line": 14975,
+      "source": "onClick={() => setIsWebReviewRoundConfirmationOpen(false)}"
+    },
+    {
+      "line": 14983,
+      "source": "onClick={(event) => event.stopPropagation()}"
+    },
+    {
+      "line": 15011,
+      "source": "onClick={() => setIsWebReviewRoundConfirmationOpen(false)}"
+    },
+    {
+      "line": 15020,
+      "source": "onClick={() => void sendWebResultReview(true)}"
+    },
+    {
+      "line": 15032,
+      "source": "<div className=\"modal-backdrop input-field-settings-backdrop\" role=\"presentation\" onClick={() => setIsInputFieldSettingsOpen(false)}>"
+    },
+    {
+      "line": 15033,
+      "source": "<div className=\"settings-modal experience-field-settings-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"输入字段设置\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15036,
+      "source": "<button type=\"button\" onClick={() => setIsInputFieldSettingsOpen(false)}>关闭</button>"
+    },
+    {
+      "line": 15045,
+      "source": "onChange={(event) => updateInputFieldDraft(field, event.target.value)}"
+    },
+    {
+      "line": 15054,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetInputFieldDraft}>"
+    },
+    {
+      "line": 15057,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isSavingInputFieldSettings} onClick={saveInputFieldPreferences}>"
+    },
+    {
+      "line": 15067,
+      "source": "<div className=\"modal-backdrop\" role=\"presentation\" onClick={() => setIsPreviewSettingsOpen(false)}>"
+    },
+    {
+      "line": 15068,
+      "source": "<div className=\"settings-modal preview-column-settings-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"预览列设置\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15074,
+      "source": "<button type=\"button\" onClick={() => setIsPreviewSettingsOpen(false)}>关闭</button>"
+    },
+    {
+      "line": 15098,
+      "source": "onChange={(event) => setPreviewDefaultLabelsDraft(event.target.value)}"
+    },
+    {
+      "line": 15108,
+      "source": "onChange={(event) => updatePreviewMaxDisplayChars(Number(event.target.value))}"
+    },
+    {
+      "line": 15128,
+      "source": "onClick={() => setActivePreviewSettingsSheetName(sheetKey)}"
+    },
+    {
+      "line": 15148,
+      "source": "onChange={(event) => updatePreviewSheetHeaderRow(activePreviewSettingsSheet, Number(event.target.value))}"
+    },
+    {
+      "line": 15156,
+      "source": "onClick={refreshActivePreviewSettingsSheet}"
+    },
+    {
+      "line": 15161,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetPreviewSheetColumns}>"
+    },
+    {
+      "line": 15179,
+      "source": "onChange={(event) => updatePreviewSheetColumns(column.label, event.target.checked)}"
+    },
+    {
+      "line": 15190,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => setPreviewDefaultLabelsDraft(preferenceText(previewColumnPreferences.defaultLabels))}>"
+    },
+    {
+      "line": 15193,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isRefreshingPreviewSettings} onClick={restorePreviewProjectDefaults}>"
+    },
+    {
+      "line": 15196,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isRefreshingPreviewSettings} onClick={savePreviewColumnPreferences}>"
+    },
+    {
+      "line": 15206,
+      "source": "<div className=\"modal-backdrop\" role=\"presentation\" onClick={() => setIsExperienceFieldSettingsOpen(false)}>"
+    },
+    {
+      "line": 15207,
+      "source": "<div className=\"settings-modal experience-field-settings-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"经验池字段设置\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15210,
+      "source": "<button type=\"button\" onClick={() => setIsExperienceFieldSettingsOpen(false)}>关闭</button>"
+    },
+    {
+      "line": 15219,
+      "source": "onChange={(event) => updateExperienceFieldDraft(field, event.target.value)}"
+    },
+    {
+      "line": 15229,
+      "source": "onChange={(event) => setOnlyImportExperienceRowsWithValue(event.target.checked)}"
+    },
+    {
+      "line": 15238,
+      "source": "onChange={(event) => setExperienceValueFilterField(event.target.value as ExperienceMappingField)}"
+    },
+    {
+      "line": 15252,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetExperienceFieldDraft}>"
+    },
+    {
+      "line": 15255,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isSavingExperienceFieldSettings} onClick={saveExperienceFieldPreferences}>"
+    },
+    {
+      "line": 15265,
+      "source": "<div className=\"modal-backdrop\" role=\"presentation\" onClick={() => setIsExperienceWarningSettingsOpen(false)}>"
+    },
+    {
+      "line": 15266,
+      "source": "<div className=\"settings-modal experience-field-settings-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"预警设置\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15269,
+      "source": "<button type=\"button\" onClick={() => setIsExperienceWarningSettingsOpen(false)}>关闭</button>"
+    },
+    {
+      "line": 15279,
+      "source": "onChange={(event) => updateExperienceWarningSetting(\"low_risk_warning_ratio\", event.target.value)}"
+    },
+    {
+      "line": 15289,
+      "source": "onChange={(event) => updateExperienceWarningSetting(\"high_risk_warning_ratio\", event.target.value)}"
+    },
+    {
+      "line": 15296,
+      "source": "onChange={(event) => updateExperienceWarningToggle(event.target.checked)}"
+    },
+    {
+      "line": 15305,
+      "source": "onChange={(event) => updateExperienceWarningFilterField(event.target.value)}"
+    },
+    {
+      "line": 15320,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetExperienceWarningSettingsDraft}>"
+    },
+    {
+      "line": 15323,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isSavingExperienceWarningSettings} onClick={saveExperienceWarningSettings}>"
+    },
+    {
+      "line": 15333,
+      "source": "<div className=\"modal-backdrop\" role=\"presentation\" onClick={() => setIsWorkloadFieldSettingsOpen(false)}>"
+    },
+    {
+      "line": 15334,
+      "source": "<div className=\"settings-modal experience-field-settings-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"工作量抓取字段设置\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15337,
+      "source": "<button type=\"button\" onClick={() => setIsWorkloadFieldSettingsOpen(false)}>关闭</button>"
+    },
+    {
+      "line": 15346,
+      "source": "onChange={(event) => setWorkloadElementSequenceEnabled(event.target.checked)}"
+    },
+    {
+      "line": 15354,
+      "source": "onChange={(event) => setWorkloadAdjacentFallbackEnabled(event.target.checked)}"
+    },
+    {
+      "line": 15365,
+      "source": "onChange={(event) => updateWorkloadFieldDraft(field, event.target.value)}"
+    },
+    {
+      "line": 15375,
+      "source": "onChange={(event) => setOnlyCaptureWorkloadRowsWithValue(event.target.checked)}"
+    },
+    {
+      "line": 15384,
+      "source": "onChange={(event) => setWorkloadValueFilterField(event.target.value as WorkloadSourceField)}"
+    },
+    {
+      "line": 15405,
+      "source": "onChange={(event) => setWorkloadTargetElementSequenceEnabled(event.target.checked)}"
+    },
+    {
+      "line": 15413,
+      "source": "onChange={(event) => setWorkloadTargetAdjacentFallbackEnabled(event.target.checked)}"
+    },
+    {
+      "line": 15424,
+      "source": "onChange={(event) => updateWorkloadTargetFieldDraft(field, event.target.value)}"
+    },
+    {
+      "line": 15435,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={restoreProjectDefaultSettings}>"
+    },
+    {
+      "line": 15442,
+      "source": "onClick={saveWorkloadFieldPreferences}"
+    },
+    {
+      "line": 15453,
+      "source": "<div className=\"modal-backdrop daweiba-settings-backdrop\" role=\"presentation\" onClick={() => setIsPageSettingsOpen(false)}>"
+    },
+    {
+      "line": 15454,
+      "source": "<div className=\"settings-modal unified-settings-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"统一设置\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15460,
+      "source": "<button type=\"button\" aria-label=\"关闭统一设置\" onClick={() => setIsPageSettingsOpen(false)}><X size={16} /></button>"
+    },
+    {
+      "line": 15463,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={activePageSettingsTab === \"page\"} className={activePageSettingsTab === \"page\" ? \"is-active\" : \"\"} onClick={() => setActivePageSettingsTab(\"page\")}>页面设置</button>"
+    },
+    {
+      "line": 15464,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={activePageSettingsTab === \"zhisuan\"} className={activePageSettingsTab === \"zhisuan\" ? \"is-active\" : \"\"} onClick={() => setActivePageSettingsTab(\"zhisuan\")}>智算设置</button>"
+    },
+    {
+      "line": 15465,
+      "source": "<button type=\"button\" role=\"tab\" aria-selected={activePageSettingsTab === \"memory\"} className={activePageSettingsTab === \"memory\" ? \"is-active\" : \"\"} onClick={() => openUnifiedSettings(\"memory\")}>知识记忆</button>"
+    },
+    {
+      "line": 15472,
+      "source": "<button className=\"ghost-button\" type=\"button\" aria-pressed={workspaceLayoutMode === \"classic\"} onClick={() => changeWorkspaceLayout(\"classic\")}>原布局</button>"
+    },
+    {
+      "line": 15473,
+      "source": "<button className=\"ghost-button\" type=\"button\" aria-pressed={isAgentPrimary} disabled={!isDesktopWorkspace} onClick={() => changeWorkspaceLayout(\"agent-primary\")}>智算主窗口</button>"
+    },
+    {
+      "line": 15487,
+      "source": "onChange={(event) => updateUiEnabled(event.target.checked)}"
+    },
+    {
+      "line": 15491,
+      "source": "<button className=\"ghost-button\" type=\"button\" disabled={isLoadingUiPreferences} onClick={openUiTuner}>"
+    },
+    {
+      "line": 15495,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isSavingUiPreferences} onClick={() => void saveUiPreferences()}>"
+    },
+    {
+      "line": 15508,
+      "source": "<input type=\"checkbox\" checked={weknoraEnabled} onChange={(event) => {"
+    },
+    {
+      "line": 15522,
+      "source": "onChange={updateKnowledgeRetrievalMode}"
+    },
+    {
+      "line": 15538,
+      "source": "onChange={(event) =>"
+    },
+    {
+      "line": 15551,
+      "source": "onChange={(event) =>"
+    },
+    {
+      "line": 15578,
+      "source": "<button className=\"primary-button\" type=\"button\" onClick={() => setIsPageSettingsOpen(false)}>完成</button>"
+    },
+    {
+      "line": 15591,
+      "source": "<button type=\"button\" onClick={() => setIsUiTunerOpen(false)}>关闭</button>"
+    },
+    {
+      "line": 15599,
+      "source": "onChange={(event) => updateUiEnabled(event.target.checked)}"
+    },
+    {
+      "line": 15607,
+      "source": "onChange={(event) => setActiveUiTarget(event.target.value as UiTunerTargetId)}"
+    },
+    {
+      "line": 15633,
+      "source": "onChange={(event) => updateUiStyleValue(field as keyof UiStyleValues, event.target.value)}"
+    },
+    {
+      "line": 15644,
+      "source": "onChange={(event) => setActiveUiTextKey(event.target.value as UiTextTargetId)}"
+    },
+    {
+      "line": 15654,
+      "source": "onChange={(event) => updateUiTextValue(event.target.value)}"
+    },
+    {
+      "line": 15659,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => setIsUiPickMode((current) => !current)}>"
+    },
+    {
+      "line": 15662,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetActiveUiStyle}>恢复当前元素</button>"
+    },
+    {
+      "line": 15663,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetActiveUiText}>恢复当前文字</button>"
+    },
+    {
+      "line": 15664,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={resetAllUiPreferences}>全部恢复默认</button>"
+    },
+    {
+      "line": 15665,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isSavingUiPreferences} onClick={() => void saveUiPreferences()}>"
+    },
+    {
+      "line": 15678,
+      "source": "<div className=\"modal-backdrop knowledge-memory-backdrop\" role=\"presentation\" onClick={() => setKnowledgeCandidateDraft(null)}>"
+    },
+    {
+      "line": 15679,
+      "source": "<div className=\"settings-modal knowledge-candidate-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"保存为知识候选\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15690,
+      "source": "<button type=\"button\" aria-label=\"关闭知识候选弹窗\" onClick={() => setKnowledgeCandidateDraft(null)}>"
+    },
+    {
+      "line": 15701,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({"
+    },
+    {
+      "line": 15713,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, projectKey: event.target.value }) : current)}"
+    },
+    {
+      "line": 15720,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => {"
+    },
+    {
+      "line": 15746,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({"
+    },
+    {
+      "line": 15763,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, submitter: event.target.value }) : current)}"
+    },
+    {
+      "line": 15770,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, jobId: event.target.value }) : current)}"
+    },
+    {
+      "line": 15778,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, expiresAt: event.target.value }) : current)}"
+    },
+    {
+      "line": 15786,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, title: event.target.value }) : current)}"
+    },
+    {
+      "line": 15793,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, question: event.target.value }) : current)}"
+    },
+    {
+      "line": 15800,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, conclusion: event.target.value }) : current)}"
+    },
+    {
+      "line": 15808,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, conditions: event.target.value }) : current)}"
+    },
+    {
+      "line": 15815,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, exceptions: event.target.value }) : current)}"
+    },
+    {
+      "line": 15823,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, sourceReference: event.target.value }) : current)}"
+    },
+    {
+      "line": 15830,
+      "source": "onChange={(event) => setKnowledgeCandidateDraft((current) => current ? ({ ...current, evidenceSummary: event.target.value }) : current)}"
+    },
+    {
+      "line": 15834,
+      "source": "<button className=\"ghost-button\" type=\"button\" onClick={() => setKnowledgeCandidateDraft(null)}>取消</button>"
+    },
+    {
+      "line": 15835,
+      "source": "<button className=\"primary-button\" type=\"button\" disabled={isSavingKnowledgeCandidate} onClick={() => void saveKnowledgeCandidate()}>"
+    },
+    {
+      "line": 15846,
+      "source": "<div className=\"modal-backdrop knowledge-memory-backdrop\" role=\"presentation\" onClick={() => setIsKnowledgeMemoryOpen(false)}>"
+    },
+    {
+      "line": 15847,
+      "source": "<div className=\"settings-modal knowledge-memory-modal\" role=\"dialog\" aria-modal=\"true\" aria-label=\"知识记忆\" onClick={(event) => event.stopPropagation()}>"
+    },
+    {
+      "line": 15853,
+      "source": "<button type=\"button\" onClick={() => setIsKnowledgeMemoryOpen(false)}>关闭</button>"
+    }
+  ],
+  "note": "源代码盘点，不等同于每项迁移完成。",
+  "audit_note": "接口声明含局部路由前缀，前端操作和需求为检索线索；逐项语义核销未完成。"
+}

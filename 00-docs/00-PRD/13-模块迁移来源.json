@@ -1,0 +1,50 @@
+[
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\public\\system-architecture\\index.html",
+    "target": "public\\system-architecture\\index.html",
+    "sha256": "dfb3378e08aa1c19aabbd9f73bbb1e0bad5e552161c200c503614d02a2382971",
+    "sha256_kind": "original_source",
+    "astra_sha256": "1d036ec9eb9c3ed4c780262f4e98f56117168d1e7842faf7702e754f1c4d1118",
+    "adaptation": "移除远程字体链接；由独立宿主提供 iframe 与 CSP"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\public\\system-architecture\\live-panel-landscape.html",
+    "target": "public\\system-architecture\\live-panel-landscape.html",
+    "sha256": "5c8825baf4ec3bef5b5a6700c4b929d9d2cd5583c311d5cc385e1a258d3af566",
+    "sha256_kind": "original_source",
+    "astra_sha256": "5c8825baf4ec3bef5b5a6700c4b929d9d2cd5583c311d5cc385e1a258d3af566",
+    "adaptation": "移除远程字体链接；由独立宿主提供 iframe 与 CSP"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\KnowledgeNetworkGraph.tsx",
+    "target": "03-Src\\studio\\knowledge-articles\\KnowledgeNetworkGraph.tsx",
+    "sha256": "bfc94a0c06bd12ddc10d9db197b6cf6dc21c1aea671881424d4924cbd7ceb48a",
+    "sha256_kind": "original_source",
+    "astra_sha256": "bbbdade6440c01d71156fec0d536d1bca86dc8bff89276a7d75a91e15ed4512e",
+    "adaptation": "动效偏好使用 Astra 命名空间"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\knowledgeArticlesUtils.ts",
+    "target": "03-Src\\studio\\knowledge-articles\\knowledgeArticlesUtils.ts",
+    "sha256": "8ef839f950263402789f3aefe0d19a8176fb53cd1a9863c4225f2097b1b09fef",
+    "sha256_kind": "original_source",
+    "astra_sha256": "8ef839f950263402789f3aefe0d19a8176fb53cd1a9863c4225f2097b1b09fef",
+    "adaptation": "原样复用，父容器与语义 token 在 workspace.css 适配"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\KnowledgeArticlesModule.tsx",
+    "target": "03-Src\\studio\\knowledge-articles\\KnowledgeArticlesModule.tsx",
+    "sha256": "d6d5f997e6e7a6b293aa0592f7aefd80f2ce70917070e20580187038ffe640c3",
+    "sha256_kind": "original_source",
+    "astra_sha256": "d76bfb423e4b5bbc0409e85fc0a9201217072652c3af20fc6c801c0f7b8a1617",
+    "adaptation": "阅读入口文案与网络计数回调；父容器与语义 token 在 workspace.css 适配"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\knowledgeArticles.css",
+    "target": "03-Src\\studio\\knowledge-articles\\knowledgeArticles.css",
+    "sha256": "9128363a94f9b4738db6719db7dde3a4a3d5cc9adc015d3270a97f707ac3207d",
+    "sha256_kind": "original_source",
+    "astra_sha256": "9128363a94f9b4738db6719db7dde3a4a3d5cc9adc015d3270a97f707ac3207d",
+    "adaptation": "原样复用，父容器与语义 token 在 workspace.css 适配"
+  }
+]

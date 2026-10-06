@@ -1,0 +1,3 @@
+rule_id,sheet_tokens,trigger_keywords,target,note
+R-T2-TRIANGLE-FIRST,表2,三角（边）一级;三角(边)一级,physical,三角（边）一级套用不造标 0.6 缺少直接标准条文支撑
+R-T4-ROW113,表4,工程勘察服务成本要素信息（2022版）;工程勘察服务成本要素信息(2022版),technical,特殊来源行不套通用技术费规则

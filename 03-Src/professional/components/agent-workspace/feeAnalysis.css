@@ -1,0 +1,229 @@
+.fee-analysis {
+  --fee-blue-0: var(--db-chart-blue-strong, #2563eb);
+  --fee-blue-1: var(--db-chart-blue-mid, #60a5fa);
+  --fee-blue-2: var(--db-chart-blue-base, #3b82f6);
+  --fee-blue-3: var(--db-chart-blue-soft, #93c5fd);
+  --fee-blue-4: var(--db-chart-blue-deep, #1e40af);
+  --fee-blue-5: var(--db-chart-blue-pale, #bfdbfe);
+  margin: 18px 0 6px;
+  color: var(--dws-color-foreground, #0f172a);
+  container-name: fee-analysis;
+  container-type: inline-size;
+}
+
+.fee-analysis__reveal {
+  animation: fee-analysis-module-reveal 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fee-analysis__header,
+.fee-analysis__panel-title,
+.fee-analysis__bar-meta,
+.fee-analysis__legend li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fee-analysis__header { margin-bottom: 10px; }
+.fee-analysis__header > div { display: grid; gap: 3px; }
+.fee-analysis__eyebrow {
+  color: var(--dws-color-primary, #2563eb);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.fee-analysis__header strong { font-size: 14px; font-weight: 600; }
+.fee-analysis__source {
+  border: 1px solid var(--dws-color-border, #e2e8f0);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: var(--dws-color-foreground-muted, #64748b);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.fee-analysis__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--dws-color-border, #e2e8f0);
+  border-radius: 8px;
+  background: var(--dws-color-background, #fff);
+}
+.fee-analysis__metrics > div { display: grid; gap: 2px; padding: 10px 12px; min-width: 0; }
+.fee-analysis__metrics > div + div { border-left: 1px solid var(--dws-color-border, #e2e8f0); }
+.fee-analysis__metrics span { color: var(--dws-color-foreground-muted, #64748b); font-size: 11px; }
+.fee-analysis__metrics strong {
+  overflow: hidden;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fee-analysis small { color: var(--dws-color-foreground-muted, #64748b); font-size: 10px; font-weight: 500; }
+
+.fee-analysis__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.fee-analysis__panel {
+  min-width: 0;
+  border: 1px solid var(--dws-color-border, #e2e8f0);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--dws-color-background, #fff);
+}
+.fee-analysis__panel-title { align-items: flex-start; margin-bottom: 12px; }
+.fee-analysis__panel-title > div { display: grid; gap: 2px; }
+.fee-analysis__panel-title strong { font-size: 13px; font-weight: 600; }
+.fee-analysis__panel-title span { color: var(--dws-color-foreground-muted, #64748b); font-size: 10px; }
+.fee-analysis__panel-title > span {
+  border-radius: 999px;
+  background: var(--db-chart-blue-wash, #eff6ff);
+  padding: 3px 7px;
+  color: var(--dws-color-primary, #2563eb);
+}
+
+.fee-analysis__donut-layout {
+  display: grid;
+  grid-template-columns: minmax(128px, 150px) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+.fee-analysis__donut { display: block; width: 100%; max-width: 150px; }
+.fee-analysis__donut-track,
+.fee-analysis__donut-segment { fill: none; stroke-width: 17; }
+.fee-analysis__donut-track { stroke: var(--db-chart-blue-wash, #eff6ff); }
+.fee-analysis__donut-segment {
+  transform: rotate(-90deg);
+  transform-origin: 80px 80px;
+  stroke-dashoffset: var(--fee-dash-offset);
+  stroke-linecap: butt;
+}
+.fee-analysis__donut-value {
+  fill: var(--dws-color-foreground, #0f172a);
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.fee-analysis__donut-unit { fill: var(--dws-color-foreground-muted, #64748b); font-size: 8px; }
+.fee-analysis__legend { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.fee-analysis__legend li { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; gap: 7px; font-size: 11px; }
+.fee-analysis__legend-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fee-analysis__legend li strong { font-variant-numeric: tabular-nums; }
+.fee-analysis__legend-dot { width: 7px; height: 7px; border-radius: 2px; background: var(--fee-blue-0); }
+
+.fee-analysis__bars { display: grid; gap: 10px; }
+.fee-analysis__bar-row { display: grid; grid-template-columns: minmax(0, 1fr) 42px; gap: 5px 8px; align-items: center; }
+.fee-analysis__bar-meta { grid-column: 1 / -1; font-size: 11px; }
+.fee-analysis__bar-meta > span { overflow: hidden; color: var(--dws-color-foreground, #334155); text-overflow: ellipsis; white-space: nowrap; }
+.fee-analysis__bar-meta strong { flex: none; font-size: 11px; font-variant-numeric: tabular-nums; }
+.fee-analysis__bar-track { height: 7px; overflow: hidden; border-radius: 999px; background: var(--db-chart-blue-wash, #eff6ff); }
+.fee-analysis__bar-fill { display: block; min-width: 2px; height: 100%; border-radius: inherit; background: var(--fee-blue-0); }
+.fee-analysis__bar-fill.is-zero { min-width: 0; }
+.fee-analysis__bar-share { color: var(--dws-color-foreground-muted, #475569); font-size: 10px; font-variant-numeric: tabular-nums; text-align: right; }
+
+.fee-analysis :is(.is-0) { --active-fee-color: var(--fee-blue-0); }
+.fee-analysis :is(.is-1) { --active-fee-color: var(--fee-blue-1); }
+.fee-analysis :is(.is-2) { --active-fee-color: var(--fee-blue-2); }
+.fee-analysis :is(.is-3) { --active-fee-color: var(--fee-blue-3); }
+.fee-analysis :is(.is-4) { --active-fee-color: var(--fee-blue-4); }
+.fee-analysis :is(.is-5) { --active-fee-color: var(--fee-blue-5); }
+.fee-analysis__donut-segment[class*="is-"] { stroke: var(--active-fee-color); }
+.fee-analysis__legend-dot[class*="is-"],
+.fee-analysis__bar-fill[class*="is-"] { background: var(--active-fee-color); }
+
+.fee-analysis__note {
+  margin: 9px 2px 0 !important;
+  color: var(--dws-color-foreground-muted, #64748b) !important;
+  font-size: 10px !important;
+  line-height: 1.55 !important;
+}
+
+@keyframes fee-analysis-donut-fill {
+  from { stroke-dasharray: 0 100; }
+}
+
+@keyframes fee-analysis-module-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fee-analysis-bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (max-width: 640px) {
+  .fee-analysis__metrics { grid-template-columns: 1fr; }
+  .fee-analysis__metrics > div + div { border-top: 1px solid var(--dws-color-border, #e2e8f0); border-left: 0; }
+  .fee-analysis__donut-layout { grid-template-columns: 128px minmax(0, 1fr); }
+}
+
+@container fee-analysis (max-width: 440px) {
+  .fee-analysis { margin-top: 12px; }
+  .fee-analysis__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .fee-analysis__source { align-self: flex-start; }
+  .fee-analysis__metrics { grid-template-columns: minmax(0, 1fr); }
+  .fee-analysis__metrics > div { padding: 8px 10px; }
+  .fee-analysis__metrics > div + div {
+    border-top: 1px solid var(--dws-color-border, #e2e8f0);
+    border-left: 0;
+  }
+  .fee-analysis__grid { grid-template-columns: minmax(0, 1fr); }
+  .fee-analysis__panel { padding: 10px; }
+  .fee-analysis__donut-layout { grid-template-columns: 120px minmax(0, 1fr); }
+  .fee-analysis__donut { max-width: 120px; }
+  .fee-analysis__note { margin-top: 7px !important; }
+}
+
+@container fee-analysis (max-width: 310px) {
+  .fee-analysis__donut-layout {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+  .fee-analysis__legend { width: 100%; }
+  .fee-analysis__bar-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fee-analysis__donut-segment {
+    animation: fee-analysis-donut-fill var(--fee-animation-duration, 1500ms) cubic-bezier(0.22, 1, 0.36, 1) var(--fee-animation-delay, 0ms) both;
+  }
+
+  .fee-analysis__bar-fill {
+    transform-origin: left center;
+    animation: fee-analysis-bar-fill var(--fee-animation-duration, 1500ms) cubic-bezier(0.22, 1, 0.36, 1) var(--fee-animation-delay, 0ms) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fee-analysis__reveal {
+    animation: none;
+  }
+
+  .fee-analysis .fee-analysis__donut .fee-analysis__donut-segment {
+    animation: fee-analysis-donut-fill var(--fee-animation-duration, 1500ms) linear var(--fee-animation-delay, 0ms) both !important;
+  }
+
+  .fee-analysis .fee-analysis__bar-track .fee-analysis__bar-fill {
+    transform-origin: left center;
+    animation: fee-analysis-bar-fill var(--fee-animation-duration, 1500ms) linear var(--fee-animation-delay, 0ms) both !important;
+  }
+}

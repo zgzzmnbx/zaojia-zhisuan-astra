@@ -1,0 +1,161 @@
+{
+  "id": "survey-measurement-limit-price",
+  "displayName": "勘察测量最高投标限价编制",
+  "version": "1.0.0",
+  "status": "active",
+  "displayOrder": 10,
+  "domain": "工程造价/勘察测量",
+  "description": "面向长输管道勘察测量最高投标限价编制的确定性专业能力。",
+  "applicability": {
+    "includes": [
+      "标准控制价 Excel 的字段映射与三数字匹配",
+      "经验池预警、人工复核、知识问答和 Word/Excel 成果输出"
+    ],
+    "excludes": [
+      "通用服务类项目的独立计价",
+      "由大模型直接生成最终价格或调整系数"
+    ]
+  },
+  "inputProfile": {
+    "extensions": [".xlsx"],
+    "templateHints": ["包含要素1-5、单位、价格和调整系数映射字段"]
+  },
+  "recommendationProfile": {
+    "fileNameKeywords": ["勘察", "测量", "控制价", "投标限价"],
+    "sheetKeywords": ["勘测", "测量", "地质", "勘察", "费用汇总"],
+    "headerKeywords": ["要素1", "要素2", "单位", "基价", "实物工作费调整系数", "技术工作费调整系数"]
+  },
+  "capabilities": {
+    "pricing": true,
+    "workloadCapture": true,
+    "experienceWarning": true,
+    "knowledgeQa": true,
+    "knowledgeMemory": true,
+    "wordReport": true,
+    "collaboration": true
+  },
+  "subSkills": [
+    {
+      "name": "控制价 Excel 智能识别 Skill",
+      "description": "识别工作表、表头和关键字段，建立要素1-5、单位、价格及调整系数映射。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "勘察测量结构化计价 Skill",
+      "description": "加载勘察测量结构化计价库，按专业字段确定基价或单价候选。",
+      "type": "professional",
+      "status": "available"
+    },
+    {
+      "name": "造价规则匹配 Skill",
+      "description": "编排字段硬校验、三数字规则与冲突检测，不确定项自动进入待复核。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "工作量表智能识别 Skill",
+      "description": "从原始工作量表抓取数量、系数和备注，按术语归并与要素顺序回填。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "造价经验风险复核 Skill",
+      "description": "使用经验池比选同类记录，识别价格偏离、样本不足和高风险项目。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "造价待复核处理 Skill",
+      "description": "汇总多候选、无候选、字段冲突和风险项，支持候选确认与人工写回。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "造价依据问答 Skill",
+      "description": "检索正式资料、规则和结构化计价库证据，由问问智算解释判断依据。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "项目知识沉淀 Skill",
+      "description": "保存经确认的项目与任务知识及版本审计，不反向改写正式计价规则。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "造价成果报告生成 Skill",
+      "description": "生成回填控制价 Excel 和模板化 Word 报告，保留匹配摘要与风险说明。",
+      "type": "shared",
+      "status": "available"
+    },
+    {
+      "name": "造价成果协同复核 Skill",
+      "description": "支持多人复核、任务隔离和智能协同分发，沿用任务级专业能力快照。",
+      "type": "shared",
+      "status": "available"
+    }
+  ],
+  "assets": {
+    "knowledgeBase": "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+    "reportTemplate": "03-知识库-二维数据库制作/01-报告模板-招标控制价报告模板/【模板勿动】控制价报告模板-yyyy-mm-dd.docx",
+    "technicalRules": "backend/app/rules/technical_fee_rules.xlsx",
+    "physicalRules": "backend/app/rules/physical_factor_rules.xlsx",
+    "physicalOverrides": "backend/app/rules/physical_factor_overrides.xlsx",
+    "experiencePool": "05-经验池-预警数据/【经验池】-管勘智算-【codex】.xlsx",
+    "experienceWarningSettings": "05-经验池-预警数据/experience-warning-settings-【codex】.json",
+    "knowledgeSources": [
+      "README.md",
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "00-PRD/00-产品总览.md",
+      "03-知识库-二维数据库制作/【数据库】【导入】.xlsx",
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】要素1-5和单位的匹配模式介绍.md",
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/01-【业务资料】原始资料-勘察测量相关基础资料",
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/03-给深度研究的提示词和交付",
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/90-【知识库】勘察测绘大模型问答知识库",
+      "backend/app/rules/technical_fee_rules.xlsx",
+      "backend/app/rules/physical_factor_rules.xlsx",
+      "backend/app/rules/physical_factor_overrides.xlsx"
+    ],
+    "ruleDocuments": [
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】项目以及总体匹配规则介绍.md",
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】要素1-5和单位的匹配模式介绍.md"
+    ],
+    "ruleWorkbooks": [
+      "03-【匹配规则】-勘察测绘知识库-匹配规则提炼/【重要匹配规则】【第一层】-标准规则命中表-说人话版-v1.0.xlsx",
+      "backend/app/rules/technical_fee_rules.xlsx",
+      "backend/app/rules/physical_factor_rules.xlsx",
+      "backend/app/rules/physical_factor_overrides.xlsx"
+    ],
+    "validationSample": "03-知识库-二维数据库制作/【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v3.1【批注-完备】.xlsx",
+    "onboardingEvidence": "business-skills/survey-measurement-limit-price/evals/V3.1正式成对验收事实.json"
+  },
+  "runtime": {
+    "processorId": "survey-measurement-v1",
+    "knowledgeBaseAsset": "knowledgeBase",
+    "ruleAssets": {
+      "technicalRules": "technicalRules",
+      "physicalRules": "physicalRules",
+      "physicalOverrides": "physicalOverrides"
+    },
+    "riskProfile": {
+      "experiencePool": "experiencePool",
+      "warningSettings": "experienceWarningSettings"
+    },
+    "knowledgeSourceAssets": ["knowledgeSources"],
+    "reportTemplateAsset": "reportTemplate",
+    "validationAsset": "validationSample"
+  },
+  "validation": {
+    "status": "verified",
+    "sample": "100 行空单价输入表",
+    "updatedAt": "2026-07-20",
+    "limitations": [
+      "实物工作费调整系数第一层标准规则暂未启用",
+      "多候选、无候选或字段冲突时必须人工复核"
+    ]
+  }
+}

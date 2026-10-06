@@ -1,0 +1,138 @@
+{
+  "$schema": "https://tr.designtokens.org/format/",
+  "name": "大尾巴 Shadcn UI",
+  "version": "1.0.0",
+  "sourcePreset": {
+    "code": "b1au7YYAi",
+    "style": "rhea",
+    "baseColor": "neutral",
+    "theme": "blue",
+    "chartColor": "blue",
+    "iconLibrary": "lucide",
+    "fontProportionReference": "inter",
+    "runtimeFont": "Zaojia PingFang SC",
+    "radius": "default",
+    "menuAccent": "subtle"
+  },
+  "primitive": {
+    "color": {
+      "neutral": {
+        "0": { "$type": "color", "$value": "#FFFFFF" },
+        "25": { "$type": "color", "$value": "#FAFBFC" },
+        "50": { "$type": "color", "$value": "#F8FAFC" },
+        "200": { "$type": "color", "$value": "#E2E8F0" },
+        "300": { "$type": "color", "$value": "#CBD5E1" },
+        "400": { "$type": "color", "$value": "#94A3B8" },
+        "500": { "$type": "color", "$value": "#64748B" },
+        "700": { "$type": "color", "$value": "#334155" },
+        "900": { "$type": "color", "$value": "#0F172A" }
+      },
+      "blue": {
+        "50": { "$type": "color", "$value": "#EFF6FF" },
+        "100": { "$type": "color", "$value": "#DBEAFE" },
+        "200": { "$type": "color", "$value": "#BFDBFE" },
+        "300": { "$type": "color", "$value": "#93C5FD" },
+        "400": { "$type": "color", "$value": "#60A5FA" },
+        "500": { "$type": "color", "$value": "#3B82F6" },
+        "600": { "$type": "color", "$value": "#2563EB" },
+        "700": { "$type": "color", "$value": "#1D4ED8" },
+        "800": { "$type": "color", "$value": "#1E40AF" }
+      },
+      "status": {
+        "success": { "$type": "color", "$value": "#15803D" },
+        "warning": { "$type": "color", "$value": "#D97706" },
+        "danger": { "$type": "color", "$value": "#B42318" },
+        "positiveChart": { "$type": "color", "$value": "rgb(117, 188, 146)" }
+      }
+    },
+    "space": {
+      "1": { "$type": "dimension", "$value": "4px" },
+      "2": { "$type": "dimension", "$value": "8px" },
+      "3": { "$type": "dimension", "$value": "12px" },
+      "4": { "$type": "dimension", "$value": "16px" },
+      "5": { "$type": "dimension", "$value": "20px" },
+      "6": { "$type": "dimension", "$value": "24px" },
+      "8": { "$type": "dimension", "$value": "32px" }
+    },
+    "radius": {
+      "sm": { "$type": "dimension", "$value": "6px" },
+      "default": { "$type": "dimension", "$value": "8px" },
+      "controlGroup": { "$type": "dimension", "$value": "10px" },
+      "overlay": { "$type": "dimension", "$value": "12px" }
+    },
+    "duration": {
+      "fast": { "$type": "duration", "$value": "150ms" },
+      "normal": { "$type": "duration", "$value": "200ms" }
+    }
+  },
+  "semantic": {
+    "color": {
+      "background": { "$type": "color", "$value": "{primitive.color.neutral.0}" },
+      "surface": { "$type": "color", "$value": "{primitive.color.neutral.0}" },
+      "muted": { "$type": "color", "$value": "{primitive.color.neutral.50}" },
+      "foreground": { "$type": "color", "$value": "{primitive.color.neutral.700}" },
+      "foregroundStrong": { "$type": "color", "$value": "{primitive.color.neutral.900}" },
+      "foregroundMuted": { "$type": "color", "$value": "{primitive.color.neutral.500}" },
+      "border": { "$type": "color", "$value": "{primitive.color.neutral.200}" },
+      "primary": { "$type": "color", "$value": "{primitive.color.blue.600}" },
+      "primaryHover": { "$type": "color", "$value": "{primitive.color.blue.700}" },
+      "primarySoft": { "$type": "color", "$value": "{primitive.color.blue.50}" },
+      "success": { "$type": "color", "$value": "{primitive.color.status.success}" },
+      "warning": { "$type": "color", "$value": "{primitive.color.status.warning}" },
+      "danger": { "$type": "color", "$value": "{primitive.color.status.danger}" }
+    },
+    "typography": {
+      "familyUi": {
+        "$type": "fontFamily",
+        "$value": [
+          "Zaojia PingFang SC",
+          "PingFang SC",
+          "Microsoft YaHei UI",
+          "sans-serif"
+        ]
+      },
+      "bodySize": { "$type": "dimension", "$value": "14px" },
+      "labelSize": { "$type": "dimension", "$value": "12px" },
+      "titleSize": { "$type": "dimension", "$value": "20px" }
+    }
+  },
+  "component": {
+    "button": {
+      "height": { "$type": "dimension", "$value": "34px" },
+      "heightSmall": { "$type": "dimension", "$value": "30px" },
+      "radius": { "$type": "dimension", "$value": "{primitive.radius.default}" },
+      "paddingInline": { "$type": "dimension", "$value": "14px" },
+      "background": { "$type": "color", "$value": "{semantic.color.primary}" },
+      "backgroundHover": { "$type": "color", "$value": "{semantic.color.primaryHover}" }
+    },
+    "panel": {
+      "radius": { "$type": "dimension", "$value": "{primitive.radius.default}" },
+      "border": { "$type": "color", "$value": "{semantic.color.border}" },
+      "padding": { "$type": "dimension", "$value": "{primitive.space.4}" },
+      "shadow": { "$type": "shadow", "$value": "none" }
+    },
+    "segmentedSwitcher": {
+      "height": { "$type": "dimension", "$value": "36px" },
+      "itemHeight": { "$type": "dimension", "$value": "30px" },
+      "radius": { "$type": "dimension", "$value": "{primitive.radius.controlGroup}" },
+      "minimumWidthTwoItems": { "$type": "dimension", "$value": "148px" }
+    },
+    "table": {
+      "rowHeight": { "$type": "dimension", "$value": "40px" },
+      "cellPaddingInline": { "$type": "dimension", "$value": "12px" },
+      "headerBackground": { "$type": "color", "$value": "{semantic.color.muted}" }
+    },
+    "dialog": {
+      "radius": { "$type": "dimension", "$value": "{primitive.radius.overlay}" },
+      "widthDefault": { "$type": "dimension", "$value": "640px" },
+      "widthLarge": { "$type": "dimension", "$value": "820px" }
+    },
+    "chart": {
+      "seriesStrong": { "$type": "color", "$value": "{primitive.color.blue.600}" },
+      "seriesDefault": { "$type": "color", "$value": "{primitive.color.blue.500}" },
+      "seriesSoft": { "$type": "color", "$value": "{primitive.color.blue.300}" },
+      "seriesPale": { "$type": "color", "$value": "{primitive.color.blue.200}" },
+      "positive": { "$type": "color", "$value": "{primitive.color.status.positiveChart}" }
+    }
+  }
+}

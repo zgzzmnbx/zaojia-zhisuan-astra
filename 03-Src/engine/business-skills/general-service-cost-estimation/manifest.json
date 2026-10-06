@@ -1,0 +1,94 @@
+{
+  "id": "general-service-cost-estimation",
+  "displayName": "通用服务类造价测算",
+  "version": "0.1.0",
+  "status": "planned",
+  "displayOrder": 20,
+  "domain": "工程造价/通用服务",
+  "description": "规划中的第二个专业能力；尚未建立独立输入、依据、规则、报告和验证样例。",
+  "applicability": {
+    "includes": ["未来用于通用服务类项目造价测算"],
+    "excludes": ["当前不能创建真实任务", "不能复用勘察测量资产伪装上线"]
+  },
+  "inputProfile": {
+    "extensions": [".xlsx"],
+    "templateHints": []
+  },
+  "recommendationProfile": {
+    "fileNameKeywords": ["通用服务", "服务费", "咨询费"],
+    "sheetKeywords": ["服务费用", "咨询费用"],
+    "headerKeywords": ["服务类别", "服务内容", "计费依据", "服务费用"]
+  },
+  "capabilities": {
+    "pricing": false,
+    "workloadCapture": false,
+    "experienceWarning": false,
+    "knowledgeQa": false,
+    "knowledgeMemory": false,
+    "wordReport": false,
+    "collaboration": false
+  },
+  "subSkills": [
+    {
+      "name": "服务类输入模板 Skill",
+      "description": "建立独立上传模板、必填字段和数据校验口径。",
+      "type": "professional",
+      "status": "planned"
+    },
+    {
+      "name": "服务类别智能识别 Skill",
+      "description": "识别服务类别、工作内容、计量单位和关键计价条件。",
+      "type": "professional",
+      "status": "planned"
+    },
+    {
+      "name": "服务类计价依据管理 Skill",
+      "description": "登记并追溯服务类项目独立计价依据，不复用勘察测量专业资产。",
+      "type": "professional",
+      "status": "planned"
+    },
+    {
+      "name": "服务费用规则计算 Skill",
+      "description": "通过结构化数据和确定性规则计算服务费用并解释命中依据。",
+      "type": "professional",
+      "status": "planned"
+    },
+    {
+      "name": "造价经验风险复核 Skill",
+      "description": "复用风险复核框架，但使用服务类独立样本和风险检查规则。",
+      "type": "shared",
+      "status": "planned"
+    },
+    {
+      "name": "服务类人工复核 Skill",
+      "description": "组织缺失依据、规则冲突和异常费用的人工确认与处理状态。",
+      "type": "shared",
+      "status": "planned"
+    },
+    {
+      "name": "造价成果表格与报告生成 Skill",
+      "description": "基于服务类独立结果表格和报告模板生成 Excel 与 Word 成果。",
+      "type": "shared",
+      "status": "planned"
+    },
+    {
+      "name": "服务类回归验证 Skill",
+      "description": "维护输入样例、预期答案和资产隔离测试，证明专业框架可横向扩展。",
+      "type": "professional",
+      "status": "planned"
+    },
+    {
+      "name": "最小业务闭环编排 Skill",
+      "description": "至少真实跑通一次上传、识别、计算、复核和导出后才可进入内测。",
+      "type": "professional",
+      "status": "planned"
+    }
+  ],
+  "assets": {},
+  "validation": {
+    "status": "not_started",
+    "sample": "尚未提供",
+    "updatedAt": "2026-07-20",
+    "limitations": ["缺少独立业务资料、确定性规则、成果模板和验证样例"]
+  }
+}

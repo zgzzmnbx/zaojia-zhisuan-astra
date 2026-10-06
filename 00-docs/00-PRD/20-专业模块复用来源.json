@@ -1,0 +1,537 @@
+[
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\agent-primary-layout.css",
+    "target": "03-Src\\professional\\agent-primary-layout.css",
+    "sha256": "45769a0fd213c626d14f4cfe541c808d1660900b678229a01c11e831414f43a8"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\App.tsx",
+    "target": "03-Src\\professional\\App.tsx",
+    "sha256": "04adc54a70ba34547613788978b5d4903fdd778237bcea537646b11bdbe6e570"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\batchMatchRequest.ts",
+    "target": "03-Src\\professional\\batchMatchRequest.ts",
+    "sha256": "6fbc8fabe72aa939a4c0840ce0213e3180f76f46ced322fa86520fea72d930b0"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\compact-touch.css",
+    "target": "03-Src\\professional\\compact-touch.css",
+    "sha256": "32621c0318e7cb92a0381168d18679d72414ccb4cc2ed0d4ba12aee28027c9f6"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\daweiba-v2.css",
+    "target": "03-Src\\professional\\daweiba-v2.css",
+    "sha256": "313f1d14787c70a31adf4fcea40e8e4d554f6e8cd5a830ae15e21664276acda2"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\DaweibaLayoutV2.tsx",
+    "target": "03-Src\\professional\\DaweibaLayoutV2.tsx",
+    "sha256": "29bf0cc16b155023391cfe38b08a417c7071392e52930a2e22f3c17e4478c188"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\main.tsx",
+    "target": "03-Src\\professional\\main.tsx",
+    "sha256": "2fbb1c6db32c611f7716c40bd9b081f766bd2aac48d0333183fe5f8319a8c2ed"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\styles.css",
+    "target": "03-Src\\professional\\styles.css",
+    "sha256": "1fcf79158daf9d4bb600cdf719c6303b614ae057b045e4d016c837cb3a9b1511"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\vite-env.d.ts",
+    "target": "03-Src\\professional\\vite-env.d.ts",
+    "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\WelcomeBot.tsx",
+    "target": "03-Src\\professional\\components\\WelcomeBot.tsx",
+    "sha256": "bcfcaaabf255ef50a18d30a6fa7fc496dcc1525f2f9ce4537bc24920880ac3d2"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\ZhisuanAvatar.css",
+    "target": "03-Src\\professional\\components\\ZhisuanAvatar.css",
+    "sha256": "6565e01016580acb1d15c433a4b48d24e138f9d7859671818e06d2e0e0b92c60"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\ZhisuanAvatar.tsx",
+    "target": "03-Src\\professional\\components\\ZhisuanAvatar.tsx",
+    "sha256": "08f8d9748f380b8353e2f501fc76d035c43404a26baaf8e55dfe26fc94dd81cf"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\design-system\\dabawei-shadcn-ui.css",
+    "target": "03-Src\\professional\\design-system\\dabawei-shadcn-ui.css",
+    "sha256": "6e1dc4e1333dc8c78dfc6fd9a0f9e52013de83a440c3a3b0fda4a78c8042f508"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\design-system\\dabawei-shadcn-ui.tokens.json",
+    "target": "03-Src\\professional\\design-system\\dabawei-shadcn-ui.tokens.json",
+    "sha256": "db53bb7e8368e00145fffde493f18e146d7871bd23b6508a9201ff35c11ec3b4"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\utils\\knowledgeAnswerPresentation.ts",
+    "target": "03-Src\\professional\\utils\\knowledgeAnswerPresentation.ts",
+    "sha256": "c88637245b0a84120ab28de8e16f4eaba592a4cce28a1c97b09adc514d468457"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\utils\\offlineDemoFill.ts",
+    "target": "03-Src\\professional\\utils\\offlineDemoFill.ts",
+    "sha256": "f57472ecc08a73d93158daa12b1dd317c6a1bc715fdc80981c606d3037e1d01b"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\utils\\trustedExperience.ts",
+    "target": "03-Src\\professional\\utils\\trustedExperience.ts",
+    "sha256": "b51c9573fa1c31f78bd803d667a025c60d460bc9a042d3e91e8bb8305fe30eec"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\utils\\zhisuanInlineMarkdown.ts",
+    "target": "03-Src\\professional\\utils\\zhisuanInlineMarkdown.ts",
+    "sha256": "f108586ea3137517f002d0cd73b91b233f907be1666851e5bf09a41b97e733c7"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\utils\\zhisuanMarkdownTable.ts",
+    "target": "03-Src\\professional\\utils\\zhisuanMarkdownTable.ts",
+    "sha256": "2d85b0f957e76b710f22f2bf2d8a4d50748dda0affc98282a90c5d15c16af8c3"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\utils\\zhisuanMessageReveal.ts",
+    "target": "03-Src\\professional\\utils\\zhisuanMessageReveal.ts",
+    "sha256": "b62c13557b9b984085d66ad529014d1bfc04c7f25a5040aa26b4991ce045b3d5"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\AgentComposer.tsx",
+    "target": "03-Src\\professional\\components\\agent-workspace\\AgentComposer.tsx",
+    "sha256": "a93c65ebbce74e8c8abe436ea038f29d3cbd086c0c6c10eefa5e88e15f11e761"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\AgentMessageStream.tsx",
+    "target": "03-Src\\professional\\components\\agent-workspace\\AgentMessageStream.tsx",
+    "sha256": "b5c8a334e3f1e9b0ac4220284ef6f7665e9cf2b3e020dadd3d8315000b56d182"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\agentWorkspace.css",
+    "target": "03-Src\\professional\\components\\agent-workspace\\agentWorkspace.css",
+    "sha256": "505a1004372f9889f34514951847f1ed5bf9cc76ee6229b13c194ab43878a475"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\agentWorkspaceUtils.ts",
+    "target": "03-Src\\professional\\components\\agent-workspace\\agentWorkspaceUtils.ts",
+    "sha256": "17d4b5ecc554596425839e9f9853480c42667c96c3d755dc7c45a13649d587c2"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\ConversationalAgentWorkspace.tsx",
+    "target": "03-Src\\professional\\components\\agent-workspace\\ConversationalAgentWorkspace.tsx",
+    "sha256": "9e4056530d14a11c49ace2cfeae009c488b61e1e20da1e34697476fe6e8549a9"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\feeAnalysis.css",
+    "target": "03-Src\\professional\\components\\agent-workspace\\feeAnalysis.css",
+    "sha256": "45373117511dcd63c17b2cf0965f4568f8163d518135c7a6f797705c3f19516c"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\feeAnalysis.ts",
+    "target": "03-Src\\professional\\components\\agent-workspace\\feeAnalysis.ts",
+    "sha256": "ad9b95ed47026b268ad95b59b85f76ff5f7910a255f4db3e7e484f62dba90542"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\feeAnalysisReveal.ts",
+    "target": "03-Src\\professional\\components\\agent-workspace\\feeAnalysisReveal.ts",
+    "sha256": "fd648fcc92ae9968036f4d04c6033a10326904a9f2feee87c70b787f892a41c2"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\inlineReviewProgressCard.css",
+    "target": "03-Src\\professional\\components\\agent-workspace\\inlineReviewProgressCard.css",
+    "sha256": "33e27945d989b44af686be6489c671ef2cd2f8cfdfeecd6130e87f8116bedc2a"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\InlineReviewProgressCard.tsx",
+    "target": "03-Src\\professional\\components\\agent-workspace\\InlineReviewProgressCard.tsx",
+    "sha256": "0ef274d68702266d52c686f727544b254f84f4637018088453305d187da44bef"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\inlineReviewSetupCard.css",
+    "target": "03-Src\\professional\\components\\agent-workspace\\inlineReviewSetupCard.css",
+    "sha256": "da1232ad7bd9dba84e5f7c5a4f16f8bf40f797f4d891c2f3351892a84459b499"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\InlineReviewSetupCard.tsx",
+    "target": "03-Src\\professional\\components\\agent-workspace\\InlineReviewSetupCard.tsx",
+    "sha256": "a021439005b8c72054227f6204e3b30f07e8ee12d7e24abc473157df731eeb93"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\reviewProgress.ts",
+    "target": "03-Src\\professional\\components\\agent-workspace\\reviewProgress.ts",
+    "sha256": "5529792c703d7568f3d029c3395613f347e35a37d373c8166e33daf768dcb97f"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\workspaceLayout.ts",
+    "target": "03-Src\\professional\\components\\agent-workspace\\workspaceLayout.ts",
+    "sha256": "217fe828e564ece688a8381683c42df259c28dae6b85a70f9f7a7d4f6414a2ed"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\zhisuanCommands.ts",
+    "target": "03-Src\\professional\\components\\agent-workspace\\zhisuanCommands.ts",
+    "sha256": "09532b55424475c06ad02b0bb1b71a04f89ff9147bc8ada32387592964a20cc6"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\agent-workspace\\ZhisuanFeeAnalysisCharts.tsx",
+    "target": "03-Src\\professional\\components\\agent-workspace\\ZhisuanFeeAnalysisCharts.tsx",
+    "sha256": "e076f53411c24b57130b3bfb2b7fa709b31f1558d1bae29a264acb476d61ae69"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\chartAccessibility.ts",
+    "target": "03-Src\\professional\\components\\data-visualization\\chartAccessibility.ts",
+    "sha256": "53ad435c0b41d5b4bd4f1108738767503df4d02bcd2e846ee26efd733deb9a45"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\chartFormatters.ts",
+    "target": "03-Src\\professional\\components\\data-visualization\\chartFormatters.ts",
+    "sha256": "63b89bce33f4da22ad0d96b92a4d122151dfb736ef8a125ece04d0c4d8fa845a"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\ChartFrame.tsx",
+    "target": "03-Src\\professional\\components\\data-visualization\\ChartFrame.tsx",
+    "sha256": "df73e19f5798fbe67313c4f47fe9090b9f8a368ad4ff67beb9582b1e0e7d8575"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\ChartState.tsx",
+    "target": "03-Src\\professional\\components\\data-visualization\\ChartState.tsx",
+    "sha256": "bb0ddc57bf7d65335c51794b72bebf6301fba9ea47a00c5c993fb2c5478578df"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\chartTheme.ts",
+    "target": "03-Src\\professional\\components\\data-visualization\\chartTheme.ts",
+    "sha256": "7583360bee1b6d5f57f36fa09ce251490fde63cc9ae26381603b7fc6b3feec41"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\dataVisualization.css",
+    "target": "03-Src\\professional\\components\\data-visualization\\dataVisualization.css",
+    "sha256": "c3832d394479511385d33dbc802f06f83ef3dc1d1777850e3959847e16baa7cc"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\ProfessionalVisuals.tsx",
+    "target": "03-Src\\professional\\components\\data-visualization\\ProfessionalVisuals.tsx",
+    "sha256": "09558d7a293b838abbf155a21728686e24cd22e340852d1246716d92901a74e4"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\visualizationUtils.ts",
+    "target": "03-Src\\professional\\components\\data-visualization\\visualizationUtils.ts",
+    "sha256": "dd425b5705536e8362153c491deeb4ab3c303ee618ae9a808e506c97ee4826b3"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\knowledgeDemoChart.css",
+    "target": "03-Src\\professional\\components\\knowledge\\knowledgeDemoChart.css",
+    "sha256": "163c2d485cabbf776611cc0c601a5ae1bd76ed94e4d83b028e268fcc1cbdfd6f"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\KnowledgeDemoChart.tsx",
+    "target": "03-Src\\professional\\components\\knowledge\\KnowledgeDemoChart.tsx",
+    "sha256": "3e2374dae7a1d156e30d61f2afd391c738e28bad820024d701f2affd537f698e"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\knowledgeDemoQuestions.ts",
+    "target": "03-Src\\professional\\components\\knowledge\\knowledgeDemoQuestions.ts",
+    "sha256": "619a0240c1293e891c096649d3deca3e6f4274a8c90149de828242b9927fb590"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\knowledgeLibrarySelector.css",
+    "target": "03-Src\\professional\\components\\knowledge\\knowledgeLibrarySelector.css",
+    "sha256": "4352fff0fe6619fdbe3ef15ccb39897b26ee918f82e5f5ec9ce01f2512bb0977"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\KnowledgeLibrarySelector.tsx",
+    "target": "03-Src\\professional\\components\\knowledge\\KnowledgeLibrarySelector.tsx",
+    "sha256": "b5c0861451b5e0addee784ca851119ec18e5962e4076a067946fed8c3c3fb105"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\KnowledgeQuestionSuggestions.tsx",
+    "target": "03-Src\\professional\\components\\knowledge\\KnowledgeQuestionSuggestions.tsx",
+    "sha256": "e3275dc819c13ac6d7390c97275d33cd8833596459aff1a90414fd248e7b973a"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\knowledgeRetrievalMode.ts",
+    "target": "03-Src\\professional\\components\\knowledge\\knowledgeRetrievalMode.ts",
+    "sha256": "fcc5b6c27596bc715d460d26fc0855b160a8e5785a9e5664bea028fbf258afc8"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\knowledgeRetrievalModeSelector.css",
+    "target": "03-Src\\professional\\components\\knowledge\\knowledgeRetrievalModeSelector.css",
+    "sha256": "5e41b7704f782864b208f0063526a1eba77bfb46560934b31f83db58d5e3f8a6"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge\\KnowledgeRetrievalModeSelector.tsx",
+    "target": "03-Src\\professional\\components\\knowledge\\KnowledgeRetrievalModeSelector.tsx",
+    "sha256": "f19e6fa938242599bb935439794d77b1bde59fdc32541522273562b4a255d83f"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\knowledgeArticles.css",
+    "target": "03-Src\\professional\\components\\knowledge-articles\\knowledgeArticles.css",
+    "sha256": "9128363a94f9b4738db6719db7dde3a4a3d5cc9adc015d3270a97f707ac3207d"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\KnowledgeArticlesModule.tsx",
+    "target": "03-Src\\professional\\components\\knowledge-articles\\KnowledgeArticlesModule.tsx",
+    "sha256": "d6d5f997e6e7a6b293aa0592f7aefd80f2ce70917070e20580187038ffe640c3"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\knowledgeArticlesUtils.ts",
+    "target": "03-Src\\professional\\components\\knowledge-articles\\knowledgeArticlesUtils.ts",
+    "sha256": "8ef839f950263402789f3aefe0d19a8176fb53cd1a9863c4225f2097b1b09fef"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\KnowledgeNetworkGraph.tsx",
+    "target": "03-Src\\professional\\components\\knowledge-articles\\KnowledgeNetworkGraph.tsx",
+    "sha256": "bfc94a0c06bd12ddc10d9db197b6cf6dc21c1aea671881424d4924cbd7ceb48a"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectCharts.tsx",
+    "target": "03-Src\\professional\\components\\project-dashboard\\ProjectCharts.tsx",
+    "sha256": "e4cb228223f16bc0f2aef313c34d67ace51c872cb7047d44254526bb9436af80"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\projectDashboard.css",
+    "target": "03-Src\\professional\\components\\project-dashboard\\projectDashboard.css",
+    "sha256": "1e001aa9e421bd9a99db52bebffd81562071a7d894f7223fcf0732c800e127e6"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectDashboard.tsx",
+    "target": "03-Src\\professional\\components\\project-dashboard\\ProjectDashboard.tsx",
+    "sha256": "235c4d3c52c667276bb2801b1b390ce858cab02db603d8900fd780adfc781443"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectDashboardToolbar.tsx",
+    "target": "03-Src\\professional\\components\\project-dashboard\\ProjectDashboardToolbar.tsx",
+    "sha256": "0fa8549931cfa067d2f86db43e73a2a2df5dc6ce50224c96d4e9060ac152e267"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\projectDashboardUtils.ts",
+    "target": "03-Src\\professional\\components\\project-dashboard\\projectDashboardUtils.ts",
+    "sha256": "2c1436182e91c0a1bc8892d19cd9c5e12869cc5cfe55dcae384512ed8928fca7"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectDetailDrawer.tsx",
+    "target": "03-Src\\professional\\components\\project-dashboard\\ProjectDetailDrawer.tsx",
+    "sha256": "f5d1fc9ab3978231e04c2906b5edc3d981499d6a41e393f0a1996cb56b1e9662"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectHistoryTable.tsx",
+    "target": "03-Src\\professional\\components\\project-dashboard\\ProjectHistoryTable.tsx",
+    "sha256": "53fb04d1421c79ecc7d491eb5688bf6a9c8e65dea189d5adb01aa5684b1ec5a4"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectLifecycleFunnel.tsx",
+    "target": "03-Src\\professional\\components\\project-dashboard\\ProjectLifecycleFunnel.tsx",
+    "sha256": "4e832f66b84d00478ed679ae4dae934cf1eb41f69694af0a11b44866db7f4e09"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectMetricGrid.tsx",
+    "target": "03-Src\\professional\\components\\project-dashboard\\ProjectMetricGrid.tsx",
+    "sha256": "c3c5af70f407362147d903eb248cc0ac6afd6053bea1fd54f157f9dcfe287215"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\chinaTestMask.ts",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\chinaTestMask.ts",
+    "sha256": "5625cb27ac3cf3e8f3602504d9f3d8224fbb40e692de8f709921b6dd411d9978"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\ProjectLocationReviewDialog.tsx",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\ProjectLocationReviewDialog.tsx",
+    "sha256": "e6080021e18813ab149db18166b5e04f49445896f4da0053e8acd4b6dd8b82a4"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\ProjectMapCanvas.tsx",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\ProjectMapCanvas.tsx",
+    "sha256": "6a1fabcafa209e57feef239209a3d012a4cd60d8abf1da1a50c675edd4f28a12"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\ProjectMapDetail.tsx",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\ProjectMapDetail.tsx",
+    "sha256": "0bf433077c199ea9112cf0e4dff47215e428ac81e08ce5dc6c1c99248091ab58"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\projectSpatialMap.css",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\projectSpatialMap.css",
+    "sha256": "d803416383f6e989746d13d9f58165f0eaf38edefc834a670cc6c8aab289044c"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\ProjectSpatialMap.tsx",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\ProjectSpatialMap.tsx",
+    "sha256": "5dc1d73ea3c09de2c2b7411e8d8f5223b7493147b5f7991bf0c75fbf5376f7f9"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\projectSpatialMapUtils.ts",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\projectSpatialMapUtils.ts",
+    "sha256": "a8751448d9964eae4af44c132c53b269caf59051126b23a426f710fb0b26b6bb"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\report\\WordReportPreview.tsx",
+    "target": "03-Src\\professional\\components\\report\\WordReportPreview.tsx",
+    "sha256": "5b5089a6dcef877d8e913312a4ba2bc8f1f36b5abee55554d694cb369238372d"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\report\\wordReportPreviewUtils.ts",
+    "target": "03-Src\\professional\\components\\report\\wordReportPreviewUtils.ts",
+    "sha256": "43e9c8429ba58a82b1b0710a6b27d8e27da6baf04953f34cc8858aa14d35ec8c"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\settlement-audit\\settlement-audit.css",
+    "target": "03-Src\\professional\\components\\settlement-audit\\settlement-audit.css",
+    "sha256": "3c548497a84fa286b65747961b2804e6d50d14ce6fa3a2f3bb286a95ebe6599e"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\settlement-audit\\SettlementAuditWorkbench.tsx",
+    "target": "03-Src\\professional\\components\\settlement-audit\\SettlementAuditWorkbench.tsx",
+    "sha256": "7dcd03412ca4dd3400a95033300a37657708e18d1d20538ef8e4803d26acd016"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\skills\\digitalEmployeeEvidence.ts",
+    "target": "03-Src\\professional\\components\\skills\\digitalEmployeeEvidence.ts",
+    "sha256": "7c76b05659fc9373142646219add62c3c41316133338dcad055a69631899d7ed"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\skills\\DigitalEmployeeEvidencePanel.css",
+    "target": "03-Src\\professional\\components\\skills\\DigitalEmployeeEvidencePanel.css",
+    "sha256": "579ed09b7aee20e1965c4b9ca78bd9b69c3037505d120798ec673b8b74ca6559"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\skills\\DigitalEmployeeEvidencePanel.tsx",
+    "target": "03-Src\\professional\\components\\skills\\DigitalEmployeeEvidencePanel.tsx",
+    "sha256": "7c4f99e1799e974a08fd09dcfba06cfd00021c73ae22eec37e9790e47ed970bf"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\skills\\ProfessionalSkillCenter.tsx",
+    "target": "03-Src\\professional\\components\\skills\\ProfessionalSkillCenter.tsx",
+    "sha256": "210b73e2f61d6070b8853d3f1aa78c463ef6282ad595ba19a1e850f5a541ca25"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\skills\\ProfessionalSkillSelector.css",
+    "target": "03-Src\\professional\\components\\skills\\ProfessionalSkillSelector.css",
+    "sha256": "9657ea11ae4d25d58a5e07802f0c1cc0ddb2185699aa339da2386c33ae91d4f0"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\skills\\ProfessionalSkillSelector.tsx",
+    "target": "03-Src\\professional\\components\\skills\\ProfessionalSkillSelector.tsx",
+    "sha256": "4bf5ae81674473cebff148628dd104ec2ee95ed62e771a513671e2417885f22c"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\skills\\skillDisplayName.ts",
+    "target": "03-Src\\professional\\components\\skills\\skillDisplayName.ts",
+    "sha256": "6e1f0733765caea38b2ff5552b08a52a650f3bfe73be82caab1582e72c9f6313"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\status-panel\\statusPanelCarousel.css",
+    "target": "03-Src\\professional\\components\\status-panel\\statusPanelCarousel.css",
+    "sha256": "44adccc75b0b67b2febd93493907c46e4bb00b75dd4cb982acf85c99a925be0a"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\status-panel\\StatusPanelCarousel.tsx",
+    "target": "03-Src\\professional\\components\\status-panel\\StatusPanelCarousel.tsx",
+    "sha256": "e225b114fd9d9fa83c436dd16c49830f958ee909f602d9c6dbba28d50d533030"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\status-panel\\statusPanelCarouselUtils.ts",
+    "target": "03-Src\\professional\\components\\status-panel\\statusPanelCarouselUtils.ts",
+    "sha256": "6eed7c03468e4ecabd2e8e14116302cd155c20986fbae3efb0f30b0cdd93e2be"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\task-context\\CurrentTaskBar.tsx",
+    "target": "03-Src\\professional\\components\\task-context\\CurrentTaskBar.tsx",
+    "sha256": "eb1c971c95dd769116c11137588561ec67f130fc8cb4e4c0b49a714177f7fc73"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\task-context\\CurrentTaskMenu.tsx",
+    "target": "03-Src\\professional\\components\\task-context\\CurrentTaskMenu.tsx",
+    "sha256": "4a01c31f491c7c0dc23d05160f4704ebcb03caad51001f06c43b49a885df90df"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\task-context\\taskContext.css",
+    "target": "03-Src\\professional\\components\\task-context\\taskContext.css",
+    "sha256": "3d60baa9a1058b8835e70a0a28e89be342245e6d26d699ef27de5e11241821e0"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\task-context\\taskContextUtils.ts",
+    "target": "03-Src\\professional\\components\\task-context\\taskContextUtils.ts",
+    "sha256": "33ca196f23c786472742941bbe3764edfe09254826e5e62946421cb0254703b6"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\task-context\\TaskDetailDrawer.tsx",
+    "target": "03-Src\\professional\\components\\task-context\\TaskDetailDrawer.tsx",
+    "sha256": "2870a341a6eb07cf2abd7d87761f1ee8e5e929d6d0cf82566253ec0c86b6bfac"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\task-context\\TaskTimeline.tsx",
+    "target": "03-Src\\professional\\components\\task-context\\TaskTimeline.tsx",
+    "sha256": "7b5f9ceff09d2478fe00100b70fd1891695a1e94c6ae5a962c8601e2568c13c8"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\zhisuan-avatar\\AvatarMotion.ts",
+    "target": "03-Src\\professional\\components\\zhisuan-avatar\\AvatarMotion.ts",
+    "sha256": "2da65b89b37abdb3d532401ee830066b216900d0526cacf50fa7868dbfeae400"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\zhisuan-avatar\\AvatarMotionSettings.tsx",
+    "target": "03-Src\\professional\\components\\zhisuan-avatar\\AvatarMotionSettings.tsx",
+    "sha256": "ccd2e22a590c4a27e21f9f392b6bdcc22df82f5e63d833da6dafe6234fec1916"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\zhisuan-avatar\\grok-study.d.ts",
+    "target": "03-Src\\professional\\components\\zhisuan-avatar\\grok-study.d.ts",
+    "sha256": "1b276b9c3066e496c1d20d61295170a39c40d2b6b6c4afa7908f928bcd913fc9"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\zhisuan-avatar\\grok-study.js",
+    "target": "03-Src\\professional\\components\\zhisuan-avatar\\grok-study.js",
+    "sha256": "220efc902af3a8de7bb6b5a95bfece96770bdb4933d598c647c95972422c752e"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\zhisuan-avatar\\motionPreference.ts",
+    "target": "03-Src\\professional\\components\\zhisuan-avatar\\motionPreference.ts",
+    "sha256": "81c146f7a775671aee4fdd76eeaa4ad8b223cca5a95ff5c79c1255842aa0227b"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\ProjectShowcaseMap.tsx",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\ProjectShowcaseMap.tsx",
+    "sha256": "5ba13f9e0fa545c54a1f4eb607b8152b8940ff5fe534309295c7e601551f07f0"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\ProjectShowcasePage.tsx",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\ProjectShowcasePage.tsx",
+    "sha256": "15f82ab292defdd9fc5bdad18c500211401c3eaf63435be5a3cdd89466f41f28"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\showcaseGeometry.ts",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\showcaseGeometry.ts",
+    "sha256": "712d18c59929d3cdce099ce30ce829396480f93b512c69a91357f0521d39c9aa"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\showcaseLabelLayout.ts",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\showcaseLabelLayout.ts",
+    "sha256": "a2f6b51f6dbdcca48a2e06fc0fd5f6691bb56b858e24087f2419162bbb251064"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\showcaseMap.css",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\showcaseMap.css",
+    "sha256": "3fd3eb2102286024ecc3f8d69a084e7206acf07389142f709e8cc5b7ff4abe22"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\showcasePage.css",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\showcasePage.css",
+    "sha256": "715a38676cc391c565222662ffc3f999c4eacfb6b166ecaa89299d1682a4ab1d"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\showcaseProvinceGeometry.ts",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\showcaseProvinceGeometry.ts",
+    "sha256": "40e3be87d9630a16adfea3f56d098b0efb975bc992b2bc9a72a44071594c8bfc"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\showcaseProvinceUtils.ts",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\showcaseProvinceUtils.ts",
+    "sha256": "e1d50cc76d7a51d5bdf8b5a69951c88af7e7142564770cab82d6e56076a949d1"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-spatial-map\\showcase\\showcaseViewModel.ts",
+    "target": "03-Src\\professional\\components\\project-spatial-map\\showcase\\showcaseViewModel.ts",
+    "sha256": "2d6a635814979a0a46de04239ad097fec73d90da35235b0295158c02ef33a9c5"
+  }
+]

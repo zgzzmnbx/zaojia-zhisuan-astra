@@ -1,0 +1,590 @@
+/*
+ * 竖屏与触控适配隔离层。
+ * 硬门禁：本文件不得包含 1025px 及以上生效的样式；桌面宽屏继续完全由 styles.css 控制。
+ */
+
+@media (max-width: 1024px) {
+  html,
+  body {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior-x: none;
+  }
+
+  .shell.layout-daweiba {
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+
+  .shell.layout-daweiba .global-nav {
+    position: relative;
+    top: auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    min-height: 54px;
+    padding:
+      env(safe-area-inset-top, 0px)
+      max(12px, env(safe-area-inset-right, 0px))
+      0
+      max(12px, env(safe-area-inset-left, 0px));
+  }
+
+  .shell.layout-daweiba .global-nav > span:first-child {
+    font-size: var(--dws-font-size-16);
+    white-space: nowrap;
+  }
+
+  .shell.layout-daweiba .global-nav .nav-status,
+  .shell.layout-daweiba .global-nav .nav-bot-statuses,
+  .shell.layout-daweiba .global-nav > .nav-text-button {
+    display: none;
+  }
+
+  .shell.layout-daweiba .global-nav .nav-work-context {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .global-nav .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .shell.layout-daweiba .global-nav .nav-settings-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 8px;
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell,
+  .shell.layout-daweiba .daweiba-layout-shell.is-left-collapsed,
+  .shell.layout-daweiba .daweiba-layout-shell.is-ai-collapsed,
+  .shell.layout-daweiba .daweiba-layout-shell.is-agent-workspace {
+    --db-layout-left-width: 100%;
+    --db-layout-ai-width: 0px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 57px minmax(0, 1fr);
+    width: 100%;
+    height: calc(100dvh - 54px - env(safe-area-inset-top, 0px));
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell > .daweiba-nav,
+  .shell.layout-daweiba .daweiba-layout-shell > .daweiba-nav.is-collapsed {
+    position: relative;
+    top: auto;
+    z-index: 12;
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    width: 100%;
+    height: 57px;
+    min-width: 0;
+    min-height: 57px;
+    overflow: hidden;
+    border-right: 0;
+    border-bottom: 1px solid var(--db-border);
+    background: var(--db-surface);
+  }
+
+  .shell.layout-daweiba .daweiba-icon-rail {
+    display: flex;
+    align-items: center;
+    justify-items: initial;
+    gap: 8px;
+    width: 100%;
+    height: 56px;
+    min-height: 56px;
+    padding:
+      6px
+      max(10px, env(safe-area-inset-right, 0px))
+      6px
+      max(10px, env(safe-area-inset-left, 0px));
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 0;
+    border-radius: 0;
+    scrollbar-width: none;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .shell.layout-daweiba .daweiba-icon-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shell.layout-daweiba .daweiba-mark,
+  .shell.layout-daweiba .daweiba-icon-link {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+    border-radius: 8px;
+    touch-action: manipulation;
+  }
+
+  .shell.layout-daweiba .daweiba-icon-link.is-active {
+    flex: 0 0 auto;
+    grid-template-columns: auto minmax(0, auto);
+    width: auto;
+    min-width: 44px;
+    padding: 0 12px;
+    gap: 7px;
+    white-space: nowrap;
+  }
+
+  .shell.layout-daweiba .daweiba-icon-link.is-active::after {
+    color: currentColor;
+    content: attr(aria-label);
+    font-size: var(--dws-font-size-13);
+    font-weight: 650;
+    line-height: 1;
+  }
+
+  .shell.layout-daweiba .daweiba-module-rail,
+  .shell.layout-daweiba .daweiba-rail-expand {
+    display: none !important;
+  }
+
+  .shell.layout-daweiba .daweiba-main-content,
+  .shell.layout-daweiba .daweiba-layout-shell.is-agent-workspace > .daweiba-main-content {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 12px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame {
+    width: 100%;
+    height: auto;
+    min-width: 0;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill > .daweiba-fill-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto auto !important;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .input-panel,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .brief-panel,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .daweiba-fill-insight-panel {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    width: 100%;
+    height: auto !important;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .daweiba-fill-overview-row,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .daweiba-fill-system-grid,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .daweiba-fill-mini-grid,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .daweiba-fill-action-stack,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .brief-panel .stats {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .drop-zone,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .drop-zone.has-file {
+    min-height: 148px;
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-preview,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-report,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-knowledge,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-collaboration,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-settlement {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .shell.layout-daweiba .daweiba-preview-section,
+  .shell.layout-daweiba .preview-window,
+  .shell.layout-daweiba .report-window,
+  .shell.layout-daweiba .daweiba-report-module {
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .shell.layout-daweiba .table-scroll,
+  .shell.layout-daweiba .sheet-tabs,
+  .shell.layout-daweiba .preview-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .shell.layout-daweiba .global-nav .professional-skill-selector__menu {
+    position: fixed;
+    top: calc(62px + env(safe-area-inset-top, 0px));
+    right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    left: max(12px, env(safe-area-inset-left, 0px));
+    z-index: 90;
+    width: auto;
+    max-height: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .shell.layout-daweiba .agent-workspace__messages {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .shell.layout-daweiba .agent-message.assistant,
+  .shell.layout-daweiba .agent-message.assistant .agent-message__body,
+  .shell.layout-daweiba .agent-message.assistant .chat-message-body {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .agent-message.assistant .agent-message__body,
+  .shell.layout-daweiba .agent-message.assistant .chat-message-body {
+    overflow-x: hidden;
+  }
+
+  .shell.layout-daweiba .agent-message.assistant .chat-message-body table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .shell.layout-daweiba .agent-message.assistant :is(
+    .knowledge-evidence-summary,
+    .knowledge-demo-chart,
+    .knowledge-demo-chart__scroll,
+    .fee-analysis
+  ) {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .agent-message.assistant :is(
+    .knowledge-evidence-summary,
+    .knowledge-evidence-summary *,
+    .zhisuan-message-paragraph
+  ) {
+    overflow-wrap: anywhere;
+  }
+
+  .shell.layout-daweiba .agent-composer,
+  .shell.layout-daweiba .agent-composer__footer,
+  .shell.layout-daweiba .agent-composer__tools {
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .agent-composer__footer {
+    gap: 8px;
+  }
+
+  .shell.layout-daweiba .agent-composer__tools {
+    flex: 1 1 auto;
+  }
+
+  .shell.layout-daweiba .agent-composer__skill-menu {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .agent-composer__skill-menu > summary {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .agent-composer__skill-menu > summary > strong {
+    flex: 1 1 auto;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .agent-composer__submit {
+    flex: 0 0 44px;
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .shell.layout-daweiba .agent-workspace :is(.agent-composer__send, .agent-composer__stop) {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell > .ai-dock:not(.is-collapsed) {
+    position: fixed;
+    top: calc(54px + env(safe-area-inset-top, 0px));
+    right: 0;
+    bottom: 0;
+    left: auto;
+    z-index: 70;
+    display: block;
+    width: min(440px, 92vw);
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-left: 1px solid var(--db-border);
+    background: var(--db-surface);
+    box-shadow: -18px 0 40px rgba(15, 23, 42, 0.16);
+    transform: none;
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell > .ai-dock:not(.is-collapsed) .ai-dock-panel {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
+    overflow: hidden;
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell.is-ai-collapsed > .ai-dock.is-collapsed {
+    position: fixed;
+    top: auto;
+    right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    left: auto;
+    z-index: 70;
+    display: block;
+    width: 56px !important;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell.is-ai-collapsed > .ai-dock.is-collapsed .ai-dock-rail {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    border-radius: 16px;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .shell.layout-daweiba :is(button, a, input, select, textarea) {
+    touch-action: manipulation;
+  }
+
+  .shell.layout-daweiba .global-nav button,
+  .shell.layout-daweiba .daweiba-main-content button,
+  .shell.layout-daweiba .ai-dock button {
+    min-height: 44px;
+  }
+
+  .shell.layout-daweiba
+    .daweiba-workspace-frame.is-daweiba-module-fill
+    > .daweiba-fill-view-tabs
+    button {
+    min-height: 44px;
+  }
+
+  .shell.layout-daweiba :is(
+    .primary-button,
+    .ghost-button,
+    .download-button,
+    .window-settings-button,
+    .experience-settings-button,
+    .chat-send-button,
+    .ai-collapse-button,
+    .icon-button,
+    .daweiba-fill-view-tabs button,
+    .preview-tabs button,
+    .sheet-tabs button
+  ) {
+    min-height: 44px;
+  }
+
+  .shell.layout-daweiba :is(input, select, textarea) {
+    min-height: 44px;
+  }
+
+  .shell.layout-daweiba :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    font-size: var(--dws-font-size-16);
+  }
+
+  .shell.layout-daweiba .modal-backdrop {
+    padding:
+      max(12px, env(safe-area-inset-top, 0px))
+      max(12px, env(safe-area-inset-right, 0px))
+      max(12px, env(safe-area-inset-bottom, 0px))
+      max(12px, env(safe-area-inset-left, 0px));
+  }
+
+  .shell.layout-daweiba .settings-modal {
+    width: min(720px, 100%);
+    max-width: 100%;
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 620px) {
+  .shell.layout-daweiba .global-nav {
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: calc(62px + env(safe-area-inset-top, 0px));
+    padding-top: calc(8px + env(safe-area-inset-top, 0px));
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell,
+  .shell.layout-daweiba .daweiba-layout-shell.is-left-collapsed,
+  .shell.layout-daweiba .daweiba-layout-shell.is-ai-collapsed,
+  .shell.layout-daweiba .daweiba-layout-shell.is-agent-workspace {
+    height: calc(100dvh - 62px - env(safe-area-inset-top, 0px));
+  }
+
+  .shell.layout-daweiba .global-nav > span:first-child {
+    display: none;
+  }
+
+  .shell.layout-daweiba .global-nav .nav-work-context {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .shell.layout-daweiba .global-nav .nav-actions {
+    grid-column: 2;
+  }
+
+  .shell.layout-daweiba .daweiba-main-content,
+  .shell.layout-daweiba .daweiba-layout-shell.is-agent-workspace > .daweiba-main-content {
+    padding: 8px;
+  }
+
+  .shell.layout-daweiba .daweiba-layout-shell > .ai-dock:not(.is-collapsed) {
+    top: calc(62px + env(safe-area-inset-top, 0px));
+    width: 100vw;
+    border-left: 0;
+    box-shadow: none;
+  }
+
+  .shell.layout-daweiba .global-nav .professional-skill-selector__menu {
+    top: calc(70px + env(safe-area-inset-top, 0px));
+    right: max(8px, env(safe-area-inset-right, 0px));
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    left: max(8px, env(safe-area-inset-left, 0px));
+    padding: 12px;
+  }
+
+  .shell.layout-daweiba .professional-skill-selector__heading {
+    display: grid;
+    justify-content: stretch;
+    gap: 8px;
+  }
+
+  .shell.layout-daweiba .professional-skill-selector__heading-actions,
+  .shell.layout-daweiba .professional-skill-card__actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .shell.layout-daweiba .professional-skill-selector__detail-link,
+  .shell.layout-daweiba .professional-skill-card__actions button,
+  .shell.layout-daweiba .professional-skill-card__actions .is-selected-state {
+    min-height: 44px;
+    font-size: var(--dws-font-size-12);
+  }
+
+  .shell.layout-daweiba .professional-skill-card {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 8px;
+  }
+
+  .shell.layout-daweiba .professional-skill-card__topline {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .shell.layout-daweiba .professional-skill-card__content > strong {
+    font-size: var(--dws-font-size-14);
+  }
+
+  .shell.layout-daweiba .professional-skill-card__content > p {
+    overflow: visible;
+    font-size: var(--dws-font-size-12);
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .shell.layout-daweiba .professional-skill-card__meta,
+  .shell.layout-daweiba .professional-skill-card__topline,
+  .shell.layout-daweiba .professional-skill-selector__selection {
+    font-size: var(--dws-font-size-12);
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame .table-scroll th:not(.action-th):not(.row-number-th),
+  .shell.layout-daweiba .daweiba-workspace-frame .table-scroll td:not(.row-ai-cell):not(.preview-row-number-cell) {
+    min-width: 96px;
+    max-width: 160px;
+  }
+
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill #daweiba-input > .action-row,
+  .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill .brief-panel .download-row,
+  .shell.layout-daweiba .window-actions,
+  .shell.layout-daweiba .experience-actions,
+  .shell.layout-daweiba .workload-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .shell.layout-daweiba .settings-modal {
+    width: 100%;
+    height: calc(100dvh - 16px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: none;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .shell.layout-daweiba .daweiba-layout-shell > .ai-dock,
+  .shell.layout-daweiba .daweiba-icon-rail {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+}

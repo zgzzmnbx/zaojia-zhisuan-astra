@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "description": "问问智算知识库问答语义回归基线。答案按关键事实验收，不要求逐字一致。",
+  "cases": [
+    {
+      "id": "demo_technical_fee",
+      "name": "预置演示-技术工作费确定",
+      "questionType": "demo",
+      "libraryIds": ["project-core"],
+      "question": "#知识库：勘察测量，技术工作费调整系数如何确定？",
+      "expected": {
+        "evidenceFound": true,
+        "presetAnswer": true,
+        "generatedByModel": false,
+        "answerMode": "curated_demo",
+        "mustInclude": ["第一层标准规则", "0.22", "1.2", "0.27", "待复核"],
+        "mustNotInclude": [],
+        "sourceContains": ["项目以及总体匹配规则介绍.md"]
+      }
+    },
+    {
+      "id": "demo_route_map_price",
+      "name": "预置演示-走向图编制价格",
+      "questionType": "demo",
+      "libraryIds": ["project-core"],
+      "question": "#知识库：走向图编制、地图编制、Ⅱ类、1:50000，价格如何确定？以及相邻比例尺价格如何确定？",
+      "expected": {
+        "evidenceFound": true,
+        "presetAnswer": true,
+        "generatedByModel": false,
+        "answerMode": "curated_demo",
+        "mustInclude": ["4,983.36", "2,742.11", "7,533.19", "元/幅", "不能在两条记录之间插值"],
+        "mustNotInclude": [],
+        "sourceContains": ["【数据库】【导入】.xlsx"]
+      }
+    },
+    {
+      "id": "demo_cost_codes",
+      "name": "预置演示-三个过路过桥费编码",
+      "questionType": "demo",
+      "libraryIds": ["cost-aiw"],
+      "question": "#知识库：对比清单编码10504014、10504015、10504016，只回答管径、单位、清单单价和来源定位，用Markdown表格。",
+      "expected": {
+        "evidenceFound": true,
+        "presetAnswer": true,
+        "generatedByModel": false,
+        "answerMode": "curated_demo",
+        "mustInclude": ["| 管径 |", "D1016", "2,250", "D1219", "3,000", "D1422", "4,500", "Excel第844行"],
+        "mustNotInclude": ["提示：本回答只解释依据"],
+        "sourceContains": ["2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md"]
+      }
+    },
+    {
+      "id": "demo_bridge_chart",
+      "name": "预置演示-过路过桥费柱状图",
+      "questionType": "demo",
+      "libraryIds": ["cost-aiw"],
+      "question": "#知识库：查询清单编码10504001至10504016的过路过桥费，按管径从小到大输出柱状图，并指出价格平台区间和最高单价，只使用造价通用知识库数据，不进行区间插值。",
+      "expected": {
+        "evidenceFound": true,
+        "presetAnswer": true,
+        "generatedByModel": false,
+        "answerMode": "curated_demo",
+        "chartItemCount": 16,
+        "mustInclude": ["D457—D559", "D914—D1016", "D1422", "4,500", "不能据此对其他管径进行区间插值"],
+        "mustNotInclude": [],
+        "sourceContains": ["2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md"]
+      }
+    },
+    {
+      "id": "project_table2_simple",
+      "name": "表2不参与技术工作费的简单检索题",
+      "questionType": "simple",
+      "libraryIds": ["project-core"],
+      "question": "#知识库：表2哪些项目不参与技术工作费金额计算？",
+      "expected": {
+        "evidenceFound": true,
+        "mustInclude": ["线路航测", "走向图编制", "像控点联测", "地物地貌调绘", "DLG/DEM/DOM", "地图编制", "0.22", "否"],
+        "mustNotInclude": ["表3—", "表4—"],
+        "sourceContains": ["表2-通用工程测量费用规则"]
+      }
+    },
+    {
+      "id": "project_table2_complex",
+      "name": "表2不参与技术工作费的复杂约束题",
+      "questionType": "complex",
+      "libraryIds": ["project-core"],
+      "question": "#知识库：解释0.22技术工作费调整系数：哪些表2项目虽然显示0.22但不参与金额计算？请用表格回答适用对象、系数、是否参与金额和正式依据。给我讲述原理",
+      "expected": {
+        "evidenceFound": true,
+        "mustInclude": ["线路航测", "走向图编制", "像控点联测", "地物地貌调绘", "DLG/DEM/DOM", "地图编制", "0.22", "|"],
+        "mustNotInclude": ["表3—", "表4—"],
+        "sourceContains": ["表2-通用工程测量费用规则"]
+      }
+    },
+    {
+      "id": "project_table3_levels",
+      "name": "表3甲乙丙级技术工作费系数",
+      "questionType": "simple",
+      "libraryIds": ["project-core"],
+      "question": "#知识库：表3岩土工程勘察甲级、乙级、丙级技术工作费调整系数分别是多少？",
+      "expected": {
+        "evidenceFound": true,
+        "mustInclude": ["表3", "甲级", "乙级", "丙级", "1.2", "1.0", "0.8"],
+        "mustNotInclude": ["表4—"],
+        "sourceContains": ["技术工作费调整系数"]
+      }
+    },
+    {
+      "id": "cost_code_10101002",
+      "name": "清单编码10101002数字快查",
+      "questionType": "simple",
+      "libraryIds": ["cost-aiw"],
+      "question": "#知识库：清单编码10101002的名称、单位、清单单价、规费和安全生产费是多少？",
+      "expected": {
+        "evidenceFound": true,
+        "mustInclude": ["10101002", "作业带扫线", "山区", "丘陵", "m²", "1.66", "0.07", "0.03"],
+        "mustNotInclude": [],
+        "sourceContains": ["2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md"]
+      }
+    },
+    {
+      "id": "cost_digital_management_5000",
+      "name": "数字与信息化项目建设单位管理费",
+      "questionType": "simple",
+      "libraryIds": ["cost-aiw"],
+      "question": "#知识库：按2024年数字与信息化项目投资计价依据，工程费用5000万元时建设单位管理费费率是多少？",
+      "expected": {
+        "evidenceFound": true,
+        "mustInclude": ["5000", "建设单位管理费", "1.04"],
+        "mustNotInclude": ["4%"],
+        "sourceContains": ["2024数字与信息化项目投资计价依据-正文问答版.md"]
+      }
+    },
+    {
+      "id": "project_no_evidence",
+      "name": "无依据自动转大模型回答",
+      "questionType": "negative",
+      "libraryIds": ["project-core"],
+      "question": "#知识库：火星土豆怎么收费？",
+      "expected": {
+        "evidenceFound": false,
+        "generatedByModel": true,
+        "answerMode": "general_model_fallback",
+        "mustInclude": ["已自动转为大模型回答"],
+        "mustNotInclude": ["当前知识库未找到明确依据，需要人工复核"],
+        "sourceContains": []
+      }
+    }
+  ]
+}

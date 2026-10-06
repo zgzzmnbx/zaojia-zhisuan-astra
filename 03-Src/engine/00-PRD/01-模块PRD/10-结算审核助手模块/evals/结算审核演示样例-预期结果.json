@@ -1,0 +1,41 @@
+{
+  "sample": "结算审核演示样例-v0.1.xlsx",
+  "reference_template": "【结算模板】260723-勘察测量结算统一报价模板-v1.0.xlsx",
+  "reference_template_sha256": "20aede1af39c986b49b611a495bca372903f5104d41cbb312de8d7c4223f91c8",
+  "expected_rules": [
+    {
+      "rule_id": "JS-001",
+      "coordinate": "表1 测量费，注所有单体都放一张表中!H11"
+    },
+    {
+      "rule_id": "JS-001",
+      "coordinate": "表1 测量费，注所有单体都放一张表中!I24"
+    },
+    {
+      "rule_id": "JS-002",
+      "coordinate": "表1 测量费，注所有单体都放一张表中!M37"
+    },
+    {
+      "rule_id": "JS-003",
+      "coordinate": "表2-1 XX勘察费，注每个单体一张表!I40"
+    },
+    {
+      "rule_id": "JS-004",
+      "coordinate": "表2-1 XX勘察费，注每个单体一张表!M200"
+    },
+    {
+      "rule_id": "JS-006",
+      "coordinate": "表3 其他费用(一次报送)!L4"
+    },
+    {
+      "rule_id": "JS-007",
+      "coordinate": "表3 其他费用(一次报送)!M5"
+    },
+    {
+      "rule_id": "JS-008",
+      "coordinate": "汇总表!M4"
+    }
+  ],
+  "expected_passing_row": "表2-1 XX勘察费，注每个单体一张表!13",
+  "boundary": "演示样例只验证结构化辅助审核，不代表真实项目结算审定。"
+}

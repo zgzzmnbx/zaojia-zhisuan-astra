@@ -1,0 +1,9 @@
+造价智算 Word 报告预览离线资源
+
+- @file-viewer/react@2.1.25 (Apache-2.0)
+- @file-viewer/renderer-word@2.1.25 (Apache-2.0)
+- @file-viewer/docx@0.3.19 (Apache-2.0)
+- jszip@3.10.1 (MIT)
+
+这些资源仅用于本地、绿色版和 Tauri 断网状态下解析当前 DOCX，不访问 CDN 或第三方在线 Office。
+完整许可证文本位于同目录 licenses/。

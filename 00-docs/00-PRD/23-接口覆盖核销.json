@@ -1,0 +1,601 @@
+{
+  "date": "2026-10-06",
+  "version": "0.6.0",
+  "source": "Frozen original engine runtime routes, not declaration regex",
+  "original_paths": 108,
+  "original_method_routes": 118,
+  "astra_paths": 131,
+  "missing": [],
+  "routes": [
+    {
+      "path": "/api/collaboration/external-dispatch/options",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/external-dispatch/tasks",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/external-dispatch/tasks",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/external-dispatch/tasks/{task_id}/retry",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/external-dispatch/web-review",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-app-bot/logs",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-app-bot/settings",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-app-bot/status",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-app-bot/tasks",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-webhook/history",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-webhook/notify",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-webhook/settings",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-webhook/status",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/collaboration/feishu-webhook/test",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/demo/load-sample",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/download/{job_id}/{kind}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-pool/field-preferences",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-pool/field-preferences",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-pool/import",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-pool/inspect",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-warnings/progress/{job_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-warnings/run",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-warnings/settings",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/experience-warnings/settings",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/fill-assist/candidates",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/fill-assist/confirm",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/health",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/input/field-preferences",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/input/field-preferences",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/inspect",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-articles",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-articles/graph",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-articles/{article_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/candidates",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}",
+      "method": "PATCH",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/audit",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/confirm",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/mark-stale",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/promote-general",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/reject",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/revise",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/revoke",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge-memory/items/{item_id}/submit",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge/ask",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge/ask-stream",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge/capabilities",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge/citations/{citation_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge/libraries",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge/requests/{request_id}/cancel",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/knowledge/search",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/llm-chat",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/preview-column-preferences",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/preview-column-preferences",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/preview/cell",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/preview/recalculate",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/preview/refresh",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/process",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/process/batch-match",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/process/{job_id}/ai-matching",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/process/{job_id}/ai-matching/analyze",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/process/{job_id}/ai-matching/cancel",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/process/{job_id}/ai-matching/confirm",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/process/{job_id}/batch-match-status",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/professional-skills",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/professional-skills/management",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/professional-skills/management/plan",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/professional-skills/open-format",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/professional-skills/recommend",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/professional-skills/{skill_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/professional-skills/{skill_id}/onboarding-evidence",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/project-default-settings",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/backfill",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/dashboard",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/map",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/spatial-candidates",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/unlocated",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/artifacts",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/artifacts/{artifact_id}/download",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/runs",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/runs/{run_id}/result",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/spatial",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/spatial",
+      "method": "PUT",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/spatial/analyze",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/projects/{project_id}/tasks",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/quality/experience-pool",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/risk-report",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/risk/summary",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/settlement-audit/download/{job_id}/{kind}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/settlement-audit/profile",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/settlement-audit/review",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/settlement-audit/sample",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/standard-trace",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/task-monitor/current",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/tasks/{task_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/tasks/{task_id}/monitor",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/tasks/{task_id}/timeline",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/trusted-experience/capsules/{project_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/trusted-experience/capsules/{project_id}/refresh",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/trusted-experience/events",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/trusted-experience/events/{event_id}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/trusted-experience/events/{event_id}/retry",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/trusted-experience/metrics",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/ui-preferences",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/ui-preferences",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/apply-to-current",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/current-download/{job_id}/{kind}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/download/{job_id}/{kind}",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/field-preferences",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/field-preferences",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/inspect",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/inspect-current-target",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/run",
+      "method": "POST",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/target-field-preferences",
+      "method": "GET",
+      "mounted": true
+    },
+    {
+      "path": "/api/workload-capture/target-field-preferences",
+      "method": "POST",
+      "mounted": true
+    }
+  ]
+}

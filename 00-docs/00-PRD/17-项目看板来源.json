@@ -1,0 +1,100 @@
+[
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectCharts.tsx",
+    "target": "03-Src/studio/project-dashboard/ProjectCharts.tsx",
+    "sha256": "e4cb228223f16bc0f2aef313c34d67ace51c872cb7047d44254526bb9436af80",
+    "astra_sha256": "9d797808e967915da2fc0571d6b474c4c57c8ae733d730a809cf65f50a258906"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\projectDashboard.css",
+    "target": "03-Src/studio/project-dashboard/projectDashboard.css",
+    "sha256": "1e001aa9e421bd9a99db52bebffd81562071a7d894f7223fcf0732c800e127e6",
+    "astra_sha256": "0de350a85ffaa61bf8ff042a79ab1fe76f50b5be826f41ec301ff3057a9c88ec"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectDashboard.tsx",
+    "target": "03-Src/studio/project-dashboard/ProjectDashboard.tsx",
+    "sha256": "235c4d3c52c667276bb2801b1b390ce858cab02db603d8900fd780adfc781443",
+    "astra_sha256": "638537196fa48c8eb1e689be8668c60f3bbba9c63d96dbe96741a3c955fff8a2"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectDashboardToolbar.tsx",
+    "target": "03-Src/studio/project-dashboard/ProjectDashboardToolbar.tsx",
+    "sha256": "0fa8549931cfa067d2f86db43e73a2a2df5dc6ce50224c96d4e9060ac152e267",
+    "astra_sha256": "66615679cff0e5729bba3376f0187ef963875ab2bc8132e3e25eec812cc922e4"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\projectDashboardUtils.ts",
+    "target": "03-Src/studio/project-dashboard/projectDashboardUtils.ts",
+    "sha256": "2c1436182e91c0a1bc8892d19cd9c5e12869cc5cfe55dcae384512ed8928fca7",
+    "astra_sha256": "2c1436182e91c0a1bc8892d19cd9c5e12869cc5cfe55dcae384512ed8928fca7"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectDetailDrawer.tsx",
+    "target": "03-Src/studio/project-dashboard/ProjectDetailDrawer.tsx",
+    "sha256": "f5d1fc9ab3978231e04c2906b5edc3d981499d6a41e393f0a1996cb56b1e9662",
+    "astra_sha256": "b85e1238aa0a1e2843e7b639c7bcb6d3c456837c2060fa609b7e2fec5a19c710"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectHistoryTable.tsx",
+    "target": "03-Src/studio/project-dashboard/ProjectHistoryTable.tsx",
+    "sha256": "53fb04d1421c79ecc7d491eb5688bf6a9c8e65dea189d5adb01aa5684b1ec5a4",
+    "astra_sha256": "4873bc815788c18cc54ee3e5c820e06b2a85042b79135dcdd1f17e88681ff184"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectLifecycleFunnel.tsx",
+    "target": "03-Src/studio/project-dashboard/ProjectLifecycleFunnel.tsx",
+    "sha256": "4e832f66b84d00478ed679ae4dae934cf1eb41f69694af0a11b44866db7f4e09",
+    "astra_sha256": "4e832f66b84d00478ed679ae4dae934cf1eb41f69694af0a11b44866db7f4e09"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\project-dashboard\\ProjectMetricGrid.tsx",
+    "target": "03-Src/studio/project-dashboard/ProjectMetricGrid.tsx",
+    "sha256": "c3c5af70f407362147d903eb248cc0ac6afd6053bea1fd54f157f9dcfe287215",
+    "astra_sha256": "d325ef91ca1f508ab29fc7e559c0ff5e53a9852db66ad8c169cf07ac27ee8b30"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\ChartFrame.tsx",
+    "target": "03-Src/studio/data-visualization/ChartFrame.tsx",
+    "sha256": "df73e19f5798fbe67313c4f47fe9090b9f8a368ad4ff67beb9582b1e0e7d8575",
+    "astra_sha256": "df73e19f5798fbe67313c4f47fe9090b9f8a368ad4ff67beb9582b1e0e7d8575"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\ChartState.tsx",
+    "target": "03-Src/studio/data-visualization/ChartState.tsx",
+    "sha256": "bb0ddc57bf7d65335c51794b72bebf6301fba9ea47a00c5c993fb2c5478578df",
+    "astra_sha256": "bb0ddc57bf7d65335c51794b72bebf6301fba9ea47a00c5c993fb2c5478578df"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\chartFormatters.ts",
+    "target": "03-Src/studio/data-visualization/chartFormatters.ts",
+    "sha256": "63b89bce33f4da22ad0d96b92a4d122151dfb736ef8a125ece04d0c4d8fa845a",
+    "astra_sha256": "63b89bce33f4da22ad0d96b92a4d122151dfb736ef8a125ece04d0c4d8fa845a"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\dataVisualization.css",
+    "target": "03-Src/studio/data-visualization/dataVisualization.css",
+    "sha256": "c3832d394479511385d33dbc802f06f83ef3dc1d1777850e3959847e16baa7cc",
+    "astra_sha256": "806d2d8be8975252c6d7d30d666aebb637d9d2f5f73a0ad29dacf2f686721c5e"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\data-visualization\\ProfessionalVisuals.tsx",
+    "target": "03-Src/studio/data-visualization/ProjectRunVersionTrend.tsx",
+    "sha256": "09558d7a293b838abbf155a21728686e24cd22e340852d1246716d92901a74e4",
+    "adaptation": "Only ProjectRunVersionDatum and ProjectRunVersionTrend are reused",
+    "astra_sha256": "f3cba87eaec2b1330ac90289390b227b6d313e8e834ce2f216e3b4d4eedd4cae"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\task-context\\taskContextUtils.ts",
+    "target": "03-Src/studio/task-context/taskContextUtils.ts",
+    "sha256": "33ca196f23c786472742941bbe3764edfe09254826e5e62946421cb0254703b6",
+    "astra_sha256": "33ca196f23c786472742941bbe3764edfe09254826e5e62946421cb0254703b6"
+  },
+  {
+    "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\tests\\projectDashboardUtils.test.ts",
+    "target": "tests/projectDashboardUtils.test.ts",
+    "sha256": "7cd50b6ac2e66ece6dd96388cd0ae6b260ee9d9798b50829315d53f09d6bb5d9",
+    "astra_sha256": "663d6356197ad022d5e03dbf8fd79babb314eca370b804d0b7fa0581a7bc49e4",
+    "adaptation": "保留七项纯逻辑契约测试，移除旧 App 源码布局断言。"
+  }
+]

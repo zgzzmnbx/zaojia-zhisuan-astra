@@ -1,0 +1,35 @@
+.zhisuan-avatar {
+  --za-character-body: #0b1f45;
+  --za-character-eye: #fff;
+  --za-character-dot: #fff;
+  --za-character-badge: #16a34a;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  position: relative;
+  width: 56px;
+  height: 56px;
+  /* Internal movement preserves the surrounding text and hit targets. */
+  overflow: hidden;
+}
+.zhisuan-avatar--compact { width: 34px; height: 34px; }
+.zhisuan-avatar--normal { width: 56px; height: 56px; }
+.zhisuan-avatar--large { width: 72px; height: 72px; }
+.zhisuan-avatar__svg { width: 100%; height: 100%; display: block; overflow: hidden; }
+.zhisuan-avatar__badge { position: absolute; width: 14px; height: 14px; right: 0; top: 0; }
+.zhisuan-avatar__badge circle { fill: var(--za-character-badge); stroke: var(--za-character-eye); stroke-width: 1.5; }
+.zhisuan-avatar__badge path { fill: none; stroke: #fff; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.zhisuan-avatar[data-state="warning"] { --za-character-badge: #d97706; }
+.zhisuan-avatar[data-state="error"] { --za-character-badge: #dc2626; }
+.shell.layout-daweiba.theme-dark .zhisuan-avatar {
+  --za-character-body: #fff;
+  --za-character-eye: #172033;
+  --za-character-dot: #172033;
+}
+/* The controller cancels RAF when reduced motion is requested. */
+@media (prefers-reduced-motion: reduce) {
+  .zhisuan-avatar, .zhisuan-avatar *, .zhisuan-avatar::before, .zhisuan-avatar::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

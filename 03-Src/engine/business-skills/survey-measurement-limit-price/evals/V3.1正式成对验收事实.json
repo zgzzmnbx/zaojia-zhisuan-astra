@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "baseline": "V3.1 正式成对验收",
+  "verified_at": "2026-08-13T21:20:55+08:00",
+  "sample": "【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v3.1【批注-完备】.xlsx",
+  "facts": {
+    "common_sheet_count": 6,
+    "compared_target_cells": 1254,
+    "three_number_difference_count": 0,
+    "formula_difference_count": 0,
+    "target_fill_difference_count": 0,
+    "review_status_difference_count": 0,
+    "hidden_row_difference_count": 0,
+    "full_value_difference_count": 0,
+    "word_cover_difference_count_excluding_date": 0,
+    "word_business_core_difference_count": 0,
+    "word_business_content_passed": true
+  },
+  "limitations": [
+    "该事实只证明指定 V3.1 样例与成对答案的业务核心一致，不代表全场景准确率承诺。",
+    "本次验收未要求协同复核，Experience 未形成候选属于真实空态。",
+    "实物工作费调整系数第一层标准规则暂未启用，多候选、无候选或字段冲突仍必须人工复核。"
+  ]
+}

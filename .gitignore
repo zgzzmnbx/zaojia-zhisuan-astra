@@ -1,0 +1,12 @@
+node_modules/
+04-output/
+Codex-Temp/
+.env*
+public/assets/*.woff2
+
+.venv/
+**/Codex-Temp/
+**/__pycache__/
+.pytest_cache/
+config/*.local.json
+**/*.key

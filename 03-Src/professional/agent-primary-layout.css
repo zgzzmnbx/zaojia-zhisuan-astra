@@ -1,0 +1,190 @@
+/* Optional desktop layout. Every production override stays inside this mode. */
+@media (min-width: 1025px) {
+  .shell.layout-daweiba .global-nav.has-workspace-mode-switch { grid-template-columns: auto minmax(220px, 300px) minmax(0, 1fr) auto auto auto; }
+  .shell.layout-daweiba .global-nav .professional-skill-selector__trigger > strong { font-size: var(--dws-font-size-13); }
+  .shell.layout-daweiba .workspace-mode-switch {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    flex: 0 0 auto;
+    width: 116px;
+    padding: 3px;
+    border: 1px solid var(--db-border);
+    border-radius: 8px;
+    background: var(--db-surface-tint);
+    font-family: var(--dws-font-family-ui);
+  }
+  .shell.layout-daweiba .workspace-mode-switch::before {
+    content: "";
+    position: absolute;
+    inset: 3px auto 3px 3px;
+    width: calc((100% - 6px) / 2);
+    border-radius: 5px;
+    background: var(--db-surface, #fff);
+    transition: transform 150ms ease;
+    pointer-events: none;
+  }
+  .shell.layout-daweiba .workspace-mode-switch.is-dialogue::before { transform: translateX(100%); }
+  .shell.layout-daweiba .workspace-mode-switch > button {
+    position: relative;
+    min-height: 26px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--db-text-muted);
+    font: inherit;
+    font-size: var(--dws-font-size-13);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .shell.layout-daweiba .workspace-mode-switch > button[aria-pressed="true"] { color: var(--db-primary); }
+  .shell.layout-daweiba .workspace-mode-switch > button:focus-visible { outline: 2px solid var(--db-primary); outline-offset: -2px; }
+  .shell.layout-daweiba .daweiba-layout-shell.is-agent-primary {
+    grid-template-columns: var(--db-layout-left-width) minmax(0, 1fr);
+  }
+  .shell.layout-daweiba .is-agent-primary > .daweiba-main-content {
+    grid-template-columns: minmax(0, var(--workspace-agent-fr)) 8px minmax(0, var(--workspace-preview-fr));
+    grid-template-rows: auto minmax(0, 1fr);
+    padding: 0;
+  }
+  .shell.layout-daweiba .is-agent-primary .daweiba-main-content > .agent-workspace {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    container: agent-primary-pane / inline-size;
+  }
+  .shell.layout-daweiba .is-agent-primary .daweiba-main-content > .daweiba-workspace-frame {
+    grid-column: 3;
+    grid-row: 2;
+    padding: 16px;
+    overflow: auto;
+  }
+  .shell.layout-daweiba .is-agent-primary .workspace-preview-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-column: 3;
+    grid-row: 1;
+    gap: 8px;
+    min-width: 0;
+    min-height: 58px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--db-border);
+    color: var(--db-text-strong);
+    background: var(--db-surface, #fff);
+    font-family: var(--dws-font-family-ui);
+    font-size: var(--dws-font-size-13);
+  }
+  .shell.layout-daweiba .is-agent-primary .workspace-preview-toolbar label,
+  .shell.layout-daweiba .is-agent-primary .workspace-preview-toolbar > div {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 8px;
+  }
+  .shell.layout-daweiba .is-agent-primary .workspace-preview-toolbar label > span { white-space: nowrap; }
+  .shell.layout-daweiba .is-agent-primary .workspace-preview-toolbar select {
+    width: auto;
+    min-width: 0;
+    max-width: 200px;
+    min-height: 34px;
+    padding: 0 8px;
+    border: 1px solid var(--db-border);
+    border-radius: 8px;
+    color: var(--db-text-strong);
+    background: var(--db-surface, #fff);
+    font: inherit;
+  }
+  .shell.layout-daweiba .is-agent-primary .workspace-preview-toolbar button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--db-text);
+    white-space: nowrap;
+    font: inherit;
+    cursor: pointer;
+  }
+  .shell.layout-daweiba .is-agent-primary .workspace-preview-toolbar button:hover { background: var(--db-surface-tint); }
+  .shell.layout-daweiba .is-agent-primary .workspace-splitter {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    position: relative;
+    background: var(--db-surface-tint);
+    border-inline: 1px solid var(--db-border);
+    touch-action: none;
+    cursor: col-resize;
+  }
+  .shell.layout-daweiba .is-agent-primary .workspace-splitter::after {
+    content: "";
+    position: absolute;
+    top: 45%;
+    left: 2px;
+    width: 2px;
+    height: 32px;
+    border-radius: 2px;
+    background: var(--db-text-muted);
+  }
+  .shell.layout-daweiba .is-agent-primary .workspace-splitter:focus-visible { outline: 2px solid var(--db-primary); outline-offset: -2px; }
+  .shell.layout-daweiba .is-agent-primary .agent-workspace__header { padding-inline: 16px; flex-wrap: wrap; gap: 4px; }
+  .shell.layout-daweiba .is-agent-primary .agent-workspace__identity > span { max-width: 165px; }
+  .shell.layout-daweiba .is-agent-primary .agent-workspace__header-actions button { padding-inline: 6px; }
+  .shell.layout-daweiba .is-agent-primary .agent-workspace__messages { padding-inline: 24px; }
+  .shell.layout-daweiba .is-agent-primary .agent-composer { padding-inline: 20px; }
+  .shell.layout-daweiba .is-agent-primary .agent-composer summary { white-space: nowrap; }
+  /* Anchor menus to the composer, so every split width keeps them inside the pane. */
+  .shell.layout-daweiba .is-agent-primary :is(.agent-composer__action-menu, .agent-composer__skill-menu) { position: static; }
+  .shell.layout-daweiba .is-agent-primary :is(.agent-composer__action-panel, .agent-composer__skill-panel) {
+    box-sizing: border-box;
+    left: 0;
+    right: auto;
+    width: min(620px, 100%);
+    min-width: 0;
+    max-height: min(480px, calc(100dvh - 320px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .shell.layout-daweiba .is-agent-primary .agent-composer__skill-panel { width: min(390px, 100%); }
+  .shell.layout-daweiba .is-agent-primary .agent-composer__action-panel :is(.agent-workspace__action-strip, .agent-workspace__artifacts) { min-width: 0; }
+  .shell.layout-daweiba .is-agent-primary :is(.agent-composer textarea, .agent-message__body) { font-size: var(--dws-font-size-14); line-height: 1.55; }
+  .shell.layout-daweiba .is-agent-primary :is(.agent-workspace__header-actions button, .workspace-preview-toolbar button) { font-weight: 700; line-height: 1; }
+  .shell.layout-daweiba .is-agent-primary.is-preview-closed > .daweiba-main-content,
+  .shell.layout-daweiba .is-agent-primary.is-professional-focused > .daweiba-main-content,
+  .shell.layout-daweiba .is-agent-primary.is-compact-workspace > .daweiba-main-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .shell.layout-daweiba .is-agent-primary.is-preview-closed .daweiba-main-content > :is(.daweiba-workspace-frame, .workspace-preview-toolbar) { display: none; }
+  .shell.layout-daweiba .is-agent-primary.is-compact-workspace:not(.is-preview-closed) .daweiba-main-content > .agent-workspace { display: none; }
+  .shell.layout-daweiba .is-agent-primary.is-professional-focused:not(.is-preview-closed) .daweiba-main-content > .agent-workspace { display: none; }
+  .shell.layout-daweiba .is-agent-primary.is-professional-focused .daweiba-main-content > :is(.daweiba-workspace-frame, .workspace-preview-toolbar) { grid-column: 1; }
+  .shell.layout-daweiba .is-agent-primary.is-compact-workspace .daweiba-main-content > :is(.daweiba-workspace-frame, .workspace-preview-toolbar) { grid-column: 1; }
+  /* Existing professional grids retain their controls; only this smaller pane stacks them. */
+  /* The original placement authority uses !important; override it only in this mode. */
+  .shell.layout-daweiba .is-agent-primary .daweiba-workspace-frame.is-daweiba-module-fill > .daweiba-fill-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto auto !important;
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+    align-content: start;
+  }
+  .shell.layout-daweiba .is-agent-primary .daweiba-fill-grid > :is(.input-panel, .brief-panel, .daweiba-fill-insight-panel) {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    overflow: visible;
+  }
+  .shell.layout-daweiba .is-agent-primary .daweiba-workspace-frame.is-daweiba-module-preview { overflow: hidden; }
+  .shell.layout-daweiba .is-agent-primary .preview-window { min-width: 0; }
+
+  @container agent-primary-pane (max-width: 460px) {
+    .shell.layout-daweiba .is-agent-primary .agent-turn { grid-template-columns: minmax(0, 1fr); }
+    .shell.layout-daweiba .is-agent-primary .agent-message { min-width: 0; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell.layout-daweiba .workspace-mode-switch::before { transition: none; }
+}
+.shell.layout-daweiba .workspace-layout-settings button[aria-pressed="true"] { border-color: var(--db-primary); color: var(--db-primary); background: var(--db-primary-soft); }

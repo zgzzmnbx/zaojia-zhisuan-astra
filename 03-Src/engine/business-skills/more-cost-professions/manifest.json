@@ -1,0 +1,34 @@
+{
+  "id": "more-cost-professions",
+  "displayName": "更多造价专业",
+  "version": "0.1.0",
+  "status": "planned",
+  "statusLabel": "即将开放",
+  "displayOrder": 30,
+  "domain": "工程造价/专业扩展",
+  "description": "通过专业能力持续扩充更多造价业务场景。",
+  "applicability": {
+    "includes": ["未来扩展的其他造价专业场景"],
+    "excludes": ["当前不能创建真实任务", "未完成专业资产和验证前不得标记上线"]
+  },
+  "inputProfile": {
+    "extensions": [".xlsx"],
+    "templateHints": []
+  },
+  "capabilities": {
+    "pricing": false,
+    "workloadCapture": false,
+    "experienceWarning": false,
+    "knowledgeQa": false,
+    "knowledgeMemory": false,
+    "wordReport": false,
+    "collaboration": false
+  },
+  "assets": {},
+  "validation": {
+    "status": "not_started",
+    "sample": "尚未提供",
+    "updatedAt": "2026-07-20",
+    "limitations": ["具体专业方向、输入、规则、模板和验证样例尚未确定"]
+  }
+}

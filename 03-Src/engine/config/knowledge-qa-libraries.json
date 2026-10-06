@@ -1,0 +1,46 @@
+{
+  "_说明": [
+    "本文件只配置 #知识库 问答可选资料库，不参与结构化计价、匹配规则、经验池或报告生成。",
+    "paths 必须使用项目根目录下的相对路径；新增资料库时复制一项并使用唯一 id。",
+    "defaultSelected 控制首次打开时的默认选择，用户在界面中的选择只属于本机界面偏好。"
+  ],
+  "schemaVersion": 1,
+  "libraries": [
+    {
+      "id": "project-core",
+      "name": "项目正式知识库",
+      "description": "当前专业能力绑定的标准资料、项目规则、规则卡片和结构化计价依据。",
+      "level": "第一层 · 项目正式依据",
+      "kind": "static",
+      "sourceMode": "professional-skill",
+      "defaultSelected": true
+    },
+    {
+      "id": "cost-aiw",
+      "name": "造价通用知识库",
+      "description": "普通依据问答可选的造价资料问答资产；行级勘察测量复核不纳入。",
+      "level": "第二层 · 造价通用资料",
+      "kind": "static",
+      "paths": [
+        "06-知识库问答资料/造价AIW资料库"
+      ],
+      "manifestFile": "manifest.json",
+      "recursive": true,
+      "extensions": [
+        ".md"
+      ],
+      "excludeNames": [
+        "知识资产清单.md"
+      ],
+      "defaultSelected": false
+    },
+    {
+      "id": "knowledge-memory",
+      "name": "已确认知识记忆",
+      "description": "仅检索已确认且未失效的通用、项目或任务知识记忆；正式标准和项目规则始终优先。",
+      "level": "第三层 · 已确认知识记忆",
+      "kind": "memory",
+      "defaultSelected": true
+    }
+  ]
+}

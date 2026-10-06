@@ -1,0 +1,8 @@
+fastapi==0.124.0
+uvicorn[standard]==0.38.0
+openpyxl==3.1.5
+python-docx==1.2.0
+python-multipart==0.0.20
+pytest==9.0.1
+httpx==0.28.1
+lark-oapi==1.4.24
