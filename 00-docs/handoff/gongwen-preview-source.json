@@ -1,0 +1,15 @@
+{
+  "project": "D:\\Codex-Temp\\260920-【公文格式】公文格式智能体v2.0-astra",
+  "commit": "ba85fdad79fc1c924f6d4e873b6dcade00f14bb6",
+  "files": {
+    "03-Src\\frontend\\src\\components\\document-preview\\DocumentPreview.tsx": "12ad7045de2ea7ba8f51c9f100afb1cfd38e710976395f936525158fbd729d70",
+    "03-Src\\frontend\\src\\components\\document-preview\\DocumentPreview.css": "bd07f666270fddad0c7141aabc271207e203fbb8c7d13b535be7b4da4f23b3c7",
+    "03-Src\\frontend\\src\\components\\document-preview\\documentPreviewUtils.ts": "226ebe32c15e869e4e61b2d47ddada17740538bbafafcf06e436ada2776ebae4",
+    "03-Src\\frontend\\src\\components\\document-preview\\documentPreviewTheme.ts": "c09740abaf20d188023d6d12a15071afca3eb842bb488544c42f64b3979fdfdb",
+    "03-Src\\frontend\\scripts\\patch-docx-east-asian-fonts.mjs": "dc5b883ba7f0d1dda87820119ba596c1ad774d570a559157bb72dfeadbbffe1a",
+    "03-Src\\frontend\\scripts\\patch-docx-pagination.mjs": "bbe9320e52c7edd13c2da8bf555a18182bdc1184df4122893773fbd96d3cc1ba",
+    "03-Src\\frontend\\scripts\\patch-docx-script-fonts.mjs": "88a2223a4159ea522cac282b851e9fd11a02040ac26ffaa5e57495f98587a841",
+    "03-Src\\frontend\\scripts\\patch-docx-table-spacing.mjs": "92094b38c4278fe27e3e7ba84a7bb87df8d08d85a714b6b3db7d7159679ae349",
+    "03-Src\\frontend\\scripts\\sync-file-viewer-assets.mjs": "b427595f40ae53b788ec98940f8dc0353ffe5e5449558cdd9796b599ac3ee5bc"
+  }
+}

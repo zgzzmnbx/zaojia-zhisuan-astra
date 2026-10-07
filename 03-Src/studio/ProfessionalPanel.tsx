@@ -3,7 +3,7 @@ import {ConnectionSettings} from './ConnectionSettings';
 import {useEffect,useRef,useState} from 'react';
 import type {View,SheetConfig} from './types';
 export const professionalTitles:Partial<Record<View,string>>={workload:'工作量抓取',experience:'经验池导入',settlement:'结算审核',memory:'知识记忆',map:'项目地图',showcase:'项目展示地图',skills:'专业能力治理',advanced:'编制与 AI 确认',analysis:'费用与风险图表',word:'Word 分页预览',configuration:'专业设置',dispatch:'协同派发与复核',originalqa:'原问答与对比',tracefull:'任务血缘与轨迹',knowledgebase:'知识库管理'};
-export function isProfessional(view:string){return view in professionalTitles;}
+export function isProfessional(view:string){return view!=='word'&&view in professionalTitles;}
 export type KnowledgeSeed={id:string;context:string;title:string;question:string;conclusion:string;sourceReference:string;evidenceSummary:string;sourceType:'knowledge_answer';jobId:string};
 export type ProfessionalReceipt={title:string;path:string;jobId:string;view:View;downloads:Record<string,string>};
 export function ProfessionalPanel({view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active,onBusy,onReceipt,onNavigate,onOpenRun}:{view:View;context:string;jobId:string;inputFile:File|null;sheets:SheetConfig[];knowledgeSeed:KnowledgeSeed|null;palette:Palette;dark:boolean;active:boolean;onBusy:(label:string)=>void;onReceipt:(receipt:ProfessionalReceipt)=>void;onNavigate:(view:string)=>void;onOpenRun:(project:string,run:string,target:'preview'|'report')=>Promise<void>}){

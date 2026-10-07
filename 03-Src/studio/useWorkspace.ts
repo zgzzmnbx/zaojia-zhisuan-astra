@@ -1,10 +1,11 @@
+import type {DocumentSource,DocumentState} from './document-types';
 import {useEffect,useRef,useState} from 'react';
 import {api,json} from './api';
 import type {Message,SheetConfig,View} from './types';
 
 export const workspaceApi='/api/astra/workspace';
 export type Project={id:string;name:string;background:string};
-export type Snapshot={messages:Message[];draft:string;locatedRow?:number;context:string;inputFileId:string;project:string;sheets:SheetConfig[];job_id:string;view:View;visible:boolean;sheetIndex:number;panelProjectId?:string;chatMode?:'task'|'knowledge';knowledgeOptions?:{library_ids:string[]|null;retrieval_mode:'classic'|'hybrid';engine?:'local'|'weknora'|'compare'}};
+export type Snapshot={selectedDocument?:DocumentSource|null;documents?:Record<string,DocumentState>;messages:Message[];draft:string;locatedRow?:number;context:string;inputFileId:string;project:string;sheets:SheetConfig[];job_id:string;view:View;visible:boolean;sheetIndex:number;panelProjectId?:string;chatMode?:'task'|'knowledge';knowledgeOptions?:{library_ids:string[]|null;retrieval_mode:'classic'|'hybrid';engine?:'local'|'weknora'|'compare'}};
 export type Conversation={id:string;title:string;project_id:string|null;revision:number;preview?:string;job_id?:string;state?:Partial<Snapshot>};
 export type Asset={id:string;name:string;size:number;sha256:string;project_id:string|null;public:number;created_at:string};
 type Index={projects:Project[];conversations:Conversation[];jobs:Record<string,string>};

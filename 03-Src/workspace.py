@@ -13,7 +13,7 @@ from fastapi import APIRouter, Body, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 
 ID = re.compile(r'^[a-f0-9]{32}$')
-FILE_TYPES = {'.xlsx', '.docx', '.pdf', '.txt', '.md', '.csv'}
+FILE_TYPES = {'.xlsx', '.docx', '.doc', '.markdown', '.pdf', '.txt', '.md', '.csv'}
 
 class ClosingConnection(sqlite3.Connection):
     def __exit__(self, *args):
@@ -224,7 +224,7 @@ def workspace_router(root_getter, checked_job):
     async def upload_asset(file: UploadFile = File(...), scope: str = Form('conversation'), project_id: str = Form(''), conversation_id: str = Form('')):
         name = file.filename or ''
         if len(name) > 240 or any(c in name for c in '/\\:') or name.startswith('.') or Path(name).suffix.lower() not in FILE_TYPES:
-            raise HTTPException(400, '请选择 XLSX、DOCX、PDF、TXT、MD 或 CSV 文件，文件名不能包含路径')
+            raise HTTPException(400, '请选择 XLSX、DOC、DOCX、PDF、TXT、MD 或 CSV 文件，文件名不能包含路径')
         data = await file.read()
         if not data or len(data) > 29 * 1024 * 1024:
             raise HTTPException(400, '资料为空或超过 29 MB 上限')

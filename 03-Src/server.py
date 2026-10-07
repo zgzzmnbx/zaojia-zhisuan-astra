@@ -19,6 +19,7 @@ ENGINE = ROOT / '03-Src/engine'
 sys.path.insert(0, str(ENGINE/'backend'))
 from app import main as engine
 from app import paths
+from documents import documents_router
 from workspace import workspace_router
 from weknora import router as weknora_router
 import weknora
@@ -27,7 +28,7 @@ import professional_host
 professional_host.install(engine, paths)
 
 assert paths.PROJECT_ROOT == ENGINE, 'Refuse to use an external business engine'
-app = FastAPI(title='智算Astra', version='0.6.2', docs_url=None, redoc_url=None)
+app = FastAPI(title='智算Astra', version='0.7.0', docs_url=None, redoc_url=None)
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()
@@ -54,6 +55,16 @@ def checked_job(job_id):
         raise HTTPException(404, '独立工作区中未找到该任务')
     return path
 
+def document_report_path(job_id):
+    folder = checked_job(job_id)
+    state = engine._load_process_state(folder)
+    file = engine._state_path(folder, state, 'output_report', required=False)
+    if not file or not file.is_file():
+        raise HTTPException(404, '当前任务还没有 Word 报告')
+    file.resolve().relative_to(folder.resolve())
+    return file
+
+app.include_router(documents_router(lambda: paths.RUNTIME_DIR, document_report_path))
 app.include_router(workspace_router(lambda: paths.RUNTIME_DIR, checked_job))
 app.include_router(weknora_router)
 app.include_router(gork_router)
@@ -146,7 +157,7 @@ async def boundaries(request: Request, call_next):
 
 @app.get('/api/health')
 def health():
-    return {'status':'ok','service':'zhisuan-astra','version':'0.6.2','engine_version':engine.APP_VERSION,
+    return {'status':'ok','service':'zhisuan-astra','version':'0.7.0','engine_version':engine.APP_VERSION,
             'isolated':True,'mode':'mechanical+ai_enhanced','model_connected':False,'model_configured':bool(professional_host.model_key()),'external_sending':False}
 
 @app.get('/api/astra/sample')

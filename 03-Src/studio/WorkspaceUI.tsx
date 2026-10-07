@@ -69,6 +69,6 @@ export function Library({workspace:w,projectId,openProject,editProject,newChat,u
     {!items.length&&<div className="library-empty"><Icon name="folder"/><p>{scope==='project'&&!project?'选择项目，查看共享资料':'这里还没有资料'}</p><small>支持 Excel、Word、PDF、Markdown、TXT 和 CSV</small></div>}
     <Note>上传保留独立版本；资料不会自动进入计价规则或问答索引。项目文件只能用于本项目对话，公共资料可供所有对话使用。</Note>
     {!projectId&&<><h3 className="section-title">专业知识</h3><div className="module-links">{[['knowledge','book','知识库与问答','原知识库范围、检索模式与引用依据'],['articles','file','造价文章与知识网络','搜索、阅读原文章及冻结关系']].map(([v,i,t,d])=><button key={v} onClick={()=>open(v)}><Icon name={i}/><span><strong>{t}</strong><small>{d}</small></span><Icon name="arrow-right"/></button>)}</div></>}
-    <input type="file" ref={input} accept=".xlsx,.docx,.pdf,.md,.txt,.csv" hidden onChange={e=>{if(e.target.files?.[0])void upload(e.target.files[0]);e.target.value='';}}/>
+    <input type="file" ref={input} accept=".xlsx,.doc,.docx,.pdf,.md,.markdown,.txt,.csv" hidden onChange={e=>{if(e.target.files?.[0])void upload(e.target.files[0]);e.target.value='';}}/>
   </div>;
 }
