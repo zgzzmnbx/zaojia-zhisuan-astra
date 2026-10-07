@@ -20,6 +20,11 @@ html,body,#root{margin:0;min-width:0;width:100%;height:100%;overflow:hidden;back
 html[data-astra-view='memory'] .daweiba-layout-shell,html[data-astra-view='configuration'] .daweiba-layout-shell,html[data-astra-view='skills'] .daweiba-layout-shell{visibility:hidden}
 html[data-astra-view='memory'] .daweiba-settings-backdrop,html[data-astra-view='configuration'] .daweiba-settings-backdrop{position:absolute;inset:0;padding:0;background:transparent}
 html[data-astra-view='memory'] .unified-settings-modal,html[data-astra-view='configuration'] .unified-settings-modal{width:100%;max-width:none;min-height:100%;max-height:100%;border:0;border-radius:0;box-shadow:none}
+/* Configuration is hosted inside Astra's settings dialog, not another framed modal. */
+html[data-astra-view='configuration'] .shell.layout-daweiba .daweiba-settings-backdrop{padding:0;background:transparent;backdrop-filter:none}
+html[data-astra-view='configuration'] .shell.layout-daweiba .settings-modal.unified-settings-modal{width:100%;max-width:none;height:100%;max-height:100%;margin:0;border:0;border-radius:0;box-shadow:none;box-sizing:border-box}
+html[data-astra-view='configuration'] .shell.layout-daweiba .unified-settings-modal>.modal-title{display:none}
+@media(max-width:480px){html[data-astra-view='configuration'] .shell.layout-daweiba .zhisuan-settings-tabs button{padding-inline:8px;white-space:nowrap;min-width:0}}
 html[data-astra-view='originalqa'] .daweiba-main-content{display:none!important}
 html[data-astra-view='originalqa'] .shell.layout-daweiba .ai-dock{display:flex!important;position:relative!important;width:100%!important;height:100%!important;max-width:none;max-height:none;inset:auto;margin:0;border:0;border-radius:0}
 html[data-astra-view='originalqa'] :is(.ai-dock-avatar-frame,.ai-dock-actions,.ai-dock-status-grid){display:none!important}

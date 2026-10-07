@@ -3240,6 +3240,19 @@ function DaweibaApp() {
   }, [activeDaweibaModule, isFeishuBotConsoleInlineOpen, isFeishuBotConsoleOpen, feishuBotConsoleEvents]);
 
   useEffect(() => {
+    if (!["configuration", "collaboration-settings"].includes(astraView)) return;
+    const closeSettings = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented || isFeishuBotConsoleOpen || isSystemArchitectureOpen) return;
+      // Let a nested editor own Escape; the outer settings dialog receives it otherwise.
+      if (Array.from(document.querySelectorAll(".modal-backdrop:not(.daweiba-settings-backdrop)")).some(node => node.getClientRects().length)) return;
+      event.preventDefault();
+      notifyParent("close-settings");
+    };
+    window.addEventListener("keydown", closeSettings);
+    return () => window.removeEventListener("keydown", closeSettings);
+  }, [astraView, isFeishuBotConsoleOpen, isSystemArchitectureOpen]);
+
+  useEffect(() => {
     if (!isFeishuBotConsoleOpen) return undefined;
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") setIsFeishuBotConsoleOpen(false);

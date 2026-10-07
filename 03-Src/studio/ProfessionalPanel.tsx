@@ -7,9 +7,9 @@ export const professionalTitles:Partial<Record<View,string>>={'collaboration-set
 export function isProfessional(view:string){return view!=='word'&&view in professionalTitles;}
 export type KnowledgeSeed={id:string;context:string;title:string;question:string;conclusion:string;sourceReference:string;evidenceSummary:string;sourceType:'knowledge_answer';jobId:string};
 export type ProfessionalReceipt={title:string;path:string;jobId:string;view:View;downloads:Record<string,string>};
-export function ProfessionalPanel({view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active,onBusy,onReceipt,onNavigate,onOpenRun}:{view:View;context:string;jobId:string;inputFile:File|null;sheets:SheetConfig[];knowledgeSeed:KnowledgeSeed|null;palette:Palette;dark:boolean;active:boolean;onBusy:(label:string)=>void;onReceipt:(receipt:ProfessionalReceipt)=>void;onNavigate:(view:string)=>void;onOpenRun:(project:string,run:string,target:'preview'|'report')=>Promise<void>}){
-  const frame=useRef<HTMLIFrameElement>(null), latest=useRef({view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active,onBusy,onReceipt,onNavigate,onOpenRun});
-  latest.current={view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active,onBusy,onReceipt,onNavigate,onOpenRun};
+export function ProfessionalPanel({view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active,onBusy,onReceipt,onNavigate,onOpenRun,onCloseSettings}:{view:View;context:string;jobId:string;inputFile:File|null;sheets:SheetConfig[];knowledgeSeed:KnowledgeSeed|null;palette:Palette;dark:boolean;active:boolean;onBusy:(label:string)=>void;onReceipt:(receipt:ProfessionalReceipt)=>void;onNavigate:(view:string)=>void;onCloseSettings?:()=>void;onOpenRun:(project:string,run:string,target:'preview'|'report')=>Promise<void>}){
+  const frame=useRef<HTMLIFrameElement>(null), latest=useRef({view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active,onBusy,onReceipt,onNavigate,onOpenRun,onCloseSettings});
+  latest.current={view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active,onBusy,onReceipt,onNavigate,onOpenRun,onCloseSettings};
   const [error,setError]=useState('');const sentInput=useRef<File|null|undefined>(undefined);
   function sync(){const x=latest.current;frame.current?.contentWindow?.postMessage({protocol:'astra-professional/1',type:'context',context:x.context,view:x.view,jobId:x.jobId,dark:x.dark,palette:x.palette,active:x.active,knowledgeSeed:x.active&&x.view==='memory'&&x.knowledgeSeed?.context===x.context?x.knowledgeSeed:undefined,...(sentInput.current!==x.inputFile?{input:x.inputFile?{file:x.inputFile,sheets:x.sheets}:null}:{})},location.origin);sentInput.current=x.inputFile;}
   useEffect(()=>{sync();},[view,context,jobId,inputFile,sheets,knowledgeSeed,palette,dark,active]);
@@ -19,6 +19,7 @@ export function ProfessionalPanel({view,context,jobId,inputFile,sheets,knowledge
       if(event.origin!==location.origin||event.source!==frame.current?.contentWindow||message?.protocol!=='astra-professional/1')return;
       if(message.type==='ready'){sentInput.current=undefined;sync();return;}
       if(message.context!==latest.current.context)return;
+      if(message.type==='close-settings'&&latest.current.active)latest.current.onCloseSettings?.();
       if(message.type==='navigate'&&(message.view==='tools'||isProfessional(message.view)))latest.current.onNavigate(message.view);
       if(message.type==='open-run'&&typeof message.project==='string'&&typeof message.run==='string'&&['preview','report'].includes(message.target))void latest.current.onOpenRun(message.project,message.run,message.target).catch(e=>setError(String(e)));
       if(message.type==='error')setError(String(message.message||'专业模块未能打开'));
