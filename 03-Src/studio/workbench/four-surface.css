@@ -38,5 +38,7 @@
  .four-surface-topbar .header-appearance{grid-column:4;grid-row:1}
 }
 
-/* The completed project overview may use the full right-hand height; chat stays wide. */
-.studio #shell .four-surface.surface-floating>.summary-artifact:has(.fs-compact){top:14px;height:min(680px,calc(100% - 28px));max-height:calc(100% - 28px)}
+/* The project card follows the viewport; only its contents scroll on short screens. */
+@media(min-width:1025px){
+ .studio #shell.live-shell .four-surface.surface-floating:not(.summary-fallback)>.summary-artifact{top:14px;bottom:14px;height:auto;max-height:calc(100% - 28px)}
+}

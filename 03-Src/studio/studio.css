@@ -70,3 +70,10 @@
 /* Keep the remaining functional actions aligned after removing decorative copy. */
 .studio .live-shell .composer-note,.studio .live-shell .artifact-footer,.studio .appearance-footer{justify-content:flex-end}
 .studio .appearance-footer>p{margin-right:auto}
+
+/* Centre the empty conversation in the space above the composer. Auto margins
+   collapse on short screens so the greeting remains reachable by scrolling. */
+.studio #shell.live-shell .conversation.home-scene>.messages{display:flex;flex-direction:column}
+.studio #shell.live-shell .conversation.home-scene .welcome{flex:0 0 auto;width:100%;max-width:610px;box-sizing:border-box;margin:auto;padding:24px 0}
+.studio #shell.live-shell .conversation.home-scene .welcome h1{margin:0 0 24px;line-height:1.5;text-wrap:balance}
+@media(max-width:650px){.studio #shell.live-shell .conversation.home-scene .welcome{padding-block:16px}.studio #shell.live-shell .conversation.home-scene .welcome h1{font-size:var(--dws-font-size-20);margin-bottom:20px}}
