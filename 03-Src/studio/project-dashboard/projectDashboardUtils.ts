@@ -221,7 +221,7 @@ export function dateRangeForPreset(preset: string, today = new Date()) {
 export function defaultProjectFilters(today = new Date()): ProjectFilters {
   return {
     ...EMPTY_FILTERS,
-    ...dateRangeForPreset("30d", today),
+    ...dateRangeForPreset("all", today),
   };
 }
 

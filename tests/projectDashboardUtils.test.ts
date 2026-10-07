@@ -31,8 +31,8 @@ test("date presets use inclusive local calendar ranges", () => {
   assert.equal(datePresetForRange("2026-07-01", "2026-07-22", today), "custom");
   assert.deepEqual(defaultProjectFilters(today), {
     ...EMPTY_FILTERS,
-    dateFrom: "2026-06-25",
-    dateTo: "2026-07-24",
+    dateFrom: "",
+    dateTo: "",
   });
 });
 

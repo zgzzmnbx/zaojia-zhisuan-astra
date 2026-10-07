@@ -18,6 +18,7 @@
 .studio .project-dashboard__header p {color:var(--muted);font-size:var(--dws-font-size-13)}
 .studio .project-dashboard__header-actions {flex-wrap:wrap;gap:8px}
 .studio .project-dashboard__metric {border-radius:12px;padding:16px;text-align:left}
+.studio .project-dashboard__metric:hover {background:var(--soft)}
 .studio .project-dashboard__metric strong {font-size:var(--dws-font-size-28);line-height:1.4}
 .studio .project-dashboard__metric small {line-height:1.6}
 .studio .project-dashboard__chart,.studio .project-dashboard__history {border-radius:12px;box-shadow:none}

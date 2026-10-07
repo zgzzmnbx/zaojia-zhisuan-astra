@@ -106,3 +106,5 @@
 - 知识模块复用 Windows 18091 WeKnora；用户于 2026-10-07 授权引用原凭证文件，只在忽略的 Astra runtime 中配置路径，不复制或提交密钥。造价 AIW 本地原文通过 tools/migrate-knowledge-assets.py 按清单导入独立 runtime；新宿主适配生效必须以重启后真实目录为准。知识图谱 50 篇 / 74 关系与 WeKnora Wiki 属不同资产。
 
 - 项目卡的已检查风险须按当前 job 独立读取，不依赖打开风险页；读取失败、未检查与真实零项分别显示。异步回执同时校验会话上下文与 job，切换时取消旧请求。
+
+- 2026-10-07 用户授权导入 2.0 历史台账；只读快照经 tools/import-legacy-history.py 写 Astra 独立 runtime。保留原 ID / 日期 / 测试标识，不按同名合并，不把 proposed 地点改成 confirmed；不导入机器人队列或凭证。回执与备份保存在 runtime/astra-history-imports/，历史数据不随 Git 推送。
