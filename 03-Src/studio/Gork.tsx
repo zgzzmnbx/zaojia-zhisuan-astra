@@ -1,38 +1,31 @@
-import {useEffect,useRef,useState,useSyncExternalStore} from 'react';
+import {attachGorkPointer} from './gork-pointer';
+import {useEffect,useRef,useState} from 'react';
 import '../vendor/gork/gork-catalog.js';
 import '../vendor/gork/gork-avatar.js';
 import {choreographGork,createGorkController,gorkDescriptions,greetings} from './gork-motion';
 import './gork.css';
 
-const preference='astra.gork-motion.v1',preferenceEvent='astra:gork-motion';
-let motionPreference='auto';
-const media=matchMedia('(prefers-reduced-motion: reduce)');
-try{motionPreference=localStorage.getItem(preference)||'auto';}catch{/* Session-only when storage is unavailable. */}
-function subscribe(change:()=>void){
-  const storage=(e:StorageEvent)=>{if(e.key!==preference&&e.key!==null)return;try{motionPreference=localStorage.getItem(preference)||'auto';}catch{}change();};
-  window.addEventListener(preferenceEvent,change);window.addEventListener('storage',storage);media.addEventListener('change',change);
-  return()=>{window.removeEventListener(preferenceEvent,change);window.removeEventListener('storage',storage);media.removeEventListener('change',change);};
-}
-export function useGorkMotion(){
-  useSyncExternalStore(subscribe,()=>`${motionPreference}:${media.matches}`);
-  const paused=motionPreference==='paused'||(motionPreference!=='play'&&media.matches);
-  return [paused,(next:boolean)=>{motionPreference=next?'paused':'play';try{localStorage.setItem(preference,motionPreference);}catch{}window.dispatchEvent(new Event(preferenceEvent));},motionPreference==='play'] as const;
-}
+// User explicitly chose playback for all visible animated avatars (2026-10-06).
+// Legacy pause preferences are intentionally ignored; visibility still owns teardown.
+export function useGorkMotion(){return [false,(_next:boolean)=>{},true] as const;}
 const catalog=choreographGork((window as any).GorkCatalog);
-type Props={state?:string;size?:number;still?:boolean;suspended?:boolean;interactive?:boolean;showPause?:boolean;completion?:number;onGreet?:()=>void};
+type Props={state?:string;size?:number;still?:boolean;suspended?:boolean;interactive?:boolean;completion?:number;onGreet?:()=>void;followPointer?:boolean;pointerSmoothing?:'smooth'|'default'};
 
-export function Gork({state='idle',size=32,still=false,suspended=false,interactive=false,showPause=false,completion=0,onGreet}:Props){
+export function Gork({state='idle',size=32,still=false,suspended=false,interactive=false,completion=0,onGreet,followPointer=false,pointerSmoothing='default'}:Props){
   const canvas=useRef<HTMLCanvasElement>(null),controller=useRef<ReturnType<typeof createGorkController>|null>(null);
-  const [paused,setPaused,forceMotion]=useGorkMotion(),[status,setStatus]=useState({state,active:false});
-  const values=useRef({state,paused:paused||still,suspended});values.current={state,paused:paused||still,suspended};
+  const [paused,,forceMotion]=useGorkMotion(),[status,setStatus]=useState({state,active:false});
+  const values=useRef({state,paused:paused||still,suspended,followPointer,pointerSmoothing});values.current={state,paused:paused||still,suspended,followPointer,pointerSmoothing};
   const reconcile=useRef<()=>void>(()=>{}),greetingIndex=useRef(0),lastGreeting=useRef(-Infinity),lastCompletion=useRef(completion);
   useEffect(()=>{
     const element=canvas.current;if(!element)return;
     let visible=false;
     const instance=createGorkController((next,frozen)=>{
-      const player=(window as any).GorkAvatar.mount(element,catalog,{still:frozen,expression:next});
-      if(!frozen)player.set(next);return player;
-    },next=>setStatus(old=>old.state===next.state&&old.active===next.active?old:next));
+      let rendered=next;
+      const pointer=!frozen&&values.current.followPointer?attachGorkPointer(element,()=>['idle','listening'].includes(rendered)&&!values.current.paused&&!values.current.suspended,values.current.pointerSmoothing==='smooth'?{responseMs:260,maxSpeed:90}:{}):undefined;
+      const player=(window as any).GorkAvatar.mount(element,catalog,{still:frozen,expression:next,appearance:{id:'gork'},forceMotion:true});
+      if(!frozen)player.set(next);
+      return {set(next:string){rendered=next;pointer?.reset();player.set(next);},dispose(){pointer?.dispose();player.dispose();}};
+    },next=>setStatus(old=>old.state===next.state&&old.active===next.active?old:next),undefined,state=>catalog.sequences.find(s=>s.id===state)?.steps.reduce((n,s)=>n+s.transitionMs+s.holdMs,0)||3200);
     controller.current=instance;
     const update=()=>instance.update({state:values.current.state,visible:visible&&!document.hidden&&!values.current.suspended,paused:values.current.paused});
     reconcile.current=update;
@@ -53,6 +46,5 @@ export function Gork({state='idle',size=32,still=false,suspended=false,interacti
   const picture=<canvas ref={canvas} width={size*2} height={size*2} style={{width:size,height:size}} role="img" aria-label={`Gork，智算的化身 · ${gorkDescriptions[status.state]||'与你一起工作'}`}/>;
   return <span className={`gork-companion ${interactive?'gork-interactive':''}`} data-state={status.state} data-animated={status.active&&!still} data-motion-override={forceMotion} style={{width:size,height:size}}>
     {interactive?<button type="button" className="gork-touch" aria-label="和 Gork 打个招呼" title={`${gorkDescriptions[status.state]||'与你一起工作'} · 点一下和 Gork 互动`} onClick={greet}>{picture}</button>:picture}
-    {interactive&&showPause&&<button type="button" className="gork-pause" aria-label={paused?'播放 Gork 动效':'暂停 Gork 动效'} title={paused?'播放 Gork 动效':'暂停 Gork 动效'} aria-pressed={paused} onClick={()=>setPaused(!paused)}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">{paused?<path d="m9 5 10 7-10 7Z"/>:<path d="M8 5v14M16 5v14"/>}</svg></button>}
   </span>;
 }

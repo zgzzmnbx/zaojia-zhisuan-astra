@@ -2,29 +2,6 @@
 .gork-companion{display:inline-flex;position:relative;flex-shrink:0;vertical-align:middle;isolation:isolate}
 .gork-companion canvas{display:block;max-width:100%;max-height:100%;transform-origin:50% 78%}
 .gork-touch{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer;touch-action:manipulation}
-.gork-touch:focus-visible,.gork-pause:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
-.gork-companion .gork-pause{position:absolute;z-index:2;right:-7px;bottom:-5px;width:26px;height:26px;min-height:26px;padding:6px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--muted);box-shadow:0 2px 5px #1018280a;opacity:0;transition:opacity .18s,color .18s;cursor:pointer}
-.gork-pause svg{width:13px;height:13px}
-.gork-companion:hover .gork-pause,.gork-companion:focus-within .gork-pause,.gork-pause[aria-pressed=true]{opacity:1}
-.gork-pause:hover{color:var(--blue)}
-.gork-interactive[data-animated=true][data-state=idle] canvas{--gork-animation:gork-breathe 7.6s ease-in-out infinite}
-.gork-interactive[data-animated=true][data-state=listening] canvas{--gork-animation:gork-attentive 5s ease-in-out infinite}
-.gork-interactive[data-animated=true][data-state=searching] canvas{--gork-animation:gork-look 6s ease-in-out infinite}
-.gork-interactive[data-animated=true][data-state=working] canvas,.gork-interactive[data-animated=true][data-state=thinking] canvas{--gork-animation:gork-focus 4.8s ease-in-out infinite}
-.gork-interactive[data-animated=true][data-state=greeting] canvas,.gork-interactive[data-animated=true][data-state=happy] canvas{--gork-animation:gork-greet 2.8s ease-in-out both}
-.gork-interactive[data-animated=true][data-state=wink] canvas{--gork-animation:gork-wink 2.8s ease-in-out both}
-.gork-interactive[data-animated=true][data-state=nod] canvas{--gork-animation:gork-nod 2.8s ease-in-out both}
-.gork-interactive[data-animated=true][data-state=shy] canvas{--gork-animation:gork-shy 3.1s ease-in-out both}
-@keyframes gork-breathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2%) scale(1.018,.99)}}
-@keyframes gork-attentive{0%,100%{transform:rotate(0)}35%,60%{transform:rotate(-3deg) translateY(-1%)}}
-@keyframes gork-look{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}65%{transform:rotate(3deg)}}
-@keyframes gork-focus{0%,100%{transform:translateY(0)}45%,55%{transform:translateY(-2%) rotate(2deg)}}
-@keyframes gork-greet{0%,100%{transform:translateY(0) scale(1)}12%{transform:scale(1.05,.94)}28%{transform:translateY(-9%) rotate(-5deg) scale(.98,1.02)}43%{transform:translateY(0) scale(1.04,.96)}60%{transform:translateY(-5%) rotate(4deg)}78%{transform:translateY(0)}}
-@keyframes gork-wink{0%,100%{transform:rotate(0)}25%,45%{transform:rotate(-8deg) translateY(-3%)}70%{transform:rotate(3deg)}}
-@keyframes gork-nod{0%,100%{transform:translateY(0) scale(1)}30%,62%{transform:translateY(4%) scale(1.03,.96)}46%,78%{transform:translateY(-2%)}}
-@keyframes gork-shy{0%,100%{transform:rotate(0) scale(1)}35%,60%{transform:rotate(6deg) translateY(3%) scale(.97)}}
-@media(hover:none){.gork-companion .gork-pause{opacity:1}}
-@media(prefers-reduced-motion:reduce){.gork-companion:not([data-motion-override=true]) canvas{animation:none!important}.gork-companion .gork-pause{transition:none}}
+/* The console canvas renderer owns all expression motion. No CSS pose/scale loop. */
 
-.gork-interactive[data-animated=true] canvas{animation:var(--gork-animation,none)}
-@media(prefers-reduced-motion:reduce){.gork-interactive[data-animated=true][data-motion-override=true] canvas{animation:var(--gork-animation,none)!important}}
+.gork-touch:focus-visible{outline:2px solid var(--blue);outline-offset:4px}

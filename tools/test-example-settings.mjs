@@ -1,0 +1,12 @@
+await import('./test-welcome.mjs');
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const React=await import('react'),{renderToStaticMarkup}=await import('react-dom/server');
+const {UploadedExampleSettings}=await import('../03-Src/studio/UploadedExampleSettings.tsx');
+const calls=[],tree=UploadedExampleSettings({activeTab:'risks',open:tab=>calls.push(tab)}),html=renderToStaticMarkup(tree);
+for(const text of ['表格演示','表格展示模板','加载表格','加载风险','加载文字报告','演示非正式审核'])assert.ok(html.includes(text));assert.equal((html.match(/<button/g)||[]).length,3);assert.equal((html.match(/type="button"/g)||[]).length,3);assert.equal((html.match(/btn-primary/g)||[]).length,1);
+function nodes(v){if(!v||typeof v!=='object')return [];if(Array.isArray(v))return v.flatMap(nodes);return [v,...nodes(v.props?.children)]}const buttons=nodes(tree).filter(n=>n.type==='button');assert.ok(buttons[1].props.className.includes('btn-primary'));for(const b of buttons)b.props.onClick();assert.deepEqual(calls,['table','risks','report']);
+const app=readFileSync('03-Src/studio/App.tsx','utf8');assert.equal((app.match(/<UploadedExampleSettings/g)||[]).length,1);assert.ok(app.indexOf('<UploadedExampleSettings')>app.indexOf('{settings&&<Modal'));assert.ok(!app.includes('className="uploaded-example-launcher"'));assert.ok(app.includes('open={tab=>{setSettings(false);showUploadedExample(tab);}}'));assert.ok(app.includes('activeTab={view===\'example\'&&visible?exampleRequest?.tab:undefined}'));assert.ok(app.includes('settings={()=>setSettings(true)}'));assert.ok(app.includes('title="智算Astra · 设置"'));
+const css=readFileSync('03-Src/frontend-debug/uploaded-example/example.css','utf8');assert.ok(css.includes('@container(max-width:420px)'));assert.ok(css.includes('grid-template-columns:1fr'));
+assert.ok(readFileSync('03-Src/frontend-debug/uploaded-example/entry.tsx','utf8').includes('请在设置 → 表格演示中点击'));
+console.log('Settings migration checks passed: exact three entry actions/state, single settings-only placement, close-before-open callback, existing settings access, narrow button stack, no bundled private data.');

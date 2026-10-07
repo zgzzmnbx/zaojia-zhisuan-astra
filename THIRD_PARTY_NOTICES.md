@@ -53,3 +53,19 @@ assistant-ui, CopilotKit and Open Canvas were read as design references. Their c
 - Recharts 3.10.0 — MIT; https://github.com/recharts/recharts . Business charts consume actual engine data.
 - User-owned professional component snapshot: `00-docs/00-PRD/20-专业模块复用来源.json`; supplemental template / runner provenance: `21-专业补充资产来源.json`. No original runtime data or credentials copied.
 - AntV test map geometry provenance and SHA256: `public/map/SOURCE.md`. Test visualization only; not an approved official map.
+
+## Cloud frontend Gork console parity, 2026-10-06
+
+User-requested private Site reuse from `zgzzmnbx/Daweiba-GORKbot-on-ESP-Stopwatch` commit `c2912b8648dd9daa3c431c87b47c0c8e5a872a68`:
+- Exact `static/avatar-engine.js`, `avatar-presets.js`, `gork-appearance.js` in `public/gork/`.
+- Exact `static/gork-avatar.js`, `gork-catalog.js` in `03-Src/vendor/gork/`.
+- Full AGPL-3.0 text and source/parameter notice in `public/gork/`.
+The original expression catalog and renderer are unchanged. Astra's former custom idle/reaction recipes and CSS pose loops were removed. A separate per-canvas pointer adapter is the only new input behavior. No robot console connection or firmware is used. Source is retained in the private Site source repository and the reviewable cumulative patch.
+
+### Explicit playback option
+The user's subsequent always-play request adds a single `forceMotion` opt-in to the copied gork-avatar.js reduced-motion guard. Geometry, expressions, timings and blink math remain upstream. Source parity tests normalize only this documented guard change; the other four engine/catalog/appearance files remain exact copies.
+
+
+## User-owned original system UI reference
+
+The owner explicitly requested the original 造价智算 connection-status UI and architecture diagram for this same owner-private preview. Source: zgzzmnbx/zaojia-zhisuan@5b6b8d2744c4a3059813dd2703ebc9ee02dfa065, frontend/src/App.tsx and frontend/public/system-architecture/index.html (blob c4015e286e99a0b53e8393530eab2a567e6eb0c7). The diagram identifies Archify 2.16.0 as generator and source-evidence revision a7012e98a63b75d721bcae192993114ba5d9036b. No license declaration was found; no license is inferred or added. Diagram topology/semantics are preserved, with remote fonts removed and an offline reference/sandbox boundary added. This material is not a statement that the old backend/platform architecture is deployed in Astra, and is not approved for public redistribution by this task.

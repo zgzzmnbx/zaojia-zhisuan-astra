@@ -3,11 +3,8 @@ import {
   CircleX,
   History,
   Loader2,
-  Maximize2,
-  Minimize2,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {createPortal} from "react-dom";
 import ProjectCharts from "./ProjectCharts";
 import ProjectDashboardToolbar from "./ProjectDashboardToolbar";
 import ProjectDetailDrawer from "./ProjectDetailDrawer";
@@ -30,7 +27,6 @@ import "./astra-dashboard.css";
 type Props = {
   active: boolean;
   apiBase: string;
-  onPresentationChange:(active:boolean)=>void;
   onOpenRun: (
     projectId: string,
     runId: string,
@@ -49,7 +45,6 @@ const EMPTY_LIST: ProjectListPayload = {
 export default function ProjectDashboard({
   active,
   apiBase,
-  onPresentationChange,
   onOpenRun,
 }: Props) {
   const [filters, setFilters] = useState<ProjectFilters>(() => defaultProjectFilters());
@@ -65,14 +60,12 @@ export default function ProjectDashboard({
   const [isBackfilling, setIsBackfilling] = useState(false);
   const [backfillMessage, setBackfillMessage] = useState("");
   const [openError, setOpenError] = useState("");
-  const [isPresentationMode, setIsPresentationMode] = useState(false);
 
   const requestRef=useRef<AbortController|null>(null);
   const openingRef=useRef(false);
   const [opening,setOpening]=useState(false);
-  useEffect(()=>{onPresentationChange(isPresentationMode);return()=>onPresentationChange(false);},[isPresentationMode,onPresentationChange]);
   useEffect(()=>()=>requestRef.current?.abort(),[]);
-  function exitPresentation(){setIsPresentationMode(false);requestAnimationFrame(()=>document.querySelector<HTMLButtonElement>('.project-dashboard__presentation')?.focus());}
+
   const load = useCallback(async (signal?: AbortSignal) => {
     requestRef.current?.abort();
     const request=new AbortController();requestRef.current=request;
@@ -116,12 +109,12 @@ export default function ProjectDashboard({
 
   useEffect(() => {
     const controller = new AbortController();
-    const delay = window.setTimeout(() => void load(controller.signal), 120);
+    const delay = active?window.setTimeout(() => void load(controller.signal), 120):undefined;
     return () => {
       window.clearTimeout(delay);
       controller.abort();
     };
-  }, [load]);
+  }, [load,active]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -131,29 +124,6 @@ export default function ProjectDashboard({
     const timer = window.setTimeout(() => setShowSkeleton(true), 300);
     return () => window.clearTimeout(timer);
   }, [isLoading]);
-
-  useEffect(() => {
-    if (!active){setIsPresentationMode(false);setSelectedItem(null);}else void load();
-  }, [active]);
-
-  useEffect(() => {
-    if (!isPresentationMode) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    function handleKeyDown(event: KeyboardEvent) {
-      if (
-        event.key === "Escape"
-        && !document.querySelector(".project-dashboard__filter-dialog, .project-dashboard__drawer")
-      ) {
-        exitPresentation();
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isPresentationMode]);
 
   const chips = useMemo(() => filterChips(filters, dashboard), [filters, dashboard]);
 
@@ -237,10 +207,9 @@ export default function ProjectDashboard({
     }finally{openingRef.current=false;setOpening(false);}
   }
 
-  if (!active) return null;
 
   const content=(
-    <div className={`project-dashboard ${isPresentationMode ? "is-presentation" : ""}`}>
+    <div className="project-dashboard" hidden={!active}>
       <header className="project-dashboard__header">
         <div>
           <h1>项目总览</h1>
@@ -252,15 +221,6 @@ export default function ProjectDashboard({
             dashboard={dashboard}
             onChange={updateFilters}
           />
-          <button
-            className="project-dashboard__presentation"
-            type="button"
-            aria-pressed={isPresentationMode}
-            onClick={() => {if(isPresentationMode)exitPresentation();else setIsPresentationMode(true);}}
-          >
-            {isPresentationMode ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
-            {isPresentationMode ? "退出汇报" : "汇报模式"}
-          </button>
           <button className="project-dashboard__backfill" type="button" disabled={isBackfilling} onClick={() => void handleBackfill()}>
             {isBackfilling ? <Loader2 size={15} className="spin" /> : <History size={15} />}回填本工作区历史
           </button>
@@ -327,7 +287,7 @@ export default function ProjectDashboard({
 
       <ProjectDetailDrawer
         apiBase={apiBase}
-        item={selectedItem}
+        item={active?selectedItem:null}
         busy={opening}
         openError={openError}
         onClose={() => setSelectedItem(null)}
@@ -335,7 +295,7 @@ export default function ProjectDashboard({
       />
     </div>
   );
-  return isPresentationMode?createPortal(<dialog className="astra-dashboard-presentation" aria-label="项目看板汇报模式" ref={node=>{if(node&&!node.open)node.showModal();}} onCancel={exitPresentation}>{content}</dialog>,document.body):content;
+  return content;
 }
 
 function DashboardSkeleton() {

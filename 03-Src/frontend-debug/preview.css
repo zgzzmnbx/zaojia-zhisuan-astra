@@ -1,0 +1,6 @@
+.astra-preview-notice {position:fixed;z-index:2147483000;left:50%;transform:translateX(-50%);bottom:8px;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 24px);padding:8px 14px;border:1px solid color-mix(in srgb,var(--primary,#2745cf) 35%,transparent);border-radius:12px;background:var(--surface,#f4f7ff);color:var(--text,#23315b);box-shadow:0 3px 18px #10224816;font:500 12px/1.4 -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;white-space:nowrap;}
+.astra-preview-notice strong{font-weight:700;}
+.astra-preview-notice button{font:inherit;cursor:pointer;border:0;border-radius:6px;background:#2745cf;color:#fff;padding:4px 8px;}
+.astra-preview-toast{position:fixed;z-index:2147483640;top:16px;left:50%;transform:translateX(-50%);max-width:calc(100vw - 32px);padding:14px 18px;background:#172343;color:#fff;border-radius:12px;font:14px/1.5 sans-serif;box-shadow:0 8px 30px #0002;}
+[data-astra-scheme=dark] .astra-preview-notice{background:#18243a;color:#e2e8f6;border-color:#4d6797;}
+@media(max-width:650px){.astra-preview-notice{left:8px;right:8px;bottom:4px;transform:none;max-width:none;white-space:normal;gap:6px;padding:6px 10px;font-size:12px}.astra-preview-notice .preview-detail{display:none}}

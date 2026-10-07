@@ -1,7 +1,9 @@
+import {DEBUG_MODE} from '../frontend-debug/mock-adapter';
 import {useEffect,useState} from 'react';
 import {api,json} from './api';
 type Settings={models:Record<string,{enabled:boolean;key_file:string;configured?:boolean}>;external_enabled:boolean;collaboration_file?:string;weknora?:{enabled:boolean;base_url:string;api_key_file:string};note?:string};
 export function ConnectionSettings(){
+ if(DEBUG_MODE)return <div className="panel-content"><h3>前端调试 · 外部连接已隔离</h3><p>模型、WeKnora 与协同连接配置已隔离。此版本不接收凭据或凭据路径。</p></div>;
  const [value,setValue]=useState<Settings>(),[message,setMessage]=useState(''),[busy,setBusy]=useState(false);
  useEffect(()=>{void api<Settings>('/api/astra/connections').then(setValue).catch(e=>setMessage(e.message));},[]);
  async function save(){if(!value)return;setBusy(true);try{setValue(await api('/api/astra/connections',{...json(value),method:'PUT'}));setMessage('连接设置已保存。可以在下方专业设置中选择模型，或配置协同平台。');}catch(e){setMessage((e as Error).message);}finally{setBusy(false);}}

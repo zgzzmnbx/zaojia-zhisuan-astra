@@ -1,7 +1,9 @@
+import {DEBUG_MODE} from '../frontend-debug/mock-adapter';
 import {useEffect,useState} from 'react';
 import {api} from './api';
 import {Button,Note} from './ui';
 export function DigitalAssistant({dark=false}:{dark?:boolean}){
+ if(DEBUG_MODE)return <div className="panel-content"><h3>前端调试 · 外部连接已隔离</h3><p>数字化项目助手需要独立服务。前端调试版不连接本机端口。</p></div>;
  const [ready,setReady]=useState(false),[checking,setChecking]=useState(false),[error,setError]=useState('');
  async function check(){setChecking(true);try{const reply=await api<{available:boolean}>('/api/astra/digital/status');setReady(reply.available);setError(reply.available?'':'独立项目助手尚未启动，请启动后重试。');}catch(e){setError((e as Error).message);}finally{setChecking(false);}}
  useEffect(()=>{void check();},[]);

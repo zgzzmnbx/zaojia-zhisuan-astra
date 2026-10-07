@@ -1,0 +1,15 @@
+await import('./test-welcome.mjs');
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const React=await import('react'),{renderToStaticMarkup}=await import('react-dom/server');
+const {ComposerCompanion}=await import('../03-Src/studio/ComposerCompanion.tsx');
+const {WorkingCard}=await import('../03-Src/studio/ConversationCard.tsx');
+const tree=ComposerCompanion({suspended:false,state:'listening',completion:3});const avatar=tree.props.children;assert.equal(avatar.props.followPointer,true);assert.equal(avatar.props.pointerSmoothing,'smooth');assert.equal(avatar.props.interactive,true);assert.equal(avatar.props.suspended,false);assert.equal(avatar.props.state,'listening');assert.equal(avatar.props.completion,3);
+const html=renderToStaticMarkup(tree);assert.equal((html.match(/<canvas/g)||[]).length,1);assert.ok(html.includes('type="button"'));assert.ok(!html.includes('type="submit"'));assert.ok(html.includes('聊天输入区的智算小人'));assert.ok(!html.includes('暂停'));
+const working=renderToStaticMarkup(React.createElement(WorkingCard,{label:'正在处理',showAvatar:false}));assert.ok(!working.includes('<canvas'));assert.ok(working.includes('role="status"'));assert.ok(working.includes('loading-spinner'));
+const app=readFileSync('03-Src/studio/App.tsx','utf8'),conversation=app.slice(app.indexOf('<section id="astra-conversation"'),app.indexOf('<div className="workbench-separator"'));
+assert.equal((conversation.match(/<ComposerCompanion/g)||[]).length,1);assert.equal((conversation.match(/<Gork[ >]/g)||[]).length,0);assert.ok(conversation.includes('<WorkingCard label={busy} showAvatar={false}/>'));assert.ok(conversation.includes('<div className="composer-input-row"><ComposerCompanion suspended={gorkSuspended} state={gorkState} completion={gorkCompletion}/><textarea'));
+assert.ok(conversation.indexOf('composer-input-row')<conversation.indexOf('composer-toolbar'));assert.ok(!app.includes('key={gork'));assert.ok(!conversation.includes('conversation-avatar'));
+const css=readFileSync('03-Src/studio/composer-companion.css','utf8');assert.ok(css.includes('grid-template-columns:56px minmax(0,1fr)'));assert.ok(css.includes('@container(max-width:340px)'));assert.ok(css.includes('grid-template-columns:44px minmax(0,1fr)'));assert.ok(!css.includes('position:absolute'));assert.ok(!css.includes('position:fixed'));
+for(const source of ['welcomeVisible','!layout.chatActive','connectionsOpen','settings'])assert.ok(app.slice(app.indexOf('const gorkSuspended'),app.indexOf('const add=')).includes(source));
+console.log('Composer companion checks passed: one workspace avatar in input grid, inherited activity/lifecycle/pointer props, non-submitting interaction, no duplicate heading/history/loading avatars, independent toolbar/text bounds, narrow-container sizing, welcome visibility and Gork lifecycle guards.');

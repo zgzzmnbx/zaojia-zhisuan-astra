@@ -11,18 +11,13 @@ export function Modal({title,children,close}:{title:string;children:ReactNode;cl
 }
 export function Universe({open}:{open:(view:string)=>void}){
   const ref=useRef<HTMLDivElement>(null),controller=useRef<{setMotion:(value:boolean,allowReduced:boolean)=>void;reset:()=>void}|null>(null);
-  const [preference,setPreference]=useState<'auto'|'play'|'paused'>(()=>{try{const saved=localStorage.getItem('astra.galaxy-motion');return saved==='play'||saved==='paused'?saved:'auto';}catch{return 'auto';}});
-  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches),[ready,setReady]=useState(false);
-  const motion=preference==='play'||(preference==='auto'&&!reduced);
-  useEffect(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)');const update=()=>setReduced(media.matches);media.addEventListener('change',update);return()=>media.removeEventListener('change',update);},[]);
-  useEffect(()=>{let disposed=false;let cleanup:(()=>void)|undefined;import('../universe.js').then(m=>{if(!disposed&&ref.current){const instance=m.mountUniverse(ref.current,open,{taskLabel:'当前任务',motion,allowReducedMotion:preference==='play'});controller.current=instance;cleanup=instance;setReady(true);}}).catch(()=>{if(ref.current)ref.current.textContent='3D 暂不可用，可使用下方入口';});return()=>{disposed=true;controller.current=null;cleanup?.();};},[]);
-  useEffect(()=>{controller.current?.setMotion(motion,preference==='play');},[motion,preference,ready]);
-  function toggleMotion(){const next=motion?'paused':'play';setPreference(next);try{localStorage.setItem('astra.galaxy-motion',next);}catch{/* The control still works without storage. */}}
+  const [ready,setReady]=useState(false);
+  const motion=true; // Explicit project-level playback preference; ignore old pause storage.
+  useEffect(()=>{let disposed=false;let cleanup:(()=>void)|undefined;import('../universe.js').then(m=>{if(!disposed&&ref.current){const instance=m.mountUniverse(ref.current,open,{taskLabel:'当前任务',motion,allowReducedMotion:true});controller.current=instance;cleanup=instance;setReady(true);}}).catch(()=>{if(ref.current)ref.current.textContent='3D 暂不可用，可使用下方入口';});return()=>{disposed=true;controller.current=null;cleanup?.();};},[]);
   return <div className="universe-panel galaxy-universe">
     <div className="universe-top"><span className="space-label">PROJECT CONSTELLATION</span><span className="badge">能力关系 · 示意</span></div>
     <div className="universe-intro"><h2>任务、知识与成果，在此相连</h2></div>
     <div className="galaxy-toolbar" role="group" aria-label="星图动效">
-      <button className="btn btn-ghost" disabled={!ready} onClick={toggleMotion} aria-pressed={motion} title={reduced&&!motion?'已遵循系统减少动效设置，点击可手动开启银河动画':undefined}><Icon name={motion?'pause':'play'}/>{motion?'暂停银河':'让银河流动'}</button>
       <button className="btn btn-ghost" disabled={!ready} onClick={()=>controller.current?.reset()}><Icon name="refresh"/>复位视角</button>
     </div>
     <div className="universe-stage"><div ref={ref} id="universe-canvas"><span className="loading loading-spinner"/></div><span className="universe-instruction">拖动旋转 · 滚轮缩放 · 悬停节点暂停公转</span></div>

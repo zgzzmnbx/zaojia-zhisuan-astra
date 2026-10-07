@@ -25,11 +25,11 @@ test('choreography reuses original poses without mutating vendor assets',()=>{
   const ids=new Set(catalog.expressions.map(p=>p.id));
   for(const sequence of catalog.sequences)for(const step of sequence.steps)assert.ok(ids.has(step.expressionId));
   assert.equal(new Set(catalog.sequences.map(s=>s.id)).size,catalog.sequences.length);
-  for(const name of [...greetings,'happy']){
-    const sequence=catalog.sequences.find(s=>s.id===name)!;
-    const duration=sequence.steps.reduce((sum,s)=>sum+s.holdMs+s.transitionMs,0);
-    assert.ok(duration>2400&&duration<=3200,`${name} completes within reaction lifetime`);
-  }
+  assert.equal(catalog,source,'console catalog is no longer re-choreographed');
+  for(const name of [...greetings,'happy']) assert.ok(catalog.sequences.some(s=>s.id===name));
+  const idle=catalog.sequences.find(s=>s.id==='idle')!;
+  assert.equal(idle.steps.reduce((sum,s)=>sum+s.holdMs+s.transitionMs,0),11400);
+  assert.deepEqual(idle.blink,{enabled:true,initialDelayMs:2600,minIntervalMs:3400,maxIntervalMs:6200,durationMs:280});
 });
 test('real activity separates looking up, working, composing and errors',()=>{
   assert.equal(gorkActivity('正在检索知识依据','old error',true),'searching');

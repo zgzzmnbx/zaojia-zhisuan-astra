@@ -1,0 +1,12 @@
+Astra uses the user's designated Gork console frontend, fixed at:
+https://github.com/zgzzmnbx/Daweiba-GORKbot-on-ESP-Stopwatch/tree/c2912b8648dd9daa3c431c87b47c0c8e5a872a68/03-Src/stopwatch-voice-companion/static
+
+avatar-engine.js, avatar-presets.js, and gork-appearance.js are exact source copies. The associated gork-avatar.js and gork-catalog.js are retained in 03-Src/vendor/gork/ and bundled in the app. The full geometry engine is Bible Strong Avatar Lab at 79fe9ba06e4874b11394b8e8a3f2c493c9d197ba, AGPL-3.0-only. Preserve LICENSE-AGPL-3.0.txt and these notices.
+
+Console idle: original 11,400 ms sequence, two 500 ms transitions and two 5,200 ms holds. Blink initial delay 2,600 ms, minimum interval 3,400 ms, maximum metadata 6,200 ms, duration 280 ms. Console sampler currently uses the minimum interval, matching the designated source rather than claiming parity with the upstream reference website's random blink behavior.
+
+Intermittent look: original 12-second cycle with a resting pause, smooth turn, short hold and return; five source target directions. It is a deterministic varied schedule, not fabricated random robot behavior.
+
+Astra addition: welcome-page mouse input smoothly blends head orientation through the same geometry renderer, with no additional RAF and no hardware/network connection. Busy/reaction states keep priority. Astra does not use CSS scaling or tilting as a substitute for these expressions.
+
+User playback preference (2026-10-06): the Astra renderer copy adds only an explicit forceMotion option to the reduced-motion guard. This application always enables it for animated visible Gork instances. The original geometry, poses, timing, idle schedule and blink calculations remain unchanged. Legacy pause settings are ignored; page-hidden/unmounted cleanup remains active.

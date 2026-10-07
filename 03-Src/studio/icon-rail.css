@@ -1,0 +1,36 @@
+/* Compact 60px first-level navigation. Project/history details remain available
+   as an adjacent panel and never consume persistent workspace width. */
+.studio #shell.live-shell{grid-template-columns:60px minmax(0,1fr)}
+.studio #shell.live-shell.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}
+.studio #shell.live-shell .sidebar.icon-rail{position:relative;z-index:30;width:60px;min-width:60px;max-width:60px;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:14px;overflow:visible;border-right:1px solid var(--line);background:var(--rail)}
+.studio #shell.live-shell .sidebar.icon-rail[hidden]{display:none}
+.icon-rail .rail-tip{display:flex;align-items:center;justify-content:center;width:44px;flex-shrink:0}
+.studio #shell .icon-rail .rail-button{position:relative;width:44px;height:44px;min-height:44px;padding:0;border:1px solid transparent;border-radius:11px;color:var(--muted);background:transparent}
+.studio #shell .icon-rail .rail-button:hover{background:var(--soft);color:var(--ink)}
+.studio #shell .icon-rail .rail-button.is-active{background:var(--blue-wash);border-color:color-mix(in srgb,var(--blue) 20%,transparent);color:var(--blue)}
+.studio #shell .icon-rail .rail-button.is-active::after{content:"";position:absolute;left:-8px;top:12px;width:3px;height:18px;border-radius:0 3px 3px 0;background:var(--blue)}
+.icon-rail .rail-button:focus-visible,.icon-rail .rail-profile:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.icon-rail .rail-button .astra-icon{width:21px;height:21px}.icon-rail .rail-button .astra-icon svg{width:21px;height:21px}
+.icon-rail .rail-brand .astra-mark{width:32px;height:32px;font-size:20px;padding:0;border-radius:10px;display:grid;place-items:center}
+.icon-rail .rail-actions.menu{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;min-width:0;width:44px;flex:1}
+.icon-rail .rail-bottom{display:flex;align-items:center;flex-direction:column;gap:10px;margin-top:auto;padding-top:8px}
+.icon-rail .rail-profile{display:grid;place-items:center;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink);font-size:12px;cursor:default}
+.icon-rail .tooltip::before,.icon-rail .tooltip::after{z-index:50}.icon-rail .tooltip::before{white-space:nowrap;font-size:13px}
+/* DaisyUI tooltip already supports :has(:focus-visible); this also covers
+   programmatic focus and touch-keyboard focus without relying on hover. */
+.icon-rail .tooltip:focus-within::before,.icon-rail .tooltip:focus-within::after{opacity:1;--tt-pos:0rem}
+.icon-rail .rail-panel{position:absolute;z-index:40;top:10px;bottom:10px;left:calc(100% + 8px);width:260px;display:flex;flex-direction:column;min-height:0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);box-shadow:0 12px 40px #10213a24;overflow:hidden}
+.icon-rail .rail-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.icon-rail .rail-panel-heading h2{margin:0;font-size:16px;font-weight:650}.icon-rail .rail-panel-heading .btn{width:36px;height:36px;min-height:36px;padding:0}
+.icon-rail .rail-panel-tools{display:flex;justify-content:space-between;gap:8px;padding:12px 0}.icon-rail .rail-panel-tools .btn{font-size:12px;gap:5px;padding-inline:8px}
+.icon-rail .rail-panel .workspace-scroll{padding:10px 0;min-height:0;overflow:auto;flex:1}.icon-rail .rail-panel .workspace-project{margin-inline:0}.icon-rail .rail-panel .session{display:flex;gap:8px;align-items:center;width:100%;min-height:42px;text-align:left;font-size:13px;margin-bottom:4px}.icon-rail .rail-panel .session span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:normal;overflow-wrap:anywhere}.icon-rail .rail-panel .workspace-empty{padding:16px 4px;font-size:13px;line-height:1.65}
+@media(max-width:650px){.studio #shell.live-shell .sidebar.icon-rail{position:fixed;inset:0 auto 0 0;height:100dvh;padding-top:10px;z-index:30;box-shadow:8px 0 30px #10182818}.icon-rail .rail-panel{left:calc(100% + 4px);width:min(260px,calc(100vw - 72px));top:8px;bottom:8px;padding:12px}.icon-rail .rail-panel-heading .btn{width:44px;height:44px;min-height:44px}.icon-rail .rail-panel-tools{flex-wrap:wrap}.icon-rail .rail-panel-tools .btn{min-height:40px}.icon-rail .rail-panel .session{min-height:44px}}
+@media(max-height:580px){.studio #shell.live-shell .sidebar.icon-rail{gap:4px;padding-top:4px;padding-bottom:4px}.icon-rail .rail-actions.menu{gap:0}.icon-rail .rail-bottom{gap:4px;padding-top:0}}
+/* Keep the welcome-page illustration aligned with the actual workspace. */
+.aw2-workspace.live-shell{grid-template-columns:60px minmax(0,1fr)}
+.aw2-sidebar.aw2-icon-rail{align-items:center;padding:16px 8px 10px;gap:20px}.aw2-icon-rail>.astra-mark{width:32px;height:32px;font-size:20px;display:grid;place-items:center}.aw2-rail-actions{display:flex;flex-direction:column;align-items:center;gap:7px}.aw2-rail-icon{width:40px;height:40px;display:grid;place-items:center;color:var(--muted);border-radius:10px}.aw2-rail-icon .astra-icon,.aw2-rail-icon svg{width:20px;height:20px}.aw2-rail-icon.is-active{color:var(--blue);background:var(--blue-wash)}.aw2-rail-settings{margin-top:auto}
+@media(max-width:1100px) and (min-width:761px){.aw2-workspace.live-shell{grid-template-columns:60px minmax(0,1fr)}}
+.icon-rail .rail-panel .project-overview{display:flex;align-items:center;gap:6px;width:100%;margin:0;padding:8px 7px 10px 27px;border:0;text-align:left;line-height:1.5;font-size:12px;color:var(--muted)}
+@media(max-width:650px){.icon-rail .rail-panel-tools .btn,.icon-rail .rail-panel .project-overview{min-height:44px}}
+
+@media(max-height:720px){.icon-rail .rail-actions.menu{min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;overscroll-behavior:contain}.icon-rail .rail-actions.menu::-webkit-scrollbar{display:none}.icon-rail .rail-bottom{flex-shrink:0}}

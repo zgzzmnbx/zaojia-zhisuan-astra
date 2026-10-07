@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5189 --strictPort",
-    "build": "tsc --noEmit && vite build",
+    "build": "node tools/build-astra.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 5189 --strictPort",
     "test": "node --test 03-Src/core.test.js 03-Src/studio/workbook.test.mjs 03-Src/studio/table/legacy-preview.test.mjs 03-Src/studio/conversation-cards.test.mjs 03-Src/studio/weknora-stream.test.mjs tests/projectDashboardUtils.test.ts tests/gork-motion.test.ts",
-    "start": ".venv/Scripts/python.exe tools/run_server.py"
+    "start": ".venv/Scripts/python.exe tools/run_server.py",
+    "build:frontend-debug": "node tools/build-astra.mjs --frontend-debug",
+    "dev:frontend-debug": "vite --mode frontend-debug --config vite.frontend-debug.config.js --host 127.0.0.1 --port 5189 --strictPort"
   },
   "dependencies": {
     "@antv/l7": "2.29.1",

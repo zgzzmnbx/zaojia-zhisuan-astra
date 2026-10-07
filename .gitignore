@@ -10,3 +10,11 @@ public/assets/*.woff2
 .pytest_cache/
 config/*.local.json
 **/*.key
+
+# Local frontend preview outputs and private sample inputs
+.openai/
+.sites-runtime/
+dist/
+03-Src/frontend-debug/uploaded-example/sample.json
+03-Src/frontend-debug/uploaded-example/private/
+

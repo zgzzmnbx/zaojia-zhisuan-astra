@@ -1,0 +1,25 @@
+/* A real grid slot keeps the avatar outside the text and send-button hit areas. */
+.studio #shell.live-shell .composer{container-type:inline-size}
+.studio #shell.live-shell .composer-input-row{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:start;gap:12px;min-width:0}
+.studio #shell.live-shell .composer-companion{display:flex;align-items:center;justify-content:center;width:56px;height:60px;padding-top:3px;flex-shrink:0}
+.studio #shell.live-shell .composer-input-row>.textarea{min-width:0;width:100%;min-height:64px;margin:0}
+.studio #shell.live-shell .composer-companion canvas{filter:drop-shadow(0 3px 5px #10182812)}
+.studio #shell.live-shell .composer-toolbar{position:relative}
+@container(max-width:340px){
+ .studio #shell.live-shell .composer-input-row{grid-template-columns:44px minmax(0,1fr);gap:9px}
+ .studio #shell.live-shell .composer-companion{width:44px;height:50px}
+ .studio #shell.live-shell .composer-companion .gork-companion,.studio #shell.live-shell .composer-companion canvas{width:44px!important;height:44px!important}
+}
+
+/* Only the screenshot's conversation heading is condensed. */
+.studio #shell.live-shell .conversation-heading{padding:10px 18px;min-height:60px;align-items:center;border-bottom:1px solid var(--line);gap:10px;flex-shrink:0}
+.studio #shell.live-shell .conversation-identity,.studio #shell.live-shell .conversation-name{min-width:0;flex:1}
+.studio #shell.live-shell .conversation-heading h1{font-size:16px;line-height:1.5;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.studio #shell.live-shell .conversation-header-actions{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.studio #shell.live-shell .conversation-header-actions .save-state{font-size:12px;padding:6px;white-space:nowrap;max-width:94px;overflow:hidden;text-overflow:ellipsis}
+.studio #shell.live-shell .conversation-header-actions .btn-square{width:36px;height:36px;min-height:36px}
+.studio #shell.live-shell .compact-task-details{padding:8px 18px;margin:0;gap:8px;flex-wrap:wrap;font-size:13px;min-height:0;background:var(--canvas)}
+.studio #shell.live-shell .compact-task-details[hidden]{display:none!important}
+@media(max-width:650px){.studio #shell.live-shell .conversation-heading{padding:8px 12px;gap:6px}.studio #shell.live-shell .conversation-header-actions .btn-square{width:40px;height:40px;min-height:40px}.studio #shell.live-shell .conversation-header-actions .save-state{max-width:62px;padding:4px}}
+
+.studio #shell.live-shell .conversation-heading h1{display:flex;align-items:center;gap:8px}.studio #shell.live-shell .conversation-heading h1>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}.studio #shell.live-shell .conversation-demo-badge{font-size:12px;line-height:1.3;min-height:23px;height:23px;flex-shrink:0;padding:2px 6px;font-weight:500;color:var(--muted)}

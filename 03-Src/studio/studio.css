@@ -23,13 +23,13 @@
 .live-shell .sidebar-backdrop{position:fixed;inset:0;z-index:19;border:0;background:#10182855;cursor:default}
 @media(min-width:1025px){
   /* Keep the result width; give the reclaimed navigation width to the chat. */
-  .studio .live-shell.sidebar-collapsed .workbench:not(.expanded):not(.no-artifact){grid-template-columns:minmax(380px,1fr) minmax(450px,calc((100% - 224px) * 1.13 / 2.13))}
+  .studio .live-shell.sidebar-collapsed .workbench:not(.expanded):not(.no-artifact){grid-template-columns:minmax(380px,1fr) minmax(450px,calc((100% - 60px) * 1.13 / 2.13))}
 }
 @media(min-width:1025px) and (max-width:1280px){
-  .studio .live-shell.sidebar-collapsed .workbench:not(.expanded):not(.no-artifact){grid-template-columns:minmax(350px,1fr) minmax(390px,calc((100% - 200px) / 2))}
+  .studio .live-shell.sidebar-collapsed .workbench:not(.expanded):not(.no-artifact){grid-template-columns:minmax(350px,1fr) minmax(390px,calc((100% - 60px) / 2))}
 }
 @media(min-width:1700px){
-  .studio .live-shell.sidebar-collapsed .workbench:not(.expanded):not(.no-artifact){grid-template-columns:minmax(470px,1fr) minmax(620px,calc((100% - 224px) * 1.1 / 2.1))}
+  .studio .live-shell.sidebar-collapsed .workbench:not(.expanded):not(.no-artifact){grid-template-columns:minmax(470px,1fr) minmax(620px,calc((100% - 60px) * 1.1 / 2.1))}
 }
 @media(max-width:650px){
   .studio .live-shell .sidebar{box-shadow:8px 0 30px #10182818}
@@ -62,3 +62,7 @@
 .knowledge-visuals{min-width:0;margin:16px 0}.knowledge-visuals>details{margin-top:12px}.knowledge-visuals summary{cursor:pointer;font-size:13px;color:var(--muted)}.knowledge-visuals .recharts-surface{width:100%;height:100%}
 
 .knowledge-visuals{--dws-neutral-900:var(--ink);--dws-neutral-700:var(--ink);--dws-neutral-500:var(--muted);--dws-text-body:var(--ink);--dws-text-muted:var(--muted);--dws-border:var(--line);--dws-color-border:var(--line);--dws-surface:var(--paper);--db-text-strong:var(--ink);--db-text:var(--ink);--db-text-muted:var(--muted);--db-border:var(--line);--db-surface:var(--paper);--db-surface-tint:var(--soft);--db-primary:var(--blue)}
+
+/* Explicit return remains reachable even when skip-welcome is saved. */
+.top-actions .welcome-return{width:auto;flex-shrink:0;gap:6px;padding-inline:10px;white-space:nowrap;font-size:13px}
+@media(max-width:760px){.top-actions .welcome-return{min-height:34px;height:34px;padding-inline:7px;font-size:12px}.top-actions .welcome-return .astra-icon{display:none}.top-actions .preview-label{display:none}.live-shell .topbar{gap:5px}.live-shell .top-actions{gap:2px}.live-shell .breadcrumb>span:not(.astra-icon){display:none}.live-shell .breadcrumb strong{max-width:90px}}

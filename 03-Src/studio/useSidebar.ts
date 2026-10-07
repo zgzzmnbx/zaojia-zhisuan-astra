@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 
-const preferenceKey='astra.sidebar-collapsed';
+const preferenceKey='astra.icon-rail-collapsed.v1';
 
 export function useSidebar(){
   const [mobile,setMobile]=useState(()=>matchMedia('(max-width:650px)').matches);

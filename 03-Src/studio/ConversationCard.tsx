@@ -27,6 +27,6 @@ export function ConversationCard({message,onAction,unavailable}:Props){
   </section>;
 }
 
-export function WorkingCard({label}:{label:string}){
-  return <div className="cc-working" role="status"><Gork state="thinking" size={30} still/><div><strong>{label}</strong><small>正在处理，完成后会在这里展示结果</small></div><span className="loading loading-spinner loading-sm" aria-hidden="true"/></div>;
+export function WorkingCard({label,showAvatar=true}:{label:string;showAvatar?:boolean}){
+  return <div className="cc-working" role="status">{showAvatar&&<Gork state="thinking" size={30} still/>}<div><strong>{label}</strong><small>正在处理，完成后会在这里展示结果</small></div><span className="loading loading-spinner loading-sm" aria-hidden="true"/></div>;
 }

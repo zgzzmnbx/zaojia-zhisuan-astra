@@ -1,0 +1,11 @@
+await import('./test-current-project.mjs');
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const React=await import('react'),{renderToStaticMarkup}=await import('react-dom/server');
+const {ProjectAssociationEmpty}=await import('../03-Src/studio/workbench/ProjectAssociationEmpty.tsx');
+const projects=[{id:'p1',name:'用户项目一',background:''},{id:'p2',name:'用户项目二',background:''}],props={projects,busy:false,assign(){},newProject(){}};
+const html=renderToStaticMarkup(React.createElement(ProjectAssociationEmpty,props));assert.ok(html.includes('选择项目'));assert.ok(html.includes('用户项目一'));assert.ok(html.includes('用户项目二'));assert.ok(html.includes('关联并显示信息卡'));assert.ok(html.includes('新建并关联当前对话'));assert.ok(html.includes('本对话附件成为项目共享资料'));assert.ok(html.includes('disabled=""'));assert.ok(!html.includes('样例 A'));const empty=renderToStaticMarkup(React.createElement(ProjectAssociationEmpty,{...props,projects:[]}));assert.ok(!empty.includes('<select'));assert.ok(empty.includes('新建并关联当前对话'));
+const app=readFileSync('03-Src/studio/App.tsx','utf8');assert.ok(app.includes('onClick={presentation.toggleSummary}'));assert.ok(app.includes("workspace.currentConversation()?.id===target"));assert.ok(app.includes("if(workspace.currentConversation()?.id!==target){setProjectId(p.id);open('project');return;}await workspace.assign(p.id)"));assert.ok(app.includes('presentation.showSummary()'));assert.ok(app.includes('associateNewProject.current=null;setProjectEditor(null)'));assert.ok(app.includes('saved={p=>void projectSaved(p)}'));assert.ok(app.includes('await workspace.assign(id)'));
+assert.ok(app.includes('disabled={!workspace.ready||projectAssociating}'));assert.ok(app.includes('finally{setProjectAssociating(false);}'));
+const entry=readFileSync('03-Src/frontend-debug/uploaded-example/entry.tsx','utf8');assert.ok(!entry.includes('项目信息卡'));assert.ok(app.includes('project-info-toggle'));
+console.log('Project-card discoverability checks passed: explicit toolbar/example entry, direct project selection, disabled empty binding, intentional new-and-associate flow, target-conversation guard, close/cancel cleanup, existing assignment API and no fake project.');

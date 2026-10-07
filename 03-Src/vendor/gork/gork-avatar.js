@@ -41,7 +41,6 @@
     function draw(now,animate=true) {
       if(stopped) return;
       let seq=seqs[name],total=seq.steps.reduce((n,s)=>n+s.transitionMs+s.holdMs,0);
-      if(mode==='once'&&now-start>=total&&options.onIdle){options.onIdle();return;}
       if(mode==='once'&&now-start>=total){previous=displayed;name='idle';mode='loop';start=now;seq=seqs.idle;total=seq.steps.reduce((n,s)=>n+s.transitionMs+s.holdMs,0);}
       let t=(now-start)%total,from=now-start>=total?poses[seq.steps.at(-1).expressionId]:previous;
       for(const step of seq.steps) {
@@ -62,7 +61,7 @@
         if(b<seq.blink.durationMs) blink=Math.max(.05,Math.abs(2*b/seq.blink.durationMs-1));
       }
       displayed=current;
-      if(name==='idle' && (!appearance || appearance.id==='gork') && !options.still && options.idleMotion!==false && !reducedMotion?.matches) {
+      if(name==='idle' && (!appearance || appearance.id==='gork') && !options.still && options.idleMotion!==false && (options.forceMotion||!reducedMotion?.matches)) {
         const look=idleLook(now-start);
         displayed={...current,headX:Math.max(-35,Math.min(35,current.headX+look.headX)),headY:Math.max(-45,Math.min(45,current.headY+look.headY)),headZ:current.headZ+look.headZ};
       }
