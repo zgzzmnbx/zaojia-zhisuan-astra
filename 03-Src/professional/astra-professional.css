@@ -44,3 +44,12 @@ html[data-astra-view="memory"] .shell.layout-daweiba .daweiba-settings-backdrop{
 .shell.layout-daweiba.theme-dark .knowledge-candidate-modal>.modal-title,
 .shell.layout-daweiba.theme-dark .knowledge-candidate-modal__body>.knowledge-memory-modal-actions{background:var(--db-surface);color:var(--db-text-strong)}
 .shell.layout-daweiba.theme-dark .knowledge-candidate-modal>.modal-title button{background:var(--db-surface-tint);color:var(--db-text)}
+
+/* The host owns the shared dashboard title and navigation. */
+html:is([data-astra-view="map"],[data-astra-view="showcase"]) .daweiba-workspace-frame{padding:12px}
+html:is([data-astra-view="map"],[data-astra-view="showcase"]) .project-spatial-map{padding:0;min-height:0}
+.astra-map-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px}
+.astra-map-toolbar .project-spatial-map__header{margin:0;align-items:center}
+.astra-map-toolbar .project-spatial-map__header>div:first-child,.astra-map-toolbar .project-showcase-page__separation-note{display:none}
+.astra-map-toolbar .project-spatial-map__scope-tabs,.astra-map-toolbar .project-showcase-page__toolbar{margin:0}
+@media(max-width:600px){.astra-map-toolbar{gap:8px}.astra-map-toolbar .project-spatial-map__header-actions{justify-content:flex-start}}

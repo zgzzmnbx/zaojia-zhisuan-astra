@@ -282,6 +282,11 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
 
   return (
     <div className={`project-spatial-map project-spatial-map--${colorMode}`}>
+      <div className="astra-map-toolbar">
+      <div className="project-spatial-map__scope-tabs" role="tablist" aria-label="项目地图数据范围">
+        <button type="button" role="tab" aria-selected={scope === "demo"} className={scope === "demo" ? "is-active" : ""} onClick={() => setScope("demo")}><Map size={15} />演示项目 <small>8</small></button>
+        <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => setScope("real")}><ListFilter size={15} />真实项目 <small>{scope === "real" ? payload.total : ""}</small></button>
+      </div>
       <header className="project-spatial-map__header">
         <div>
           <h1>全国项目地图</h1>
@@ -292,10 +297,6 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
           <button type="button" className="project-spatial-map__button" onClick={() => void load()} disabled={isLoading}><RefreshCw size={14} className={isLoading ? "spin" : ""} />刷新</button>
         </div>
       </header>
-
-      <div className="project-spatial-map__scope-tabs" role="tablist" aria-label="项目地图数据范围">
-        <button type="button" role="tab" aria-selected={scope === "demo"} className={scope === "demo" ? "is-active" : ""} onClick={() => setScope("demo")}><Map size={15} />演示项目 <small>8</small></button>
-        <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => setScope("real")}><ListFilter size={15} />真实项目 <small>{scope === "real" ? payload.total : ""}</small></button>
       </div>
 
       {activeFilterChips.length ? <div className="project-spatial-map__active-filters" aria-label="已应用地图筛选"><span>已应用筛选</span>{activeFilterChips.map((chip) => <em key={chip}>{chip}</em>)}<button type="button" onClick={clearAppliedFilters}>清除筛选</button></div> : null}

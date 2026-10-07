@@ -302,6 +302,14 @@ export default function ProjectShowcasePage({ active, apiBase, colorMode, onOpen
 
   return (
     <div className={`project-spatial-map project-spatial-map--${colorMode} project-spatial-map--showcase project-showcase-page`}>
+      <div className="astra-map-toolbar">
+      <div className="project-showcase-page__toolbar">
+        <div className="project-spatial-map__scope-tabs" role="tablist" aria-label="展示地图数据范围">
+          <button type="button" role="tab" aria-selected={scope === "demo"} className={scope === "demo" ? "is-active" : ""} onClick={() => changeScope("demo")}><Map size={15} />演示项目 <small>8</small></button>
+          <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => changeScope("real")}><Map size={15} />真实项目 <small>{scope === "real" ? payload.total : ""}</small></button>
+        </div>
+        <span className="project-showcase-page__separation-note">独立展示页面 · 与全国项目地图共存</span>
+      </div>
       <header className="project-spatial-map__header project-showcase-page__header">
         <div>
           <span className="project-showcase-page__eyebrow">空间协同 · 视觉展示</span>
@@ -314,13 +322,6 @@ export default function ProjectShowcasePage({ active, apiBase, colorMode, onOpen
           <button type="button" className="project-spatial-map__button" onClick={() => void load()} disabled={isLoading}><RefreshCw size={14} className={isLoading ? "spin" : ""} />刷新</button>
         </div>
       </header>
-
-      <div className="project-showcase-page__toolbar">
-        <div className="project-spatial-map__scope-tabs" role="tablist" aria-label="展示地图数据范围">
-          <button type="button" role="tab" aria-selected={scope === "demo"} className={scope === "demo" ? "is-active" : ""} onClick={() => changeScope("demo")}><Map size={15} />演示项目 <small>8</small></button>
-          <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => changeScope("real")}><Map size={15} />真实项目 <small>{scope === "real" ? payload.total : ""}</small></button>
-        </div>
-        <span className="project-showcase-page__separation-note">独立展示页面 · 与全国项目地图共存</span>
       </div>
 
       {activeFilterChips.length ? <div className="project-spatial-map__active-filters project-showcase-page__active-filters" aria-label="已应用展示地图筛选"><span>已应用筛选</span>{activeFilterChips.map((chip) => <em key={chip}>{chip}</em>)}<button type="button" onClick={clearAppliedFilters}>清除筛选</button></div> : null}

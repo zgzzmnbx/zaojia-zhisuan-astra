@@ -10,11 +10,10 @@
   --dws-neutral-900:var(--ink);--dws-neutral-700:var(--ink);--dws-neutral-500:var(--muted);
   --dws-border:var(--line);--dws-warning:var(--amber);--dws-danger:var(--red);
   --dws-surface:var(--paper);--dws-text-body:var(--ink);--dws-text-muted:var(--muted);
-  padding:20px;line-height:1.6;font-size:var(--dws-font-size-13);
+  padding:12px 16px;line-height:1.6;font-size:var(--dws-font-size-13);
 }
 .studio .astra-dashboard-host {min-width:0}
-.studio .astra-dashboard-tabs {margin:12px 20px 0;justify-content:flex-start}
-.studio .project-dashboard__header {flex-wrap:wrap;gap:16px;margin-bottom:20px}
+.studio .project-dashboard__header {flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .studio .project-dashboard__header h1 {font-size:var(--dws-font-size-20);line-height:1.4}
 .studio .project-dashboard__header p {color:var(--muted);font-size:var(--dws-font-size-13)}
 .studio .project-dashboard__header-actions {flex-wrap:wrap;gap:8px}

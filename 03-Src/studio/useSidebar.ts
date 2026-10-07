@@ -15,7 +15,7 @@ export function useSidebar(){
   useEffect(()=>{
     const media=matchMedia('(max-width:650px)');
     const update=()=>{setMobile(media.matches);setSidebar(false);};
-    media.addEventListener('change',update);
+    media.addEventListener('change',update);update();
     return()=>media.removeEventListener('change',update);
   },[]);
   useEffect(()=>{

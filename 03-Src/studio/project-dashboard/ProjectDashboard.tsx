@@ -211,10 +211,6 @@ export default function ProjectDashboard({
   const content=(
     <div className="project-dashboard" hidden={!active}>
       <header className="project-dashboard__header">
-        <div>
-          <h1>项目总览</h1>
-          <p>进度、质量与成果，一处看清。统计来自 Astra 独立业务台账。</p>
-        </div>
         <div className="project-dashboard__header-actions">
           <ProjectDashboardToolbar
             filters={filters}

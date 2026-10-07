@@ -324,7 +324,7 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
           ? new Mapbox(mapOptions as never)
           : new MapLibre(mapOptions as never);
         if (disposed || !containerRef.current) return;
-        const scene = new Scene({ id: containerId, map }) as unknown as SceneLike;
+        const scene = new Scene({ id: containerId, map, logoVisible: false }) as unknown as SceneLike;
         sceneRef.current = scene;
         const projectBubbleData = getProjectBubbleData(items);
         const selectedProjectBubbleData = projectBubbleData.filter((bubble) => bubble.project_id === selectedProjectId);
