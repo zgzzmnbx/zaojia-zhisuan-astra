@@ -66,7 +66,7 @@
  .studio #shell.live-shell .adjustable-workbench.surface-floating>.conversation .conversation-heading,
  .studio #shell.live-shell .adjustable-workbench.surface-floating>.conversation .context-line,
  .studio #shell.live-shell .adjustable-workbench.surface-floating>.conversation .composer-wrap{box-sizing:border-box;width:100%;max-width:960px;align-self:center;flex-shrink:0}
- .studio #shell.live-shell .adjustable-workbench.surface-floating>.conversation .messages{box-sizing:border-box;width:100%;padding-left:max(30px,calc((100% - 960px)/2 + 30px));padding-right:max(30px,calc((100% - 960px)/2 + 30px));overflow-anchor:auto}
+ .studio #shell.live-shell .adjustable-workbench.surface-floating>.conversation .messages{box-sizing:border-box;width:100%;padding-left:max(48px,calc((100% - 960px)/2 + 48px));padding-right:max(48px,calc((100% - 960px)/2 + 48px));overflow-anchor:auto}
  .studio #shell.live-shell .adjustable-workbench.surface-floating>.artifact{transition:opacity 180ms ease,transform 180ms ease;animation:insight-card-arrive 180ms ease 220ms backwards}
  .studio #shell.live-shell .adjustable-workbench.surface-floating.floating-minimized>.artifact{top:14px;visibility:hidden;pointer-events:none}
 }
