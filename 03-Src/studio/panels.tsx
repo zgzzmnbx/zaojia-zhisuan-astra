@@ -1,6 +1,6 @@
 import {DEBUG_MODE} from '../frontend-debug/mock-adapter';
 import {useState} from 'react';
-import type {Result,SheetConfig,Risk,Report,Run} from './types';
+import type {Result,SheetConfig,Report,Run} from './types';
 import {Button,Icon,Note} from './ui';
 
 
@@ -19,7 +19,7 @@ export function Mapping({sheets,setSheets,filename,project,setProject,busy,conve
   </div>;
 }
 
-export function Risks({items,busy,warning,locate,hasRun}:{items:Risk[];busy:boolean;warning:()=>void;locate:(r:Risk)=>void;hasRun:boolean}){return <div className="panel-content"><div className="section-caption"><h3>风险与复核事项</h3><span className="badge badge-warning">{items.length} 项</span></div><p className="panel-lead">依据匹配结果和经验池偏离生成。风险提示不自动修改价格或系数。</p><Button icon="shield" primary onClick={warning} disabled={busy}>{hasRun?'重新检查经验池预警':'检查经验池预警'}</Button>{!hasRun&&<Note>经验池尚未检查。首次转换和匹配不会自动运行预警。</Note>}{!items.length&&<div className="empty-state"><Icon name="shield"/><h3>当前没有结构化风险项</h3><p>仍需核对经验提示层的适用条件。</p></div>}{items.map(r=><article key={r.id} className="review-card"><div className="section-caption"><span className={`badge badge-${r.severity==='high'?'error':'warning'}`}>{r.severity_label}</span><small>{r.risk_type||r.metric}</small></div><h3>{r.title}</h3><p>{r.message}</p>{r.evidence?.map((e,i)=><details key={i}><summary>{e.label}</summary><p>{e.text}</p></details>)}<p className="muted">{r.suggested_action}</p><Button icon="arrow-up-right" onClick={()=>locate(r)}>定位表格并复核</Button></article>)}</div>;}
+export {Risks} from './RiskReview';
 
 export function ReportPanel({report,result,generate,busy}:{report:Report|null;result:Result;generate:()=>void;busy:boolean}){return <div className="panel-content"><div className="section-caption"><h3>{DEBUG_MODE?'模拟报告文本':'当前实际 Word 成果'}</h3><span className="badge badge-success">{DEBUG_MODE?'未生成 DOCX':'来自 DOCX'}</span></div><p className="panel-lead">{report?.note||'完成批量匹配后，模板化报告随计算表一起生成。'}</p><div className="action-row">{result.downloads.report&&<a className="btn btn-primary" href={result.downloads.report}><Icon name="download"/>下载正式 Word</a>}<Button onClick={generate} disabled={busy}>补充风险报告</Button></div>{report&&<article className="live-report">{report.paragraphs.map((p,i)=>/^[一二三四五六七八九十]+、/.test(p)?<h3 key={i}>{p}</h3>:<p key={i}>{p}</p>)}{report.tables.map((table,i)=><div className="report-table-scroll" key={i}><table>{table.map((row,r)=><tbody key={r}><tr>{row.map((cell,c)=><td key={c}>{cell}</td>)}</tr></tbody>)}</table></div>)}</article>}</div>;}
 

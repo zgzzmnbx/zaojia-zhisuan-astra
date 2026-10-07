@@ -2,7 +2,7 @@
 const cards='.card,.welcome-card,.capability-item,.risk-card,.project-dashboard__metric,.project-dashboard__analysis,.dv-chart-frame,.workspace-project,.asset-card,.review-card,.gork-link-card';
 const panels='.summary-artifact,.modal-box,.project-dashboard__drawer,.rail-panel';
 const rings='.fs-donut,.cp-ring';
-const bars='.fs-column-row,.cp-composition-bar,.cp-risk-track';
+const bars='.fs-column-row,.cp-composition-bar,.cp-risk-track,.rr-animated-track';
 const plots='.recharts-wrapper';
 const disclosures='.fs-details[open]>.fs-table,.cc-disclosure[open]>div,.mapping-fields[open]>.field-grid,.cp-context-details[open]';
 const icons='.cc-symbol,.cp-project-icon,.welcome-card>.astra-icon';
