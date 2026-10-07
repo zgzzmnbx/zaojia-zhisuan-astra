@@ -110,3 +110,5 @@
 - 2026-10-07 用户授权导入 2.0 历史台账；只读快照经 tools/import-legacy-history.py 写 Astra 独立 runtime。保留原 ID / 日期 / 测试标识，不按同名合并，不把 proposed 地点改成 confirmed；不导入机器人队列或凭证。回执与备份保存在 runtime/astra-history-imports/，历史数据不随 Git 推送。
 
 - 2026-10-07 用户明确：本项目暂只考虑桌面端。除非用户特意要求，不设计或测试平板、手机表现；后续验收仅检查桌面尺寸与亮暗主题。本条覆盖文档中较早的移动端验收要求，现有响应式代码可保留。
+
+- Windows 统一启动入口为启动预览.bat + tools/launch-preview.ps1。config/astra-launch.local.json 显式指定本机活动工作区（Git 忽略）；检测健康及进程解释器归属后复用服务，冲突不停止进程。健康后才打开浏览器，错误需保留窗口；普通启动不自动 pip install 或重新构建。迁移 / 归档 worktree 前须同步启动指向及独立 runtime。

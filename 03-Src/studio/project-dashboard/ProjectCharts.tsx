@@ -38,6 +38,14 @@ const STATUS_COLORS: Record<string, string> = {
 
 const MODEL_COLORS = [7, 3, 5, 9, 2, 6].map(level => `var(--astra-chart-${level})`);
 const SOURCE_COLORS = MODEL_COLORS;
+
+function DonutGradients({ id, colors }: { id: string; colors: string[] }) {
+  return <defs>{colors.map((color, index) => <linearGradient key={index} id={`${id}-${index}`} x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stopColor={`color-mix(in oklab, ${color} 72%, white)`} />
+    <stop offset="52%" stopColor={color} />
+    <stop offset="100%" stopColor={`color-mix(in oklab, ${color} 80%, var(--astra-chart-9))`} />
+  </linearGradient>)}</defs>;
+}
 const EMPTY_LLM_USAGE: DashboardPayload["llm_usage"] = {
   available: false,
   scope: "local_instance",
@@ -95,6 +103,10 @@ export default function ProjectCharts({
   const newGradient = `${chartId}-new`;
   const completedGradient = `${chartId}-completed`;
   const waveGradient = `${chartId}-wave`;
+  const statusGradient = `${chartId}-status`;
+  const modelGradient = `${chartId}-model`;
+  const sourceGradient = `${chartId}-source`;
+  const visibleStatuses = dashboard.status_distribution.filter(item => item.count > 0);
   const trendNewTotal = dashboard.trend.reduce((sum, item) => sum + item.new_projects, 0);
   const trendCompletedTotal = dashboard.trend.reduce((sum, item) => sum + item.completed_projects, 0);
   const trendTotal = trendNewTotal + trendCompletedTotal;
@@ -194,8 +206,9 @@ export default function ProjectCharts({
             <div className="project-dashboard__chart is-donut" role="img" tabIndex={0} aria-label={`项目状态分布，总计 ${statusTotal} 个项目`}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
+                  <DonutGradients id={statusGradient} colors={visibleStatuses.map(item => STATUS_COLORS[item.status] || 'var(--muted)')} />
                   <Pie isAnimationActive={false}
-                    data={dashboard.status_distribution.filter((item) => item.count > 0)}
+                    data={visibleStatuses}
                     dataKey="count"
                     nameKey="label"
                     innerRadius="58%"
@@ -207,8 +220,8 @@ export default function ProjectCharts({
                       if (status) onStatus(status);
                     }}
                   >
-                    {dashboard.status_distribution.filter((item) => item.count > 0).map((item) => (
-                      <Cell key={item.status} fill={STATUS_COLORS[item.status] || "var(--muted)"} />
+                    {visibleStatuses.map((item, index) => (
+                      <Cell key={item.status} fill={`url(#${statusGradient}-${index})`} />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -318,6 +331,7 @@ export default function ProjectCharts({
             >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
+                  <DonutGradients id={modelGradient} colors={MODEL_COLORS} />
                   <Pie isAnimationActive={false}
                     data={llmUsage.models}
                     dataKey="count"
@@ -328,7 +342,7 @@ export default function ProjectCharts({
                     stroke="var(--paper)"
                   >
                     {llmUsage.models.map((item, index) => (
-                      <Cell key={`${item.provider}-${item.model}`} fill={MODEL_COLORS[index % MODEL_COLORS.length]} />
+                      <Cell key={`${item.provider}-${item.model}`} fill={`url(#${modelGradient}-${index % MODEL_COLORS.length})`} />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -455,6 +469,7 @@ export default function ProjectCharts({
             >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
+                  <DonutGradients id={sourceGradient} colors={SOURCE_COLORS} />
                   <Pie isAnimationActive={false}
                     data={sourceData}
                     dataKey="count"
@@ -471,7 +486,7 @@ export default function ProjectCharts({
                     {sourceData.map((item, index) => (
                       <Cell
                         key={item.source_type}
-                        fill={SOURCE_COLORS[index % SOURCE_COLORS.length]}
+                        fill={`url(#${sourceGradient}-${index % SOURCE_COLORS.length})`}
                       />
                     ))}
                   </Pie>

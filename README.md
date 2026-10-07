@@ -4,7 +4,9 @@
 
 ## 当前状态
 
-**UI v0.9.4 / 宿主源码 v0.9.0 · 知识与双平台复核，2026-10-07。默认亮色，保留六套主题；默认仅验收桌面端，平板 / 手机按用户明确要求处理。WeKnora 真实问答与引用已验证；13 份本地资料适配及公文新增接口待当前旧宿主重启。**
+**UI v0.9.5 / 宿主源码 v0.9.0 · 知识与双平台复核，2026-10-07。默认亮色，保留六套主题；默认仅验收桌面端，平板 / 手机按用户明确要求处理。WeKnora 真实问答与引用已验证；13 份本地资料适配及公文新增接口待当前旧宿主重启。**
+
+- v0.9.5：圆环也使用主题渐变；修复双击启动入口；复用已运行的同工作区服务并自动打开浏览器，离线启动后台服务后等待健康响应，失败保留错误窗口。D 盘入口通过本机忽略配置指向当前交接 worktree，不合并 main。
 
 - v0.9.4：看板图表使用随六套主题切换的同色系深浅色阶，柱形与面积图采用轻渐变，圆环与图例同步配色；保留风险语义色。
 
@@ -173,3 +175,11 @@ npm start
 参见 [当前版本计划](00-docs/00-PRD/02-当前版本计划.md)、[功能保留矩阵](00-docs/00-PRD/04-功能保留与接入矩阵.md) 和 [分阶段实施计划](00-docs/00-PRD/05-分阶段实施计划.md)。118 个接口声明、276 条 PRD 需求、455 条前端操作线索已导出；仍需逐项语义核销，不能以清单导出证明全部覆盖。
 
 来源：实际使用 [daisyUI](https://daisyui.com/components/)、[Tailwind](https://tailwindcss.com/)、[3d-force-graph](https://github.com/vasturiano/3d-force-graph)。参考 [assistant-ui](https://github.com/assistant-ui/assistant-ui)、[CopilotKit](https://github.com/CopilotKit/CopilotKit)、[Open Canvas](https://github.com/langchain-ai/open-canvas) 的交互结构，未声称集成其运行时。Gork 使用指定原工程的冻结 renderer / catalog。许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+### Windows 双击入口
+
+双击 `启动预览.bat`。成功后命令窗口自动关闭，浏览器自动打开 http://127.0.0.1:5189/ 。服务在后台运行；关闭网页不会停止服务。再次双击只打开现有服务，不重复安装依赖、不构建、不重启。
+
+本机 D 盘入口 `D:\Codex-Temp\260613-【智算Astra】\启动预览.bat` 通过 `config/astra-launch.local.json` 的 `workspace` 字段指向当前 UI 交接 worktree；配置仅保存在本机。不存在配置时启动脚本所在工作区。不得归档当前配置指向的工作区，否则应先更新此路径并迁移独立数据。
+
+错误时窗口保留提示；后台启动日志位于目标工作区 `Codex-Temp/preview-*.log`。5189 被其他工作区占用时拒绝抢占。新机器须先准备该工作区的 Python 虚拟环境及前端构建；普通启动不自动更新依赖。只读检测：`powershell -NoProfile -File tools/launch-preview.ps1 -NoBrowser -CheckOnly`。
