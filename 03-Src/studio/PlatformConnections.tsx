@@ -1,6 +1,7 @@
 import {useCallback,useEffect,useState} from 'react';
 import {api} from './api';
-import {Button,Note} from './ui';
+import {Button,Icon} from './ui';
+import './platform-connections.css';
 import {platforms,platformStatus,type Platform,type BotStatus,type StatusSnapshot} from './platform-status';
 import '../frontend-debug/legacy-system/legacy-system.css';
 
@@ -39,10 +40,10 @@ export function PlatformStatusButtons({snapshot,open}:{snapshot:StatusSnapshot;o
   return <button type="button" key={p.id} className="btn btn-ghost btn-sm legacy-status-chip" aria-label={p.label+'连接情况，'+status} title={p.label+' · '+status+' · Astra 独立工作区'} onClick={()=>open(p.id)}>{p.label}<span> · {status}</span></button>;
  })}</div>;
 }
-export function PlatformConnections({selected,select,snapshot,refresh}:{selected:Platform;select:(id:Platform)=>void;snapshot:StatusSnapshot;refresh:()=>void}){
- return <div className="panel-content legacy-connections"><div className="section-caption"><h3>双平台连接状态</h3><Button icon="refresh" onClick={refresh}>刷新状态</Button></div>
-  <Note>以下来自当前 Astra 独立后端。仅查看状态；不会启动机器人、启用接收或发送消息。原系统与云端实例的状态不在此范围。</Note>
-  <p className="muted" role="status">{snapshot.error||(!snapshot.data?'尚未检测': '状态接口可达 · 最近检查 '+new Date(snapshot.checkedAt!).toLocaleTimeString('zh-CN'))}</p>
+export function PlatformConnections({selected,select,snapshot,refresh,onSettings,onReview,onProgress}:{selected:Platform;select:(id:Platform)=>void;snapshot:StatusSnapshot;refresh:()=>void;onSettings:()=>void;onReview:()=>void;onProgress:()=>void}){
+ return <div className="platform-review-hub legacy-connections">
+  <div className="platform-review-toolbar"><span className="muted" role="status">{snapshot.error||(!snapshot.data?'正在读取平台状态…':'最近检查 '+new Date(snapshot.checkedAt!).toLocaleTimeString('zh-CN'))}</span><Button icon="refresh" onClick={refresh}>刷新</Button></div>
+  <div className="platform-review-intro"><span className="platform-review-symbol"><Icon name="users"/></span><div><strong>同事复核</strong><p>在聊天中确认平台、复核人和发送内容。</p></div></div>
   <div className="legacy-platform-grid">{platforms.map(p=>{
    const profile=snapshot.data?.profiles.find(item=>item.profile_id===p.id),health=profile?.health;
    const verified=Boolean(!snapshot.error&&profile?.running&&health?.fresh);
@@ -54,5 +55,9 @@ export function PlatformConnections({selected,select,snapshot,refresh}:{selected
     <div><dt>应用身份</dt><dd>{fact(health?.identity_ready,'已核验','待恢复')}</dd></div>
     <div><dt>机器人业务后端</dt><dd>{fact(health?.backend_ok,'健康','异常')}</dd></div>
    </dl></article>;
-  })}</div><p className="muted">仅当进程、心跳、应用身份、业务后端及消息队列检查均通过时显示“运行中”。配置存在不代表连接成功；启停与平台配置仍在专业协同工具中操作。</p></div>;
+  })}</div>
+  <div className="platform-review-steps" aria-label="复核流程">{['选择平台与人员','确认后发送','跟踪意见与轮次'].map((label,i)=><span key={label}><i>{i+1}</i>{label}</span>)}</div>
+  <div className="platform-review-actions"><Button primary icon="users" onClick={onReview}>发起同事复核</Button><Button icon="clock" onClick={onProgress}>复核进度</Button><Button icon="settings" onClick={onSettings}>协同设置</Button></div>
+  <p className="platform-review-footnote">{snapshot.data?.profiles.some(p=>p.configured)?'应用配置已读取；接收状态以实际运行检测为准。':'先在协同设置中引用 2.0 的应用配置，或填写独立配置。'}</p>
+ </div>;
 }
