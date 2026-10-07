@@ -75,6 +75,7 @@ function App(){
     add(receipt.title,[...downloads,{label:'查看专业详情',action:receipt.view,primary:true},...(receipt.jobId===result?.job_id?[{label:'查看计算表',action:'table'}]:[])],'assistant',false,completedResult?resultCard(completedResult):{kind:'result',title:receipt.title,caption:'专业操作 · 实际返回',icon:'check',status:'已返回',note:'请在右侧核对处理结果、待复核项和完整成果。'});
   }
 
+  const [architectureOpening,setArchitectureOpening]=useState(0);
   const [dashboardWarm,setDashboardWarm]=useState(false);
   const [dashboardTab,setDashboardTab]=useState<'board'|'runs'>('board');
   const [welcomeVisible,setWelcomeVisible]=useState(()=>!readSkipWelcome());
@@ -254,7 +255,7 @@ function App(){
   },[activeDocumentSource?.source_id,activeDocumentSource?.kind,layout.chatActive]);
 
   async function perform(label:string,work:()=>Promise<void>){if(busyRef.current||!workspace.ready)return;busyRef.current=true;setBusy(label);setOperationError('');try{await work();}catch(e){const message=e instanceof Error?e.message:'操作失败，请检查服务状态后重试。';setOperationError(message);add(message,undefined,'assistant',true);}finally{setBusy('');busyRef.current=false;}}
-  function open(next:string){if(next==='word')next='report';if(next==='settings'){setSettings(true);return;}if(next==='insights'){showInsights();return;}if(isProfessional(next))setProfessionalWarm(true);if(next==='chat'){presentation.chat();setSidebar(false);return;}if(next in titles){presentation.open(next as View);setSidebar(false);if(next==='risk'&&result)void refreshRisk(result.job_id);if(next==='report'&&result)void refreshReport(result.job_id);if(next==='projects'){setDashboardWarm(true);}if(next==='projects')void listRuns().catch(e=>add(e.message,undefined,'assistant',true));if(next==='trace')void loadTimeline();}else{presentation.open('tools');add('这项能力已经列入完整迁移清单，当前版本尚未接通。右侧可以查看接入状态。');}}
+  function open(next:string){if(next==='word')next='report';if(next==='settings'){setSettings(true);return;}if(next==='insights'){showInsights();return;}if(isProfessional(next))setProfessionalWarm(true);if(next==='chat'){presentation.chat();setSidebar(false);return;}if(next in titles){if(next==='architecture')setArchitectureOpening(n=>n+1);presentation.open(next as View);setSidebar(false);if(next==='risk'&&result)void refreshRisk(result.job_id);if(next==='report'&&result)void refreshReport(result.job_id);if(next==='projects'){setDashboardWarm(true);}if(next==='projects')void listRuns().catch(e=>add(e.message,undefined,'assistant',true));if(next==='trace')void loadTimeline();}else{presentation.open('tools');add('这项能力已经列入完整迁移清单，当前版本尚未接通。右侧可以查看接入状态。');}}
   async function refreshRisk(job:string){try{const data=await api<{items:Risk[]}>(`/api/risk/summary?job_id=${job}`);if(loadedJob.current===job){setRisks(data.items);setRiskJobId(job);}}catch(e){add((e as Error).message,undefined,'assistant',true);}}
   async function refreshReport(job:string){try{const data=await api<Report>(`/api/astra/report/${job}`);if(loadedJob.current===job)setReport(data);}catch(e){if(loadedJob.current===job){setReport(null);add((e as Error).message,undefined,'assistant',true);}}}
   async function loadTimeline(){const id=result?.task_tracking?.task?.task_id;if(!id){setTimeline([]);return;}try{const data=await api<{items:any[]}>(`/api/tasks/${id}/timeline`);setTimeline(data.items.filter(i=>!i.is_placeholder));}catch(e){add((e as Error).message,undefined,'assistant',true);}}
@@ -350,7 +351,7 @@ function App(){
     if(isProfessional(view))return null;
     if(view==='gork')return <GorkConsole/>;
     if(view==='digital')return <DigitalAssistant dark={dark}/>;
-    if(view==='architecture')return <Architecture active={contentActive&&!welcomeVisible} dark={dark}/>;
+    if(view==='architecture')return <Architecture key={architectureOpening} active={contentActive&&!welcomeVisible} dark={dark}/>;
     if(view==='articles')return <ArticleLibrary present={id=>void presentArticle(id)}/>;
     if(view==='knowledge')return <KnowledgePanel options={knowledgeOptions} setOptions={v=>{setKnowledgeOptions(v);setChatMode('knowledge');}} evidence={evidence} ask={q=>void askKnowledge(q)} busy={!!busy||!workspace.ready} weknora={weknora.status} refreshWeKnora={weknora.refresh}/>;
     if(view==='collaboration')return <><div className="module-actions"><Button onClick={()=>open('dispatch')}>派发、平台配置与复核回执</Button></div><CollaborationPanel key={workspace.active?.id} conversation={workspace.active?.id||''} job={result?.job_id||''} busy={!!busy} flush={workspace.flush} prepared={()=>add('复核草稿已保存。平台尚未连接，未发起发送。',undefined,'assistant',false,{kind:'confirmation',title:'复核草稿已保存',caption:'智能协同 · 本地准备',icon:'users',status:'未发送',note:'接收人尚待平台身份核验，没有送达回执。'})}/></>;

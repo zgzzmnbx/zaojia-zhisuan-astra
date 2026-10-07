@@ -389,8 +389,8 @@ function boot(c){
   var go=function(){ window.__ready=true; window.seek(window.__pending==null?0:window.__pending);
     if(!/[?&]manual/.test(location.search)){
       // Astra viewer: pause controls and background/reduced-motion lifecycle.
-      var reduced=matchMedia('(prefers-reduced-motion: reduce)'), playing=!reduced.matches;
-      var explicit=false, frame=0, elapsed=0, last=0, D=cv.duration||30;
+      var reduced=matchMedia('(prefers-reduced-motion: reduce)'), autoplay=new URLSearchParams(location.search).get('autoplay')==='1', playing=autoplay||!reduced.matches;
+      var explicit=autoplay, frame=0, elapsed=0, last=0, D=cv.duration||30;
       var control=document.createElement('button'); control.id='astra-motion'; control.type='button';
       control.style.cssText='position:fixed;right:12px;top:8px;z-index:10;padding:8px 12px;border:1px solid #59758a;border-radius:6px;background:#172330;color:#f1f7fb;font:14px Microsoft YaHei,sans-serif;cursor:pointer';
       document.body.appendChild(control);

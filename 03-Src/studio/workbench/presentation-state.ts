@@ -30,7 +30,7 @@ export function presentationReducer(state:PresentationState,action:PresentationA
  if(action.type==='open-content'){
   if(action.view==='insights')return presentationReducer(state,{type:'show-summary'});
   const returnMode=state.mode==='chat'||state.mode==='summary'?state.mode:state.returnMode;
-  return revise({mode:state.mode==='fullscreen'?'fullscreen':'content',content:action.view,returnMode,visited:state.visited.includes(action.view)?state.visited:[...state.visited,action.view]});
+  return revise({mode:action.view==='architecture'||state.mode==='fullscreen'?'fullscreen':'content',content:action.view,returnMode,visited:state.visited.includes(action.view)?state.visited:[...state.visited,action.view]});
  }
  if(action.type==='close-content')return presentationReducer(state,{type:'chat'});
  if(action.type==='fullscreen'&&state.mode==='content')return revise({mode:'fullscreen'});

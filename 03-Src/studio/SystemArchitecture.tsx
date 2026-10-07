@@ -3,10 +3,10 @@ import {Icon} from './ui';
 
 /** Both builds use the same offline copies from 智算 2.0. */
 export function Architecture({active=true,dark=false}:{active?:boolean;dark?:boolean}){
-  const [kind,setKind]=useState<'original'|'live'>('original');
+  const [kind,setKind]=useState<'original'|'live'>('live');
   const url=kind==='original'
     ? `/system-architecture/index.html?present=1&motion=focus-v4&theme=${dark?'dark':'light'}`
-    : '/system-architecture/live-panel-landscape.html';
+    : '/system-architecture/live-panel-landscape.html?autoplay=1';
   return <div className="architecture-module">
     <div className="module-toolbar">
       <div className="module-tabs" role="group" aria-label="架构图版本">
