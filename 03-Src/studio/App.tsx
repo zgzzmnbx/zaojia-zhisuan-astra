@@ -104,6 +104,7 @@ function App(){
   function openDataTab(tab:DataTab){const target=dataTabDestination(tab,DEBUG_MODE&&!!exampleRequest,!!result,view);if(target.view==='example'){setExampleRequest(r=>r?{...r,tab:target.tab!}:r);open('example');}else open(target.view);}
   function showUploadedExample(tab:ExampleTab){if(!DEBUG_MODE)return;setExampleRequest(r=>({id:(r?.id||0)+1,tab}));open('example');}
 
+  const [inputConversationId,setInputConversationId]=useState('');
   const [resultScope,setResultScope]=useState<ResultScope|null>(null);
   const [riskJobId,setRiskJobId]=useState('');
   const [conversationDetails,setConversationDetails]=useState(false);
@@ -141,12 +142,12 @@ function App(){
     conversationContext.current=state.context||crypto.randomUUID();chatFollow.current=!chatScrollMemory.current.has(conversationContext.current);loadedJob.current='';previewRefreshAttempt.current='';
     setGorkIssue(false);setOperationError('');setResult(null);setResultScope(null);setRiskJobId('');setNeedsRecalculate(false);if(data)acceptResult(data,false,conversation);
     setSelectedDocument(state.selectedDocument||null);setDocuments(state.documents||{});
-    setMappingExpanded(false);setMessages(state.messages||[]);setDraft(state.draft||'');setFile(attachment);setInputFileId(state.inputFileId||'');setSheets(state.sheets||[]);setProject(state.project||'');
+    setMappingExpanded(false);setMessages(state.messages||[]);setDraft(state.draft||'');setFile(attachment);setInputConversationId(attachment?conversation.id:'');setInputFileId(state.inputFileId||'');setSheets(state.sheets||[]);setProject(state.project||'');
     setRisks([]);setReport(null);setSources(null);setTimeline([]);setSelection(null);setEvidence([...state.messages||[]].reverse().find(m=>m.evidence)?.evidence||null);setChatMode(state.chatMode||'task');setKnowledgeOptions(state.knowledgeOptions||{library_ids:null,retrieval_mode:'classic'});setProjectId(state.panelProjectId||'');setLocatedRow(state.locatedRow);setSheetIndex(state.sheetIndex||0);
     presentation.enter(conversation.project_id||null,conversation.id);setSidebar(false);
     if(data&&state.view==='risk')void refreshRisk(data.job_id);if(data&&state.view==='report')void refreshReport(data.job_id);
   });
-  const currentProject=currentProjectSnapshot({ready:workspace.ready,active:workspace.active,projects:workspace.projects,conversations:workspace.conversations,result,resultScope,risks,riskJobId,filename:file?.name||'',debug:DEBUG_MODE});
+  const currentProject=currentProjectSnapshot({ready:workspace.ready,active:workspace.active,projects:workspace.projects,conversations:workspace.conversations,result,resultScope,risks,riskJobId,filename:file?.name||'',inputScope:{conversationId:inputConversationId,projectName:project},debug:DEBUG_MODE});
   function showInsights(){presentation.showSummary();setSidebar(false);}
   async function associateProject(id:string){if(busyRef.current||!workspace.ready)return;setProjectAssociating(true);try{await perform('正在关联当前项目',async()=>{await workspace.assign(id);presentation.showSummary();});}finally{setProjectAssociating(false);}}
   async function projectSaved(p:Project){
@@ -297,7 +298,7 @@ function App(){
     if(next.size>30*1024*1024)throw new Error('文件超过 30 MB 上限');
     const data=await api<Inspection>('/api/inspect',form({file:next}));const assetId=existingAssetId||(await persistInput(next)).id;setInputFileId(assetId);
     conversationContext.current=crypto.randomUUID();loadedJob.current='';
-    setFile(next);setProject(next.name.replace(/\.xlsx$/i,''));setResult(null);setReport(null);setRisks([]);setSources(null);setSheetIndex(0);setNeedsRecalculate(false);
+    setInputConversationId(workspace.currentConversation()?.id||'');setFile(next);setProject(next.name.replace(/\.xlsx$/i,''));setResult(null);setReport(null);setRisks([]);setSources(null);setSheetIndex(0);setNeedsRecalculate(false);
     const prepared=prepareSheets(data.sheets);setSheets(prepared);setMappingExpanded(false);if(token===presentation.interactionToken())presentation.prepareInput();
     add(`请帮我编制这份控制价：${next.name}`,undefined,'user');
     add('资料已读取。我们先确认结构，再交给专业规则匹配。',[{label:'确认结构并转换',action:'convert',primary:true},{label:'核对字段',action:'mapping'}],'assistant',false,inputCard(next.name,prepared));
@@ -307,7 +308,7 @@ function App(){
     const next=new File([await response.blob()],DEBUG_MODE?'合成调试样例.xlsx':'【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v3.1【演示】 .xlsx',{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     const data=await api<Inspection>('/api/inspect',form({file:next}));setInputFileId((await persistInput(next)).id);
     conversationContext.current=crypto.randomUUID();loadedJob.current='';
-    setFile(next);setProject(DEBUG_MODE?'合成调试项目（非业务资料）':'V3.1 勘察测量控制价');setResult(null);setRisks([]);setReport(null);setSources(null);setSheetIndex(0);setNeedsRecalculate(false);
+    setInputConversationId(workspace.currentConversation()?.id||'');setFile(next);setProject(DEBUG_MODE?'合成调试项目（非业务资料）':'V3.1 勘察测量控制价');setResult(null);setRisks([]);setReport(null);setSources(null);setSheetIndex(0);setNeedsRecalculate(false);
     const prepared=prepareSheets(data.sheets);setSheets(prepared);setMappingExpanded(false);if(token===presentation.interactionToken())presentation.prepareInput();
     add(DEBUG_MODE?'用合成样例走一遍前端交互流程。':'用 V3.1 正式样本走一遍编制流程。',undefined,'user');
     add('样本副本已就位。这次会实际运行规则，生成 Excel 和 Word 成果。',[{label:'确认结构并转换',action:'convert',primary:true},{label:'核对字段',action:'mapping'}],'assistant',false,inputCard(next.name,prepared));
@@ -356,7 +357,7 @@ function App(){
   function messageAction(message:Message,a:Action){if(unavailable(message,a)||busyRef.current)return;if(a.action==='knowledge-result'&&message.evidence){setEvidence(message.evidence);open('knowledge');return;}if(a.action==='locate'&&a.target){locate(a.target.sheet,a.target.row);return;}action(a.action);}
 
   useEffect(()=>{if(isProfessional(view))setProfessionalWarm(true);},[view]);
-  function summaryContent(){return <CurrentProjectCard project={currentProject} ready={workspace.ready} openBoard={()=>open('projects')} openData={()=>{if(currentProject?.workspaceProjectId){setProjectId(currentProject.workspaceProjectId);open('project');}else open('library');}} openTable={()=>open('table')} openRisks={()=>open('risk')} assign={id=>void associateProject(id)} newProject={()=>{associateNewProject.current=workspace.currentConversation()?.id||null;setProjectEditor(true);}} projects={workspace.projects} busy={!!busy} contextKey={workspace.active?.id}/>;}
+  function summaryContent(){return <CurrentProjectCard project={currentProject} ready={workspace.ready} openBoard={()=>open('projects')} openData={()=>{if(currentProject?.workspaceProjectId){setProjectId(currentProject.workspaceProjectId);open('project');}else open('library');}} openInput={()=>open('mapping')} openTable={()=>open('table')} openRisks={()=>open('risk')} assign={id=>void associateProject(id)} newProject={()=>{associateNewProject.current=workspace.currentConversation()?.id||null;setProjectEditor(true);}} projects={workspace.projects} busy={!!busy} contextKey={workspace.active?.id}/>;}
   const details=(panelView:View=view)=>{const contentActive=visible&&presentation.state.content===panelView;const view=panelView;
 
     if(view==='example')return null;
