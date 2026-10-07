@@ -23,7 +23,7 @@ export function presentationReducer(state:PresentationState,action:PresentationA
  }
  if(action.type==='result-available')return state;
  if(action.type==='resize')return revise({ratio:safeRatio(action.ratio),preferences:preference(state.preferences[state.context]?.summaryDismissed??false,safeRatio(action.ratio))});
- if(action.type==='chat')return revise({mode:'chat',returnMode:'chat',preferences:preference(true)});
+ if(action.type==='chat')return revise({mode:'summary',returnMode:'summary',preferences:preference(false)});
  if(action.type==='show-summary')return revise({mode:'summary',returnMode:'summary',preferences:preference(false)});
  if(action.type==='toggle-summary')return presentationReducer(state,{type:state.mode==='summary'?'close-summary':'show-summary'});
  if(action.type==='close-summary')return revise({mode:'chat',returnMode:'chat',preferences:preference(true)});
@@ -32,7 +32,7 @@ export function presentationReducer(state:PresentationState,action:PresentationA
   const returnMode=state.mode==='chat'||state.mode==='summary'?state.mode:state.returnMode;
   return revise({mode:state.mode==='fullscreen'?'fullscreen':'content',content:action.view,returnMode,visited:state.visited.includes(action.view)?state.visited:[...state.visited,action.view]});
  }
- if(action.type==='close-content')return revise({mode:state.returnMode});
+ if(action.type==='close-content')return presentationReducer(state,{type:'chat'});
  if(action.type==='fullscreen'&&state.mode==='content')return revise({mode:'fullscreen'});
  if(action.type==='return-to-split'&&state.mode==='fullscreen')return revise({mode:'content'});
  return state;
