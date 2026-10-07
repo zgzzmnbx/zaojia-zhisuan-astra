@@ -14,6 +14,7 @@
 .studio #shell .four-surface-topbar .project-info-toggle,.studio #shell .four-surface-topbar .legacy-status-chip{width:auto;white-space:nowrap}
 /* Real split panes share one header row. Summary cards keep their own header. */
 .studio #shell.live-shell .four-surface{--pane-heading-height:56px}
+.four-surface.mode-content>.workbench-separator::after{content:"";position:absolute;top:calc(var(--pane-heading-height) - 1px);left:0;right:0;height:1px;background:var(--line);pointer-events:none}
 .studio #shell.live-shell .four-surface.mode-content>.conversation>.conversation-heading,
 .studio #shell.live-shell .four-surface.mode-content>.content-artifact>.artifact-heading,
 .studio #shell.live-shell .four-surface.mode-fullscreen>.content-artifact>.artifact-heading{box-sizing:border-box;display:flex;align-items:center;flex-wrap:nowrap;flex:0 0 var(--pane-heading-height);height:var(--pane-heading-height);min-height:var(--pane-heading-height);max-height:var(--pane-heading-height);padding:8px 18px;margin:0;gap:10px;border:0;border-bottom:1px solid var(--color-base-300)}

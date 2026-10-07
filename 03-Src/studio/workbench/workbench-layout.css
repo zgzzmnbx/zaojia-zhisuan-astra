@@ -23,7 +23,14 @@
 .studio #shell.live-shell .adjustable-workbench.expanded>.artifact{margin:0;border:0;border-radius:0;box-shadow:none;height:auto;max-height:none;align-self:stretch;background:var(--paper)}
 .studio #shell.live-shell .adjustable-workbench.surface-split>.artifact .artifact-heading{border-bottom:1px solid var(--line)}
 .studio #shell.live-shell .adjustable-workbench.surface-split>.artifact .artifact-body{background:var(--canvas)}
-.studio #shell.live-shell .adjustable-workbench.surface-split>.workbench-separator{background:var(--canvas)}
+.studio #shell.live-shell .adjustable-workbench.surface-split>.workbench-separator{background:var(--paper)}
+/* A hairline divides the surfaces; the invisible 12px target remains easy to grab. */
+.surface-split>.workbench-separator::before{content:"";position:absolute;inset:0 auto 0 50%;width:1px;transform:translateX(-50%);background:color-mix(in srgb,var(--line) 65%,var(--paper));pointer-events:none;transition:background .15s}
+.surface-split>.workbench-separator>span:first-child{position:relative;opacity:0;box-shadow:0 0 0 3px var(--paper);transition:height .15s,background .15s,opacity .15s}
+.surface-split>.workbench-separator:hover>span:first-child,.surface-split>.workbench-separator:focus-visible>span:first-child,.surface-split.is-resizing>.workbench-separator>span:first-child{opacity:1}
+.surface-split>.workbench-separator:hover::before,.surface-split>.workbench-separator:focus-visible::before,.surface-split.is-resizing>.workbench-separator::before{background:color-mix(in srgb,var(--blue) 35%,var(--line))}
+.surface-split>.workbench-separator:focus-visible{outline:0;box-shadow:inset 0 0 0 2px var(--blue)}
+@media(prefers-reduced-motion:reduce){.surface-split>.workbench-separator::before,.surface-split>.workbench-separator>span:first-child{transition:none}}
 /* A compact preview floats within the message area. No backdrop or second
    grid column exists; the measured bottom always stops above the composer. */
 @media(min-width:1025px){
