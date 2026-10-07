@@ -3,15 +3,21 @@ import {useEffect,useRef,useState} from 'react';
 import '../vendor/gork/gork-catalog.js';
 import '../vendor/gork/gork-avatar.js';
 import {choreographGork,createGorkController,gorkDescriptions,greetings} from './gork-motion';
+import {gorkExpression,type GorkAppearance} from './gork-preferences';
+import {useGorkSettings} from './useGorkSettings';
 import './gork.css';
 
 // User explicitly chose playback for all visible animated avatars (2026-10-06).
 // Legacy pause preferences are intentionally ignored; visibility still owns teardown.
 export function useGorkMotion(){return [false,(_next:boolean)=>{},true] as const;}
 const catalog=choreographGork((window as any).GorkCatalog);
-type Props={state?:string;size?:number;still?:boolean;suspended?:boolean;interactive?:boolean;completion?:number;onGreet?:()=>void;followPointer?:boolean;pointerSmoothing?:'smooth'|'default'};
+type Props={state?:string;size?:number;still?:boolean;suspended?:boolean;interactive?:boolean;completion?:number;onGreet?:()=>void;followPointer?:boolean;pointerSmoothing?:'smooth'|'default';appearanceOverride?:GorkAppearance;expressionOverride?:string};
 
-export function Gork({state='idle',size=32,still=false,suspended=false,interactive=false,completion=0,onGreet,followPointer=false,pointerSmoothing='default'}:Props){
+export function Gork({state='idle',size=32,still=false,suspended=false,interactive=false,completion=0,onGreet,followPointer=false,pointerSmoothing='default',appearanceOverride,expressionOverride}:Props){
+  const {preferences}=useGorkSettings();
+  const appearance=appearanceOverride||preferences.appearance;
+  const expression=(semantic:string)=>expressionOverride||gorkExpression(semantic,preferences);
+  const configuration=JSON.stringify([appearance,expressionOverride||preferences.expressions]);
   const canvas=useRef<HTMLCanvasElement>(null),controller=useRef<ReturnType<typeof createGorkController>|null>(null);
   const [paused,,forceMotion]=useGorkMotion(),[status,setStatus]=useState({state,active:false});
   const values=useRef({state,paused:paused||still,suspended,followPointer,pointerSmoothing});values.current={state,paused:paused||still,suspended,followPointer,pointerSmoothing};
@@ -22,17 +28,17 @@ export function Gork({state='idle',size=32,still=false,suspended=false,interacti
     const instance=createGorkController((next,frozen)=>{
       let rendered=next;
       const pointer=!frozen&&values.current.followPointer?attachGorkPointer(element,()=>['idle','listening'].includes(rendered)&&!values.current.paused&&!values.current.suspended,values.current.pointerSmoothing==='smooth'?{responseMs:260,maxSpeed:90}:{}):undefined;
-      const player=(window as any).GorkAvatar.mount(element,catalog,{still:frozen,expression:next,appearance:{id:'gork'},forceMotion:true});
-      if(!frozen)player.set(next);
-      return {set(next:string){rendered=next;pointer?.reset();player.set(next);},dispose(){pointer?.dispose();player.dispose();}};
-    },next=>setStatus(old=>old.state===next.state&&old.active===next.active?old:next),undefined,state=>catalog.sequences.find(s=>s.id===state)?.steps.reduce((n,s)=>n+s.transitionMs+s.holdMs,0)||3200);
+      const player=(window as any).GorkAvatar.mount(element,catalog,{still:frozen,expression:expression(next),appearance,forceMotion:true});
+      if(!frozen)player.set(expression(next));
+      return {set(next:string){rendered=next;pointer?.reset();player.set(expression(next));},dispose(){pointer?.dispose();player.dispose();}};
+    },next=>setStatus(old=>old.state===next.state&&old.active===next.active?old:next),undefined,state=>catalog.sequences.find(s=>s.id===expression(state))?.steps.reduce((n,s)=>n+s.transitionMs+s.holdMs,0)||3200);
     controller.current=instance;
     const update=()=>instance.update({state:values.current.state,visible:visible&&!document.hidden&&!values.current.suspended,paused:values.current.paused});
     reconcile.current=update;
     const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update();});
     observer.observe(element);document.addEventListener('visibilitychange',update);
     return()=>{observer.disconnect();document.removeEventListener('visibilitychange',update);instance.dispose();controller.current=null;reconcile.current=()=>{};};
-  },[]);
+  },[configuration]);
   useEffect(()=>reconcile.current(),[state,paused,still,suspended]);
   useEffect(()=>{
     if(completion===lastCompletion.current)return;
@@ -44,7 +50,7 @@ export function Gork({state='idle',size=32,still=false,suspended=false,interacti
     onGreet?.();
   }
   const picture=<canvas ref={canvas} width={size*2} height={size*2} style={{width:size,height:size}} role="img" aria-label={`Gork，智算的化身 · ${gorkDescriptions[status.state]||'与你一起工作'}`}/>;
-  return <span className={`gork-companion ${interactive?'gork-interactive':''}`} data-state={status.state} data-animated={status.active&&!still} data-motion-override={forceMotion} style={{width:size,height:size}}>
+  return <span className={`gork-companion ${interactive?'gork-interactive':''}`} data-state={status.state} data-expression={expression(status.state)} data-appearance={appearance.id} data-animated={status.active&&!still} data-motion-override={forceMotion} style={{width:size,height:size}}>
     {interactive?<button type="button" className="gork-touch" aria-label="和 Gork 打个招呼" title={`${gorkDescriptions[status.state]||'与你一起工作'} · 点一下和 Gork 互动`} onClick={greet}>{picture}</button>:picture}
   </span>;
 }
