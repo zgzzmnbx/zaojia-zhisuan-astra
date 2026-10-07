@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import type { DashboardPayload } from "./projectDashboardUtils";
 import { qualityPercentages } from "./projectDashboardUtils";
 
@@ -29,15 +29,15 @@ type Props = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  processing: "#2563eb",
-  pending_review: "#60a5fa",
-  completed: "#93c5fd",
-  returned: "#bfdbfe",
-  failed: "#1e40af",
+  processing: "var(--astra-chart-7)",
+  pending_review: "var(--astra-chart-5)",
+  completed: "var(--astra-chart-3)",
+  returned: "var(--astra-chart-2)",
+  failed: "var(--astra-chart-9)",
 };
 
-const MODEL_COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe", "#dbeafe"];
-const SOURCE_COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe"];
+const MODEL_COLORS = [7, 3, 5, 9, 2, 6].map(level => `var(--astra-chart-${level})`);
+const SOURCE_COLORS = MODEL_COLORS;
 const EMPTY_LLM_USAGE: DashboardPayload["llm_usage"] = {
   available: false,
   scope: "local_instance",
@@ -91,6 +91,10 @@ export default function ProjectCharts({
   onQuality,
   onSource,
 }: Props) {
+  const chartId = useId();
+  const newGradient = `${chartId}-new`;
+  const completedGradient = `${chartId}-completed`;
+  const waveGradient = `${chartId}-wave`;
   const trendNewTotal = dashboard.trend.reduce((sum, item) => sum + item.new_projects, 0);
   const trendCompletedTotal = dashboard.trend.reduce((sum, item) => sum + item.completed_projects, 0);
   const trendTotal = trendNewTotal + trendCompletedTotal;
@@ -134,18 +138,31 @@ export default function ProjectCharts({
           <div className="project-dashboard__chart" role="img" tabIndex={0} aria-label={`项目处理趋势，共 ${dashboard.trend.length} 个周期`}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dashboard.trend} margin={{ top: 22, right: 10, left: -18, bottom: 4 }}>
+                <defs>
+                  <linearGradient id={newGradient} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--astra-chart-5)" />
+                    <stop offset="100%" stopColor="var(--astra-chart-7)" />
+                  </linearGradient>
+                  <linearGradient id={completedGradient} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--astra-chart-2)" />
+                    <stop offset="100%" stopColor="var(--astra-chart-3)" />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid stroke="var(--pd-border)" vertical={false} />
                 <XAxis dataKey="period" tick={{ fill: "var(--pd-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis allowDecimals={false} tick={{ fill: "var(--pd-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip cursor={{ fill: "#eff6ff" }} />
-                <Legend iconType="circle" iconSize={7} />
-                <Bar isAnimationActive={false} dataKey="new_projects" name="新增" fill="#60a5fa" radius={[5, 5, 0, 0]} onClick={(data) => {
+                <Tooltip cursor={{ fill: "var(--soft)" }} />
+                <Legend content={<ul className="astra-chart-inline-legend">
+                  <li><i style={{background:'var(--astra-chart-7)'}} />新增</li>
+                  <li><i style={{background:'var(--astra-chart-3)'}} />完成</li>
+                </ul>} />
+                <Bar isAnimationActive={false} dataKey="new_projects" name="新增" fill={`url(#${newGradient})`} radius={[5, 5, 0, 0]} onClick={(data) => {
                   const period = chartItemValue(data, "period");
                   if (period) onPeriod(period);
                 }}>
                   <LabelList dataKey="new_projects" position="top" fill="var(--pd-text)" fontSize={12} />
                 </Bar>
-                <Bar isAnimationActive={false} dataKey="completed_projects" name="完成" fill="#bfdbfe" radius={[5, 5, 0, 0]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="completed_projects" name="完成" fill={`url(#${completedGradient})`} radius={[5, 5, 0, 0]} onClick={(data) => {
                   const period = chartItemValue(data, "period");
                   if (period) onPeriod(period);
                 }}>
@@ -184,13 +201,14 @@ export default function ProjectCharts({
                     innerRadius="58%"
                     outerRadius="80%"
                     paddingAngle={2}
+                    stroke="var(--paper)"
                     onClick={(data) => {
                       const status = chartItemValue(data, "status");
                       if (status) onStatus(status);
                     }}
                   >
                     {dashboard.status_distribution.filter((item) => item.count > 0).map((item) => (
-                      <Cell key={item.status} fill={STATUS_COLORS[item.status] || "#94a3b8"} />
+                      <Cell key={item.status} fill={STATUS_COLORS[item.status] || "var(--muted)"} />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -202,7 +220,7 @@ export default function ProjectCharts({
               {dashboard.status_distribution.map((item) => (
                 <li key={item.status}>
                   <button type="button" onClick={() => onStatus(item.status)}>
-                    <i style={{ background: STATUS_COLORS[item.status] || "#94a3b8" }} />
+                    <i style={{ background: STATUS_COLORS[item.status] || "var(--muted)" }} />
                     <span>{item.label}</span><b>{item.count}</b>
                   </button>
                 </li>
@@ -237,10 +255,10 @@ export default function ProjectCharts({
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={llmUsage.trend} margin={{ top: 18, right: 12, left: -18, bottom: 2 }}>
                 <defs>
-                  <linearGradient id="projectDashboardLlmWave" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#60a5fa" stopOpacity={0.42} />
-                    <stop offset="72%" stopColor="#bfdbfe" stopOpacity={0.18} />
-                    <stop offset="100%" stopColor="#eff6ff" stopOpacity={0.04} />
+                  <linearGradient id={waveGradient} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--astra-chart-5)" stopOpacity={0.38} />
+                    <stop offset="72%" stopColor="var(--astra-chart-3)" stopOpacity={0.14} />
+                    <stop offset="100%" stopColor="var(--astra-chart-2)" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="var(--pd-border)" vertical={false} />
@@ -263,11 +281,11 @@ export default function ProjectCharts({
                   type="monotone"
                   dataKey="requests"
                   name="请求次数"
-                  stroke="#3b82f6"
+                  stroke="var(--astra-chart-7)"
                   strokeWidth={2.5}
-                  fill="url(#projectDashboardLlmWave)"
-                  dot={{ r: 2.5, fill: "#fff", stroke: "#60a5fa", strokeWidth: 1.5 }}
-                  activeDot={{ r: 4, fill: "#2563eb", stroke: "#fff", strokeWidth: 2 }}
+                  fill={`url(#${waveGradient})`}
+                  dot={{ r: 2.5, fill: "var(--paper)", stroke: "var(--astra-chart-7)", strokeWidth: 1.5 }}
+                  activeDot={{ r: 4, fill: "var(--astra-chart-7)", stroke: "var(--paper)", strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -307,6 +325,7 @@ export default function ProjectCharts({
                     innerRadius="58%"
                     outerRadius="80%"
                     paddingAngle={2}
+                    stroke="var(--paper)"
                   >
                     {llmUsage.models.map((item, index) => (
                       <Cell key={`${item.provider}-${item.model}`} fill={MODEL_COLORS[index % MODEL_COLORS.length]} />
@@ -357,13 +376,13 @@ export default function ProjectCharts({
                 <YAxis dataKey="axis_name" type="category" width={96} tick={{ fill: "var(--pd-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip />
                 <Legend iconType="circle" iconSize={7} />
-                <Bar isAnimationActive={false} dataKey="risk_high" name="高风险" stackId="risk" fill="#3b82f6" radius={[5, 0, 0, 5]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="risk_high" name="高风险" stackId="risk" fill="var(--red)" radius={[5, 0, 0, 5]} onClick={(data) => {
                   const projectName = chartItemValue(data, "project_name");
                   if (projectName) onProject(projectName);
                 }}>
-                  <LabelList dataKey="risk_high" position="insideLeft" fill="#fff" fontSize={12} />
+                  <LabelList dataKey="risk_high" position="insideLeft" fill="var(--paper)" fontSize={12} />
                 </Bar>
-                <Bar isAnimationActive={false} dataKey="risk_low" name="低风险" stackId="risk" fill="#bfdbfe" radius={[0, 5, 5, 0]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="risk_low" name="低风险" stackId="risk" fill="var(--amber)" radius={[0, 5, 5, 0]} onClick={(data) => {
                   const projectName = chartItemValue(data, "project_name");
                   if (projectName) onProject(projectName);
                 }}>
@@ -403,9 +422,9 @@ export default function ProjectCharts({
                   <XAxis type="number" domain={[0, 100]} hide />
                   <YAxis type="category" dataKey="name" hide />
                   <Tooltip formatter={(value) => `${Number(value).toFixed(1)}%`} />
-                  <Bar isAnimationActive={false} dataKey="standard" stackId="quality" fill="#60a5fa" radius={[5, 0, 0, 5]} onClick={() => onQuality("standard")} />
-                  <Bar isAnimationActive={false} dataKey="experience" stackId="quality" fill="#93c5fd" onClick={() => onQuality("experience")} />
-                  <Bar isAnimationActive={false} dataKey="review" stackId="quality" fill="#dbeafe" radius={[0, 5, 5, 0]} onClick={() => onQuality("review")} />
+                  <Bar isAnimationActive={false} dataKey="standard" stackId="quality" fill="var(--astra-chart-5)" radius={[5, 0, 0, 5]} onClick={() => onQuality("standard")} />
+                  <Bar isAnimationActive={false} dataKey="experience" stackId="quality" fill="var(--astra-chart-3)" onClick={() => onQuality("experience")} />
+                  <Bar isAnimationActive={false} dataKey="review" stackId="quality" fill="var(--astra-chart-2)" radius={[0, 5, 5, 0]} onClick={() => onQuality("review")} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -443,6 +462,7 @@ export default function ProjectCharts({
                     innerRadius="58%"
                     outerRadius="80%"
                     paddingAngle={2}
+                    stroke="var(--paper)"
                     onClick={(data) => {
                       const sourceType = chartItemValue(data, "source_type");
                       if (sourceType) onSource(sourceType);

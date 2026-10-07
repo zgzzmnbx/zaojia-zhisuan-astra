@@ -13,6 +13,30 @@
 [data-astra-palette="graphite"][data-astra-scheme="light"]{--astra-paper:#ffffff;--astra-canvas:#f6f6f6;--astra-rail:#efefef;--astra-ink:#292b30;--astra-muted:#696b72;--astra-line:#e0e1e3;--astra-soft:#eeeeef;--astra-primary:#45464d;--astra-accent:#45464d;}
 [data-astra-palette="graphite"][data-astra-scheme="dark"]{--astra-paper:#212225;--astra-canvas:#191a1d;--astra-rail:#141518;--astra-ink:#eeeeef;--astra-muted:#b1b3ba;--astra-line:#393b41;--astra-soft:#2d2f35;--astra-primary:#555963;--astra-accent:#d5d7e0;}
 
+/* Chart ramps: Mantine-inspired hue families, derived shades owned by Astra.
+   CSS-only updates preserve chart identity, selections and current business state. */
+:root{--astra-chart-seed:#4263eb}
+:root[data-astra-palette="emerald"]{--astra-chart-seed:#12a882}
+:root[data-astra-palette="nord"]{--astra-chart-seed:#228be6}
+:root[data-astra-palette="silk"]{--astra-chart-seed:#ae3ec9}
+:root[data-astra-palette="autumn"]{--astra-chart-seed:#e87524}
+:root[data-astra-palette="graphite"]{--astra-chart-seed:#697582}
+:root{
+ --astra-chart-2:color-mix(in oklab,var(--astra-chart-seed) 25%,white);
+ --astra-chart-3:color-mix(in oklab,var(--astra-chart-seed) 43%,white);
+ --astra-chart-5:color-mix(in oklab,var(--astra-chart-seed) 72%,white);
+ --astra-chart-6:color-mix(in oklab,var(--astra-chart-seed) 88%,white);
+ --astra-chart-7:var(--astra-chart-seed);
+ --astra-chart-9:color-mix(in oklab,var(--astra-chart-seed) 78%,#17243b);
+}
+:root[data-astra-scheme="dark"]{
+ --astra-chart-2:color-mix(in oklab,var(--astra-chart-seed) 30%,white);
+ --astra-chart-3:color-mix(in oklab,var(--astra-chart-seed) 48%,white);
+ --astra-chart-5:color-mix(in oklab,var(--astra-chart-seed) 67%,white);
+ --astra-chart-6:color-mix(in oklab,var(--astra-chart-seed) 77%,white);
+ --astra-chart-7:color-mix(in oklab,var(--astra-chart-seed) 87%,white);
+ --astra-chart-9:var(--astra-chart-seed);
+}
 :root[data-astra-palette]{--color-primary:var(--astra-primary);--color-primary-content:#fff;--color-base-100:var(--astra-paper);--color-base-200:var(--astra-soft);--color-base-300:var(--astra-line);--color-base-content:var(--astra-ink);background:var(--astra-paper)}
 :root[data-astra-palette] .studio{--paper:var(--astra-paper);--canvas:var(--astra-canvas);--rail:var(--astra-rail);--ink:var(--astra-ink);--muted:var(--astra-muted);--line:var(--astra-line);--soft:var(--astra-soft);--blue:var(--astra-accent);--blue-wash:color-mix(in srgb,var(--astra-accent) 10%,var(--astra-paper));--color-primary:var(--astra-primary);--color-primary-content:#fff;--color-base-100:var(--astra-paper);--color-base-200:var(--astra-soft);--color-base-300:var(--astra-line);--color-base-content:var(--astra-ink)}
 :root[data-astra-palette] .studio .live-shell{--color-primary:var(--astra-primary)}

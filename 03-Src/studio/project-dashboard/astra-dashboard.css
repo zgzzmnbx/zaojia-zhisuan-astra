@@ -5,7 +5,7 @@
   --dws-color-muted:var(--soft);--dws-color-surface-subtle:var(--soft);
   --dws-color-border:var(--line);--dws-color-border-soft:var(--line);
   --dws-color-foreground-strong:var(--ink);--dws-color-foreground:var(--ink);
-  --dws-color-foreground-muted:var(--muted);--dws-chart-blue-soft:#93b5ff;
+  --dws-color-foreground-muted:var(--muted);--dws-chart-blue-soft:var(--astra-chart-3);
   --dws-panel-shadow:none;--font-ui:var(--dws-font-family-ui);
   --dws-neutral-900:var(--ink);--dws-neutral-700:var(--ink);--dws-neutral-500:var(--muted);
   --dws-border:var(--line);--dws-warning:var(--amber);--dws-danger:var(--red);
@@ -19,6 +19,14 @@
 .studio .project-dashboard__header-actions {flex-wrap:wrap;gap:8px}
 .studio .project-dashboard__metric {border-radius:12px;padding:16px;text-align:left}
 .studio .project-dashboard__metric:hover {background:var(--soft)}
+.astra-chart-inline-legend{display:flex;justify-content:center;gap:16px;list-style:none;margin:0;padding:0;color:var(--ink);font-size:var(--dws-font-size-12)}
+.astra-chart-inline-legend li{display:flex;align-items:center;gap:6px}
+.astra-chart-inline-legend i{width:8px;height:8px;border-radius:50%}
+.studio .project-dashboard .recharts-tooltip-item{color:var(--ink)!important}
+.studio .project-dashboard__metric .project-dashboard__metric-heading svg {color:var(--astra-chart-7)}
+.studio .project-dashboard__quality-numbers i.is-standard {background:var(--astra-chart-5)}
+.studio .project-dashboard__quality-numbers i.is-experience {background:var(--astra-chart-3)}
+.studio .project-dashboard__quality-numbers i.is-review {background:var(--astra-chart-2)}
 .studio .project-dashboard__metric strong {font-size:var(--dws-font-size-28);line-height:1.4}
 .studio .project-dashboard__metric small {line-height:1.6}
 .studio .project-dashboard__chart,.studio .project-dashboard__history {border-radius:12px;box-shadow:none}
