@@ -37,3 +37,6 @@
  .four-surface-topbar .header-welcome{grid-column:4;grid-row:2}
  .four-surface-topbar .header-appearance{grid-column:4;grid-row:1}
 }
+
+/* The completed project overview may use the full right-hand height; chat stays wide. */
+.studio #shell .four-surface.surface-floating>.summary-artifact:has(.fs-compact){top:14px;height:min(680px,calc(100% - 28px));max-height:calc(100% - 28px)}

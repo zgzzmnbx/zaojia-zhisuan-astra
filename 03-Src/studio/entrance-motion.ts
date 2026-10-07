@@ -4,41 +4,48 @@ const panels='.summary-artifact,.modal-box,.project-dashboard__drawer,.rail-pane
 const rings='.fs-donut,.cp-ring';
 const bars='.fs-column-row,.cp-composition-bar,.cp-risk-track';
 const plots='.recharts-wrapper';
-const disclosures='.fs-details[open]>.fs-table,.cc-disclosure[open]>div';
-const selector=[cards,panels,rings,bars,plots,disclosures].join(',');
+const disclosures='.fs-details[open]>.fs-table,.cc-disclosure[open]>div,.mapping-fields[open]>.field-grid,.cp-context-details[open]';
+const icons='.cc-symbol,.cp-project-icon,.welcome-card>.astra-icon';
+const selector=[cards,panels,rings,bars,plots,disclosures,icons].join(',');
 const ease='cubic-bezier(.16,1,.3,1)';
 
 export function installEntranceMotion(doc:Document=document){
  const win=doc.defaultView;
  if(!win?.IntersectionObserver||!win.MutationObserver||!win.Element.prototype.animate)return ()=>{};
  const reduced=win.matchMedia('(prefers-reduced-motion: reduce)');
- const seen=new WeakSet<Element>(),observed=new Set<Element>(),running=new Map<Animation,Element>();
+ const seen=new WeakSet<Element>(),observed=new Set<Element>(),running=new Map<Animation,{node:Element;owner:Element}>();
  let disposed=false;
  function settle(root?:Element){
-  for(const [animation,node] of running)if(!root||root===node||root.contains(node)){animation.cancel();running.delete(animation);}
+  for(const [animation,{node,owner}] of running)if(!root||root===node||root.contains(node)){
+   // An entrance interrupted by auto-scroll must be allowed to play when visible again.
+   seen.delete(owner);animation.cancel();running.delete(animation);
+  }
  }
- function animate(node:Element,frames:Keyframe[],duration:number,delay=0){
+ function animate(node:Element,frames:Keyframe[],duration:number,delay=0,owner=node){
   const animation=node.animate(frames,{duration,delay,easing:ease,fill:'backwards'});
-  animation.id='astra-entrance';running.set(animation,node);
+  animation.id='astra-entrance';running.set(animation,{node,owner});
   const release=()=>{running.delete(animation);animation.cancel();};
   animation.finished.then(release,()=>running.delete(animation));
  }
  function reveal(node:Element,delay:number){
   if(seen.has(node)||!node.isConnected||node.closest('[hidden],dialog:not([open]),.aw2-product-frame'))return;
   seen.add(node);
-  if(reduced.matches||doc.hidden)return;
+  if(doc.hidden){seen.delete(node);return;}
+  if(reduced.matches){animate(node,[{opacity:.55},{opacity:1}],180);return;}
   if(node.matches(rings)){
-   node.querySelectorAll('circle[stroke-dasharray]').forEach(circle=>animate(circle,[{strokeDasharray:'0 100'},{strokeDasharray:circle.getAttribute('stroke-dasharray')!}],740,delay));
-   const center=node.querySelector('.fs-donut-center');if(center)animate(center,[{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],360,delay+100);
+   node.querySelectorAll('circle[stroke-dasharray]').forEach(circle=>animate(circle,[{strokeDasharray:'0 100'},{strokeDasharray:circle.getAttribute('stroke-dasharray')!}],1100,delay+100,node));
+   const center=node.querySelector('.fs-donut-center');if(center)animate(center,[{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],600,delay+180,node);
   }else if(node.matches(bars)){
    const fill=node.matches('.fs-column-row')?node.querySelector('.fs-column-track>i'):node.firstElementChild;
-   if(fill)animate(fill,[{transform:'scaleX(0)',transformOrigin:'left center'},{transform:'scaleX(1)',transformOrigin:'left center'}],680,delay);
+   if(fill)animate(fill,[{transform:'scaleX(0)',transformOrigin:'left center'},{transform:'scaleX(1)',transformOrigin:'left center'}],1000,delay+100,node);
   }else if(node.matches(plots)){
-   animate(node,[{opacity:.35,clipPath:'inset(0 100% 0 0)'},{opacity:1,clipPath:'inset(0 0% 0 0)'}],720,delay);
+   animate(node,[{opacity:.35,clipPath:'inset(0 100% 0 0)'},{opacity:1,clipPath:'inset(0 0% 0 0)'}],900,delay);
+  }else if(node.matches(icons)){
+   animate(node,[{opacity:0,transform:'scale(.65) rotate(-12deg)'},{opacity:1,transform:'scale(1.08) rotate(3deg)',offset:.65},{opacity:1,transform:'none'}],650,delay+100);
   }else if(node.matches(panels)){
-   animate(node,[{opacity:0,transform:'translateY(12px) scale(.985)'},{opacity:1,transform:'none'}],360);
+   animate(node,[{opacity:0,transform:'translateY(22px) scale(.97)'},{opacity:1,transform:'none'}],560);
   }else{
-   animate(node,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],320,delay);
+   animate(node,[{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'none'}],520,delay);
   }
  }
  const visibility=new win.IntersectionObserver(entries=>{

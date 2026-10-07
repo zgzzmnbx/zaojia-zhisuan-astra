@@ -7,7 +7,7 @@ export function inputCard(filename:string,sheets:SheetConfig[]):ConversationCard
     items:[{title:filename,detail:`Excel 工作簿 · ${sheets.length} 个候选工作表`,icon:'sheet',action:{label:'核对字段映射',action:'mapping'}}],
     steps:[{label:'读取资料',state:'done'},{label:'确认结构',state:'current'},{label:'规则匹配',state:'waiting'},{label:'复核成果',state:'waiting'}],
     disclosure:{label:'查看识别到的工作表',lines:sheets.map(s=>`${s.sheet_name} · 第 ${s.header_row} 行表头${s.enabled?' · 已选用':' · 未选用'}`)},
-    note:'先核对右侧表头与字段；按当前选择转换，价格在下一步匹配。'};
+    note:'按卡片内的工作表与字段设置转换，价格在下一步匹配。'};
 }
 
 export function resultCard(result:Result,restored=false):ConversationCard {

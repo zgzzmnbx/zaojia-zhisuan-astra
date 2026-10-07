@@ -7,7 +7,7 @@ export type PresentationAction=
  |{type:'enter';projectId:string|null;conversationId:string}
  |{type:'show-summary'}|{type:'toggle-summary'}|{type:'close-summary'}|{type:'chat'}
  |{type:'open-content';view:View}|{type:'close-content'}|{type:'fullscreen'}|{type:'return-to-split'}
- |{type:'resize';ratio:number}|{type:'result-available';view?:View};
+ |{type:'prepare-input'}|{type:'resize';ratio:number}|{type:'result-available';view?:View};
 export const PRESENTATION_KEY='astra.four-surface.v1';
 const safeRatio=(n:unknown)=>typeof n==='number'&&Number.isFinite(n)?Math.max(.15,Math.min(.85,n)):.32;
 export function readPresentationPreferences(value:unknown):PresentationPreferences{if(!value||typeof value!=='object'||Array.isArray(value))return {};const result:PresentationPreferences={};for(const [key,p] of Object.entries(value as Record<string,any>)){if(!p||typeof p!=='object'||key==='__proto__'||key==='constructor')continue;result[key]={summaryDismissed:p.summaryDismissed===true,ratio:safeRatio(p.ratio)}}return result;}
@@ -22,6 +22,7 @@ export function presentationReducer(state:PresentationState,action:PresentationA
   return revise({context,projectId:action.projectId,conversationId:action.conversationId,mode,returnMode:mode,content:null,visited:[],ratio:p?.ratio??.32});
  }
  if(action.type==='result-available')return state;
+ if(action.type==='prepare-input')return revise({mode:'chat'});
  if(action.type==='resize')return revise({ratio:safeRatio(action.ratio),preferences:preference(state.preferences[state.context]?.summaryDismissed??false,safeRatio(action.ratio))});
  if(action.type==='chat')return revise({mode:'summary',returnMode:'summary',preferences:preference(false)});
  if(action.type==='show-summary')return revise({mode:'summary',returnMode:'summary',preferences:preference(false)});
