@@ -114,6 +114,8 @@ function App(){
   const [inputConversationId,setInputConversationId]=useState('');
   const [resultScope,setResultScope]=useState<ResultScope|null>(null);
   const [riskJobId,setRiskJobId]=useState('');
+  const [riskRead,setRiskRead]=useState({job:'',loading:false,error:''});
+  const riskRequest=useRef<AbortController|null>(null);
   const [conversationDetails,setConversationDetails]=useState(false);
   const [connectionPlatform,setConnectionPlatform]=useState<Platform>('default');
   const [connectionsOpen,setConnectionsOpen]=useState(false);
@@ -157,6 +159,10 @@ function App(){
     if(data&&state.view==='risk')void refreshRisk(data.job_id);if(data&&state.view==='report')void refreshReport(data.job_id);
   });
   const currentProject=currentProjectSnapshot({ready:workspace.ready,active:workspace.active,projects:workspace.projects,conversations:workspace.conversations,result,resultScope,risks,riskJobId,filename:file?.name||'',inputScope:{conversationId:inputConversationId,projectName:project},debug:DEBUG_MODE});
+  useEffect(()=>{
+    if(workspace.ready&&result?.summary.warning_summary?.executed&&loadedJob.current===result.job_id)void refreshRisk(result.job_id,true);
+    return()=>{riskRequest.current?.abort();};
+  },[workspace.ready,workspace.active?.id,result?.job_id,result?.summary.warning_summary?.executed]);
   function showInsights(){presentation.showSummary();setSidebar(false);}
   async function associateProject(id:string){if(busyRef.current||!workspace.ready)return;setProjectAssociating(true);try{await perform('正在关联当前项目',async()=>{await workspace.assign(id);presentation.showSummary();});}finally{setProjectAssociating(false);}}
   async function projectSaved(p:Project){
@@ -282,7 +288,16 @@ function App(){
   }
   function openSettings(section:SettingsSection='appearance'){setSettingsSection(section);setSettings(true);}
   function open(next:string){if(next==='articles'||next==='knowledgebase'||next==='originalqa'||next==='network'){setKnowledgeTab(next==='network'?'network':next==='articles'?'articles':'ask');next='knowledge';}else if(next==='knowledge')setKnowledgeTab('ask');const setting=settingsSectionForRoute(next);if(setting){openSettings(setting);return;}if(next==='collaboration'){prepareReview();return;}if(next==='review-progress'){prepareReview('progress');return;}if(next==='mapping'&&file&&!result){setMappingExpanded(true);presentation.prepareInput();setSidebar(false);requestAnimationFrame(()=>document.querySelector('.mapping-inline')?.scrollIntoView({block:'nearest'}));return;}if(next==='word')next='report';if(next==='insights'){showInsights();return;}if(isProfessional(next))setProfessionalWarm(true);if(next==='chat'){presentation.chat();setSidebar(false);return;}if(next in titles){if(next==='architecture')setArchitectureOpening(n=>n+1);presentation.open(next as View);setSidebar(false);if(next==='risk'&&result)void refreshRisk(result.job_id);if(next==='report'&&result)void refreshReport(result.job_id);if(next==='projects'){setDashboardWarm(true);}if(next==='projects')void listRuns().catch(e=>add(e.message,undefined,'assistant',true));if(next==='trace')void loadTimeline();}else{presentation.open('tools');add('这项能力已经列入完整迁移清单，当前版本尚未接通。右侧可以查看接入状态。');}}
-  async function refreshRisk(job:string){try{const data=await api<{items:Risk[]}>(`/api/risk/summary?job_id=${job}`);if(loadedJob.current===job){setRisks(data.items);setRiskJobId(job);}}catch(e){add((e as Error).message,undefined,'assistant',true);}}
+  async function refreshRisk(job:string,silent=false){
+    riskRequest.current?.abort();const controller=new AbortController();riskRequest.current=controller;
+    const context=conversationContext.current;let timedOut=false;
+    const timer=setTimeout(()=>{timedOut=true;controller.abort();},15000);
+    const current=()=>riskRequest.current===controller&&loadedJob.current===job&&conversationContext.current===context;
+    setRiskRead({job,loading:true,error:''});
+    try{const data=await api<{items:Risk[]}>(`/api/risk/summary?job_id=${job}`,{signal:controller.signal});if(current()&&!controller.signal.aborted){setRisks(data.items);setRiskJobId(job);setRiskRead({job,loading:false,error:''});}}
+    catch(e){if(current()&&(!controller.signal.aborted||timedOut)){const message=timedOut?'风险读取超时，请重试':(e as Error).message;setRiskRead({job,loading:false,error:message});if(!silent)add(message,undefined,'assistant',true);}}
+    finally{clearTimeout(timer);}
+  }
   async function refreshReport(job:string){try{const data=await api<Report>(`/api/astra/report/${job}`);if(loadedJob.current===job)setReport(data);}catch(e){if(loadedJob.current===job){setReport(null);add((e as Error).message,undefined,'assistant',true);}}}
   async function loadTimeline(){const id=result?.task_tracking?.task?.task_id;if(!id){setTimeline([]);return;}try{const data=await api<{items:any[]}>(`/api/tasks/${id}/timeline`);setTimeline(data.items.filter(i=>!i.is_placeholder));}catch(e){add((e as Error).message,undefined,'assistant',true);}}
   function acceptResult(data:Result,fromPreview=false,owner?:Conversation){const current=owner||workspace.currentConversation();setResultScope(current?{conversationId:current.id,projectId:current.project_id,jobId:data.job_id}:null);if(loadedJob.current!==data.job_id)setRiskJobId('');if(!fromPreview)previewRefreshAttempt.current='';const sameJob=loadedJob.current===data.job_id;loadedJob.current=data.job_id;if(!sameJob){setLocatedRow(undefined);const previews=data.summary.table_preview.sheets||[data.summary.table_preview];const index=previews.findIndex(s=>/^表[234]/.test(s.sheet_name));setSheetIndex(Math.max(0,index));}setResult(previous=>previous?.job_id===data.job_id?{...previous,...data}:data);setNeedsRecalculate(previous=>data.needs_recalculate??(sameJob&&previous));setReport(null);}
@@ -367,7 +382,7 @@ function App(){
   function messageAction(message:Message,a:Action){if(unavailable(message,a)||busyRef.current)return;if(a.action==='knowledge-result'&&message.evidence){setEvidence(message.evidence);open('knowledge');return;}if(a.action==='locate'&&a.target){locate(a.target.sheet,a.target.row);return;}action(a.action);}
 
   useEffect(()=>{if(isProfessional(view))setProfessionalWarm(true);},[view]);
-  function summaryContent(){return <CurrentProjectCard project={currentProject} ready={workspace.ready} openBoard={()=>open('projects')} openData={()=>{if(currentProject?.workspaceProjectId){setProjectId(currentProject.workspaceProjectId);open('project');}else open('library');}} openInput={()=>open('mapping')} openTable={()=>open('table')} openRisks={()=>open('risk')} assign={id=>void associateProject(id)} newProject={()=>{associateNewProject.current=workspace.currentConversation()?.id||null;setProjectEditor(true);}} projects={workspace.projects} busy={!!busy} contextKey={workspace.active?.id}/>;}
+  function summaryContent(){return <CurrentProjectCard riskLoading={riskRead.job===currentProject?.jobId&&riskRead.loading} riskError={riskRead.job===currentProject?.jobId?riskRead.error:''} reloadRisks={()=>{if(result)void refreshRisk(result.job_id,true);}} checkRisks={()=>void warning()} project={currentProject} ready={workspace.ready} openBoard={()=>open('projects')} openData={()=>{if(currentProject?.workspaceProjectId){setProjectId(currentProject.workspaceProjectId);open('project');}else open('library');}} openInput={()=>open('mapping')} openTable={()=>open('table')} openRisks={()=>open('risk')} assign={id=>void associateProject(id)} newProject={()=>{associateNewProject.current=workspace.currentConversation()?.id||null;setProjectEditor(true);}} projects={workspace.projects} busy={!!busy} contextKey={workspace.active?.id}/>;}
   const details=(panelView:View=view)=>{const contentActive=visible&&presentation.state.content===panelView;const view=panelView;
 
     if(view==='example')return null;
