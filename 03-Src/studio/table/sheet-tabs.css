@@ -1,0 +1,12 @@
+.workbook-sheet-nav{display:flex;align-items:center;gap:4px;flex:1;min-width:0;max-width:100%;height:40px;color:var(--ink)}
+.workbook-sheet-tabs{display:flex;align-items:center;gap:6px;flex:1;min-width:0;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;padding:3px 2px}
+.workbook-sheet-tabs::-webkit-scrollbar{display:none}
+.studio .workbook-sheet-tabs [role=tab]{flex:0 0 auto;max-width:220px;min-height:32px;padding:5px 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;font-family:inherit;font-size:var(--dws-font-size-13);line-height:1.5;color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.studio .workbook-sheet-tabs [role=tab]:hover{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 35%,var(--line));background:var(--soft)}
+.studio .workbook-sheet-tabs [aria-selected=true]{color:var(--blue);background:var(--blue-wash);border-color:color-mix(in srgb,var(--blue) 45%,var(--line));font-weight:600;box-shadow:inset 0 -2px 0 var(--blue)}
+.studio .workbook-sheet-nav .sheet-scroll{flex:0 0 26px;width:26px;height:32px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
+.studio .workbook-sheet-nav .sheet-scroll:hover:not(:disabled){background:var(--soft);color:var(--blue)}
+.studio .workbook-sheet-nav .sheet-scroll:disabled{opacity:.28;cursor:default}
+.workbook-sheet-tabs [role=tab]:focus-visible,.sheet-scroll:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.sheet-count{flex:0 0 auto;white-space:nowrap;padding:0 4px 0 6px;font-size:var(--dws-font-size-12);font-variant-numeric:tabular-nums;color:var(--blue)}
+.sheet-count>span{color:var(--muted)}

@@ -1,13 +1,15 @@
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useRef,useState,useId} from 'react';
 import {Icon} from '../../studio/ui';
 import type {ExampleProps,ExampleTab} from './disabled';
 import {cellText,cellValue,columnWidth,findEvidence,locateObservation,type ExampleCell,type ExampleData,type ExampleSheet,type Observation} from './model';
 import './example.css';
+import {SheetTabs} from '../../studio/table/SheetTabs';
 const loaders={table:'加载附件表格节选',risks:'加载样表观察与演示风险',report:'排版演示文字报告'};
 
 export default function UploadedExample({request,active,onTabChange,sourceDetails=false}:ExampleProps){
  const [data,setData]=useState<ExampleData|null>(null),[tab,setTab]=useState<ExampleTab>('table'),[phase,setPhase]=useState<'loading'|'ready'|'empty'|'error'>('loading'),[error,setError]=useState('');
  const [sheetIndex,setSheetIndex]=useState(0),[reference,setReference]=useState(false),[location,setLocation]=useState<{row:number;refs:string[]}|null>(null),[selectedCell,setSelectedCell]=useState<ExampleCell|null>(null),[synthetic,setSynthetic]=useState(false),[marked,setMarked]=useState(false);
+ const sheetPanelId=useId();
  const tableRef=useRef<HTMLDivElement>(null),pendingLocation=useRef(false),loaded=useRef<ExampleData|null>(null);
  useEffect(()=>{
   if(!request)return;let cancelled=false;let timer:ReturnType<typeof setTimeout>|undefined;
@@ -35,9 +37,9 @@ export default function UploadedExample({request,active,onTabChange,sourceDetail
    {phase==='error'&&<div className="example-scroll" role="alert"><h3>暂时无法载入附件节选</h3><p>{error}</p><p>请在设置 → 表格演示中点击“加载表格”重试。</p></div>}
    {data&&sheet&&<>
     <section className="example-panel" id="example-panel-table" role="tabpanel" aria-labelledby="example-tab-table" hidden={tab!=='table'} aria-label="上传表格内容">
-     <div className="example-sheetbar"><label>工作表<select className="select select-bordered" aria-label="选择原始工作表" value={sheetIndex} onChange={e=>{setSheetIndex(Number(e.target.value));setReference(false);setLocation(null);setSelectedCell(null)}}>{data.sheets.map((s,i)=><option value={i} key={s.name}>{s.name}</option>)}</select></label><small>{sheet.businessRowCount?`${sheet.businessRowCount} 条明细`:'汇总快照'}</small>{sheet.referenceColumns&&<button className="btn btn-ghost btn-sm" aria-pressed={reference} onClick={()=>setReference(!reference)}>{reference?'收起参考列':'展开样表参考列'}</button>}</div>
+     <div className="example-sheetbar"><SheetTabs names={data.sheets.map(s=>s.name)} index={sheetIndex} panelId={sheetPanelId} onChange={index=>{setSheetIndex(index);setReference(false);setLocation(null);setSelectedCell(null);tableRef.current?.scrollTo({left:0,top:0});}}/><small>{sheet.businessRowCount?`${sheet.businessRowCount} 条明细`:'汇总快照'}</small>{sheet.referenceColumns&&<button className="btn btn-ghost btn-sm" aria-pressed={reference} onClick={()=>setReference(!reference)}>{reference?'收起参考列':'展开样表参考列'}</button>}</div>
      {location&&<div className="example-location" role="status"><span>已定位原第 {location.row} 行 · {location.refs.join('、')}</span><button className="btn btn-ghost btn-sm" onClick={()=>navigate('risks')}>返回风险</button></div>}
-     <div className="example-table-scroll" ref={tableRef} tabIndex={0} aria-label="可横向和纵向滚动的原表节选">
+     <div className="example-table-scroll" id={sheetPanelId} role="tabpanel" aria-labelledby={`${sheetPanelId}-tab-${sheetIndex}`} ref={tableRef} tabIndex={0} aria-label="可横向和纵向滚动的原表节选">
       <ExampleGrid sheet={sheet} reference={reference} location={location} select={setSelectedCell}/>
      </div>
      <div className="example-table-foot">{selectedCell?<><strong>{selectedCell.ref}</strong> · {cellText(selectedCell)}{selectedCell.formula&&<span> · 原公式：{selectedCell.formula}（仅展示，未执行）</span>}{selectedCell.mergedFrom&&<span> · 显示内容继承自合并格 {selectedCell.mergedFrom}</span>}</>:<>横向滚动查看各列；点击单元格查看原坐标和公式。<br/>“—”为空白，0 保留为 0；ƒ 为文件保存的公式结果，未重算。金额列按元或万元标注。</>}</div>

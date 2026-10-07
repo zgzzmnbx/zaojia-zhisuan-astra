@@ -12,3 +12,5 @@
 .example-header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.example-header-actions .btn{font-size:13px;min-height:32px}.example-top-line>h3{min-width:0}.example-header-actions .badge{font-size:12px}
 
 .example-source-note{flex:0 0 auto;padding:8px 14px;font-size:13px;line-height:1.6;background:var(--paper);border-bottom:1px solid var(--line);overflow-wrap:anywhere}.example-source-note p{margin:3px 0 0;color:var(--muted)}
+
+.example-sheetbar>.workbook-sheet-nav{flex-basis:100%}.example-sheetbar{gap:4px 10px;padding:3px 12px 6px;flex-shrink:0}

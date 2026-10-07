@@ -1,4 +1,4 @@
-import {useEffect,useRef,useState,type CSSProperties,type PointerEvent} from 'react';
+import {useEffect,useRef,useState,useId,type CSSProperties,type PointerEvent} from 'react';
 import type {Result,SelectedCell} from '../types';
 import {Button,Icon,Modal,Note} from '../ui';
 import {exportUrl} from '../api';
@@ -12,6 +12,7 @@ import {
   type PreviewColumn,type PreviewColumnPreferences,
 } from './legacy-preview';
 import './workbook.css';
+import {SheetTabs} from './SheetTabs';
 
 const preferenceKey='astra.preview-columns.v1';
 export function readPreviewPreferences():PreviewColumnPreferences {
@@ -30,14 +31,15 @@ type Props={
 /** Sheet toolbar / tabs / resizable columns / fixed row actions follow the original preview structure. */
 export function Workbook({result,sheetIndex,setSheetIndex,busy,match,recalculate,needsRecalculate,selectedRow,edit,inspect,preferences,setPreferences,refreshHeaders}:Props){
   const sheets=previewSheetsFromTablePreview(result.summary.table_preview);
-  const sheet=sheets[sheetIndex]||sheets[0];
+  const activeSheetIndex=sheets[sheetIndex]?sheetIndex:0;
+  const sheet=sheets[activeSheetIndex];
   const sheetKey=previewSheetKey(sheet);
   const complete=result.summary.matching_status==='completed';
   const [searchOpen,setSearchOpen]=useState(false);const [query,setQuery]=useState('');const [hideEmpty,setHideEmpty]=useState(true);
   const [settings,setSettings]=useState<PreviewColumnPreferences|null>(null);
   const [settingsError,setSettingsError]=useState('');const [storageError,setStorageError]=useState('');
   const scroller=useRef<HTMLDivElement>(null);const resizing=useRef<(()=>void)|null>(null);
-  const sheetTabs=useRef<HTMLDivElement>(null);
+  const sheetPanelId=useId();
   const latestPreferences=useRef(preferences);latestPreferences.current=preferences;
   const available=buildAvailablePreviewColumns(sheet,result.summary.price_column);
   const columns=selectedPreviewColumns(sheet,result.summary.price_column,preferences);
@@ -45,7 +47,6 @@ export function Workbook({result,sheetIndex,setSheetIndex,busy,match,recalculate
   const rows=filtered.filter(({row})=>!query.trim()||row.some(value=>String(value??'').includes(query.trim())));
   const locatedVisible=selectedRow===undefined||rows.some(({sourceIndex})=>previewExcelRowNumber(sheet,sourceIndex)===selectedRow);
   useEffect(()=>{setQuery('');scroller.current?.scrollTo({left:0,top:0});},[sheetKey,result.job_id]);
-  useEffect(()=>{sheetTabs.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({block:'nearest',inline:'nearest'});},[sheetKey]);
   useEffect(()=>{if(selectedRow!==undefined)scroller.current?.querySelector(`[data-preview-row="${selectedRow}"]`)?.scrollIntoView({block:'nearest',inline:'nearest'});},[selectedRow,sheetKey,query,hideEmpty]);
   useEffect(()=>()=>resizing.current?.(),[]);
 
@@ -99,8 +100,7 @@ export function Workbook({result,sheetIndex,setSheetIndex,busy,match,recalculate
   return <div className="astra-legacy-table">
     <div className="preview-window">
       <div className="window-bar">
-        <div ref={sheetTabs} className="preview-tabs" role="tablist" aria-label="预览工作表">{sheets.map((item,index)=><button key={item.sheet_name} role="tab" aria-selected={index===sheetIndex} tabIndex={index===sheetIndex?0:-1} title={item.sheet_name} className={`tab ${index===sheetIndex?'tab-active':''}`} onClick={()=>selectSheet(index)} onKeyDown={e=>{const next=e.key==='ArrowRight'?(index+1)%sheets.length:e.key==='ArrowLeft'?(index+sheets.length-1)%sheets.length:e.key==='Home'?0:e.key==='End'?sheets.length-1:null;if(next!==null){e.preventDefault();selectSheet(next);(e.currentTarget.parentElement?.children[next] as HTMLButtonElement)?.focus();}}}>{item.sheet_name}</button>)}</div>
-        <select className="select preview-sheet-select" aria-label="当前工作表" title={sheet.sheet_name} value={sheetIndex} onChange={e=>selectSheet(Number(e.target.value))}>{sheets.map((item,index)=><option key={item.sheet_name} value={index}>{item.sheet_name}</option>)}</select>
+        <SheetTabs names={sheets.map(item=>item.sheet_name)} index={activeSheetIndex} onChange={selectSheet} panelId={sheetPanelId}/>
         <div className="window-actions">
           {!complete&&<Button primary disabled={busy} onClick={match}>批量匹配</Button>}
           <label className="check-line" title="按数量过滤表2、表3、表4的空量行；合计行保留"><input type="checkbox" className="checkbox checkbox-sm" aria-label="隐藏空量行" checked={hideEmpty} onChange={e=>setHideEmpty(e.target.checked)}/><span className="preview-filter-label">隐藏空量行</span><span className="preview-filter-icon"><Icon name="filter"/></span></label>
@@ -115,7 +115,7 @@ export function Workbook({result,sheetIndex,setSheetIndex,busy,match,recalculate
       {storageError&&<Note>{storageError}</Note>}
       {!locatedVisible&&<Note>第 {selectedRow} 行不在当前预览或筛选范围内。可清除筛选，或下载完整 Excel 查看。</Note>}
       {hideEmpty&&isCorePreviewSheet(sheet)&&warningFilterColumnIndex(sheet.headers,'数量')<0&&<Note>当前表头未识别到数量列，已保留全部预览行。可在列设置中调整表头行。</Note>}
-      <div ref={scroller} className="table-scroll" tabIndex={0} role="region" aria-label={`${sheet.sheet_name}，可横向滚动的计算表`} style={{'--preview-cell-max-chars':`${preferences.maxDisplayChars}ch`} as CSSProperties}>
+      <div ref={scroller} id={sheetPanelId} className="table-scroll" tabIndex={0} role="tabpanel" aria-labelledby={`${sheetPanelId}-tab-${activeSheetIndex}`} aria-label={`${sheet.sheet_name}，可横向滚动的计算表`} style={{'--preview-cell-max-chars':`${preferences.maxDisplayChars}ch`} as CSSProperties}>
         <table className="table"><caption className="sr-only">{sheet.sheet_name}，预览表头后 {sheet.rows.length} 行；双击或键盘 Enter 编辑普通单元格。</caption><thead><tr><th className="row-number" scope="col">行</th>{columns.map(column=><th key={column.index} scope="col" className="preview-data-header" style={{'--preview-column-width':`${width(column)}px`} as CSSProperties}><span title={column.label}>{column.label}</span><span role="separator" aria-orientation="vertical" aria-label={`调整 ${column.label} 列宽`} aria-valuenow={width(column)} aria-valuemin={72} aria-valuemax={420} tabIndex={0} className="preview-column-resize-handle" onPointerDown={e=>startResize(e,column)} onKeyDown={e=>{const change=e.key==='ArrowRight'?(e.shiftKey?24:8):e.key==='ArrowLeft'?-(e.shiftKey?24:8):0;if(change||e.key==='Home'||e.key==='End'){e.preventDefault();resize(column,e.key==='Home'?72:e.key==='End'?420:width(column)+change);savePreferences(latestPreferences.current);}}}/></th>)}<th scope="col" className="action-th">依据</th></tr></thead>
         <tbody>{rows.map(({row,sourceIndex})=>{const excelRow=previewExcelRowNumber(sheet,sourceIndex);return <tr key={excelRow} className={`${selectedRow===excelRow?'preview-row-focused ':''}${isTotalSummaryRow(row)?'preview-total-row':''}`} data-preview-row={excelRow} data-preview-sheet={sheet.sheet_name}><th scope="row" className="row-number">{excelRow}</th>{columns.map(column=>{
           const value=row[column.index];const text=previewCellText(value);const canEdit=complete&&!busy&&isEditablePreviewColumn(column);const warning=warningCellState(available,row);
