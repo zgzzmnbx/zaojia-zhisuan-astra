@@ -1,7 +1,7 @@
 import {palettes,type Palette} from './appearance';
 import {Icon} from './ui';
-export function ThemeButton({open}:{open:()=>void}){
- return <button type="button" className="btn btn-ghost btn-square theme-trigger" aria-label="主题配色" title="外观与主题" onClick={open}><span aria-hidden="true"/></button>;
+export function ThemeButton({open,className='',expanded,label='主题配色'}:{open:()=>void;className?:string;expanded?:boolean;label?:string}){
+ return <button type="button" className={`btn btn-ghost btn-square theme-trigger ${className}`} aria-label={label} aria-haspopup="dialog" aria-expanded={expanded} title="外观与主题" onClick={open}><span aria-hidden="true"/></button>;
 }
 export function AppearanceControls({palette,dark,setPalette,setDark,reset,error}:{palette:Palette;dark:boolean;setPalette:(p:Palette)=>void;setDark:(d:boolean)=>void;reset:()=>void;error:string}){
  return <section className="appearance-controls" aria-label="外观偏好">
