@@ -16,11 +16,17 @@ const React=await import('react');const {renderToStaticMarkup}=await import('rea
 const {WelcomeScreen}=await import('../03-Src/studio/WelcomeScreen.tsx');
 const props={ready:true,busy:false,dark:false,toggleTheme(){},openAppearance(){},hasWork:false,enter(){},newChat(){},open(){}};
 const html=renderToStaticMarkup(React.createElement(WelcomeScreen,props));
-for(const expected of ['astra-welcome-v2','aw2-copy','aw2-product-frame','进入系统','下次直接进入主界面','aw2-bot-peek','aw2-workspace','conversation-card','astra-legacy-table','当前界面 · 空表预览','inert=""'])assert.ok(html.includes(expected),expected);
+for(const expected of ['astra-welcome-v2','aw2-copy','aw2-product-frame','进入系统','下次直接进入主界面','aw2-bot-peek','aw2-workspace','awp-result-card','awp-table','合成数据 · 界面示例','awp-donut','inert=""'])assert.ok(html.includes(expected),expected);
 assert.ok(html.indexOf('aw2-copy')<html.indexOf('aw2-product-frame'),'Old vertical copy-before-preview layout');
 assert.equal(writes,0,'Read-only preview must not persist dummy state');assert.ok(!html.includes('暂停 Gork 动效'));assert.ok(!html.includes('aw2-motion'));
 assert.ok(!/<iframe|<form/.test(html),'Welcome illustration must not create an iframe or submit form');
 const waiting=renderToStaticMarkup(React.createElement(WelcomeScreen,{...props,ready:false}));assert.ok(waiting.includes('正在恢复工作空间'));assert.ok(waiting.includes('disabled=""'));
 const failed=renderToStaticMarkup(React.createElement(WelcomeScreen,{...props,ready:false,error:'调试错误'}));assert.ok(failed.includes('role="alert"'));assert.ok(failed.includes('调试错误'));
 const css=readFileSync('03-Src/studio/welcome-screen.css','utf8');assert.ok(css.includes('@media(max-width:760px)'));assert.ok(css.includes('@keyframes aw2-workbench-rise'));assert.ok(!css.includes('.aw2-motion'));assert.ok(css.includes('.aw2-copy h1'));
-console.log('Welcome checks passed: old layout structure, actual Astra components, daisyUI controls, inert/no-write preview, loading/error paths, scoped mobile CSS and explicit always-play mode.');
+console.log('Welcome checks passed: isolated synthetic preview, single hero mascot, inert/no-write boundary, loading/error paths and scoped responsive styles.');
+
+const {WelcomeWorkspacePreview}=await import('../03-Src/studio/WelcomeWorkspacePreview.tsx');
+const preview=renderToStaticMarkup(React.createElement(WelcomeWorkspacePreview));
+assert.ok(!/gork|canvas|iframe|<form|<button|<input/i.test(preview),'Illustration has no avatar, live embedded content or focusable controls');
+assert.equal((html.match(/class="gork-companion/g)||[]).length,1,'Keep only the hero mascot');
+assert.ok(preview.includes('128.60')&&preview.includes('121.32'),'Synthetic fee totals visible');

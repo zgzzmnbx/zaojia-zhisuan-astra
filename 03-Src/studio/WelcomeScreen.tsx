@@ -29,7 +29,7 @@ export function WelcomeScreen({ready,busy,dark,toggleTheme,openAppearance,error,
    </section>
    <div className="aw2-product-wrap">
     <div ref={bot} className="aw2-bot-peek"><Gork size={102} state={busy?'working':'idle'} interactive followPointer/></div>
-    <div className="aw2-product-frame card" role="img" aria-label="当前 Astra 工作室预览：左侧项目与对话，中间任务协作，右侧计算表；展示合成样例。"><WelcomeWorkspacePreview/></div>
+    <div className="aw2-product-frame" role="img" aria-label="Astra 工作室示例：对话编制、匹配结果、费用构成环图和 Sheet 明细；全部数值为合成示例，不是当前项目成果。"><WelcomeWorkspacePreview/></div>
    </div>
   </div>
  </main>;

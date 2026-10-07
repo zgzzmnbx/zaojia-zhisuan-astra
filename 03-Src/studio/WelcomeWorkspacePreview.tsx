@@ -1,32 +1,35 @@
-import {useState} from 'react';
-import {Gork,Icon} from './ui';
-import {ConversationCard} from './ConversationCard';
-import {Workbook,readPreviewPreferences} from './table/Workbook';
-import type {Message,Result} from './types';
+import type {CSSProperties} from 'react';
+import {Icon} from './ui';
+import './welcome-workspace-preview.css';
 
-// Read-only welcome illustration composed from the current Astra components.
-// It has no workspace hook, iframe, API request or persistence writes.
-const previewResult:Result={job_id:'welcome-preview',project_name:'界面预览',downloads:{},summary:{total_data_rows:0,matched_rows:0,filled_rows:0,unchanged_rows:0,review_rows:0,conflict_rows:0,physical_experience_rows:0,technical_experience_rows:0,matching_status:'pending',output_excel:'',output_report:'',report_text:'',price_column:'E',table_preview:{sheet_name:'未载入资料',header_row:1,headers:['序号','项目名称','单位','数量','价格','实物工作系数','技术工作系数'],rows:[],row_numbers:[]}}};
-const message:Message={id:'welcome-card',role:'assistant',text:'添加资料后，在这里查看表格、风险与报告。',card:{kind:'confirmation',title:'等待资料',caption:'当前界面预览',icon:'sheet',status:'无业务数据',note:'仅展示当前 Astra 界面，不执行真实业务。'},actions:[{label:'查看计算表',action:'table',primary:true},{label:'风险复核',action:'risk'}]};
-const noop=()=>{};
+// A self-contained illustration: synthetic values, no live task, storage or API.
+const fees=[{label:'实物工作费',value:'86.40',share:67.185,offset:0,tone:'physical'},{label:'技术工作费',value:'34.92',share:27.154,offset:67.185,tone:'technical'},{label:'税金',value:'7.28',share:5.661,offset:94.339,tone:'tax'}];
+const rows=[['地质勘察','54.00','21.82','75.82'],['工程测量','32.40','13.10','45.50'],['合计','86.40','34.92','121.32']];
 export function WelcomeWorkspacePreview(){
- const [preferences,setPreferences]=useState(readPreviewPreferences);
- return <div className="aw2-workspace live-shell" inert aria-hidden="true">
-  <aside className="aw2-sidebar aw2-icon-rail">
-   <span className="brand-mark astra-mark">A</span>
-   <div className="aw2-rail-actions">{[['plus','新对话'],['search','搜索对话'],['folder','项目'],['message','最近对话'],['grid','项目看板'],['book','资料库']].map(([icon,label])=><span key={icon} className={`aw2-rail-icon ${icon==='message'?'is-active':''}`} title={label}><Icon name={icon}/></span>)}</div>
-   <span className="aw2-rail-icon aw2-rail-settings" title="设置"><Icon name="settings"/></span>
-  </aside>
-  <div className="aw2-main">
-   <header className="topbar"><div className="breadcrumb"><Icon name="sidebar-close"/><span>工作空间</span><span className="slash">/</span><strong>智算Astra</strong></div><span className="badge badge-outline">当前界面 · 空表预览</span></header>
-   <div className="aw2-panels aw2-preview-first">
-    <section className="aw2-conversation">
-     <div className="conversation-heading"><div className="conversation-identity"><Gork size={40} still/><div className="conversation-name"><div className="eyebrow">智算 · Gork</div><h2>控制价编制与复核</h2></div></div></div>
-     <div className="context-line"><span className="badge skill-badge"><Icon name="spark"/>勘察测量</span><span>等待资料</span></div>
-     <div className="aw2-messages"><div className="chat chat-end"><div className="chat-bubble">打开工作空间。</div></div><div className="assistant-author"><Gork size={26} still/>智算<small>Gork</small></div><div className="assistant-copy"><p>{message.text}</p><ConversationCard message={message} onAction={noop} unavailable={()=>undefined}/></div></div>
-     <div className="aw2-composer"><div className="composer"><div className="aw2-prompt">描述你的需求，或添加资料…</div><div className="composer-toolbar"><div className="composer-tools"><Icon name="plus"/><span className="btn btn-ghost skill-selector"><Icon name="spark"/>专业工具</span><span className="tool-divider"/><span>任务协作</span></div><span className="btn btn-primary btn-square"><Icon name="arrow-up"/></span></div></div></div>
+ return <div className="aw2-workspace awp-workspace" inert aria-hidden="true">
+  <aside className="awp-rail"><span className="awp-brand">A</span><div>{['message','plus','folder','grid','sheet','book'].map((name,index)=><span key={name} className={index===0?'awp-rail-item is-current':'awp-rail-item'}><Icon name={name}/></span>)}</div><span className="awp-rail-item awp-rail-bottom"><Icon name="settings"/></span></aside>
+  <div className="awp-main">
+   <header className="awp-topbar"><div><Icon name="folder"/><strong>勘察测量示例项目</strong><span className="awp-workspace-label">工作空间</span></div><span className="awp-demo"><i/>合成数据 · 界面示例</span></header>
+   <div className="awp-panes">
+    <section className="awp-dialogue">
+     <header className="awp-dialogue-heading"><strong>当前对话</strong><span><Icon name="check"/>已保存</span></header>
+     <div className="awp-dialogue-body">
+      <div className="awp-user-message">编制这份勘察测量控制价。<span className="awp-attachment"><Icon name="sheet"/>勘察测量工作量.xlsx</span></div>
+      <div className="awp-assistant"><strong>智算</strong><p>费用已整理，2 项需要你复核。</p></div>
+      <div className="awp-result-card"><header><span className="awp-result-icon"><Icon name="circlecheck"/></span><div><small>规则匹配</small><h3>计算完成</h3></div><span className="awp-review-pill">待复核</span></header><div className="awp-result-metrics"><div><strong>24<span> / 24</span></strong><small>已匹配条目</small></div><div><strong>2</strong><small>待人工复核</small></div></div><div className="awp-progress"><span/></div><footer><span><Icon name="sheet"/>查看计算表<Icon name="arrow-up-right"/></span><span>风险复核<Icon name="arrow-right"/></span></footer></div>
+     </div>
+     <div className="awp-composer"><span className="awp-quick-handle"><Icon name="grid"/>快捷功能<Icon name="chevron"/></span><div className="awp-input"><span>继续描述你的需求…</span><div><span><Icon name="plus"/><Icon name="spark"/>专业工具</span><span className="awp-send"><Icon name="arrow-up"/></span></div></div></div>
     </section>
-    <section className="aw2-artifact"><header className="artifact-header"><div><span className="eyebrow">WORKSPACE</span><h2>计算表</h2></div><Icon name="expand"/></header><Workbook result={previewResult} sheetIndex={0} setSheetIndex={noop} busy={false} match={noop} recalculate={noop} needsRecalculate={false} edit={noop} inspect={noop} preferences={preferences} setPreferences={setPreferences} refreshHeaders={async()=>false}/></section>
+    <section className="awp-results">
+     <header className="awp-view-tabs"><span className="is-current">表格</span><span>风险<i>2</i></span><span>文字报告</span><Icon name="expand"/></header>
+     <div className="awp-sheet-tabs"><span className="is-current"><Icon name="sheet"/>费用汇总</span><span>地质勘察</span><span>工程测量</span></div>
+     <div className="awp-finance">
+      <div className="awp-fee-summary"><span className="awp-caption">含税控制价</span><div className="awp-total">128.60<small>万元</small></div><div className="awp-fee-legend">{fees.map(fee=><div key={fee.tone}><i className={`awp-color-${fee.tone}`}/><span>{fee.label}</span><strong>{fee.value}</strong></div>)}</div></div>
+      <div className="awp-donut"><svg viewBox="0 0 180 180" fill="none"><circle cx="90" cy="90" r="68" stroke="var(--soft)" strokeWidth="21"/>{fees.map(fee=><circle key={fee.tone} className={`awp-arc awp-color-${fee.tone}`} cx="90" cy="90" r="68" pathLength="100" strokeWidth="21" strokeDasharray={`${fee.share} ${100-fee.share}`} strokeDashoffset={-fee.offset} transform="rotate(-90 90 90)" style={{'--awp-share':fee.share} as CSSProperties}/>)}</svg><div><strong>3</strong><span>费用构成</span></div></div>
+     </div>
+     <div className="awp-table-wrap"><div className="awp-table-caption"><strong>专业费用明细</strong><span>单位：万元</span></div><table className="awp-table"><thead><tr>{['专业','实物工作费','技术工作费','合计'].map(label=><th key={label}>{label}</th>)}</tr></thead><tbody>{rows.map(row=><tr key={row[0]}>{row.map((cell,index)=><td key={index}>{cell}</td>)}</tr>)}</tbody></table></div>
+     <footer className="awp-result-foot"><span><i/>示例成果</span><span>Excel / Word<Icon name="download"/></span></footer>
+    </section>
    </div>
   </div>
  </div>;
