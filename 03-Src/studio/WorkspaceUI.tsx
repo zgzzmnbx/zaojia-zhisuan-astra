@@ -35,7 +35,7 @@ export function WorkspaceSidebar({workspace:w,navigation:n,busy,newChat,select,s
    <RailButton label="表格" icon="sheet" active={!panel&&activeView==='table'} onClick={()=>go(()=>open('table'))}/>
    <RailButton label="风险" icon="shield" active={!panel&&activeView==='risk'} onClick={()=>go(()=>open('risk'))}/>
    <RailButton label="文字报告" icon="file" active={!panel&&activeView==='report'} onClick={()=>go(()=>open('report'))}/>
-   <RailButton label="知识库" icon="book" active={!panel&&activeView==='library'} onClick={()=>go(()=>open('library'))}/>
+   <RailButton label="资料库" icon="book" active={!panel&&activeView==='library'} onClick={()=>go(()=>open('library'))}/>
   </nav>
   <div className="rail-bottom"><RailButton label="设置" icon="settings" active={settingsActive} onClick={()=>go(settings)}/><div className="tooltip tooltip-right rail-tip" data-tip="石萌 · 独立工作空间"><span className="rail-profile" aria-label="石萌，独立工作空间" tabIndex={0}>石</span></div></div>
   {panel&&<WorkspaceRailPanel mode={panel} workspace={w} busy={busy} select={id=>go(()=>select(id))} showProject={id=>go(()=>showProject(id))} newProject={()=>go(newProject)} open={view=>go(()=>open(view))} close={close}/>}

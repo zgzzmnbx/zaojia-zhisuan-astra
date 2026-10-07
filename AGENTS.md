@@ -102,3 +102,5 @@
 - 全局设置统一由左下角齿轮的 SettingsDialog 承载；configuration / collaboration-settings / gork 入口通过 settingsSectionForRoute 分流，不改变成果展示状态。独立弹窗的 :has() 尺寸规则须排除 .settings-window，避免访问子分类后整体变形。
 
 - 风险偏离率直接读取引擎的绝对偏离百分比，方向由当前值与经验均值另行标明；不得前端重新判级。压缩坐标必须标明并保留实际百分比，缺失值与零基准不得伪装为 0% 偏离。
+
+- 知识模块复用 Windows 18091 WeKnora；用户于 2026-10-07 授权引用原凭证文件，只在忽略的 Astra runtime 中配置路径，不复制或提交密钥。造价 AIW 本地原文通过 tools/migrate-knowledge-assets.py 按清单导入独立 runtime；新宿主适配生效必须以重启后真实目录为准。知识图谱 50 篇 / 74 关系与 WeKnora Wiki 属不同资产。

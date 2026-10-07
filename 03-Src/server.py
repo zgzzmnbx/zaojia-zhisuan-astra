@@ -26,9 +26,11 @@ import weknora
 from gork_link import router as gork_router
 import professional_host
 professional_host.install(engine, paths)
+import knowledge_host
+knowledge_host.install(paths)
 
 assert paths.PROJECT_ROOT == ENGINE, 'Refuse to use an external business engine'
-app = FastAPI(title='智算Astra', version='0.7.0', docs_url=None, redoc_url=None)
+app = FastAPI(title='智算Astra', version='0.9.0', docs_url=None, redoc_url=None)
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()

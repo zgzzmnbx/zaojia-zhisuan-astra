@@ -1,42 +1,10 @@
 export {Architecture} from './SystemArchitecture';
-import {lazy,Suspense,useEffect,useState} from 'react';
-import {Prose} from './Prose';
+import {useEffect,useState} from 'react';
 import {api,json} from './api';
 import {Button,Icon,Note} from './ui';
-import type {WeKnoraStatus} from './useWeKnora';
 import {workspaceApi} from './useWorkspace';
-const KnowledgeVisuals=lazy(()=>import('./KnowledgeVisuals'));
-const Articles=lazy(()=>import('./knowledge-articles/KnowledgeArticlesModule'));
-
-export function ArticleLibrary({present}:{present:(id:string)=>void}){
-  const [tab,setTab]=useState<'articles'|'network'>('articles'),[query,setQuery]=useState('');
-  const [counts,setCounts]=useState({articles:0,relations:0});
-  return <div className="panel-content migrated-articles"><div className="module-heading"><div><span className="eyebrow">KNOWLEDGE ATLAS</span><h3>造价文章与知识网络</h3></div><Icon name="network"/></div><p className="panel-lead">{counts.articles||'—'} 篇原文章 · {counts.relations||'—'} 条已整理关系。选择文章可在当前对话中阅读。</p><div className="module-tabs" role="group" aria-label="文章视图"><button className={tab==='articles'?'active':''} onClick={()=>setTab('articles')}>文章目录</button><button className={tab==='network'?'active':''} onClick={()=>setTab('network')}>知识网络</button></div><div className={`knowledge-articles-module ${tab==='network'?'is-network':''}`}><Suspense fallback={<Note>正在打开文章库…</Note>}><Articles apiBase="" activeTab={tab} onTabChange={setTab} networkQuery={query} onNetworkQueryChange={setQuery} onArticleCountChange={articles=>setCounts(c=>({...c,articles}))} onRelationshipCountChange={relations=>setCounts(c=>({...c,relations}))} onPresentArticle={present}/></Suspense></div></div>;
-}
-
-export type KnowledgeOptions={library_ids:string[]|null;retrieval_mode:'classic'|'hybrid';engine?:'local'|'weknora'|'compare'};
-export type Evidence={question?:string;answer:string;sources:any[];answer_mode:string;retrieval_mode_used?:string;degradation_reason?:string;project_memories?:any[];evidence_status?:string;elapsed_ms?:number;chart?:import('../professional/components/knowledge/KnowledgeDemoChart').KnowledgeDemoChartData|null;retrieval_trace?:Record<string,unknown>};
-function CitationLink({id}:{id:string}){
-  const [data,setData]=useState<any>(null),[error,setError]=useState(''),[loading,setLoading]=useState(false);
-  async function read(){setLoading(true);setError('');try{setData(await api(`/api/astra/weknora/citations/${encodeURIComponent(id)}`));}catch(e){setError((e as Error).message);}finally{setLoading(false);}}
-  return <div className="citation-detail">{!data?<button className="text-button" disabled={loading} onClick={()=>void read()}>{loading?'正在核对来源…':'核对来源版本'}<Icon name="arrow-right"/></button>:<><p className="muted">来源版本 {data.source_version?.slice(0,12)} · 分块 {data.locator_value||'原文'}</p><a className="text-button" href={data.source_url} target="_blank" rel="noopener noreferrer">在 WeKnora 查看原文<Icon name="arrow-up-right"/></a></>}{error&&<p className="edit-error" role="alert">{error}</p>}</div>;
-}
-export function KnowledgePanel({options,setOptions,evidence,ask,busy,weknora,refreshWeKnora}:{options:KnowledgeOptions;setOptions:(v:KnowledgeOptions)=>void;evidence:Evidence|null;ask:(q:string)=>void;busy:boolean;weknora:WeKnoraStatus;refreshWeKnora:()=>Promise<void>}){
-  const [catalog,setCatalog]=useState<any>(null),[error,setError]=useState(''),[q,setQ]=useState('');
-  const enhanced=options.engine==='weknora',comparison=options.engine==='compare';
-  useEffect(()=>{let live=true;void api<any>('/api/knowledge/libraries').then(data=>{if(live)setCatalog(data);}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[]);
-  const selected=options.library_ids??catalog?.default_library_ids??[];
-  return <div className="panel-content knowledge-panel"><div className="module-heading"><div><span className="eyebrow">GROUNDED KNOWLEDGE</span><h3>知识问答</h3></div><Icon name="book"/></div>
-    <div className="knowledge-engine-picker" role="group" aria-label="知识问答引擎"><button aria-pressed={!enhanced&&!comparison} disabled={busy} onClick={()=>setOptions({...options,engine:'local'})}><Icon name="search"/><strong>原知识问答</strong><small>本地依据 · 按配置调用模型</small></button><button aria-pressed={enhanced} disabled={busy||!weknora.available} onClick={()=>setOptions({...options,engine:'weknora'})}><Icon name="spark"/><strong>WeKnora 问答</strong><small>基于资料回答 · 可核对引用</small></button></div>
-    <button className="btn btn-ghost" aria-pressed={comparison} disabled={busy||!weknora.available} onClick={()=>setOptions({...options,engine:'compare'})}>双路对比回答{options.engine==='compare'?' · 已选择':''}</button>
-    <div className="knowledge-connection"><span className={weknora.available?'connection-ready':''}>{weknora.checking?'正在检测 WeKnora…':weknora.available?`WeKnora 已连接 · ${weknora.document_count} 份资料`:weknora.reason?.message||'WeKnora 尚未连接'}</span><button className="btn btn-ghost btn-square" aria-label="重新检测 WeKnora" title="重新检测 WeKnora" disabled={weknora.checking||busy} onClick={()=>void refreshWeKnora()}><Icon name="refresh"/></button></div>
-    <form className="knowledge-query" onSubmit={e=>{e.preventDefault();if(!busy&&q.trim()&&(!(enhanced||comparison)||weknora.available)){ask(q);setQ('');}}}><input className="input" value={q} onChange={e=>setQ(e.target.value)} placeholder="查找规范、规则或专业术语" aria-label="知识问题"/><button className="btn btn-primary" disabled={busy||!q.trim()||((enhanced||comparison)&&!weknora.available)} type="submit">询问智算</button></form>
-    {enhanced?<details className="knowledge-selection"><summary>问答范围 · 造价通用知识库 · {weknora.document_count||13} 份获准资料</summary><p className="muted">只使用这里列出的资料，不发送当前 Excel、项目附件或其他对话。</p><ul className="knowledge-documents">{weknora.documents?.map(d=><li key={d.id}>{d.name}</li>)}</ul></details>:<><div className="module-tabs" role="group" aria-label="检索模式">{[['classic','经典检索'],['hybrid','混合检索']].map(([v,t])=><button disabled={busy} key={v} className={options.retrieval_mode===v?'active':''} onClick={()=>setOptions({...options,retrieval_mode:v as KnowledgeOptions['retrieval_mode']})}>{t}</button>)}</div>
-    {error&&<Note>{error}</Note>}<details className="knowledge-selection" open={!evidence}><summary>知识库范围 · {selected.length} 个已选</summary>{catalog?.libraries.map((l:any)=><label key={l.id}><input type="checkbox" className="checkbox checkbox-sm" disabled={busy||!l.available} checked={selected.includes(l.id)} onChange={e=>setOptions({...options,library_ids:e.target.checked?[...selected,l.id]:selected.filter((id:string)=>id!==l.id)})}/><span><strong>{l.name}</strong><small>{l.description} · {l.available?(l.source_count===null?'独立知识记忆':`${l.source_count} 份来源`):'当前资料不可用'}</small></span></label>)}</details></>}
-    <p className="knowledge-boundary">{comparison?'原问答采用下方所选知识库；WeKnora 使用 13 份获准通用资料。两路分别返回，停止时取消未完成请求。':enhanced?'回答完成并核验引用后显示；依据不足会明确告知，不自动换引擎。':'未配置模型时展示原文检索和预设示例；配置后根据证据调用原模型通路。'}</p>
-    {evidence&&<><Suspense fallback={<p>正在载入知识图表…</p>}><KnowledgeVisuals chart={evidence.chart} trace={evidence.retrieval_trace}/></Suspense><h3 className="section-title">本次引用依据</h3><p className="muted">{evidence.answer_mode==='weknora'?`WeKnora · ${evidence.sources.length} 条已核验引用`:evidence.answer_mode==='curated_demo'?'原系统预设示例，非模型生成':`本地${evidence.retrieval_mode_used==='hybrid'?'混合':'经典'}检索 · ${evidence.sources.length} 条来源`}</p>{evidence.degradation_reason&&<Note>本次检索已降级：{evidence.degradation_reason}</Note>}{evidence.sources.map((s:any,i:number)=><article className="evidence-item" key={s.citation_id||i}><span className="source-num">{i+1}</span><div><h3>{s.title||s.title_path||s.source_name||s.source||'知识来源'}</h3><small>{s.library_name||s.library_id} {s.source_file||s.source_path||s.path||''} {s.sheet_name||''} {s.row_number?`第 ${s.row_number} 行`:''}</small><Prose text={s.snippet||s.excerpt||s.content||s.text||s.summary||'此来源未提供摘录，请根据文件与定位信息核对。'}/>{s.citation_id&&<CitationLink id={s.citation_id}/>}</div></article>)}{!evidence.sources.length&&<p className="library-empty">本次没有可展示的来源摘录。</p>}</>}
-  </div>;
-}
+export {KnowledgeWorkspace,KnowledgeTabs} from './KnowledgeWorkspace';
+export type {Evidence,KnowledgeOptions} from './KnowledgeWorkspace';
 
 export function CollaborationPanel({conversation,job,busy,flush,prepared}:{conversation:string;job:string;busy:boolean;flush:()=>Promise<void>;prepared:()=>void}){
   const [status,setStatus]=useState<any>(null),[drafts,setDrafts]=useState<any[]>([]),[platform,setPlatform]=useState('feishu'),[recipients,setRecipients]=useState(''),[instructions,setInstructions]=useState(''),[error,setError]=useState(''),[saving,setSaving]=useState(false);

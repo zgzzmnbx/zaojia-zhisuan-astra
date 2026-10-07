@@ -529,7 +529,7 @@ export default function KnowledgeNetworkGraph({ data, query, selectedId, onSelec
           )}
         </div>
       ) : null}
-      <p className="knowledge-network-graph__hint">点击空白处清除选中；拖动星点松手后会缓慢滑行，拖动空白处平移；滚轮缩放，点击星点在智算窗口显示正文。</p>
+      <p className="knowledge-network-graph__hint">拖动平移 · 滚轮缩放 · 点击节点在对话中阅读</p>
     </div>
   );
 }

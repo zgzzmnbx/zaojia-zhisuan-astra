@@ -137,7 +137,7 @@ export default function KnowledgeArticlesModule({
         onRelationshipCountChange(payload.relationship_count);
       })
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (controller.signal.aborted || (error instanceof DOMException && error.name === "AbortError")) return;
         setListError(error instanceof Error ? error.message : "文章目录加载失败");
       });
     return () => controller.abort();
@@ -150,7 +150,7 @@ export default function KnowledgeArticlesModule({
     void getJson<KnowledgeArticleGraphData>(endpoint(apiBase, "/api/knowledge-articles/graph"), controller.signal)
       .then((payload) => { setGraph(payload); onArticleCountChange(payload.nodes.length); onRelationshipCountChange(payload.edges.length); })
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (controller.signal.aborted || (error instanceof DOMException && error.name === "AbortError")) return;
         setGraphError(error instanceof Error ? error.message : "关系网络加载失败");
       });
     return () => controller.abort();
@@ -162,12 +162,12 @@ export default function KnowledgeArticlesModule({
     setIsDetailLoading(true);
     setDetailError("");
     void getJson<ArticleDetailResponse>(endpoint(apiBase, `/api/knowledge-articles/${encodeURIComponent(selectedArticleId)}`), controller.signal)
-      .then((payload) => setArticleDetail(payload.article))
+      .then((payload) => {if(!controller.signal.aborted)setArticleDetail(payload.article);})
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (controller.signal.aborted || (error instanceof DOMException && error.name === "AbortError")) return;
         setDetailError(error instanceof Error ? error.message : "文章正文加载失败");
       })
-      .finally(() => setIsDetailLoading(false));
+      .finally(() => {if(!controller.signal.aborted)setIsDetailLoading(false);});
     return () => controller.abort();
   }, [activeTab, apiBase, articleDetail?.id, detailRetryKey, selectedArticleId]);
 
@@ -219,7 +219,7 @@ export default function KnowledgeArticlesModule({
   return (
     <div className="knowledge-articles-module__workspace">
       {activeTab === "articles" ? (
-        <div className="knowledge-articles-reader">
+        <div className={`knowledge-articles-reader ${selectedArticleId?'has-selection':''}`}>
           <div className="knowledge-articles-toolbar" role="search" aria-label="文章筛选">
             <label className="knowledge-articles-search">
               <Search size={16} />
@@ -266,10 +266,11 @@ export default function KnowledgeArticlesModule({
                   <div className="knowledge-articles-empty knowledge-article-detail__placeholder">
                     <FileText size={22} />
                     <strong>选择一篇文章开始阅读</strong>
-                    <p>正文只在点击文章后读取，目录和关系网络不会预先加载全文。</p>
+                    <p>可按专题或标签筛选。</p>
                   </div>
                 ) : isDetailLoading ? <LoadingState label="正在读取文章正文" /> : detailError ? <ErrorState message={detailError} onRetry={() => { setArticleDetail(null); setDetailError(""); setDetailRetryKey((key) => key + 1); }} /> : articleDetail ? (
                   <>
+                    <button type="button" className="knowledge-article-back btn btn-ghost btn-sm" onClick={()=>setSelectedArticleId(null)}><ChevronLeft size={16}/>文章目录</button>
                     <header className="knowledge-article-detail__head">
                       <div>
                         <span className="knowledge-articles-list__id">{articleDetail.id}</span>
@@ -282,7 +283,7 @@ export default function KnowledgeArticlesModule({
                       <Tag size={14} />
                       {articleDetail.tags.map((item) => <span key={item}>{item}</span>)}
                     </div>
-                    <div className="knowledge-article-body">{renderArticleBody(articleDetail.body)}</div>
+                    <div className="knowledge-article-body">{renderArticleBody(articleDetail.body.replace(/^# [^\n]+\n+/,''))}</div>
                     <section className="knowledge-article-source" aria-label="来源依据">
                       <h2>来源依据</h2>
                       {articleDetail.source_basis.map((item) => <p key={item}>{item}</p>)}
