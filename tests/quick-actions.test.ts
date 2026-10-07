@@ -13,5 +13,5 @@ test('busy work blocks all mutating shortcuts while navigation stays available',
  for(const [id] of [...quickDestinations,...quickCommands.filter(([id])=>!['match','warning','risk-report'].includes(id))])assert.equal(quickUnavailable(id,{ready:false,busy:true,connected:false,hasResult:false,completed:false}),undefined);
 });
 test('review shortcuts open existing preparation and status screens without a send action',()=>{
- assert.ok(quickCommands.some(([id])=>id==='collaboration'));assert.ok(quickCommands.some(([id])=>id==='dispatch'));assert.equal(quickCommands.some(([id])=>String(id).startsWith('send')),false);
+ assert.ok(quickCommands.some(([id])=>id==='collaboration'));assert.ok(quickCommands.some(([id])=>id==='review-progress'));assert.equal(quickCommands.some(([id])=>String(id).startsWith('send')),false);
 });

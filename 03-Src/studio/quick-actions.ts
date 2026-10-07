@@ -1,7 +1,7 @@
 export type QuickState={ready:boolean;busy:boolean;connected:boolean;hasResult:boolean;completed:boolean};
 export const quickCommands=[
  ['match','route','批量匹配'],['analysis','chart','费用分析'],['warning','shield','经验池预警'],['risk-report','file','风险报告'],
- ['table','sheet','Excel 表格'],['report','file','Word 报告'],['collaboration','users','同事复核'],['dispatch','clock','复核进度'],
+ ['table','sheet','Excel 表格'],['report','file','Word 报告'],['collaboration','users','同事复核'],['review-progress','clock','复核进度'],
 ] as const;
 export const quickDestinations=[['projects','folder','项目看板'],['map','globe','项目地图'],['knowledge','book','知识问答'],['library','database','资料库'],['trace','route','任务轨迹'],['settings','settings','设置']] as const;
 const mutations=new Set(['match','warning','risk-report']);

@@ -97,7 +97,7 @@ function platformMethodReady(platform: InlineReviewPlatformSetup) {
   if (!platform.enabled || !platform.configurationOk || platform.loading || !platform.deliveryChannels.length) return false;
   if (platform.deliveryChannels.includes("direct") && !platform.directDeliveryAvailable) return false;
   const group = selectedGroup(platform);
-  if (platform.deliveryChannels.includes("group") && (!group || !group.members_available || group.member_count > 10)) return false;
+  if (platform.deliveryChannels.includes("group") && (!group || !group.authorized || !group.members_available || group.member_count > 10)) return false;
   return true;
 }
 
@@ -271,7 +271,7 @@ export default function InlineReviewSetupCard({
           </header>
           <div className="inline-review-setup__step-card-body">
             <details className="inline-review-setup__requirements">
-              <summary><span><strong>补充复核要求</strong><small>默认折叠 · 需要时展开修改</small></span><ChevronDown size={16} aria-hidden="true" /></summary>
+              <summary><span><strong>截止 {deadline.replace("T", " ") || "未设置"}</strong><small>{instructions || "请填写复核说明"}</small></span><ChevronDown size={16} aria-hidden="true" /></summary>
               <div className="inline-review-setup__control-grid">
                 <label className="inline-review-setup__field"><span>复核截止时间</span><input type="datetime-local" value={deadline} disabled={sending} onChange={(event) => onDeadlineChange(event.target.value)} /></label>
                 <label className="inline-review-setup__field is-wide"><span>复核说明</span><textarea rows={3} value={instructions} disabled={sending} onChange={(event) => onInstructionsChange(event.target.value)} /></label>

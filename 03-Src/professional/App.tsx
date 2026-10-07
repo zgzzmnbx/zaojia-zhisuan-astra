@@ -2501,8 +2501,9 @@ function DaweibaApp() {
         setFile(next.input.file);const incoming=next.input.sheets as SheetMappingConfig[];setSheetConfigs(incoming);
         if(incoming[0]){setColumns(incoming[0].columns);setHeaderRow(incoming[0].header_row);setColumnMapping(incoming[0].column_mapping);}
       }
+      if(routeChanged&&next.view==="collaboration-settings")setActiveCollaborationTab("tasks");
       if(routeChanged&&next.view==="experience")setIsExperienceImportCollapsed(false);
-      const modules:Record<string,DaweibaModuleId>={workload:"workload",experience:"experience",settlement:"settlement",advanced:"fill",analysis:"preview",word:"report",dispatch:"collaboration",map:"fill",showcase:"fill",originalqa:"agent",knowledgebase:"knowledge",tracefull:"preview"};
+      const modules:Record<string,DaweibaModuleId>={workload:"workload",experience:"experience",settlement:"settlement",advanced:"fill",analysis:"preview",word:"report",dispatch:"collaboration","collaboration-settings":"collaboration",map:"fill",showcase:"fill",originalqa:"agent",knowledgebase:"knowledge",tracefull:"preview"};
       if(routeChanged)setActiveDaweibaModule(next.active?(modules[next.view]||"knowledge"):"knowledge");
       if(routeChanged)setFillWorkspaceView(next.view==="map"?"spatial":next.view==="showcase"?"showcase":"new");
       if(routeChanged&&next.active&&next.view==="configuration")openUnifiedSettings("zhisuan");
@@ -13836,7 +13837,7 @@ function DaweibaApp() {
                     </article>
                   );
                 })}
-                {!feishuAppBotStatus?.profiles?.length ? <p className="daweiba-collaboration-empty">正在读取普通飞书与 WeAct 独立连接状态……</p> : null}
+                {!feishuAppBotStatus?.profiles?.length ? <p className="daweiba-collaboration-empty">{feishuAppBotStatus ? "尚未配置飞书 / WeAct，请先保存本工作区的协同凭证。" : isLoadingFeishuWebhook ? "正在读取飞书 / WeAct 状态……" : "平台状态未就绪，请刷新重试。"}</p> : null}
               </div>
               {feishuAppBotStatus?.configuration_error && <p className="daweiba-collaboration-feedback is-error">{feishuAppBotStatus.configuration_error}，异常平台已阻止启动，另一平台不受影响。</p>}
               <div className="daweiba-feishu-app-metrics"><span><strong>{feishuAppBotStatus?.concurrency ?? 1}</strong>并发任务</span><span><strong>{feishuAppBotStatus?.counts?.queued ?? 0}</strong>等待中</span><span><strong>{feishuAppBotStatus?.counts?.completed ?? 0}</strong>已完成</span><span><strong>{feishuAppBotStatus?.retention_days ?? 30}</strong>天留存</span></div>
