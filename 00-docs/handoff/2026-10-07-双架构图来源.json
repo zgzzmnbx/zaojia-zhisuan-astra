@@ -1,0 +1,25 @@
+{
+  "source_project": "管勘智算-V2.0",
+  "source_directory": "frontend/public/system-architecture",
+  "verified_on": "2026-10-07",
+  "adaptations": [
+    "Offline CSP on both pages; external font links removed",
+    "Shared formal/debug viewer; light/dark query for original diagram",
+    "Live diagram language/title and pause/reduced-motion/background lifecycle; remote config fallback removed"
+  ],
+  "files": [
+    {
+      "file": "index.html",
+      "source_sha256": "dfb3378e08aa1c19aabbd9f73bbb1e0bad5e552161c200c503614d02a2382971",
+      "source_normalized_sha256": "dfb3378e08aa1c19aabbd9f73bbb1e0bad5e552161c200c503614d02a2382971",
+      "migrated_normalized_sha256": "ce58f5d6c6188a56790960bba54b188cc659e46f9106d8e56da227cfd99a73c1"
+    },
+    {
+      "file": "live-panel-landscape.html",
+      "source_sha256": "5c8825baf4ec3bef5b5a6700c4b929d9d2cd5583c311d5cc385e1a258d3af566",
+      "source_normalized_sha256": "693520e7a2516ee770608949316c675bc93cfbe89f438ccf4dffb7d4ebd8c2be",
+      "migrated_normalized_sha256": "80718730b78af906a9cf5e666fdac5ec7cf5a7bcf7050726eb48e581a1b68df8"
+    }
+  ],
+  "source_root": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0"
+}

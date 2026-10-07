@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>live-panel</title>
+<title>造价智算 · 动态系统架构（示意）</title>
 <style>
 /* live-panel template. Content, colours, sizes: all come from the JSON config (see references/config-schema.md).
    Layout never moves. Everything that changes is a pure function of time: window.seek(t). */
@@ -60,9 +61,7 @@ function fail(e){var d=document.getElementById('err')||document.body.appendChild
 function loadConfig(){
   var el=document.getElementById('live-config');
   if(el&&el.textContent.trim()) return Promise.resolve(JSON.parse(el.textContent));
-  var m=/[?&]config=([^&]+)/.exec(location.search);
-  if(m) return fetch(decodeURIComponent(m[1])).then(function(r){return r.json()});
-  return Promise.reject(new Error('no config: embed <script id="live-config" type="application/json"> or use ?config=path.json (over http)'));
+  return Promise.reject(new Error('no config: embed <script id="live-config" type="application/json">'));
 }
 
 // ---------- value access / templating ----------
@@ -388,7 +387,26 @@ function boot(c){
   if(c.credit){ B.text(Object.assign({type:'text',x:0,w:CW,align:'center',y:CH-14,size:12,c:'dim'},c.credit)); }
   fit(); addEventListener('resize',fit);
   var go=function(){ window.__ready=true; window.seek(window.__pending==null?0:window.__pending);
-    if(!/[?&]manual/.test(location.search)){ var t0=performance.now(), D=cv.duration||30; (function loop(now){ window.seek(((now-t0)/1000)%D); requestAnimationFrame(loop); })(t0); } };
+    if(!/[?&]manual/.test(location.search)){
+      // Astra viewer: pause controls and background/reduced-motion lifecycle.
+      var reduced=matchMedia('(prefers-reduced-motion: reduce)'), playing=!reduced.matches;
+      var explicit=false, frame=0, elapsed=0, last=0, D=cv.duration||30;
+      var control=document.createElement('button'); control.id='astra-motion'; control.type='button';
+      control.style.cssText='position:fixed;right:12px;top:8px;z-index:10;padding:8px 12px;border:1px solid #59758a;border-radius:6px;background:#172330;color:#f1f7fb;font:14px Microsoft YaHei,sans-serif;cursor:pointer';
+      document.body.appendChild(control);
+      function loop(now){ frame=0; elapsed+=(now-last)/1000; last=now; window.seek(elapsed%D); frame=requestAnimationFrame(loop); }
+      function sync(){
+        cancelAnimationFrame(frame); frame=0;
+        control.textContent=playing?'暂停动画':'播放动画'; control.setAttribute('aria-pressed',String(playing));
+        if(playing&&!document.hidden){last=performance.now();frame=requestAnimationFrame(loop);}
+      }
+      control.onclick=function(){explicit=true;playing=!playing;sync();};
+      reduced.addEventListener('change',function(){if(!explicit){playing=!reduced.matches;sync();}});
+      document.addEventListener('visibilitychange',sync);
+      window.addEventListener('pagehide',function(){cancelAnimationFrame(frame);frame=0;});
+      window.addEventListener('pageshow',sync);
+      sync();
+    } };
   (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(go);
 }
 loadConfig().then(boot).catch(fail);

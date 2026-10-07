@@ -1,5 +1,4 @@
-import {LegacyArchitecture} from '../frontend-debug/legacy-system/disabled';
-import {DEBUG_MODE} from '../frontend-debug/mock-adapter';
+export {Architecture} from './SystemArchitecture';
 import {lazy,Suspense,useEffect,useState} from 'react';
 import {Prose} from './Prose';
 import {api,json} from './api';
@@ -8,12 +7,6 @@ import type {WeKnoraStatus} from './useWeKnora';
 import {workspaceApi} from './useWorkspace';
 const KnowledgeVisuals=lazy(()=>import('./KnowledgeVisuals'));
 const Articles=lazy(()=>import('./knowledge-articles/KnowledgeArticlesModule'));
-
-export function Architecture({active=true,dark=false}:{active?:boolean;dark?:boolean}){
-  if(DEBUG_MODE)return <LegacyArchitecture active={active} dark={dark}/>;
-  const [kind,setKind]=useState('original');const url=kind==='original'?'/system-architecture/index.html?present=1&motion=focus-v4':'/system-architecture/live-panel-landscape.html';
-  return <div className="architecture-module"><div className="module-toolbar"><div className="module-tabs" role="group" aria-label="架构图版本">{[['original','原系统架构'],['live','动态横版']].map(([v,t])=><button key={v} className={kind===v?'active':''} onClick={()=>setKind(v)}>{t}</button>)}</div><a className="btn btn-ghost" href={url} target="_blank" rel="noopener noreferrer">独立打开<Icon name="arrow-up-right"/></a></div><iframe key={url} title={kind==='original'?'原系统架构图':'动态架构图（示意）'} src={url} sandbox="allow-scripts allow-downloads"/><p className="module-footnote">保留原系统架构图。流动、计数和日志为演示示意，不表示 Astra 当前已接通全部模块。</p></div>;
-}
 
 export function ArticleLibrary({present}:{present:(id:string)=>void}){
   const [tab,setTab]=useState<'articles'|'network'>('articles'),[query,setQuery]=useState('');

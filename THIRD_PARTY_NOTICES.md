@@ -69,3 +69,7 @@ The user's subsequent always-play request adds a single `forceMotion` opt-in to 
 ## User-owned original system UI reference
 
 The owner explicitly requested the original 造价智算 connection-status UI and architecture diagram for this same owner-private preview. Source: zgzzmnbx/zaojia-zhisuan@5b6b8d2744c4a3059813dd2703ebc9ee02dfa065, frontend/src/App.tsx and frontend/public/system-architecture/index.html (blob c4015e286e99a0b53e8393530eab2a567e6eb0c7). The diagram identifies Archify 2.16.0 as generator and source-evidence revision a7012e98a63b75d721bcae192993114ba5d9036b. No license declaration was found; no license is inferred or added. Diagram topology/semantics are preserved, with remote fonts removed and an offline reference/sandbox boundary added. This material is not a statement that the old backend/platform architecture is deployed in Astra, and is not approved for public redistribution by this task.
+
+## 智算 2.0 双架构图（2026-10-07）
+
+两图重新核对自用户确认的 `D:\Codex-Temp\260612-【ai大赛】-管勘智算-V2.0/frontend/public/system-architecture/`，原图 Archify 2.16.0，动态横版为 2026-10-05 live-panel 产物。图形、节点关系与动态配置保留；来源哈希和离线 / 生命周期适配见 `00-docs/handoff/2026-10-07-双架构图来源.json`。未复制字体、视频或第三方二进制，未新增或推断再分发许可。

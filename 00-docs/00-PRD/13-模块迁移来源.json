@@ -4,16 +4,18 @@
     "target": "public\\system-architecture\\index.html",
     "sha256": "dfb3378e08aa1c19aabbd9f73bbb1e0bad5e552161c200c503614d02a2382971",
     "sha256_kind": "original_source",
-    "astra_sha256": "1d036ec9eb9c3ed4c780262f4e98f56117168d1e7842faf7702e754f1c4d1118",
-    "adaptation": "移除远程字体链接；由独立宿主提供 iframe 与 CSP"
+    "astra_sha256": "ce58f5d6c6188a56790960bba54b188cc659e46f9106d8e56da227cfd99a73c1",
+    "adaptation": "离线 CSP；正式 / 调试共用入口；移除外部字体或远程配置；动态页增加暂停 / 减少动效 / 后台停算；详见 handoff/2026-10-07-双架构图迁移.md",
+    "astra_sha256_kind": "UTF-8 LF normalized"
   },
   {
     "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\public\\system-architecture\\live-panel-landscape.html",
     "target": "public\\system-architecture\\live-panel-landscape.html",
     "sha256": "5c8825baf4ec3bef5b5a6700c4b929d9d2cd5583c311d5cc385e1a258d3af566",
     "sha256_kind": "original_source",
-    "astra_sha256": "5c8825baf4ec3bef5b5a6700c4b929d9d2cd5583c311d5cc385e1a258d3af566",
-    "adaptation": "移除远程字体链接；由独立宿主提供 iframe 与 CSP"
+    "astra_sha256": "80718730b78af906a9cf5e666fdac5ec7cf5a7bcf7050726eb48e581a1b68df8",
+    "adaptation": "离线 CSP；正式 / 调试共用入口；移除外部字体或远程配置；动态页增加暂停 / 减少动效 / 后台停算；详见 handoff/2026-10-07-双架构图迁移.md",
+    "astra_sha256_kind": "UTF-8 LF normalized"
   },
   {
     "source": "D:\\Codex-Temp\\260612-【ai大赛】-管勘智算-V2.0\\frontend\\src\\components\\knowledge-articles\\KnowledgeNetworkGraph.tsx",
