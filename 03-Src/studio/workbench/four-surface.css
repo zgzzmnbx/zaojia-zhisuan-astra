@@ -23,3 +23,15 @@
 /* The three data views live in the shared title row, including application fullscreen. */
 .content-artifact{container-type:inline-size}.content-heading-actions{display:flex;align-items:center;gap:4px;flex:0 0 auto}.content-view-tabs{display:flex;align-items:stretch;gap:3px;min-width:0;overflow-x:auto;scrollbar-width:none;flex:1}.content-view-tabs::-webkit-scrollbar{display:none}.content-view-tab{flex:0 0 auto;min-height:36px;padding:0 10px;border:0;border-bottom:2px solid transparent;border-radius:5px 5px 0 0;background:transparent;color:var(--color-base-content);font-size:14px;white-space:nowrap;cursor:pointer}.content-view-tab.is-active{color:var(--color-primary);border-bottom-color:var(--color-primary);background:color-mix(in srgb,var(--color-primary) 8%,transparent)}.content-view-tab:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}.preview-demo-badge{flex:0 0 auto;font-size:12px;white-space:nowrap}.studio #shell.live-shell .four-surface .content-artifact>.data-preview-heading .artifact-title{gap:8px}.studio #shell.live-shell .four-surface .content-heading-actions>.btn-square{width:32px;min-width:32px;height:36px;min-height:36px;padding:0}.retained-content-pane:has(>.result-tab-panel){display:flex;overflow:hidden}.result-tab-panel{display:flex;flex-direction:column;flex:1;min-width:0;min-height:0;height:100%;overflow:auto}
 @container(max-width:650px){.data-preview-heading .content-fullscreen span{display:none}.studio #shell.live-shell .four-surface .data-preview-heading .content-fullscreen{width:32px;min-width:32px;padding:0}.data-preview-heading .preview-demo-badge{max-width:44px;overflow:hidden;text-overflow:ellipsis;display:block}.data-preview-heading .content-view-tab{padding-inline:8px}.content-heading-actions{gap:2px}}
+
+/* Keep both platform states readable without a third header row on phones. */
+@media(max-width:760px){
+ .studio #shell .four-surface-topbar{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px 6px}
+ .four-surface-topbar .current-project-title{grid-column:1;grid-row:1;min-width:0}
+ .four-surface-topbar .current-project-title strong{max-width:none;min-width:0}
+ .studio #shell .four-surface-topbar .top-actions{display:contents}
+ .four-surface-topbar .project-info-toggle{grid-column:2/4;grid-row:1}
+ .studio #shell .four-surface-topbar .legacy-top-links{grid-column:1;grid-row:2;flex-wrap:nowrap}
+ .four-surface-topbar .header-icon-tip:nth-last-child(2){grid-column:2;grid-row:2}
+ .four-surface-topbar .header-icon-tip:last-child{grid-column:3;grid-row:2}
+}

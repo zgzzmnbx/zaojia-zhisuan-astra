@@ -20,6 +20,7 @@ export function useWorkspace(snapshot:Snapshot,apply:(state:Partial<Snapshot>,co
   const activeRef=useRef<Conversation|null>(null), current=useRef(snapshot), applyRef=useRef(apply);
   current.current=snapshot;applyRef.current=apply;
   const hydrated=useRef(false), saved=useRef(''), flight=useRef<Promise<void>|null>(null), mounted=useRef(true);
+  const switching=useRef(false);
   async function refresh(){const data=await api<Index>(workspaceApi);if(mounted.current)setIndex(data);return data;}
   async function flush(){
     if(flight.current){await flight.current;return flush();}
@@ -55,10 +56,16 @@ export function useWorkspace(snapshot:Snapshot,apply:(state:Partial<Snapshot>,co
     await applyRef.current(state,conv);activeRef.current=conv;setActive(conv);localStorage.setItem('astra.active-conversation',id);saved.current=JSON.stringify(conv.state||{});setStatus(recovery||'已保存');setError('');}
     finally{hydrated.current=Boolean(activeRef.current);setReady(Boolean(activeRef.current));}
   }
-  async function select(id:string){await flush();await load(id);}
-  async function create(project_id?:string){await flush();const conv=await api<Conversation>(`${workspaceApi}/conversations`,json({project_id}));await load(conv.id);await refresh();}
+  async function transition(work:()=>Promise<void>){
+    if(switching.current)throw new Error('对话正在切换，请稍候');
+    switching.current=true;setReady(false);
+    try{await flush();await work();}
+    finally{switching.current=false;setReady(Boolean(activeRef.current));}
+  }
+  async function select(id:string){await transition(()=>load(id));}
+  async function create(project_id?:string){await transition(async()=>{const conv=await api<Conversation>(`${workspaceApi}/conversations`,json({project_id}));await load(conv.id);await refresh();});}
   async function rename(title:string){await flush();if(!activeRef.current)return;const conv={...activeRef.current,title};activeRef.current=conv;setActive(conv);saved.current='';await flush();}
-  async function assign(project_id:string){await flush();if(!activeRef.current)return;const id=activeRef.current.id;await api(`${workspaceApi}/conversations/${id}/project`,json({project_id}));await load(id);await refresh();}
+  async function assign(project_id:string){await transition(async()=>{if(!activeRef.current)return;const id=activeRef.current.id;await api(`${workspaceApi}/conversations/${id}/project`,json({project_id}));await load(id);await refresh();});}
   const encoded=JSON.stringify(snapshot);
   useEffect(()=>{if(!ready)return;const timer=setTimeout(()=>void flush().catch(()=>{}),500);return()=>clearTimeout(timer);},[encoded,ready]);
   useEffect(()=>{

@@ -1,13 +1,13 @@
 import {registerHooks} from 'node:module';
 import {existsSync,readFileSync} from 'node:fs';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath,pathToFileURL} from 'node:url';
 import path from 'node:path';
 import ts from 'typescript';
 import assert from 'node:assert/strict';
-const root=process.cwd();
+const root=pathToFileURL(process.cwd()+path.sep).href;
 registerHooks({
  resolve(specifier,ctx,next){if(specifier.startsWith('.')&&ctx.parentURL?.startsWith('file:')){const url=new URL(specifier,ctx.parentURL);if(!path.extname(url.pathname)){for(const ext of ['.tsx','.ts','.js']){if(existsSync(fileURLToPath(url)+ext))return {url:url.href+ext,shortCircuit:true}}}}return next(specifier,ctx)},
- load(url,ctx,next){if(url.startsWith('file:')&&url.includes(root)&&!url.includes('/node_modules/')){const file=fileURLToPath(url);if(file.endsWith('.css'))return {format:'module',source:'export default {};',shortCircuit:true};if(file.endsWith('.json'))return {format:'module',source:'export default '+readFileSync(file,'utf8'),shortCircuit:true};if(/\.tsx?$/.test(file)){// Supply a server-only snapshot for the unchanged, browser-only Gork store.
+ load(url,ctx,next){if(url.startsWith('file:')&&url.startsWith(root)&&!url.includes('/node_modules/')){const file=fileURLToPath(url);if(file.endsWith('.css'))return {format:'module',source:'export default {};',shortCircuit:true};if(file.endsWith('.json'))return {format:'module',source:'export default '+readFileSync(file,'utf8'),shortCircuit:true};if(/\.tsx?$/.test(file)){// Supply a server-only snapshot for the unchanged, browser-only Gork store.
 const source=readFileSync(file,'utf8').replaceAll('import.meta.env.MODE',"'frontend-debug'").replace('useSyncExternalStore(subscribe,()=>`${motionPreference}:${media.matches}`)',"useSyncExternalStore(subscribe,()=>`${motionPreference}:${media.matches}`,()=> 'auto:false')");return {format:'module',shortCircuit:true,source:ts.transpileModule(source,{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText}}}return next(url,ctx)}
 });
 let writes=0;globalThis.localStorage={getItem:()=>null,setItem:()=>{writes++}};

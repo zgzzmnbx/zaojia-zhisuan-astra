@@ -14,7 +14,7 @@ const hashes:Record<string,string>={
  '03-Src/vendor/gork/gork-catalog.js':'43e75b74504e714fa1cab99c5c7e435759f56202',
 };
 test('upstream blobs match after normalizing the explicit-playback-only renderer option',()=>{
- for(const [file,expected] of Object.entries(hashes)){const bytes=Buffer.from(read(file).replace('(options.forceMotion||!reducedMotion?.matches)','!reducedMotion?.matches'));assert.equal(createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex'),expected,file);}
+ for(const [file,expected] of Object.entries(hashes)){const bytes=Buffer.from(read(file).replace(/\r\n/g,'\n').replace('(options.forceMotion||!reducedMotion?.matches)','!reducedMotion?.matches'));assert.equal(createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex'),expected,file);}
 });
 function consoleFixture(options:any={},reduced=false){
  let clock=0,id=0;const frames=new Map<number,(t:number)=>void>(),drawn:any[]=[];
