@@ -1,3 +1,4 @@
+import {FeeSummary} from './FeeSummary';
 import {Prose,sourceExcerpt} from './Prose';
 import {Gork,Icon} from './ui';
 import type {Action,Message} from './types';
@@ -10,9 +11,10 @@ export function ConversationCard({message,onAction,unavailable}:Props){
   const settled=card.kind==='input'&&message.actions?.some(a=>a.action==='convert'&&unavailable(a)==='结构已确认')||card.kind==='confirmation'&&message.actions?.some(a=>a.action==='match'&&unavailable(a)==='匹配已完成');
   const refreshed=card.kind==='edit'&&message.actions?.some(a=>a.action==='recalculate'&&unavailable(a)==='已刷新');
   const title=refreshed?'修改已保存，成果已刷新':card.title;
-  return <section className={`card conversation-card card-${card.kind}`} aria-label={title}>
+  return <section className={`card conversation-card card-${card.kind}`} aria-label={title} data-message-id={message.id}>
     <header className="cc-heading"><span className="cc-symbol"><Icon name={card.icon}/></span><div><span className="cc-caption">{card.caption}</span><h3>{title}</h3></div><span className={`badge cc-status ${settled||refreshed?'tone-success':card.tone?`tone-${card.tone}`:''}`}>{refreshed?'已刷新':settled?'已确认':card.status}</span></header>
     <div className="cc-body">
+      {card.fees!==undefined&&<FeeSummary snapshot={card.fees} historical/>}
       {card.metrics&&<dl className={`cc-metrics ${card.metrics.length===1?'cc-metrics-single':''}`}>{card.metrics.map(m=><div key={m.label}><dt>{m.label}</dt><dd className={m.tone==='attention'?'tone-attention':''}>{m.value.toLocaleString('zh-CN')}</dd></div>)}</dl>}
       {card.steps&&<ol className="cc-steps" aria-label="编制流程">{card.steps.map(s=><li key={s.label} data-state={s.state}><span>{s.state==='done'?<Icon name="check"/>:<i/>}</span>{s.label}</li>)}</ol>}
       {card.facts&&<dl className="cc-facts">{card.facts.map(f=><div key={f.label}><dt>{f.label}</dt><dd>{f.value}</dd></div>)}</dl>}

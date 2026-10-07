@@ -1,3 +1,4 @@
+import {feeSnapshot} from '../fee-summary.ts';
 import type {Result,Risk} from '../types';
 import type {Conversation,Project} from '../useWorkspace';
 export type ResultScope={conversationId:string;projectId:string|null;jobId:string};
@@ -14,7 +15,7 @@ export function currentProjectSnapshot(input:CurrentProjectInput){
  const severity={high:0,medium:0,low:0,other:0};if(loadedRisks)for(const r of input.risks){const key=r.severity==='high'?'high':r.severity==='medium'?'medium':r.severity==='low'?'low':'other';severity[key]++;}
  return {id:project.id,title:project.name,background:project.background,conversationId:input.active.id,conversationTitle:input.active.title,conversationCount:conversations.length,resultConversations:new Set([...conversations.filter(c=>!!(c.job_id||c.state?.job_id)).map(c=>c.id),...(result?[input.active.id]:[])]).size,
   debug:input.debug,filename:result?.input_filename||input.filename,jobId:result?.job_id||'',total,matched,review,remaining:total===null?null:Math.max(0,total-(matched||0)),percent:total?Math.round((matched||0)/total*100):null,
-  matchingStatus:s?.matching_status||'',riskChecked:!!s?.warning_summary?.executed,riskLoaded:loadedRisks,riskTotal:loadedRisks?input.risks.length:null,severity,
+  fees:feeSnapshot(result),matchingStatus:s?.matching_status||'',riskChecked:!!s?.warning_summary?.executed,riskLoaded:loadedRisks,riskTotal:loadedRisks?input.risks.length:null,severity,
   recalculated:result?.formula_recalculated===true,needsRecalculate:result?.needs_recalculate===true,hasResult:!!result};
 }
 export type CurrentProject=NonNullable<ReturnType<typeof currentProjectSnapshot>>;

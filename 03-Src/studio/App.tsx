@@ -57,13 +57,14 @@ function App(){
   function professionalBusy(label:string){busyRef.current=!!label;setBusy(label);}
   async function professionalReceipt(receipt:ProfessionalReceipt){
     const context=conversationContext.current;
+    let completedResult:Result|null=null;
     if(receipt.jobId&&/^[a-f0-9]{32}$/.test(receipt.jobId)&&!['/api/settlement-audit/review','/api/workload-capture/run','/api/experience-pool/import'].includes(receipt.path)){
-      try{const updated=await api<Result>(`/api/astra/runs/${receipt.jobId}`);if(context!==conversationContext.current)return;acceptResult(updated);}catch(e){add((e as Error).message,undefined,'assistant',true);return;}
+      try{const updated=await api<Result>(`/api/astra/runs/${receipt.jobId}`);if(context!==conversationContext.current)return;acceptResult(updated);if(receipt.path==='/api/process/batch-match'&&updated.summary.matching_status==='completed')completedResult=updated;}catch(e){add((e as Error).message,undefined,'assistant',true);return;}
     }
     if(context!==conversationContext.current)return;
     setGorkCompletion(n=>n+1);
     const downloads=Object.entries(receipt.downloads||{}).filter(([,url])=>/^\/api\/(?:settlement-audit|workload-capture)\/(?:download|current-download)\/[a-f0-9]{32}\/[a-z]+$/.test(url)).map(([kind,url])=>({label:({excel:'下载审核表',report:'下载审核报告',result:'下载审核明细',workload:'下载标注工作量',target:'下载抓取计算表'} as Record<string,string>)[kind]||'下载成果',action:'download:'+url}));
-    add(receipt.title,[...downloads,{label:'查看专业详情',action:receipt.view,primary:true},...(receipt.jobId===result?.job_id?[{label:'查看计算表',action:'table'}]:[])],'assistant',false,{kind:'result',title:receipt.title,caption:'专业操作 · 实际返回',icon:'check',status:'已返回',note:'请在右侧核对处理结果、待复核项和完整成果。'});
+    add(receipt.title,[...downloads,{label:'查看专业详情',action:receipt.view,primary:true},...(receipt.jobId===result?.job_id?[{label:'查看计算表',action:'table'}]:[])],'assistant',false,completedResult?resultCard(completedResult):{kind:'result',title:receipt.title,caption:'专业操作 · 实际返回',icon:'check',status:'已返回',note:'请在右侧核对处理结果、待复核项和完整成果。'});
   }
 
   const [dashboardWarm,setDashboardWarm]=useState(false);
@@ -182,11 +183,20 @@ function App(){
   const summary=result?.summary;const completed=summary?.matching_status==='completed';
   const gorkState=gorkActivity(busy,operationError,composing);
   const gorkSuspended=welcomeVisible||!layout.chatActive||settings||connectionsOpen||searchOpen||conversationEditor||!!selection||!!projectEditor;
-  const add=(text:string,actions?:Action[],role:'user'|'assistant'='assistant',error=false,card?:Card)=>{const message:Message={id:crypto.randomUUID(),text:debugText(text),actions,role,error,card:card||(error?errorCard(text):undefined),job:loadedJob.current,context:conversationContext.current};setMessages(m=>[...m,message]);};
+  const pendingFeeFocus=useRef('');
+  const add=(text:string,actions?:Action[],role:'user'|'assistant'='assistant',error=false,card?:Card)=>{const message:Message={id:crypto.randomUUID(),text:debugText(text),actions,role,error,card:card||(error?errorCard(text):undefined),job:loadedJob.current,context:conversationContext.current};pendingFeeFocus.current=card?.fees?message.id:'';setMessages(m=>[...m,message]);};
   const listRuns=async()=>{const data=await api<{items:Run[]}>('/api/astra/runs');setRuns(data.items);};
   useEffect(()=>{api<{isolated:boolean;service:string}>('/api/health').then(h=>{if(h.service!=='zhisuan-astra'||!h.isolated)throw new Error('当前地址不是独立 Astra 服务');setConnected(true);return listRuns();}).catch(e=>add(e.message,undefined,'assistant',true));},[]);
 
-  useEffect(()=>{if(layout.chatActive&&chatFollow.current)scroll.current?.scrollTo({top:messages.length?scroll.current.scrollHeight:0,behavior:'instant'});},[messages,busy]);
+  useEffect(()=>{
+    const host=scroll.current;
+    if(layout.chatActive&&host){
+      const feeCard=pendingFeeFocus.current?host.querySelector<HTMLElement>(`[data-message-id="${pendingFeeFocus.current}"]`):null;
+      if(feeCard){host.scrollTo({top:host.scrollTop+feeCard.getBoundingClientRect().top-host.getBoundingClientRect().top-12,behavior:'instant'});chatFollow.current=false;}
+      else if(chatFollow.current)host.scrollTo({top:messages.length?host.scrollHeight:0,behavior:'instant'});
+    }
+    pendingFeeFocus.current='';
+  },[messages,busy]);
   useLayoutEffect(()=>{if(layout.chatActive&&scroll.current){const saved=chatScrollMemory.current.get(conversationContext.current);if(saved!==undefined)scroll.current.scrollTop=saved;}},[presentation.state.mode,presentation.state.conversationId,layout.chatActive]);
   useEffect(()=>{const handle=(e:KeyboardEvent)=>{if(welcomeVisible)return;if(e.key==='Escape'){if(document.querySelector('dialog[open]'))return;if(sidebar){setSidebar(false);return;}if(expanded)presentation.returnToSplit();else if(presentation.state.mode==='content')presentation.closeContent();else if(presentation.state.mode==='summary')presentation.closeSummary();}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true);}};document.addEventListener('keydown',handle);return()=>document.removeEventListener('keydown',handle);},[sidebar,welcomeVisible,presentation.state.mode]);
 

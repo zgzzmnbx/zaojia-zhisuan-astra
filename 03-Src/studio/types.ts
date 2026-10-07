@@ -1,3 +1,4 @@
+import type {FeeSnapshot} from './fee-summary';
 export type Cell = string | number | boolean | null;
 export type Preview = {sheet_name:string; header_row:number; headers:Cell[]; rows:Cell[][]; row_numbers?:number[]; sheets?:Preview[]};
 export type SheetConfig = {sheet_name:string; enabled:boolean; header_row:number; headers:string[]; columns:{letter:string;label:string}[]; suggested_mapping:Record<string,string>; column_mapping:Record<string,string>; only_match_rows_with_value:boolean; match_value_filter_field:string};
@@ -10,6 +11,7 @@ export type Action = {label:string; action:string; primary?:boolean; target?:{sh
 export type ConversationCard = {
   kind:'input'|'confirmation'|'result'|'review'|'artifact'|'source'|'edit'|'capabilities'|'error';
   title:string; caption:string; icon:string; status:string; tone?:'success'|'attention'|'error';
+  fees?:FeeSnapshot|null;
   metrics?:{label:string;value:number;tone?:'attention'}[];
   facts?:{label:string;value:string}[];
   steps?:{label:string;state:'done'|'current'|'waiting'}[];

@@ -1,3 +1,4 @@
+import {feeSnapshot} from './fee-summary.ts';
 import type {Action,ConversationCard,Message,Result,Risk,SelectedCell,SheetConfig} from './types';
 
 /** Cards are snapshots of business responses; they never infer prices or completion. */
@@ -16,6 +17,7 @@ export function resultCard(result:Result,restored=false):ConversationCard {
   return {kind:done?'result':'confirmation',title:done?(restored?'继续这份控制价成果':'规则匹配已完成'):'结构已转换，准备匹配',
     caption:restored?'任务恢复':done?'匹配结果':'执行确认',icon:done?'circlecheck':'route',
     status:dirty?'待重算':done?(s.review_rows?'待复核':'已匹配'):'待你确认',tone:dirty||!done||s.review_rows?'attention':'success',
+    fees:done?feeSnapshot(result):undefined,
     metrics:done?[{label:'处理行数',value:s.total_data_rows},{label:'价格命中',value:s.matched_rows},{label:'保留原值',value:s.unchanged_rows},{label:'待复核',value:s.review_rows,tone:s.review_rows?'attention':undefined}]:[{label:'待处理行数',value:s.total_data_rows}],
     facts:!done?[{label:'匹配方式',value:'机械规则 · 保留原值'},{label:'匹配范围',value:'基价 / 实物系数 / 技术系数'}]:undefined,
     items:done?artifactItems(result):undefined,
@@ -38,6 +40,7 @@ export function reviewCard(risks:Risk[]):ConversationCard {
 
 export function artifactCard(result:Result,note?:string):ConversationCard {
   return {kind:'artifact',caption:'任务成果',title:'成果已整理在这里',icon:'folder',status:result.needs_recalculate?'待重算':'可查看',tone:result.needs_recalculate?'attention':undefined,
+    fees:result.summary.matching_status==='completed'?feeSnapshot(result):undefined,
     items:artifactItems(result),note:note||(result.needs_recalculate?'请先重算公式与报告，再下载交付。':'点击成果，在右侧查看细节；可临时全屏展开。')};
 }
 
