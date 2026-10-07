@@ -139,13 +139,13 @@ export default function ProjectCharts({
                 <YAxis allowDecimals={false} tick={{ fill: "var(--pd-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip cursor={{ fill: "#eff6ff" }} />
                 <Legend iconType="circle" iconSize={7} />
-                <Bar dataKey="new_projects" name="新增" fill="#60a5fa" radius={[5, 5, 0, 0]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="new_projects" name="新增" fill="#60a5fa" radius={[5, 5, 0, 0]} onClick={(data) => {
                   const period = chartItemValue(data, "period");
                   if (period) onPeriod(period);
                 }}>
                   <LabelList dataKey="new_projects" position="top" fill="var(--pd-text)" fontSize={12} />
                 </Bar>
-                <Bar dataKey="completed_projects" name="完成" fill="#bfdbfe" radius={[5, 5, 0, 0]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="completed_projects" name="完成" fill="#bfdbfe" radius={[5, 5, 0, 0]} onClick={(data) => {
                   const period = chartItemValue(data, "period");
                   if (period) onPeriod(period);
                 }}>
@@ -177,7 +177,7 @@ export default function ProjectCharts({
             <div className="project-dashboard__chart is-donut" role="img" tabIndex={0} aria-label={`项目状态分布，总计 ${statusTotal} 个项目`}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
+                  <Pie isAnimationActive={false}
                     data={dashboard.status_distribution.filter((item) => item.count > 0)}
                     dataKey="count"
                     nameKey="label"
@@ -259,7 +259,7 @@ export default function ProjectCharts({
                   tickLine={false}
                 />
                 <Tooltip />
-                <Area
+                <Area isAnimationActive={false}
                   type="monotone"
                   dataKey="requests"
                   name="请求次数"
@@ -300,7 +300,7 @@ export default function ProjectCharts({
             >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
+                  <Pie isAnimationActive={false}
                     data={llmUsage.models}
                     dataKey="count"
                     nameKey="model"
@@ -357,13 +357,13 @@ export default function ProjectCharts({
                 <YAxis dataKey="axis_name" type="category" width={96} tick={{ fill: "var(--pd-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip />
                 <Legend iconType="circle" iconSize={7} />
-                <Bar dataKey="risk_high" name="高风险" stackId="risk" fill="#3b82f6" radius={[5, 0, 0, 5]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="risk_high" name="高风险" stackId="risk" fill="#3b82f6" radius={[5, 0, 0, 5]} onClick={(data) => {
                   const projectName = chartItemValue(data, "project_name");
                   if (projectName) onProject(projectName);
                 }}>
                   <LabelList dataKey="risk_high" position="insideLeft" fill="#fff" fontSize={12} />
                 </Bar>
-                <Bar dataKey="risk_low" name="低风险" stackId="risk" fill="#bfdbfe" radius={[0, 5, 5, 0]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="risk_low" name="低风险" stackId="risk" fill="#bfdbfe" radius={[0, 5, 5, 0]} onClick={(data) => {
                   const projectName = chartItemValue(data, "project_name");
                   if (projectName) onProject(projectName);
                 }}>
@@ -403,9 +403,9 @@ export default function ProjectCharts({
                   <XAxis type="number" domain={[0, 100]} hide />
                   <YAxis type="category" dataKey="name" hide />
                   <Tooltip formatter={(value) => `${Number(value).toFixed(1)}%`} />
-                  <Bar dataKey="standard" stackId="quality" fill="#60a5fa" radius={[5, 0, 0, 5]} onClick={() => onQuality("standard")} />
-                  <Bar dataKey="experience" stackId="quality" fill="#93c5fd" onClick={() => onQuality("experience")} />
-                  <Bar dataKey="review" stackId="quality" fill="#dbeafe" radius={[0, 5, 5, 0]} onClick={() => onQuality("review")} />
+                  <Bar isAnimationActive={false} dataKey="standard" stackId="quality" fill="#60a5fa" radius={[5, 0, 0, 5]} onClick={() => onQuality("standard")} />
+                  <Bar isAnimationActive={false} dataKey="experience" stackId="quality" fill="#93c5fd" onClick={() => onQuality("experience")} />
+                  <Bar isAnimationActive={false} dataKey="review" stackId="quality" fill="#dbeafe" radius={[0, 5, 5, 0]} onClick={() => onQuality("review")} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -436,7 +436,7 @@ export default function ProjectCharts({
             >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
+                  <Pie isAnimationActive={false}
                     data={sourceData}
                     dataKey="count"
                     nameKey="label"

@@ -1,3 +1,5 @@
+import {installEntranceMotion} from './entrance-motion';
+import './entrance-motion.css';
 import {LegacyStatusButtons,LegacyConnections,type Platform} from '../frontend-debug/legacy-system/disabled';
 import {PlatformConnections,PlatformStatusButtons,usePlatformStatus} from './PlatformConnections';
 import {UploadedExampleSettings} from './UploadedExampleSettings';
@@ -52,6 +54,7 @@ const titles:Record<View,string>={connections:'飞书与 WeAct 连接情况',exa
 
 
 function App(){
+  useEffect(()=>installEntranceMotion(document),[]);
   const [professionalWarm,setProfessionalWarm]=useState(false);
   const [knowledgeSeed,setKnowledgeSeed]=useState<KnowledgeSeed|null>(null);
   function professionalBusy(label:string){busyRef.current=!!label;setBusy(label);}

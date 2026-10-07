@@ -1,0 +1,7 @@
+/* A single controller owns entrances. Never leave content hidden without JS. */
+.studio .current-project-card{animation:none}
+.studio #shell.live-shell .four-surface.surface-floating>.summary-artifact{animation:none;transition:none}
+.studio dialog.modal>.modal-box{transition:none}
+.studio dialog[open]::backdrop{animation:astra-backdrop-in 220ms ease-out}
+@keyframes astra-backdrop-in{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.studio dialog[open]::backdrop{animation:none}}
