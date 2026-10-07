@@ -19,11 +19,32 @@ export function createPointerLook(env:PointerEnvironment,smoothing:PointerSmooth
 type Look=ReturnType<typeof createPointerLook>;
 const activeLooks=new WeakMap<HTMLCanvasElement,Look>();
 let wrapped=false;
+/** Same-origin professional panes receive pointer events in their own document. */
+function listenGorkEvent(name:string,handler:(event:any)=>void){
+ window.addEventListener(name,handler,{passive:true});
+ const frames=new Map<HTMLIFrameElement,()=>void>();
+ const observeFrames=()=>{
+  for(const [frame,stop] of frames)if(!frame.isConnected){stop();frames.delete(frame);}
+  for(const frame of document.querySelectorAll('iframe')){
+   if(frames.has(frame))continue;
+   let remove=()=>{};
+   const bind=()=>{remove();remove=()=>{};try{
+    const doc=frame.contentDocument;if(!doc)return;
+    const forward=(event:globalThis.PointerEvent)=>{const rect=frame.getBoundingClientRect();if(!rect.width||!rect.height)return;handler({pointerType:event.pointerType,clientX:rect.left+frame.clientLeft+event.clientX*rect.width/(frame.offsetWidth||rect.width),clientY:rect.top+frame.clientTop+event.clientY*rect.height/(frame.offsetHeight||rect.height)});};
+    doc.addEventListener('pointermove',forward,{passive:true});remove=()=>doc.removeEventListener('pointermove',forward);
+   }catch{/* Opaque or external frames remain isolated. */}};
+   frame.addEventListener('load',bind);bind();frames.set(frame,()=>{remove();frame.removeEventListener('load',bind);});
+  }
+ };
+ const observer=name==='pointermove'&&typeof document!=='undefined'?new MutationObserver(observeFrames):null;
+ if(observer){observeFrames();observer.observe(document.body,{childList:true,subtree:true});}
+ return()=>{window.removeEventListener(name,handler);observer?.disconnect();for(const stop of frames.values())stop();frames.clear();};
+}
 export function attachGorkPointer(canvas:HTMLCanvasElement,enabled:()=>boolean,smoothing:PointerSmoothing={}){
  const appearance=(window as any).GorkAppearance;
  if(!appearance)throw new Error('Gork 控制台完整几何渲染未载入');
  if(!wrapped){const original=appearance.draw;appearance.draw=(ctx:CanvasRenderingContext2D,pose:HeadPose,blink:number,value:unknown)=>original(ctx,activeLooks.get(ctx.canvas)?.apply(pose)||pose,blink,value);wrapped=true;}
- const look=createPointerLook({now:()=>performance.now(),viewport:()=>({width:innerWidth,height:innerHeight}),rect:()=>canvas.getBoundingClientRect(),enabled,listen:(name,handler)=>{window.addEventListener(name,handler,{passive:true});return()=>window.removeEventListener(name,handler)}},smoothing);
+ const look=createPointerLook({now:()=>performance.now(),viewport:()=>({width:innerWidth,height:innerHeight}),rect:()=>canvas.getBoundingClientRect(),enabled,listen:listenGorkEvent},smoothing);
  activeLooks.set(canvas,look);
  return {reset:look.reset,dispose(){look.dispose();activeLooks.delete(canvas)}};
 }
