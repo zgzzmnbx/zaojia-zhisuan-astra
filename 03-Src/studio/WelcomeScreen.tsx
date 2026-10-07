@@ -20,10 +20,9 @@ export function WelcomeScreen({ready,busy,dark,toggleTheme,openAppearance,error,
   <div className="aw2-appearance"><ThemeButton open={openAppearance}/><button className="btn btn-ghost btn-square" type="button" aria-label="切换欢迎页明暗主题" onClick={toggleTheme}><Icon name={dark?'sun':'moon'}/></button></div>
   <div className="aw2-shell">
    <section className="aw2-copy" aria-labelledby="aw2-title">
-    <p className="aw2-kicker badge badge-outline"><Icon name="shield"/>{DEBUG_MODE?'前端调试 · 模拟数据 · 外连已隔离':'规则可追溯 · 关键决策由你确认'}</p>
+    {DEBUG_MODE&&<p className="aw2-kicker badge badge-outline"><Icon name="shield"/>前端调试 · 模拟数据 · 外连已隔离</p>}
     <h1 id="aw2-title" ref={heading} tabIndex={-1}>智算 Astra</h1>
     <p className="aw2-role">工程造价辅助智能体</p>
-    <p className="aw2-lead">在对话中推进编制，表格、依据与成果随时在侧。</p>
     <div className="aw2-actions"><button className="btn btn-neutral aw2-enter" type="button" disabled={entering||busy||(!ready&&!error)} onClick={()=>void enterStudio()}><Icon name="spark"/>{entering?'正在进入…':'进入系统'}</button><label className="aw2-check"><input className="checkbox checkbox-sm" type="checkbox" checked={skip} onChange={e=>savePreference(e.target.checked)}/><span>下次直接进入主界面</span></label></div>
     {!ready&&!error&&<p className="aw2-status" role="status">正在恢复工作空间…</p>}
     {(error||preferenceError)&&<p className="aw2-error" role="alert">{error||preferenceError}</p>}

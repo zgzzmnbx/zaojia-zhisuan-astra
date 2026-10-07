@@ -66,3 +66,7 @@
 /* Explicit return remains reachable even when skip-welcome is saved. */
 .top-actions .welcome-return{width:auto;flex-shrink:0;gap:6px;padding-inline:10px;white-space:nowrap;font-size:13px}
 @media(max-width:760px){.top-actions .welcome-return{min-height:34px;height:34px;padding-inline:7px;font-size:12px}.top-actions .welcome-return .astra-icon{display:none}.top-actions .preview-label{display:none}.live-shell .topbar{gap:5px}.live-shell .top-actions{gap:2px}.live-shell .breadcrumb>span:not(.astra-icon){display:none}.live-shell .breadcrumb strong{max-width:90px}}
+
+/* Keep the remaining functional actions aligned after removing decorative copy. */
+.studio .live-shell .composer-note,.studio .live-shell .artifact-footer,.studio .appearance-footer{justify-content:flex-end}
+.studio .appearance-footer>p{margin-right:auto}
