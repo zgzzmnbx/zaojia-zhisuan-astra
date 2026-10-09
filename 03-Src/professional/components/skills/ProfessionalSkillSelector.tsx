@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { CheckCircle2, ChevronDown, Info, Loader2, RefreshCw, Settings2, ShieldCheck, X } from "lucide-react";
+import { CheckCircle2, ChevronDown, Info, Loader2, RefreshCw, Settings2, ShieldCheck, X } from "../../../PhosphorIcons";
 import ProfessionalSkillCenter from "./ProfessionalSkillCenter";
 import { professionalSkillShortName } from "./skillDisplayName";
 import "./ProfessionalSkillSelector.css";

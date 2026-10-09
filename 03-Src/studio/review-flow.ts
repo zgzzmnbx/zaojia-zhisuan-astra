@@ -5,6 +5,10 @@ export type ReviewOptions={active_profile:string;platforms:{profile_id:string;co
 export type ReviewTask=ReviewProgressTask&{can_retry:boolean;error?:string};
 export type ReviewPlatform={profileId:string;label:string;configurationOk:boolean;enabled:boolean;expanded:boolean;options:ReviewOptions|null;deliveryChannels:('direct'|'group')[];group:string;selectedReviewers:string[];task:ReviewTask|null;loading:boolean;feedback:string};
 export type ReviewRequest={kind:'setup'|'progress';jobId:string;fileName:string;projectName:string;reviewRows:number;version:number;closed?:boolean};
+/** New reviews select all available platforms; existing rounds stay deselected. */
+export function initialReviewEnabled(available:boolean,task:ReviewTask|null,previous?:ReviewPlatform){
+ return available&&(previous?previous.enabled:!task);
+}
 export function reviewPeople(p:ReviewPlatform){return p.deliveryChannels.includes('group')?p.options?.directory.groups.find(g=>g.group_ref===p.group)?.people||[]:p.options?.directory.people||[];}
 export function nextRound(task:ReviewTask|null){return !!task&&['completed','returned'].includes(task.status);}
 /** Original 2.0 recipient and round rules, checked again immediately before POST. */

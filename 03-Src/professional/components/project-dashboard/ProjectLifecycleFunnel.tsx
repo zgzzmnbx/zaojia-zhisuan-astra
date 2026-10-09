@@ -1,4 +1,4 @@
-import { CheckCircle2, ChevronDown } from "lucide-react";
+import { CheckCircle2, ChevronDown } from "../../../PhosphorIcons";
 import type { CSSProperties } from "react";
 import type { DashboardPayload } from "./projectDashboardUtils";
 

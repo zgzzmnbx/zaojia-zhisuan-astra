@@ -1,0 +1,422 @@
+{
+  "arrow-counter-clockwise": {
+    "weight": "regular",
+    "sha256": "4eb160d5ae781107c674481ac081962e6bce6281a646129e6c3f960b9dd5dac6"
+  },
+  "arrow-down": {
+    "weight": "regular",
+    "sha256": "cc6416ae83e20660f14b11f5525c6d05ee679c3f26cee41b696cb37aa905d4f5"
+  },
+  "arrow-line-left": {
+    "weight": "regular",
+    "sha256": "6bf9dfd3202beb9a788459dab4e2003d6d06a5edf46ae9ba21bfd3e3c918de1a"
+  },
+  "arrow-line-right": {
+    "weight": "regular",
+    "sha256": "289f2728e235a4e3f548978b7c602631ec20c86cc1dc767c3e2cc156d133234d"
+  },
+  "arrow-right": {
+    "weight": "regular",
+    "sha256": "e45bc4a12592b8723110db42c6deffdf177e4fe7704cf50324963fa0a59b2d74"
+  },
+  "arrow-square-out": {
+    "weight": "regular",
+    "sha256": "8610e8f5c7d4952ae1ada34ef56fa7cbab1780bc85f25a5c9482b74144790fc8"
+  },
+  "arrow-up": {
+    "weight": "regular",
+    "sha256": "361aa9f9c52a759bf598faf6ed38ccd426f949f541d662c65b5b5d868fa76980"
+  },
+  "arrow-up-right": {
+    "weight": "regular",
+    "sha256": "44db5257b360ec04863eb6daaa41f220c8b714d23fb81403517d0a30acfda9f4"
+  },
+  "arrows-clockwise": {
+    "weight": "regular",
+    "sha256": "2e80fbc9c5c37553934c9ebbd6324bf7fabe9a4b4d7c2445d99edfce55cc22df"
+  },
+  "arrows-in-simple": {
+    "weight": "regular",
+    "sha256": "07f22540ba343ad71cb9afab17d3bf62c1475c899a1ba6379bcafb738c7a750f"
+  },
+  "arrows-out-simple": {
+    "weight": "regular",
+    "sha256": "df766bb615bf2ec178d2fa0e095684b4da0ecc6eba1f228ffba00139f16a4611"
+  },
+  "book-open-text": {
+    "weight": "duotone",
+    "sha256": "523066f01683f1879bbc20219bfcfb1cb4452fb26c0e074a3f8da4e06a75b60a"
+  },
+  "books": {
+    "weight": "duotone",
+    "sha256": "7898d95403db718d42cd3e4d8b9785a2c295076d500d4adbc174bd817167a303"
+  },
+  "brain": {
+    "weight": "duotone",
+    "sha256": "21c4456e71486b819599cc5feecde1451dc172c82f40ae10f8469f434567979b"
+  },
+  "briefcase": {
+    "weight": "duotone",
+    "sha256": "6d64f87d3b91ce799edcfc5d7e3cf2d058234ac9f52a8f4883c7c29d6bc9069f"
+  },
+  "browser": {
+    "weight": "duotone",
+    "sha256": "3ef00b237bc4bb131274b22bc341de0fdd332cd966a00c1ee9f588d7418221f9"
+  },
+  "buildings": {
+    "weight": "duotone",
+    "sha256": "d6843f7a68d132f539effacbfc5151d6a506ee983f1a409ad98a868d8be14713"
+  },
+  "calendar-dots": {
+    "weight": "duotone",
+    "sha256": "72b4bb72b7b180840bb6f5b86ad94987fc8b1b0fdb49caab09c7a2790a93c707"
+  },
+  "caret-down": {
+    "weight": "regular",
+    "sha256": "53f0cf2d0b144ac3cb07e353e0cd0853ffb3ed432d741460ce288edfcb0924b1"
+  },
+  "caret-left": {
+    "weight": "regular",
+    "sha256": "623bf248fe21a8170344e168aaac2e174119cea5d7c5d0fb0dc84f581009475f"
+  },
+  "caret-right": {
+    "weight": "regular",
+    "sha256": "e6dec01e074807965b7f3146b976a9b5e82c31d9c2c88aeb52e77cc2ab16c1d7"
+  },
+  "chart-donut": {
+    "weight": "duotone",
+    "sha256": "6196d3a2bcf8f41be84f813ec8acc60eef16ba4c49a61c8ddc87d3acf8066de6"
+  },
+  "chat-circle-dots": {
+    "weight": "duotone",
+    "sha256": "361680d35411ce4611191eb4a24a1b7d309deee350a4faea1808bdcde5700045"
+  },
+  "chat-circle-text": {
+    "weight": "duotone",
+    "sha256": "af780c6315531363c568d9d74c6cecbab33454fec1d70d298ad5995b18da1f10"
+  },
+  "check": {
+    "weight": "regular",
+    "sha256": "cbb89a8c42f283d4f846eb935e05d88c1be04462f16480e068c0f82b9ce40b12"
+  },
+  "check-circle": {
+    "weight": "duotone",
+    "sha256": "d9c7016e83a81c8ef1a250a307acc6d29d5c492fc46066ab5e5e7446a65b48f6"
+  },
+  "circle": {
+    "weight": "regular",
+    "sha256": "efc9ee22b165d0d40c21b1c5ebe2463c99744af44ab6f530b4d6c44f25181974"
+  },
+  "circle-notch": {
+    "weight": "regular",
+    "sha256": "7db6049b3b6f951dba2872d63c52f85c6de9ea95e7bda4d598c84bc443a5f035"
+  },
+  "clipboard-text": {
+    "weight": "duotone",
+    "sha256": "d1e13568193ac0b89bef7b92cf351d9253f850480ccc1a52faf9061114bc8aac"
+  },
+  "clock": {
+    "weight": "duotone",
+    "sha256": "2f54d3367b48e1c7579b3fb33963240ee4060bd55ddd4e3c39cd59f840499539"
+  },
+  "clock-countdown": {
+    "weight": "duotone",
+    "sha256": "33f740bbecdf546b9ab0508060a33b8618231d2defe30aba957d712e3790c0ce"
+  },
+  "clock-counter-clockwise": {
+    "weight": "duotone",
+    "sha256": "4de8888a05bd3b4cabcce6135f48d89f8606c3b237ac1b2e9fbcc90cc17fd855"
+  },
+  "cloud-arrow-up": {
+    "weight": "duotone",
+    "sha256": "4e08ed5b8730960d7fea46028f95f9ba8188860f5f54a799a8ed579ecf764bf0"
+  },
+  "columns": {
+    "weight": "duotone",
+    "sha256": "1290d2c1552abd7833309a47a8dc150674f834d45c85e0e5fbab64006765fe8a"
+  },
+  "crosshair": {
+    "weight": "duotone",
+    "sha256": "0ec929c7d60c416ccdbf7956f817123567ebd4554bcf52cff5acb3e35fbb7623"
+  },
+  "database": {
+    "weight": "duotone",
+    "sha256": "2543df52f9d509307cd7d08d8bf2ba9033aa23207791c32e2526841ef869ea1c"
+  },
+  "desktop": {
+    "weight": "duotone",
+    "sha256": "bf8a8a436772763ff5e430428c3c2850c601057fef1009dee7a24a02ed709c3b"
+  },
+  "dots-three": {
+    "weight": "regular",
+    "sha256": "ca4e748007101155641ec3041cd129bb03a8030d0eed16e313b9dd75e6beac77"
+  },
+  "download-simple": {
+    "weight": "duotone",
+    "sha256": "68ffe027868f3e33b2788d5cc246dbcb47a86f210b39a2866ab7e2d1cddee9a4"
+  },
+  "eye": {
+    "weight": "duotone",
+    "sha256": "695dc8f0c5793b700905ced99225cb6bd891cd49ba5f00eb3eaff744a4bd1cf6"
+  },
+  "file-arrow-up": {
+    "weight": "duotone",
+    "sha256": "f8915874debbb5903b68ae2e2962e9c4693dd79e7ee2b22b8b578d020b256284"
+  },
+  "file-doc": {
+    "weight": "duotone",
+    "sha256": "71ba3e223c85300609dcdbcbb29b8eb3535a6e44353edfe6f2ca8ff68bcf16f5"
+  },
+  "file-magnifying-glass": {
+    "weight": "duotone",
+    "sha256": "d5862a4992bec67e20c020086625492f6d78eef169f84a62a139c865caff4433"
+  },
+  "file-text": {
+    "weight": "duotone",
+    "sha256": "6b0867a397af11f3c0a66091a4e17e3c172a42f48812ba99fc8157d9093cb7ea"
+  },
+  "file-xls": {
+    "weight": "duotone",
+    "sha256": "fd093243c13ff0d0403f6e0b347613d983ea22e429f191419500cb9875e94f3f"
+  },
+  "folder-open": {
+    "weight": "duotone",
+    "sha256": "1dffe161c141ddc915ef97be2ca0264f7d1cfb710112a5d51e4b2c86a63e6aae"
+  },
+  "funnel": {
+    "weight": "duotone",
+    "sha256": "ba1eb55b4d6abd28131ac98dc5269957291f76d09ed3de4eef78c21c8cf73bb7"
+  },
+  "gauge": {
+    "weight": "duotone",
+    "sha256": "c83d8964e6b998b89055448db702aa3c7dd8784063a5e786aad42ca02f9eb74d"
+  },
+  "gear-six": {
+    "weight": "duotone",
+    "sha256": "049e51d9b794d6b2649073414f90daed5ebadbebfcefb178170aef21c7ace330"
+  },
+  "globe-hemisphere-east": {
+    "weight": "duotone",
+    "sha256": "e37c4325d2816e8c159939ab2ed8ddb3de17113a73133385c9066933430a918e"
+  },
+  "graph": {
+    "weight": "duotone",
+    "sha256": "f6c4e19ef3076eaec1528363f7fbf09b23dba0b44387b6b5643cf7f4db110b5a"
+  },
+  "house": {
+    "weight": "duotone",
+    "sha256": "bd9f3502ab7d63c3cc8a3cf91657e5974188ede3bd1ac7249333d9ce5d0d932f"
+  },
+  "info": {
+    "weight": "duotone",
+    "sha256": "dec9ea1394c618d6d576ba43e0f08eea265eaf20046e98bc3da19eb4b8da73e8"
+  },
+  "intersect": {
+    "weight": "duotone",
+    "sha256": "bded9e42d34ac9fabf53cb50789009a728c77df5094f7d6b2b6f2d257509ca09"
+  },
+  "kanban": {
+    "weight": "duotone",
+    "sha256": "2b5b8eb6ba858d5b39383fd5debf8c368cfb9e7ae0402cfdb238eba4887dbfb6"
+  },
+  "link": {
+    "weight": "duotone",
+    "sha256": "74735ed9c69ae2bc99d9e4bd258a94e20635f2000e1fb17d110d1fc89f317895"
+  },
+  "list": {
+    "weight": "regular",
+    "sha256": "fb1851842c74b40a3f42ce3d6ae0e67ede556b624218e79c0f4ead7d9ceec51f"
+  },
+  "list-bullets": {
+    "weight": "duotone",
+    "sha256": "1f4c9a2353c05b2d3314959b2d7604c0a20c77e8bc3e35f8ed28fdb2217518b0"
+  },
+  "list-checks": {
+    "weight": "duotone",
+    "sha256": "aa71967b96fc44f2e40fabf3b297e333925c994cc22a2da2177980b7eea5a55e"
+  },
+  "magic-wand": {
+    "weight": "duotone",
+    "sha256": "923eaa6b49c427a640c2fc6e1bd0bc36686adbbff28672b4f8c10f48415d3397"
+  },
+  "magnifying-glass": {
+    "weight": "duotone",
+    "sha256": "7a840ea2341e75cf1d9187e07223be4501d6c6078a064a4097be07c1b3a52fb6"
+  },
+  "magnifying-glass-minus": {
+    "weight": "duotone",
+    "sha256": "21e5cb91d1c55c5b90218feab38ab00f387adf789c89eeb99decfa2eb3f92fda"
+  },
+  "magnifying-glass-plus": {
+    "weight": "duotone",
+    "sha256": "b4804ddf84c7249758277bb7abeb138ef6dc9071287aa2fd10430a9ce204bd4e"
+  },
+  "map-pin": {
+    "weight": "duotone",
+    "sha256": "c21ced095b724128b17c25ce60f40e32d98d14339038d818cf79140dc1e04349"
+  },
+  "map-trifold": {
+    "weight": "duotone",
+    "sha256": "51fc6df1cb4a67fcf8ec828735f3d2eb163c14d998b2bd34b1507782bf40bb5c"
+  },
+  "moon": {
+    "weight": "duotone",
+    "sha256": "64c8f8b7ba1ad4ae1e892a34ba895744747d9bcd8daaf1d924051c69c4c64650"
+  },
+  "paper-plane-tilt": {
+    "weight": "duotone",
+    "sha256": "a8eb912cee783545493f39946640bf1d93768051addfbab56b040d552e519c52"
+  },
+  "paperclip": {
+    "weight": "duotone",
+    "sha256": "54e155b0d8c5c0cd63a1304b68f2d189553e50c9e66d434077e4bed90749e384"
+  },
+  "path": {
+    "weight": "duotone",
+    "sha256": "973dc0fba7a17598d9347b44d8cec6f74588b1ae24b44a50dc8923016aeee253"
+  },
+  "pause": {
+    "weight": "duotone",
+    "sha256": "d8cd1f4b61cc90a6f70bb87db2dc4bda686f8ef9f3c69722c3528860b5c43c1c"
+  },
+  "pencil-line": {
+    "weight": "duotone",
+    "sha256": "1f9d6e4bf93778b443eb39628c0785a849632d158df229edb89530ef305b0a2c"
+  },
+  "planet": {
+    "weight": "duotone",
+    "sha256": "154c0409513cbc726e4b3c2bcb22eb168fe92b2dbdca9dc14d6faa66089cc11d"
+  },
+  "play": {
+    "weight": "duotone",
+    "sha256": "8485ad1efd20878370885ccf7b825aae21a3b2fede35734484475672ac707c48"
+  },
+  "plus": {
+    "weight": "regular",
+    "sha256": "d688feb9dd2e41c1721d6906a05a2a42e18cd774762fe706d72b2bdfd91cddc4"
+  },
+  "presentation": {
+    "weight": "duotone",
+    "sha256": "5bef47a8ac5e0c608552ff47c0de868cd9349f0c1fd30a21121c0121475dd030"
+  },
+  "puzzle-piece": {
+    "weight": "duotone",
+    "sha256": "21b5ecfdd65a1aaced52daf72e1ac405e4de7c2a1363a9065800a40fb15cb602"
+  },
+  "radio-button": {
+    "weight": "duotone",
+    "sha256": "312d0afdb8b891c7dca27d719296cc1acc28b4feb92cf83fbcac12dda00200c8"
+  },
+  "robot": {
+    "weight": "duotone",
+    "sha256": "7674bf6dd6c2a4f09bbf3989e915e17edd9804c45e14d0a95edadc5505fda1b3"
+  },
+  "scales": {
+    "weight": "duotone",
+    "sha256": "e31256959626a331a7949762141f67020126347e9421c66f04ed696b008002b6"
+  },
+  "scan": {
+    "weight": "duotone",
+    "sha256": "69c2bdfe6d6fa604ec6172e7e7d7495a45f7375b8f18d3ada0834da72ce61d0a"
+  },
+  "seal-check": {
+    "weight": "duotone",
+    "sha256": "45897ac520115a7af6372864e0df6e4c1636af59c75de7bc230d660efb46029d"
+  },
+  "shield-check": {
+    "weight": "duotone",
+    "sha256": "e42c34a900022e60b41136a5744989af1cfb977247079afbfaf5a8440b86fd91"
+  },
+  "shield-warning": {
+    "weight": "duotone",
+    "sha256": "a5f6a9fa81eab8703e656e34de2e45a54061544bfeb136bae62f008e87fb81f4"
+  },
+  "sidebar-simple": {
+    "weight": "duotone",
+    "sha256": "7b23c859cee86dec8913c8d9fda9b4f20e2e43f5d5f5d7043b87f0a3cc9ca7e6"
+  },
+  "sliders-horizontal": {
+    "weight": "duotone",
+    "sha256": "76260b62780cba20278d8c45eb9107801090414b0fbb8a6b67c97860664d7237"
+  },
+  "sparkle": {
+    "weight": "duotone",
+    "sha256": "c4740b4365131487e4b49b54fc554a6cbdde28aaad74c5a8a8be2195b5fb4c19"
+  },
+  "spinner-gap": {
+    "weight": "regular",
+    "sha256": "c6cd667951de0c9a64e1831e11866b51f8af9b2da56623f58634f3448fb450cd"
+  },
+  "squares-four": {
+    "weight": "duotone",
+    "sha256": "08872949367b6a6f2f0578ff77364f6c8ebb407942629a28b322194512927381"
+  },
+  "stack": {
+    "weight": "duotone",
+    "sha256": "f1449eb8dcde911c59b913042bbf51ee9778aae9eb9663b7b14a8d9fe1032aad"
+  },
+  "stop": {
+    "weight": "duotone",
+    "sha256": "b27b345a9ddd09b09cfad1a3b796b215275e1a906a011f24fa52a319b3a58ef5"
+  },
+  "sun": {
+    "weight": "duotone",
+    "sha256": "6a180204ea92f2501de811908395e6dad15ddf2ca0a577f420fad8bef0b4c5ca"
+  },
+  "table": {
+    "weight": "duotone",
+    "sha256": "9d5d194de48b3983c3e666fe8e1089cad925adbde10477f0908066f38b919c71"
+  },
+  "tag": {
+    "weight": "duotone",
+    "sha256": "3d1cc09e77869fd52efab0633cfb5ad050632f5f1c1ed1851298915ae3d80909"
+  },
+  "toolbox": {
+    "weight": "duotone",
+    "sha256": "c36a8423f14a7fed14005251706f3b350af19bf0140b7b1fac4bcd16b152ad8d"
+  },
+  "tree-structure": {
+    "weight": "duotone",
+    "sha256": "576f858cd9a82372aa845dd98ca00ef37cd4cf72e518399554fee4177ddd3814"
+  },
+  "upload-simple": {
+    "weight": "duotone",
+    "sha256": "f95c3c5150c3c15e27828fd1600cc8b00a60c236b7c911da89941da4bfdb336e"
+  },
+  "user": {
+    "weight": "duotone",
+    "sha256": "58708fccb6ecc622a23f9fcd4aae24912c660d8f3d502185693ba562bef85674"
+  },
+  "user-check": {
+    "weight": "duotone",
+    "sha256": "4dd7c39395a5d480e8ddc948d9ed39be1e109d0e0b97c70f58cc7c140b788711"
+  },
+  "users-three": {
+    "weight": "duotone",
+    "sha256": "8df43f36d7329c365afa0672e2367af16a7bfc7d8820838dfe7358cce1a76aba"
+  },
+  "warning": {
+    "weight": "duotone",
+    "sha256": "5ae0c2cd3e764e0e82f03685657353b65499d6b231745af8516c140e8b1ba4af"
+  },
+  "warning-circle": {
+    "weight": "duotone",
+    "sha256": "d0b7e244c1e5df2093690a2b3c990c2aad72d5e889739238489fe51159ce1b40"
+  },
+  "x": {
+    "weight": "regular",
+    "sha256": "7397b15e1fa66eaf6ff9b59fe91d483cb5c3bcf75b2fe052097ab6f0593b513a"
+  },
+  "x-circle": {
+    "weight": "duotone",
+    "sha256": "62a1dc9fb293f84fd6671cc44ebeecbea30a52a671264d2a737b3e687d3d601f"
+  },
+  "question": {
+    "weight": "duotone",
+    "sha256": "af995bac28b5f0007c9ff20cf23351dba0a8c07cea55868cd8b65056bc103515"
+  },
+  "note-pencil": {
+    "weight": "duotone",
+    "sha256": "42e4e6d15c523016812041aa4e692c8ab9b6d6488c7b8864adb537fefc083fee"
+  }
+}

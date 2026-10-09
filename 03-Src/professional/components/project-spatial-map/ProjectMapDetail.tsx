@@ -1,4 +1,5 @@
-import { AlertTriangle, ExternalLink, MapPin, ShieldCheck, UserRound } from "lucide-react";
+import { AlertTriangle, ChevronRight, ExternalLink, MapPin, ShieldCheck, UserRound } from "../../../PhosphorIcons";
+import "./mapRefinement.css";
 import type { SpatialMapItem, SpatialProfile } from "./projectSpatialMapUtils";
 import { DEFAULT_SPATIAL_MAP_SOURCE, displayCoordinate, riskLabel, spatialStatusLabel, spatialTypeLabel } from "./projectSpatialMapUtils";
 
@@ -46,14 +47,12 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
 
   return (
     <aside className="project-spatial-map__detail" aria-label="项目地点详情">
+      <div className="project-spatial-map__detail-kicker"><span className="project-spatial-map__eyebrow">{item.is_demo ? "演示项目" : "真实项目"}</span><span className={`project-spatial-map__risk project-spatial-map__risk--${item.risk_level || "unknown"}`}>{riskLabel(item.risk_level)}</span></div>
       <div className="project-spatial-map__detail-heading">
         <div>
-          <span className="project-spatial-map__eyebrow">{item.is_demo ? "演示项目" : "真实项目"}</span>
           <h2>{item.project_name}</h2>
         </div>
-        <span className={`project-spatial-map__risk project-spatial-map__risk--${item.risk_level || "unknown"}`}>{riskLabel(item.risk_level)}</span>
       </div>
-      <p className="project-spatial-map__location-line"><MapPin size={15} />{item.display_location || "未识别地点"}</p>
       <div className="project-spatial-map__tag-row">
         <span className="project-spatial-map__tag">{spatialTypeLabel(item.spatial_type)}</span>
         <span className="project-spatial-map__tag">{spatialStatusLabel(profile?.recognition_status || item.recognition_status)}</span>
@@ -61,13 +60,13 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
       </div>
 
       <section className="project-spatial-map__detail-section">
-        <h3>空间位置</h3>
+        <h3 className="project-spatial-map__place-heading"><MapPin size={18} />空间位置<span>{places.length} 处</span></h3>
         {places.length ? (
-          <ol className="project-spatial-map__place-list">
-            {places.map((place) => (
+          <ol className="project-spatial-map__place-list project-spatial-map__place-timeline">
+            {places.map((place, index) => (
               <li key={`${place.admin_code}-${place.sequence_no}`}>
-                <span>{item.spatial_type === "CORRIDOR" ? `${place.sequence_no}. ` : ""}{placeName(place)}</span>
-                <small>{displayCoordinate(place)}</small>
+                <span className="project-spatial-map__place-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><div><span>{placeName(place)}</span>
+                <small>{displayCoordinate(place)}</small></div>
               </li>
             ))}
           </ol>
@@ -76,10 +75,10 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
         {item.spatial_type === "CORRIDOR" ? <p className="project-spatial-map__disclaimer">廊道线仅连接已确认地点，用于项目关系示意，不代表实际管线走向。</p> : null}
       </section>
 
-      <section className="project-spatial-map__detail-section">
-        <h3>来源与确认</h3>
+      <details className="project-spatial-map__detail-section project-spatial-map__source-details">
+        <summary><ShieldCheck size={18} /><span>来源与确认</span><ChevronRight size={16} /></summary>
         <dl className="project-spatial-map__meta-list">
-          <div><dt>识别方式</dt><dd>{item.recognition_method || "未记录"}</dd></div>
+          <div><dt>识别方式</dt><dd>{item.recognition_method === "demo_fixture" ? "演示样本" : item.recognition_method || "未记录"}</dd></div>
           <div><dt>地点版本</dt><dd>{profile?.source_version || source?.source_version || "未记录"}</dd></div>
           <div><dt>地图归属</dt><dd>{isShowcase ? "本地展示几何（测试）" : source?.source_authority || "待配置"}</dd></div>
           <div><dt>许可</dt><dd>{isShowcase ? "本地展示层；非正式制图成果" : source?.license || "待配置"}</dd></div>
@@ -88,8 +87,8 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
         </dl>
         {isShowcase ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />展示主题使用本地测试几何和项目台账；省域颜色、台湾岛与南海群岛均为展示示意，不作为正式制图成果。</p> : isL7TestMap ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />测试项目直接使用 AntV L7；地点为代表点示意，不作为正式制图成果。</p> : !source?.approved_for_formal_map ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />当前为展示代表点资产，正式底图和审图号完成配置前不作为正式制图成果。</p> : null}
         {profile?.confirmed_by ? <p className="project-spatial-map__confirmed"><UserRound size={14} />确认人：{profile.confirmed_by} · {profile.confirmed_at}</p> : null}
+      </details>
         {isReal && profile?.pending_candidates?.length ? <p className="project-spatial-map__warning"><AlertTriangle size={14} />发现 {profile.pending_candidates.length} 个新地点候选，当前已确认结果未被覆盖，请进入人工复核。</p> : null}
-      </section>
 
       {evidenceItems.length ? (
         <section className="project-spatial-map__detail-section">
@@ -105,10 +104,11 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
         </section>
       ) : null}
 
-      <div className="project-spatial-map__detail-actions">
+      {!source?.approved_for_formal_map || isL7TestMap || isShowcase ? <p className="project-spatial-map__map-notice"><ShieldCheck size={16} />测试地图 · 地点示意，非正式制图成果</p> : null}
+      {isReal ? <div className="project-spatial-map__detail-actions">
         {isReal ? <button type="button" className="project-spatial-map__button project-spatial-map__button--primary" onClick={onReview}>{profile?.pending_candidates?.length ? "复核新候选" : profile?.recognition_status === "confirmed" ? "修正地点" : "人工确认地点"}</button> : null}
         {isReal && item.latest_run_id ? <button type="button" className="project-spatial-map__button" onClick={() => void onOpenRun(item.project_id, item.latest_run_id, "preview")}><ExternalLink size={14} />打开结果预览</button> : null}
-      </div>
+      </div> : null}
       {profileLoading ? <p className="project-spatial-map__loading-note">正在读取空间审计资料……</p> : null}
     </aside>
   );

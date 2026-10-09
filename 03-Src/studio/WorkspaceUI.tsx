@@ -4,6 +4,7 @@ import {api,form,json} from './api';
 import {Button,Icon,Modal,Note} from './ui';
 import {workspaceApi,useWorkspace,type Asset,type Conversation,type Project} from './useWorkspace';
 import {useSidebar} from './useSidebar';
+import {uiVersion} from './version';
 
 type Workspace=ReturnType<typeof useWorkspace>;
 type RailPanel='projects'|'history';
@@ -24,20 +25,20 @@ export function WorkspaceSidebar({workspace:w,navigation:n,busy,newChat,select,s
  useEffect(()=>{if(!n.visible||!active)setPanel(null)},[n.visible,active]);
  useEffect(()=>{if(!panel)return;const root=n.sidebarRef.current;root?.querySelector<HTMLButtonElement>('[data-rail-panel-close]')?.focus();const outside=(e:PointerEvent)=>{if(root&&!root.contains(e.target as Node))setPanel(null)};const key=(e:KeyboardEvent)=>{if(e.key==='Escape'&&!document.querySelector('dialog[open]')){e.preventDefault();close();}};document.addEventListener('pointerdown',outside);document.addEventListener('keydown',key);return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',key)};},[panel]);
  return <aside className="sidebar icon-rail" id="project-sidebar" ref={n.sidebarRef} hidden={!n.visible} role={n.mobile?'dialog':undefined} aria-modal={n.mobile&&n.sidebar?true:undefined} aria-label="主导航">
-  <div className="tooltip tooltip-right rail-tip rail-brand" data-tip={n.mobile?'收起导航':'智算 Astra · 当前对话'}><button type="button" className="btn btn-ghost btn-square rail-button" data-sidebar-close={n.mobile||undefined} aria-label={n.mobile?'收起项目菜单':'返回当前对话'} title={n.mobile?'收起导航':'当前对话'} onClick={()=>n.mobile?n.setSidebar(false):go(()=>open('chat'))}>{n.mobile?<Icon name="close"/>:<span className="brand-mark astra-mark">A</span>}</button></div>
+  <div className="tooltip tooltip-right rail-tip rail-brand" data-tip={n.mobile?'收起导航':'造价智算 · 当前对话'}><button type="button" className="btn btn-ghost btn-square rail-button" data-sidebar-close={n.mobile||undefined} aria-label={n.mobile?'收起项目菜单':'返回当前对话'} title={n.mobile?'收起导航':'当前对话'} onClick={()=>n.mobile?n.setSidebar(false):go(()=>open('chat'))}>{n.mobile?<Icon name="close"/>:<span className="brand-mark astra-mark">A</span>}</button></div>
   <nav className="rail-actions menu" aria-label="工作区入口">
    <RailButton label="聊天" icon="message" active={!panel&&activeView==='chat'&&!settingsActive} onClick={()=>go(()=>open('chat'))}/>
-   <RailButton label="新对话" icon="plus" disabled={busy||!w.ready} onClick={()=>go(newChat)}/>
+   <RailButton label="新对话" icon="new-chat" disabled={busy||!w.ready} onClick={()=>go(newChat)}/>
    <RailButton label="搜索对话" icon="search" onClick={()=>go(search)}/>
    <RailButton label="项目" icon="folder" active={panel==='projects'} expanded={panel==='projects'} controls="workspace-rail-panel" onClick={e=>toggle('projects',e.currentTarget)}/>
-   <RailButton label="最近对话" icon="message" active={panel==='history'||(!panel&&activeView==='chat'&&!settingsActive)} expanded={panel==='history'} controls="workspace-rail-panel" onClick={e=>toggle('history',e.currentTarget)}/>
-   <RailButton label="项目看板" icon="grid" active={!panel&&activeView==='projects'} onClick={()=>go(()=>open('projects'))}/>
+   <RailButton label="最近对话" icon="history" active={panel==='history'||(!panel&&activeView==='chat'&&!settingsActive)} expanded={panel==='history'} controls="workspace-rail-panel" onClick={e=>toggle('history',e.currentTarget)}/>
+   <RailButton label="项目看板" icon="projects" active={!panel&&activeView==='projects'} onClick={()=>go(()=>open('projects'))}/>
    <RailButton label="表格" icon="sheet" active={!panel&&activeView==='table'} onClick={()=>go(()=>open('table'))}/>
    <RailButton label="风险" icon="shield" active={!panel&&activeView==='risk'} onClick={()=>go(()=>open('risk'))}/>
-   <RailButton label="文字报告" icon="file" active={!panel&&activeView==='report'} onClick={()=>go(()=>open('report'))}/>
-   <RailButton label="资料库" icon="book" active={!panel&&activeView==='library'} onClick={()=>go(()=>open('library'))}/>
+   <RailButton label="文字报告" icon="report" active={!panel&&activeView==='report'} onClick={()=>go(()=>open('report'))}/>
+   <RailButton label="资料库" icon="library" active={!panel&&['knowledge','articles'].includes(activeView)} onClick={()=>go(()=>open('articles'))}/>
   </nav>
-  <div className="rail-bottom"><RailButton label="设置" icon="settings" active={settingsActive} onClick={()=>go(settings)}/><div className="tooltip tooltip-right rail-tip" data-tip="石萌 · 独立工作空间"><span className="rail-profile" aria-label="石萌，独立工作空间" tabIndex={0}>石</span></div></div>
+  <div className="rail-bottom"><RailButton label="设置" icon="settings" active={settingsActive} onClick={()=>go(settings)}/><div className="tooltip tooltip-right rail-tip" data-tip="石萌 · 独立工作空间"><span className="rail-profile" aria-label="石萌，独立工作空间" tabIndex={0}>石</span></div><span className="rail-version" aria-label={`应用版本 ${uiVersion}`} title={`造价智算 v${uiVersion}`}>v{uiVersion}</span></div>
   {panel&&<WorkspaceRailPanel mode={panel} workspace={w} busy={busy} select={id=>go(()=>select(id))} showProject={id=>go(()=>showProject(id))} newProject={()=>go(newProject)} open={view=>go(()=>open(view))} close={close}/>}
  </aside>;
 }

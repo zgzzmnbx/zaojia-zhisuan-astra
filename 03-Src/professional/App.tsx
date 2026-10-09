@@ -1,3 +1,5 @@
+import {readBusiness,saveBusiness,type BusinessSettings} from '../studio/business-settings';
+import type {RowContext} from '../studio/RowAssist';
 import {applyAppearance} from "../studio/appearance";
 import {currentContext,notifyParent,protocol,setContext,type ProfessionalContext} from "./astra-bridge";
 import ProfessionalSkillCenter from "./components/skills/ProfessionalSkillCenter";
@@ -37,7 +39,7 @@ import {
   Sun,
   Upload,
   X,
-} from "lucide-react";
+} from "../PhosphorIcons";
 import { DaweibaLayoutV2 } from "./DaweibaLayoutV2";
 import { AvatarMotionSettings } from "./components/zhisuan-avatar/AvatarMotionSettings";
 import { normalizeAvatarMotionMode, setAvatarMotionMode, type AvatarMotionMode } from "./components/zhisuan-avatar/motionPreference";
@@ -2479,13 +2481,29 @@ function DaweibaApp() {
   const astraRestore=useRef(0);
   const astraLoadedJob=useRef("");
   const astraSeed=useRef("");
+  const [astraRow,setAstraRow]=useState<RowContext|null>(null);const openedAstraRow=useRef('');
+  const astraBusiness=useRef<BusinessSettings|null>(null),astraBusinessReady=useRef(false),astraBusinessSave=useRef<Promise<unknown>>(Promise.resolve()),astraBusinessTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
+  async function persistAstraBusiness(current:Omit<BusinessSettings,'revision'>){
+    const operation=astraBusinessSave.current.catch(()=>{}).then(async()=>{
+      if(!astraBusiness.current)await loadAstraBusiness();
+      if(Object.entries(current).every(([key,value])=>astraBusiness.current?.[key as keyof BusinessSettings]===value))return;
+      astraBusiness.current=await saveBusiness({...astraBusiness.current!,...current});notifyParent('settings-changed');
+    });astraBusinessSave.current=operation;await operation;
+  }
+  async function loadAstraBusiness(){const value=await readBusiness();astraBusiness.current=value;setMatchingMode(value.matchingMode);setOnlyMatchRowsWithValue(value.onlyMatchRowsWithValue);setMatchValueFilterField(normalizeWarningFilterFieldValue(value.matchValueFilterField));setOutputMatchReport(value.outputMatchReport);setMergeVerticalCells(value.mergeVerticalCells);setMergeHorizontalCells(value.mergeHorizontalCells);astraBusinessReady.current=true;}
+
   useEffect(()=>{
     async function apply(next:ProfessionalContext){
       if(!next.context||typeof next.context!=="string")return;
       const changed=next.context!==currentContext.context;
+      const businessChanged=next.businessRevision!==currentContext.businessRevision;
       const routeChanged=changed||next.view!==currentContext.view||next.active!==currentContext.active;
       applyAppearance({palette:next.palette||"astra",dark:next.dark});
-      setContext(next);setAstraView(next.view);setColorMode(next.dark?"dark":"light");
+      setContext(next);if(next.previewPreferences&&JSON.stringify(next.previewPreferences)!==JSON.stringify(previewPreferencesRef.current)){setPreviewColumnPreferences(normalizePreviewColumnPreferences(next.previewPreferences));}
+      if(routeChanged){setAstraRow(null);openedAstraRow.current="";}
+      if(businessChanged||routeChanged)await loadAstraBusiness().catch(error=>notifyParent("error",{message:String(error)}));
+      if(currentContext.context!==next.context||currentContext.jobId!==next.jobId||currentContext.view!==next.view)return;
+      setAstraView(next.view);setColorMode(next.dark?"dark":"light");
       document.documentElement.dataset.astraView=next.view;
       document.documentElement.dataset.astraActive=String(next.active);
       if(routeChanged){
@@ -2522,6 +2540,7 @@ function DaweibaApp() {
           setResult(restored);if(next.view==="tracefull")setTimeout(()=>setIsTaskDetailOpen(true),0);setProjectName((restored as ProcessResult & {project_name?:string}).project_name||"");setActivePreviewSheetName("");
         }catch(error){astraLoadedJob.current="";notifyParent("error",{message:String(error)});}
       }
+      if(next.rowContext?.context===next.context&&next.rowContext.job_id===next.jobId)setAstraRow(next.rowContext);else setAstraRow(null);
     }
     const receive=(event:MessageEvent)=>{if(event.origin===location.origin&&event.source===window.parent&&event.data?.protocol===protocol&&event.data.type==="context")void apply(event.data);};
     window.addEventListener("message",receive);notifyParent("ready");
@@ -2587,6 +2606,16 @@ function DaweibaApp() {
   const [isPreviewSettingsOpen, setIsPreviewSettingsOpen] = useState(false);
   const [activePreviewSettingsSheetName, setActivePreviewSettingsSheetName] = useState("");
   const [previewColumnPreferences, setPreviewColumnPreferences] = useState<PreviewColumnPreferences>(readInitialPreviewColumnPreferences);
+  const previewPreferencesRef=useRef(previewColumnPreferences);previewPreferencesRef.current=previewColumnPreferences;
+  useEffect(()=>{if(currentContext.active&&JSON.stringify(previewColumnPreferences)!==JSON.stringify(currentContext.previewPreferences))notifyParent('preview-preferences',{preferences:previewColumnPreferences});},[previewColumnPreferences]);
+  useEffect(()=>{
+    if(!astraBusinessReady.current||!astraBusiness.current)return;
+    const current={matchingMode,onlyMatchRowsWithValue,matchValueFilterField,outputMatchReport,mergeVerticalCells,mergeHorizontalCells};
+    if(Object.entries(current).every(([key,value])=>astraBusiness.current?.[key as keyof BusinessSettings]===value))return;
+    const timer=setTimeout(()=>{void persistAstraBusiness(current).catch(error=>{astraBusinessReady.current=false;setError(String(error));notifyParent('error',{message:'编制设置未保存，请重新读取：'+String(error)});});},350);astraBusinessTimer.current=timer;
+    return()=>clearTimeout(timer);
+  },[matchingMode,onlyMatchRowsWithValue,matchValueFilterField,outputMatchReport,mergeVerticalCells,mergeHorizontalCells]);
+
   const [previewDefaultLabelsDraft, setPreviewDefaultLabelsDraft] = useState(preferenceText([...DEFAULT_CORE_PREVIEW_LABELS]));
   const [isRefreshingPreviewSettings, setIsRefreshingPreviewSettings] = useState(false);
   const [editingPreviewCell, setEditingPreviewCell] = useState<PreviewCellEditState | null>(null);
@@ -5225,6 +5254,8 @@ function DaweibaApp() {
     setInputFieldDraft(inputDefaults);
     setInputFieldPreferencesPath(payload.file_path ?? "");
     setMatchingMode(payload.aiMatching?.defaultMode === "mechanical" ? "mechanical" : "ai_enhanced");
+    if(currentContext.previewPreferences)setPreviewColumnPreferences(normalizePreviewColumnPreferences(currentContext.previewPreferences));
+    astraBusinessReady.current=false;void loadAstraBusiness().catch(error=>setError(String(error)));
 
     const workloadDefaults = payload.workloadCapture ?? {};
     const sourceDefaults = workloadDefaults.source ?? {};
@@ -7882,6 +7913,9 @@ function DaweibaApp() {
     body.append("only_match_rows_with_value", String(onlyMatchRowsWithValue));
     body.append("match_value_filter_field", matchValueFilterField);
     body.append("defer_matching", "true");
+    if(astraBusinessTimer.current)clearTimeout(astraBusinessTimer.current);
+    try{await persistAstraBusiness({matchingMode,onlyMatchRowsWithValue,matchValueFilterField,outputMatchReport,mergeVerticalCells,mergeHorizontalCells});}
+    catch(error){setError('编制设置未保存：'+String(error));return;}
     body.append("matching_mode", matchingMode);
     body.append("skill_id", selectedProfessionalSkill.id);
     body.append("skill_version", selectedProfessionalSkill.version);
@@ -8229,7 +8263,7 @@ function DaweibaApp() {
     row: Array<string | number | null>,
     sourceIndex: number,
     sheetOverride?: TablePreview,
-    options: { autoRunAi?: boolean } = {},
+    options: { autoRunAi?: boolean; targetHeader?:string;targetColumnNumber?:number } = {},
   ) {
     if (!result || !activePreview) return;
     setIsFillAssistAiAnswerExpanded(false);
@@ -8237,7 +8271,7 @@ function DaweibaApp() {
     const sourceColumns = sheetOverride
       ? buildPreviewColumns(sourceSheet, result.summary.price_column, previewColumnPreferences)
       : previewColumns;
-    const targetColumn = findFillAssistTargetColumn(sourceColumns, result.summary.price_column);
+    const targetColumn = options.targetColumnNumber?sourceColumns.find(column=>column.index===options.targetColumnNumber!-1):options.targetHeader?sourceColumns.find(column=>column.label===options.targetHeader):findFillAssistTargetColumn(sourceColumns, result.summary.price_column);
     if (!targetColumn) {
       setError("当前预览未找到基价 / 单价列，无法启动 AI 填价");
       return;
@@ -8256,7 +8290,7 @@ function DaweibaApp() {
       context: {
         sheet_name: sheetName,
         excel_row: rowNumber,
-        target_header: targetColumn.label,
+        target_header: options.targetHeader||targetColumn.label,
         target_column: targetColumn.index + 1,
         current_value: row[targetColumn.index] ?? "",
         row: {},
@@ -8278,7 +8312,7 @@ function DaweibaApp() {
           job_id: result.job_id,
           sheet_name: sheetName,
           row_number: rowNumber,
-          target_header: targetColumn.label,
+          target_header: options.targetHeader||targetColumn.label,
         }),
       });
       if (!response.ok) {
@@ -8311,6 +8345,17 @@ function DaweibaApp() {
       } : current);
     }
   }
+
+  useEffect(()=>{
+    if(!astraRow||!result||result.job_id!==astraRow.job_id||!currentContext.active)return;
+    const key=JSON.stringify(astraRow);if(openedAstraRow.current===key)return;
+    const sheet=previewSheets.find(item=>item.sheet_name===astraRow.sheet_name);
+    if(!sheet)return;
+    const index=sheet.rows.findIndex((_row,index)=>previewExcelRowNumber(sheet,index,sheetConfigs)===astraRow.row_number);
+    if(index<0){setError('选中行不在当前预览范围内');return;}
+    openedAstraRow.current=key;setActivePreviewSheetName(astraRow.sheet_name);
+    void openFillAssist(sheet.rows[index],index,sheet,{targetHeader:astraRow.target_header,targetColumnNumber:astraRow.column_number});
+  },[astraRow,result,previewSheets]);
 
   async function confirmFillAssist() {
     if (!result || !fillAssistDialog) return;
@@ -16181,6 +16226,7 @@ function Metric({
     </div>
   );
 }
+
 
 
 

@@ -9,7 +9,7 @@ import {
   RefreshCw,
   ShieldAlert,
   ShieldCheck,
-} from "lucide-react";
+} from "../../../PhosphorIcons";
 import {
   evidenceExperienceStatusLabel,
   evidenceToMarkdown,

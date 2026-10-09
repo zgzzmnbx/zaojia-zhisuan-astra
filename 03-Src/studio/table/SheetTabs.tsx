@@ -1,3 +1,4 @@
+import {ChevronLeft,ChevronRight} from '../../PhosphorIcons';
 import {useEffect,useRef,useState} from 'react';
 import './sheet-tabs.css';
 
@@ -25,14 +26,14 @@ export function SheetTabs({names,index,onChange,panelId}:{names:string[];index:n
   if(!names.length)return null;
   function scroll(direction:number){const node=list.current;if(node)node.scrollBy({left:direction*Math.max(120,node.clientWidth*.75),behavior:'auto'});}
   return <div className="workbook-sheet-nav">
-    <button type="button" className="sheet-scroll" aria-label="向左滚动工作表页签" disabled={!overflow.left} onClick={()=>scroll(-1)}><span aria-hidden="true">‹</span></button>
+    <button type="button" className="sheet-scroll" aria-label="向左滚动工作表页签" disabled={!overflow.left} onClick={()=>scroll(-1)}><ChevronLeft size={16}/></button>
     <div ref={list} className="workbook-sheet-tabs" role="tablist" aria-label="预览工作表">
       {names.map((name,i)=><button type="button" key={`${i}-${name}`} id={`${panelId}-tab-${i}`} role="tab" aria-controls={panelId} aria-selected={i===active} tabIndex={i===active?0:-1} title={name} onClick={()=>onChange(i)} onKeyDown={event=>{
         const next=event.key==='ArrowRight'?(i+1)%names.length:event.key==='ArrowLeft'?(i+names.length-1)%names.length:event.key==='Home'?0:event.key==='End'?names.length-1:null;
         if(next!==null){event.preventDefault();onChange(next);(list.current?.children[next] as HTMLButtonElement)?.focus({preventScroll:true});}
       }}>{name}</button>)}
     </div>
-    <button type="button" className="sheet-scroll" aria-label="向右滚动工作表页签" disabled={!overflow.right} onClick={()=>scroll(1)}><span aria-hidden="true">›</span></button>
+    <button type="button" className="sheet-scroll" aria-label="向右滚动工作表页签" disabled={!overflow.right} onClick={()=>scroll(1)}><ChevronRight size={16}/></button>
     <span className="sheet-count" title={`共 ${names.length} 张工作表`}>{active+1}<span> / {names.length}</span></span>
   </div>;
 }

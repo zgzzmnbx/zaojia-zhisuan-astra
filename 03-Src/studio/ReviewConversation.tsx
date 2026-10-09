@@ -3,7 +3,7 @@ import InlineReviewSetupCard from '../professional/components/agent-workspace/In
 import InlineReviewProgressCard from '../professional/components/agent-workspace/InlineReviewProgressCard';
 import {latestReviewTasksByPlatform} from '../professional/components/agent-workspace/reviewProgress';
 import {api,json} from './api';
-import {reviewPeople,reviewProblem,reviewPayload,type ReviewOptions,type ReviewPlatform,type ReviewRequest,type ReviewTask} from './review-flow';
+import {initialReviewEnabled,reviewPeople,reviewProblem,reviewPayload,type ReviewOptions,type ReviewPlatform,type ReviewRequest,type ReviewTask} from './review-flow';
 import './review-conversation.css';
 
 const profiles=[['default','飞书'],['weact_cost','WeAct']] as const;
@@ -27,7 +27,7 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
     const outcome=options[index],o=outcome?.status==='fulfilled'?outcome.value:null,previous=old.find(p=>p.profileId===id),task=current.find(t=>t.platform===id)||null;
     const available=!!o&&o.active_profile===id&&o.platforms.some(p=>p.profile_id===id&&p.configuration_ok)&&connection.external_enabled;
     const group=o?.directory.groups.find(g=>g.group_ref===previous?.group)||o?.directory.groups.find(g=>g.authorized);
-    return {profileId:id,label,options:o,configurationOk:available,enabled:previous?previous.enabled&&available:available&&(id==='default'||options[0]?.status==='rejected'),expanded:previous?.expanded??true,deliveryChannels:previous?.deliveryChannels||[o?.direct_delivery.status==='available'?'direct':'group'],group:group?.group_ref||'',selectedReviewers:[],task,loading:false,feedback:outcome?.status==='rejected'?(outcome.reason as Error).message:o?.directory.refresh_error?`目录刷新失败：${o.directory.refresh_error}`:!connection.external_enabled?'请先在协同设置中启用本工作区。':''};
+    return {profileId:id,label,options:o,configurationOk:available,enabled:initialReviewEnabled(available,task,previous),expanded:previous?.expanded??true,deliveryChannels:previous?.deliveryChannels||[o?.direct_delivery.status==='available'?'direct':'group'],group:group?.group_ref||'',selectedReviewers:[],task,loading:false,feedback:outcome?.status==='rejected'?(outcome.reason as Error).message:o?.directory.refresh_error?`目录刷新失败：${o.directory.refresh_error}`:!connection.external_enabled?'请先在协同设置中启用本工作区。':''};
    }));
    setFeedback(refresh?'目录已重新读取，请重新勾选复核人。':'');
   }catch(e){if(alive.current&&generation===epoch.current){setExternal(false);setError((e as Error).message);setPlatforms(old=>old.map(p=>({...p,configurationOk:false})));}}
@@ -76,6 +76,6 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
    onDeadlineChange={value=>{setDeadline(value);setConfirmed(false);setRound(false);}} onInstructionsChange={value=>{setInstructions(value);setConfirmed(false);setRound(false);}}
    onAudienceConfirmedChange={setConfirmed} onRefresh={()=>void load(true)} onCancel={onClose} onSubmit={()=>void send()} onRetry={id=>void retry(id)} onOpenNewRoundConfirmation={()=>setRound(true)} onCloseNewRoundConfirmation={()=>setRound(false)} onConfirmNewRound={()=>void send(true)}/>:null}
   {request.kind==='setup'&&tasks.some(t=>t.can_retry)&&<div className="review-retry-actions">{platforms.filter(p=>p.task?.can_retry).map(p=><button key={p.profileId} className="btn btn-outline btn-sm" disabled={sending||busy||loading||!external} onClick={()=>void retry(p.profileId)}>仅重试 {p.label} 失败步骤</button>)}</div>}
-  {(request.kind==='progress'||tasks.length>0)&&<InlineReviewProgressCard snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose}/>}
+  {(request.kind==='progress'||tasks.length>0)&&<InlineReviewProgressCard snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose} onAddPlatform={request.kind==='progress'?onClose:()=>{setConfirmed(false);setPlatforms(all=>all.map(p=>({...p,enabled:p.configurationOk&&!p.task,expanded:!p.task||p.expanded})));}}/>}
  </div>;
 }

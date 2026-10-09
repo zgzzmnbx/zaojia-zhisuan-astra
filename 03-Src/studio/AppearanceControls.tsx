@@ -1,5 +1,9 @@
 import {palettes,type Palette} from './appearance';
 import {Icon} from './ui';
+export function ThemeModeButton({dark,toggle}:{dark:boolean;toggle:()=>void}){
+ const label=dark?'切换到亮色模式':'切换到深色模式';
+ return <button type="button" className="btn btn-ghost btn-square theme-mode-toggle" aria-label={label} aria-pressed={dark} title={label} onClick={toggle}><Icon name={dark?'sun':'moon'}/></button>;
+}
 export function ThemeButton({open,className='',expanded,label='主题配色'}:{open:()=>void;className?:string;expanded?:boolean;label?:string}){
  return <button type="button" className={`btn btn-ghost btn-square theme-trigger ${className}`} aria-label={label} aria-haspopup="dialog" aria-expanded={expanded} title="外观与主题" onClick={open}><span aria-hidden="true"/></button>;
 }

@@ -2,6 +2,10 @@
    Source: https://daisyui.com/docs/themes/ . Status / pricing colors are separate. */
 [data-astra-palette="astra"][data-astra-scheme="light"]{--astra-paper:#ffffff;--astra-canvas:#f7f8fa;--astra-rail:#f4f5f7;--astra-ink:#202838;--astra-muted:#637084;--astra-line:#e5e8ee;--astra-soft:#f0f3f8;--astra-primary:#284bd4;--astra-accent:#284bd4;}
 [data-astra-palette="astra"][data-astra-scheme="dark"]{--astra-paper:#161a21;--astra-canvas:#11151c;--astra-rail:#0d1117;--astra-ink:#edf1f8;--astra-muted:#a4afc0;--astra-line:#303946;--astra-soft:#222b39;--astra-primary:#4564cd;--astra-accent:#a6baff;}
+/* Mantine default blue[6], https://mantine.dev/theming/colors/ .
+   White button text uses a deeper same-hue gradient; blue.6 remains the chart seed. */
+[data-astra-palette="mantine-blue"][data-astra-scheme="light"]{--astra-paper:#ffffff;--astra-canvas:#f5f9fd;--astra-rail:#edf4fb;--astra-ink:#203044;--astra-muted:#586d82;--astra-line:#dce7f1;--astra-soft:#eaf3fb;--astra-primary:#228be6;--astra-accent:#1971c2;--astra-primary-content:#fff;--astra-primary-gradient:linear-gradient(135deg,#1971c2,#1864ab);--astra-selected-gradient:linear-gradient(135deg,#e7f5ff,#f5f9fd);}
+[data-astra-palette="mantine-blue"][data-astra-scheme="dark"]{--astra-paper:#16212d;--astra-canvas:#101923;--astra-rail:#0c141e;--astra-ink:#edf4fc;--astra-muted:#a6bad0;--astra-line:#304356;--astra-soft:#213549;--astra-primary:#228be6;--astra-accent:#74c0fc;--astra-primary-content:#fff;--astra-primary-gradient:linear-gradient(135deg,#1971c2,#1864ab);--astra-selected-gradient:linear-gradient(135deg,#213b54,#16212d);}
 [data-astra-palette="emerald"][data-astra-scheme="light"]{--astra-paper:#fcfefc;--astra-canvas:#f3f8f4;--astra-rail:#eaf2ec;--astra-ink:#24372c;--astra-muted:#5a6f62;--astra-line:#dbe7df;--astra-soft:#e9f3ed;--astra-primary:#197452;--astra-accent:#176648;}
 [data-astra-palette="emerald"][data-astra-scheme="dark"]{--astra-paper:#17221c;--astra-canvas:#101b16;--astra-rail:#0c1712;--astra-ink:#e8f1eb;--astra-muted:#a4b9ab;--astra-line:#304438;--astra-soft:#233b2d;--astra-primary:#287652;--astra-accent:#92d5af;}
 [data-astra-palette="nord"][data-astra-scheme="light"]{--astra-paper:#fafcfe;--astra-canvas:#eef3f8;--astra-rail:#e8eef4;--astra-ink:#293748;--astra-muted:#5b6b7e;--astra-line:#d8e2eb;--astra-soft:#e7eef5;--astra-primary:#3c6388;--astra-accent:#3c6388;}
@@ -13,14 +17,9 @@
 [data-astra-palette="graphite"][data-astra-scheme="light"]{--astra-paper:#ffffff;--astra-canvas:#f6f6f6;--astra-rail:#efefef;--astra-ink:#292b30;--astra-muted:#696b72;--astra-line:#e0e1e3;--astra-soft:#eeeeef;--astra-primary:#45464d;--astra-accent:#45464d;}
 [data-astra-palette="graphite"][data-astra-scheme="dark"]{--astra-paper:#212225;--astra-canvas:#191a1d;--astra-rail:#141518;--astra-ink:#eeeeef;--astra-muted:#b1b3ba;--astra-line:#393b41;--astra-soft:#2d2f35;--astra-primary:#555963;--astra-accent:#d5d7e0;}
 
-/* Chart ramps: Mantine-inspired hue families, derived shades owned by Astra.
+/* Chart ramps derive from the active UI primary, including its light/dark variant.
    CSS-only updates preserve chart identity, selections and current business state. */
-:root{--astra-chart-seed:#4263eb}
-:root[data-astra-palette="emerald"]{--astra-chart-seed:#12a882}
-:root[data-astra-palette="nord"]{--astra-chart-seed:#228be6}
-:root[data-astra-palette="silk"]{--astra-chart-seed:#ae3ec9}
-:root[data-astra-palette="autumn"]{--astra-chart-seed:#e87524}
-:root[data-astra-palette="graphite"]{--astra-chart-seed:#697582}
+:root{--astra-chart-seed:var(--astra-primary)}
 :root{
  --astra-chart-2:color-mix(in oklab,var(--astra-chart-seed) 25%,white);
  --astra-chart-3:color-mix(in oklab,var(--astra-chart-seed) 43%,white);
@@ -83,3 +82,16 @@
 :root[data-astra-palette] .shell.layout-daweiba .workload-card-kicker{font-size:12px!important}
 
 .appearance-controls button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* New palette only: keep existing palettes and business state unchanged. */
+:root[data-astra-palette="mantine-blue"],
+:root[data-astra-palette="mantine-blue"] .studio,
+:root[data-astra-palette="mantine-blue"] .studio .live-shell,
+:root[data-astra-palette="mantine-blue"] .studio .astra-welcome{--color-primary-content:var(--astra-primary-content)}
+:root[data-astra-palette="mantine-blue"] .studio :is(.btn-primary,.astra-mark){background:var(--astra-primary-gradient);color:var(--astra-primary-content)}
+:root[data-astra-palette="mantine-blue"] .studio .btn-primary:hover{filter:none;border-color:var(--astra-accent)}
+:root[data-astra-palette="mantine-blue"] .studio .btn-primary:disabled{background:var(--astra-soft);color:var(--astra-muted);border-color:var(--astra-line);filter:none}
+:root[data-astra-palette="mantine-blue"] .shell.layout-daweiba{--dws-color-primary-foreground:var(--astra-primary-content);--dws-primary-foreground:var(--astra-primary-content)}
+:root[data-astra-palette="mantine-blue"] .shell.layout-daweiba .primary-button:not(:disabled){background:var(--astra-primary-gradient)!important;color:var(--astra-primary-content)!important}
+:root[data-astra-palette="mantine-blue"] .studio :is(.session.active,.settings-navigation .is-active){background:var(--astra-selected-gradient)}
+.appearance-preview[data-astra-palette="mantine-blue"] .ap-chat b{background:var(--astra-primary-gradient)}

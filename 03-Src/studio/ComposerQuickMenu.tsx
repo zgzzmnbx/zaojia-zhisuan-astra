@@ -1,18 +1,20 @@
 import {useEffect,useLayoutEffect,useRef,useState,type CSSProperties} from 'react';
 import {Icon} from './ui';
+import {QuickFeatureIcon} from './QuickFeatureIcon';
 import {capabilityGroups} from './CapabilityHub';
 import {quickCommands,quickDestinations,quickUnavailable,type QuickState} from './quick-actions';
 import './composer-quick-menu.css';
+import type {QuickPreferences} from './QuickSettings';
 
-type Props={active:boolean;context:string;state:QuickState;run:(id:string)=>void};
-export function ComposerQuickMenu({active,context,state,run}:Props){
+type Props={active:boolean;context:string;state:QuickState;run:(id:string)=>void;preferences:QuickPreferences;custom:(text:string)=>void};
+export function ComposerQuickMenu({active,context,state,run,preferences,custom}:Props){
  const root=useRef<HTMLDivElement>(null),trigger=useRef<HTMLButtonElement>(null),panel=useRef<HTMLDivElement>(null);
  const timer=useRef<ReturnType<typeof setTimeout>|null>(null),suppressHover=useRef(false);
  const [mode,setMode]=useState<'closed'|'hover'|'pinned'>('closed'),[tab,setTab]=useState<'common'|'all'>('common'),[height,setHeight]=useState(420);
  const open=active&&mode!=='closed';
  const cancelTimer=()=>{if(timer.current!==null){clearTimeout(timer.current);timer.current=null;}};
  function close(restore=false){cancelTimer();suppressHover.current=true;if(restore)trigger.current?.focus({preventScroll:true});setMode('closed');}
- function choose(id:string){if(quickUnavailable(id,state))return;close(true);run(id);}
+ function choose(id:string){if(quickUnavailable(id,state))return;if(preferences.autoHide)close(true);else setMode('pinned');if(id.startsWith('custom:'))custom(preferences.customPrompts[Number(id.slice(7))]);else run(id);}
  useEffect(()=>{cancelTimer();suppressHover.current=false;setMode('closed');setTab('common');return cancelTimer;},[active,context]);
  useEffect(()=>{
   if(!open)return;
@@ -30,20 +32,20 @@ export function ComposerQuickMenu({active,context,state,run}:Props){
   const observer=new ResizeObserver(measure);if(conversation)observer.observe(conversation);if(node?.parentElement)observer.observe(node.parentElement);measure();window.addEventListener('resize',measure);window.visualViewport?.addEventListener('resize',measure);
   return()=>{observer.disconnect();window.removeEventListener('resize',measure);window.visualViewport?.removeEventListener('resize',measure);};
  },[open]);
- const tile=(id:string,icon:string,label:string,description?:string)=>{
-  const reason=quickUnavailable(id,state);
-  return <button type="button" data-quick-item key={id} className="quick-feature" disabled={!!reason} title={reason||description||label} onClick={()=>choose(id)}><Icon name={icon}/><span>{label}</span>{reason&&<span className="quick-feature-reason">{reason}</span>}</button>;
+ const tile=(id:string,_icon:string,label:string,description?:string)=>{
+  const reason=id.startsWith('custom:')?(!state.ready?'工作空间正在恢复':state.busy?'当前任务正在执行':undefined):quickUnavailable(id,state);
+  return <button type="button" data-quick-item key={id} className="btn btn-ghost quick-feature" disabled={!!reason} title={reason||description||label} onClick={()=>choose(id)}><QuickFeatureIcon id={id}/><span className="quick-feature-label">{label}</span>{reason&&<span className="quick-feature-reason">{reason}</span>}</button>;
  };
  return <div ref={root} className={`composer-quick-menu ${open?'is-open':''}`} style={{'--quick-available-height':`${height}px`} as CSSProperties}
-  onPointerEnter={event=>{cancelTimer();if(event.pointerType==='mouse'&&active&&!suppressHover.current&&mode==='closed')timer.current=setTimeout(()=>{timer.current=null;setMode('hover');},90);}}
-  onPointerLeave={()=>{cancelTimer();suppressHover.current=false;if(mode==='hover'&&!panel.current?.contains(document.activeElement))timer.current=setTimeout(()=>{timer.current=null;setMode('closed');},180);}}
+  onPointerEnter={cancelTimer}
+  onPointerLeave={()=>{cancelTimer();suppressHover.current=false;if(preferences.autoHide&&mode==='hover'&&!panel.current?.contains(document.activeElement))timer.current=setTimeout(()=>{timer.current=null;setMode('closed');},180);}}
   onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node))close();}}
   onKeyDown={event=>{if(event.key==='Escape'&&open){event.preventDefault();event.stopPropagation();close(true);}}}>
-  <button ref={trigger} type="button" className="quick-menu-handle" aria-expanded={open} aria-controls="composer-quick-panel" onClick={()=>{cancelTimer();if(mode==='pinned')close();else setMode('pinned');}} onKeyDown={event=>{if(event.key==='ArrowUp'){event.preventDefault();cancelTimer();setMode('pinned');requestAnimationFrame(()=>panel.current?.querySelector<HTMLButtonElement>('[data-quick-item]:not(:disabled)')?.focus());}}}><Icon name="grid"/><span>快捷功能</span><Icon name="chevron"/></button>
+  <button ref={trigger} type="button" className="quick-menu-handle" aria-expanded={open} aria-controls="composer-quick-panel" onPointerEnter={event=>{cancelTimer();if(event.pointerType==='mouse'&&active&&!suppressHover.current&&mode==='closed')timer.current=setTimeout(()=>{timer.current=null;setMode('hover');},90);}} onPointerLeave={()=>{cancelTimer();suppressHover.current=false;}} onClick={()=>{cancelTimer();if(mode==='pinned')close();else setMode('pinned');}} onKeyDown={event=>{if(event.key==='ArrowUp'){event.preventDefault();cancelTimer();setMode('pinned');requestAnimationFrame(()=>panel.current?.querySelector<HTMLButtonElement>('[data-quick-item]:not(:disabled)')?.focus());}}}><Icon name="grid"/><span>快捷功能</span><Icon name="chevron"/></button>
   <div ref={panel} id="composer-quick-panel" className="quick-menu-panel" role="region" aria-label="快捷功能" aria-hidden={!open} inert={!open}>
    <header className="quick-menu-heading"><div role="tablist" aria-label="快捷功能范围">{(['common','all'] as const).map(value=><button type="button" key={value} id={`quick-tab-${value}`} role="tab" aria-selected={tab===value} aria-controls="quick-menu-contents" tabIndex={tab===value?0:-1} onClick={()=>setTab(value)} onKeyDown={event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?'common':event.key==='End'?'all':tab==='common'?'all':'common';setTab(next);root.current?.querySelector<HTMLButtonElement>(`#quick-tab-${next}`)?.focus();}}}>{value==='common'?'常用':'全部功能'}</button>)}</div><button type="button" className="quick-menu-close" aria-label="收起快捷功能" onClick={()=>close(true)}><Icon name="close"/></button></header>
    <div id="quick-menu-contents" className="quick-menu-contents" role="tabpanel" aria-labelledby={`quick-tab-${tab}`}>
-    {tab==='common'?<><section><h3>编制与复核</h3><div className="quick-feature-grid">{quickCommands.map(([id,icon,label])=>tile(id,icon,label))}</div></section><section><h3>工作区</h3><div className="quick-feature-grid">{quickDestinations.map(([id,icon,label])=>tile(id,icon,label))}</div></section></>:capabilityGroups.map(group=><section key={group.title}><h3>{group.title}</h3><div className="quick-feature-grid">{group.items.map(([id,icon,label,description])=>tile(id,icon,label,description))}</div></section>)}
+    {tab==='common'?<><section><h3>编制与复核</h3><div className="quick-feature-grid">{quickCommands.filter(([id])=>preferences.enabledIds.includes(id)).map(([id,icon,label])=>tile(id,icon,label))}</div></section><section><h3>工作区</h3><div className="quick-feature-grid">{quickDestinations.filter(([id])=>preferences.enabledIds.includes(id)).map(([id,icon,label])=>tile(id,icon,label))}</div></section>{preferences.customPrompts.length>0&&<section><h3>自定义指令</h3><div className="quick-feature-grid">{preferences.customPrompts.map((text,index)=>tile('custom:'+index,'spark',text))}</div></section>}</>:capabilityGroups.map(group=><section key={group.title}><h3>{group.title}</h3><div className="quick-feature-grid">{group.items.map(([id,icon,label,description])=>tile(id,icon,label,description))}</div></section>)}
    </div>
   </div>
  </div>;

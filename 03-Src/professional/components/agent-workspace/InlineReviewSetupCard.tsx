@@ -11,8 +11,10 @@ import {
   UserRoundCheck,
   UsersRound,
   X,
-} from "lucide-react";
+} from "../../../PhosphorIcons";
 import "./inlineReviewSetupCard.css";
+import {useId} from 'react';
+import {reviewMethodProblem,reviewConfirmationProblem} from './review-setup-readiness';
 
 type ReviewPerson = {
   person_ref: string;
@@ -94,17 +96,7 @@ function selectedGroup(platform: InlineReviewPlatformSetup) {
 }
 
 function platformMethodReady(platform: InlineReviewPlatformSetup) {
-  if (!platform.enabled || !platform.configurationOk || platform.loading || !platform.deliveryChannels.length) return false;
-  if (platform.deliveryChannels.includes("direct") && !platform.directDeliveryAvailable) return false;
-  const group = selectedGroup(platform);
-  if (platform.deliveryChannels.includes("group") && (!group || !group.authorized || !group.members_available || group.member_count > 10)) return false;
-  return true;
-}
-
-function platformReady(platform: InlineReviewPlatformSetup) {
-  if (!platformMethodReady(platform) || !platform.selectedReviewers.length) return false;
-  if (platform.task && !taskCanStartNextRound(platform.task)) return false;
-  return true;
+  return !reviewMethodProblem(platform);
 }
 
 export default function InlineReviewSetupCard({
@@ -137,7 +129,9 @@ export default function InlineReviewSetupCard({
 }: Props) {
   const enabledPlatforms = platforms.filter((platform) => platform.enabled);
   const enabledTasks = enabledPlatforms.filter((platform) => platform.task);
-  const allEnabledReady = enabledPlatforms.length > 0 && enabledPlatforms.every(platformReady);
+  const confirmationHintId=useId();
+  const confirmationProblem=loading?'正在读取平台目录。':sending?'正在发送，请稍候。':reviewConfirmationProblem(platforms);
+  const allEnabledReady = !confirmationProblem;
   const canSubmit = !loading && !sending && audienceConfirmed && allEnabledReady && Boolean(instructions.trim());
   const selectedPeopleCount = enabledPlatforms.reduce((total, platform) => total + platform.selectedReviewers.length, 0);
   const methodsReady = enabledPlatforms.length > 0 && enabledPlatforms.every(platformMethodReady);
@@ -277,7 +271,8 @@ export default function InlineReviewSetupCard({
                 <label className="inline-review-setup__field is-wide"><span>复核说明</span><textarea rows={3} value={instructions} disabled={sending} onChange={(event) => onInstructionsChange(event.target.value)} /></label>
               </div>
             </details>
-            <label className={`inline-review-setup__confirmation ${audienceConfirmed ? "is-confirmed" : ""}`}><input type="checkbox" checked={audienceConfirmed} disabled={!allEnabledReady || sending} onChange={(event) => onAudienceConfirmedChange(event.target.checked)} /><span><strong>我已核对本次复核范围</strong><small>每个平台只向本卡片中勾选的人员发送；工作群与个人私聊可同时启用。</small></span><ShieldCheck size={18} aria-hidden="true" /></label>
+            <label className={`inline-review-setup__confirmation ${audienceConfirmed ? "is-confirmed" : ""}`}><input type="checkbox" checked={audienceConfirmed} disabled={!allEnabledReady || sending} aria-describedby={confirmationProblem?confirmationHintId:undefined} onChange={(event) => onAudienceConfirmedChange(event.target.checked)} /><span><strong>我已核对本次复核范围</strong><small>每个平台只向本卡片中勾选的人员发送；工作群与个人私聊可同时启用。</small></span><ShieldCheck size={18} aria-hidden="true" /></label>
+            {confirmationProblem&&<p id={confirmationHintId} className="inline-review-setup__platform-feedback" role="status">{confirmationProblem}</p>}
             {newRoundConfirmationOpen && <section className="inline-review-setup__round-confirm" role="alertdialog" aria-label="确认发起复核"><span><RefreshCw size={17} /><strong>确认按当前平台设置发起复核？</strong></span><p>已有已完成任务的平台将续开下一轮；尚无任务的平台将新建首轮，历史快照和复核记录不会覆盖。</p><div><button type="button" disabled={sending} onClick={onCloseNewRoundConfirmation}>返回检查</button><button type="button" disabled={sending} onClick={onConfirmNewRound}>{sending ? <Loader2 size={14} className="spin" /> : <Send size={14} />}确认发起</button></div></section>}
             {feedback ? <p className={`inline-review-setup__feedback ${feedbackIsError ? "is-error" : ""}`} aria-live="polite">{feedback}</p> : null}
           </div>

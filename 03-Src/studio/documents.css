@@ -10,3 +10,5 @@
 .document-tab-panel{height:100%;min-height:0}.retained-content-pane:has(>.document-tab-panel){padding:0;overflow:hidden}
 
 .document-offer{display:flex;flex-direction:row;align-items:center;gap:10px;padding:14px;margin:12px 0;background:var(--paper);border:1px solid var(--line);border-radius:12px}.document-offer>div{flex:1;min-width:0}.document-offer strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--dws-font-size-13)}.document-offer span{font-size:var(--dws-font-size-12);color:var(--muted)}.document-offer>.astra-icon{width:20px;height:20px;color:var(--blue)}.document-offer .btn{flex-shrink:0;font-size:var(--dws-font-size-12)}
+
+.document-preview-hint{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;color:var(--muted);font-size:var(--dws-font-size-12);cursor:help}.document-preview-hint:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}.document-toolbar .document-download{gap:5px;padding-inline:8px;min-height:30px;height:30px;font-size:var(--dws-font-size-12);white-space:nowrap;flex-shrink:0}

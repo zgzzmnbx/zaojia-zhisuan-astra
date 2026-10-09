@@ -2,6 +2,7 @@ import {useLayoutEffect,useState} from 'react';
 
 export const palettes=[
  {id:'astra',name:'Astra 蓝',reference:'Corporate',description:'清晰、专注的经典蓝'},
+ {id:'mantine-blue',name:'Mantine 蓝',reference:'Mantine blue.6',description:'明蓝主色，同色系渐变'},
  {id:'emerald',name:'翡翠绿',reference:'Emerald',description:'柔和自然，安静陪伴'},
  {id:'nord',name:'北境蓝',reference:'Nord',description:'雾蓝与冷灰，理性克制'},
  {id:'silk',name:'丝绒紫',reference:'Silk',description:'浅绒底色，细腻温和'},
@@ -25,12 +26,12 @@ export function applyAppearance(value:Appearance){
  root.dataset.theme=v.dark?'dark':'light';root.style.colorScheme=v.dark?'dark':'light';
  document.body?.toggleAttribute('data-dark',v.dark);
 }
-export function useAppearance(){
+export function useAppearance(darkOverride?:boolean){
  const [appearance,setAppearance]=useState(readAppearance),[error,setError]=useState('');
  useLayoutEffect(()=>{
-  applyAppearance(appearance);
+  applyAppearance({...appearance,dark:darkOverride??appearance.dark});
   try{localStorage.setItem(appearanceKey,JSON.stringify(appearance));setError('');}
   catch{setError('当前浏览器无法保存偏好，本次配色仍已生效。');}
- },[appearance]);
- return {...appearance,error,setPalette:(palette:Palette)=>setAppearance(current=>({...current,palette})),setDark:(dark:boolean)=>setAppearance(current=>({...current,dark})),reset:()=>setAppearance({...defaultAppearance})};
+ },[appearance,darkOverride]);
+ return {...appearance,dark:darkOverride??appearance.dark,error,setPalette:(palette:Palette)=>setAppearance(current=>({...current,palette})),setDark:(dark:boolean)=>setAppearance(current=>({...current,dark})),reset:()=>setAppearance({...defaultAppearance})};
 }

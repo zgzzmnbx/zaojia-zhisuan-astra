@@ -1,0 +1,25 @@
+.composer-knowledge-questions{position:absolute;bottom:calc(100% + 30px);left:0;width:100%;max-height:min(560px,62vh);z-index:45;display:flex;flex-direction:column;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 36px color-mix(in srgb,var(--ink) 12%,transparent);overflow:hidden}
+.composer-knowledge-questions>header{display:flex;align-items:center;gap:4px;padding:7px 10px;border-bottom:1px solid var(--line);min-height:44px;flex-shrink:0}.composer-knowledge-questions>header>strong{flex:1;font-size:14px}.composer-knowledge-questions>header>span{color:var(--muted);font-size:12px;margin-right:4px}.composer-knowledge-questions .btn-square{height:28px;min-height:28px;width:28px;padding:5px}.composer-knowledge-questions .astra-icon{width:16px;height:16px}
+.ckq-list{padding:6px;overflow:auto;min-height:0}.ckq-question.btn{display:flex;align-items:flex-start;gap:10px;width:100%;height:auto;min-height:42px;padding:10px;font-size:13px;line-height:1.7;font-weight:400;text-align:left;white-space:normal;border-radius:8px}.ckq-number{width:18px;flex-shrink:0;color:var(--muted);font-size:12px}.ckq-text{flex:1;min-width:0}.ckq-question>.astra-icon{flex-shrink:0;margin-top:3px;color:var(--muted)}.knowledge-preset-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--astra-primary);margin:0 0 2px 7px;vertical-align:middle;flex-shrink:0}.ckq-edit{display:flex;align-items:center;gap:8px;padding:5px}.ckq-edit>span{font-size:12px;color:var(--muted)}.ckq-edit .textarea{flex:1;min-width:0;font-size:13px;line-height:1.7;color:var(--ink);background:var(--paper);border-color:var(--line)}.ckq-edit>div{display:flex;flex-direction:column}.ckq-error{padding:8px;color:var(--ink);font-size:13px}.ckq-list>p{padding:12px;font-size:13px}
+.knowledge-preset-label{display:inline-flex;align-items:center;color:var(--muted);font-size:12px;margin-bottom:8px;gap:6px}.knowledge-preset-label .knowledge-preset-dot{margin:0}.chat-knowledge-answer{min-width:0}.chat-knowledge-chart{display:block;margin:16px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}.chat-knowledge-chart>figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between;font-size:14px}.chat-knowledge-chart>figcaption>span,.chat-knowledge-chart>p{color:var(--muted);font-size:12px}.chat-knowledge-chart-scroll{overflow:auto;margin-top:10px}.chat-knowledge-chart svg{max-width:none;display:block}.chat-knowledge-chart>p{margin:6px 0 0}
+
+/* Answers own the visual card; evidence remains a single collapsed footer row. */
+.live-shell .chat-knowledge-answer{display:block;border:1px solid var(--line);border-radius:12px;background:var(--paper);box-shadow:0 3px 14px #182b4908;overflow:hidden;color:var(--ink)}
+.knowledge-answer-heading{display:flex;align-items:center;min-height:40px;padding:10px 16px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--astra-primary) 4%,var(--paper))}
+.knowledge-answer-heading>strong{font-size:13px;font-weight:600;color:var(--muted)}
+.knowledge-answer-body{padding:16px;min-width:0}.knowledge-answer-body>.astra-prose>:last-child{margin-bottom:0}
+.knowledge-answer-actions{display:flex;padding:0 12px 10px}.knowledge-answer-actions .btn{min-height:30px;height:30px;font-size:12px;padding:0 8px}
+.knowledge-citation-count{font-size:var(--dws-font-size-12)}
+
+
+.knowledge-answer-heading{gap:10px;padding-block:8px}
+.knowledge-answer-symbol{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--blue-wash);color:var(--blue)}
+.knowledge-answer-heading>strong{color:var(--ink)}
+.live-shell .knowledge-answer-body .astra-prose table{border:1px solid var(--line);border-radius:9px;border-collapse:separate;border-spacing:0;background:var(--paper);font-variant-numeric:tabular-nums;scrollbar-width:thin}
+.live-shell .knowledge-answer-body .astra-prose :is(th,td){padding:11px 13px;border:0;border-bottom:1px solid var(--line);line-height:1.7;vertical-align:top}
+.live-shell .knowledge-answer-body .astra-prose th{background:color-mix(in srgb,var(--astra-primary) 9%,var(--paper));color:var(--blue);font-weight:600;white-space:normal}
+.live-shell .knowledge-answer-body .astra-prose th+th{border-left:1px solid color-mix(in srgb,var(--astra-primary) 9%,transparent)}
+.live-shell .knowledge-answer-body .astra-prose tbody tr:nth-child(even){background:color-mix(in srgb,var(--astra-primary) 3%,var(--paper))}
+.live-shell .knowledge-answer-body .astra-prose tbody tr:hover{background:color-mix(in srgb,var(--astra-primary) 7%,var(--paper))}
+.live-shell .knowledge-answer-body .astra-prose tbody tr:last-child td{border-bottom:0}
+.live-shell .knowledge-answer-body .astra-prose td:first-child{font-weight:500}

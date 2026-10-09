@@ -1,4 +1,4 @@
-import { ArrowRight, ClipboardList, FileCheck2, RotateCcw } from "lucide-react";
+import { ArrowRight, ClipboardList, FileCheck2, RotateCcw } from "../../../PhosphorIcons";
 import type { BusinessTask, TaskTarget } from "./taskContextUtils";
 import { taskAvailableActions, taskStageTarget, taskStatusTone } from "./taskContextUtils";
 import "./taskContext.css";

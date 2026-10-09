@@ -1,4 +1,4 @@
-import { BookOpen, FileSpreadsheet, LoaderCircle, ShieldCheck, Sparkles } from "lucide-react";
+import { BookOpen, FileSpreadsheet, LoaderCircle, ShieldCheck, Sparkles } from "../../../PhosphorIcons";
 import type { ReactNode, RefObject } from "react";
 import { agentConversationTurns } from "./agentWorkspaceUtils";
 

@@ -13,6 +13,8 @@
   padding:12px 16px;line-height:1.6;font-size:var(--dws-font-size-13);
 }
 .studio .astra-dashboard-host {min-width:0}
+.studio .is-risk-chart{--astra-risk-chart-label:#fff}
+:root[data-astra-scheme="dark"] .studio .is-risk-chart{--astra-risk-chart-label:var(--astra-ink)}
 .studio .project-dashboard__header {flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .studio .project-dashboard__header h1 {font-size:var(--dws-font-size-20);line-height:1.4}
 .studio .project-dashboard__header p {color:var(--muted);font-size:var(--dws-font-size-13)}

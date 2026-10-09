@@ -15,6 +15,35 @@ import server
 import professional_host
 from app import settlement_audit_api
 
+def test_markdown_model_key_reads_only_explicit_section(tmp_path,monkeypatch):
+    note=tmp_path/'credentials.md'
+    selected='sk-selected000000000000'
+    other='sk-other000000000000000'
+    note.write_text('### Another\n'+other+'\n### DeepSeek官方\n'+selected+'\n### Other\n'+other,encoding='utf-8')
+    settings={'models':{'deepseek':{'enabled':True,'key_file':str(note)+'#DeepSeek官方'}}}
+    monkeypatch.setattr(professional_host,'config',lambda:settings)
+    assert professional_host.model_key()==selected
+    settings['models']['deepseek']['key_file']=str(note)+'#Missing'
+    assert professional_host.model_key()==''
+    settings['models']['deepseek']['key_file']=str(note)+'#DeepSeek官方'
+    note.write_text('### DeepSeek官方\n'+selected+'\n'+other,encoding='utf-8')
+    assert professional_host.model_key()==''
+
+def test_missing_model_is_explicit_and_configured_question_uses_model(client,monkeypatch):
+    async def search(payload):return {'results':[{'snippet':'source'}],'evidence_found':True}
+    monkeypatch.setattr(server.engine,'knowledge_search',search)
+    response=client.post('/api/astra/knowledge/ask',json={'question':'非预设问题'})
+    assert response.status_code==200
+    data=response.json();assert data['model_configured'] is False
+    assert '未配置' in data['answer'] and '尚未生成答案' in data['answer']
+    calls=[]
+    async def answer(payload):
+        calls.append(payload);return {'answer':'模型答案','sources':[],'answer_mode':'model_answer'}
+    monkeypatch.setattr(professional_host,'model_key',lambda provider:'test-key')
+    monkeypatch.setattr(server.engine,'knowledge_ask',answer)
+    response=client.post('/api/astra/knowledge/ask',json={'question':'另一个非预设问题'})
+    assert response.json()['answer']=='模型答案' and len(calls)==1
+
 def legacy_helpers(name):
     spec=importlib.util.spec_from_file_location(name,server.ENGINE/'backend/tests'/f'{name}.py')
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
@@ -114,3 +143,81 @@ def test_rejected_connection_form_is_not_partially_saved(client,tmp_path):
     (tmp_path/('d'*32)/'process-state.json').write_text('{}')
     assert client.post('/api/collaboration/external-dispatch/web-review',json={'job_id':'d'*32}).status_code==409
     assert client.get('/api/settlement-audit/profile').json()['max_file_mb']==30
+
+def test_explicit_platform_connection_preserves_settings_and_uses_selected_platform(client,monkeypatch):
+    from app import feishu_app_bot
+    previous={'models':{'deepseek':{'enabled':False,'key_file':'keep.key'}},'collaboration_file':'keep.json','external_enabled':False}
+    professional_host.CONFIG.write_text(json.dumps(previous),encoding='utf-8')
+    monkeypatch.setattr(feishu_app_bot,'load_credentials',lambda _: {'app_id':'test-id','app_secret':'test-secret'})
+    monkeypatch.setattr(feishu_app_bot,'credential_configuration_issue',lambda *_: '')
+    monkeypatch.setattr(feishu_app_bot,'credential_profiles',lambda:[{'profile_id':'default'},{'profile_id':'weact_cost'}])
+    monkeypatch.setattr(feishu_app_bot,'_read_enabled_control',lambda _:True)
+    controls=[]
+    monkeypatch.setattr(feishu_app_bot,'save_bot_enabled',lambda enabled,profile:controls.append((enabled,profile)))
+    calls=[]
+    def update(payload):
+        calls.append(payload)
+        assert professional_host.config()['external_enabled']
+        return {'profiles':[]}
+    monkeypatch.setattr(server.engine,'update_feishu_app_bot_settings',update)
+    assert client.post('/api/astra/connections/platforms/weact_cost/connection',json={'enabled':True}).status_code==200
+    assert calls==[{'profile_id':'weact_cost','enabled':True}]
+    assert controls==[(False,'default'),(False,'weact_cost')]
+    assert professional_host.config()=={**previous,'external_enabled':True}
+    assert client.post('/api/astra/connections/platforms/default/connection',json={'enabled':False}).status_code==200
+    assert calls[-1]=={'profile_id':'default','enabled':False}
+
+def test_connection_rejects_missing_credentials_and_rolls_back_start_failure(client,monkeypatch):
+    from app import feishu_app_bot
+    previous={'external_enabled':False,'models':{'deepseek':{'key_file':'keep.key'}}}
+    professional_host.CONFIG.write_text(json.dumps(previous),encoding='utf-8')
+    endpoint='/api/astra/connections/platforms/default/connection'
+    monkeypatch.setattr(feishu_app_bot,'load_credentials',lambda _: {})
+    assert client.post(endpoint,json={'enabled':True}).status_code==409
+    assert professional_host.config()==previous
+    assert client.post(endpoint,json={'enabled':'yes'}).status_code==400
+    assert client.post('/api/astra/connections/platforms/other/connection',json={'enabled':True}).status_code==400
+    monkeypatch.setattr(feishu_app_bot,'load_credentials',lambda _: {'app_id':'test-id','app_secret':'test-secret'})
+    monkeypatch.setattr(feishu_app_bot,'credential_configuration_issue',lambda *_: '')
+    def fail(_):raise server.HTTPException(409,'start failed')
+    monkeypatch.setattr(server.engine,'update_feishu_app_bot_settings',fail)
+    controls=[]
+    monkeypatch.setattr(feishu_app_bot,'credential_profiles',lambda:[{'profile_id':'default'}])
+    monkeypatch.setattr(feishu_app_bot,'_read_enabled_control',lambda _:False)
+    monkeypatch.setattr(feishu_app_bot,'save_bot_enabled',lambda enabled,profile:controls.append((enabled,profile)))
+    assert client.post(endpoint,json={'enabled':True}).status_code==409
+    assert professional_host.config()==previous
+    assert controls==[(False,'default'),(False,'default')]
+
+def test_supervisor_uses_astra_launcher_and_deduplicates_process(monkeypatch,tmp_path):
+    import subprocess
+    from contextlib import contextmanager
+    from app import feishu_app_bot
+    monkeypatch.setattr(feishu_app_bot,'RUNTIME_ROOT',tmp_path)
+    @contextmanager
+    def lock(_):yield True
+    monkeypatch.setattr(feishu_app_bot,'_profile_start_lock',lock)
+    running=False
+    monkeypatch.setattr(feishu_app_bot,'_pid_is_running',lambda _:running)
+    calls=[]
+    class Process:pid=123
+    def launch(args,**kwargs):calls.append((args,kwargs));return Process()
+    monkeypatch.setattr(subprocess,'Popen',launch)
+    assert feishu_app_bot.start_local_bot_supervisor()
+    assert Path(calls[0][0][1])==professional_host.ROOT/'tools/run_collaboration_supervisor.py'
+    assert calls[0][1]['cwd']==professional_host.ROOT
+    running=True
+    assert feishu_app_bot.start_local_bot_supervisor()
+    assert len(calls)==1
+
+
+def test_stopped_receiver_is_not_reported_as_starting(monkeypatch,tmp_path):
+    from app import feishu_app_bot
+    monkeypatch.setattr(feishu_app_bot,'DB_PATH',tmp_path/'tasks.sqlite3')
+    monkeypatch.setattr(feishu_app_bot,'credential_profiles',lambda:[{'profile_id':'default'}])
+    monkeypatch.setattr(feishu_app_bot,'load_credentials',lambda _:{'app_id':'id','app_secret':'test-only'})
+    monkeypatch.setattr(feishu_app_bot,'credential_configuration_issue',lambda *_:'')
+    monkeypatch.setattr(feishu_app_bot,'is_bot_enabled',lambda _:True)
+    monkeypatch.setattr(feishu_app_bot,'bot_process_running',lambda _:False)
+    profile=feishu_app_bot.bot_status(tmp_path/'tasks.sqlite3')['profiles'][0]
+    assert profile['status']=='stopped' and not profile['running']

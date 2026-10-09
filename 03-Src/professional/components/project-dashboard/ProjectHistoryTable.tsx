@@ -1,3 +1,4 @@
+import {FolderOpen} from '../../../PhosphorIcons';
 import {
   ArrowDown,
   ArrowUp,
@@ -6,8 +7,8 @@ import {
   Download,
   Eye,
   FileSpreadsheet,
-  FileText,
-} from "lucide-react";
+  FileDoc,
+} from "../../../PhosphorIcons";
 import type { ProjectListItem, ProjectListPayload } from "./projectDashboardUtils";
 import { artifactSummary, formatDashboardDate } from "./projectDashboardUtils";
 
@@ -101,7 +102,7 @@ export default function ProjectHistoryTable({
                   <td>
                     <span className="project-dashboard__artifacts">
                       <span title={excel?.exists ? "Excel 可用" : "Excel 文件已失效"} className={excel?.exists ? "is-ready" : "is-missing"}><FileSpreadsheet size={14} /></span>
-                      <span title={word?.exists ? "Word 可用" : "Word 文件已失效"} className={word?.exists ? "is-ready" : "is-missing"}><FileText size={14} /></span>
+                      <span title={word?.exists ? "Word 可用" : "Word 文件已失效"} className={word?.exists ? "is-ready" : "is-missing"}><FileDoc size={14} /></span>
                     </span>
                   </td>
                   <td>
@@ -111,7 +112,7 @@ export default function ProjectHistoryTable({
                         <button type="button" title="打开结果预览" aria-label={`打开 ${item.project_name} 结果预览`} onClick={() => onOpenRun(item, "preview")}><FileSpreadsheet size={14} /></button>
                       ) : null}
                       {word?.exists && item.project_id && item.job_id ? (
-                        <button type="button" title="打开 Word 报告" aria-label={`打开 ${item.project_name} Word 报告`} onClick={() => onOpenRun(item, "report")}><FileText size={14} /></button>
+                        <button type="button" title="打开 Word 报告" aria-label={`打开 ${item.project_name} Word 报告`} onClick={() => onOpenRun(item, "report")}><FileDoc size={14} /></button>
                       ) : null}
                       {excel?.exists && excel.download_url ? (
                         <a href={`${apiBase}${excel.download_url}`} title="下载 Excel" aria-label={`下载 ${item.project_name} Excel`}><Download size={14} /></a>
@@ -143,11 +144,4 @@ export default function ProjectHistoryTable({
   );
 }
 
-function FolderEmpty() {
-  return (
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 7.5h6l2 2h10v9.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7.5Z" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M3 7.5V5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v2.5" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
+function FolderEmpty() { return <FolderOpen size={36}/>; }

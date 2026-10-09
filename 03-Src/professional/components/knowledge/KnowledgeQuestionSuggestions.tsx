@@ -1,4 +1,4 @@
-import { BookOpen, Check, ChevronLeft, ChevronRight, Loader2, RotateCcw, Settings, X } from "lucide-react";
+import { BookOpen, Check, ChevronLeft, ChevronRight, Loader2, RotateCcw, Settings, X } from "../../../PhosphorIcons";
 import { useEffect, useState } from "react";
 import { shouldShowKnowledgeQuestionSuggestions } from "../agent-workspace/agentWorkspaceUtils";
 import { isDemoKnowledgeQuestion } from "./knowledgeDemoQuestions";

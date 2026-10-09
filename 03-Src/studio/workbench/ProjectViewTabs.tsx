@@ -1,3 +1,4 @@
+import {ChevronLeft,ChevronRight} from '../../PhosphorIcons';
 import {useEffect,useRef,useState,type KeyboardEvent} from 'react';
 import './project-view-tabs.css';
 
@@ -18,8 +19,8 @@ export function ProjectViewTabs({active,select}:{active:ProjectTab;select:(tab:P
   if(next<0)return;event.preventDefault();select(tabs[next][0]);strip.current?.querySelector<HTMLButtonElement>(`#dashboard-tab-${tabs[next][0]}`)?.focus({preventScroll:true});
  }
  return <nav className="dashboard-view-nav" aria-label="项目看板">
-  <button type="button" className="dashboard-tab-scroll" aria-label="向左滚动看板页签" disabled={!edges.left} onClick={()=>strip.current?.scrollBy({left:-160})}>‹</button>
+  <button type="button" className="dashboard-tab-scroll" aria-label="向左滚动看板页签" disabled={!edges.left} onClick={()=>strip.current?.scrollBy({left:-160})}><ChevronLeft size={16}/></button>
   <div ref={strip} className="dashboard-view-tabs" role="tablist" aria-label="项目看板视图" aria-orientation="horizontal">{tabs.map(([tab,label],index)=><button key={tab} id={`dashboard-tab-${tab}`} type="button" role="tab" aria-selected={active===tab} aria-controls="astra-dashboard-panel" tabIndex={active===tab?0:-1} className="dashboard-view-tab" onClick={()=>select(tab)} onKeyDown={event=>key(event,index)}>{label}</button>)}</div>
-  <button type="button" className="dashboard-tab-scroll" aria-label="向右滚动看板页签" disabled={!edges.right} onClick={()=>strip.current?.scrollBy({left:160})}>›</button>
+  <button type="button" className="dashboard-tab-scroll" aria-label="向右滚动看板页签" disabled={!edges.right} onClick={()=>strip.current?.scrollBy({left:160})}><ChevronRight size={16}/></button>
  </nav>;
 }

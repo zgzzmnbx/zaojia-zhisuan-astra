@@ -48,7 +48,7 @@ export async function requestBatchMatch<T>(
       throw new BatchMatchError(state.message || "本次匹配未完成，原成果已保留。请核对任务后重试。", "failed");
     }
     if (state.status === "pending") {
-      throw failure instanceof Error ? failure : new Error("匹配未开始，请检查任务状态。");
+      throw new BatchMatchError(failure instanceof Error ? failure.message : "匹配未开始，请检查任务状态。", "failed");
     }
     if (state.status !== "running") break;
     definitiveRejection = false;

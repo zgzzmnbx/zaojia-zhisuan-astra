@@ -3,7 +3,7 @@ import {
   CircleX,
   History,
   Loader2,
-} from "lucide-react";
+} from "../../PhosphorIcons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ProjectCharts from "./ProjectCharts";
 import ProjectDashboardToolbar from "./ProjectDashboardToolbar";

@@ -1,4 +1,4 @@
-import { AlertTriangle, Check, Loader2, Search, X } from "lucide-react";
+import { AlertTriangle, Check, Loader2, Search, X } from "../../../PhosphorIcons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { SpatialCandidate, SpatialProfile, SpatialType } from "./projectSpatialMapUtils";
 import { spatialTypeLabel } from "./projectSpatialMapUtils";

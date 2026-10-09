@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, Clock3, FolderKanban, Plus } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock3, FolderKanban, Plus } from "../../PhosphorIcons";
 import type { DashboardPayload } from "./projectDashboardUtils";
 
 type MetricKey = "total" | "month" | "completed" | "review" | "risk";

@@ -1,9 +1,10 @@
 import {useSyncExternalStore} from 'react';
 import '../vendor/gork/gork-catalog.js';
 import {gorkPreferencesKey,normalizeGorkPreferences,type GorkPreferences,type GorkPreset} from './gork-preferences';
+import {customGorkEntries} from './gork-custom-data';
 
 export const robotPresets:readonly GorkPreset[]=(window as any).GorkAppearance.presets;
-export const robotExpressions:readonly string[]=(window as any).GorkCatalog.sequences.map((s:{id:string})=>s.id);
+export const robotExpressions:readonly string[]=[...(window as any).GorkCatalog.sequences.map((s:{id:string})=>s.id),...customGorkEntries.map(entry=>entry.id)];
 const normalize=(value:unknown)=>normalizeGorkPreferences(value,robotPresets,robotExpressions);
 const read=()=>{try{return {preferences:normalize(JSON.parse(localStorage.getItem(gorkPreferencesKey)||'null')),error:''};}catch{return {preferences:normalize(null),error:'浏览器暂时无法读取偏好，已使用默认形象。'};}};
 let snapshot=read();

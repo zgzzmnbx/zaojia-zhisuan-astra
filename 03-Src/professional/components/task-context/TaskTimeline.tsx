@@ -1,4 +1,4 @@
-import { AlertCircle, Check, Circle, Clock3, UserRoundCheck } from "lucide-react";
+import { AlertCircle, Check, Circle, Clock3, UserRoundCheck } from "../../../PhosphorIcons";
 import type { TaskEvent, TaskTarget } from "./taskContextUtils";
 import { formatTaskTime, taskEventStatusLabel, taskEventTarget, taskEventTone } from "./taskContextUtils";
 

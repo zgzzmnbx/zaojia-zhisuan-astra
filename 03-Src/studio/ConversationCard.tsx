@@ -5,10 +5,14 @@ import {Gork,Icon} from './ui';
 import type {Action,Message} from './types';
 import './conversation-cards.css';
 
-type Props={inputSettings?:ReactNode;message:Message;onAction:(action:Action)=>void;unavailable:(action:Action)=>string|undefined};
+type Props={onCitations?:()=>void;citationsOpen?:boolean;inputSettings?:ReactNode;message:Message;onAction:(action:Action)=>void;unavailable:(action:Action)=>string|undefined};
 
-export function ConversationCard({message,onAction,unavailable,inputSettings}:Props){
+export function ConversationCard({message,onAction,unavailable,inputSettings,onCitations,citationsOpen}:Props){
   const card=message.card!;
+  if(message.evidence&&!message.error){
+    const sources=message.evidence.sources||[];
+    return <button type="button" className="knowledge-citation-trigger" aria-expanded={!!citationsOpen} aria-controls="astra-summary" onClick={onCitations}><Icon name="book"/><span>引用依据</span><span className="knowledge-citation-count">{sources.length?`${sources.length} 条`:'暂无引用'}</span><Icon name="arrow-right"/></button>;
+  }
   const settled=card.kind==='input'&&message.actions?.some(a=>a.action==='convert'&&unavailable(a)==='结构已确认')||card.kind==='confirmation'&&message.actions?.some(a=>a.action==='match'&&unavailable(a)==='匹配已完成');
   const refreshed=card.kind==='edit'&&message.actions?.some(a=>a.action==='recalculate'&&unavailable(a)==='已刷新');
   const title=refreshed?'修改已保存，成果已刷新':card.title;
@@ -31,6 +35,6 @@ export function ConversationCard({message,onAction,unavailable,inputSettings}:Pr
   </section>;
 }
 
-export function WorkingCard({label,showAvatar=true}:{label:string;showAvatar?:boolean}){
-  return <div className="cc-working" role="status">{showAvatar&&<Gork state="thinking" size={30} still/>}<div><strong>{label}</strong><small>正在处理，完成后会在这里展示结果</small></div><span className="loading loading-spinner loading-sm" aria-hidden="true"/></div>;
+export function WorkingCard({label,detail,showAvatar=true}:{label:string;detail?:string;showAvatar?:boolean}){
+  return <div className="cc-working" role="status">{showAvatar&&<Gork state="thinking" size={30} still/>}<div><strong>{label}</strong><small>{detail||'正在处理，完成后会在这里展示结果'}</small></div><span className="loading loading-spinner loading-sm" aria-hidden="true"/></div>;
 }

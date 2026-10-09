@@ -5,10 +5,10 @@ export type Preview = {sheet_name:string; header_row:number; headers:Cell[]; row
 export type SheetConfig = {sheet_name:string; enabled:boolean; header_row:number; headers:string[]; columns:{letter:string;label:string}[]; suggested_mapping:Record<string,string>; column_mapping:Record<string,string>; only_match_rows_with_value:boolean; match_value_filter_field:string};
 export type Inspection = {sheets:SheetConfig[]; suggested_mapping:Record<string,string>};
 export type Summary = {price_column?:string;total_data_rows:number; matched_rows:number; filled_rows:number; unchanged_rows:number; review_rows:number; conflict_rows:number; physical_experience_rows:number; technical_experience_rows:number; matching_status:string; output_excel:string; output_report:string; report_text:string; table_preview:Preview; warning_summary?:Record<string,unknown>};
-export type Result = {job_id:string; summary:Summary; downloads:Record<string,string>; needs_recalculate?:boolean; formula_recalculated?:boolean; task_tracking?:{task:{task_id:string;artifact_version:number}}; input_filename?:string; project_name?:string};
+export type Result = {ai_matching?:{requested_mode?:string;effective_mode?:string;ai_stage?:string;mode_reason?:string};process_options?:{matching_mode?:string;only_match_rows_with_value?:boolean;match_value_filter_field?:string};artifact_version?:number;job_id:string; summary:Summary; downloads:Record<string,string>; needs_recalculate?:boolean; formula_recalculated?:boolean; task_tracking?:{task:{task_id:string;artifact_version:number}}; input_filename?:string; project_name?:string};
 export type Run = {job_id:string; name:string; status:string; updated_at:string; rows:number; input_filename:string};
 export type View = 'collaboration-settings'|'document'|'connections'|'example'|'insights'|'universe'|'mapping'|'table'|'risk'|'report'|'sources'|'projects'|'tools'|'trace'|'library'|'project'|'architecture'|'knowledge'|'articles'|'collaboration'|'workload'|'experience'|'settlement'|'memory'|'map'|'showcase'|'skills'|'advanced'|'analysis'|'word'|'configuration'|'dispatch'|'originalqa'|'digital'|'tracefull'|'knowledgebase'|'gork';
-export type Action = {label:string; action:string; primary?:boolean; target?:{sheet:string;row:number}};
+export type Action = {label:string; action:string; primary?:boolean; target?:{sheet:string;row:number;metric?:string;severity?:string;riskId?:string}};
 export type ConversationCard = {
   kind:'input'|'confirmation'|'result'|'review'|'artifact'|'source'|'edit'|'capabilities'|'error';
   title:string; caption:string; icon:string; status:string; tone?:'success'|'attention'|'error';
@@ -20,7 +20,7 @@ export type ConversationCard = {
   disclosure?:{label:string;lines:string[]};
   note?:string;
 };
-export type Message = {review?:ReviewRequest;id:string; role:'user'|'assistant';text:string;actions?:Action[];card?:ConversationCard;error?:boolean;job?:string;context?:string;evidence?:any};
+export type Message = {rowPricing?:import('./row-pricing').RowPricingState;review?:ReviewRequest;id:string; role:'user'|'assistant';text:string;actions?:Action[];card?:ConversationCard;error?:boolean;job?:string;context?:string;evidence?:any};
 export type Risk = {id:string; title:string; sheet_name:string; excel_row:number; metric:string; severity:string; severity_label:string; risk_type?:string; source?:string; key_text?:string; current_value?:number|string|null; reference_value?:number|string|null; deviation_percent?:number|string|null; sample_count?:number|string|null; message:string; suggested_action:string; evidence:{label:string;text:string}[]};
 export type Report = {filename:string;paragraphs:string[];tables:string[][][];note:string};
 export type SelectedCell = {sheet:string;row:number;column:number;header:string;value:Cell};

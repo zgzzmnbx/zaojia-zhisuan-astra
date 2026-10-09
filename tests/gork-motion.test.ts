@@ -3,10 +3,51 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {choreographGork,createGorkController,gorkActivity,greetings} from '../03-Src/studio/gork-motion.ts';
+import {createGorkFeedback} from '../03-Src/studio/gork-feedback.ts';
 
 const catalogText=readFileSync(new URL('../03-Src/vendor/gork/gork-catalog.js',import.meta.url),'utf8');
 const source=JSON.parse(catalogText.slice(catalogText.indexOf(' = ')+3).trim().replace(/;$/,''));
 const catalog=choreographGork(source);
+function feedbackFixture(){
+ let now=0,id=0,value={success:false,warning:false};
+ const timers=new Map<number,{fn:()=>void;due:number}>();
+ const feedback=createGorkFeedback(next=>{value=next;},{now:()=>now,after:(fn,delay)=>{timers.set(++id,{fn,due:now+delay});return id;},cancel:key=>{timers.delete(key as number);}});
+ const advance=(elapsed:number)=>{now+=elapsed;for(const [key,t] of [...timers])if(t.due<=now){timers.delete(key);t.fn();}};
+ return {feedback,timers,advance,value:()=>value};
+}
+
+test('2.0 success lasts 2 seconds and warning lasts 10 seconds, independent of pose duration',()=>{
+ const f=feedbackFixture();f.feedback.warning();f.advance(9999);assert.equal(f.value().warning,true);
+ f.advance(1);assert.equal(gorkActivity('','',false,f.value()),'idle');
+ f.feedback.success();f.advance(1999);assert.equal(f.value().success,true);
+ f.advance(1);assert.equal(gorkActivity('','',true,f.value()),'listening');assert.equal(f.timers.size,0);
+});
+test('the same warning result never extends its deadline; an explicit new check can replay',()=>{
+ const f=feedbackFixture();f.feedback.observeWarning('job:2:0',true);f.advance(9000);
+ f.feedback.observeWarning('job:2:0',true);f.advance(1000);assert.equal(f.value().warning,false);
+ f.feedback.observeWarning('job:2:0',true);assert.equal(f.value().warning,false);
+ f.feedback.warning();assert.equal(f.value().warning,true);
+ f.feedback.success();assert.deepEqual(f.value(),{success:true,warning:false});
+ f.feedback.warning();assert.deepEqual(f.value(),{success:false,warning:true});
+});
+test('2.0 priority is error, processing, success, warning, thinking, input, idle',()=>{
+ const both={success:true,warning:true};
+ assert.equal(gorkActivity('匹配价格','失败',true,both),'confused');
+ assert.equal(gorkActivity('匹配价格','',true,both),'working');
+ assert.equal(gorkActivity('生成回答','',true,both),'happy');
+ assert.equal(gorkActivity('生成回答','',true,{success:false,warning:true}),'confused');
+ assert.equal(gorkActivity('生成回答','',true),'thinking');
+ const f=feedbackFixture();f.feedback.warning();f.advance(20000);
+ assert.equal(gorkActivity('匹配价格','',false,f.value()),'working');
+ assert.equal(gorkActivity('生成回答','',false,f.value()),'thinking');
+ assert.equal(gorkActivity('','失败',false,f.value()),'confused','real error never times out');
+});
+test('restoring/switching context clears transient feedback; disposal cancels late timers',()=>{
+ const f=feedbackFixture();f.feedback.warning();f.feedback.reset();assert.equal(f.timers.size,0);
+ f.advance(20000);assert.deepEqual(f.value(),{success:false,warning:false});
+ f.feedback.success();f.feedback.dispose();assert.equal(f.timers.size,0);
+ f.feedback.warning();f.advance(20000);assert.equal(f.timers.size,0);
+});
 function fixture(){
   let now=0,id=0;const timers=new Map<number,{fn:()=>void;due:number}>();
   const mounts:{state:string;still:boolean;disposed:boolean}[]=[],changes:string[]=[],statuses:{state:string;active:boolean}[]=[];
@@ -32,7 +73,7 @@ test('choreography reuses original poses without mutating vendor assets',()=>{
   assert.deepEqual(idle.blink,{enabled:true,initialDelayMs:2600,minIntervalMs:3400,maxIntervalMs:6200,durationMs:280});
 });
 test('real activity separates looking up, working, composing and errors',()=>{
-  assert.equal(gorkActivity('正在检索知识依据','old error',true),'searching');
+  assert.equal(gorkActivity('正在检索知识依据','old error',true),'confused');
   assert.equal(gorkActivity('正在匹配价格与双系数','',true),'working');
   assert.equal(gorkActivity('WeKnora 正在生成回答并核验引用','',false),'thinking');
   assert.equal(gorkActivity('','failed',true),'confused');
@@ -52,7 +93,7 @@ test('greeting expires back to the current input state, without replaying',()=>{
 test('play cannot mask work; actual completion waits for busy and runs once',()=>{
   const f=fixture();f.update('working');assert.equal(f.controller.react('greeting'),false);
   assert.ok(f.controller.react('happy',true));assert.equal(f.status().state,'working');
-  f.update();assert.equal(f.status().state,'happy');f.advance(3200);assert.equal(f.status().state,'idle');
+  f.update();assert.equal(f.status().state,'happy');f.advance(2000);assert.equal(f.status().state,'idle');
 });
 test('error cancels any queued completion; returning to idle does not celebrate',()=>{
   const f=fixture();f.update('working');f.controller.react('happy',true);f.update('confused');

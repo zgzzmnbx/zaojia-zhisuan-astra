@@ -10,7 +10,7 @@ function initialCorner(){try{return readGorkCorner(localStorage.getItem(storageK
 
 /** Fullscreen companion stays in the browser top layer, including above modal content.
  * The original canvas renderer owns blinking and gaze; only the dock position is new. */
-export function FloatingGork({active,state,completion}:{active:boolean;state:string;completion:number}){
+export function FloatingGork({active,state,completion=0}:{active:boolean;state:string;completion?:number}){
  const [corner,setCorner]=useState(initialCorner),[position,setPosition]=useState<Point|null>(null),[host,setHost]=useState<Element>(document.body);
  const [viewport,setViewport]=useState(()=>({width:innerWidth,height:innerHeight,left:0,top:58,bottom:48}));
  const layer=useRef<HTMLDivElement>(null),drag=useRef<{id:number;node:HTMLButtonElement;start:Point;offset:Point;last:Point;moved:boolean}|null>(null);

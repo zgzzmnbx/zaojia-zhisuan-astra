@@ -5,7 +5,7 @@ import type {Message,SheetConfig,View} from './types';
 
 export const workspaceApi='/api/astra/workspace';
 export type Project={id:string;name:string;background:string};
-export type Snapshot={selectedDocument?:DocumentSource|null;documents?:Record<string,DocumentState>;messages:Message[];draft:string;locatedRow?:number;context:string;inputFileId:string;project:string;sheets:SheetConfig[];job_id:string;view:View;visible:boolean;sheetIndex:number;panelProjectId?:string;chatMode?:'task'|'knowledge';knowledgeOptions?:{library_ids:string[]|null;retrieval_mode:'classic'|'hybrid';engine?:'local'|'weknora'|'compare'}};
+export type Snapshot={batchUncertainJob?:string;selectedDocument?:DocumentSource|null;documents?:Record<string,DocumentState>;messages:Message[];draft:string;locatedRow?:number;context:string;inputFileId:string;project:string;sheets:SheetConfig[];job_id:string;view:View;visible:boolean;sheetIndex:number;panelProjectId?:string;chatMode?:'task'|'knowledge';knowledgeOptions?:{library_ids:string[]|null;retrieval_mode:'classic'|'hybrid';engine?:'local'|'weknora'|'compare'}};
 export type Conversation={id:string;title:string;project_id:string|null;revision:number;preview?:string;job_id?:string;state?:Partial<Snapshot>};
 export type Asset={id:string;name:string;size:number;sha256:string;project_id:string|null;public:number;created_at:string};
 type Index={projects:Project[];conversations:Conversation[];jobs:Record<string,string>};
@@ -77,6 +77,6 @@ export function useWorkspace(snapshot:Snapshot,apply:(state:Partial<Snapshot>,co
     void refresh().then(async data=>{const last=localStorage.getItem('astra.active-conversation');const id=data.conversations.find(c=>c.id===last)?.id||data.conversations[0]?.id;if(id)await load(id);else await create();}).catch(e=>{setError(e.message);setStatus('对话载入失败');});
     return()=>{mounted.current=false;window.removeEventListener('beforeunload',unload);};
   },[]);
-  function exportDraft(){const content=recovery||JSON.stringify(current.current,null,2);const url=URL.createObjectURL(new Blob([content],{type:'application/json;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='智算Astra-未保存对话.json';link.click();URL.revokeObjectURL(url);}
+  function exportDraft(){const content=recovery||JSON.stringify(current.current,null,2);const url=URL.createObjectURL(new Blob([content],{type:'application/json;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='造价智算-未保存对话.json';link.click();URL.revokeObjectURL(url);}
   return {...index,currentConversation:()=>activeRef.current,active,ready,status,error,recovery,exportDraft,refresh,flush,select,create,rename,assign};
 }

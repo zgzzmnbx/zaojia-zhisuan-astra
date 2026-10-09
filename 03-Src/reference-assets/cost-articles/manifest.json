@@ -1,0 +1,2899 @@
+{
+  "schema_version": 1,
+  "library_id": "cost-articles-v1",
+  "title": "造价知识文章库",
+  "article_count": 100,
+  "articles": [
+    {
+      "id": "cost-001",
+      "title": "油气输送管道工程适用范围",
+      "category": "油气输送管道工程",
+      "tags": [
+        "适用范围",
+        "章节定位",
+        "工程对象"
+      ],
+      "summary": "从工程对象和章节目录入手，理解第一册适用范围与查找顺序。",
+      "file": "articles/cost-001-油气输送管道工程适用范围.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=总说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-002",
+      "title": "油气输送管道土石方清单阅读",
+      "category": "油气输送管道工程",
+      "tags": [
+        "土石方",
+        "措施工程",
+        "工程内容"
+      ],
+      "summary": "围绕土石方、措施和线路恢复，梳理清单工作内容与排除范围。",
+      "file": "articles/cost-002-油气输送管道土石方清单阅读.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=第一章 土石方及措施工程"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-003",
+      "title": "管段组装焊接清单阅读",
+      "category": "油气输送管道工程",
+      "tags": [
+        "组装焊接",
+        "施工方法",
+        "清单特征"
+      ],
+      "summary": "从管段组装、焊接方法和焊口资料入手，说明清单比对方法。",
+      "file": "articles/cost-003-管段组装焊接清单阅读.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=第六章 管段组装焊接"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-004",
+      "title": "冬季施工增加费使用边界",
+      "category": "油气输送管道工程",
+      "tags": [
+        "冬季施工",
+        "费用边界",
+        "施工条件"
+      ],
+      "summary": "结合施工月份、地点和受影响工序，说明冬季施工费用的核对边界。",
+      "file": "articles/cost-004-冬季施工增加费使用边界.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=总说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-005",
+      "title": "管道清管试压与干燥置换",
+      "category": "油气输送管道工程",
+      "tags": [
+        "清管试压",
+        "干燥置换",
+        "投产准备"
+      ],
+      "summary": "按施工顺序梳理清管、试压、干燥和氮气置换的资料阅读重点。",
+      "file": "articles/cost-005-管道清管试压与干燥置换.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=第八章 清管、试压、干燥及氮气置换"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-006",
+      "title": "低温储罐项目特征阅读",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "低温储罐",
+        "项目特征",
+        "保冷"
+      ],
+      "summary": "从介质、温度、结构和保冷做法入手，帮助定位低温储罐清单。",
+      "file": "articles/cost-006-低温储罐项目特征阅读.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=第一章 储罐制作安装"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-007",
+      "title": "储罐焊缝检测清单边界",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "焊缝检测",
+        "检测方法",
+        "成果边界"
+      ],
+      "summary": "区分检测对象、抽检比例、检测阶段和成果形式，避免检测范围混淆。",
+      "file": "articles/cost-007-储罐焊缝检测清单边界.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=储罐焊缝检测相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-008",
+      "title": "储罐试验与沉降观测",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "试验",
+        "沉降观测",
+        "验收"
+      ],
+      "summary": "说明储罐试验、清洗、沉降观测和记录工作如何分开核对。",
+      "file": "articles/cost-008-储罐试验与沉降观测.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=储罐试验与沉降观测相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-009",
+      "title": "金属储罐制作安装内容",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "金属储罐",
+        "制作安装",
+        "附件"
+      ],
+      "summary": "以项目特征表为线索，梳理金属储罐制作安装和附件工作的边界。",
+      "file": "articles/cost-009-金属储罐制作安装内容.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=金属储罐制作安装相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-010",
+      "title": "储罐保冷与机械作业",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "保冷",
+        "垂直运输",
+        "施工机械"
+      ],
+      "summary": "围绕保冷材料、施工高度、垂直运输和机械安拆说明查找顺序。",
+      "file": "articles/cost-010-储罐保冷与机械作业.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=储罐保冷及机械作业相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-011",
+      "title": "机械设备安装清单内容",
+      "category": "通用安装工程",
+      "tags": [
+        "机械设备",
+        "附件",
+        "试运转"
+      ],
+      "summary": "从设备类型、附件、基础和试运转条件出发，说明设备安装清单阅读方法。",
+      "file": "articles/cost-011-机械设备安装清单内容.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=第一册或设备安装相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-012",
+      "title": "工艺管道安装清单阅读",
+      "category": "通用安装工程",
+      "tags": [
+        "工艺管道",
+        "材质",
+        "压力等级"
+      ],
+      "summary": "结合材质、压力等级、连接形式和试验要求，定位工艺管道清单。",
+      "file": "articles/cost-012-工艺管道安装清单阅读.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=工艺管道安装相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-013",
+      "title": "阀门安装清单特征",
+      "category": "通用安装工程",
+      "tags": [
+        "阀门",
+        "连接方式",
+        "驱动方式"
+      ],
+      "summary": "从阀门类型、连接方式、压力等级和驱动方式判断安装边界。",
+      "file": "articles/cost-013-阀门安装清单特征.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=阀门安装相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-014",
+      "title": "自动化控制仪表安装边界",
+      "category": "通用安装工程",
+      "tags": [
+        "自动化仪表",
+        "校验",
+        "系统调试"
+      ],
+      "summary": "区分仪表本体、取源部件、接线、校验和系统调试工作。",
+      "file": "articles/cost-014-自动化控制仪表安装边界.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=自动化控制仪表安装相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-015",
+      "title": "通用安装章节如何定位",
+      "category": "通用安装工程",
+      "tags": [
+        "章节定位",
+        "专业对象",
+        "接口"
+      ],
+      "summary": "建立设备、管道、仪表、电气、通信等专业对象的查找顺序。",
+      "file": "articles/cost-015-通用安装章节如何定位.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=目录及各专业章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-016",
+      "title": "通信线路工程清单阅读",
+      "category": "其他工程",
+      "tags": [
+        "通信线路",
+        "敷设方式",
+        "测试"
+      ],
+      "summary": "从线路类型、敷设、接续和测试要求入手，说明通信线路清单边界。",
+      "file": "articles/cost-016-通信线路工程清单阅读.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=通信线路工程相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-017",
+      "title": "伴行与巡检道路工程",
+      "category": "其他工程",
+      "tags": [
+        "道路工程",
+        "永久临时",
+        "结构做法"
+      ],
+      "summary": "区分伴行道路、巡检道路和临时施工便道的用途与计量范围。",
+      "file": "articles/cost-017-伴行与巡检道路工程.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=道路工程相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-018",
+      "title": "智能化建设清单结构",
+      "category": "其他工程",
+      "tags": [
+        "智能化",
+        "数据采集",
+        "平台服务"
+      ],
+      "summary": "将数据采集、现场监控、通信传输和平台服务分开阅读。",
+      "file": "articles/cost-018-智能化建设清单结构.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=智能化建设相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-019",
+      "title": "投产前管道内检测",
+      "category": "其他工程",
+      "tags": [
+        "内检测",
+        "投产准备",
+        "检测成果"
+      ],
+      "summary": "说明检测器、管道条件、发射接收和报告成果的核对顺序。",
+      "file": "articles/cost-019-投产前管道内检测.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=投产前管道内检测相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-020",
+      "title": "中转站与其他工程章节",
+      "category": "其他工程",
+      "tags": [
+        "中转站",
+        "跨专业",
+        "工程对象"
+      ],
+      "summary": "按设备、管道、道路、通信和智能化对象定位中转站相关章节。",
+      "file": "articles/cost-020-中转站与其他工程章节.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=中转站及其他工程相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-021",
+      "title": "第五册参考计价依据的用途",
+      "category": "参考计价依据",
+      "tags": [
+        "参考依据",
+        "查价路径",
+        "适用条件"
+      ],
+      "summary": "解释第五册怎样作为参考条目查找和比对的入口。",
+      "file": "articles/cost-021-第五册参考计价依据的用途.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=总说明及目录"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-022",
+      "title": "柔性内焊与全自动外焊",
+      "category": "参考计价依据",
+      "tags": [
+        "柔性内焊",
+        "自动外焊",
+        "焊口范围"
+      ],
+      "summary": "对照两种焊接方法的施工位置、设备和清单工作边界。",
+      "file": "articles/cost-022-柔性内焊与全自动外焊.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=管道组装焊接相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-023",
+      "title": "移动式天然气放空回收",
+      "category": "参考计价依据",
+      "tags": [
+        "放空回收",
+        "移动设备",
+        "安全作业"
+      ],
+      "summary": "从作业阶段、设备移动、气体处理和安全配合理解放空回收清单。",
+      "file": "articles/cost-023-移动式天然气放空回收.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=移动式天然气放空回收相关条目"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-024",
+      "title": "场站绿化工程阅读",
+      "category": "参考计价依据",
+      "tags": [
+        "场站绿化",
+        "临时恢复",
+        "养护"
+      ],
+      "summary": "区分场站绿化、临时占地恢复和永久景观工程的查找范围。",
+      "file": "articles/cost-024-场站绿化工程阅读.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=场站绿化相关条目"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-025",
+      "title": "完整性管理技术服务",
+      "category": "参考计价依据",
+      "tags": [
+        "完整性管理",
+        "技术服务",
+        "成果交付"
+      ],
+      "summary": "按检测资料、风险评价、成果报告和维护服务梳理清单边界。",
+      "file": "articles/cost-025-完整性管理技术服务.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=完整性管理技术服务相关条目"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-026",
+      "title": "全费用清单单价五册结构",
+      "category": "全费用清单单价",
+      "tags": [
+        "五册结构",
+        "目录定位",
+        "跨册查找"
+      ],
+      "summary": "用五册目录建立油气管道造价资料的查找地图。",
+      "file": "articles/cost-026-全费用清单单价五册结构.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=目录及册说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-027",
+      "title": "全费用综合单价构成",
+      "category": "全费用清单单价",
+      "tags": [
+        "综合单价",
+        "费用组成",
+        "排除内容"
+      ],
+      "summary": "说明全费用清单单价中人工、材料、机械及相关费用的阅读口径。",
+      "file": "articles/cost-027-全费用综合单价构成.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=总说明 价格组成"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-028",
+      "title": "清单名称阈值表达",
+      "category": "全费用清单单价",
+      "tags": [
+        "阈值",
+        "项目特征",
+        "边界判断"
+      ],
+      "summary": "解释清单名称中的占位、以上表述和临界参数怎样核对。",
+      "file": "articles/cost-028-清单名称阈值表达.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=总说明 清单名称规则"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-029",
+      "title": "子目不足时补充清单单价",
+      "category": "全费用清单单价",
+      "tags": [
+        "补充清单",
+        "依据选择",
+        "人工复核"
+      ],
+      "summary": "说明已有子目不足时，怎样查找依据并形成可追溯补充清单。",
+      "file": "articles/cost-029-子目不足时补充清单单价.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=总说明 补充清单单价"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-030",
+      "title": "清单工程量与计量单位",
+      "category": "全费用清单单价",
+      "tags": [
+        "工程量",
+        "计量单位",
+        "表格结构"
+      ],
+      "summary": "从单位、工程量和合并单元格处理说明清单表格阅读方法。",
+      "file": "articles/cost-030-清单工程量与计量单位.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=总说明 工程量与计量单位"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-031",
+      "title": "建设用地与赔补费用",
+      "category": "建设项目其他费用",
+      "tags": [
+        "建设用地",
+        "补偿费用",
+        "区域条件"
+      ],
+      "summary": "区分永久用地、临时用地和赔补费用的项目资料入口。",
+      "file": "articles/cost-031-建设用地与赔补费用.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=建设用地和补偿相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-032",
+      "title": "前期工作费用阅读",
+      "category": "建设项目其他费用",
+      "tags": [
+        "前期工作",
+        "项目阶段",
+        "成果报告"
+      ],
+      "summary": "按可研、咨询、勘察设计和论证阶段理解前期工作费用。",
+      "file": "articles/cost-032-前期工作费用阅读.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=前期工作费用相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-033",
+      "title": "建设管理监理与造价咨询费用",
+      "category": "建设项目其他费用",
+      "tags": [
+        "建设管理",
+        "工程监理",
+        "造价咨询"
+      ],
+      "summary": "区分建设管理、监理和造价咨询的服务对象、阶段及成果。",
+      "file": "articles/cost-033-建设管理监理与造价咨询费用.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=建设管理及咨询相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-034",
+      "title": "专项评价及验收费",
+      "category": "建设项目其他费用",
+      "tags": [
+        "专项评价",
+        "验收费",
+        "批复要求"
+      ],
+      "summary": "围绕专项名称、主管要求、检测对象和验收阶段判断费用范围。",
+      "file": "articles/cost-034-专项评价及验收费.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=专项评价及验收相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-035",
+      "title": "生产准备与培训费用",
+      "category": "建设项目其他费用",
+      "tags": [
+        "生产准备",
+        "培训",
+        "投产安排"
+      ],
+      "summary": "说明人员培训、工具物资和投产准备费用的分类方法。",
+      "file": "articles/cost-035-生产准备与培训费用.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=生产准备及培训相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-036",
+      "title": "概算指标的费用组成",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "概算指标",
+        "费用组成",
+        "设计阶段"
+      ],
+      "summary": "介绍概算指标的适用阶段、综合费用和未包含内容的阅读边界。",
+      "file": "articles/cost-036-概算指标的费用组成.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=总说明及编制说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-037",
+      "title": "设备储罐与工艺管道指标定位",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "设备指标",
+        "储罐指标",
+        "管道指标"
+      ],
+      "summary": "按工程对象定位设备、储罐和工艺管道概算指标章节。",
+      "file": "articles/cost-037-设备储罐与工艺管道指标定位.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=设备、储罐及工艺管道相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-038",
+      "title": "费用定额版本阅读",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "2005定额",
+        "2015定额",
+        "版本比较"
+      ],
+      "summary": "比较两个费用定额版本时应关注适用范围、费用项目和计算口径。",
+      "file": "articles/cost-038-费用定额版本阅读.md",
+      "source_basis": [
+        "asset_id=ac47f68129c5ea29; output=2005石油建设安装工程费用定额-正文问答版.md; title_path=总说明；asset_id=b004c6bfe24f2c9b; output=2015石油建设安装工程费用定额-正文问答版.md; title_path=总说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-039",
+      "title": "地区与施工条件调整",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "地区调整",
+        "冬季施工",
+        "施工条件"
+      ],
+      "summary": "说明地区、季节、地形和施工条件调整怎样与清单范围对应。",
+      "file": "articles/cost-039-地区与施工条件调整.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=地区及施工条件相关说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-040",
+      "title": "人工工日价格阅读",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "人工价格",
+        "工种",
+        "时间口径"
+      ],
+      "summary": "从工种、地区、时期和价格组成理解人工工日价格的使用条件。",
+      "file": "articles/cost-040-人工工日价格阅读.md",
+      "source_basis": [
+        "asset_id=b004c6bfe24f2c9b; output=2015石油建设安装工程费用定额-正文问答版.md; title_path=人工及费用相关说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-041",
+      "title": "建设项目总投资组成",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "总投资",
+        "工程费用",
+        "其他费用"
+      ],
+      "summary": "按投资阶段拆分工程费用、其他费用和预备费的阅读顺序。",
+      "file": "articles/cost-041-建设项目总投资组成.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=总说明 投资组成"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-042",
+      "title": "数字项目税费与估算口径",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "税费口径",
+        "含税不含税",
+        "投资估算"
+      ],
+      "summary": "区分数字项目设备、软件服务和建设其他费用的税费口径。",
+      "file": "articles/cost-042-数字项目税费与估算口径.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=总说明 税费及估算口径"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-043",
+      "title": "软件开发成本组成",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "软件开发",
+        "需求范围",
+        "交付成果"
+      ],
+      "summary": "按需求、设计、开发、测试、部署和文档拆分软件开发成本。",
+      "file": "articles/cost-043-软件开发成本组成.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=软件开发相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-044",
+      "title": "功能点与开发成本测算",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "功能点",
+        "生产率",
+        "成本测算"
+      ],
+      "summary": "说明功能点边界、生产率、人员成本和开发估算之间的关系。",
+      "file": "articles/cost-044-功能点与开发成本测算.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=软件开发及工作量测算相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-045",
+      "title": "数字项目实施与培训费用",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "系统实施",
+        "培训",
+        "项目管理"
+      ],
+      "summary": "区分环境部署、数据迁移、培训和项目管理的费用边界。",
+      "file": "articles/cost-045-数字项目实施与培训费用.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=实施服务及培训相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-046",
+      "title": "软件基准数据来源与样本",
+      "category": "软件行业基准数据",
+      "tags": [
+        "数据来源",
+        "样本",
+        "统计口径"
+      ],
+      "summary": "从来源、样本、统计时间和指标定义判断软件基准数据的可比性。",
+      "file": "articles/cost-046-软件基准数据来源与样本.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=数据说明及样本说明"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-047",
+      "title": "软件生产率与功能点单价",
+      "category": "软件行业基准数据",
+      "tags": [
+        "生产率",
+        "功能点单价",
+        "项目估算"
+      ],
+      "summary": "说明生产率和功能点单价如何结合项目边界做参考测算。",
+      "file": "articles/cost-047-软件生产率与功能点单价.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=生产率及费用指标相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-048",
+      "title": "软件质量与工作量指标",
+      "category": "软件行业基准数据",
+      "tags": [
+        "软件质量",
+        "工作量",
+        "缺陷指标"
+      ],
+      "summary": "将质量、工期、生产率和工作量放在同一统计口径下理解。",
+      "file": "articles/cost-048-软件质量与工作量指标.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=质量及工作量指标相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-049",
+      "title": "软件规模与调整因素",
+      "category": "软件行业基准数据",
+      "tags": [
+        "软件规模",
+        "调整因素",
+        "需求变化"
+      ],
+      "summary": "围绕功能、接口、数据和质量要求理解规模变化的调整边界。",
+      "file": "articles/cost-049-软件规模与调整因素.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=规模及调整因素相关章节"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-050",
+      "title": "软件基准数据的使用边界",
+      "category": "软件行业基准数据",
+      "tags": [
+        "使用边界",
+        "比较分析",
+        "项目实测"
+      ],
+      "summary": "说明软件行业基准适合做比较和复核，不代替项目预算和验收依据。",
+      "file": "articles/cost-050-软件基准数据的使用边界.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=使用说明及指标解释"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-051",
+      "title": "热煨弯管加工的规格核对",
+      "category": "油气输送管道工程",
+      "tags": [
+        "热煨弯管",
+        "油气输送管道工程",
+        "范围核对"
+      ],
+      "summary": "热煨弯管加工费对应的是工厂加工与检验环节，不能与现场弯管安装、防腐或运输清单混为一项。",
+      "file": "articles/cost-051-热煨弯管加工的规格核对.md",
+      "source_basis": [
+        "asset_id=9676a4c3b58749c6; output=2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md; title_path=（元） / 第三章 热煨弯管加工费 / 清单内容：热煨弯管加工、检验; lines=1264-1304,4808-4816"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-052",
+      "title": "管段防腐与保温的内容区分",
+      "category": "油气输送管道工程",
+      "tags": [
+        "管段防腐",
+        "油气输送管道工程",
+        "范围核对"
+      ],
+      "summary": "管段防腐与保温服务于不同的设计要求。",
+      "file": "articles/cost-052-管段防腐与保温的内容区分.md",
+      "source_basis": [
+        "asset_id=9676a4c3b58749c6; output=2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md; title_path=清单内容：热煨弯管加工、检验 / 第四章 管段防腐、保温 / （元）; lines=1306-1340"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-053",
+      "title": "管段运输的运输条件与计量",
+      "category": "油气输送管道工程",
+      "tags": [
+        "管段运输",
+        "油气输送管道工程",
+        "范围核对"
+      ],
+      "summary": "管段运输应先划清运输区段，再选择对应清单。",
+      "file": "articles/cost-053-管段运输的运输条件与计量.md",
+      "source_basis": [
+        "asset_id=9676a4c3b58749c6; output=2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md; title_path=清单内容：准备、吊装、运输、卸车、返回 / 第二节 热煨弯管运输 / 清单内容：准备、吊装、运输、卸车、返回; lines=1484-1556,11188-11222"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-054",
+      "title": "管道穿跨越清单选用",
+      "category": "油气输送管道工程",
+      "tags": [
+        "管道穿跨越",
+        "油气输送管道工程",
+        "范围核对"
+      ],
+      "summary": "第一册第七章覆盖穿跨越管段组装焊接、铁路穿越安装就位、公路和河流穿越、定向钻、交叉穿越及管道跨越等工程对象。",
+      "file": "articles/cost-054-管道穿跨越清单选用.md",
+      "source_basis": [
+        "asset_id=9676a4c3b58749c6; output=2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md; title_path=清单内容：准备工作、清污、配制材料、发泡保温、模具安拆 / 第七章 管道穿跨越 / （1）开挖穿越公路; lines=5420-5456"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-055",
+      "title": "管道无损检测方法与工作内容",
+      "category": "油气输送管道工程",
+      "tags": [
+        "无损检测",
+        "油气输送管道工程",
+        "范围核对"
+      ],
+      "summary": "管道无损检测与第四方复评是不同工作。",
+      "file": "articles/cost-055-管道无损检测方法与工作内容.md",
+      "source_basis": [
+        "asset_id=9676a4c3b58749c6; output=2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md; title_path=第六节 线路截断阀 / 清单内容：开箱检查、试压清洗、切管、支座安装、阀门吊装、焊接 / 第十一章 无损检测; lines=10464-10504"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-056",
+      "title": "球形储罐制作安装的清单选用",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "球形储罐",
+        "储罐制作安装工程",
+        "范围核对"
+      ],
+      "summary": "第二册第三章的金属球形储罐清单适用于球罐组对安装，选用条件包括容量和球皮厚度。",
+      "file": "articles/cost-056-球形储罐制作安装的清单选用.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=清单内容：防火器安装 / 清单内容：空气泡沫产生器安装 / 第三章 金属球形储罐制作安装工程; lines=998-1028"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-057",
+      "title": "储罐底板施工内容核对",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "底板",
+        "储罐制作安装工程",
+        "范围核对"
+      ],
+      "summary": "储罐底板属于罐体重量核对的重要组成，但不能脱离罐型单独判断计价方式。",
+      "file": "articles/cost-057-储罐底板施工内容核对.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=第二册 储罐制作安装工程 / 说 明 / 第一章 液化天然气（LNG）低温储罐制作安装工程; lines=402-410,704-722"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-058",
+      "title": "储罐壁板施工内容核对",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "壁板",
+        "储罐制作安装工程",
+        "范围核对"
+      ],
+      "summary": "壁板工程需同时核对重量归属和施工措施。",
+      "file": "articles/cost-058-储罐壁板施工内容核对.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=说 明 / 第一章 液化天然气（LNG）低温储罐制作安装工程 / 表2.1-1 液化天然气（LNG）低温储罐主要材料损耗率表; lines=402-420,672-686,716-722"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-059",
+      "title": "储罐罐顶施工内容核对",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "罐顶",
+        "储罐制作安装工程",
+        "范围核对"
+      ],
+      "summary": "“罐顶”在不同储罐中可能指拱顶板、浮顶、铝吊顶或吊顶吊杆，不能以同一名称套用相同计量方式。",
+      "file": "articles/cost-059-储罐罐顶施工内容核对.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=说 明 / 第一章 液化天然气（LNG）低温储罐制作安装工程 / 表2.1-1 液化天然气（LNG）低温储罐主要材料损耗率表; lines=408-440,716-722"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-060",
+      "title": "储罐附件的计价范围核对",
+      "category": "储罐制作安装工程",
+      "tags": [
+        "附件",
+        "储罐制作安装工程",
+        "范围核对"
+      ],
+      "summary": "储罐附件的“安装工作已含”和“附件重量纳入本体重量”不是同一问题。",
+      "file": "articles/cost-060-储罐附件的计价范围核对.md",
+      "source_basis": [
+        "asset_id=5c6d5e9151ba548e; output=2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md; title_path=第六节 低温储罐保冷 / 清单内容：保冷材料的安装、铺设、填充 / 第二章 金属储罐制作安装工程; lines=672-690,716-722,844-868"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-061",
+      "title": "金属结构制作安装的工作内容",
+      "category": "通用安装工程",
+      "tags": [
+        "金属结构",
+        "通用安装工程",
+        "范围核对"
+      ],
+      "summary": "第三册第二章为金属结构制作安装的定位入口。",
+      "file": "articles/cost-061-金属结构制作安装的工作内容.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=清单内容：本体安装 / 第二章 金属结构制作安装工程 / （元）; lines=1946-1986,14258-14264,14630-14636"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-062",
+      "title": "电气安装清单的工程对象",
+      "category": "通用安装工程",
+      "tags": [
+        "电气安装",
+        "通用安装工程",
+        "范围核对"
+      ],
+      "summary": "第三册第五章是电气安装工程的主要入口。",
+      "file": "articles/cost-062-电气安装清单的工程对象.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=（元） / 第三节 阀门安装 / 第四章 自动化控制仪表安装工程; lines=5054-5058,5668-5698"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-063",
+      "title": "通信设备安装与通信线路的区别",
+      "category": "通用安装工程",
+      "tags": [
+        "通信安装",
+        "通用安装工程",
+        "范围核对"
+      ],
+      "summary": "第三册通信安装与第四册通信线路都涉及线缆，但适用工程对象和工作内容不同。",
+      "file": "articles/cost-063-通信设备安装与通信线路的区别.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=（二）单轴跟踪式地面光伏组件 / （三）双轴跟踪式地面光伏组件 / 第六章 通信安装工程; lines=9738-9784",
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=第四册 其他工程 / 说 明 / 第一章 通信线路工程; lines=406-450"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-064",
+      "title": "消防与给排水安装的清单定位",
+      "category": "通用安装工程",
+      "tags": [
+        "消防",
+        "通用安装工程",
+        "范围核对"
+      ],
+      "summary": "第三册第七章将采暖、通风、给排水、消防和燃气安装纳入同一章，定位时仍需按具体设备和系统分节查找。",
+      "file": "articles/cost-064-消防与给排水安装的清单定位.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=（三）水表组成安装 / （四）给水设备 / （一）水灭火系统安装; lines=12980-13002"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-065",
+      "title": "阴极保护工程的计价对象",
+      "category": "通用安装工程",
+      "tags": [
+        "阴极保护",
+        "通用安装工程",
+        "范围核对"
+      ],
+      "summary": "阴极保护工程不能只用一条管道总长度概括全部工作。",
+      "file": "articles/cost-065-阴极保护工程的计价对象.md",
+      "source_basis": [
+        "asset_id=c3f7eda0d116e2cc; output=2024全费用清单单价-第3册通用安装工程-Excel问答版.md; title_path=第九章 阴极保护工程 / 费（元） / 第九章 阴极保护工程; lines=15158-15204,15364-15382"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-066",
+      "title": "通信线路穿越施工的内容核对",
+      "category": "其他工程",
+      "tags": [
+        "穿越",
+        "其他工程",
+        "范围核对"
+      ],
+      "summary": "第四册通信线路章说明，敷设埋式和管道、硅管光缆清单不含土石方挖填、光缆保护与防护、光缆穿越其他线路、人手孔、警示带及标石埋设等列明内容。",
+      "file": "articles/cost-066-通信线路穿越施工的内容核对.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=第四册 其他工程 / 说 明 / 第一章 通信线路工程; lines=436-450"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-067",
+      "title": "通信线路接续与测试的内容核对",
+      "category": "其他工程",
+      "tags": [
+        "接续",
+        "其他工程",
+        "范围核对"
+      ],
+      "summary": "第四册通信线路清单中，光缆接续和测试可能已经包含在敷设工作内。",
+      "file": "articles/cost-067-通信线路接续与测试的内容核对.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=第四册 其他工程 / 说 明 / 第一章 通信线路工程; lines=406-418,782-792,880-888"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-068",
+      "title": "伴行道路路面工程的计量",
+      "category": "其他工程",
+      "tags": [
+        "路面",
+        "其他工程",
+        "范围核对"
+      ],
+      "summary": "第四册伴行与巡检道路章按路面类型描述不同工作内容。",
+      "file": "articles/cost-068-伴行道路路面工程的计量.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=第二章 道路工程（伴行/巡检道路） / （元） / 第二章 道路工程（伴行/巡检道路）; lines=916-964"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-069",
+      "title": "伴行与巡检道路的计量单位",
+      "category": "其他工程",
+      "tags": [
+        "道路工程",
+        "其他工程",
+        "范围核对"
+      ],
+      "summary": "伴行或巡检道路的名称描述用途，计量单位仍由第四册具体清单决定。",
+      "file": "articles/cost-069-伴行与巡检道路的计量单位.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=第二章 道路工程（伴行/巡检道路） / （元） / 第二章 道路工程（伴行/巡检道路）; lines=932-964"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-070",
+      "title": "投产前内检测的规格与工作量",
+      "category": "其他工程",
+      "tags": [
+        "内检测",
+        "其他工程",
+        "范围核对"
+      ],
+      "summary": "投产前管道内检测的工程量不一定等于检测段实际长度。",
+      "file": "articles/cost-070-投产前内检测的规格与工作量.md",
+      "source_basis": [
+        "asset_id=ef1142901d94a9a9; output=2024全费用清单单价-第4册其他工程-Excel问答版.md; title_path=（四）统建系统实施 / 清单内容：系统接入、调试、实施 / 第四章 投产前管道内检测; lines=1956-1988,2176-2184"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-071",
+      "title": "高原施工增加费的条件核对",
+      "category": "参考计价依据",
+      "tags": [
+        "高原",
+        "参考计价依据",
+        "范围核对"
+      ],
+      "summary": "特殊地区施工增加费应从工程所在地条件和适用项目开始核对。",
+      "file": "articles/cost-071-高原施工增加费的条件核对.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=总 说 明 / 表1 特殊地区施工增加费调整系数表 / 注：; lines=66-104"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-072",
+      "title": "边远地区差异调整的来源核对",
+      "category": "参考计价依据",
+      "tags": [
+        "地区差异",
+        "参考计价依据",
+        "范围核对"
+      ],
+      "summary": "地区差异调整与高原等特殊地区增加费是两个不同口径。",
+      "file": "articles/cost-072-边远地区差异调整的来源核对.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=表1 特殊地区施工增加费调整系数表 / 注： / 表2 地区差异调整系数表; lines=104-128"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-073",
+      "title": "生产与安装同时进行的降效调整",
+      "category": "参考计价依据",
+      "tags": [
+        "降效",
+        "参考计价依据",
+        "范围核对"
+      ],
+      "summary": "安装与生产同时进行的降效费有特定条件。",
+      "file": "articles/cost-073-生产与安装同时进行的降效调整.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=表1 特殊地区施工增加费调整系数表 / 注： / 表2 地区差异调整系数表; lines=122-128"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-074",
+      "title": "估算与概算幅度差的使用阶段",
+      "category": "参考计价依据",
+      "tags": [
+        "幅度差",
+        "参考计价依据",
+        "范围核对"
+      ],
+      "summary": "估算与概算幅度差用于区分投资编制阶段。",
+      "file": "articles/cost-074-估算与概算幅度差的使用阶段.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=表1 特殊地区施工增加费调整系数表 / 注： / 表2 地区差异调整系数表; lines=124-128"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-075",
+      "title": "参考计价条目的计量单位核对",
+      "category": "参考计价依据",
+      "tags": [
+        "计量单位",
+        "参考计价依据",
+        "范围核对"
+      ],
+      "summary": "第五册参考计价依据的工程对象不同，不能使用统一计量单位。",
+      "file": "articles/cost-075-参考计价条目的计量单位核对.md",
+      "source_basis": [
+        "asset_id=6df81e7f127e93a8; output=2024全费用清单单价-第5册参考计价依据-Excel问答版.md; title_path=第二节 管件预制安装（柔性内焊+全自动外焊） / 第三节 穿跨越管段组装焊接（柔性内焊+全自动外焊） / 第二章 移动式天然气放空回收; lines=964-974,1046-1058,1296-1306"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-076",
+      "title": "清单单价中的规费口径",
+      "category": "全费用清单单价",
+      "tags": [
+        "规费",
+        "全费用清单单价",
+        "范围核对"
+      ],
+      "summary": "2024清单总说明将规费列入不含税全费用综合单价，表头中的规费属于单价构成信息，不能默认在清单总价之外再加一次。",
+      "file": "articles/cost-076-清单单价中的规费口径.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单 / 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费 / 十二、《清单单价》中，规费指按国家法律、法规及政府和有关部门规定必须缴纳或计取的费用，; lines=92-102"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-077",
+      "title": "安全生产费的清单表达",
+      "category": "全费用清单单价",
+      "tags": [
+        "安全生产费",
+        "全费用清单单价",
+        "范围核对"
+      ],
+      "summary": "2024清单中的安全生产费同时具有费用定义和单价构成位置。",
+      "file": "articles/cost-077-安全生产费的清单表达.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单 / 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费 / 十二、《清单单价》中，规费指按国家法律、法规及政府和有关部门规定必须缴纳或计取的费用，; lines=96-102"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-078",
+      "title": "不含税单价与价税分离",
+      "category": "全费用清单单价",
+      "tags": [
+        "不含税",
+        "全费用清单单价",
+        "范围核对"
+      ],
+      "summary": "2024清单总说明明确其确定价格为不含税全费用综合单价，增值税另按相应规定计算。",
+      "file": "articles/cost-078-不含税单价与价税分离.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=九、清单单价调整规则为 / 十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单 / 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费; lines=92-98"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-079",
+      "title": "主材消耗量与清单工作内容",
+      "category": "全费用清单单价",
+      "tags": [
+        "主材",
+        "全费用清单单价",
+        "范围核对"
+      ],
+      "summary": "清单表中的设备或主材用量与清单单价是不同字段。",
+      "file": "articles/cost-079-主材消耗量与清单工作内容.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=九、清单单价调整规则为 / 十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单 / 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费; lines=92-98,308-318"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-080",
+      "title": "清单单价调整权限与换算边界",
+      "category": "全费用清单单价",
+      "tags": [
+        "换算",
+        "全费用清单单价",
+        "范围核对"
+      ],
+      "summary": "清单差异不等于具有自由调整价格的权限。",
+      "file": "articles/cost-080-清单单价调整权限与换算边界.md",
+      "source_basis": [
+        "asset_id=ccbbfa9365e29784; output=2024全费用清单单价-第1册油气输送管道工程-正文问答版.md; title_path=十六、《清单单价》涵盖子目不足部分，可按行业或工程所在地计价依据编制补充清单单价 / 十七、《清单单价》由国家管网集团战略与执行部负责管理，由国家管网集团西气东输公司造价中 / 十八、本说明未尽事宜，详见各册、章说明; lines=114-126"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-081",
+      "title": "建设期管道巡护费的计列条件",
+      "category": "建设项目其他费用",
+      "tags": [
+        "建设期管道巡护费",
+        "建设项目其他费用",
+        "范围核对"
+      ],
+      "summary": "2024其他费用依据第二十四条将建设期管道巡护费定义为建设单位委托运行单位履行建设期管道保护职责的费用。",
+      "file": "articles/cost-081-建设期管道巡护费的计列条件.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=第二十四条 建设期管道巡护费 / 1.费用内容 / 2.计算方法; lines=658-666"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-082",
+      "title": "国内设备运杂费的费用内容",
+      "category": "建设项目其他费用",
+      "tags": [
+        "国内设备运杂费",
+        "建设项目其他费用",
+        "范围核对"
+      ],
+      "summary": "2024其他费用依据第二十五条说明，国内设备运杂费包括从制造厂至施工现场的运输、装卸、包装、采购管理、保管、港口建设及运输保险等，明确不包括超限设备运输特殊措施费。",
+      "file": "articles/cost-082-国内设备运杂费的费用内容.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=第二十五条 国内设备运杂费 / （一）费用内容 / （二）计算方法; lines=672-680"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-083",
+      "title": "建设期利息的计算资料",
+      "category": "建设项目其他费用",
+      "tags": [
+        "建设期利息",
+        "建设项目其他费用",
+        "范围核对"
+      ],
+      "summary": "建设期利息不是把总投资乘一个利率即可得到。",
+      "file": "articles/cost-083-建设期利息的计算资料.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=第三十条 建设期利息 / （一）费用内容建设期利息是指在建设期内发生，并应计入固定资产的建设项目的负息资金的利息 / （二）计算方法; lines=752-758"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-084",
+      "title": "基本预备费与价差预备费",
+      "category": "建设项目其他费用",
+      "tags": [
+        "基本预备费",
+        "建设项目其他费用",
+        "范围核对"
+      ],
+      "summary": "基本预备费和价差预备费应先按版本辨认，不能合并成一个通用比例。",
+      "file": "articles/cost-084-基本预备费与价差预备费.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=第二十九条 基本预备费 / （一）费用内容 / （二）计算方法; lines=738-748",
+        "asset_id=a8e01d63f42cb606; output=2012石油建设项目其他费用和相关费用规定-正文问答版.md; title_path=1. 费用内容 / 2. 计算方法 / 第五章  预 备 费; lines=864-904"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-085",
+      "title": "管道铺底油气与储气库铺底气",
+      "category": "建设项目其他费用",
+      "tags": [
+        "铺底油",
+        "建设项目其他费用",
+        "范围核对"
+      ],
+      "summary": "管道铺底油气和储气库铺底气虽然均与投产初期有关，工程对象不同。",
+      "file": "articles/cost-085-管道铺底油气与储气库铺底气.md",
+      "source_basis": [
+        "asset_id=3d16701618141b48; output=2024建设项目其他费用及相关费用计价依据-正文问答版.md; title_path=第三十三条 储气库铺底气费用 / （一）费用内容储气库铺底气费用系指储气库在投产初期，为了使储层的地层压力上升到最低工作压力，以便为储气库正常储存或释放天然气提 / （二）计算方法; lines=768-786"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-086",
+      "title": "压力容器安装指标的组合内容",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "压力容器",
+        "概算指标与费用定额",
+        "范围核对"
+      ],
+      "summary": "2005概算指标的静置设备安装章区分整体安装与分段分片组对。",
+      "file": "articles/cost-086-压力容器安装指标的组合内容.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=二、指标包括内容： / 三、指标未包括内容： / 四、指标使用方法：; lines=310-378"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-087",
+      "title": "金属结构指标的计量与选用",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "金属结构",
+        "概算指标与费用定额",
+        "范围核对"
+      ],
+      "summary": "金属结构的指标单位取决于具体工序。",
+      "file": "articles/cost-087-金属结构指标的计量与选用.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=第三章 炉类及附属设备安装工程 / 一、本章指标共分为： / 二、指标的组合内容包括：; lines=424-462,786-844"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-088",
+      "title": "电气指标中的安装与调试内容",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "电气",
+        "概算指标与费用定额",
+        "范围核对"
+      ],
+      "summary": "2005电气安装指标中，不同设备对调试和连接工作的综合程度不同。",
+      "file": "articles/cost-088-电气指标中的安装与调试内容.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=第九章 输变电、电气及照明工程 / 一、本章指标分为： / 二、指标包括的内容：; lines=968-1030"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-089",
+      "title": "消防安装指标的范围核对",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "消防",
+        "概算指标与费用定额",
+        "范围核对"
+      ],
+      "summary": "消防安装指标应与储罐本体指标分开核对。",
+      "file": "articles/cost-089-消防安装指标的范围核对.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=一、本章指标分为： / 二、指标包括的内容： / 三、指标不包括的内容：; lines=590-596,746-780"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-090",
+      "title": "工艺管道指标的工作内容核对",
+      "category": "概算指标与费用定额",
+      "tags": [
+        "工艺管道",
+        "概算指标与费用定额",
+        "范围核对"
+      ],
+      "summary": "2005第五章工艺管道安装指标区分石油化工与石油天然气工艺管道，并进一步按材质、压力、室内外及连接方式等选择。",
+      "file": "articles/cost-090-工艺管道指标的工作内容核对.md",
+      "source_basis": [
+        "asset_id=d9280c86ba95e6bb; output=2005石油建设安装工程概算指标说明-正文问答版.md; title_path=二、指标包括内容： / 三、指标未包括内容： / 四、指标使用方法：; lines=648-709"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-091",
+      "title": "数字项目硬件费用的组成",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "硬件费用",
+        "数字与信息化项目投资",
+        "估算复核"
+      ],
+      "summary": "2024数字与信息化依据将硬件费用分为设备购置费和资源租赁费。",
+      "file": "articles/cost-091-数字项目硬件费用的组成.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=（一） 硬件费用 / 1. 费用内容 / 2. 计算方法; lines=134-142"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-092",
+      "title": "数字项目采购管理费的计列",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "采购管理费",
+        "数字与信息化项目投资",
+        "估算复核"
+      ],
+      "summary": "数字项目采购管理费有特定主体和阶段条件。",
+      "file": "articles/cost-092-数字项目采购管理费的计列.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=1. 费用内容 / 2. 计算方法 / （三） 采购管理费; lines=154-156"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-093",
+      "title": "架构看护与第三方咨询费用",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "架构看护费",
+        "数字与信息化项目投资",
+        "估算复核"
+      ],
+      "summary": "架构看护与第三方咨询均列入数字项目建设管理费用，但服务对象和计算方法不同。",
+      "file": "articles/cost-093-架构看护与第三方咨询费用.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=2. 造价咨询费 / 3. 架构看护费 / 4. 第三方咨询费; lines=176-194"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-094",
+      "title": "软件功能性能与等保测评费用",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "安全等级保护",
+        "数字与信息化项目投资",
+        "估算复核"
+      ],
+      "summary": "软件功能性能测评与安全等级保护测评是不同费用。",
+      "file": "articles/cost-094-软件功能性能与等保测评费用.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=1. 软件功能与性能测评费 / 2. 安全等级保护测评费 / 3. 其他测评费; lines=196-208"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-095",
+      "title": "软件直接非人力成本的组成",
+      "category": "数字与信息化项目投资",
+      "tags": [
+        "直接非人力成本",
+        "数字与信息化项目投资",
+        "估算复核"
+      ],
+      "summary": "直接非人力成本强调为特定开发项目发生的非人员支出。",
+      "file": "articles/cost-095-软件直接非人力成本的组成.md",
+      "source_basis": [
+        "asset_id=ffb4af8c045bcebc; output=2024数字与信息化项目投资计价依据-正文问答版.md; title_path=（三） 间接人力成本 / （四） 间接非人力成本 / （五） 毛利润; lines=236-262"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-096",
+      "title": "软件运维工作量的估算周期",
+      "category": "软件行业基准数据",
+      "tags": [
+        "周期",
+        "软件行业基准数据",
+        "估算复核"
+      ],
+      "summary": "2025软件行业基准资料问答D.6说明，基于行业数据评估的软件运维工作量周期缺省为一年。",
+      "file": "articles/cost-096-软件运维工作量的估算周期.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=D.5在进行工作量估算时，如果所属业务领域不在行业基准数据的行业分类中怎么办？ / D.6基于行业数据评估的软件运维工作量周期是多长？ / D.7基于行业数据评估的软件开发或运维费用是否含税？; lines=322-328"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-097",
+      "title": "软件开发费用的含税口径",
+      "category": "软件行业基准数据",
+      "tags": [
+        "是否含税",
+        "软件行业基准数据",
+        "估算复核"
+      ],
+      "summary": "2025行业基准资料问答D.7明确，基于行业数据评估的软件开发或运维费用为含税口径，并说明费用所涵盖的人力、间接非人力和合理利润等范围，不包括直接非人力成本。",
+      "file": "articles/cost-097-软件开发费用的含税口径.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=D.5在进行工作量估算时，如果所属业务领域不在行业基准数据的行业分类中怎么办？ / D.6基于行业数据评估的软件运维工作量周期是多长？ / D.7基于行业数据评估的软件开发或运维费用是否含税？; lines=326-328"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-098",
+      "title": "开发团队背景调整因子的使用",
+      "category": "软件行业基准数据",
+      "tags": [
+        "开发团队背景",
+        "软件行业基准数据",
+        "估算复核"
+      ],
+      "summary": "2025行业基准附录A.7按开发团队同类行业和项目经验划分背景调整因子。",
+      "file": "articles/cost-098-开发团队背景调整因子的使用.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=A.5非功能性特征调整因子参数表 / A.6开发平台调整因子参数表 / A.7开发团队背景调整因子参数表; lines=232-234"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-099",
+      "title": "软件需求质量评价的依据",
+      "category": "软件行业基准数据",
+      "tags": [
+        "需求质量评价",
+        "软件行业基准数据",
+        "估算复核"
+      ],
+      "summary": "2025行业基准资料的业务需求质量评价案例指出，立项需求较简单、后续变更及验收资料显示需求模糊，会影响交付功能对业务需要的满足程度。",
+      "file": "articles/cost-099-软件需求质量评价的依据.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=1、预算合理性评价 / 2、业务需求质量评价 / 附录 C 其他运维成本度量基准数据; lines=278-290"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "cost-100",
+      "title": "基准分位数与项目估算口径",
+      "category": "软件行业基准数据",
+      "tags": [
+        "分位",
+        "软件行业基准数据",
+        "估算复核"
+      ],
+      "summary": "百分位数描述样本分布中的位置。",
+      "file": "articles/cost-100-基准分位数与项目估算口径.md",
+      "source_basis": [
+        "asset_id=7c385d19f1706319; output=2025中国软件行业基准数据-正文问答版.md; title_path=中国软件行业基准数据（CSBMK® -202510） / 1. 背景与目的 / 2. 术语与缩略语; lines=54-60,76-78"
+      ],
+      "status": "published"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "cost-001",
+      "target": "cost-002",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-002",
+      "target": "cost-003",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-003",
+      "target": "cost-004",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-004",
+      "target": "cost-005",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-005",
+      "target": "cost-006",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-006",
+      "target": "cost-007",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-007",
+      "target": "cost-008",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-008",
+      "target": "cost-009",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-009",
+      "target": "cost-010",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-010",
+      "target": "cost-011",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-011",
+      "target": "cost-012",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-012",
+      "target": "cost-013",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-013",
+      "target": "cost-014",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-014",
+      "target": "cost-015",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-016",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-016",
+      "target": "cost-017",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-017",
+      "target": "cost-018",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-018",
+      "target": "cost-019",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-019",
+      "target": "cost-020",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-020",
+      "target": "cost-021",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-021",
+      "target": "cost-022",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-022",
+      "target": "cost-023",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-023",
+      "target": "cost-024",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-024",
+      "target": "cost-025",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-025",
+      "target": "cost-026",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-026",
+      "target": "cost-027",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-027",
+      "target": "cost-028",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-028",
+      "target": "cost-029",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-029",
+      "target": "cost-030",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-030",
+      "target": "cost-031",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-031",
+      "target": "cost-032",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-032",
+      "target": "cost-033",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-033",
+      "target": "cost-034",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-034",
+      "target": "cost-035",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-035",
+      "target": "cost-036",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-036",
+      "target": "cost-037",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-037",
+      "target": "cost-038",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-038",
+      "target": "cost-039",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-039",
+      "target": "cost-040",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-040",
+      "target": "cost-041",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-041",
+      "target": "cost-042",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-042",
+      "target": "cost-043",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-043",
+      "target": "cost-044",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-044",
+      "target": "cost-045",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-045",
+      "target": "cost-046",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-046",
+      "target": "cost-047",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-047",
+      "target": "cost-048",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-048",
+      "target": "cost-049",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-049",
+      "target": "cost-050",
+      "type": "manual",
+      "weight": 1,
+      "reason": "相邻文章承接同一阅读主题"
+    },
+    {
+      "source": "cost-001",
+      "target": "cost-026",
+      "type": "manual",
+      "weight": 1,
+      "reason": "工程对象与五册目录相互定位"
+    },
+    {
+      "source": "cost-002",
+      "target": "cost-031",
+      "type": "manual",
+      "weight": 1,
+      "reason": "线路工程与用地费用存在资料关联"
+    },
+    {
+      "source": "cost-003",
+      "target": "cost-022",
+      "type": "manual",
+      "weight": 1,
+      "reason": "焊接方法可由主册与参考册互相核对"
+    },
+    {
+      "source": "cost-004",
+      "target": "cost-039",
+      "type": "manual",
+      "weight": 1,
+      "reason": "施工条件与调整说明相互印证"
+    },
+    {
+      "source": "cost-005",
+      "target": "cost-041",
+      "type": "manual",
+      "weight": 1,
+      "reason": "投产准备与投资组成需要分阶段查看"
+    },
+    {
+      "source": "cost-006",
+      "target": "cost-033",
+      "type": "manual",
+      "weight": 1,
+      "reason": "储罐项目与建设管理资料存在阶段关联"
+    },
+    {
+      "source": "cost-007",
+      "target": "cost-034",
+      "type": "manual",
+      "weight": 1,
+      "reason": "检测工作与专项验收需要分别确认"
+    },
+    {
+      "source": "cost-008",
+      "target": "cost-036",
+      "type": "manual",
+      "weight": 1,
+      "reason": "储罐试验与概算指标的包含范围有关"
+    },
+    {
+      "source": "cost-009",
+      "target": "cost-027",
+      "type": "manual",
+      "weight": 1,
+      "reason": "储罐安装内容可对照综合单价组成"
+    },
+    {
+      "source": "cost-010",
+      "target": "cost-045",
+      "type": "manual",
+      "weight": 1,
+      "reason": "储罐机械作业与实施服务边界可互查"
+    },
+    {
+      "source": "cost-011",
+      "target": "cost-043",
+      "type": "manual",
+      "weight": 1,
+      "reason": "设备安装与软件项目成本都需按对象拆分"
+    },
+    {
+      "source": "cost-012",
+      "target": "cost-042",
+      "type": "manual",
+      "weight": 1,
+      "reason": "工艺管道清单与税费口径需要分别核对"
+    },
+    {
+      "source": "cost-013",
+      "target": "cost-049",
+      "type": "manual",
+      "weight": 1,
+      "reason": "阀门特征与规模调整都强调项目参数"
+    },
+    {
+      "source": "cost-014",
+      "target": "cost-048",
+      "type": "manual",
+      "weight": 1,
+      "reason": "仪表调试与质量工作需要留存成果"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-050",
+      "type": "manual",
+      "weight": 1,
+      "reason": "章节定位与资料使用边界相互约束"
+    },
+    {
+      "source": "cost-016",
+      "target": "cost-018",
+      "type": "manual",
+      "weight": 1,
+      "reason": "通信线路与智能化系统存在接口关系"
+    },
+    {
+      "source": "cost-017",
+      "target": "cost-030",
+      "type": "manual",
+      "weight": 1,
+      "reason": "道路工程量与计量单位需要共同阅读"
+    },
+    {
+      "source": "cost-018",
+      "target": "cost-020",
+      "type": "manual",
+      "weight": 1,
+      "reason": "智能化系统与中转站工程可能同场出现"
+    },
+    {
+      "source": "cost-019",
+      "target": "cost-025",
+      "type": "manual",
+      "weight": 1,
+      "reason": "内检测与完整性管理都有成果交付边界"
+    },
+    {
+      "source": "cost-021",
+      "target": "cost-046",
+      "type": "manual",
+      "weight": 1,
+      "reason": "参考依据与行业基准都需要核对来源"
+    },
+    {
+      "source": "cost-023",
+      "target": "cost-044",
+      "type": "manual",
+      "weight": 1,
+      "reason": "放空回收与工作量测算都依赖项目条件"
+    },
+    {
+      "source": "cost-024",
+      "target": "cost-032",
+      "type": "manual",
+      "weight": 1,
+      "reason": "绿化工程与其他费用阶段存在资料关联"
+    },
+    {
+      "source": "cost-028",
+      "target": "cost-038",
+      "type": "manual",
+      "weight": 1,
+      "reason": "清单阈值与定额版本都要求回看原文"
+    },
+    {
+      "source": "cost-029",
+      "target": "cost-040",
+      "type": "manual",
+      "weight": 1,
+      "reason": "补充清单与人工价格都需要记录依据"
+    },
+    {
+      "source": "cost-035",
+      "target": "cost-047",
+      "type": "manual",
+      "weight": 1,
+      "reason": "培训费用与软件生产率都应对应项目范围"
+    },
+    {
+      "source": "cost-001",
+      "target": "cost-051",
+      "type": "shared_topic",
+      "reason": "油气输送管道工程适用范围与热煨弯管加工的规格核对共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-003",
+      "target": "cost-051",
+      "type": "shared_topic",
+      "reason": "管段组装焊接清单阅读与热煨弯管加工的规格核对共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-001",
+      "target": "cost-052",
+      "type": "shared_topic",
+      "reason": "油气输送管道工程适用范围与管段防腐与保温的内容区分共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-028",
+      "target": "cost-052",
+      "type": "shared_topic",
+      "reason": "清单名称阈值表达与管段防腐与保温的内容区分共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-001",
+      "target": "cost-053",
+      "type": "shared_topic",
+      "reason": "油气输送管道工程适用范围与管段运输的运输条件与计量共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-030",
+      "target": "cost-053",
+      "type": "shared_topic",
+      "reason": "清单工程量与计量单位与管段运输的运输条件与计量共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-001",
+      "target": "cost-054",
+      "type": "shared_topic",
+      "reason": "油气输送管道工程适用范围与管道穿跨越清单选用共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-003",
+      "target": "cost-054",
+      "type": "shared_topic",
+      "reason": "管段组装焊接清单阅读与管道穿跨越清单选用共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-003",
+      "target": "cost-055",
+      "type": "shared_topic",
+      "reason": "管段组装焊接清单阅读与管道无损检测方法与工作内容共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-005",
+      "target": "cost-055",
+      "type": "shared_topic",
+      "reason": "管道清管试压与干燥置换与管道无损检测方法与工作内容共同用于油气输送管道工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-008",
+      "target": "cost-056",
+      "type": "shared_topic",
+      "reason": "储罐试验与沉降观测与球形储罐制作安装的清单选用共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-009",
+      "target": "cost-056",
+      "type": "shared_topic",
+      "reason": "金属储罐制作安装内容与球形储罐制作安装的清单选用共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-008",
+      "target": "cost-057",
+      "type": "shared_topic",
+      "reason": "储罐试验与沉降观测与储罐底板施工内容核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-010",
+      "target": "cost-057",
+      "type": "shared_topic",
+      "reason": "储罐保冷与机械作业与储罐底板施工内容核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-009",
+      "target": "cost-058",
+      "type": "shared_topic",
+      "reason": "金属储罐制作安装内容与储罐壁板施工内容核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-010",
+      "target": "cost-058",
+      "type": "shared_topic",
+      "reason": "储罐保冷与机械作业与储罐壁板施工内容核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-006",
+      "target": "cost-059",
+      "type": "shared_topic",
+      "reason": "低温储罐项目特征阅读与储罐罐顶施工内容核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-008",
+      "target": "cost-059",
+      "type": "shared_topic",
+      "reason": "储罐试验与沉降观测与储罐罐顶施工内容核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-007",
+      "target": "cost-060",
+      "type": "shared_topic",
+      "reason": "储罐焊缝检测清单边界与储罐附件的计价范围核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-009",
+      "target": "cost-060",
+      "type": "shared_topic",
+      "reason": "金属储罐制作安装内容与储罐附件的计价范围核对共同用于储罐制作安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-011",
+      "target": "cost-061",
+      "type": "shared_topic",
+      "reason": "机械设备安装清单内容与金属结构制作安装的工作内容共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-061",
+      "type": "shared_topic",
+      "reason": "通用安装章节如何定位与金属结构制作安装的工作内容共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-014",
+      "target": "cost-062",
+      "type": "shared_topic",
+      "reason": "自动化控制仪表安装边界与电气安装清单的工程对象共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-062",
+      "type": "shared_topic",
+      "reason": "通用安装章节如何定位与电气安装清单的工程对象共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-063",
+      "type": "shared_topic",
+      "reason": "通用安装章节如何定位与通信设备安装与通信线路的区别共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-016",
+      "target": "cost-063",
+      "type": "shared_topic",
+      "reason": "通信线路工程清单阅读与通信设备安装与通信线路的区别共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-013",
+      "target": "cost-064",
+      "type": "shared_topic",
+      "reason": "阀门安装清单特征与消防与给排水安装的清单定位共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-064",
+      "type": "shared_topic",
+      "reason": "通用安装章节如何定位与消防与给排水安装的清单定位共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-012",
+      "target": "cost-065",
+      "type": "shared_topic",
+      "reason": "工艺管道安装清单阅读与阴极保护工程的计价对象共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-065",
+      "type": "shared_topic",
+      "reason": "通用安装章节如何定位与阴极保护工程的计价对象共同用于通用安装工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-016",
+      "target": "cost-066",
+      "type": "shared_topic",
+      "reason": "通信线路工程清单阅读与通信线路穿越施工的内容核对共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-002",
+      "target": "cost-066",
+      "type": "shared_topic",
+      "reason": "油气输送管道土石方清单阅读与通信线路穿越施工的内容核对共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-016",
+      "target": "cost-067",
+      "type": "shared_topic",
+      "reason": "通信线路工程清单阅读与通信线路接续与测试的内容核对共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-015",
+      "target": "cost-067",
+      "type": "shared_topic",
+      "reason": "通用安装章节如何定位与通信线路接续与测试的内容核对共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-017",
+      "target": "cost-068",
+      "type": "shared_topic",
+      "reason": "伴行与巡检道路工程与伴行道路路面工程的计量共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-002",
+      "target": "cost-068",
+      "type": "shared_topic",
+      "reason": "油气输送管道土石方清单阅读与伴行道路路面工程的计量共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-017",
+      "target": "cost-069",
+      "type": "shared_topic",
+      "reason": "伴行与巡检道路工程与伴行与巡检道路的计量单位共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-030",
+      "target": "cost-069",
+      "type": "shared_topic",
+      "reason": "清单工程量与计量单位与伴行与巡检道路的计量单位共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-019",
+      "target": "cost-070",
+      "type": "shared_topic",
+      "reason": "投产前管道内检测与投产前内检测的规格与工作量共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-005",
+      "target": "cost-070",
+      "type": "shared_topic",
+      "reason": "管道清管试压与干燥置换与投产前内检测的规格与工作量共同用于其他工程的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-021",
+      "target": "cost-071",
+      "type": "shared_topic",
+      "reason": "第五册参考计价依据的用途与高原施工增加费的条件核对共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-039",
+      "target": "cost-071",
+      "type": "shared_topic",
+      "reason": "地区与施工条件调整与高原施工增加费的条件核对共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-021",
+      "target": "cost-072",
+      "type": "shared_topic",
+      "reason": "第五册参考计价依据的用途与边远地区差异调整的来源核对共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-027",
+      "target": "cost-072",
+      "type": "shared_topic",
+      "reason": "全费用综合单价构成与边远地区差异调整的来源核对共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-021",
+      "target": "cost-073",
+      "type": "shared_topic",
+      "reason": "第五册参考计价依据的用途与生产与安装同时进行的降效调整共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-009",
+      "target": "cost-073",
+      "type": "shared_topic",
+      "reason": "金属储罐制作安装内容与生产与安装同时进行的降效调整共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-021",
+      "target": "cost-074",
+      "type": "shared_topic",
+      "reason": "第五册参考计价依据的用途与估算与概算幅度差的使用阶段共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-026",
+      "target": "cost-074",
+      "type": "shared_topic",
+      "reason": "全费用清单单价五册结构与估算与概算幅度差的使用阶段共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-023",
+      "target": "cost-075",
+      "type": "shared_topic",
+      "reason": "移动式天然气放空回收与参考计价条目的计量单位核对共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-025",
+      "target": "cost-075",
+      "type": "shared_topic",
+      "reason": "完整性管理技术服务与参考计价条目的计量单位核对共同用于参考计价依据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-027",
+      "target": "cost-076",
+      "type": "shared_topic",
+      "reason": "全费用综合单价构成与清单单价中的规费口径共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-038",
+      "target": "cost-076",
+      "type": "shared_topic",
+      "reason": "费用定额版本阅读与清单单价中的规费口径共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-027",
+      "target": "cost-077",
+      "type": "shared_topic",
+      "reason": "全费用综合单价构成与安全生产费的清单表达共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-039",
+      "target": "cost-077",
+      "type": "shared_topic",
+      "reason": "地区与施工条件调整与安全生产费的清单表达共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-027",
+      "target": "cost-078",
+      "type": "shared_topic",
+      "reason": "全费用综合单价构成与不含税单价与价税分离共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-042",
+      "target": "cost-078",
+      "type": "shared_topic",
+      "reason": "数字项目税费与估算口径与不含税单价与价税分离共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-028",
+      "target": "cost-079",
+      "type": "shared_topic",
+      "reason": "清单名称阈值表达与主材消耗量与清单工作内容共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-030",
+      "target": "cost-079",
+      "type": "shared_topic",
+      "reason": "清单工程量与计量单位与主材消耗量与清单工作内容共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-029",
+      "target": "cost-080",
+      "type": "shared_topic",
+      "reason": "子目不足时补充清单单价与清单单价调整权限与换算边界共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-036",
+      "target": "cost-080",
+      "type": "shared_topic",
+      "reason": "概算指标的费用组成与清单单价调整权限与换算边界共同用于全费用清单单价的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-031",
+      "target": "cost-081",
+      "type": "shared_topic",
+      "reason": "建设用地与赔补费用与建设期管道巡护费的计列条件共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-019",
+      "target": "cost-081",
+      "type": "shared_topic",
+      "reason": "投产前管道内检测与建设期管道巡护费的计列条件共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-027",
+      "target": "cost-082",
+      "type": "shared_topic",
+      "reason": "全费用综合单价构成与国内设备运杂费的费用内容共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-034",
+      "target": "cost-082",
+      "type": "shared_topic",
+      "reason": "专项评价及验收费与国内设备运杂费的费用内容共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-041",
+      "target": "cost-083",
+      "type": "shared_topic",
+      "reason": "建设项目总投资组成与建设期利息的计算资料共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-042",
+      "target": "cost-083",
+      "type": "shared_topic",
+      "reason": "数字项目税费与估算口径与建设期利息的计算资料共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-032",
+      "target": "cost-084",
+      "type": "shared_topic",
+      "reason": "前期工作费用阅读与基本预备费与价差预备费共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-041",
+      "target": "cost-084",
+      "type": "shared_topic",
+      "reason": "建设项目总投资组成与基本预备费与价差预备费共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-001",
+      "target": "cost-085",
+      "type": "shared_topic",
+      "reason": "油气输送管道工程适用范围与管道铺底油气与储气库铺底气共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-006",
+      "target": "cost-085",
+      "type": "shared_topic",
+      "reason": "低温储罐项目特征阅读与管道铺底油气与储气库铺底气共同用于建设项目其他费用的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-011",
+      "target": "cost-086",
+      "type": "shared_topic",
+      "reason": "机械设备安装清单内容与压力容器安装指标的组合内容共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-037",
+      "target": "cost-086",
+      "type": "shared_topic",
+      "reason": "设备储罐与工艺管道指标定位与压力容器安装指标的组合内容共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-036",
+      "target": "cost-087",
+      "type": "shared_topic",
+      "reason": "概算指标的费用组成与金属结构指标的计量与选用共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-038",
+      "target": "cost-087",
+      "type": "shared_topic",
+      "reason": "费用定额版本阅读与金属结构指标的计量与选用共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-014",
+      "target": "cost-088",
+      "type": "shared_topic",
+      "reason": "自动化控制仪表安装边界与电气指标中的安装与调试内容共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-036",
+      "target": "cost-088",
+      "type": "shared_topic",
+      "reason": "概算指标的费用组成与电气指标中的安装与调试内容共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-007",
+      "target": "cost-089",
+      "type": "shared_topic",
+      "reason": "储罐焊缝检测清单边界与消防安装指标的范围核对共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-037",
+      "target": "cost-089",
+      "type": "shared_topic",
+      "reason": "设备储罐与工艺管道指标定位与消防安装指标的范围核对共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-012",
+      "target": "cost-090",
+      "type": "shared_topic",
+      "reason": "工艺管道安装清单阅读与工艺管道指标的工作内容核对共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-037",
+      "target": "cost-090",
+      "type": "shared_topic",
+      "reason": "设备储罐与工艺管道指标定位与工艺管道指标的工作内容核对共同用于概算指标与费用定额的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-041",
+      "target": "cost-091",
+      "type": "shared_topic",
+      "reason": "建设项目总投资组成与数字项目硬件费用的组成共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-044",
+      "target": "cost-091",
+      "type": "shared_topic",
+      "reason": "功能点与开发成本测算与数字项目硬件费用的组成共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-041",
+      "target": "cost-092",
+      "type": "shared_topic",
+      "reason": "建设项目总投资组成与数字项目采购管理费的计列共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-045",
+      "target": "cost-092",
+      "type": "shared_topic",
+      "reason": "数字项目实施与培训费用与数字项目采购管理费的计列共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-033",
+      "target": "cost-093",
+      "type": "shared_topic",
+      "reason": "建设管理监理与造价咨询费用与架构看护与第三方咨询费用共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-041",
+      "target": "cost-093",
+      "type": "shared_topic",
+      "reason": "建设项目总投资组成与架构看护与第三方咨询费用共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-041",
+      "target": "cost-094",
+      "type": "shared_topic",
+      "reason": "建设项目总投资组成与软件功能性能与等保测评费用共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-045",
+      "target": "cost-094",
+      "type": "shared_topic",
+      "reason": "数字项目实施与培训费用与软件功能性能与等保测评费用共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-043",
+      "target": "cost-095",
+      "type": "shared_topic",
+      "reason": "软件开发成本组成与软件直接非人力成本的组成共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-044",
+      "target": "cost-095",
+      "type": "shared_topic",
+      "reason": "功能点与开发成本测算与软件直接非人力成本的组成共同用于数字与信息化项目投资的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-046",
+      "target": "cost-096",
+      "type": "shared_topic",
+      "reason": "软件基准数据来源与样本与软件运维工作量的估算周期共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-047",
+      "target": "cost-096",
+      "type": "shared_topic",
+      "reason": "软件生产率与功能点单价与软件运维工作量的估算周期共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-042",
+      "target": "cost-097",
+      "type": "shared_topic",
+      "reason": "数字项目税费与估算口径与软件开发费用的含税口径共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-043",
+      "target": "cost-097",
+      "type": "shared_topic",
+      "reason": "软件开发成本组成与软件开发费用的含税口径共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-047",
+      "target": "cost-098",
+      "type": "shared_topic",
+      "reason": "软件生产率与功能点单价与开发团队背景调整因子的使用共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-049",
+      "target": "cost-098",
+      "type": "shared_topic",
+      "reason": "软件规模与调整因素与开发团队背景调整因子的使用共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-048",
+      "target": "cost-099",
+      "type": "shared_topic",
+      "reason": "软件质量与工作量指标与软件需求质量评价的依据共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-050",
+      "target": "cost-099",
+      "type": "shared_topic",
+      "reason": "软件基准数据的使用边界与软件需求质量评价的依据共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-046",
+      "target": "cost-100",
+      "type": "shared_topic",
+      "reason": "软件基准数据来源与样本与基准分位数与项目估算口径共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-047",
+      "target": "cost-100",
+      "type": "shared_topic",
+      "reason": "软件生产率与功能点单价与基准分位数与项目估算口径共同用于软件行业基准数据的范围、对象或计价口径核对。"
+    },
+    {
+      "source": "cost-051",
+      "target": "cost-052",
+      "type": "manual",
+      "reason": "加工费排除防腐层，需衔接核对"
+    },
+    {
+      "source": "cost-051",
+      "target": "cost-053",
+      "type": "manual",
+      "reason": "加工、运输是弯管采购的不同环节"
+    },
+    {
+      "source": "cost-054",
+      "target": "cost-055",
+      "type": "manual",
+      "reason": "穿跨越焊口的施工与检测对象衔接"
+    },
+    {
+      "source": "cost-057",
+      "target": "cost-058",
+      "type": "manual",
+      "reason": "底板与壁板共同构成罐体重量"
+    },
+    {
+      "source": "cost-058",
+      "target": "cost-059",
+      "type": "manual",
+      "reason": "壁板、罐顶按罐型核对本体范围"
+    },
+    {
+      "source": "cost-059",
+      "target": "cost-060",
+      "type": "manual",
+      "reason": "罐顶接管与附件的单位及包含范围衔接"
+    },
+    {
+      "source": "cost-061",
+      "target": "cost-087",
+      "type": "manual",
+      "reason": "2024清单与2005指标的钢结构工序口径比较"
+    },
+    {
+      "source": "cost-062",
+      "target": "cost-088",
+      "type": "manual",
+      "reason": "电气安装与调试在两个版本中的范围核对"
+    },
+    {
+      "source": "cost-063",
+      "target": "cost-066",
+      "type": "manual",
+      "reason": "站内通信与线路穿越的专业接口"
+    },
+    {
+      "source": "cost-066",
+      "target": "cost-067",
+      "type": "manual",
+      "reason": "光缆敷设的已含接续测试与排除穿越对照"
+    },
+    {
+      "source": "cost-068",
+      "target": "cost-069",
+      "type": "manual",
+      "reason": "路面结构与面积计量互为核对条件"
+    },
+    {
+      "source": "cost-070",
+      "target": "cost-075",
+      "type": "manual",
+      "reason": "服务类型与计量条件对照"
+    },
+    {
+      "source": "cost-071",
+      "target": "cost-072",
+      "type": "manual",
+      "reason": "特殊地区与地区差异为不同调整口径"
+    },
+    {
+      "source": "cost-072",
+      "target": "cost-073",
+      "type": "manual",
+      "reason": "地区与降效按同一总说明公式组合"
+    },
+    {
+      "source": "cost-073",
+      "target": "cost-074",
+      "type": "manual",
+      "reason": "降效和估概算幅度差需分别确认适用"
+    },
+    {
+      "source": "cost-076",
+      "target": "cost-077",
+      "type": "manual",
+      "reason": "规费与安全生产费同属单价其中项"
+    },
+    {
+      "source": "cost-078",
+      "target": "cost-079",
+      "type": "manual",
+      "reason": "主材另计需统一不含税价格口径"
+    },
+    {
+      "source": "cost-079",
+      "target": "cost-080",
+      "type": "manual",
+      "reason": "材料范围差异不能越过调整权限"
+    },
+    {
+      "source": "cost-053",
+      "target": "cost-082",
+      "type": "manual",
+      "reason": "制造厂、中转库与现场运输区段防重"
+    },
+    {
+      "source": "cost-083",
+      "target": "cost-084",
+      "type": "manual",
+      "reason": "预备与资金利息均需确认投资阶段及基数"
+    },
+    {
+      "source": "cost-086",
+      "target": "cost-090",
+      "type": "manual",
+      "reason": "设备本体法兰以外管道与工艺管道范围衔接"
+    },
+    {
+      "source": "cost-064",
+      "target": "cost-089",
+      "type": "manual",
+      "reason": "两个版本中消防器具与主材范围比较"
+    },
+    {
+      "source": "cost-091",
+      "target": "cost-092",
+      "type": "manual",
+      "reason": "购置费用与采购管理费包含关系"
+    },
+    {
+      "source": "cost-093",
+      "target": "cost-094",
+      "type": "manual",
+      "reason": "咨询与测评需各自确认任务和成果范围"
+    },
+    {
+      "source": "cost-095",
+      "target": "cost-097",
+      "type": "manual",
+      "reason": "行业基准排除直接非人力成本"
+    },
+    {
+      "source": "cost-096",
+      "target": "cost-100",
+      "type": "manual",
+      "reason": "运维分位数据的年度周期与单位"
+    },
+    {
+      "source": "cost-098",
+      "target": "cost-100",
+      "type": "manual",
+      "reason": "团队调整与基准分位选择分别记录"
+    },
+    {
+      "source": "cost-098",
+      "target": "cost-099",
+      "type": "manual",
+      "reason": "需求质量与团队背景是不同估算条件"
+    }
+  ],
+  "edition": "Astra 2026-10-09 / 100篇"
+}

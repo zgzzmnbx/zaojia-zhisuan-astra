@@ -5,6 +5,7 @@ import '../vendor/gork/gork-avatar.js';
 import {choreographGork,createGorkController,gorkDescriptions,greetings} from './gork-motion';
 import {gorkExpression,type GorkAppearance} from './gork-preferences';
 import {useGorkSettings} from './useGorkSettings';
+import {mountGorkPlayer} from './gork-custom';
 import './gork.css';
 
 // User explicitly chose playback for all visible animated avatars (2026-10-06).
@@ -28,7 +29,7 @@ export function Gork({state='idle',size=32,still=false,suspended=false,interacti
     const instance=createGorkController((next,frozen)=>{
       let rendered=next;
       const pointer=!frozen&&values.current.followPointer?attachGorkPointer(element,()=>['idle','listening'].includes(rendered)&&!values.current.paused&&!values.current.suspended,values.current.pointerSmoothing==='smooth'?{responseMs:260,maxSpeed:90}:{}):undefined;
-      const player=(window as any).GorkAvatar.mount(element,catalog,{still:frozen,expression:expression(next),appearance,forceMotion:true});
+      const player=mountGorkPlayer(element,catalog,{still:frozen,expression:expression(next),appearance});
       if(!frozen)player.set(expression(next));
       return {set(next:string){rendered=next;pointer?.reset();player.set(expression(next));},dispose(){pointer?.dispose();player.dispose();}};
     },next=>setStatus(old=>old.state===next.state&&old.active===next.active?old:next),undefined,state=>catalog.sequences.find(s=>s.id===expression(state))?.steps.reduce((n,s)=>n+s.transitionMs+s.holdMs,0)||3200);

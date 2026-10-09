@@ -5,7 +5,7 @@ import {
   Loader2,
   Maximize2,
   Minimize2,
-} from "lucide-react";
+} from "../../../PhosphorIcons";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ProjectCharts from "./ProjectCharts";
 import ProjectDashboardToolbar from "./ProjectDashboardToolbar";

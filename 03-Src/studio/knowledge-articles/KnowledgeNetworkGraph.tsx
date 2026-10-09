@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, LocateFixed, RotateCcw, Sparkles, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronRight, LocateFixed, RotateCcw, Sparkles, ZoomIn, ZoomOut } from "../../PhosphorIcons";
 import ForceGraph2D from "react-force-graph-2d";
 import type { ForceGraphMethods } from "react-force-graph-2d";
 import type { KnowledgeArticleGraphData, KnowledgeArticleMeta, KnowledgeArticleRelation } from "./knowledgeArticlesUtils";
@@ -134,6 +134,38 @@ export default function KnowledgeNetworkGraph({ data, query, selectedId, onSelec
   const categories = useMemo(() => [...new Set(data.nodes.map((node) => node.category))], [data.nodes]);
   const nodeById = useMemo(() => new Map(data.nodes.map((node) => [node.id, node])), [data.nodes]);
   const [motionEnabled, setMotionEnabled] = useState(initialMotionEnabled);
+  const [motionVisible, setMotionVisible] = useState(false);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    let intersecting = false;
+    const update = () => setMotionVisible(intersecting && !document.hidden);
+    const observer = new IntersectionObserver(([entry]) => { intersecting = entry.isIntersecting; update(); });
+    observer.observe(stage);
+    document.addEventListener("visibilitychange", update);
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", update); };
+  }, []);
+
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (motionVisible) graph?.resumeAnimation();
+    else {
+      graph?.pauseAnimation();
+      if (inertiaFrameRef.current !== null) window.cancelAnimationFrame(inertiaFrameRef.current);
+      inertiaFrameRef.current = null;
+    }
+  }, [motionVisible]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => {
+      try { if (["enabled", "disabled"].includes(localStorage.getItem(MOTION_PREFERENCE_KEY) || "")) return; } catch {}
+      setMotionEnabled(!media.matches);
+    };
+    media.addEventListener("change", sync); sync();
+    return () => media.removeEventListener("change", sync);
+  }, []);
 
   const graphData = useMemo<{ nodes: GalaxyNode[]; links: GalaxyLink[] }>(() => ({
     nodes: data.nodes.map((node, index) => ({
@@ -397,7 +429,7 @@ export default function KnowledgeNetworkGraph({ data, query, selectedId, onSelec
   }, [fitGraph, size.height, size.width]);
 
   return (
-    <div className={`knowledge-network-graph${motionEnabled ? " is-motion-enabled" : ""}${entryReady ? " is-entry-ready" : ""}`} aria-label="造价知识星云网络">
+    <div className={`knowledge-network-graph${motionEnabled ? " is-motion-enabled" : ""}${entryReady ? " is-entry-ready" : ""}${motionVisible ? "" : " is-motion-paused"}`} aria-label="造价知识星云网络">
       <div className="knowledge-network-graph__controls" aria-label="关系网络控制">
         <span className={`knowledge-network-graph__engine ${engineRunning ? "is-running" : ""}`}>
           <Sparkles size={14} />{engineRunning ? "星云排布中" : "星云已稳定"}
@@ -436,7 +468,9 @@ export default function KnowledgeNetworkGraph({ data, query, selectedId, onSelec
       </div>
 
       <div className="knowledge-network-graph__stage" ref={stageRef}>
+        <div className="knowledge-network-graph__galaxy" aria-hidden="true" />
         <div className="knowledge-network-graph__stars" aria-hidden="true" />
+        <div className="knowledge-network-graph__stars knowledge-network-graph__stars--near" aria-hidden="true" />
         <div className="knowledge-network-graph__nebula knowledge-network-graph__nebula--cyan" aria-hidden="true" />
         <div className="knowledge-network-graph__nebula knowledge-network-graph__nebula--violet" aria-hidden="true" />
         <div className="knowledge-network-graph__bloom-layer">

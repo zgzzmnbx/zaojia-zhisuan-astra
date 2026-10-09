@@ -1,4 +1,4 @@
-import { Download, FileSpreadsheet, FileText, ShieldCheck, X } from "lucide-react";
+import { Download, FileSpreadsheet, FileText, ShieldCheck, X } from "../../../PhosphorIcons";
 import { useEffect, useRef } from "react";
 import type { BusinessTask, TaskTarget } from "./taskContextUtils";
 import { formatTaskTime, taskStatusTone } from "./taskContextUtils";

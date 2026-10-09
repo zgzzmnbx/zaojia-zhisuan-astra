@@ -1,0 +1,48 @@
+{
+  "assets": [
+    {
+      "source": "D:\\Codex-Temp\\260529-ESP-32-M5StopWatch\\03-Src\\stopwatch-voice-companion\\static\\motion\\gork-config.js",
+      "target": "public/gork/motion/gork-config.js",
+      "sha256": "ccf2951c3f20148745b8133162b1967fe75ea08c347c17f8e55da4592419311d",
+      "target_sha256": "ccf2951c3f20148745b8133162b1967fe75ea08c347c17f8e55da4592419311d"
+    },
+    {
+      "source": "D:\\Codex-Temp\\260529-ESP-32-M5StopWatch\\03-Src\\stopwatch-voice-companion\\static\\motion\\gork-pens.js",
+      "target": "public/gork/motion/gork-pens.js",
+      "sha256": "8760ba7c345536aeafa05b995357ea387d11667a681c1fa6e819bbcb8a4c9ca8",
+      "target_sha256": "8760ba7c345536aeafa05b995357ea387d11667a681c1fa6e819bbcb8a4c9ca8"
+    },
+    {
+      "source": "D:\\Codex-Temp\\260529-ESP-32-M5StopWatch\\03-Src\\stopwatch-voice-companion\\static\\motion\\scene-controller.js",
+      "target": "public/gork/motion/scene-controller.js",
+      "sha256": "94bde7db0079a8b20a510ae3239610f58be91c9fe004d74b5f1b3c85669a1fc4",
+      "target_sha256": "94bde7db0079a8b20a510ae3239610f58be91c9fe004d74b5f1b3c85669a1fc4"
+    },
+    {
+      "source": "D:\\Codex-Temp\\260529-ESP-32-M5StopWatch\\03-Src\\stopwatch-voice-companion\\static\\motion\\gork-renderer.js",
+      "target": "public/gork/motion/gork-renderer.js",
+      "sha256": "5100e5b7ff6860f4e4235c711b4cdefde175b61e8614662dae89c99acf1695bc",
+      "target_sha256": "624a53d6c0b50fac782c23c03b44c0cda6a2af9736ba79dd9253a4f1ed02a893"
+    },
+    {
+      "source": "D:\\Codex-Temp\\260529-ESP-32-M5StopWatch\\03-Src\\stopwatch-voice-companion\\static\\motion\\gork-player.js",
+      "target": "public/gork/motion/gork-player.js",
+      "sha256": "1480a7159372e31eccafaf352cf5c54cc6c6e4dd41558cd148019b6d1339581f",
+      "target_sha256": "1480a7159372e31eccafaf352cf5c54cc6c6e4dd41558cd148019b6d1339581f"
+    },
+    {
+      "source": "D:\\Codex-Temp\\260529-ESP-32-M5StopWatch\\03-Src\\stopwatch-voice-companion\\static\\motion\\LICENSE.upstream",
+      "target": "public/gork/motion/LICENSE.upstream",
+      "sha256": "e9df4c4e4e64b8168a71c3c67668dcffabbe8fca11d4ac4a7d5482562cd1679c",
+      "target_sha256": "e9df4c4e4e64b8168a71c3c67668dcffabbe8fca11d4ac4a7d5482562cd1679c"
+    },
+    {
+      "source": "D:\\Codex-Temp\\260529-ESP-32-M5StopWatch\\03-Src\\stopwatch-voice-companion\\motion-library.local.json",
+      "target": "03-Src/studio/gork-custom-data.ts",
+      "sha256": "84413b85a8e2dccfe0605506094d0f080099d3fbfe90b96f235cfe7624ce2cdc",
+      "target_sha256": "071563ee8e3917ade00b830554ea6396fa7acaedd0dc0ea30d63fa694541b788"
+    }
+  ],
+  "adaptation": "Original scenes/config/player retained. Scene renderer adds selected preset/body/eye colors; no pose or timing change. Classic modules load before React to avoid CommonJS global export conversion. Astra owns one active player and visibility; no console preferences or hardware calls. Selected preset uses the existing 260/300 view size to prevent clipping.",
+  "validation": "两工作区各 138 项测试、类型检查与正式构建通过；浏览器三种表情实际画面随时间变化，普通 / 自定义切换、Citrus 外观适配、亮暗预览和刷新后选择保持通过；验收临时表情选择恢复原偏好。原目录只读，未触发设备或控制台接口。"
+}

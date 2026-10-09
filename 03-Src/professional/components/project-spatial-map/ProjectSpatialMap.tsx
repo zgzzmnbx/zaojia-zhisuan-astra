@@ -1,4 +1,4 @@
-import { AlertTriangle, ChevronRight, ListFilter, Loader2, Map, RefreshCw, Search, X } from "lucide-react";
+import { AlertTriangle, ChevronRight, ListFilter, Loader2, Map, RefreshCw, Search, X } from "../../../PhosphorIcons";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ProjectLocationReviewDialog from "./ProjectLocationReviewDialog";
 import ProjectMapDetail from "./ProjectMapDetail";
@@ -17,6 +17,7 @@ import {
   riskLabel,
 } from "./projectSpatialMapUtils";
 import "./projectSpatialMap.css";
+import "./mapRefinement.css";
 
 const ProjectMapCanvas = lazy(() => import("./ProjectMapCanvas"));
 
@@ -281,24 +282,7 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
   }, [dateFrom, dateTo, keyword, riskFilter, spatialType, statusFilter]);
 
   return (
-    <div className={`project-spatial-map project-spatial-map--${colorMode}`}>
-      <div className="astra-map-toolbar">
-      <div className="project-spatial-map__scope-tabs" role="tablist" aria-label="项目地图数据范围">
-        <button type="button" role="tab" aria-selected={scope === "demo"} className={scope === "demo" ? "is-active" : ""} onClick={() => setScope("demo")}><Map size={15} />演示项目 <small>8</small></button>
-        <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => setScope("real")}><ListFilter size={15} />真实项目 <small>{scope === "real" ? payload.total : ""}</small></button>
-      </div>
-      <header className="project-spatial-map__header">
-        <div>
-          <h1>全国项目地图</h1>
-        </div>
-        <div className="project-spatial-map__header-actions">
-          <span className={`project-spatial-map__map-status project-spatial-map__map-status--${mapStatus}`}><span aria-hidden="true" />{mapStatus === "ready" ? "底图已加载" : mapStatus === "fallback" ? "清单降级" : "底图检查中"}</span>
-          <button ref={filterButtonRef} type="button" className={`project-spatial-map__button ${activeFilterChips.length ? "project-spatial-map__button--active" : ""}`} onClick={openFilterDialog} aria-expanded={isFilterOpen} aria-controls="project-spatial-map-filter-dialog"><ListFilter size={14} />筛选{activeFilterChips.length ? <small>{activeFilterChips.length}</small> : null}</button>
-          <button type="button" className="project-spatial-map__button" onClick={() => void load()} disabled={isLoading}><RefreshCw size={14} className={isLoading ? "spin" : ""} />刷新</button>
-        </div>
-      </header>
-      </div>
-
+    <div className={`project-spatial-map project-spatial-map--geography project-spatial-map--${colorMode}`}>
       {activeFilterChips.length ? <div className="project-spatial-map__active-filters" aria-label="已应用地图筛选"><span>已应用筛选</span>{activeFilterChips.map((chip) => <em key={chip}>{chip}</em>)}<button type="button" onClick={clearAppliedFilters}>清除筛选</button></div> : null}
 
       {isFilterOpen ? (
@@ -325,12 +309,26 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
 
       {error ? <div className="project-spatial-map__error" role="alert"><AlertTriangle size={15} /><span>{error}</span></div> : null}
 
-      <div className="project-spatial-map__summary" aria-label="地图项目概览">
-        <span><b>{payload.total}</b>个项目</span><span><i className="is-point" />点位 {counts.POINT}</span><span><i className="is-area" />区域 {counts.AREA}</span><span><i className="is-corridor" />廊道 {counts.CORRIDOR}</span>{scope === "real" ? <span className="project-spatial-map__unlocated-summary">待定位 {unlocated.total}</span> : null}
-      </div>
-
       <div className="project-spatial-map__workspace">
         <section className="project-spatial-map__map-panel" aria-label="项目地图主视图">
+      <div className="astra-map-toolbar project-spatial-map__floating-tools">
+      <div className="project-spatial-map__scope-tabs" role="tablist" aria-label="项目地图数据范围">
+        <button type="button" role="tab" aria-selected={scope === "demo"} className={scope === "demo" ? "is-active" : ""} onClick={() => setScope("demo")}><Map size={15} />演示项目 <small>8</small></button>
+        <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => setScope("real")}><ListFilter size={15} />真实项目 <small>{scope === "real" ? payload.total : ""}</small></button>
+      </div>
+      <header className="project-spatial-map__header">
+        <div>
+          <h1>全国项目地图</h1>
+        </div>
+        <div className="project-spatial-map__header-actions">
+          <span className={`project-spatial-map__map-status project-spatial-map__map-status--${mapStatus}`}><span aria-hidden="true" />{mapStatus === "ready" ? "底图已加载" : mapStatus === "fallback" ? "清单降级" : "底图检查中"}</span>
+          <button ref={filterButtonRef} type="button" className={`project-spatial-map__button ${activeFilterChips.length ? "project-spatial-map__button--active" : ""}`} onClick={openFilterDialog} aria-expanded={isFilterOpen} aria-controls="project-spatial-map-filter-dialog"><ListFilter size={14} />筛选{activeFilterChips.length ? <small>{activeFilterChips.length}</small> : null}</button>
+          <button type="button" className="project-spatial-map__button" onClick={() => void load()} disabled={isLoading}><RefreshCw size={14} className={isLoading ? "spin" : ""} />刷新</button>
+        </div>
+      </header>
+      </div>
+
+
           {isLoading && !items.length ? <div className="project-spatial-map__loading"><Loader2 size={18} className="spin" />正在读取项目地点……</div> : null}
           {!isLoading || items.length ? (
             <Suspense fallback={<div className="project-spatial-map__loading"><Loader2 size={18} className="spin" />正在加载地图组件……</div>}>
@@ -343,8 +341,10 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
       </div>
 
       <section className="project-spatial-map__project-list" aria-label="项目地点清单">
-        <div className="project-spatial-map__section-heading"><div><span className="project-spatial-map__eyebrow">当前范围</span><h2>项目地点清单</h2></div><span>{items.length} / {payload.total}</span></div>
-        {items.length ? <div className="project-spatial-map__cards">{items.map((item) => <button key={item.project_id} type="button" className={`project-spatial-map__project-card ${selectedItem?.project_id === item.project_id ? "is-selected" : ""}`} onClick={() => setSelectedProjectId(item.project_id)}><span className={`project-spatial-map__card-marker is-${item.spatial_type.toLowerCase() || "unknown"}`} /><span className="project-spatial-map__card-main"><b>{item.project_name}</b><small>{item.display_location || "未识别地点"}</small></span><span className="project-spatial-map__card-meta"><em>{spatialTypeLabel(item.spatial_type)}</em><em>{riskLabel(item.risk_level)}</em></span><ChevronRight size={16} /></button>)}</div> : <div className="project-spatial-map__empty-list">当前筛选没有可展示的项目。</div>}
+        <div className="project-spatial-map__section-heading"><h2>项目地点</h2><div className="project-spatial-map__summary" aria-label="地图项目概览">
+        <span><b>{payload.total}</b>个项目</span><span><i className="is-point" />点位 {counts.POINT}</span><span><i className="is-area" />区域 {counts.AREA}</span><span><i className="is-corridor" />廊道 {counts.CORRIDOR}</span>{scope === "real" ? <span className="project-spatial-map__unlocated-summary">待定位 {unlocated.total}</span> : null}
+      </div><span className="project-spatial-map__list-range">{items.length} / {payload.total}</span></div>
+        {items.length ? <div className="project-spatial-map__cards">{items.map((item) => <button key={item.project_id} type="button" aria-pressed={selectedItem?.project_id === item.project_id} title={item.project_name} className={`project-spatial-map__project-card ${selectedItem?.project_id === item.project_id ? "is-selected" : ""}`} onClick={() => setSelectedProjectId(item.project_id)}><span className={`project-spatial-map__card-marker is-${item.spatial_type.toLowerCase() || "unknown"}`} /><span className="project-spatial-map__card-main"><b>{item.project_name}</b><small>{item.display_location || "未识别地点"}</small></span><span className="project-spatial-map__card-meta"><em>{spatialTypeLabel(item.spatial_type)}</em><em>{riskLabel(item.risk_level)}</em></span><ChevronRight size={16} /></button>)}</div> : <div className="project-spatial-map__empty-list">当前筛选没有可展示的项目。</div>}
       </section>
 
       {scope === "real" ? (

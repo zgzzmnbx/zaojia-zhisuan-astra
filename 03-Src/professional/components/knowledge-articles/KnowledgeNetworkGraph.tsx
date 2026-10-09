@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, LocateFixed, RotateCcw, Sparkles, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronRight, LocateFixed, RotateCcw, Sparkles, ZoomIn, ZoomOut } from "../../../PhosphorIcons";
 import ForceGraph2D from "react-force-graph-2d";
 import type { ForceGraphMethods } from "react-force-graph-2d";
 import type { KnowledgeArticleGraphData, KnowledgeArticleMeta, KnowledgeArticleRelation } from "./knowledgeArticlesUtils";

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from "react";
-import { Check, CircleDot, Layers3, Maximize2, Minimize2, Route } from "lucide-react";
+import { X, Check, CircleDot, Layers3, Maximize2, Minimize2, Route } from "../../../../PhosphorIcons";
 import type { SpatialMapItem } from "../projectSpatialMapUtils";
 import {
   createShowcaseHexes,
@@ -303,7 +303,7 @@ export default function ProjectShowcaseMap({ items, selectedProjectId, onSelect 
         </div>
 
         {activeGroup ? <div id="project-showcase-group-menu" className="project-spatial-showcase__group-menu" role="listbox" aria-label="选择同点项目" style={groupMenuStyle}>
-          <div className="project-spatial-showcase__group-menu-head"><span><strong>同点项目</strong><small>{activeGroup.count} 个项目位于同一位置</small></span><button type="button" aria-label="关闭同点项目列表" onClick={() => setOpenGroupKey("")}>×</button></div>
+          <div className="project-spatial-showcase__group-menu-head"><span><strong>同点项目</strong><small>{activeGroup.count} 个项目位于同一位置</small></span><button type="button" aria-label="关闭同点项目列表" onClick={() => setOpenGroupKey("")}><X size={16}/></button></div>
           <div className="project-spatial-showcase__group-menu-list">
             {activeGroup.anchors.map((anchor) => <button key={anchor.projectId} type="button" role="option" aria-selected={anchor.projectId === selectedProjectId} className={anchor.projectId === selectedProjectId ? "is-selected" : ""} onClick={() => selectFromGroup(anchor.projectId)}><span className="project-spatial-showcase__group-menu-dot" /><span><strong>{anchor.projectName}</strong><small>{anchor.displayLocation} · {anchor.statusLabel}</small></span><Check size={14} aria-hidden="true" /></button>)}
           </div>

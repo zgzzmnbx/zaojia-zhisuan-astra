@@ -40,6 +40,10 @@ export type ReviewProgressSummary = {
   label: string;
 };
 
+export function missingReviewPlatforms(tasks: ReviewProgressTask[]): string[] {
+  return ['default', 'weact_cost'].filter(platform => !tasks.some(task => task.platform === platform));
+}
+
 export function reviewParticipants(task: ReviewProgressTask): ReviewProgressParticipant[] {
   return task.participants.filter((participant) => participant.role === "复核人");
 }

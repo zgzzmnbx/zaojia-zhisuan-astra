@@ -1,4 +1,4 @@
-import { AlertTriangle, Download, FileSpreadsheet, FileText, X } from "lucide-react";
+import { AlertTriangle, Download, FileSpreadsheet, FileDoc, X } from "../../../PhosphorIcons";
 import { useEffect, useState } from "react";
 import type {
   ProjectDetail,
@@ -149,7 +149,7 @@ export default function ProjectDetailDrawer({ apiBase, item, onClose, onOpenRun 
             <div className="project-dashboard__artifact-list">
               {artifacts.map((artifact) => (
                 <div key={artifact.artifact_id} className={artifact.exists ? "" : "is-missing"}>
-                  <span>{artifact.type === "word" ? <FileText size={17} /> : <FileSpreadsheet size={17} />}</span>
+                  <span>{artifact.type === "word" ? <FileDoc size={17} /> : <FileSpreadsheet size={17} />}</span>
                   <div><strong>{artifact.display_name}</strong><small>v{artifact.version} · {artifact.exists ? "文件可用" : "文件已失效"}</small></div>
                   {artifact.exists && artifact.download_url ? <a href={`${apiBase}${artifact.download_url}`} aria-label={`下载 ${artifact.display_name}`}><Download size={15} />下载</a> : <b>已失效</b>}
                 </div>
@@ -169,7 +169,7 @@ export default function ProjectDetailDrawer({ apiBase, item, onClose, onOpenRun 
         </div>
         <footer>
           {item.project_id && item.job_id ? <button type="button" onClick={() => onOpenRun(item, "preview")}><FileSpreadsheet size={15} />打开结果预览</button> : null}
-          {item.project_id && item.job_id && artifacts.some((artifact) => artifact.type === "word" && artifact.exists) ? <button type="button" onClick={() => onOpenRun(item, "report")}><FileText size={15} />打开 Word 报告</button> : null}
+          {item.project_id && item.job_id && artifacts.some((artifact) => artifact.type === "word" && artifact.exists) ? <button type="button" onClick={() => onOpenRun(item, "report")}><FileDoc size={15} />打开 Word 报告</button> : null}
         </footer>
       </aside>
     </div>

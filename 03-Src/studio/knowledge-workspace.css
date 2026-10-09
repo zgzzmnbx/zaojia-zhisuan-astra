@@ -6,3 +6,7 @@
 @media(max-width:650px){.knowledge-tabs.content-view-segmented{min-width:204px}.knowledge-preview-heading .content-heading-actions{gap:2px}.knowledge-preview-heading .artifact-title{width:100%}}
 
 .kw-source .citation-detail{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.kw-source .citation-detail small{overflow-wrap:anywhere}.kw-source .citation-detail .text-button{font-size:12px;white-space:nowrap}
+
+.knowledge-tabs.content-view-segmented{grid-template-columns:repeat(4,minmax(0,1fr));max-width:464px;min-width:390px;flex:0 1 464px}.knowledge-tabs .content-view-slider{width:calc((100% - 8px)/4)}
+
+.knowledge-tabs #knowledge-tab-weknora{font-size:13px}

@@ -14,7 +14,7 @@ import type {
   ViewerMountOptions,
   ViewerState,
 } from "@file-viewer/react";
-import { AlertTriangle, Download, FileText, Loader2, PanelTop, RefreshCw } from "lucide-react";
+import { AlertTriangle, Download, FileDoc, Loader2, PanelTop, RefreshCw } from "../../../PhosphorIcons";
 import {
   DOCX_MAX_DYNAMIC_PAGINATION_PASSES,
   DOCX_PAGINATION_TOLERANCE_PX,
@@ -319,7 +319,7 @@ export default function WordReportPreview({
   if (!enabled || !isAvailable) {
     return (
       <div className="word-report-preview-state is-empty" role="status">
-        <FileText size={34} />
+        <FileDoc size={34} />
         <strong>Word 报告尚未生成</strong>
         <p>{unavailableMessage ?? "请先完成批量匹配和报告生成，再进入这里核对真实报告。"}</p>
         {onReturnToPreview && (

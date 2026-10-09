@@ -1,4 +1,4 @@
-import { AlertTriangle, ChevronRight, ListFilter, Loader2, Map, RefreshCw, Search, X } from "lucide-react";
+import { AlertTriangle, ChevronRight, ListFilter, Loader2, Map, RefreshCw, Search, X } from "../../../../PhosphorIcons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ProjectLocationReviewDialog from "../ProjectLocationReviewDialog";
 import ProjectMapDetail from "../ProjectMapDetail";

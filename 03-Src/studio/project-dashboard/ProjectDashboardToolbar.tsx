@@ -4,7 +4,7 @@ import {
   Search,
   SlidersHorizontal,
   X,
-} from "lucide-react";
+} from "../../PhosphorIcons";
 import {
   useCallback,
   useEffect,

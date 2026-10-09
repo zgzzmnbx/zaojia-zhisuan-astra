@@ -1,0 +1,1248 @@
+{
+  "schema_version": "1.0",
+  "audit_date": "2026-10-07",
+  "audit_type": "remote_static_review_and_historical_record_comparison",
+  "scope": "All actually implemented legacy capabilities, not only this initial task list.",
+  "baselines": {
+    "legacy_repository": "zgzzmnbx/zaojia-zhisuan",
+    "legacy_commit": "5b6b8d2744c4a3059813dd2703ebc9ee02dfa065",
+    "astra_repository": "zgzzmnbx/zaojia-zhisuan-astra",
+    "astra_commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6"
+  },
+  "runtime_tested_in_this_audit": false,
+  "implementation_performed_in_this_audit": false,
+  "allowed_statuses": [
+    "todo",
+    "in_progress",
+    "done",
+    "equivalent_or_better",
+    "not_in_legacy",
+    "blocked_external"
+  ],
+  "dependency_semantics": "Code/contract prerequisites and recommended sequence. External evidence blockage must not prevent independent offline subtasks; split tasks where useful. Final end-to-end closure requires all applicable gates.",
+  "closure_rules": [
+    "Discover and append additional legacy implemented operation gaps; do not cap scope at the initial tasks.",
+    "done/equivalent_or_better requires current traceable evidence, not a copied historical checkbox.",
+    "not_in_legacy requires source implementation/scope evidence and is excluded from the implemented-capability denominator.",
+    "blocked_external is not passed and cannot count as full end-to-end completion.",
+    "No new migration loss is allowed; source-preexisting missing files remain explicit data-quality exceptions, never fabricated.",
+    "Protect original code/assets/runtime, preserve Astra live data, use only authorized credential references, and do not send/deploy without explicit scope."
+  ],
+  "tasks": [
+    {
+      "id": "T00",
+      "title": "冻结四方基线，核对活动 worktree 与运行宿主",
+      "priority": "P0",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E20",
+        "E21",
+        "E12"
+      ],
+      "depends_on": [],
+      "finding": "GitHub main 的源码、D 盘主目录、当前活动 worktree、实际 5189 进程不是同一个概念；历史数据和连接配置保留在活动 worktree，不能按目录名字推断。",
+      "implementation": [
+        "读取各层 AGENTS.md、README、DESIGN.md、当前计划、04 矩阵和 26 待办；记录本地 git status、分支、worktree 列表、HEAD，保留未提交改动。",
+        "只读比较：源 GitHub 固定 SHA、源本地工作目录、Astra 冻结 engine、Astra 当前待修改工作区。源本地有额外业务提交时追加差异审计，不用云端旧快照覆盖。",
+        "记录当前服务 PID、命令行、工作目录、启动配置引用、runtime/工作资料库位置；不输出密钥，不复制整个运行目录。",
+        "先备份 Astra 将写入的台账和工作资产；后续服务切换只作用于被确认的 Astra 实例。无重启授权时先离线测试，明确记录在线门禁。"
+      ],
+      "acceptance": [
+        "baseline.json 记录四方身份、应用/构建身份、运行目录和原工程只读基线。",
+        "既有会话、附件、278 项目等历史导入记录所在工作区没有丢失或被空库替换。",
+        "检查前后原工程业务文件无写入；保留其他人的未提交改动。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T01",
+      "title": "建立操作级迁移矩阵，而非接口计数",
+      "priority": "P0",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E23",
+        "E26"
+      ],
+      "depends_on": [
+        "T00"
+      ],
+      "finding": "现有 108 路径/118 方法路径组合覆盖是历史接口证据，不证明每个旧按钮、字段、失败路径都能在新入口完成业务。",
+      "implementation": [
+        "从真正源工程提取路由及 APIRouter 前缀、主要组件操作、表单字段、命令检测、设置键、专业 Skill、27 个模块 PRD；不能只扫描 Astra 内已复制的引擎。",
+        "以“用户目的 + 输入范围 + 业务效果”定义稳定 capability_id；补录内联处理函数、按条件显隐的按钮、模块内二级菜单、原失败与取消行为。",
+        "每行填 source_entry/source_code/legacy_implemented/astra_entry/handler/request/output/state_scope/acceptance_evidence。分别记录 UI 可达、接口已挂载、业务验收。",
+        "状态仅用 todo、in_progress、done、equivalent_or_better、not_in_legacy、blocked_external；更好的替代须证明同一业务结果和权限/来源/版本语义，不能只凭更美观。",
+        "发现本包未枚举的真实缺口，自动新增 T23 起的任务，不以固定任务列表限制迁移范围。"
+      ],
+      "acceptance": [
+        "源已实现操作全集均有唯一明确去向；没有未解释的漏项。",
+        "知识维护、全部业务设置、VIS-01—15、专业表格、Task/Skill、协同收发分别穿透核销。",
+        "旧 PRD 待开发项先核代码：确实没有实现才记 not_in_legacy；禁止把它们变成强制新研发。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T02",
+      "title": "统一聊天指令，修复问句误执行和旧指令退化",
+      "priority": "P0",
+      "classification": "confirmed_gap",
+      "status": "done",
+      "evidence": [
+        "E01",
+        "E02",
+        "E26"
+      ],
+      "depends_on": [
+        "T00"
+      ],
+      "finding": "新 send 的泛关键词路由缺少旧版问句排除；“复核到哪了”可能进入经验池预警；“执行批量匹配”“费用洞察”“生成AI审查摘要”“输出Excel”等旧入口未等价接通。",
+      "implementation": [
+        "先将旧 detectZhisuanCommand 的有效语义抽成共享业务函数；采用规范化、明确指令优先、问句/否定句/引用文本排除，不再让多个宽泛正则抢占写操作。",
+        "所有按钮、快捷菜单、输入指令共用受控 dispatchAction，按当前任务阶段检查前置条件；查询进度与发起预警分离。",
+        "提问转问答或澄清操作卡，不能直接产生转换、预警、重算、报告覆盖或外发；明确执行请求才运行副作用。",
+        "保留输入法合成、Enter/Shift+Enter、草稿、重复发送防护；不为了路由引入模型直接操作定价或发送。"
+      ],
+      "acceptance": [
+        "用相同指令语料对旧/新 dispatcher 做对照，覆盖八类旧指令及其同义词。",
+        "“怎么运行经验池预警？”“这次重算的依据是什么？”“不要转换”“我想了解复核怎么做”不调用业务写接口。",
+        "“复核到哪了”只查当前任务复核进度，不新增预警或轮次。",
+        "有效命令与对应按钮走同一动作、同一 job、同一版本。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [
+        "03-Src/studio/commands.ts",
+        "tests/migration-commands.test.ts",
+        "Codex-Temp/migration-six/browser-results.json",
+        "Codex-Temp/migration-six/browser-followup-results.json",
+        "00-docs/migration-audit-20261007/05-六项修复操作矩阵.md",
+        "00-docs/handoff/2026-10-08-六项迁移修复与验收.md",
+        "00-docs/handoff/2026-10-08-知识推荐问题与预设答案迁移.md",
+        "tests/knowledge-recommendations.test.mjs",
+        "Codex-Temp/knowledge-recommendations/preset-parity.json"
+      ],
+      "closure_reason": "问句、否定、引号先解释并提供可选按钮；旧指令共用现有动作，进度读取不执行预警。",
+      "local_implementation": "completed",
+      "last_verified": "2026-10-08",
+      "authorized_followups": [
+        {
+          "date": "2026-10-08",
+          "ui_version": "0.9.32",
+          "operation": "单#后按空格补成#知识库：",
+          "status": "done",
+          "result": "真实本地问答一次POST、8条引用、业务写入0；IME/组合键/草稿保护通过",
+          "evidence": [
+            "00-docs/handoff/2026-10-08-井号空格知识问答入口.md",
+            "03-Src/studio/knowledge-shortcut.ts",
+            "tests/migration-commands.test.ts",
+            "Codex-Temp/knowledge-shortcut/browser-results.json",
+            "Codex-Temp/knowledge-shortcut/source-sha256.json"
+          ]
+        },
+        {
+          "date": "2026-10-08",
+          "ui_version": "0.9.36",
+          "scope": "#知识库推荐弹窗、18题分页编辑、前四题原预设答案与小标记",
+          "status": "done",
+          "evidence": "00-docs/handoff/2026-10-08-知识推荐问题与预设答案迁移.md",
+          "remaining_gate": "普通题模型综合回答需独立凭证；原文检索已验，不关闭T11"
+        }
+      ]
+    },
+    {
+      "id": "T03",
+      "title": "接回批量匹配超时与丢响应恢复",
+      "priority": "P0",
+      "classification": "confirmed_gap",
+      "status": "done",
+      "evidence": [
+        "E03",
+        "E04",
+        "E05",
+        "E06"
+      ],
+      "depends_on": [
+        "T00"
+      ],
+      "finding": "可靠 requestBatchMatch 已在 professional 中保留，但 studio 主 match 使用一次普通 POST；主入口缺少原有的结果未知恢复流程。",
+      "implementation": [
+        "复用现有 requestBatchMatch 的单次 POST + 状态轮询协议，抽到可共享模块；不要另写一套重复提交策略。",
+        "主聊天、表格、快捷菜单、专业入口全部使用同一适配器；传递真实 header_rows 和当前 task/job 上下文。",
+        "把 failed、running、unknown、completed 显式入 UI/持久任务状态；unknown 不显示确定失败，不开放不受控重做，不自动再 POST。",
+        "刷新或网络恢复后查询实际服务器状态；结果必须校验 job/run/attempt/artifact version，旧会话晚到结果丢弃。"
+      ],
+      "acceptance": [
+        "POST 响应丢失但服务器已提交：通过 GET 恢复，POST 次数严格为 1，金额/产物版本不重复。",
+        "超时仍运行、真实失败、409/422、断网恢复、刷新页面全部有区分明确的结果。",
+        "用户换会话后，原请求不得覆盖当前任务卡或触发错误的成功动效。",
+        "原已确认人工修改和原成果保留；失败重试有明确状态依据。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [
+        "03-Src/professional/batchMatchRequest.ts",
+        "tests/batch-recovery.test.ts",
+        "Codex-Temp/migration-six/browser-results.json",
+        "Codex-Temp/migration-six/browser-refresh-results.json",
+        "00-docs/migration-audit-20261007/05-六项修复操作矩阵.md",
+        "00-docs/handoff/2026-10-08-六项迁移修复与验收.md"
+      ],
+      "closure_reason": "真实后台匹配后丢弃响应，仅一次 POST，通过 GET 恢复同 job；不确定标记保存后刷新，只核对原任务，明确未完成才提供重试。",
+      "local_implementation": "completed",
+      "last_verified": "2026-10-08"
+    },
+    {
+      "id": "T04",
+      "title": "接通同一行的 AI 填价、候选确认与主表回写",
+      "priority": "P1",
+      "classification": "confirmed_gap",
+      "status": "blocked_external",
+      "evidence": [
+        "E07",
+        "E08",
+        "E09",
+        "E10"
+      ],
+      "depends_on": [
+        "T00",
+        "T02"
+      ],
+      "finding": "新主表仅有“依据”动作；来源页转 analysis 没有选中行 DTO，专业桥没有 row/cell 字段。不能把“整页专业模块存在”视作同一行闭环已迁。",
+      "implementation": [
+        "设计小型 RowContext：conversation_id、job_id、run_id/attempt、artifact_version、sheet_name、excel_row、字段标识及当前值；使用真实 Excel 行号而非筛选后数组序号。",
+        "在新表提供符合 DESIGN.md 的行级动作；可用紧凑菜单而非复制旧双图标，但结构化候选与 AI 行级分析须明确可达、语义不合并。",
+        "扩展专业桥或直接使用已有业务服务；保持 origin/source/context 校验，进入即绑定指定行，不能要求用户在另一张表重新猜行。",
+        "逐字段展示来源、确定性候选与模型建议；人工明确确认后才写入，记录原值/新值/来源/操作者/时间/版本，回主表刷新和标记待重算。",
+        "取消不写值；人工编辑后旧候选失效；旧行旧版本的晚到结果不得写入当前工作簿。"
+      ],
+      "acceptance": [
+        "跨 Sheet、排序/过滤、人工定位后点击第 N 行，展示与确认的仍是同一 Excel 行与字段。",
+        "基价、实物系数、技术系数分别核对；未确认、无依据或冲突不写入。",
+        "同一行确认→主表更新→待重算→重算→报告/下载一致。",
+        "第 50 行外不假称已定位或已显示；如有原能力则通过正确结果/原文路径处理。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [
+        "03-Src/row_assist.py",
+        "03-Src/studio/RowAssist.tsx",
+        "03-Src/professional/astra-bridge.ts",
+        "tests/test_migration_six.py",
+        "Codex-Temp/migration-six/browser-followup-results.json",
+        "00-docs/migration-audit-20261007/05-六项修复操作矩阵.md",
+        "00-docs/handoff/2026-10-08-六项迁移修复与验收.md",
+        "Codex-Temp/migration-six/real-row-confirmation.json"
+      ],
+      "closure_reason": "物理行、单字段、对话、task/run/attempt、成果 SHA/版本绑定已修复；真实 Excel 单字段确认及过期/晚到拒绝测试通过。真实模型对价格与双系数的逐字段建议仍缺独立模型凭证。",
+      "local_implementation": "completed",
+      "last_verified": "2026-10-08"
+    },
+    {
+      "id": "T05",
+      "title": "统一业务设置、模型参数和有效编制模式",
+      "priority": "P1",
+      "classification": "confirmed_integration_gap",
+      "status": "blocked_external",
+      "evidence": [
+        "E05",
+        "E06",
+        "E08",
+        "E11",
+        "E12",
+        "E13"
+      ],
+      "depends_on": [
+        "T00",
+        "T01"
+      ],
+      "finding": "主 convert 固定 mechanical 和数量过滤；主风险报告只传 job，宿主默认按 DeepSeek 检查，而设置支持多提供商。主表本地偏好与专业模块偏好也可能产生两套生效口径。",
+      "implementation": [
+        "逐项列出设置的存储、默认值、读取方与生效范围，至少覆盖 provider/model/baseURL/temperature/maxTokens、机械/AI 模式、过滤列、字段映射、预警阈值、预览表头和列宽。",
+        "建立共享有效配置解析层；业务参数进入任务快照，主聊天与 professional 使用一致契约。视觉偏好可以独立，但不可冒充业务设置生效。",
+        "风险报告与问答、AI 分析使用明确有效 provider/model 配置；补齐当前参数未传递路径，不使用全局环境密钥偷补。",
+        "机械模式保留；用户明确选择 AI 时正确冻结 requested/effective mode。不要擅自改默认模式，更不能界面显示 AI 而实际静默机械。",
+        "指定列过滤在预览、预警与导出各自沿用原语义；不得一律固定“数量”。旧任务的冻结业务参数不随全局设置漂移。"
+      ],
+      "acceptance": [
+        "仅配置已授权 SiliconFlow 的测试环境：主风险报告不再误检 DeepSeek；配置缺失时给出正确提供商提示。",
+        "主入口/专业入口同配置同输入得到一致的三数字、过滤范围和报告。",
+        "机械、AI、离线降级、恢复旧任务后模式与快照一致且可解释。",
+        "修改一项设置后保存、刷新、新任务、旧任务分别按明确作用域生效；列设置不存在无说明的双源冲突。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [
+        "03-Src/business_settings.py",
+        "03-Src/model_adapter.py",
+        "tests/test_migration_six.py",
+        "Codex-Temp/migration-six/browser-results.json",
+        "00-docs/migration-audit-20261007/05-六项修复操作矩阵.md",
+        "00-docs/handoff/2026-10-08-六项迁移修复与验收.md"
+      ],
+      "closure_reason": "共用编制设置、预览偏好与选定模型；转换参数冻结，AI 未确认门禁保留，SiliconFlow 路由/传输参数契约通过。真实 SiliconFlow 调用和同配置两入口三数字全链路仍待模型环境验收。",
+      "local_implementation": "completed",
+      "last_verified": "2026-10-08",
+      "scope_correction": "当前源引擎 WARNING_FILTER_FIELDS 仅数量及其别名；任意非默认过滤字段不属于本次原功能迁移，不擅自新增计价规则。"
+    },
+    {
+      "id": "T06",
+      "title": "恢复可配置的快捷指令，不重复开发常见问题",
+      "priority": "P2",
+      "classification": "confirmed_gap",
+      "status": "done",
+      "evidence": [
+        "E13",
+        "E14",
+        "E15",
+        "E17"
+      ],
+      "depends_on": [
+        "T00",
+        "T02"
+      ],
+      "finding": "旧 quickSettings 的 enabledIds/customPrompts/autoHide 尚未迁入主快捷菜单；已实现的 18 条常见问题编辑不是这项能力的替代。",
+      "implementation": [
+        "沿用稳定命令 ID，接入启用项、自定义 prompt、固定展开/自动收起偏好，用新设计设置面板承载。",
+        "明确会话/工作区/默认模板范围；保存到 Astra 独立命名空间并支持恢复默认，不覆盖知识常见问题。",
+        "自定义 prompt 先进入同一指令安全层；不能因自定义文本跳过副作用确认和平台发送授权。"
+      ],
+      "acceptance": [
+        "启用/禁用、添加/删除/修改自定义 prompt、自动收起偏好保存恢复均通过。",
+        "旧“#知识库：”使用场景仍可完成；不会同时发送两次或串到别的会话。",
+        "菜单变更不影响聊天草稿、当前项目或主题。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [
+        "03-Src/studio/QuickSettings.tsx",
+        "03-Src/studio/ComposerQuickMenu.tsx",
+        "Codex-Temp/migration-six/browser-results.json",
+        "Codex-Temp/migration-six/browser-refresh-results.json",
+        "00-docs/migration-audit-20261007/05-六项修复操作矩阵.md",
+        "00-docs/handoff/2026-10-08-六项迁移修复与验收.md"
+      ],
+      "closure_reason": "启用项、自定义 prompt、自动收起、刷新恢复、恢复默认已接通；自定义指令沿问句保护，保留已有草稿。",
+      "local_implementation": "completed",
+      "last_verified": "2026-10-08"
+    },
+    {
+      "id": "T07",
+      "title": "修正运行版本、能力和连接状态的事实来源",
+      "priority": "P0",
+      "classification": "confirmed_gap",
+      "status": "done",
+      "evidence": [
+        "E12",
+        "E20",
+        "E24"
+      ],
+      "depends_on": [
+        "T00"
+      ],
+      "finding": "宿主源码 FastAPI 声明 0.9.0，health 却返回常量 0.7.0；部分兼容状态接口永久返回未连接/禁止发送。它们可能误导启动复用及验收判断。",
+      "implementation": [
+        "统一版本元数据，并返回可追溯的 build/commit、宿主实例、运行区标识及能力集合；敏感绝对路径仅留本地诊断，不对外广播。",
+        "区分配置已存在、允许启用、探测可达、身份验证成功、接收进程运行、实际送达；不同状态不能用一个 connected 布尔值代替。",
+        "旧固定状态接口明确废弃并移除调用，或适配到统一状态服务；检查主顶部与设置/兼容页不互相矛盾。",
+        "启动器健康复用前核对服务身份和接口能力；检测到旧实例时说明差异，不抢占端口或擅自重启其他服务。"
+      ],
+      "acceptance": [
+        "健康与实际代码版本/提交可对应；能识别“端口在线但公文或本地知识新接口未加载”。",
+        "未检测不显示已联通；写有 key 不显示已真实调用；机器人进程与平台送达分开。",
+        "重新载入正确宿主后，公文状态/格式化和本地知识目录接口确实可调用。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [
+        "tools/launch-preview.ps1",
+        "tests/preview-launcher.test.ps1",
+        "Codex-Temp/migration-six/health.json",
+        "Codex-Temp/migration-six/baseline/identity.json",
+        "00-docs/migration-audit-20261007/05-六项修复操作矩阵.md",
+        "00-docs/handoff/2026-10-08-六项迁移修复与验收.md"
+      ],
+      "closure_reason": "运行宿主 0.9.1 / UI 0.9.21、PID、workspace/runtime、加载源码哈希、构建哈希及能力返回真实值；HTTP 200 旧宿主、旧构建、异目录、缺能力均被启动门禁拒绝。模型有配置与已连接分离，协同读取新鲜真实健康快照。",
+      "local_implementation": "completed",
+      "last_verified": "2026-10-08"
+    },
+    {
+      "id": "T08",
+      "title": "补齐旧专项测试资产并建立双答案差异验收",
+      "priority": "P0",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E23",
+        "E24"
+      ],
+      "depends_on": [
+        "T00",
+        "T01"
+      ],
+      "finding": "历史迁移只完成了部分专项；至少有旧测试硬编码 frontend/src/App.tsx，结算专项缺 tools.build_settlement_audit_sample，不能用 npm 绿灯代替全量业务验收。",
+      "implementation": [
+        "迁入真实缺少的样本构造器、测试夹具和关联资源到 Astra 独立验证目录，记录来源/哈希；不改原工程。",
+        "将路径依赖改为明确可注入的源码根/资源根；保留业务断言，不复制假的旧目录骗测试，不跳过收集失败。",
+        "先在独立 fixture/runtime 建立改动前结果，运行目标前端、Python 宿主和原已实现模块专项；禁止测试写入原库或生产运行库。",
+        "复用 tools/verify_astra_v31.py 与正式输入、Excel/Word 两份标准答案；区分确定性编制、预设演示风险正文和真实模型增量。",
+        "输出逐单元格/段落差异：三数字、单位、公式、缓存、颜色、行隐藏、费用汇总、Word 事实/表格/版本；允许差异采用字段白名单，不宽泛过滤。"
+      ],
+      "acceptance": [
+        "所有计划内旧专项可完整收集，零假跳过；缺依赖不被当成已通过。",
+        "V3.1 关键业务差异为 0；日期/文件名等允许差异单独列明。",
+        "至少增加非 V3.1 的正常、多候选、无候选、冲突和人工改价样本，防止只适配演示。",
+        "测试总数、命令、返回码、用例 ID、输入/输出哈希及日志保存，明确哪些测试本次实际运行。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T09",
+      "title": "完成真实公式重算与成果版本一致性",
+      "priority": "P0",
+      "classification": "runtime_verification_required",
+      "status": "todo",
+      "evidence": [
+        "E05",
+        "E12",
+        "E17",
+        "E18"
+      ],
+      "depends_on": [
+        "T00",
+        "T07",
+        "T08"
+      ],
+      "finding": "编辑、持久待重算状态和重算接口都已存在，但当前记录中的 Windows Excel COM 真实重算未关闭；这是金额交付门禁，不是缺少按钮。",
+      "implementation": [
+        "只读诊断当前 Excel/COM/项目虚拟环境；优先修项目适配与错误呈现，不擅自改系统注册表、Office 安装、管理员权限或全局环境。",
+        "使用测试副本和受控 Office 实例：先改数量、基价或系数，再执行真实重算，读取保存后的公式缓存并更新报告和项目卡。",
+        "对运行版本、导出 Excel、下载 Word、主预览、费用图表、协同待发送成果做同版本一致性核验；修改后旧报告失效或明确标注版本。",
+        "重算不支持或失败时，保持 durable needs_recalculate；可以沿用原草稿导出策略，但必须显式提醒，不能宣称已校核/可直接交付。",
+        "不得强杀所有 Excel 进程或关闭用户已有未保存文档；只清理本次验收创建的实例。"
+      ],
+      "acceptance": [
+        "人工改值→重算成功→Excel 公式缓存/预览/费用/Word 同版本同金额→刷新恢复仍一致。",
+        "重算失败、超时或引擎不可用后提示不消失；不靠清除 JSON 状态掩盖失败。",
+        "原 V3.1 未修改答案通过不能替代此用例。"
+      ],
+      "external_prerequisites": [
+        "兼容的 Excel/Office 计算环境；任何超出现有授权的系统修复另列阻塞。"
+      ],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T10",
+      "title": "核对主助手普通问答、行上下文与真实模型增量",
+      "priority": "P1",
+      "classification": "integration_verification_required",
+      "status": "todo",
+      "evidence": [
+        "E02",
+        "E05",
+        "E11",
+        "E17",
+        "E22",
+        "E25",
+        "E26"
+      ],
+      "depends_on": [
+        "T02",
+        "T04",
+        "T05",
+        "T08"
+      ],
+      "finding": "原问答/AI 模块已保留，但主 task 聊天未知输入只返回能力卡；主问答上下文与旧助手是否等价尚未核销，原模型真实独立联调未完成。",
+      "implementation": [
+        "逐条盘点旧助手已实现的普通问答、强制知识前缀、附件/当前行解释、预设回答和任务阶段引导；只补证实遗漏的语义。",
+        "把提问、安全的操作建议、明确业务执行分层；原已有的当前行/任务上下文通过明确 DTO 传递，并受版本和作用域限制。",
+        "按独立配置运行真实普通问答、AI 受限理解、三字段候选、逐字段确认、风险润色；保留机械路径、失败降级及取消/超时。",
+        "界面区分原文摘录、预设示例、模型综合、无知识依据的通用回答；引用不充分时明确边界。",
+        "不把“项目共享资料已存储”偷换为“全文已进入模型”；共享背景/附件自动索引属于新扩展，未批准不外发。"
+      ],
+      "acceptance": [
+        "旧已支持问题在 Astra 可到达同等或更好回答路径，不因关键字被错误执行业务。",
+        "真实 AI 测试用非演示样本，记录 provider/model、耗时、证据、有效模式和确认前后输出。",
+        "确认前三个数字不变；取消与晚到响应不写值；缺凭证时明示未验收，不借其他项目密钥。",
+        "模型失败不影响机械编制与旧知识检索。"
+      ],
+      "external_prerequisites": [
+        "Astra 已授权的独立模型凭证与可用服务；按已有预算/测试范围限制调用，不无限重试。"
+      ],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T11",
+      "title": "穿透核销知识库维护、知识记忆和可信经验治理",
+      "priority": "P1",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E09",
+        "E10",
+        "E15",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "depends_on": [
+        "T01",
+        "T05",
+        "T08"
+      ],
+      "finding": "新知识工作区和原专业知识模块并存，部分 knowledgebase/originalqa 入口被重定向到新问答页。不能只看知识库选择器就认定原维护/治理行为全部可达。",
+      "implementation": [
+        "对原实际已实现的资料/库维护操作逐项查找新入口、路由和权限；原没有的 CRUD、自动索引或知识图谱推理不要新造需求。",
+        "核对候选提交、来源/范围审核、确认、修订、撤销、审计、失效/过期等实际支持的记忆操作；公共/项目/任务 scope 不能串库。",
+        "核对 workspace 项目 ID 与业务台账 project_key 的关联策略，避免旧任务恢复后记忆范围漂移。",
+        "复用已有 professional 表单/服务，必要时补独立维护子页或设置入口；保留新问答/文章/图谱布局，不搬回旧导航。",
+        "可信经验只能经原已实现的审核流程参与候选；知识答案转候选是草稿，不自动升级为计价规则。"
+      ],
+      "acceptance": [
+        "每个源已实现维护动作有可到达的新入口和实际产物。",
+        "候选→确认→检索可见→撤销/失效后不再作为有效依据；审计可查。",
+        "项目 A 的专属记忆不泄露到 B，恢复历史任务范围一致。",
+        "50 文章/74 关系及 18 FAQ 继续可读可用，不为治理迁移破坏既有新界面。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [
+        "00-docs/handoff/2026-10-08-知识推荐问题与预设答案迁移.md",
+        "Codex-Temp/knowledge-recommendations/ordinary-questions.json",
+        "00-docs/handoff/2026-10-09-普通知识问答模型接通.md",
+        "Codex-Temp/knowledge-model-fix/live-api-results.json",
+        "tests/test_knowledge_model.py"
+      ],
+      "closure_reason": null,
+      "partial_verification": "v0.9.38普通本地知识问答已完成真实模型验收；前4预设、14普通题及主聊天表格与规则解释通过；T11其他AI/双路门槛保留。"
+    },
+    {
+      "id": "T12",
+      "title": "复验本地知识目录、WeKnora 及双路故障矩阵",
+      "priority": "P1",
+      "classification": "runtime_verification_required",
+      "status": "todo",
+      "evidence": [
+        "E15",
+        "E16",
+        "E17",
+        "E25"
+      ],
+      "depends_on": [
+        "T07",
+        "T10",
+        "T11"
+      ],
+      "finding": "WeKnora 真实回答/引用已有后续版本证据，不应重建；本地 13 份资料路径在活动宿主的加载、原模型与双路真实比较仍需收口。",
+      "implementation": [
+        "沿用已授权凭证文件引用与 Windows 本机知识服务；不复制密钥、不改资料白名单。",
+        "在确认已加载新源码的宿主上验证 cost-aiw 实际来源目录/数量、经典和混合检索、资料版本/权限。",
+        "分别验证原问答和 WeKnora，再验证同题双路；双路结果、来源、失败各自保留，不能拼成虚假的单一可靠答案。",
+        "覆盖无依据、越权引用、资料版本变化、上游超时、断流、取消、网络恢复；沿用引用核验完成才交付正文的设计。"
+      ],
+      "acceptance": [
+        "真实在线服务实际看到 13 份获准资料；不是只在源码 TestClient 中通过。",
+        "引用均能核对来源与版本；越界或不明来源不交付为可信答案。",
+        "单路失败不冒充双路成功；不静默切引擎，取消后晚到结果不会回写。",
+        "已完成的 50/74 内容保留，能力星图不替代知识关系图。"
+      ],
+      "external_prerequisites": [
+        "本机 WeKnora 服务可用；原问答真实模型条件同 T10。"
+      ],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T13",
+      "title": "核销工作量抓取、经验池导入与阈值业务",
+      "priority": "P1",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E23"
+      ],
+      "depends_on": [
+        "T01",
+        "T05",
+        "T08"
+      ],
+      "finding": "这些模块已在专业工作区接入，剩余重点是全字段操作与主任务回写，不应按早期文档重建整套页面。",
+      "implementation": [
+        "核对工作量源/目标双表、映射、单位/数量、术语作用域、抓取结果与标注结果双下载，包含同名文件但不同内容的情况。",
+        "验证向当前任务应用抓取结果时仍绑定正确 job/版本，并同步待重算、主卡片和导出。",
+        "经验池导入保持正式模板只读、新库样式、过滤列、字段偏好作用域与空行处理规则；改动只落 Astra 工作副本。",
+        "核对预警阈值的实际默认与配置、指定列非零、原同类项判定条件、偏离率/风险分级/来源定位；不得为了新图表重定义风险。"
+      ],
+      "acceptance": [
+        "真实双表样本经过抓取产生正确数量、标注文件和目标文件；同名文件不覆盖。",
+        "经验导入前后正式母版哈希一致，工作副本按预期变化；失败无半导入。",
+        "阈值边界与百分率单位正确；输入过滤与预览/导出口径有明确一致性。",
+        "主聊天回执指向本次真实成果，刷新仍可恢复。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T14",
+      "title": "完成结算审核专项与双成果闭环",
+      "priority": "P1",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18"
+      ],
+      "depends_on": [
+        "T08",
+        "T13"
+      ],
+      "finding": "结算界面、规则和 Excel/Word/JSON 成果已有运行记录；未补全的旧结算专项和多任务状态仍需验证。",
+      "implementation": [
+        "补齐真正样本构造器后运行原结算专项，保留原规则、人工复核和建议审减语义。",
+        "用标准样本走上传→审核→风险详情→定位→人工复核→审核表/报告/明细下载；不得只验证 HTTP 200。",
+        "检查主编制任务与结算任务切换时输入、风险、金额、下载卡片的隔离和恢复。"
+      ],
+      "acceptance": [
+        "规则命中、建议金额和输出事实与源基线一致；不把建议审减标成已最终审定。",
+        "三种现有成果下载可读，任务/项目/版本一一对应。",
+        "失败重试、空结果、多问题、人工处置和刷新恢复无丢失或串任务。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T15",
+      "title": "完成飞书/WeAct 的受控收发与多人复核",
+      "priority": "P1",
+      "classification": "external_verification_required",
+      "status": "todo",
+      "evidence": [
+        "E11",
+        "E17",
+        "E18",
+        "E19"
+      ],
+      "depends_on": [
+        "T07",
+        "T09",
+        "T14"
+      ],
+      "finding": "发送确认卡、受众、进度、重试和轮次等已接入；配置已按授权引用并识别。真实接收、派发、逐人结论以及成果/卡片送达尚无本次关闭证据。",
+      "implementation": [
+        "沿用已授权配置引用，不再次复制生产密钥；先核对原应用与 Astra 消费者/回调/网关身份，不让两个实例抢同一收件流。",
+        "离线契约先覆盖平台选取、群/私聊、多人、期限、说明、确认、版本冻结、幂等、防重复发送。",
+        "有明确测试平台和受众授权后，验证接收→受控派发→成果文件与卡片分别送达→逐人复核→意见/轮次→失败仅补失败步骤。",
+        "保留原项目来源与 Astra 来源的隔离、连接恢复、已读/已送达/已完成的不同含义；当前任务和历史回执查询不能混用。",
+        "无真实发送授权或接收身份未确认时只做离线/只读核查，标 blocked_external 并继续其他任务，不能默认为所有同事发送测试。"
+      ],
+      "acceptance": [
+        "真实平台上可证明两平台各自送达与回执归属；没有以配置成功、进程在线或模拟回执代替。",
+        "当前版本变更后不误发旧成果；旧轮次评论不覆盖新轮次结论。",
+        "失败补发只处理失败节点；不重放原收件箱/发件队列，不重复创建复核任务。"
+      ],
+      "external_prerequisites": [
+        "明确允许接收/发送的应用归属、平台与测试受众；必要时受控重启对应服务。"
+      ],
+      "result_evidence": [
+        "v0.9.59双平台复核接收恢复：00-docs/handoff/2026-10-09-双平台复核接收恢复.md；本轮真实送达/按钮闭环待确认，不据此核销T15。"
+      ],
+      "closure_reason": null
+    },
+    {
+      "id": "T16",
+      "title": "长报告、分页预览与公文转换在线验收",
+      "priority": "P1",
+      "classification": "runtime_verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E20"
+      ],
+      "depends_on": [
+        "T07",
+        "T09",
+        "T14"
+      ],
+      "finding": "原 Word 与新公文引擎的组件/接口已存在；旧宿主新接口加载、5 页以上报告及 Word/WPS 实际排版尚需验证。",
+      "implementation": [
+        "先在实际宿主检测状态/格式化接口，分别做 DOC、DOCX、Markdown→独立公文成果→分页预览→下载。",
+        "核对原件与成果分离，转换提示仅绑定当前文稿；聊天切换、同名稿件、失败重试不混用。",
+        "使用包含长正文、表格跨页、标题层级及页码的 5 页以上样本；对照真实 Word/WPS 中的页面，而不是只做 XML 文本差异。",
+        "数值与正式业务报告继续同版本；公文排版不得改变规则结论、风险事实或原金额。"
+      ],
+      "acceptance": [
+        "浏览器预览与实际下载均来自同一文稿/业务版本；新接口不再 404。",
+        "长表、续页、段落、页码和字体布局有真实截图证据，截断/空白页/溢出已处理。",
+        "原稿哈希不变，生成成果可独立下载；转换失败不覆盖原文件。"
+      ],
+      "external_prerequisites": [
+        "只读公文引擎可用，DOC 所需转换环境，以及相应 Office/WPS 视觉验收环境。"
+      ],
+      "result_evidence": [
+        "00-docs/handoff/2026-10-08-查看报告白屏修复.md",
+        "Codex-Temp/report-white/runtime-evidence.json",
+        "Codex-Temp/report-white/fixed-browser.txt"
+      ],
+      "closure_reason": null,
+      "verification_notes": [
+        "2026-10-08 用户批准修复查看报告白屏。该缺陷已关闭；当前真实 Word 4 页与下载、主题、全屏通过。5 页以上长报告及 Office/WPS 全量门槛仍未通过，任务状态保持 todo。"
+      ]
+    },
+    {
+      "id": "T17",
+      "title": "历史成果完整性、缺失文件与旧协同记录归档",
+      "priority": "P1",
+      "classification": "data_gap",
+      "status": "todo",
+      "evidence": [
+        "E19",
+        "E20",
+        "E17"
+      ],
+      "depends_on": [
+        "T00",
+        "T07",
+        "T08"
+      ],
+      "finding": "历史台账并非未迁：已导入 278 项目/310 运行/565 成果引用/823 调用审计；52 个成果引用源文件已失效，另 5 个过程文件缺失，34 地点待确认；旧协同库/队列没有迁入。数字是历史导入快照。",
+      "implementation": [
+        "先读活动 worktree 的导入回执并实时盘点，不以历史计数覆盖当前新增项目；保留已在 Astra 修改的历史副本。",
+        "对源仍存在的有效文件核验哈希/引用路径/可恢复性；以原导入脚本的预检、事务、备份、幂等机制补齐，不整库覆盖。",
+        "对 57 个不同缺失路径分类：源已不存在、路径搬迁、可恢复副本、权限或解析问题。只在已授权目录只读查找真实文件，不能伪造或重新生成冒充旧成果。",
+        "原已支持的旧协同任务/回执查询需要迁移时，建立只读历史档案或查询适配，保留平台/任务/轮次/版本关系；绝不导入为待发送、待执行队列。",
+        "34 个 proposed 地点保留人工确认边界；没有人工确认不得批量变成真实地图点。"
+      ],
+      "acceptance": [
+        "导入后原有效资料无新增丢失，Astra 后续编辑不被旧数据覆盖，重复导入新增为 0。",
+        "源已缺失的资料可见且明确不可下载，报告列出缺失原因；不能声称历史数据 100% 齐全。",
+        "历史回执只读、无任何消息补发；正式地图只显示真实已确认位置。"
+      ],
+      "external_prerequisites": [
+        "源缺失文件的真实备份；无法恢复时保留源数据缺陷声明，不以造假闭合。"
+      ],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T18",
+      "title": "VIS-01—15 图表、地图与地点确认全组合核销",
+      "priority": "P1",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E22"
+      ],
+      "depends_on": [
+        "T01",
+        "T13",
+        "T14",
+        "T17"
+      ],
+      "finding": "费用、风险、看板和地图组件已经保留，Astra 有更好的图表布局；剩余是旧信息维度和交互语义，而不是复刻每张旧图。",
+      "implementation": [
+        "从原 VIS-01—15 提取指标定义、单位、数据范围、筛选、点击后动作和依据，逐图匹配新图或等价业务入口。",
+        "核对空、单、多数据，0 值/负值/异常值（仅原支持场景），筛选/下钻/返回和六主题下风险语义色。",
+        "地理地图、展示地图、文章二维网络、能力星图各自核销，不互相替代；保留测试/演示标签和既有地图来源。",
+        "核对地点候选、证据、人工确认/修订、恢复及同名项目隔离；正式地图资质不是原已完成能力，不擅自扩大到生产地图建设。"
+      ],
+      "acceptance": [
+        "每项旧已支持的信息维度有可访问去向；新图更好时标 equivalent_or_better 并给出数据和下钻证据。",
+        "筛选后的指标、图表、明细和下载口径一致，百分率没有乘除 100 错误。",
+        "地图离开卸载/隐藏停算，候选不当成确认地点，测试数据不混入真实统计。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T19",
+      "title": "Task/Skill 证据链与 Gork 真实任务跟踪",
+      "priority": "P1",
+      "classification": "external_verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E21",
+        "E26"
+      ],
+      "depends_on": [
+        "T01",
+        "T03",
+        "T04",
+        "T07"
+      ],
+      "finding": "Task 轨迹/Skill 治理组件和 Gork 来源适配已有代码；实际控制台跟踪及 Watch 实机提醒仍待验收。",
+      "implementation": [
+        "独立核对任务对象、运行 attempt、Skill 选择/快照锁定、轨迹、血缘、证据导出；治理展示不能误称通用智能体编排已实现。",
+        "沿用既有 Gork 任务哨兵来源协议，默认关闭、默认当前正在发生任务；原版与 Astra 的服务身份必须区分。",
+        "在已有最小联动授权内验证兼容控制台；不新建 BLE 客户端、不刷固件、不改设备语音、不扩大第三方项目修改范围。",
+        "真实任务开始/完成/失败/取消/报告写入触发正确状态；首次连接/切换来源不补播历史；断连恢复不重复提醒。"
+      ],
+      "acceptance": [
+        "当前轨迹真实事件与同一 attempt/产物版本一致；不从 task.status 编造进度。",
+        "Skill Manifest/快照/上岗证据可查，旧任务锁定规则不漂移。",
+        "分别证明控制台可达、设备已连接、哨兵正在跟踪；有实机提醒才标硬件验收通过。"
+      ],
+      "external_prerequisites": [
+        "兼容控制台、用户允许的来源开关/连接操作及 Watch 设备；否则保留实机门禁。"
+      ],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T20",
+      "title": "数字化项目助手完整业务联调",
+      "priority": "P1",
+      "classification": "external_verification_required",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E12"
+      ],
+      "depends_on": [
+        "T00",
+        "T07"
+      ],
+      "finding": "Astra 已有 5175 独立服务探测、iframe、主题/超时/重试/独立打开，但“可打开”不等于原助手上传到导出的业务已验收。",
+      "implementation": [
+        "先读该项目交接/跨项目信箱，确认当前协议和启动方式；没有必要不修改外部项目。",
+        "在获准独立服务可用时跑上传→候选→测算→导出→返回 Astra；保留来源、任务与结果关联。",
+        "核对服务未启动、超时、拒绝嵌入、独立打开、主题同步和返回状态恢复。"
+      ],
+      "acceptance": [
+        "真实业务成果可下载且与测算明细一致；iframe 载入不能单独关闭任务。",
+        "服务故障不阻断 Astra 主编制，返回不丢主任务/草稿。"
+      ],
+      "external_prerequisites": [
+        "数字化助手独立服务与可用样本；按既有项目授权边界启动和验收。"
+      ],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T21",
+      "title": "多窗口、取消、刷新、主题和性能回归",
+      "priority": "P1",
+      "classification": "verification_required",
+      "status": "todo",
+      "evidence": [
+        "E08",
+        "E09",
+        "E17",
+        "E21"
+      ],
+      "depends_on": [
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T11",
+        "T13",
+        "T14",
+        "T16"
+      ],
+      "finding": "Astra 已有 revision、幂等和晚到保护，但仍需用真实浏览器覆盖跨入口竞争组合；不能仅靠单组件测试。",
+      "implementation": [
+        "同项目双窗口同时改草稿/资料/偏好/候选，验证 CAS 冲突而非最后写覆盖；用真实延迟请求覆盖切会话前 flush 窗口。",
+        "覆盖同名不同内容附件、历史任务恢复、专业 iframe 晚到回执、取消后继续任务、断网后导出/恢复、连续切换项目。",
+        "遵守当前 DESIGN.md：默认亮色、兼查深色与六主题、桌面聊天/信息卡/成果/全屏四形态；不重新规定旧窄屏验收为强制。",
+        "记录当前大表/长报告/历史看板的性能基线与本次对比；目标是迁移不退化，不把旧未开发的大表分页优化算入必须完成。",
+        "主题切换不重建业务工作区、不清空表单；不可见动效停止，现有 Gork 位置和播放偏好不回退。"
+      ],
+      "acceptance": [
+        "两个会话/两个窗口的服务端草稿和任务相互独立，冲突有明确恢复路径。",
+        "没有跨 job、跨版本、跨受众的误写；取消不是只停止动画。",
+        "四种桌面形态无输入区被挤出、重要操作遮挡或业务文字低于设计字号；键盘行为可用。",
+        "关键路径性能无无法解释的回退；错误/空/加载/恢复状态均有浏览器证据。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    },
+    {
+      "id": "T22",
+      "title": "集成验收、交付与持续核销关闭",
+      "priority": "P0",
+      "classification": "delivery_gate",
+      "status": "todo",
+      "evidence": [
+        "E17",
+        "E18",
+        "E21",
+        "E24"
+      ],
+      "depends_on": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "T07",
+        "T08",
+        "T09",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T15",
+        "T16",
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T21"
+      ],
+      "finding": "任务目标是可证明的功能迁移完成，不是页面数量增加、构建成功、文档写完或把外部阻塞勾掉。",
+      "implementation": [
+        "对当前原工程已实现操作矩阵再次巡检，将新增发现追加任务并闭合；已有更好实现无需重复迁移，但必须提供等价证据。",
+        "运行全部目标测试、专项、正式/调试构建、V3.1 双答案、真实改价重算、关键新路径浏览器测试；记录未执行与失败项。",
+        "执行受控冷启动/已有服务复用/过期实例识别验收；保留现有 runtime、凭据引用和最新业务。",
+        "更新当前入口文档、功能矩阵、26 续办、CHANGELOG、操作矩阵与本包 JSON；历史验收只追加，不改写成今日已通过。",
+        "交付补丁摘要、通过证据、未迁原能力、更好替代项、源本就缺失项、外部阻塞、回滚方式；只在已获授权的分支本地提交，不自动 push/合并/部署。"
+      ],
+      "acceptance": [
+        "所有源已实现能力均为 done 或有证据的 equivalent_or_better；原本未实现项单列，不掺入迁移分母。",
+        "P0 功能无未关闭问题，关键业务差异为 0，原代码/规则/凭证/运行库无越界写入。",
+        "外部环境/发送/设备门禁未过时，交付明确“本地代码已完成、端到端尚受阻”，不得宣称全量迁移验收完成。",
+        "历史源缺失可按不新增丢失的功能迁移口径核销，但数据完整性缺项必须永久如实披露。"
+      ],
+      "external_prerequisites": [],
+      "result_evidence": [],
+      "closure_reason": null
+    }
+  ],
+  "sources": {
+    "E01": {
+      "repository": "zgzzmnbx/zaojia-zhisuan",
+      "commit": "5b6b8d2744c4a3059813dd2703ebc9ee02dfa065",
+      "path": "frontend/src/components/agent-workspace/zhisuanCommands.ts",
+      "evidence_type": "code",
+      "note": "旧指令检测包含问句排除和八类业务指令。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan/blob/5b6b8d2744c4a3059813dd2703ebc9ee02dfa065/frontend/src/components/agent-workspace/zhisuanCommands.ts"
+    },
+    "E02": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/App.tsx",
+      "evidence_type": "code",
+      "note": "send 使用另一套关键词分流；task 模式未知问题返回能力卡。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/App.tsx#L362-L370"
+    },
+    "E03": {
+      "repository": "zgzzmnbx/zaojia-zhisuan",
+      "commit": "5b6b8d2744c4a3059813dd2703ebc9ee02dfa065",
+      "path": "frontend/src/batchMatchRequest.ts",
+      "evidence_type": "code",
+      "note": "单次提交后通过状态查询恢复结果；区分 failed 与 unknown，不重复 POST。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan/blob/5b6b8d2744c4a3059813dd2703ebc9ee02dfa065/frontend/src/batchMatchRequest.ts"
+    },
+    "E04": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/professional/batchMatchRequest.ts",
+      "evidence_type": "git_blob_identity",
+      "note": "Git 树中该文件 blob 与旧版相同；不等于 studio 主链路已调用。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/professional/batchMatchRequest.ts"
+    },
+    "E05": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/App.tsx",
+      "evidence_type": "code",
+      "note": "convert/match/warning/generateRisk/recalculate：固定机械模式、数量过滤；match 直接普通 POST；风险报告只传 job。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/App.tsx#L300-L365"
+    },
+    "E06": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/api.ts",
+      "evidence_type": "code",
+      "note": "普通 fetch 包装未提供批量匹配断线状态恢复；导出空行过滤固定为数量。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/api.ts"
+    },
+    "E07": {
+      "repository": "zgzzmnbx/zaojia-zhisuan",
+      "commit": "5b6b8d2744c4a3059813dd2703ebc9ee02dfa065",
+      "path": "00-PRD/01-模块PRD/02-填价结果预览与输出/PRD.md",
+      "evidence_type": "declared_implemented",
+      "note": "旧已实现操作包括书本候选、机器人行级 AI、指定列空行过滤等；需再与源代码执行行为核销。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan/blob/5b6b8d2744c4a3059813dd2703ebc9ee02dfa065/00-PRD/01-%E6%A8%A1%E5%9D%97PRD/02-%E5%A1%AB%E4%BB%B7%E7%BB%93%E6%9E%9C%E9%A2%84%E8%A7%88%E4%B8%8E%E8%BE%93%E5%87%BA/PRD.md#L1-L44"
+    },
+    "E08": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/table/Workbook.tsx",
+      "evidence_type": "code",
+      "note": "新表行操作只有依据按钮；过滤固定为数量；独立 localStorage 预览偏好。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/table/Workbook.tsx"
+    },
+    "E09": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/ProfessionalPanel.tsx",
+      "evidence_type": "code",
+      "note": "专业桥传递 job/input/sheets/knowledgeSeed 等，未见选中行单元格上下文字段。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/ProfessionalPanel.tsx"
+    },
+    "E10": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/App.tsx",
+      "evidence_type": "code",
+      "note": "依据页只读候选转 analysis 入口；没有把当前行带入桥接协议。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/App.tsx#L370-L413"
+    },
+    "E11": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/professional_host.py",
+      "evidence_type": "code",
+      "note": "独立模型偏好与密钥文件引用、可写业务资产隔离、平台总开关和授权配置引用。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/professional_host.py"
+    },
+    "E12": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/server.py",
+      "evidence_type": "code",
+      "note": "FastAPI 版本 0.9.0，health 写死 0.7.0；旧状态接口部分字段为常量；风险报告 provider 默认 deepseek；保留 pending-recalculate sidecar。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/server.py"
+    },
+    "E13": {
+      "repository": "zgzzmnbx/zaojia-zhisuan",
+      "commit": "5b6b8d2744c4a3059813dd2703ebc9ee02dfa065",
+      "path": "config/project-default-settings.json",
+      "evidence_type": "code_config",
+      "note": "原 quickSettings 包含 enabledIds/customPrompts/autoHide；还有专业业务设置。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan/blob/5b6b8d2744c4a3059813dd2703ebc9ee02dfa065/config/project-default-settings.json#L1-L160"
+    },
+    "E14": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/quick-actions.ts",
+      "evidence_type": "code",
+      "note": "当前固定快捷操作集合；用户自定义行为还需接入。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/quick-actions.ts"
+    },
+    "E15": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/KnowledgeSettings.tsx",
+      "evidence_type": "code",
+      "note": "WeKnora 设置与常见问题编辑已存在，不能误列为未迁。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/KnowledgeSettings.tsx"
+    },
+    "E16": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/KnowledgeWorkspace.tsx",
+      "evidence_type": "code",
+      "note": "原问答/WeKnora/双路、经典混合检索、来源、文章/关系网络及知识记忆入口。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/KnowledgeWorkspace.tsx"
+    },
+    "E17": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "00-docs/00-PRD/26-迁移续办与验收待办.md",
+      "evidence_type": "historical_status",
+      "note": "2026-10-07 当前续办入口；区分真实开发缺口、环境验收、未来扩展。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/00-docs/00-PRD/26-%E8%BF%81%E7%A7%BB%E7%BB%AD%E5%8A%9E%E4%B8%8E%E9%AA%8C%E6%94%B6%E5%BE%85%E5%8A%9E.md"
+    },
+    "E18": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "00-docs/00-PRD/22-v0.6.0迁移验收.md",
+      "evidence_type": "historical_test_record",
+      "note": "专业模块集中接入、V3.1 双答案、旧专项收集缺依赖等历史记录。本次没有重跑。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/00-docs/00-PRD/22-v0.6.0%E8%BF%81%E7%A7%BB%E9%AA%8C%E6%94%B6.md"
+    },
+    "E19": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "00-docs/handoff/2026-10-07-2.0历史项目导入.md",
+      "evidence_type": "historical_data_record",
+      "note": "历史数据定向导入活动 worktree；52 成果引用及另 5 过程文件缺失；34 地点待确认；无旧协同队列。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/00-docs/handoff/2026-10-07-2.0%E5%8E%86%E5%8F%B2%E9%A1%B9%E7%9B%AE%E5%AF%BC%E5%85%A5.md"
+    },
+    "E20": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "README.md",
+      "evidence_type": "historical_status",
+      "note": "main 已合并交接提交，但活动运行目录未切换；UI 0.9.5，宿主源码 0.9.0。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/README.md"
+    },
+    "E21": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "AGENTS.md",
+      "evidence_type": "project_constraints",
+      "note": "原项目只读、DESIGN.md 唯一视觉依据、独立 runtime、禁自动外发/部署、默认桌面等。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/AGENTS.md"
+    },
+    "E22": {
+      "repository": "zgzzmnbx/zaojia-zhisuan",
+      "commit": "5b6b8d2744c4a3059813dd2703ebc9ee02dfa065",
+      "path": "README.md",
+      "evidence_type": "historical_status",
+      "note": "原已支持主业务与 AI 增强；Tauri 自 2026-09-26 暂缓归档。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan/blob/5b6b8d2744c4a3059813dd2703ebc9ee02dfa065/README.md"
+    },
+    "E23": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "00-docs/00-PRD/08-原功能与接口盘点.json",
+      "evidence_type": "inventory_not_acceptance",
+      "note": "包含接口、已实现和未实现需求；状态存在早期快照，不能直接用待接入筛选。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/00-docs/00-PRD/08-%E5%8E%9F%E5%8A%9F%E8%83%BD%E4%B8%8E%E6%8E%A5%E5%8F%A3%E7%9B%98%E7%82%B9.json"
+    },
+    "E24": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "package.json",
+      "evidence_type": "code_config",
+      "note": "已有 npm test/build/debug-build；npm test 不是 Python 和全部旧专项。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/package.json"
+    },
+    "E25": {
+      "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+      "commit": "8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6",
+      "path": "03-Src/studio/App.tsx",
+      "evidence_type": "code",
+      "note": "本地问答带 project_key/job；WeKnora 仅通用获准库；不传项目共享文件正文。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/8c61ff6d7b92ccb1b0d2fc1ff44316ab54b934e6/03-Src/studio/App.tsx#L130-L210"
+    },
+    "E26": {
+      "repository": "zgzzmnbx/zaojia-zhisuan",
+      "commit": "5b6b8d2744c4a3059813dd2703ebc9ee02dfa065",
+      "path": "frontend/src/components/agent-workspace/agentWorkspaceUtils.ts",
+      "evidence_type": "code",
+      "note": "旧知识前缀辅助、阶段引导和任务 Skill 锁定辅助；用于操作核销，不要求复刻旧视觉。",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan/blob/5b6b8d2744c4a3059813dd2703ebc9ee02dfa065/frontend/src/components/agent-workspace/agentWorkspaceUtils.ts"
+    }
+  },
+  "execution": {
+    "date": "2026-10-08",
+    "human_approved_scope": [
+      "T02",
+      "T03",
+      "T04",
+      "T05",
+      "T06",
+      "T07"
+    ],
+    "behavior_choice": "先解释，并提供可选操作按钮",
+    "ui_version": "0.9.23",
+    "host_version": "0.9.1",
+    "runtime_tested": true,
+    "implementation_performed": true,
+    "all_migration_complete": false,
+    "remaining_scope_requires_human_authorization": true,
+    "approved_followups": [
+      {
+        "date": "2026-10-08",
+        "scope": "查看报告白屏修复",
+        "ui_version": "0.9.33",
+        "status": "done",
+        "evidence": "00-docs/handoff/2026-10-08-查看报告白屏修复.md"
+      },
+      {
+        "date": "2026-10-08",
+        "ui_version": "0.9.36",
+        "scope": "#知识库推荐弹窗、18题分页编辑、前四题原预设答案与小标记",
+        "status": "done",
+        "evidence": "00-docs/handoff/2026-10-08-知识推荐问题与预设答案迁移.md",
+        "remaining_gate": "普通题模型综合回答需独立凭证；原文检索已验，不关闭T11"
+      },
+      {
+        "date": "2026-10-09",
+        "ui_version": "0.9.38",
+        "scope": "普通本地知识问答模型接通及引用显示修复",
+        "status": "done",
+        "evidence": "00-docs/handoff/2026-10-09-普通知识问答模型接通.md",
+        "real_acceptance": "14题真实model_answer、4原预设逐项一致、主聊天普通题表格与解释通过"
+      },
+      {
+        "date": "2026-10-09",
+        "ui_version": "0.9.51",
+        "scope": "WeKnora Wiki只读接入试验区",
+        "status": "done",
+        "evidence": "00-docs/handoff/2026-10-09-WeKnora接入试验区.md",
+        "real_acceptance": "154条目/338关系、13份来源、二维三维、正文原文与草稿验收通过",
+        "remaining_gate": "编辑/回滚、自动生成、Neo4j实体图谱及历史正文未启用"
+      },
+      {
+        "date": "2026-10-09",
+        "ui_version": "0.9.52",
+        "scope": "删除输入栏范围与引用，按具体回答核对引用",
+        "status": "done",
+        "evidence": "00-docs/handoff/2026-10-09-回答引用入口.md"
+      },
+      {
+        "date": "2026-10-09",
+        "ui_version": "0.9.53",
+        "scope": "WeKnora工具栏与搜索筛选合为单行",
+        "status": "done",
+        "evidence": "00-docs/handoff/2026-10-09-WeKnora单行工具栏.md"
+      },
+      {
+        "date": "2026-10-09",
+        "ui_version": "0.9.54",
+        "scope": "知识库推荐问题预载，消除重复弹出的加载等待",
+        "status": "done",
+        "evidence": "00-docs/handoff/2026-10-09-推荐问题预载.md"
+      }
+    ]
+  },
+  "approved_followups": [
+    {
+      "id": "UI-0.9.56-chat-scroll",
+      "title": "对话两侧留白原生滚动",
+      "status": "done",
+      "scope": "用户授权的局部UI修复",
+      "evidence": "00-docs/handoff/2026-10-09-对话留白滚动.md"
+    },
+    {
+      "id": "UI-0.9.57-preset-loading",
+      "title": "四个预设问题4秒展示动画",
+      "status": "done",
+      "scope": "用户授权局部UI修复",
+      "evidence": "00-docs/handoff/2026-10-09-预设答案展示动画.md"
+    },
+    {
+      "id": "UI-0.9.59-review-recovery",
+      "title": "双平台复核接收恢复及缺失平台展示",
+      "status": "blocked_external",
+      "scope": "用户授权定位修复、恢复既有接收并仅向WeAct石萌补发原成果，用户已确认收到与按钮成功",
+      "evidence": "00-docs/handoff/2026-10-09-双平台复核接收恢复.md",
+      "local_validation": "两工作区各192前端/34后端专项，构建与桌面亮暗通过；当前双平台真实健康",
+      "remaining_gate": "WeAct送达与按钮approve/completed已真实确认；飞书原卡按钮仍待用户验证，T15全量门槛不关闭"
+    },
+    {
+      "id": "UI-0.9.61-platform-watchdog",
+      "title": "双平台持续监护与右上角未启用 / 异常状态",
+      "status": "done",
+      "scope": "用户授权局部可靠性与状态显示修复",
+      "evidence": "00-docs/handoff/2026-10-09-双平台持续监护.md",
+      "local_validation": "两工作区各196前端 / 36后端专项，构建与桌面亮暗通过；两次真实监督器退出9.546秒 / 9.891秒恢复，接收保持",
+      "remaining_gate": "本局部任务完成；飞书原卡真实复核仍待验证，不扩大T15验收结论"
+    }
+  ]
+}

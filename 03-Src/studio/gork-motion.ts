@@ -9,13 +9,17 @@ export function choreographGork(source:GorkCatalog):GorkCatalog{return source;}
 
 export const greetings=['waking','playful','curious','shy'] as const;
 export const gorkDescriptions:Record<string,string>={idle:'在这里陪你',waking:'向你打招呼',playful:'俏皮回应你',curious:'好奇地看看',listening:'在看你输入',searching:'正在查找资料',working:'正在处理任务',thinking:'正在整理回答',confused:'遇到问题，等你一起处理',happy:'这一步已完成',greeting:'向你打招呼',wink:'眨眼回应你',nod:'点头回应你',shy:'有点害羞'};
-export function gorkActivity(busy:string,error:string,composing:boolean){
-  if(busy){
-    if(/生成回答/.test(busy))return 'thinking';
+export function gorkActivity(busy:string,error:string,composing:boolean,feedback:{success:boolean;warning:boolean}={success:false,warning:false}){
+  if(error)return 'confused';
+  const thinking=/生成回答/.test(busy);
+  if(busy&&!thinking){
     if(/检索|读取|识别|载入|连接 WeKnora/.test(busy))return 'searching';
     return 'working';
   }
-  return error?'confused':composing?'listening':'idle';
+  if(feedback.success)return 'happy';
+  if(feedback.warning)return 'confused';
+  if(thinking)return 'thinking';
+  return composing?'listening':'idle';
 }
 
 type Player={set:(state:string)=>void;dispose:()=>void};
@@ -51,7 +55,7 @@ export function createGorkController(mount:(state:string,still:boolean)=>Player,
       if(disposed||!inputs.visible||inputs.paused||inputs.state==='confused')return false;
       // Play never masks a real task. An actual completion can wait for busy to clear.
       if(!completion&&inputs.state!=='idle'&&inputs.state!=='listening')return false;
-      const duration=Math.max(1,durationFor(state));
+      const duration=completion?2000:Math.max(1,durationFor(state));
       clearReaction();reaction={state,expires:time.now()+duration};
       timer=time.after(()=>{timer=undefined;reaction=undefined;render();},duration);render();return true;
     },

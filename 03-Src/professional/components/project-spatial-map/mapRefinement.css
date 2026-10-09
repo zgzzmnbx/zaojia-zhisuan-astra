@@ -1,0 +1,83 @@
+/* Map controls live on the canvas; project metadata stays in the side sheet. */
+.project-spatial-map.project-spatial-map--geography {
+  --ps-primary: var(--astra-accent, var(--dws-color-primary));
+  --ps-primary-soft: var(--astra-soft, var(--dws-color-primary-soft));
+}
+.project-spatial-map--geography .project-spatial-map__workspace {
+  grid-template-columns: minmax(0, 1fr) 340px;
+  height: clamp(440px, calc(100dvh - 212px), 900px);
+  min-height: 0;
+  gap: 12px;
+}
+.project-spatial-map--geography :is(.project-spatial-map__map-panel,.project-spatial-map__canvas,.project-spatial-map__l7-host) { min-height: 0; height: 100%; }
+.project-spatial-map--geography .project-spatial-map__map-panel { border-radius: 12px; border-color: var(--ps-border); }
+.project-spatial-map--geography .project-spatial-map__floating-tools {
+  position: absolute; z-index: 5; inset: 12px 12px auto;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap;
+  gap: 12px; margin: 0; pointer-events: none;
+}
+.project-spatial-map__floating-tools > * { pointer-events: auto; }
+.project-spatial-map--geography .project-spatial-map__scope-tabs {
+  padding: 4px; border: 1px solid var(--ps-border); border-radius: 12px;
+  background: var(--ps-surface); box-shadow: 0 3px 14px #182b4910;
+}
+.project-spatial-map--geography .project-spatial-map__scope-tabs button { min-height: 32px; border-radius: 8px; padding: 0 12px; }
+.project-spatial-map--geography .project-spatial-map__scope-tabs button.is-active { background: var(--ps-primary-soft); color: var(--ps-primary); border-color: transparent; box-shadow: none; }
+.project-spatial-map--geography .project-spatial-map__header-actions { flex-wrap: nowrap; gap: 6px; padding: 4px; border: 1px solid var(--ps-border); border-radius: 12px; background: var(--ps-surface); box-shadow: 0 3px 14px #182b4910; }
+.project-spatial-map--geography .project-spatial-map__header-actions .project-spatial-map__button { border-color: transparent; border-radius: 8px; background: transparent; }
+.project-spatial-map--geography .project-spatial-map__header-actions .project-spatial-map__button:hover { background: var(--ps-primary-soft); }
+.project-spatial-map--geography .project-spatial-map__map-status { border: 0; padding: 0 8px; background: transparent; }
+.project-spatial-map--geography .project-spatial-map__map-legend { top: auto; bottom: 42px; left: auto; right: 12px; border: 0; background: color-mix(in srgb,var(--ps-surface) 94%,transparent); }
+.project-spatial-map--geography .project-spatial-map__map-attribution { bottom: 12px; border: 0; }
+.project-spatial-map--geography .project-spatial-map__map-caption { bottom: 12px; right: 12px; border: 0; }
+.project-spatial-map--geography .project-spatial-map__fallback-banner { top: 66px; }
+.project-spatial-map--geography .project-spatial-map__detail { min-height: 0; max-height: 100%; border-color: var(--ps-border); }
+.project-spatial-map .project-spatial-map__detail { border-radius: 12px; padding: 20px; }
+.project-spatial-map__detail-kicker { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.project-spatial-map__detail-kicker .project-spatial-map__eyebrow { font-weight: 500; letter-spacing: 0; }
+.shell.layout-daweiba .project-spatial-map__detail-heading h2 { max-width: none; margin: 0; font-size: var(--dws-font-size-16,16px); font-weight: 600; line-height: 1.65; }
+.project-spatial-map__detail .project-spatial-map__tag-row { margin-top: 12px; gap: 6px; }
+.project-spatial-map__detail .project-spatial-map__tag { padding: 3px 8px; border: 0; border-radius: 6px; background: var(--ps-surface-subtle); }
+.project-spatial-map__detail .project-spatial-map__risk { color: var(--ps-primary); background: var(--ps-primary-soft); border-radius: 6px; }
+.project-spatial-map__detail .project-spatial-map__risk--high { color: var(--astra-primary-content,#fff); background: var(--astra-primary-gradient,var(--ps-primary)); }
+.project-spatial-map__detail .project-spatial-map__detail-section { margin-top: 20px; padding-top: 20px; }
+.shell.layout-daweiba .project-spatial-map__place-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: var(--dws-font-size-13,13px); font-weight: 600; }
+.project-spatial-map__place-heading svg { color: var(--ps-primary); }
+.project-spatial-map__place-heading > span { margin-left: auto; color: var(--ps-muted); font-size: var(--dws-font-size-12,12px); font-weight: 400; }
+.project-spatial-map__place-timeline { padding: 0; margin: 0; list-style: none; gap: 0; }
+.project-spatial-map__place-timeline li { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 0 0 20px; font-size: var(--dws-font-size-13,13px); }
+.project-spatial-map__place-timeline li:last-child { padding-bottom: 0; }
+.project-spatial-map__place-timeline li:not(:last-child)::after { content: ''; position: absolute; top: 30px; bottom: 4px; left: 14px; width: 1px; background: var(--ps-border); }
+.project-spatial-map__place-index { display: grid; place-items: center; width: 28px; height: 28px; flex: none; border-radius: 8px; color: var(--ps-primary); background: var(--ps-primary-soft); font-size: var(--dws-font-size-12,12px); font-weight: 600; }
+.project-spatial-map__place-timeline li > div { padding-top: 3px; min-width: 0; }
+.project-spatial-map__place-timeline li small { margin-top: 4px; line-height: 1.6; }
+.project-spatial-map__detail .project-spatial-map__disclaimer { margin-top: 16px; line-height: 1.7; }
+.project-spatial-map__source-details > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; color: var(--ps-strong); font-size: var(--dws-font-size-13,13px); font-weight: 600; }
+.project-spatial-map__source-details > summary::-webkit-details-marker { display: none; }
+.project-spatial-map__source-details > summary > svg:first-child { color: var(--ps-primary); }
+.project-spatial-map__source-details > summary > svg:last-child { margin-left: auto; color: var(--ps-muted); }
+.project-spatial-map__source-details[open] > summary > svg:last-child { transform: rotate(90deg); }
+.project-spatial-map__source-details > summary:focus-visible { outline: 2px solid var(--ps-primary); outline-offset: 6px; border-radius: 4px; }
+.project-spatial-map__source-details .project-spatial-map__meta-list { margin-top: 16px; gap: 10px; }
+.project-spatial-map__map-notice { display: flex; align-items: flex-start; gap: 6px; margin: 20px 0 0; color: var(--ps-muted); font-size: var(--dws-font-size-12,12px); line-height: 1.7; }
+.project-spatial-map__detail svg { flex-shrink: 0; }
+.project-spatial-map--geography .project-spatial-map__project-list { margin-top: 12px; padding: 0; border: 0; background: transparent; }
+.project-spatial-map--geography .project-spatial-map__section-heading { justify-content: flex-start; gap: 16px; margin-bottom: 8px; min-height: 24px; }
+.shell.layout-daweiba .project-spatial-map--geography .project-spatial-map__section-heading h2 { margin: 0; font-size: var(--dws-font-size-13,13px); font-weight: 600; }
+.project-spatial-map--geography .project-spatial-map__summary { gap: 12px; min-height: 24px; margin: 0; padding: 0; font-size: var(--dws-font-size-12,12px); }
+.project-spatial-map--geography .project-spatial-map__list-range { margin-left: auto; }
+.project-spatial-map--geography .project-spatial-map__cards { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.project-spatial-map--geography .project-spatial-map__project-card { min-height: 60px; padding: 10px 12px; border-radius: 8px; border-color: var(--ps-border); transition: background .15s, border-color .15s; }
+.project-spatial-map--geography .project-spatial-map__project-card.is-selected { box-shadow: inset 3px 0 var(--ps-primary); }
+.project-spatial-map--geography .project-spatial-map__project-card.is-selected .project-spatial-map__card-main b { color: var(--ps-primary); }
+/* Keep the map usable in the existing narrow desktop split view. */
+@media (max-width: 1100px) {
+  .project-spatial-map--geography .project-spatial-map__workspace { grid-template-columns: minmax(0,1fr) 300px; }
+  .project-spatial-map--geography .project-spatial-map__map-status--ready { display: none; }
+  .project-spatial-map--geography .project-spatial-map__cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 850px) {
+  .project-spatial-map--geography .project-spatial-map__workspace { height: auto; grid-template-columns: minmax(0,1fr); }
+  .project-spatial-map--geography .project-spatial-map__map-panel { height: 460px; }
+  .project-spatial-map--geography .project-spatial-map__detail { max-height: 380px; }
+}

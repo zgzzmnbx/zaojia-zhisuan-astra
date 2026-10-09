@@ -1,0 +1,54 @@
+{
+  "version": "0.9.51",
+  "date": "2026-10-09",
+  "scope": "WeKnora Wiki只读试验区",
+  "documents": 13,
+  "pages": 154,
+  "links": 338,
+  "operations": [
+    {
+      "source_operation": "Wiki目录、类型与分类",
+      "new_entry": "资料库/WeKnora试验区/Wiki目录",
+      "status": "accepted",
+      "evidence": "live-verification.json; ui-verification.json; directory.png"
+    },
+    {
+      "source_operation": "Wiki关系图及邻域",
+      "new_entry": "关系图谱/二维三维/1—3层关联",
+      "status": "accepted",
+      "evidence": "live-verification.json; graph-2d.png; graph-3d.png"
+    },
+    {
+      "source_operation": "正文、来源及原文分块",
+      "new_entry": "条目阅读/原始资料",
+      "status": "accepted",
+      "evidence": "live-verification.json; ui-verification.json"
+    },
+    {
+      "source_operation": "版本记录",
+      "new_entry": "条目/版本记录",
+      "status": "accepted",
+      "evidence": "live-verification.json; ui-verification.json"
+    },
+    {
+      "source_operation": "待核查、独立条目与更新",
+      "new_entry": "资料检查",
+      "status": "accepted",
+      "evidence": "live-verification.json; ui-verification.json"
+    },
+    {
+      "source_operation": "提问上下文",
+      "new_entry": "条目/就此提问",
+      "status": "accepted",
+      "evidence": "ui-verification.json"
+    }
+  ],
+  "not_enabled": [
+    "编辑与回滚",
+    "自动生成",
+    "Neo4j实体抽取/GraphRAG",
+    "缺少来源范围的历史正文"
+  ],
+  "all_migration_complete": false,
+  "handoff": "00-docs/handoff/2026-10-09-WeKnora接入试验区.md"
+}

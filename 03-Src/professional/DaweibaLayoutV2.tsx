@@ -9,7 +9,7 @@ import {
   FileText,
   Settings,
   Upload,
-} from "lucide-react";
+} from "../PhosphorIcons";
 import "./daweiba-v2.css";
 
 const modules = [

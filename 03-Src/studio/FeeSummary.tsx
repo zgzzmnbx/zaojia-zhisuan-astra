@@ -1,3 +1,4 @@
+import {useId} from 'react';
 import type {FeeItem,FeeSnapshot} from './fee-summary';
 import './fee-summary.css';
 
@@ -7,6 +8,7 @@ function Breakdown({items,professional=false}:{items:FeeItem[];professional?:boo
  return <table className="fs-table"><caption className="sr-only">{professional?'专业费用（浮动前）':'最终费用构成'}</caption><thead><tr><th scope="col">{professional?'专业':'费用项目'}</th><th scope="col">金额</th><th scope="col">占比</th></tr></thead><tbody>{items.map((item,index)=><tr key={`${item.label}-${index}`}><th scope="row"><span>{!professional&&<i style={{background:`var(--fs-color-${index%2})`}}/>}{item.label}</span></th><td title={item.value===null?'表内无有效金额':String(item.value)}>{amount(item.value)}</td><td>{percent(item.share)}</td></tr>)}</tbody></table>;
 }
 export function FeeSummary({snapshot,historical=false,compact=false}:{snapshot:FeeSnapshot|null;historical?:boolean;compact?:boolean}){
+ const gradientId=`fee-${useId().replace(/:/g,'')}`;
  if(!snapshot)return <section className="fee-summary fs-empty" aria-label="费用汇总">费用汇总暂不可用</section>;
  const s=snapshot,composition=s.finalComposition,valid=composition.length>0&&composition.every(item=>item.share!==null);
  let offset=0;
@@ -17,7 +19,7 @@ export function FeeSummary({snapshot,historical=false,compact=false}:{snapshot:F
   <div className="fs-breakdowns">
    <figure className="fs-chart"><figcaption>最终费用构成</figcaption>
     <div className="fs-donut" role="img" aria-label={valid?composition.map(item=>`${item.label} ${percent(item.share)}`).join('，'):'占比不可计算'}>
-     <svg viewBox="0 0 220 220" aria-hidden="true"><circle className="fs-track" cx="110" cy="110" r="84"/>{valid&&composition.map((item,i)=>{const start=offset;offset+=item.share!*100;return <circle key={i} cx="110" cy="110" r="84" pathLength="100" stroke={`var(--fs-color-${i%2})`} strokeDasharray={`${item.share!*100} 100`} strokeDashoffset={-start}><title>{item.label}：{amount(item.value)}{s.unit||''}，{percent(item.share)}</title></circle>;})}</svg>
+     <svg viewBox="0 0 220 220" aria-hidden="true"><defs>{[0,1].map(i=><linearGradient key={i} id={`${gradientId}-${i}`} gradientUnits="userSpaceOnUse" x1="26" y1="26" x2="194" y2="194"><stop offset="0%" stopColor={`color-mix(in oklab,var(--fs-color-${i}) 72%,white)`}/><stop offset="52%" stopColor={`var(--fs-color-${i})`}/><stop offset="100%" stopColor={`color-mix(in oklab,var(--fs-color-${i}) 80%,var(--astra-chart-9))`}/></linearGradient>)}</defs><circle className="fs-track" cx="110" cy="110" r="84"/>{valid&&composition.map((item,i)=>{const start=offset;offset+=item.share!*100;return <circle key={i} cx="110" cy="110" r="84" pathLength="100" stroke={`url(#${gradientId}-${i%2})`} strokeDasharray={`${item.share!*100} 100`} strokeDashoffset={-start}><title>{item.label}：{amount(item.value)}{s.unit||''}，{percent(item.share)}</title></circle>;})}</svg>
      <div className="fs-donut-center"><span>主要构成</span><strong>{valid?percent(composition.reduce((a,b)=>a.share!>=b.share!?a:b).share):'—'}</strong><small>{valid?composition.reduce((a,b)=>a.share!>=b.share!?a:b).label:'占比不可计算'}</small></div>
     </div>
     <ul className="fs-chart-legend">{composition.map((item,i)=><li key={item.label}><span><i style={{background:`var(--fs-color-${i%2})`}}/>{item.label}</span><strong title={String(item.value??'')}>{amount(item.value)}</strong><small>{percent(item.share)}</small></li>)}</ul>

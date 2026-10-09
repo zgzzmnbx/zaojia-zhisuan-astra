@@ -9,7 +9,7 @@ import {
   PanelRightOpen,
   Search,
   Tag,
-} from "lucide-react";
+} from "../../../PhosphorIcons";
 import {
   articleById,
   articleNeighborIds,

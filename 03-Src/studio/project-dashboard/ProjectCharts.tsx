@@ -106,6 +106,8 @@ export default function ProjectCharts({
   const statusGradient = `${chartId}-status`;
   const modelGradient = `${chartId}-model`;
   const sourceGradient = `${chartId}-source`;
+  const highRiskGradient = `${chartId}-risk-high`;
+  const lowRiskGradient = `${chartId}-risk-low`;
   const visibleStatuses = dashboard.status_distribution.filter(item => item.count > 0);
   const trendNewTotal = dashboard.trend.reduce((sum, item) => sum + item.new_projects, 0);
   const trendCompletedTotal = dashboard.trend.reduce((sum, item) => sum + item.completed_projects, 0);
@@ -385,18 +387,28 @@ export default function ProjectCharts({
           <div className="project-dashboard__chart is-risk-chart" role="img" tabIndex={0} aria-label={`风险项目排行，共 ${dashboard.risk_ranking.length} 个已运行预警项目`}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={riskChartData} layout="vertical" margin={{ top: 4, right: 24, left: 4, bottom: 4 }}>
+                <defs>
+                  <linearGradient id={highRiskGradient} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--astra-chart-5)" />
+                    <stop offset="100%" stopColor="var(--astra-chart-7)" />
+                  </linearGradient>
+                  <linearGradient id={lowRiskGradient} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--astra-chart-2)" />
+                    <stop offset="100%" stopColor="var(--astra-chart-3)" />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid stroke="var(--pd-border)" horizontal={false} />
                 <XAxis type="number" allowDecimals={false} tick={{ fill: "var(--pd-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis dataKey="axis_name" type="category" width={96} tick={{ fill: "var(--pd-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip />
-                <Legend iconType="circle" iconSize={7} />
-                <Bar isAnimationActive={false} dataKey="risk_high" name="高风险" stackId="risk" fill="var(--red)" radius={[5, 0, 0, 5]} onClick={(data) => {
+                <Legend content={()=><ul className="astra-chart-inline-legend"><li><i style={{background:'var(--astra-chart-7)'}}/>高风险</li><li><i style={{background:'var(--astra-chart-3)'}}/>低风险</li></ul>} />
+                <Bar isAnimationActive={false} dataKey="risk_high" name="高风险" stackId="risk" fill={`url(#${highRiskGradient})`} radius={[5, 0, 0, 5]} onClick={(data) => {
                   const projectName = chartItemValue(data, "project_name");
                   if (projectName) onProject(projectName);
                 }}>
-                  <LabelList dataKey="risk_high" position="insideLeft" fill="var(--paper)" fontSize={12} />
+                  <LabelList dataKey="risk_high" position="insideLeft" fill="var(--astra-risk-chart-label)" fontSize={12} />
                 </Bar>
-                <Bar isAnimationActive={false} dataKey="risk_low" name="低风险" stackId="risk" fill="var(--amber)" radius={[0, 5, 5, 0]} onClick={(data) => {
+                <Bar isAnimationActive={false} dataKey="risk_low" name="低风险" stackId="risk" fill={`url(#${lowRiskGradient})`} radius={[0, 5, 5, 0]} onClick={(data) => {
                   const projectName = chartItemValue(data, "project_name");
                   if (projectName) onProject(projectName);
                 }}>

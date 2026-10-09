@@ -54,3 +54,11 @@ Gork 任务哨兵 → 身份校验 → Astra 5189 /api/task-monitor/current
 截图与哈希：`Codex-Temp/gork-link-v062/`。Gork 修改前四个关键文件副本：`Codex-Temp/gork-link-before/`。专项测试：Astra `tests/test_gork_link.py`，Gork `tests/test_astra_sentinel.py` 及 `test_browser.mjs`。
 
 构建保留原有大 chunk / use-client 提示，Python 保留现有 Starlette / anyio 弃用提示；无失败。未提交、推送、部署或操作固件。正式控制台重开会短暂断开机器人，也会加载目录中已有其他改动，待用户确认后再进行。
+
+## 2026-10-08 完成金额语音联动（v0.9.20）
+
+- 与 Stopwatch 开发线程 `01a102d1-f432-74a3-9f38-31f22522edb9` 核对并补齐现有链路，不新增通信接口或设备连接。正式控制台已加载 v0.20.27-dev，Watch 通过现有 BLE 连接。
+- Astra 适配层在成功 match_result 发布时固化 amount_summary：本 attempt 的费用汇总金额、currency=CNY、unit=yuan、basis=tax_included / tax_excluded、calculation_status=recalculated / unconfirmed；监控只读已保存快照，不追补旧事件金额。
+- 公式重算未确认时，语音明确说“表内含税总额……元，公式重算未确认”；不宣称金额已最终确认。控制台沿既有音色、动态 TTS 与电脑 / Watch 播放选择处理。
+- Astra 104 项 Python、两工作区各 138 项前端测试、类型检查和构建通过。控制台线程报告 212 项 Python / 96 项前端回归通过。冻结引擎与固件未修改。
+- 用户最新要求自行测试，因此未发起真实新匹配或金额播放。交接时哨兵 enabled=false、source=legacy，声音为 speech / pc，target=both；需在 Gork 正式窗口选择 Astra 并启用后，再开始新任务。实际金额语音及听感仍待用户验收，健康 / 自动测试不算播报验收。

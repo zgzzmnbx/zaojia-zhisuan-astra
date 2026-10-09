@@ -11,7 +11,7 @@ import {
   ScanSearch,
   ShieldCheck,
   Sparkles,
-} from "lucide-react";
+} from "../../../PhosphorIcons";
 import {
   filmstripStageIndexes,
   relayActiveIndex,

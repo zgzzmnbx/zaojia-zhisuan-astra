@@ -26,11 +26,40 @@ function Get-AstraListener {
     return Get-NetTCPConnection -LocalPort 5189 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
 }
 
-function Test-AstraReady {
+function Test-AstraReady([string]$WorkspaceRoot = '') {
     try {
-        $health = Invoke-RestMethod -Uri 'http://127.0.0.1:5189/api/health' -TimeoutSec 2
-        return $health.status -eq 'ok' -and $health.service -eq 'zhisuan-astra' -and $health.isolated -eq $true
+        # Windows PowerShell 5.1 decodes JSON without a charset as Latin-1.
+        # Read UTF-8 bytes explicitly so Chinese workspace paths retain identity.
+        $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:5189/api/health' -TimeoutSec 2
+        $health = ConvertFrom-AstraHealthResponse $response
+        if ($health.status -ne 'ok' -or $health.service -ne 'zhisuan-astra' -or $health.isolated -ne $true) { return $false }
+        if ($WorkspaceRoot) {
+            if (-not $health.workspace -or [IO.Path]::GetFullPath($health.workspace) -ne [IO.Path]::GetFullPath($WorkspaceRoot)) { return $false }
+            foreach ($name in @('server.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py')) {
+                $file = Join-Path $WorkspaceRoot "03-Src/$name"
+                if (-not (Test-Path -LiteralPath $file)) { return $false }
+                if ($health.host_sources.$name -ne (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()) { return $false }
+            }
+            foreach ($capability in @('batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1')) {
+                if ($health.capabilities -notcontains $capability) { return $false }
+            }
+            $package = Get-Content -LiteralPath (Join-Path $WorkspaceRoot 'package.json') -Raw | ConvertFrom-Json
+            if ($health.build.version -ne $package.version) { return $false }
+            if (-not $health.build.sources -or -not $health.build.sources.'03-Src/studio/commands.ts') { return $false }
+            foreach ($entry in $health.build.sources.PSObject.Properties) {
+                $file = Join-Path $WorkspaceRoot $entry.Name
+                if (-not (Test-Path -LiteralPath $file)) { return $false }
+                if ($entry.Value -ne (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()) { return $false }
+            }
+        }
+        return $true
     } catch { return $false }
+}
+
+function ConvertFrom-AstraHealthResponse($Response) {
+    if (-not $Response.RawContentStream) { throw 'Health response bytes are missing.' }
+    $json = [Text.Encoding]::UTF8.GetString($Response.RawContentStream.ToArray())
+    return $json | ConvertFrom-Json
 }
 
 function Invoke-AstraPreview {
@@ -45,7 +74,7 @@ function Invoke-AstraPreview {
         if (-not (Test-AstraOwner $owner.CommandLine $pythonPath)) {
             throw 'Port 5189 belongs to a different workspace or service. Nothing was stopped. Check config/astra-launch.local.json.'
         }
-        if (-not (Test-AstraReady)) { throw 'Astra is running but not ready. Check its server log; no process was restarted.' }
+        if (-not (Test-AstraReady $root)) { throw 'Astra service or frontend is outdated or not ready. Build this workspace and normally restart its service. No process was restarted.' }
         Write-Host 'Astra is already running. Reusing the existing service.'
     } else {
         if ($CheckOnly) { throw 'Astra is not running.' }
@@ -60,7 +89,7 @@ function Invoke-AstraPreview {
         for ($attempt = 0; $attempt -lt 45; $attempt++) {
             $process.Refresh()
             if ($process.HasExited) { throw "Astra exited during startup. Log: $errorLog" }
-            if (Test-AstraReady) { $ready = $true; break }
+            if (Test-AstraReady $root) { $ready = $true; break }
             Start-Sleep -Milliseconds 500
         }
         if (-not $ready) { throw "Astra has not become ready yet. Log: $errorLog. Do not repeatedly relaunch." }

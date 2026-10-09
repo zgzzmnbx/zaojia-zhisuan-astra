@@ -9,7 +9,7 @@ import {
   PanelRightOpen,
   Search,
   Tag,
-} from "lucide-react";
+} from "../../PhosphorIcons";
 import {
   articleById,
   articleNeighborIds,
@@ -20,13 +20,15 @@ import {
   type KnowledgeArticleRelation,
 } from "./knowledgeArticlesUtils";
 import "./knowledgeArticles.css";
+import KnowledgeNodeDetail from './KnowledgeNodeDetail';
 
-const KnowledgeNetworkGraph = lazy(() => import("./KnowledgeNetworkGraph"));
+const KnowledgeNetworkGraph = lazy(() => import("./KnowledgeGalaxyView"));
 
 export type KnowledgeArticlesTab = "articles" | "network";
 
 type KnowledgeArticlesModuleProps = {
   networkVisible?: boolean;
+  fullScreen?: boolean;
   activeTab: KnowledgeArticlesTab;
   onTabChange: (tab: KnowledgeArticlesTab) => void;
   apiBase: string;
@@ -101,6 +103,7 @@ function LoadingState({ label }: { label: string }) {
 
 export default function KnowledgeArticlesModule({
   networkVisible = true,
+  fullScreen = false,
   activeTab,
   onTabChange,
   apiBase,
@@ -185,8 +188,8 @@ export default function KnowledgeArticlesModule({
   const currentArticle = articleById(articles ?? [], selectedArticleId);
   const currentIndex = currentArticle ? filteredArticles.findIndex((article) => article.id === currentArticle.id) : -1;
   const relatedIds = useMemo(
-    () => articleNeighborIds(articleDetail?.related ?? graph?.edges ?? [], selectedArticleId),
-    [articleDetail?.related, graph?.edges, selectedArticleId],
+    () => articleNeighborIds(activeTab === 'network' ? graph?.edges ?? [] : articleDetail?.related ?? [], selectedArticleId),
+    [activeTab, articleDetail?.related, graph?.edges, selectedArticleId],
   );
 
   function retryList() {
@@ -213,7 +216,14 @@ export default function KnowledgeArticlesModule({
 
   function presentNetworkArticle(articleId: string) {
     setSelectedArticleId(articleId);
-    onPresentArticle(articleId);
+    onNetworkQueryChange('');
+    setIsRelationshipPanelOpen(false);
+    if (!fullScreen) onPresentArticle(articleId);
+  }
+
+  function leaveNode() {
+    setSelectedArticleId(null);
+    requestAnimationFrame(() => document.querySelector<HTMLCanvasElement>('#knowledge-panel-network .knowledge-galaxy-canvas canvas')?.focus({ preventScroll: true }));
   }
 
   return (
@@ -328,10 +338,18 @@ export default function KnowledgeArticlesModule({
                   query={networkQuery}
                   selectedId={selectedArticleId}
                   onSelectNode={(node) => presentNetworkArticle(node.id)}
-                  onClearSelection={() => setSelectedArticleId(null)}
+                  onClearSelection={leaveNode}
+                  fullScreen={fullScreen}
                 />
               </Suspense>}
-              <aside className={`knowledge-network-relation-drawer ${isRelationshipPanelOpen ? "is-open" : "is-collapsed"}`} aria-label="关系列表">
+              {fullScreen && networkVisible && selectedArticleId && graph.nodes.some(node => node.id === selectedArticleId) && <KnowledgeNodeDetail
+                node={graph.nodes.find(node => node.id === selectedArticleId)!}
+                related={graph.nodes.filter(node => relatedIds.includes(node.id))}
+                apiBase={apiBase}
+                onClose={leaveNode}
+                onSelect={node => presentNetworkArticle(node.id)}
+              />}
+              {!(fullScreen && selectedArticleId) && <aside className={`knowledge-network-relation-drawer ${isRelationshipPanelOpen ? "is-open" : "is-collapsed"}`} aria-label="关系列表">
                 <button
                   type="button"
                   className="knowledge-network-relation-drawer__toggle"
@@ -344,7 +362,7 @@ export default function KnowledgeArticlesModule({
                   <span>关系列表</span>
                 </button>
                 <div className="knowledge-network-relation-drawer__body" id="knowledge-network-relation-list" hidden={!isRelationshipPanelOpen}>
-                  <header><strong>关系列表</strong><span>点击后在智算窗口显示正文</span></header>
+                  <header><strong>关系列表</strong><span>{fullScreen ? '选择节点查看详情' : '点击后在智算窗口显示正文'}</span></header>
                   <div className="knowledge-network-relation-drawer__list">
                   {graph.nodes.map((node) => (
                     <button type="button" key={node.id} onClick={() => presentNetworkArticle(node.id)}>
@@ -354,7 +372,7 @@ export default function KnowledgeArticlesModule({
                   ))}
                   </div>
                 </div>
-              </aside>
+              </aside>}
             </div>
           )}
         </div>

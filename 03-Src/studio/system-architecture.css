@@ -1,0 +1,13 @@
+.studio dialog.architecture-window{position:fixed;inset:0;box-sizing:border-box;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:var(--paper);color:var(--ink);overflow:hidden}
+.studio dialog.architecture-window::backdrop{background:var(--paper)}
+.studio .architecture-window>.architecture-window-box{box-sizing:border-box;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;overflow:hidden;transform:none;background:var(--paper);display:flex}
+.studio .architecture-window .architecture-module{width:100%;height:100%;min-height:0;flex:1}
+.studio .architecture-window .module-toolbar{height:44px;min-height:44px;flex:0 0 44px;flex-wrap:nowrap;gap:16px;padding:0 12px;border-bottom:1px solid var(--line)}
+.studio .architecture-window h2{display:flex;align-items:center;gap:8px;margin:0;font-size:var(--dws-font-size-14);font-weight:600;white-space:nowrap}
+.studio .architecture-window .module-tabs{align-self:stretch;display:flex;align-items:stretch}
+.studio .architecture-window .module-tabs>button{padding:0 12px;font-size:var(--dws-font-size-13)}
+.architecture-actions{display:flex;align-items:center;gap:10px;margin-left:auto}
+.architecture-demo{font-size:var(--dws-font-size-12);color:var(--muted);white-space:nowrap}
+.studio .architecture-window .architecture-actions .btn{height:32px;min-height:32px;padding:0 8px}
+.studio .architecture-window .architecture-actions .btn-square{width:32px;padding:0}
+.studio .architecture-window iframe{display:block;flex:1;min-height:0;min-width:0;width:100%;height:0;border:0}

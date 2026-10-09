@@ -1,4 +1,4 @@
-import { AlertTriangle, Database, Loader2 } from "lucide-react";
+import { AlertTriangle, Database, Loader2 } from "../../../PhosphorIcons";
 import type { ReactNode } from "react";
 
 export type ChartStateKind = "initial" | "loading" | "insufficient" | "partial" | "error" | "empty" | "ready";

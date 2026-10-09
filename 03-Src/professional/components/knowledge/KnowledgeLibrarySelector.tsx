@@ -1,4 +1,4 @@
-import { Check, ChevronDown, Database, Loader2 } from "lucide-react";
+import { Check, ChevronDown, Database, Loader2 } from "../../../PhosphorIcons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./knowledgeLibrarySelector.css";
 

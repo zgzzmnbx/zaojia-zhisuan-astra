@@ -411,4 +411,10 @@ function boot(c){
 }
 loadConfig().then(boot).catch(fail);
 })();
-</script></body></html>
+</script><script>
+// The sandboxed diagram forwards Escape only to its current parent window.
+if(window.parent!==window)document.addEventListener('keydown',function(event){
+  if(event.key==='Escape'&&!event.isComposing){event.preventDefault();window.parent.postMessage({type:'astra:architecture-close'},location.origin);}
+});
+</script>
+</body></html>

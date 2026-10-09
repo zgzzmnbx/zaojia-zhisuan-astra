@@ -1,4 +1,4 @@
-import { Check, ChevronDown, FileSpreadsheet, Loader2, Paperclip, Send, ShieldCheck, SlidersHorizontal, Square } from "lucide-react";
+import { Check, ChevronDown, FileSpreadsheet, Loader2, Paperclip, Send, ShieldCheck, SlidersHorizontal, Square } from "../../../PhosphorIcons";
 import { useEffect, useRef, useState, type DragEvent, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import ZhisuanAvatar, { type ZhisuanAvatarState } from "../ZhisuanAvatar";
 import KnowledgeQuestionSuggestions from "../knowledge/KnowledgeQuestionSuggestions";

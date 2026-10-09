@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 import os
+import re
 import shutil
 from dataclasses import replace
 from pathlib import Path
@@ -10,6 +11,51 @@ from fastapi import APIRouter, Body, HTTPException
 ROOT=Path(__file__).resolve().parents[1]
 CONFIG=ROOT/'config/astra-connections.local.json'
 router=APIRouter(prefix='/api/astra/connections')
+_engine=None
+
+@router.post('/platforms/{profile_id}/connection')
+def platform_connection(profile_id:str,payload:dict=Body(...)):
+    from app import feishu_app_bot
+    enabled=payload.get('enabled')
+    if type(enabled) is not bool:raise HTTPException(400,'enabled 必须是布尔值')
+    if profile_id not in {'default','weact_cost'}:raise HTTPException(400,'平台无效')
+    if enabled:
+        credentials=feishu_app_bot.load_credentials(profile_id)
+        if not credentials.get('app_id') or not credentials.get('app_secret'):
+            raise HTTPException(409,'请先在协同设置中配置此平台凭证')
+        issue=feishu_app_bot.credential_configuration_issue(profile_id,credentials)
+        if issue:raise HTTPException(409,issue)
+    previous=config()
+    controls={}
+    # Explicit connection enables the existing collaboration gate, preserving all other settings.
+    if enabled and not previous.get('external_enabled'):
+        # Disabled workspace can contain old enabled controls. Do not silently start other platforms.
+        for item in feishu_app_bot.credential_profiles():
+            identifier=item['profile_id']
+            controls[identifier]=feishu_app_bot._read_enabled_control(feishu_app_bot.bot_control_path(identifier))
+            feishu_app_bot.save_bot_enabled(False,identifier)
+        CONFIG.parent.mkdir(parents=True,exist_ok=True)
+        temporary=CONFIG.with_suffix('.tmp')
+        temporary.write_text(json.dumps({**previous,'external_enabled':True},ensure_ascii=False,indent=2),encoding='utf-8')
+        temporary.replace(CONFIG)
+    try:
+        return _engine.update_feishu_app_bot_settings({'profile_id':profile_id,'enabled':enabled})
+    except Exception:
+        if enabled and not previous.get('external_enabled'):
+            CONFIG.write_text(json.dumps(previous,ensure_ascii=False,indent=2),encoding='utf-8')
+            for identifier,value in controls.items():
+                feishu_app_bot.save_bot_enabled(bool(value),identifier)
+        raise
+
+def require_review_connection(profile_id):
+    from app import feishu_app_bot
+    if profile_id not in {'default','weact_cost'}:raise HTTPException(400,'请选择飞书或 WeAct 投递平台')
+    profile=next((p for p in feishu_app_bot.bot_status().get('profiles',[]) if p.get('profile_id')==profile_id),{})
+    health=profile.get('health') or {}
+    if not (profile.get('enabled') and profile.get('running') and all(health.get(key) for key in ('fresh','connected','identity_ready','backend_ok'))):
+        label='飞书' if profile_id=='default' else 'WeAct'
+        raise HTTPException(409,f'{label} 回调接收未就绪，请先在平台状态中恢复连接，再发送复核。')
+
 
 def config():
     try:
@@ -23,9 +69,20 @@ def model_key(provider='deepseek'):
     filename=settings.get('key_file','')
     if not filename:return ''
     try:
-        path=Path(filename)
+        document,separator,section=filename.rpartition('#')
+        markdown_section=bool(separator and section and Path(document).suffix.lower()=='.md')
+        path=Path(document if markdown_section else filename)
         if not path.is_absolute():path=ROOT/path
         value=path.read_text(encoding='utf-8-sig').strip()
+        if markdown_section:
+            heading=re.search(r'^(#{1,6})\s+'+re.escape(section.strip())+r'\s*$',value,re.M)
+            if not heading:return ''
+            tail=value[heading.end():]
+            end=re.search(r'^#{1,'+str(len(heading.group(1)))+r'}\s',tail,re.M)
+            keys=set(re.findall(r'\bsk-[A-Za-z0-9_-]{12,}',tail[:end.start()] if end else tail))
+            # An explicitly referenced section must identify exactly one key.
+            if len(keys)!=1:return ''
+            return next(iter(keys))
         if not value or '\n' in value or len(value)>4096:return ''
         return value
     except (OSError,ValueError):return ''
@@ -108,6 +165,10 @@ EXACT={'/api/input/field-preferences','/api/ui-preferences','/api/preview-column
 def accepts(path):return path in EXACT or path.startswith(PREFIXES)
 
 def install(engine,paths):
+    global _engine
+    _engine=engine
+    import gork_amount
+    gork_amount.install(engine)
     # Fork only mutable pool / preferences. Formal KB, rules, manifests and templates stay frozen.
     working=paths.RUNTIME_DIR/'astra-working-assets'
     working.mkdir(parents=True,exist_ok=True)
@@ -128,6 +189,8 @@ def install(engine,paths):
     engine._skill_runtime_context=runtime
     from app.llm import LlmConfig
     LlmConfig.resolved_api_key=lambda self:model_key(self.provider)
+    import model_adapter
+    model_adapter.install(engine,model_preference)
 
     from app import settlement_audit_api
     settlement_audit_api.SETTLEMENT_REFERENCE_TEMPLATE=ROOT/"03-Src/professional-assets/settlement-reference.xlsx"
@@ -150,5 +213,43 @@ def install(engine,paths):
         except (OSError,ValueError,AttributeError):return saved
     feishu_robot_settings.load_section=section
 
+    original_status=feishu_app_bot.bot_status
+    def bot_status(*args,**kwargs):
+        result=original_status(*args,**kwargs)
+        import time
+        try:
+            resume_path=feishu_app_bot.RUNTIME_ROOT/'host-resume.json'
+            recovery=json.loads(resume_path.read_text(encoding='utf-8'))
+            monitor_fresh=time.time()-resume_path.stat().st_mtime<35
+        except (OSError,ValueError):
+            recovery={};monitor_fresh=False
+        supervised=feishu_app_bot._pid_is_running(feishu_app_bot.RUNTIME_ROOT/'supervisor.pid')
+        for profile in result.get('profiles',[]):
+            profile['supervision_ok']=bool(supervised and monitor_fresh)
+            profile['recovery_status']=recovery.get('status','')
+            if profile.get('enabled') and not profile.get('running'):
+                reason=recovery.get('status') if profile.get('profile_id') in recovery.get('profiles',[]) else ''
+                profile['recovery_issue']={'blocked_old_queue':'有未完成旧队列，自动恢复已暂停；需核对后处理。','start_failed':'接收监护启动失败，请检查运行日志。'}.get(reason,'')
+            if profile.get('enabled') and not profile.get('running') and profile.get('status')=='starting':
+                profile['status']='stopped'
+        return result
+    feishu_app_bot.bot_status=bot_status
+
     original_enabled=feishu_app_bot.is_bot_enabled
     feishu_app_bot.is_bot_enabled=lambda profile_id=None:bool(config().get("external_enabled")) and original_enabled(profile_id)
+
+    def start_supervisor():
+        import subprocess,sys
+        if os.name!='nt':return False
+        pid_path=feishu_app_bot.RUNTIME_ROOT/'supervisor.pid'
+        with feishu_app_bot._profile_start_lock('supervisor') as acquired:
+            if not acquired or feishu_app_bot._pid_is_running(pid_path):
+                return feishu_app_bot._pid_is_running(pid_path)
+            log_path=feishu_app_bot.RUNTIME_ROOT/'logs/supervisor.log'
+            log_path.parent.mkdir(parents=True,exist_ok=True)
+            with log_path.open('a',encoding='utf-8') as output:
+                process=subprocess.Popen([sys.executable,str(ROOT/'tools/run_collaboration_supervisor.py')],
+                    cwd=ROOT,stdout=output,stderr=output,creationflags=subprocess.CREATE_NO_WINDOW)
+            pid_path.write_text(str(process.pid),encoding='utf-8')
+        return True
+    feishu_app_bot.start_local_bot_supervisor=start_supervisor

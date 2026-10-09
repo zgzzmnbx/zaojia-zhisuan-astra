@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, FileSearch, Loader2, RefreshCw, ShieldCheck, X } from "lucide-react";
+import { CheckCircle2, FileSearch, Loader2, RefreshCw, ShieldCheck, X } from "../../../PhosphorIcons";
 import type { ProfessionalSkillSummary } from "./ProfessionalSkillSelector";
 import { SkillCapabilityMatrix } from "../data-visualization/ProfessionalVisuals";
 import DigitalEmployeeEvidencePanel from "./DigitalEmployeeEvidencePanel";

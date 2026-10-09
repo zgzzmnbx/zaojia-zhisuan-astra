@@ -1,0 +1,1958 @@
+{
+  "date": "2026-10-09",
+  "scope": "reading_articles_and_graph",
+  "original_manifest_sha256": "1ab2b2f2df697f370093c4d1c2da83712fed6596aad29477779dc1eb8b79bc9c",
+  "original_manifest_normalized_sha256": "1ab2b2f2df697f370093c4d1c2da83712fed6596aad29477779dc1eb8b79bc9c",
+  "original_manifest_sha256_variants": [
+    "1ab2b2f2df697f370093c4d1c2da83712fed6596aad29477779dc1eb8b79bc9c",
+    "dd92e215efaee4f7c7e039363d2ca4f19f9da455d3042f7613d07f4dd8eccd52"
+  ],
+  "original_articles": [
+    {
+      "id": "cost-001",
+      "file": "articles/cost-001-油气输送管道工程适用范围.md",
+      "sha256": "3b2c8d28cca843712b4760c0e2caa34d6499e97884d2a763403af02cb3fed08b",
+      "normalized_sha256": "3b2c8d28cca843712b4760c0e2caa34d6499e97884d2a763403af02cb3fed08b",
+      "frozen_sha256_variants": [
+        "3b2c8d28cca843712b4760c0e2caa34d6499e97884d2a763403af02cb3fed08b",
+        "9181de01810f8057306053eb384fa69438a0f9531c8c48efc43e51f275a4b096"
+      ]
+    },
+    {
+      "id": "cost-002",
+      "file": "articles/cost-002-油气输送管道土石方清单阅读.md",
+      "sha256": "c20e5fa2694a037dbe30fe27c8a021710da749d6f0750ce4d21406645a70273a",
+      "normalized_sha256": "c20e5fa2694a037dbe30fe27c8a021710da749d6f0750ce4d21406645a70273a",
+      "frozen_sha256_variants": [
+        "c20e5fa2694a037dbe30fe27c8a021710da749d6f0750ce4d21406645a70273a",
+        "f0d2d462a6c5b769c56a9234d77e165ede9eb64a657a3f49ddbc519d3dcf3ea8"
+      ]
+    },
+    {
+      "id": "cost-003",
+      "file": "articles/cost-003-管段组装焊接清单阅读.md",
+      "sha256": "54bf86d0fbc666c57df9ea6079b5a9e15bdd819ff5352748a294d9ae824c62f8",
+      "normalized_sha256": "54bf86d0fbc666c57df9ea6079b5a9e15bdd819ff5352748a294d9ae824c62f8",
+      "frozen_sha256_variants": [
+        "15209230f5fba016c8bf1d8927d6361071bafac3450722b1ac755e5a156d7bcb",
+        "54bf86d0fbc666c57df9ea6079b5a9e15bdd819ff5352748a294d9ae824c62f8"
+      ]
+    },
+    {
+      "id": "cost-004",
+      "file": "articles/cost-004-冬季施工增加费使用边界.md",
+      "sha256": "6a159bf211af91bc38e92db97f146ca058f1d7b69638de6f6fd5dc3e12f77991",
+      "normalized_sha256": "6a159bf211af91bc38e92db97f146ca058f1d7b69638de6f6fd5dc3e12f77991",
+      "frozen_sha256_variants": [
+        "6a159bf211af91bc38e92db97f146ca058f1d7b69638de6f6fd5dc3e12f77991",
+        "a089af28fa462d3e3bae57aefcd09ae074a27eeec5d192239e5261abe757b9bd"
+      ]
+    },
+    {
+      "id": "cost-005",
+      "file": "articles/cost-005-管道清管试压与干燥置换.md",
+      "sha256": "b7010043fcaab1c43f4be20c912bde0b1d4a775e82aa0f6b874e3a2b81e1e4f2",
+      "normalized_sha256": "b7010043fcaab1c43f4be20c912bde0b1d4a775e82aa0f6b874e3a2b81e1e4f2",
+      "frozen_sha256_variants": [
+        "71def9df4d78970157327b504363cfda945f6f8bd628f737073845d393c4c24c",
+        "b7010043fcaab1c43f4be20c912bde0b1d4a775e82aa0f6b874e3a2b81e1e4f2"
+      ]
+    },
+    {
+      "id": "cost-006",
+      "file": "articles/cost-006-低温储罐项目特征阅读.md",
+      "sha256": "c789369366be31335bf0cb09d9176fbdf2d556b79524280040a6359635965330",
+      "normalized_sha256": "c789369366be31335bf0cb09d9176fbdf2d556b79524280040a6359635965330",
+      "frozen_sha256_variants": [
+        "c789369366be31335bf0cb09d9176fbdf2d556b79524280040a6359635965330",
+        "e3493222b77cdca10dd904dd1dcaa35cd510b527b545eb2be2221c754a6d4db2"
+      ]
+    },
+    {
+      "id": "cost-007",
+      "file": "articles/cost-007-储罐焊缝检测清单边界.md",
+      "sha256": "7b72156a954a59a63d925a5f61abb305e5d7662f4c1838ad7c23d40b29b94eaf",
+      "normalized_sha256": "7b72156a954a59a63d925a5f61abb305e5d7662f4c1838ad7c23d40b29b94eaf",
+      "frozen_sha256_variants": [
+        "498390eb7d4546fe03df142d5f87d5a0e0738a6cf1fbf2e72c2fce00685a65f1",
+        "7b72156a954a59a63d925a5f61abb305e5d7662f4c1838ad7c23d40b29b94eaf"
+      ]
+    },
+    {
+      "id": "cost-008",
+      "file": "articles/cost-008-储罐试验与沉降观测.md",
+      "sha256": "6307d6091331bfb52cf0d66f43a9fc656cf580c09f4e16248a97f49d1343fec7",
+      "normalized_sha256": "6307d6091331bfb52cf0d66f43a9fc656cf580c09f4e16248a97f49d1343fec7",
+      "frozen_sha256_variants": [
+        "6307d6091331bfb52cf0d66f43a9fc656cf580c09f4e16248a97f49d1343fec7",
+        "ef07e7d339a1f2670a2094e30f461aaf31f3ab01df4094c0642f99055bd72ac6"
+      ]
+    },
+    {
+      "id": "cost-009",
+      "file": "articles/cost-009-金属储罐制作安装内容.md",
+      "sha256": "28e24e0c7567e63621654906f26fb03e7055dfd3f6676182aee9ef0061a799a1",
+      "normalized_sha256": "28e24e0c7567e63621654906f26fb03e7055dfd3f6676182aee9ef0061a799a1",
+      "frozen_sha256_variants": [
+        "28e24e0c7567e63621654906f26fb03e7055dfd3f6676182aee9ef0061a799a1",
+        "ec10a5ba125512c2d67b21413c3bfc1ae975272f2b782bb1c7b8ff96a58a49a3"
+      ]
+    },
+    {
+      "id": "cost-010",
+      "file": "articles/cost-010-储罐保冷与机械作业.md",
+      "sha256": "a04b54c08e12ac69783b74a9466d9406b6b6b80e3d018fe15b7fadf30c13a2a3",
+      "normalized_sha256": "a04b54c08e12ac69783b74a9466d9406b6b6b80e3d018fe15b7fadf30c13a2a3",
+      "frozen_sha256_variants": [
+        "7fa062c5a7f58a9fc8dfa216d1ef0be5e52b7b1091a79c198ada80402fd7a828",
+        "a04b54c08e12ac69783b74a9466d9406b6b6b80e3d018fe15b7fadf30c13a2a3"
+      ]
+    },
+    {
+      "id": "cost-011",
+      "file": "articles/cost-011-机械设备安装清单内容.md",
+      "sha256": "74510f8605deeac497a4ad9f1d341578754fefdaa8bb09ab9ad5cb72838b666b",
+      "normalized_sha256": "74510f8605deeac497a4ad9f1d341578754fefdaa8bb09ab9ad5cb72838b666b",
+      "frozen_sha256_variants": [
+        "74510f8605deeac497a4ad9f1d341578754fefdaa8bb09ab9ad5cb72838b666b",
+        "dddea69b11e8044489fbc47424faf95f8480d9f4ec8ce1c7f8e2a2622d7d810f"
+      ]
+    },
+    {
+      "id": "cost-012",
+      "file": "articles/cost-012-工艺管道安装清单阅读.md",
+      "sha256": "762f66b5cf44d0ec01537dd62fa86aa87c419dbbfd7cd0675469f934b8164332",
+      "normalized_sha256": "762f66b5cf44d0ec01537dd62fa86aa87c419dbbfd7cd0675469f934b8164332",
+      "frozen_sha256_variants": [
+        "762f66b5cf44d0ec01537dd62fa86aa87c419dbbfd7cd0675469f934b8164332",
+        "c40775dca6fb0baf393057592b33e4334757eff41841abf776c3bcf53e766e11"
+      ]
+    },
+    {
+      "id": "cost-013",
+      "file": "articles/cost-013-阀门安装清单特征.md",
+      "sha256": "ba47df2e79e8e57906552bb088f27d1f47037a247f25a8cc1de63926790b14a3",
+      "normalized_sha256": "ba47df2e79e8e57906552bb088f27d1f47037a247f25a8cc1de63926790b14a3",
+      "frozen_sha256_variants": [
+        "b276c9a133722667562c20dd1c4e4e344f80ff56751f5bb643c36650bf368e75",
+        "ba47df2e79e8e57906552bb088f27d1f47037a247f25a8cc1de63926790b14a3"
+      ]
+    },
+    {
+      "id": "cost-014",
+      "file": "articles/cost-014-自动化控制仪表安装边界.md",
+      "sha256": "62573ef509fc0c6ae442fd884f1ff9085ad82557e9675e743d26b260690eace6",
+      "normalized_sha256": "62573ef509fc0c6ae442fd884f1ff9085ad82557e9675e743d26b260690eace6",
+      "frozen_sha256_variants": [
+        "62573ef509fc0c6ae442fd884f1ff9085ad82557e9675e743d26b260690eace6",
+        "c0a3b269c7ef1db9255d5cea4eac3aade68591ae91db5f4ce56a1fd3bccb4ba8"
+      ]
+    },
+    {
+      "id": "cost-015",
+      "file": "articles/cost-015-通用安装章节如何定位.md",
+      "sha256": "ce820d931885b776e757c33b0c018d01adbe6a87d8e0b3310e1cf6939edbf121",
+      "normalized_sha256": "ce820d931885b776e757c33b0c018d01adbe6a87d8e0b3310e1cf6939edbf121",
+      "frozen_sha256_variants": [
+        "ce820d931885b776e757c33b0c018d01adbe6a87d8e0b3310e1cf6939edbf121",
+        "e1d32cd5b74f949b17e3b7e11cf4c90d8c403d597afaca4417998c1d628c4317"
+      ]
+    },
+    {
+      "id": "cost-016",
+      "file": "articles/cost-016-通信线路工程清单阅读.md",
+      "sha256": "97c711495518986f2d722ed190e5b7f1f0f84a2742b5474d9b05e9765aaf1094",
+      "normalized_sha256": "97c711495518986f2d722ed190e5b7f1f0f84a2742b5474d9b05e9765aaf1094",
+      "frozen_sha256_variants": [
+        "371215f0ecec65995fa1b74624db4da4f238cbe01279726d4428b11a0a34e07f",
+        "97c711495518986f2d722ed190e5b7f1f0f84a2742b5474d9b05e9765aaf1094"
+      ]
+    },
+    {
+      "id": "cost-017",
+      "file": "articles/cost-017-伴行与巡检道路工程.md",
+      "sha256": "5277815cd87cf1ba72ee5dc164759e4f99d667bbcc307e7bfc1089570b7b957f",
+      "normalized_sha256": "5277815cd87cf1ba72ee5dc164759e4f99d667bbcc307e7bfc1089570b7b957f",
+      "frozen_sha256_variants": [
+        "5277815cd87cf1ba72ee5dc164759e4f99d667bbcc307e7bfc1089570b7b957f",
+        "a2c2e978a702a5b36742612a8104ab33dcd0f9d6684b7a3a35b798c068591134"
+      ]
+    },
+    {
+      "id": "cost-018",
+      "file": "articles/cost-018-智能化建设清单结构.md",
+      "sha256": "b39c4a260cb1771f9d2301a9597a379edd70b6b5c7f6814e7916ac40defda6aa",
+      "normalized_sha256": "b39c4a260cb1771f9d2301a9597a379edd70b6b5c7f6814e7916ac40defda6aa",
+      "frozen_sha256_variants": [
+        "b39c4a260cb1771f9d2301a9597a379edd70b6b5c7f6814e7916ac40defda6aa",
+        "c8a1d00f3b91ce77fd36c388e5c152a22a4672f3da6fee909305eb2871d4987a"
+      ]
+    },
+    {
+      "id": "cost-019",
+      "file": "articles/cost-019-投产前管道内检测.md",
+      "sha256": "6fb3d5713d62fbe1b64530bf82c9cf2a5865eb74e801df4c8ae984a875335434",
+      "normalized_sha256": "6fb3d5713d62fbe1b64530bf82c9cf2a5865eb74e801df4c8ae984a875335434",
+      "frozen_sha256_variants": [
+        "6fb3d5713d62fbe1b64530bf82c9cf2a5865eb74e801df4c8ae984a875335434",
+        "80eda242822315b1930c27c05ae089187dd6a70f8ad3d8f9aefab848d7539759"
+      ]
+    },
+    {
+      "id": "cost-020",
+      "file": "articles/cost-020-中转站与其他工程章节.md",
+      "sha256": "ec57cddb084ec21d48b85c86ece8055859748c8da03e1694300179cfb93af6f0",
+      "normalized_sha256": "ec57cddb084ec21d48b85c86ece8055859748c8da03e1694300179cfb93af6f0",
+      "frozen_sha256_variants": [
+        "60502bfad35c338a88650edff1932f14e9d1c7afcc26f9bdd6ac670083421e7c",
+        "ec57cddb084ec21d48b85c86ece8055859748c8da03e1694300179cfb93af6f0"
+      ]
+    },
+    {
+      "id": "cost-021",
+      "file": "articles/cost-021-第五册参考计价依据的用途.md",
+      "sha256": "c348945b0ea3a39353f103a27ba8e64f4c41f4940ffd62138fbab0a5235d864d",
+      "normalized_sha256": "c348945b0ea3a39353f103a27ba8e64f4c41f4940ffd62138fbab0a5235d864d",
+      "frozen_sha256_variants": [
+        "c348945b0ea3a39353f103a27ba8e64f4c41f4940ffd62138fbab0a5235d864d",
+        "e4a747d899093cdd9611f07c7708fed4976e4795b6262e8d78a7aeba88f78e79"
+      ]
+    },
+    {
+      "id": "cost-022",
+      "file": "articles/cost-022-柔性内焊与全自动外焊.md",
+      "sha256": "c88c794b979cb5806fdc1568ed919a4d0a1bb68aa2351be616452011bacfe9ab",
+      "normalized_sha256": "c88c794b979cb5806fdc1568ed919a4d0a1bb68aa2351be616452011bacfe9ab",
+      "frozen_sha256_variants": [
+        "c02beac275e21d7e217bb9a818ebe4141154b48c4f2b9ba43a958197973b1b2e",
+        "c88c794b979cb5806fdc1568ed919a4d0a1bb68aa2351be616452011bacfe9ab"
+      ]
+    },
+    {
+      "id": "cost-023",
+      "file": "articles/cost-023-移动式天然气放空回收.md",
+      "sha256": "2702021f1a55798375e5f28d95710c318c72c7df379ec2dea1286d2ca0213c65",
+      "normalized_sha256": "2702021f1a55798375e5f28d95710c318c72c7df379ec2dea1286d2ca0213c65",
+      "frozen_sha256_variants": [
+        "2702021f1a55798375e5f28d95710c318c72c7df379ec2dea1286d2ca0213c65",
+        "3170e7e4a59298f41f7371bc5e19065c985024e05d27287c06877a6475fed01c"
+      ]
+    },
+    {
+      "id": "cost-024",
+      "file": "articles/cost-024-场站绿化工程阅读.md",
+      "sha256": "1e12fc271b6b12f88cd8a4077296a1927b6e4680d25d53e181e31d56b2f87856",
+      "normalized_sha256": "1e12fc271b6b12f88cd8a4077296a1927b6e4680d25d53e181e31d56b2f87856",
+      "frozen_sha256_variants": [
+        "1e12fc271b6b12f88cd8a4077296a1927b6e4680d25d53e181e31d56b2f87856",
+        "bb9a91f21761066e7ef2e38ac3ee8f6a62369bf158f1218ed734b617f9da1fd2"
+      ]
+    },
+    {
+      "id": "cost-025",
+      "file": "articles/cost-025-完整性管理技术服务.md",
+      "sha256": "0e0e28e79f742a269f8e3e43bd9290e7a50032c6a1e042b8b8a0a925f0c159f6",
+      "normalized_sha256": "0e0e28e79f742a269f8e3e43bd9290e7a50032c6a1e042b8b8a0a925f0c159f6",
+      "frozen_sha256_variants": [
+        "0e0e28e79f742a269f8e3e43bd9290e7a50032c6a1e042b8b8a0a925f0c159f6",
+        "28932206adf5d953e22a430f08d553dc7adcee8fa21aa45bc525cbea7dca6b4b"
+      ]
+    },
+    {
+      "id": "cost-026",
+      "file": "articles/cost-026-全费用清单单价五册结构.md",
+      "sha256": "d534f8245acfc66189e0a41ff62f8c520b555b8d723ca944ae60347880c5de17",
+      "normalized_sha256": "d534f8245acfc66189e0a41ff62f8c520b555b8d723ca944ae60347880c5de17",
+      "frozen_sha256_variants": [
+        "817096418a63d5ad40a12ccc2b8a2c9a20b136e00270d9168709a38f28c29890",
+        "d534f8245acfc66189e0a41ff62f8c520b555b8d723ca944ae60347880c5de17"
+      ]
+    },
+    {
+      "id": "cost-027",
+      "file": "articles/cost-027-全费用综合单价构成.md",
+      "sha256": "57fb326271aa2885e8ec8af1c05adcbc85256d769db7cb1d622f7990bffb4149",
+      "normalized_sha256": "57fb326271aa2885e8ec8af1c05adcbc85256d769db7cb1d622f7990bffb4149",
+      "frozen_sha256_variants": [
+        "4489d2a5a68434bd0198e06ecd5cfab77de14dc99aa94aa5150d79fe520a2e81",
+        "57fb326271aa2885e8ec8af1c05adcbc85256d769db7cb1d622f7990bffb4149"
+      ]
+    },
+    {
+      "id": "cost-028",
+      "file": "articles/cost-028-清单名称阈值表达.md",
+      "sha256": "c778d7f09fe4c71734dd72be312d51e2aeef91594e83c5c17a7ed13b0b96b913",
+      "normalized_sha256": "c778d7f09fe4c71734dd72be312d51e2aeef91594e83c5c17a7ed13b0b96b913",
+      "frozen_sha256_variants": [
+        "c778d7f09fe4c71734dd72be312d51e2aeef91594e83c5c17a7ed13b0b96b913",
+        "c887332a7453b84fa03d0ffe4794ce7e8cca082c1db790cf45d3a6321e90439d"
+      ]
+    },
+    {
+      "id": "cost-029",
+      "file": "articles/cost-029-子目不足时补充清单单价.md",
+      "sha256": "539d02c9e9526f4c5af95d425d0a833520d560b5c89eae4e4b324c6c8a592ac3",
+      "normalized_sha256": "539d02c9e9526f4c5af95d425d0a833520d560b5c89eae4e4b324c6c8a592ac3",
+      "frozen_sha256_variants": [
+        "539d02c9e9526f4c5af95d425d0a833520d560b5c89eae4e4b324c6c8a592ac3",
+        "c8b41e800457ba990a42d48e17b8c7d0c9e5a28f5b5cebc269255ba62308f7f2"
+      ]
+    },
+    {
+      "id": "cost-030",
+      "file": "articles/cost-030-清单工程量与计量单位.md",
+      "sha256": "f709040bf3bff490cd9c081927c2f8eb4f1cdc5331a379a4da168698e61c550d",
+      "normalized_sha256": "f709040bf3bff490cd9c081927c2f8eb4f1cdc5331a379a4da168698e61c550d",
+      "frozen_sha256_variants": [
+        "3ebd03bb1e82d86d59a70af2ce217fc721e643f17cac8534d53ab3271f06dec7",
+        "f709040bf3bff490cd9c081927c2f8eb4f1cdc5331a379a4da168698e61c550d"
+      ]
+    },
+    {
+      "id": "cost-031",
+      "file": "articles/cost-031-建设用地与赔补费用.md",
+      "sha256": "7d0adb5dbaacde4cec9d5b6a48d449a0a8b1df252992277bdc87d31dbb2b0bf1",
+      "normalized_sha256": "7d0adb5dbaacde4cec9d5b6a48d449a0a8b1df252992277bdc87d31dbb2b0bf1",
+      "frozen_sha256_variants": [
+        "7d0adb5dbaacde4cec9d5b6a48d449a0a8b1df252992277bdc87d31dbb2b0bf1",
+        "e0abe58a8a43ff77b84db4ad0c22b8b2851761f0f50f96d052e1473e47390ee6"
+      ]
+    },
+    {
+      "id": "cost-032",
+      "file": "articles/cost-032-前期工作费用阅读.md",
+      "sha256": "7461f1b1193b2c602abb7439a155973f3e664ce6a298fd260cc640d1da62ef78",
+      "normalized_sha256": "7461f1b1193b2c602abb7439a155973f3e664ce6a298fd260cc640d1da62ef78",
+      "frozen_sha256_variants": [
+        "7461f1b1193b2c602abb7439a155973f3e664ce6a298fd260cc640d1da62ef78",
+        "c03fcd3bad27698f8c6c9672de0f7d3582f1cc70e3e885d4da730cfbc977d57f"
+      ]
+    },
+    {
+      "id": "cost-033",
+      "file": "articles/cost-033-建设管理监理与造价咨询费用.md",
+      "sha256": "ea13460023e81d29005ac3daab0787db0e0d61afbaefd2d06c4a07913c861ca9",
+      "normalized_sha256": "ea13460023e81d29005ac3daab0787db0e0d61afbaefd2d06c4a07913c861ca9",
+      "frozen_sha256_variants": [
+        "ac3fa88ec89aac55f0368d21d520c87419d881f4f03012e15b79666025a5b743",
+        "ea13460023e81d29005ac3daab0787db0e0d61afbaefd2d06c4a07913c861ca9"
+      ]
+    },
+    {
+      "id": "cost-034",
+      "file": "articles/cost-034-专项评价及验收费.md",
+      "sha256": "b6aca1c0e4c1d693b1daf22e1d56a981b400fb0ad1a1108e6c62089c025ecb64",
+      "normalized_sha256": "b6aca1c0e4c1d693b1daf22e1d56a981b400fb0ad1a1108e6c62089c025ecb64",
+      "frozen_sha256_variants": [
+        "0100d93158ff933434e7040b172d0d84f70db5fb03327a0efee677b6834237b0",
+        "b6aca1c0e4c1d693b1daf22e1d56a981b400fb0ad1a1108e6c62089c025ecb64"
+      ]
+    },
+    {
+      "id": "cost-035",
+      "file": "articles/cost-035-生产准备与培训费用.md",
+      "sha256": "846afb48d55b7657e1f8bf8a91e8fdd3a84ed832ee19754934f5cc061268a13f",
+      "normalized_sha256": "846afb48d55b7657e1f8bf8a91e8fdd3a84ed832ee19754934f5cc061268a13f",
+      "frozen_sha256_variants": [
+        "1916e2a816d5bde79c93e57b9e752fa5cf5d459669f56dce9f5bcd10f12a8f90",
+        "846afb48d55b7657e1f8bf8a91e8fdd3a84ed832ee19754934f5cc061268a13f"
+      ]
+    },
+    {
+      "id": "cost-036",
+      "file": "articles/cost-036-概算指标的费用组成.md",
+      "sha256": "62d62bbe76b6c370ebf060ff595853bdd6b2d0f8196d5b3b2001367dbcf733c9",
+      "normalized_sha256": "62d62bbe76b6c370ebf060ff595853bdd6b2d0f8196d5b3b2001367dbcf733c9",
+      "frozen_sha256_variants": [
+        "62d62bbe76b6c370ebf060ff595853bdd6b2d0f8196d5b3b2001367dbcf733c9",
+        "f1ccabec70327d900bd84ee8f0cd9b959bf9042f9449083af9d14e84b7a48dbd"
+      ]
+    },
+    {
+      "id": "cost-037",
+      "file": "articles/cost-037-设备储罐与工艺管道指标定位.md",
+      "sha256": "becec289e3a90ad0f44f84cf572862f06993f880bb72c4d518ad1bd699c9642e",
+      "normalized_sha256": "becec289e3a90ad0f44f84cf572862f06993f880bb72c4d518ad1bd699c9642e",
+      "frozen_sha256_variants": [
+        "b8c261a387cb6391c6db78ab5b51ff1c36d84b40bedcaae17d0c9d4f1bec4e0f",
+        "becec289e3a90ad0f44f84cf572862f06993f880bb72c4d518ad1bd699c9642e"
+      ]
+    },
+    {
+      "id": "cost-038",
+      "file": "articles/cost-038-费用定额版本阅读.md",
+      "sha256": "4696fd05de99de6fd59c3804b0b026dd30cfea6146c6f87481d66e92c149b4fa",
+      "normalized_sha256": "4696fd05de99de6fd59c3804b0b026dd30cfea6146c6f87481d66e92c149b4fa",
+      "frozen_sha256_variants": [
+        "4696fd05de99de6fd59c3804b0b026dd30cfea6146c6f87481d66e92c149b4fa",
+        "819898cd2c452b705b1e2c62768f7f1482e9f276c82ee591912b42aaff83d8dd"
+      ]
+    },
+    {
+      "id": "cost-039",
+      "file": "articles/cost-039-地区与施工条件调整.md",
+      "sha256": "616ba87834d28a6db16eb12879cc121ab9beea2d418775f53423f5d34463dd3f",
+      "normalized_sha256": "616ba87834d28a6db16eb12879cc121ab9beea2d418775f53423f5d34463dd3f",
+      "frozen_sha256_variants": [
+        "616ba87834d28a6db16eb12879cc121ab9beea2d418775f53423f5d34463dd3f",
+        "78623cec391bc05252acf021e4bf8f3459a10c71b5c42d15b5a8ef62a8eba575"
+      ]
+    },
+    {
+      "id": "cost-040",
+      "file": "articles/cost-040-人工工日价格阅读.md",
+      "sha256": "1c9beba851042906ec302af3286970979ee922c97391ce64956e68154660d40d",
+      "normalized_sha256": "1c9beba851042906ec302af3286970979ee922c97391ce64956e68154660d40d",
+      "frozen_sha256_variants": [
+        "1c9beba851042906ec302af3286970979ee922c97391ce64956e68154660d40d",
+        "6d6081993e70a6ee0a09bc0b500d5cf29bddba5cbbbfca67481e9fc1369f9eba"
+      ]
+    },
+    {
+      "id": "cost-041",
+      "file": "articles/cost-041-建设项目总投资组成.md",
+      "sha256": "3bccc522123c6c9f8223a7383283c6ccaf98053e2d2591cb7ebbec747f3d7321",
+      "normalized_sha256": "3bccc522123c6c9f8223a7383283c6ccaf98053e2d2591cb7ebbec747f3d7321",
+      "frozen_sha256_variants": [
+        "3bccc522123c6c9f8223a7383283c6ccaf98053e2d2591cb7ebbec747f3d7321",
+        "4fae887108ef69e78832270656de6ed09e9b8fc7f014ce25acf8c9a65b951f08"
+      ]
+    },
+    {
+      "id": "cost-042",
+      "file": "articles/cost-042-数字项目税费与估算口径.md",
+      "sha256": "941f186396a113092836a30e650adfb54deae9dcb286ffcdec05442e4349d0ff",
+      "normalized_sha256": "941f186396a113092836a30e650adfb54deae9dcb286ffcdec05442e4349d0ff",
+      "frozen_sha256_variants": [
+        "941f186396a113092836a30e650adfb54deae9dcb286ffcdec05442e4349d0ff",
+        "fdb9d5a78aa08cfb138f59bccade8b1c908f89efbd667aaeaf84e1cbe8461deb"
+      ]
+    },
+    {
+      "id": "cost-043",
+      "file": "articles/cost-043-软件开发成本组成.md",
+      "sha256": "c423cf88fd0149599e11f6c8f5697a477f8f6e6e08c0bd356de75e7027458447",
+      "normalized_sha256": "c423cf88fd0149599e11f6c8f5697a477f8f6e6e08c0bd356de75e7027458447",
+      "frozen_sha256_variants": [
+        "8043fed9054958d4964e81c658a8a87e879a77013c936c05417659fe8ff5645d",
+        "c423cf88fd0149599e11f6c8f5697a477f8f6e6e08c0bd356de75e7027458447"
+      ]
+    },
+    {
+      "id": "cost-044",
+      "file": "articles/cost-044-功能点与开发成本测算.md",
+      "sha256": "d247be6e3931a972aa0fdee0f853ba8e567cd1a7657527ae66eb13360a241661",
+      "normalized_sha256": "d247be6e3931a972aa0fdee0f853ba8e567cd1a7657527ae66eb13360a241661",
+      "frozen_sha256_variants": [
+        "c0cf814f04ce81bff9ac61f1561071ce87d687fdf296253aa6da549a8ed7e1c5",
+        "d247be6e3931a972aa0fdee0f853ba8e567cd1a7657527ae66eb13360a241661"
+      ]
+    },
+    {
+      "id": "cost-045",
+      "file": "articles/cost-045-数字项目实施与培训费用.md",
+      "sha256": "fbd76da749850d4991fc0e690238fcd53a172ad0e0856b1dbe0e923cdd3ee9e1",
+      "normalized_sha256": "fbd76da749850d4991fc0e690238fcd53a172ad0e0856b1dbe0e923cdd3ee9e1",
+      "frozen_sha256_variants": [
+        "36d13b0f65485730fc90a74df57a36a6b2862864c5b6bdaae6c983f961b337ce",
+        "fbd76da749850d4991fc0e690238fcd53a172ad0e0856b1dbe0e923cdd3ee9e1"
+      ]
+    },
+    {
+      "id": "cost-046",
+      "file": "articles/cost-046-软件基准数据来源与样本.md",
+      "sha256": "904311a6089470f9f3a0e61877a8172540ef5cbba4774d0a439d802c9babf054",
+      "normalized_sha256": "904311a6089470f9f3a0e61877a8172540ef5cbba4774d0a439d802c9babf054",
+      "frozen_sha256_variants": [
+        "904311a6089470f9f3a0e61877a8172540ef5cbba4774d0a439d802c9babf054",
+        "e0f8ef9a0ea3ba6fb3884b3233c6d63783f17626d8d315b352f2e1042ee9c0a6"
+      ]
+    },
+    {
+      "id": "cost-047",
+      "file": "articles/cost-047-软件生产率与功能点单价.md",
+      "sha256": "fe2e1e6bc91184473ee578fcf8e177817ea501622c93660d1a7de04855ee4ef0",
+      "normalized_sha256": "fe2e1e6bc91184473ee578fcf8e177817ea501622c93660d1a7de04855ee4ef0",
+      "frozen_sha256_variants": [
+        "27b13868ac7ffe3f1269a79dcaa914407d6d6684e5ac55d60f437bd272b31f96",
+        "fe2e1e6bc91184473ee578fcf8e177817ea501622c93660d1a7de04855ee4ef0"
+      ]
+    },
+    {
+      "id": "cost-048",
+      "file": "articles/cost-048-软件质量与工作量指标.md",
+      "sha256": "20cb2e11b8406700fc1b87ec9d9747ff83265808b2e1f3c6829aaa223ad7754e",
+      "normalized_sha256": "20cb2e11b8406700fc1b87ec9d9747ff83265808b2e1f3c6829aaa223ad7754e",
+      "frozen_sha256_variants": [
+        "20cb2e11b8406700fc1b87ec9d9747ff83265808b2e1f3c6829aaa223ad7754e",
+        "2befc4c717931b5bf421326a7ec7854c7a318a74ba762e228d24ab099cc1c9b6"
+      ]
+    },
+    {
+      "id": "cost-049",
+      "file": "articles/cost-049-软件规模与调整因素.md",
+      "sha256": "8542f074243c6f45fc3dae7c8e5a263d2a499d07125f8e1b79a15e1c8d69a5a0",
+      "normalized_sha256": "8542f074243c6f45fc3dae7c8e5a263d2a499d07125f8e1b79a15e1c8d69a5a0",
+      "frozen_sha256_variants": [
+        "839bbb1e60ac9f8ebff18e82f02d630818cf197559b3321b61254c888aa1ecd8",
+        "8542f074243c6f45fc3dae7c8e5a263d2a499d07125f8e1b79a15e1c8d69a5a0"
+      ]
+    },
+    {
+      "id": "cost-050",
+      "file": "articles/cost-050-软件基准数据的使用边界.md",
+      "sha256": "08943ea4358980c406581f0e43b82a43e655aeb10ab89b566b10913b6cded317",
+      "normalized_sha256": "08943ea4358980c406581f0e43b82a43e655aeb10ab89b566b10913b6cded317",
+      "frozen_sha256_variants": [
+        "08943ea4358980c406581f0e43b82a43e655aeb10ab89b566b10913b6cded317",
+        "14bd44d83f46b8573b52cf809ce1a4920d496b9040c4ba6e2163b5eabd18e401"
+      ]
+    }
+  ],
+  "new_articles": [
+    {
+      "id": "cost-051",
+      "body_sha256": "119451f199011ed21a7b06f89771d685d825446dde8affbf8040beac495fa452",
+      "source_evidence": [
+        {
+          "asset_id": "9676a4c3b58749c6",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+          "sha256": "e0a073bf103cbf66f551c3f500139584d1ede9b10623a988e9e1c668b252cf73",
+          "ranges": [
+            [
+              1264,
+              1304
+            ],
+            [
+              4808,
+              4816
+            ]
+          ],
+          "excerpts": [
+            "### 第三章 热煨弯管加工费\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 651 行，A 列。\n\n- Excel 第 652 行｜A列：本章清单单价适用于油气输送管道热煨弯管加工费。\n\n- Excel 第 653 行｜A列：一、清单单价包括内容\n\n- Excel 第 654 行｜A列：1.热煨弯管加工费：热煨弯管加工、检验。\n\n- Excel 第 655 行｜A列：二、清单单价不包括内容\n\n- Excel 第 656 行｜A列：1.热煨弯管防腐与防护层。\n\n- Excel 第 657 行｜A列：三、清单单价使用方法\n\n- Excel 第 658 行｜A列：1.热煨弯管加工费，按X80（L555）、X65（L450）-X70（L485）、X60（L415）及以下钢级分别计算。\n\n- Excel 第 659 行｜A列：2.热煨弯管加工费列入工程费用中的设备购置费。\n\n**表头定位：Excel 第 672 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中\n\n**表头定位：Excel 第 673 行**｜D列=单位｜E列=主材用量｜F列=（元）｜G列=规费｜H列=安全生产费（元）\n\n#### （元）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 674 行，G 列。\n\n### 第三章 热煨弯管加工费\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 675 行，A 列。\n\n#### 清单内容：热煨弯管加工、检验\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 676 行，A 列。\n\n- Excel 第 677 行｜A列（序号）=1｜B列（清单编码）=10301001｜C列（清单名称）=热煨弯管加工费 X80（L555）钢级｜D列（单位）=t｜F列（（元））=7079.65\n\n- Excel 第 678 行｜A列（序号）=2｜B列（清单编码）=10301002｜C列（清单名称）=热煨弯管加工费 X65（L450）-X70（L485）钢级｜D列（单位）=t｜F列（（元））=6194.69\n\n- Excel 第 679 行｜A列（序号）=3｜B列（清单编码）=10301003｜C列（清单名称）=热煨弯管加工费 X60（L415）钢级及以下｜D列（单位）=t｜F列（（元））=5309.73",
+            "- Excel 第 2465 行｜A列（序号）=143｜B列（清单编码）=10605483｜C列（清单名称）=热煨弯管安装(组合自动焊) D1422×21.4｜D列（单位）=个｜F列（（元））=19086.65｜G列（规费）=1161.55｜H列（安全生产费（元））=400.89\n\n- Excel 第 2466 行｜A列（序号）=144｜B列（清单编码）=10605484｜C列（清单名称）=热煨弯管安装(组合自动焊) D1422×25.7｜D列（单位）=个｜F列（（元））=21469.48｜G列（规费）=1182.98｜H列（安全生产费（元））=450.94\n\n- Excel 第 2467 行｜A列（序号）=145｜B列（清单编码）=10605485｜C列（清单名称）=热煨弯管安装(组合自动焊) D1422×30.8｜D列（单位）=个｜F列（（元））=24040.31｜G列（规费）=1206.28｜H列（安全生产费（元））=504.94\n\n- Excel 第 2468 行｜A列（序号）=146｜B列（清单编码）=10605486｜C列（清单名称）=热煨弯管安装(组合自动焊) D1422×32.1｜D列（单位）=个｜F列（（元））=26007.27｜G列（规费）=1221.35｜H列（安全生产费（元））=546.25\n\n- Excel 第 2469 行｜A列（序号）=147｜B列（清单编码）=10605487｜C列（清单名称）=热煨弯管安装(组合自动焊) D1422×38.5｜D列（单位）=个｜F列（（元））=26994.01｜G列（规费）=1159.62｜H列（安全生产费（元））=566.98"
+          ],
+          "headings": [
+            "（元）",
+            "第三章 热煨弯管加工费",
+            "清单内容：热煨弯管加工、检验"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-052",
+      "body_sha256": "e5ba8c42af01e7dd735b97594e8fc10e8861714e8f86da21d7de3d7918538922",
+      "source_evidence": [
+        {
+          "asset_id": "9676a4c3b58749c6",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+          "sha256": "e0a073bf103cbf66f551c3f500139584d1ede9b10623a988e9e1c668b252cf73",
+          "ranges": [
+            [
+              1306,
+              1340
+            ]
+          ],
+          "excerpts": [
+            "### 第四章 管段防腐、保温\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 681 行，A 列。\n\n- Excel 第 682 行｜A列：本章清单单价适用于油气输送管道三层PE外防腐层、热煨弯管防腐、内减阻涂层、保温与绝热。\n\n- Excel 第 683 行｜A列：一、清单单价包括内容\n\n- Excel 第 684 行｜A列：1.三层PE外防腐层：除锈、防腐层制作、检测。\n\n- Excel 第 685 行｜A列：2.热煨弯管防腐：除锈、防腐层制作、检测。\n\n- Excel 第 686 行｜A列：3.内减阻涂层：除锈、喷涂、检测。\n\n- Excel 第 687 行｜A列：4.保温、绝热：保温及保护层预制、检测、聚氨酯泡沫及聚乙烯夹克材料费、热缩防水帽安装及材料费。\n\n- Excel 第 688 行｜A列：二、清单单价使用方法\n\n- Excel 第 689 行｜A列：1.常温型外防腐层：聚乙烯防腐层最高设计温度不超过60℃。\n\n- Excel 第 690 行｜A列：2.高温型外防腐层：聚乙烯防腐层最高设计温度不超过80℃。\n\n- Excel 第 691 行｜A列：3.内减阻涂层：内涂层干膜厚度65-160μm，内涂后管道内壁表面粗糙度≤10μm。\n\n- Excel 第 692 行｜A列：4.管段防腐、保温列入工程费用中的设备购置费。\n\n- Excel 第 693 行｜A列：三、工程量计算规则\n\n- Excel 第 694 行｜A列：1.管段防腐、保温工程量，按防腐管段防腐保温面展开面积及规定损耗率（7‰）计算。\n\n**表头定位：Excel 第 699 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中\n\n**表头定位：Excel 第 700 行**｜D列=单位｜E列=主材用量｜F列=（元）｜G列=规费｜H列=安全生产费（元）\n\n#### （元）"
+          ],
+          "headings": [
+            "清单内容：热煨弯管加工、检验",
+            "第四章 管段防腐、保温",
+            "（元）"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-053",
+      "body_sha256": "783beff9630e0a83fa50b90498069b7dd95b7db70aa7c8ff7fd4c50d9bee1357",
+      "source_evidence": [
+        {
+          "asset_id": "9676a4c3b58749c6",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+          "sha256": "e0a073bf103cbf66f551c3f500139584d1ede9b10623a988e9e1c668b252cf73",
+          "ranges": [
+            [
+              1484,
+              1556
+            ],
+            [
+              11188,
+              11222
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 769 行｜A列：（3）冷弯弯管运输清单单价乘以1.46调整系数，实际运距不同时，180km以内每增减10km清单单价增减10.49%。\n\n- Excel 第 770 行｜A列：4.过路过桥费按管线实际长度及规定损耗率（7‰）计算，基本运距为80km，实际运距不同时，180km以内每增减10km清单单价增减5%。\n\n- Excel 第 771 行｜A列：5.运距超过180km时，超过部分按公路运输市场价格（元/t·km）计算运输费用。\n\n- Excel 第 772 行｜A列：6.绝热、保温管的运输按保温后管外径执行相应清单单价。\n\n**表头定位：Excel 第 789 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中\n\n**表头定位：Excel 第 790 行**｜D列=单位｜E列=主材用量｜F列=（元）｜G列=规费｜H列=安全生产费（元）\n\n#### （元）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 791 行，G 列。\n\n### 第五章 管段运输\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 792 行，A 列。\n\n#### 第一节 直管运输\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 793 行，A 列。\n\n#### 清单内容：准备、吊装、运输、卸车、返回\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 794 行，A 列。\n\n- Excel 第 795 行｜A列（序号）=1｜B列（清单编码）=10501001｜C列（清单名称）=防腐管段场外运输 D219.1｜D列（单位）=km｜F列（（元））=5896.03｜G列（规费）=206.86｜H列（安全生产费（元））=123.84\n\n- Excel 第 796 行｜A列（序号）=2｜B列（清单编码）=10501002｜C列（清单名称）=防腐管段场外运输 D273.1｜D列（单位）=km｜F列（（元））=6592.34｜G列（规费）=206.86｜H列（安全生产费（元））=138.46\n\n- Excel 第 797 行｜A列（序号）=3｜B列（清单编码）=10501003｜C列（清单名称）=防腐管段场外运输 D323.9｜D列（单位）=km｜F列（（元））=7653.78｜G列（规费）=221.88｜H列（安全生产费（元））=160.76\n\n- Excel 第 798 行｜A列（序号）=4｜B列（清单编码）=10501004｜C列（清单名称）=防腐管段场外运输 D355.6｜D列（单位）=km｜F列（（元））=8689.5｜G列（规费）=258.57｜H列（安全生产费（元））=182.51\n\n- Excel 第 799 行｜A列（序号）=5｜B列（清单编码）=10501005｜C列（清单名称）=防腐管段场外运输 D457｜D列（单位）=km｜F列（（元））=12230.27｜G列（规费）=331.06｜H列（安全生产费（元））=256.88\n\n- Excel 第 800 行｜A列（序号）=6｜B列（清单编码）=10501006｜C列（清单名称）=防腐管段场外运输 D508｜D列（单位）=km｜F列（（元））=15442.14｜G列（规费）=413.71｜H列（安全生产费（元））=324.34\n\n- Excel 第 801 行｜A列（序号）=7｜B列（清单编码）=10501007｜C列（清单名称）=防腐管段场外运输 D559｜D列（单位）=km｜F列（（元））=16899.7｜G列（规费）=413.71｜H列（安全生产费（元））=354.96\n\n- Excel 第 802 行｜A列（序号）=8｜B列（清单编码）=10501008｜C列（清单名称）=防腐管段场外运输 D660｜D列（单位）=km｜F列（（元））=20321.92｜G列（规费）=443.33｜H列（安全生产费（元））=426.84\n\n- Excel 第 803 行｜A列（序号）=9｜B列（清单编码）=10501009｜C列（清单名称）=防腐管段场外运输 D813｜D列（单位）=km｜F列（（元））=27067.88｜G列（规费）=591.4｜H列（安全生产费（元））=568.53\n\n- Excel 第 804 行｜A列（序号）=10｜B列（清单编码）=10501010｜C列（清单名称）=防腐管段场外运输 D914｜D列（单位）=km｜F列（（元））=37370.95｜G列（规费）=776.15｜H列（安全生产费（元））=784.93\n\n- Excel 第 805 行｜A列（序号）=11｜B列（清单编码）=10501011｜C列（清单名称）=防腐管段场外运输 D1016｜D列（单位）=km｜F列（（元））=47121.31｜G列（规费）=919.8｜H列（安全生产费（元））=989.73\n\n- Excel 第 806 行｜A列（序号）=12｜B列（清单编码）=10501012｜C列（清单名称）=防腐管段场外运输 D1219｜D列（单位）=km｜F列（（元））=67231.58｜G列（规费）=1241.58｜H列（安全生产费（元））=1412.12\n\n- Excel 第 807 行｜A列（序号）=13｜B列（清单编码）=10501013｜C列（清单名称）=防腐管段场外运输 D1422｜D列（单位）=km｜F列（（元））=80516.28｜G列（规费）=1683.29｜H列（安全生产费（元））=1691.15\n\n#### 第二节 热煨弯管运输\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 809 行，A 列。\n\n#### 清单内容：准备、吊装、运输、卸车、返回\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 810 行，A 列。\n\n- Excel 第 811 行｜A列（序号）=1｜B列（清单编码）=10502001｜C列（清单名称）=热煨弯管场外运输 D219.1-355.6｜D列（单位）=个｜F列（（元））=280.41｜G列（规费）=13.3｜H列（安全生产费（元））=5.89\n\n- Excel 第 812 行｜A列（序号）=2｜B列（清单编码）=10502002｜C列（清单名称）=热煨弯管场外运输 D406.4-559｜D列（单位）=个｜F列（（元））=330.45｜G列（规费）=15.2｜H列（安全生产费（元））=6.94\n\n- Excel 第 813 行｜A列（序号）=3｜B列（清单编码）=10502003｜C列（清单名称）=热煨弯管场外运输 D610-711｜D列（单位）=个｜F列（（元））=414.74｜G列（规费）=18.39｜H列（安全生产费（元））=8.71\n\n- Excel 第 814 行｜A列（序号）=4｜B列（清单编码）=10502004｜C列（清单名称）=热煨弯管场外运输 D813-914｜D列（单位）=个｜F列（（元））=650.43｜G列（规费）=24.75｜H列（安全生产费（元））=13.66\n\n- Excel 第 815 行｜A列（序号）=5｜B列（清单编码）=10502005｜C列（清单名称）=热煨弯管场外运输 D1016-1219｜D列（单位）=个｜F列（（元））=1485.89｜G列（规费）=33.11｜H列（安全生产费（元））=31.21\n\n- Excel 第 816 行｜A列（序号）=6｜B列（清单编码）=10502006｜C列（清单名称）=热煨弯管场外运输 D1422｜D列（单位）=个｜F列（（元））=1685.51｜G列（规费）=40.56｜H列（安全生产费（元））=35.4",
+            "- Excel 第 5741 行｜A列：（1）焊前预热：加热设备安装、加热、测温、加热设备拆除等。\n\n- Excel 第 5742 行｜A列：（2）焊后保温：保温被安装、拆除等。\n\n- Excel 第 5743 行｜A列：（3）焊后热处理：加热、温控设备及加热带安装、拆除，焊口加热、恒温、降温、热处理报告等。\n\n- Excel 第 5744 行｜A列：二、清单单价不包括内容\n\n- Excel 第 5745 行｜A列：1.管段运输过路过桥费。\n\n- Excel 第 5746 行｜A列：2.警示带、警示牌制作安装。\n\n- Excel 第 5747 行｜A列：3.施工作业带清理和施工便道修筑、管沟土石方开挖及回填、地貌恢复、管道保护构筑物。\n\n- Excel 第 5748 行｜A列：4.管道支架、吊架、管托和管墩的制作安装。\n\n- Excel 第 5749 行｜A列：三、清单单价使用方法\n\n- Excel 第 5750 行｜A列：1.钢制管段、非金属管运输\n\n- Excel 第 5751 行｜A列：（1）钢质防腐（保温）管段和非金属管场外运输基段运距为20km，实际运距超过或低于基段运距时，180km以内按每增减5km运距调整；运距超过180km时，超过部分按公路运输市场价格（元/t·km）计算运输费用。\n\n- Excel 第 5752 行｜A列：（2）使用时按管线实际长度及规定损耗率计算。\n\n- Excel 第 5753 行｜A列：（3）钢质防腐（保温）管段运输按管径、壁厚划分清单，冷弯弯管、热煨弯管、三通等各类管件已综合考虑，保温管段已综合考虑保温层厚度对运输的影响，使用时均不得调整。\n\n- Excel 第 5754 行｜A列：（4）非金属管运输按管径划分清单，双金属复合管运输执行钢质管段运输相应清单。\n\n- Excel 第 5755 行｜A列：（5）管段运输清单单价按平原考虑，山区运输时，综合考虑路面、装卸、倒运、车辆等因素，按表1-14-1系数调整。\n\n#### 表1-14-1 管段运输山区调整系数表\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 5756 行，A 列。\n\n**表头定位：Excel 第 5757 行**｜A列=序号｜B列=项目名称｜C列=运距｜D列=调整系数"
+          ],
+          "headings": [
+            "清单内容：准备、吊装、运输、卸车、返回",
+            "第二节 热煨弯管运输",
+            "清单内容：准备、吊装、运输、卸车、返回"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-054",
+      "body_sha256": "9d353d5172fa706f795a334c68634547ae2474c29397b8ab8e0d8295268f7a4f",
+      "source_evidence": [
+        {
+          "asset_id": "9676a4c3b58749c6",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+          "sha256": "e0a073bf103cbf66f551c3f500139584d1ede9b10623a988e9e1c668b252cf73",
+          "ranges": [
+            [
+              5420,
+              5456
+            ]
+          ],
+          "excerpts": [
+            "### 第七章 管道穿跨越\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 2781 行，A 列。\n\n- Excel 第 2782 行｜A列：本章清单单价适用于穿跨越管段组装焊接，铁路穿越管段安装就位，公路穿越，河流穿越，定向钻穿越，光（电）缆、管线交叉穿越，管道跨越工程。\n\n- Excel 第 2783 行｜A列：一、清单单价包括内容\n\n- Excel 第 2784 行｜A列：1.穿跨越管段组装焊接\n\n- Excel 第 2785 行｜A列：（1）一般穿跨越管段组装焊接（手工焊、半自动焊、组合自动焊、自动焊）：机械运布管、穿跨越管段组装焊接、检漏、管段连头、焊接保护棚、爬犁、爬犁房制作摊销。\n\n- Excel 第 2786 行｜A列：（2）山体隧道管段组装焊接（半自动焊、自动焊）：山体隧道内机械运布管、钢轨安拆、卷扬机基础及锚固、山体隧道内管段组装焊接、检漏、管段连头。\n\n- Excel 第 2787 行｜A列：（3）盾构隧道管段组装焊接（半自动焊、自动焊）：盾构隧道内机械运布管、钢轨安拆、盾构隧道内管段组装焊接、检漏、管段连头。\n\n- Excel 第 2788 行｜A列：（4）穿越管段竖井内组装焊接：机械运布管、钢轨安拆、管段组装焊接、检漏、牵引就位、管段连头。\n\n- Excel 第 2789 行｜A列：2.铁路穿越管段安装就位\n\n- Excel 第 2790 行｜A列：铁路穿越管段安装就位分顶箱涵穿越和顶管穿越两种方式。\n\n- Excel 第 2791 行｜A列：铁路穿越管道安装就位：管段下沟、支撑制作安装、管体穿越、两端封堵。\n\n- Excel 第 2792 行｜A列：3.公路穿越\n\n#### （1）开挖穿越公路\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 2793 行，A 列。\n\n- Excel 第 2794 行｜A列：开挖穿越公路分不带套管、带钢套管、带混凝土套管三种方式。\n\n- Excel 第 2795 行｜A列：①不带套管：修建绕行道路、路面开挖及恢复、管段下沟。\n\n- Excel 第 2796 行｜A列：②带钢套管：修建绕行道路、路面开挖及恢复、钢套管吊装就位组焊、管段下沟、支撑制作安装、管体穿越、两端封堵。\n\n- Excel 第 2797 行｜A列：③带混凝土套管：修建绕行道路、路面开挖及恢复、混凝土套管吊装就位接口、管段下沟、支撑制作安装、管体穿越、两端封堵。"
+          ],
+          "headings": [
+            "清单内容：准备工作、清污、配制材料、发泡保温、模具安拆",
+            "第七章 管道穿跨越",
+            "（1）开挖穿越公路"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-055",
+      "body_sha256": "197bd3974f8c0327f3bb62659bad87edc880ec257f14016800d7da50c6b2e775",
+      "source_evidence": [
+        {
+          "asset_id": "9676a4c3b58749c6",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md",
+          "sha256": "e0a073bf103cbf66f551c3f500139584d1ede9b10623a988e9e1c668b252cf73",
+          "ranges": [
+            [
+              10464,
+              10504
+            ]
+          ],
+          "excerpts": [
+            "### 第十一章 无损检测\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第1册《油气输送管道工程》`，Excel 第 5352 行，A 列。\n\n- Excel 第 5353 行｜A列：本章清单单价适用于油气输送管道焊口无损检测、第四方复评。\n\n- Excel 第 5354 行｜A列：一、清单单价包括内容\n\n- Excel 第 5355 行｜A列：1.无损检测\n\n- Excel 第 5356 行｜A列：（1）X射线胶片检测（RT）：训机、取曝光参数、试片、现场拍片探伤、暗室处理、底片评定、报告签发。\n\n- Excel 第 5357 行｜A列：（2）X射线数字成像检测（DR）：机器搬运、安装、布置防护区域、训机、作业坑、标识、清理工件表面、轨道安装、机器定位、曝光、图像扫描、评定，报告签发。\n\n- Excel 第 5358 行｜A列：（3）全自动超声检测（AUT）：划参考线、打磨、除锈、挖作业坑、校准、安装轨道、扫查、评定、打印、移动工程车、出具报告、数据刻盘。\n\n- Excel 第 5359 行｜A列：（4）超声检测（UT）：探伤条件及参数选择、仪器调校、机具搬运、焊缝清理除锈、涂抹耦合剂、探伤、检查。\n\n- Excel 第 5360 行｜A列：（5）相控阵超声检测（PAUT+TOFD）：划参考线、打磨、除锈、挖作业坑、校准、安装轨道、扫查、评定、打印、移动工程车、出具报告、数据刻盘。\n\n- Excel 第 5361 行｜A列：（6）相控阵超声检测（PAUT）：划参考线、打磨、除锈、挖作业坑、校准、安装轨道、扫查、评定、打印、移动工程车、出具报告、数据刻盘。\n\n- Excel 第 5362 行｜A列：2.第四方复评\n\n- Excel 第 5363 行｜A列：（1）X射线胶片检测（RT）第四方复评：X 射线检测结果复评、出具报告、数据刻盘。\n\n- Excel 第 5364 行｜A列：（2）X射线数字成像检测（DR）第四方复评：DR射线检测结果复评、出具报告、数据刻盘。\n\n- Excel 第 5365 行｜A列：（3）超声检测（UT）第四方复评：UT 检测结果复评、出具报告、数据刻盘。\n\n- Excel 第 5366 行｜A列：（4）全自动超声检测（AUT）第四方复评：AUT 检测结果复评、出具报告、数据刻盘。\n\n- Excel 第 5367 行｜A列：（5）相控阵超声检测（PAUT+TOFD）第四方复评：PAUT+TOFD 检测结果复评、出具报告、数据刻盘。\n\n- Excel 第 5368 行｜A列：二、清单单价使用方法\n\n- Excel 第 5369 行｜A列：1.无损检测及第四方复评均以“道口”为单位，按不同管径或壁厚执行相应清单单价。\n\n- Excel 第 5370 行｜A列：2.相控阵超声检测（PAUT）第四方复评，执行相控阵超声检测（PAUT+TOFD）第四方复评清单单价。\n\n- Excel 第 5371 行｜A列：3.根据工期计划建设项目需要安排冬季施工时，无损检测清单单价按25.41%比例综合计取冬季施工增加费。"
+          ],
+          "headings": [
+            "第六节 线路截断阀",
+            "清单内容：开箱检查、试压清洗、切管、支座安装、阀门吊装、焊接",
+            "第十一章 无损检测"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-056",
+      "body_sha256": "9350da92bc6d870ed0197d65734a1c20fab16c226293fef93b6eeeaf8029396c",
+      "source_evidence": [
+        {
+          "asset_id": "5c6d5e9151ba548e",
+          "file": "2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md",
+          "sha256": "3045fb725a54741f9ec17ba16d9567bf5b1369da44e20a43db8e8ad95322c8ff",
+          "ranges": [
+            [
+              998,
+              1028
+            ]
+          ],
+          "excerpts": [
+            "### 第三章 金属球形储罐制作安装工程\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第2册《储罐制作安装工程》`，Excel 第 534 行，A 列。\n\n- Excel 第 535 行｜A列：本章清单单价适用于金属球形储罐组对安装。\n\n- Excel 第 536 行｜A列：一、清单单价包括内容\n\n- Excel 第 537 行｜A列：金属球形储罐组对安装：球罐组装，立柱组对安装，水压试验及气密性试验，焊缝焊前预热与焊后热处理，金属焊接防护棚搭设与拆除，焊缝无损检测，球罐整体热处理，球罐及立柱刷漆，现场组装平台搭设与拆除，组装胎具制作安装与拆除，焊接工艺评定及产品试板试验，基础灌浆。\n\n- Excel 第 538 行｜A列：二、清单单价不包括内容\n\n- Excel 第 539 行｜A列：1.附属梯子、平台、栏杆的制作安装。\n\n- Excel 第 540 行｜A列：2.空气泡沫产生器、喷淋、消防装置的制作安装。\n\n- Excel 第 541 行｜A列：3.加热器及安装。\n\n- Excel 第 542 行｜A列：4.锻件、机加工件、外购件的制作或加工。\n\n- Excel 第 543 行｜A列：5.球罐的防腐、保温、脱脂。\n\n- Excel 第 544 行｜A列：6.防火设施、防雷接地。\n\n- Excel 第 545 行｜A列：三、清单单价使用方法\n\n- Excel 第 546 行｜A列：1.球罐组对安装按其容量及球皮厚度执行相应清单单价，工程量以设计图纸重量包括球壳板、支柱、拉杆及接管、加强板、人孔的全部重量计算，罐体上梯子、栏杆、扶手制作安装工程执行第三册相关清单单价。\n\n- Excel 第 547 行｜A列：2.球罐材质为低温钢时，执行相应清单单价乘以1.04调整系数。\n\n- Excel 第 548 行｜A列：3.球罐水压试验按一座单独进行考虑，同容量的两座及以上球罐连续交替试压时，试压用水量乘以0.85调整系数。"
+          ],
+          "headings": [
+            "清单内容：防火器安装",
+            "清单内容：空气泡沫产生器安装",
+            "第三章 金属球形储罐制作安装工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-057",
+      "body_sha256": "2111e6fe5588f4b1e621fb8ce010c06ed3f445f0454e52ab16025ed2c4c6dc01",
+      "source_evidence": [
+        {
+          "asset_id": "5c6d5e9151ba548e",
+          "file": "2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md",
+          "sha256": "3045fb725a54741f9ec17ba16d9567bf5b1369da44e20a43db8e8ad95322c8ff",
+          "ranges": [
+            [
+              402,
+              410
+            ],
+            [
+              704,
+              722
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 195 行｜A列：4.储罐标定费用。\n\n- Excel 第 196 行｜A列：三、清单单价使用方法\n\n- Excel 第 197 行｜A列：1.低温储罐制作安装清单单价按一个工地同时建造两座及以上储罐考虑，如果只建造一座，清单单价乘以1.15调整系数。\n\n- Excel 第 198 行｜A列：2.罐本体制作安装的金属重量包括内罐、外罐、底板、加强圈、抗风圈、承压环、拱顶梁、拱顶板以及罐体上的搭接、垫板、加强板等总重量。\n\n- Excel 第 199 行｜A列：3.罐本体制作安装中内外罐的清单单价包括板幅调整、承压圈、加强圈和抗风圈制作安装、储罐焊缝真空试漏、半成品运输、施工手段用料摊销、气顶升装置、瓜皮块预制作胎具、拱顶组装临时架台、壁板临时架台、壁板移动小车制作安装，使用时不得调整。",
+            "- Excel 第 368 行｜A列：3.储罐的防腐、保温。\n\n- Excel 第 369 行｜A列：4.储罐标定费用。\n\n- Excel 第 370 行｜A列：5.罐体防雷接地。\n\n- Excel 第 371 行｜A列：6.阴极保护。\n\n- Excel 第 372 行｜A列：三、清单单价使用方法\n\n- Excel 第 373 行｜A列：1.储罐施工方法已综合考虑，使用时不得调整。\n\n- Excel 第 374 行｜A列：2.水罐制作安装执行拱顶及内浮顶储罐制作安装清单单价，乘以0.95调整系数。\n\n- Excel 第 375 行｜A列：3.金属储罐制作安装是按一个工地同时建造同系列、同容量两座及以上储罐考虑的，如果只建造一座，清单单价乘以1.14调整系数，试压水用量乘以1.30调整系数。\n\n- Excel 第 376 行｜A列：4.拱顶罐、浮顶罐本体重量包括罐底板、罐壁板、罐顶板（浮顶）、包边角钢、加强圈、抗风圈以及罐体上垫板、补强板等总重量，不包括梯子、平台、扶手及附件重量。清单单价中的储罐重量按表2.2-1、表2.2-2、表2.2-3取定，若设计重量大于表中所列总重量，超过部分按清单单价乘以超重部分调整比例计算安装费。\n\n#### 表2.2-1 拱顶及内浮顶储罐重量及超重计算比例、试压用水量表"
+          ],
+          "headings": [
+            "第二册 储罐制作安装工程",
+            "说 明",
+            "第一章 液化天然气（LNG）低温储罐制作安装工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-058",
+      "body_sha256": "2c468839de7db193815abbb88bb33a3128ceaa856ed356e44c574052bb46e5de",
+      "source_evidence": [
+        {
+          "asset_id": "5c6d5e9151ba548e",
+          "file": "2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md",
+          "sha256": "3045fb725a54741f9ec17ba16d9567bf5b1369da44e20a43db8e8ad95322c8ff",
+          "ranges": [
+            [
+              402,
+              420
+            ],
+            [
+              672,
+              686
+            ],
+            [
+              716,
+              722
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 195 行｜A列：4.储罐标定费用。\n\n- Excel 第 196 行｜A列：三、清单单价使用方法\n\n- Excel 第 197 行｜A列：1.低温储罐制作安装清单单价按一个工地同时建造两座及以上储罐考虑，如果只建造一座，清单单价乘以1.15调整系数。\n\n- Excel 第 198 行｜A列：2.罐本体制作安装的金属重量包括内罐、外罐、底板、加强圈、抗风圈、承压环、拱顶梁、拱顶板以及罐体上的搭接、垫板、加强板等总重量。\n\n- Excel 第 199 行｜A列：3.罐本体制作安装中内外罐的清单单价包括板幅调整、承压圈、加强圈和抗风圈制作安装、储罐焊缝真空试漏、半成品运输、施工手段用料摊销、气顶升装置、瓜皮块预制作胎具、拱顶组装临时架台、壁板临时架台、壁板移动小车制作安装，使用时不得调整。\n\n- Excel 第 200 行｜A列：4.铝吊顶、不锈钢吊顶吊杆，罐顶不锈钢接管、低温碳钢接管制作安装使用时不得调整，主材费另计。\n\n- Excel 第 201 行｜A列：5.储罐水压试验按储罐罐容执行相应清单，储罐水压试验是按同容量的两座及以上储罐连续交替试压考虑，如果只建造一座，清单单价乘以1.20调整系数，试压用水量乘以1.30调整系数。\n\n- Excel 第 202 行｜A列：6.液化天然气低温储罐主要材料损耗见表2.1-1。\n\n#### 表2.1-1 液化天然气（LNG）低温储罐主要材料损耗率表\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第2册《储罐制作安装工程》`，Excel 第 203 行，A 列。",
+            "> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第2册《储罐制作安装工程》`，Excel 第 352 行，A 列。\n\n- Excel 第 353 行｜A列：本章清单单价适用于拱顶储罐、浮顶（双盘、单盘）储罐、不锈钢拱顶储罐、附属设施制作安装。\n\n- Excel 第 354 行｜A列：一、清单单价包括内容\n\n- Excel 第 355 行｜A列：1.拱顶（内浮顶）储罐制作安装：罐体预制安装，附件（人孔、透光孔、排污孔、罐顶结合管、罐壁结合管、呼吸阀、安全阀、通气阀、清扫孔、通气孔、导向管、量油管等）安装，无损检测，水压试验，胎具摊销（壁板卷弧胎具制作、型钢煨弯胎具制作、顶板预制胎具制作、顶板组装胎具制作安装拆除等），梯子、平台、栏杆、扶手制作安装及刷漆，半成品运输。\n\n- Excel 第 356 行｜A列：2.双盘（单盘）浮顶储罐制作安装：罐体、加强圈、抗风圈预制安装，附件（人孔、透光孔、排污孔、罐顶结合管、罐壁结合管、紧急排水管、进出油管、呼吸阀、安全阀、通气阀、预留口、量油帽、清扫孔、通气孔、导向管、量油管、一次密封装置、二次密封装置、浮船及单盘支柱等）安装，无损检测及升降试验，严密性试验，胎具摊销（壁板卷弧胎具制作、型钢煨弯胎具制作、内脚手架正装胎具制作安装拆除、外脚手架安装拆除、船舱胎具制作等），浮梯、盘梯平台等制作安装及刷漆，半成品运输。\n\n- Excel 第 357 行｜A列：3.不锈钢拱顶储罐制作安装：罐体预制安装，附件（人孔、透光孔、排污孔、罐顶结合管、罐壁结合管、呼吸阀、安全阀、通气阀、清扫孔、通气孔、导向管、量油管等）安装，无损检测，水压试验，胎具摊销（壁板卷弧胎具制作、型钢煨弯胎具制作、顶板预制胎具制作、顶板组装胎具制作安装拆除等），梯子、平台、栏杆、扶手制作安装及刷漆，半成品运输。\n\n- Excel 第 358 行｜A列：4.附属设施制作安装\n\n- Excel 第 359 行｜A列：（1）搅拌器安装：搅拌器孔制作安装、搅拌器安装。",
+            "- Excel 第 374 行｜A列：2.水罐制作安装执行拱顶及内浮顶储罐制作安装清单单价，乘以0.95调整系数。\n\n- Excel 第 375 行｜A列：3.金属储罐制作安装是按一个工地同时建造同系列、同容量两座及以上储罐考虑的，如果只建造一座，清单单价乘以1.14调整系数，试压水用量乘以1.30调整系数。\n\n- Excel 第 376 行｜A列：4.拱顶罐、浮顶罐本体重量包括罐底板、罐壁板、罐顶板（浮顶）、包边角钢、加强圈、抗风圈以及罐体上垫板、补强板等总重量，不包括梯子、平台、扶手及附件重量。清单单价中的储罐重量按表2.2-1、表2.2-2、表2.2-3取定，若设计重量大于表中所列总重量，超过部分按清单单价乘以超重部分调整比例计算安装费。\n\n#### 表2.2-1 拱顶及内浮顶储罐重量及超重计算比例、试压用水量表"
+          ],
+          "headings": [
+            "说 明",
+            "第一章 液化天然气（LNG）低温储罐制作安装工程",
+            "表2.1-1 液化天然气（LNG）低温储罐主要材料损耗率表"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-059",
+      "body_sha256": "3de5a2acc77697de6197f71e8541dabc0db75fb48ecc2a7a9b22e6e09952927d",
+      "source_evidence": [
+        {
+          "asset_id": "5c6d5e9151ba548e",
+          "file": "2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md",
+          "sha256": "3045fb725a54741f9ec17ba16d9567bf5b1369da44e20a43db8e8ad95322c8ff",
+          "ranges": [
+            [
+              408,
+              440
+            ],
+            [
+              716,
+              722
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 198 行｜A列：2.罐本体制作安装的金属重量包括内罐、外罐、底板、加强圈、抗风圈、承压环、拱顶梁、拱顶板以及罐体上的搭接、垫板、加强板等总重量。\n\n- Excel 第 199 行｜A列：3.罐本体制作安装中内外罐的清单单价包括板幅调整、承压圈、加强圈和抗风圈制作安装、储罐焊缝真空试漏、半成品运输、施工手段用料摊销、气顶升装置、瓜皮块预制作胎具、拱顶组装临时架台、壁板临时架台、壁板移动小车制作安装，使用时不得调整。\n\n- Excel 第 200 行｜A列：4.铝吊顶、不锈钢吊顶吊杆，罐顶不锈钢接管、低温碳钢接管制作安装使用时不得调整，主材费另计。\n\n- Excel 第 201 行｜A列：5.储罐水压试验按储罐罐容执行相应清单，储罐水压试验是按同容量的两座及以上储罐连续交替试压考虑，如果只建造一座，清单单价乘以1.20调整系数，试压用水量乘以1.30调整系数。\n\n- Excel 第 202 行｜A列：6.液化天然气低温储罐主要材料损耗见表2.1-1。\n\n#### 表2.1-1 液化天然气（LNG）低温储罐主要材料损耗率表\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第2册《储罐制作安装工程》`，Excel 第 203 行，A 列。\n\n**表头定位：Excel 第 204 行**｜A列=序号｜B列=主要材料名称｜C列=损耗率（%）\n\n- Excel 第 205 行｜A列（序号）=1｜B列（主要材料名称）=内罐钢板｜C列（损耗率（%））=4\n\n- Excel 第 206 行｜A列（序号）=2｜B列（主要材料名称）=外罐内衬板｜C列（损耗率（%））=4\n\n- Excel 第 207 行｜A列（序号）=3｜B列（主要材料名称）=拱顶板、拱顶梁｜C列（损耗率（%））=5\n\n- Excel 第 208 行｜A列（序号）=4｜B列（主要材料名称）=罐内吊顶｜C列（损耗率（%））=5\n\n- Excel 第 209 行｜A列（序号）=5｜B列（主要材料名称）=接管｜C列（损耗率（%））=4\n\n- Excel 第 210 行｜A列（序号）=6｜B列（主要材料名称）=罐内金属结构｜C列（损耗率（%））=6\n\n- Excel 第 211 行｜A列：四、工程量计算规则\n\n- Excel 第 212 行｜A列：1.低温储罐本体制作安装中外罐、内罐、铝吊顶、罐内金属结构制作安装，以“t”为计量单位；不锈钢吊顶吊杆、罐顶不锈钢接管以及低温碳钢接管制作安装，按储罐容积，以“座”为计量单位。\n\n- Excel 第 213 行｜A列：2.低温储罐水压、气压试验，按储罐容积，以“座”为计量单位。",
+            "- Excel 第 374 行｜A列：2.水罐制作安装执行拱顶及内浮顶储罐制作安装清单单价，乘以0.95调整系数。\n\n- Excel 第 375 行｜A列：3.金属储罐制作安装是按一个工地同时建造同系列、同容量两座及以上储罐考虑的，如果只建造一座，清单单价乘以1.14调整系数，试压水用量乘以1.30调整系数。\n\n- Excel 第 376 行｜A列：4.拱顶罐、浮顶罐本体重量包括罐底板、罐壁板、罐顶板（浮顶）、包边角钢、加强圈、抗风圈以及罐体上垫板、补强板等总重量，不包括梯子、平台、扶手及附件重量。清单单价中的储罐重量按表2.2-1、表2.2-2、表2.2-3取定，若设计重量大于表中所列总重量，超过部分按清单单价乘以超重部分调整比例计算安装费。\n\n#### 表2.2-1 拱顶及内浮顶储罐重量及超重计算比例、试压用水量表"
+          ],
+          "headings": [
+            "说 明",
+            "第一章 液化天然气（LNG）低温储罐制作安装工程",
+            "表2.1-1 液化天然气（LNG）低温储罐主要材料损耗率表"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-060",
+      "body_sha256": "d33d638b4521b5f4c056f57ca5f7febbbb6904617fe5650d4844105520ea4b6f",
+      "source_evidence": [
+        {
+          "asset_id": "5c6d5e9151ba548e",
+          "file": "2024全费用清单单价-第2册储罐制作安装工程-Excel问答版.md",
+          "sha256": "3045fb725a54741f9ec17ba16d9567bf5b1369da44e20a43db8e8ad95322c8ff",
+          "ranges": [
+            [
+              672,
+              690
+            ],
+            [
+              716,
+              722
+            ],
+            [
+              844,
+              868
+            ]
+          ],
+          "excerpts": [
+            "> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第2册《储罐制作安装工程》`，Excel 第 352 行，A 列。\n\n- Excel 第 353 行｜A列：本章清单单价适用于拱顶储罐、浮顶（双盘、单盘）储罐、不锈钢拱顶储罐、附属设施制作安装。\n\n- Excel 第 354 行｜A列：一、清单单价包括内容\n\n- Excel 第 355 行｜A列：1.拱顶（内浮顶）储罐制作安装：罐体预制安装，附件（人孔、透光孔、排污孔、罐顶结合管、罐壁结合管、呼吸阀、安全阀、通气阀、清扫孔、通气孔、导向管、量油管等）安装，无损检测，水压试验，胎具摊销（壁板卷弧胎具制作、型钢煨弯胎具制作、顶板预制胎具制作、顶板组装胎具制作安装拆除等），梯子、平台、栏杆、扶手制作安装及刷漆，半成品运输。\n\n- Excel 第 356 行｜A列：2.双盘（单盘）浮顶储罐制作安装：罐体、加强圈、抗风圈预制安装，附件（人孔、透光孔、排污孔、罐顶结合管、罐壁结合管、紧急排水管、进出油管、呼吸阀、安全阀、通气阀、预留口、量油帽、清扫孔、通气孔、导向管、量油管、一次密封装置、二次密封装置、浮船及单盘支柱等）安装，无损检测及升降试验，严密性试验，胎具摊销（壁板卷弧胎具制作、型钢煨弯胎具制作、内脚手架正装胎具制作安装拆除、外脚手架安装拆除、船舱胎具制作等），浮梯、盘梯平台等制作安装及刷漆，半成品运输。\n\n- Excel 第 357 行｜A列：3.不锈钢拱顶储罐制作安装：罐体预制安装，附件（人孔、透光孔、排污孔、罐顶结合管、罐壁结合管、呼吸阀、安全阀、通气阀、清扫孔、通气孔、导向管、量油管等）安装，无损检测，水压试验，胎具摊销（壁板卷弧胎具制作、型钢煨弯胎具制作、顶板预制胎具制作、顶板组装胎具制作安装拆除等），梯子、平台、栏杆、扶手制作安装及刷漆，半成品运输。\n\n- Excel 第 358 行｜A列：4.附属设施制作安装\n\n- Excel 第 359 行｜A列：（1）搅拌器安装：搅拌器孔制作安装、搅拌器安装。\n\n- Excel 第 360 行｜A列：（2）加热器制作安装：加热蒸汽盘管和加热蒸汽排管制作安装、水压试验、加热器支座预制安装。\n\n- Excel 第 361 行｜A列：（3）防火器安装：防火器安装。",
+            "- Excel 第 374 行｜A列：2.水罐制作安装执行拱顶及内浮顶储罐制作安装清单单价，乘以0.95调整系数。\n\n- Excel 第 375 行｜A列：3.金属储罐制作安装是按一个工地同时建造同系列、同容量两座及以上储罐考虑的，如果只建造一座，清单单价乘以1.14调整系数，试压水用量乘以1.30调整系数。\n\n- Excel 第 376 行｜A列：4.拱顶罐、浮顶罐本体重量包括罐底板、罐壁板、罐顶板（浮顶）、包边角钢、加强圈、抗风圈以及罐体上垫板、补强板等总重量，不包括梯子、平台、扶手及附件重量。清单单价中的储罐重量按表2.2-1、表2.2-2、表2.2-3取定，若设计重量大于表中所列总重量，超过部分按清单单价乘以超重部分调整比例计算安装费。\n\n#### 表2.2-1 拱顶及内浮顶储罐重量及超重计算比例、试压用水量表",
+            "- Excel 第 451 行｜A列（序号）=7｜B列（清单编码）=20202007｜C列（清单名称）=150000m³双盘浮顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=3303.54｜G列（其 中）=290.94｜H列=93.9\n\n- Excel 第 454 行｜A列：二、单盘浮顶储罐制作安装\n\n- Excel 第 455 行｜A列：清单内容：罐体、加强圈、抗风圈预制安装，附件安装，无损检测，升降试验，严密性试验，胎具摊销，浮梯、盘梯平台等制作安装及刷漆，半成品运输\n\n- Excel 第 456 行｜A列（序号）=8｜B列（清单编码）=20202008｜C列（清单名称）=3000m³单盘浮顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=6140.55｜G列（其 中）=600.6｜H列=174.54\n\n- Excel 第 457 行｜A列（序号）=9｜B列（清单编码）=20202009｜C列（清单名称）=5000m³单盘浮顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=5123.93｜G列（其 中）=510.51｜H列=145.64\n\n- Excel 第 458 行｜A列（序号）=10｜B列（清单编码）=20202010｜C列（清单名称）=10000m³单盘浮顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=4421.4｜G列（其 中）=439.53｜H列=125.68\n\n- Excel 第 459 行｜A列（序号）=11｜B列（清单编码）=20202011｜C列（清单名称）=20000m³单盘浮顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=3890｜G列（其 中）=368.55｜H列=110.57\n\n- Excel 第 460 行｜A列（序号）=12｜B列（清单编码）=20202012｜C列（清单名称）=30000m³单盘浮顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=3594.31｜G列（其 中）=346.32｜H列=102.17\n\n- Excel 第 461 行｜A列（序号）=13｜B列（清单编码）=20202013｜C列（清单名称）=50000m³单盘浮顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=3246.15｜G列（其 中）=297.96｜H列=92.27\n\n#### 第三节 不锈钢拱顶储罐制作安装\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第2册《储罐制作安装工程》`，Excel 第 463 行，A 列。\n\n- Excel 第 464 行｜A列：清单内容：罐体预制安装、附件安装、无损检测、水压试验、胎具摊销、梯平栏制作安装及刷漆、半成品运输\n\n- Excel 第 465 行｜A列（序号）=1｜B列（清单编码）=20203001｜C列（清单名称）=200m³不锈钢拱顶储罐制作安装｜D列（计量单位）=t｜F列（清单单价）=10339.95｜G列（其 中）=833.82｜H列=293.91"
+          ],
+          "headings": [
+            "第六节 低温储罐保冷",
+            "清单内容：保冷材料的安装、铺设、填充",
+            "第二章 金属储罐制作安装工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-061",
+      "body_sha256": "ed07ec44461b7369622ea39126c872fdadb092bb4f7d480347dc60db08038a17",
+      "source_evidence": [
+        {
+          "asset_id": "c3f7eda0d116e2cc",
+          "file": "2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "sha256": "8ec3cb960cb685acca5ed9051d57a2f43f275aa6992b632367b96be293cc43e3",
+          "ranges": [
+            [
+              1946,
+              1986
+            ],
+            [
+              14258,
+              14264
+            ],
+            [
+              14630,
+              14636
+            ]
+          ],
+          "excerpts": [
+            "### 第二章 金属结构制作安装工程\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第3册《通用安装工程》`，Excel 第 943 行，A 列。\n\n- Excel 第 944 行｜A列：本章清单单价适用于工艺金属结构制作安装、低温保冷管道支架安装工程。\n\n- Excel 第 945 行｜A列：一、清单单价包括内容\n\n- Excel 第 946 行｜A列：1.工艺金属结构制作安装：桁架、管廊、设备框架、平台、梯子扶手栏杆等的制作、安装、现场组装平台铺设与拆除。\n\n- Excel 第 947 行｜A列：2.低温保冷管道支架组对安装：拆除组件、吊装就位、安装、修补调整。\n\n- Excel 第 948 行｜A列：二、清单单价不包括内容\n\n- Excel 第 949 行｜A列：1.金属结构防腐、防火。\n\n- Excel 第 950 行｜A列：2.高强螺栓连接管廊、设备框架中高强螺栓主材费。\n\n- Excel 第 951 行｜A列：三、清单单价使用方法\n\n- Excel 第 952 行｜A列：1.工艺金属结构制作安装，以设计标高正负零为准，安装高度超过40m时，计取超高作业降效增加费，超过部分按清单单价乘以1.18调整系数。\n\n- Excel 第 953 行｜A列：2.低温保冷管道支架为低温成品到货支架，包括保冷层、管夹、管托的拆解、安装。\n\n- Excel 第 954 行｜A列：四、工程量计算规则\n\n- Excel 第 955 行｜A列：1.工艺金属结构制作安装，以“t”为计量单位。\n\n- Excel 第 956 行｜A列：2.高强螺栓连接管廊、设备框架制作安装中已包含连接螺栓安装，螺栓主材另计（螺栓损耗率按3%计算）。\n\n- Excel 第 957 行｜A列：3.平台制作安装适用于独立平台，分为钢格板平台和花纹钢板平台，以“t”为计量单位，包括梁、板、柱的重量，不包括梯子、扶手、栏杆的重量。\n\n- Excel 第 958 行｜A列：4.低温保冷管道支架组对安装，按照公称直径，以“个”为计量单位。\n\n**表头定位：Excel 第 959 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中\n\n**表头定位：Excel 第 960 行**｜D列=单位｜E列=主材用量｜F列=（元）｜G列=规费（元）｜H列=安全生产费\n\n#### （元）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第3册《通用安装工程》`，Excel 第 961 行，H 列。",
+            "- Excel 第 7086 行｜B列（清单编码）=主材｜C列（清单名称）=防静电涂料｜D列（单位）=kg｜E列（主材用量）=0.196\n\n- Excel 第 7088 行｜A列：三、金属结构刷油、防腐蚀\n\n- Excel 第 7089 行｜A列：清单内容：施工准备、材料搬运、调配、刷（喷）涂。\n\n- Excel 第 7090 行｜A列（序号）=46｜B列（清单编码）=30802046｜C列（清单名称）=梯子、平台、栏杆钢结构刷防锈漆(银粉漆、调和漆、磁漆、醇酸磁漆、耐酸漆、沥青漆及沥青船底漆)两遍｜D列（单位）=kg｜F列（（元））=0.75｜G列（规费（元））=0.08｜H列（安全生产）=0.02",
+            "- Excel 第 7277 行｜B列（清单编码）=主材｜C列（清单名称）=厚型防火涂料｜D列（单位）=kg｜E列（主材用量）=16.319\n\n- Excel 第 7279 行｜A列：八、金属结构刷（喷）涂防火涂料\n\n- Excel 第 7280 行｜A列：清单内容：施工准备、材料搬运、调配、刷（喷）涂。\n\n- Excel 第 7281 行｜A列（序号）=118｜B列（清单编码）=30802118｜C列（清单名称）=梯子、平台、栏杆钢结构刷超薄型防火涂料刷涂 厚度1.5mm/耐火极限1.5h｜D列（单位）=kg｜F列（（元））=0.94｜G列（规费（元））=0.14｜H列（安全生产）=0.03"
+          ],
+          "headings": [
+            "清单内容：本体安装",
+            "第二章 金属结构制作安装工程",
+            "（元）"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-062",
+      "body_sha256": "ea5fb9ce3493d045b022119924f7d372b4fa948e085e4421b58bfa675d7b90c9",
+      "source_evidence": [
+        {
+          "asset_id": "c3f7eda0d116e2cc",
+          "file": "2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "sha256": "8ec3cb960cb685acca5ed9051d57a2f43f275aa6992b632367b96be293cc43e3",
+          "ranges": [
+            [
+              5054,
+              5058
+            ],
+            [
+              5668,
+              5698
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 2532 行｜A列：5.其他说明\n\n- Excel 第 2533 行｜A列：自动化控制仪表安装工程中的电气设备、元件安装，电缆保护管敷设，电缆沟挖填土方、铺砂、盖砖、盖保护板，电缆（线）敷设，电缆桥架（槽盒）安装，防雷接地装置安装等，执行本册第五章电气安装工程相应清单单价。\n\n- Excel 第 2534 行｜A列：四、工程量计算规则",
+            "### 第五章 电气安装工程\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第3册《通用安装工程》`，Excel 第 2874 行，A 列。\n\n- Excel 第 2875 行｜A列：本章清单单价适用于110kV及以下变电站工程、变配电装置、动力照明、光伏发电工程等。\n\n#### 第一节 变电站工程\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第3册《通用安装工程》`，Excel 第 2876 行，A 列。\n\n- Excel 第 2877 行｜A列：一、清单单价包括内容\n\n- Excel 第 2878 行｜A列：1.变压器安装：本体安装，端子箱、控制箱安装、设备本体电缆安装、引下线安装，铁构件制作安装，油过滤，接地，单体调试。\n\n- Excel 第 2879 行｜A列：2.电抗器安装：本体安装，端子箱、控制箱、本体至相邻一组（或台）设备连线、引下线安装，油过滤，接地，单体调试。\n\n- Excel 第 2880 行｜A列：3.消弧线圈安装：本体安装，端子箱、控制箱安装，设备连线，油过滤，接地，单体调试。\n\n- Excel 第 2881 行｜A列：4.接地变压器及消弧线圈成套装置安装：接地变压器、消弧线圈、隔离开关、避雷器及电压互感器等安装，接线，接地，单体调试。\n\n- Excel 第 2882 行｜A列：5.断路器安装：本体安装，本体至相邻一组（或台）设备连接线安装、端子箱安装，油过滤，接地，单体调试。\n\n- Excel 第 2883 行｜A列：6.SF6全封闭组合电器(GIS)安装：本体安装、真空处理，充SF6气体，分支母线安装，设备本体电缆安装，接地，单体调试。\n\n- Excel 第 2884 行｜A列：7.复合式组合电器（HGIS）安装：本体安装、抽真空，充SF6气体，设备本体电缆安装，附件安装，接地，单体调试。\n\n- Excel 第 2885 行｜A列：8.空气外绝缘高压组合电器（COMPASS）安装：本体安装，设备本体电缆安装，本体至相邻一组（或台）设备连接线安装、充SF6气体，接地，单体调试。\n\n- Excel 第 2886 行｜A列：9.耦合电容器安装：本体安装，本体至相邻一组（或台）设备连线安装，引下线安装，接地，单体调试。\n\n- Excel 第 2887 行｜A列：10.框架式电容器安装：电容器、隔离开关、放电线圈、避雷器、电抗器、支持绝缘子、端子箱、框架、网门等安装，设备连线安装，接地，单体调试。"
+          ],
+          "headings": [
+            "（元）",
+            "第三节 阀门安装",
+            "第四章 自动化控制仪表安装工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-063",
+      "body_sha256": "b03c8cd698374395d7b9956412bb9a7e4f283178cc494848c3d23f8864e5e30b",
+      "source_evidence": [
+        {
+          "asset_id": "c3f7eda0d116e2cc",
+          "file": "2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "sha256": "8ec3cb960cb685acca5ed9051d57a2f43f275aa6992b632367b96be293cc43e3",
+          "ranges": [
+            [
+              9738,
+              9784
+            ]
+          ],
+          "excerpts": [
+            "### 第六章 通信安装工程\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第3册《通用安装工程》`，Excel 第 4878 行，A 列。\n\n- Excel 第 4879 行｜A列：本章清单单价适用于通信工程的安装与调试。\n\n- Excel 第 4880 行｜A列：一、清单单价包括内容\n\n- Excel 第 4881 行｜A列：1.扩音对讲系统安装调试：安装就位、线路检查、系统试验。\n\n- Excel 第 4882 行｜A列：2.信息网络系统安装调试：定位安装、检测调试、设备加电试验、功能调试、系统试验。\n\n- Excel 第 4883 行｜A列：3.安全防范系统安装调试：\n\n- Excel 第 4884 行｜A列：（1）入侵探测设备安装、电视监控设备安装：设备组装、安装调试，指标测试、功能测试、联调。\n\n- Excel 第 4885 行｜A列：（2）出入口控制设备安装：设备组装、安装调试。\n\n- Excel 第 4886 行｜A列：（3）管道安全预警系统：单体模块功能测试，预警单元传感光路测试、性能测试、功能检查等。\n\n- Excel 第 4887 行｜A列：（4）防冲撞设施安装：液压油泵安装、配管配线安装、设备组装、安装调试。\n\n- Excel 第 4888 行｜A列：4.通信设备安装调测：设备安装（含组装、固定及设备线缆的连接等）、调测。\n\n- Excel 第 4889 行｜A列：5.敷设双绞线缆：\n\n- Excel 第 4890 行｜A列：（1）穿放、布放及测试双绞线缆：穿布放（含固定、做标记等）、封堵出口、测试等。\n\n- Excel 第 4891 行｜A列：（2）制作和连接跳线线缆：制作、连接、核对线序等。\n\n- Excel 第 4892 行｜A列：（3）跳线架、配线架：安装（含组装、固定及设备线缆的连接等）、核对线序、做标记等。\n\n- Excel 第 4893 行｜A列：6.敷设光缆：穿布放光缆、光纤连接、测试等。\n\n- Excel 第 4894 行｜A列：7.敷设电话线：穿布放电话线、接续等。\n\n- Excel 第 4895 行｜A列：8.敷设同轴电缆：穿布放（含连接）等。\n\n- Excel 第 4896 行｜A列：9.安装机柜（架）：安装（含组装、固定）等。\n\n- Excel 第 4897 行｜A列：二、清单单价不包括内容\n\n- Excel 第 4898 行｜A列：1.防冲撞设施基础及土石方。\n\n- Excel 第 4899 行｜A列：三、工程量计算规则\n\n- Excel 第 4900 行｜A列：1.通信设备根据名称、规格型号划分，以“套”或“台”为单位。"
+          ],
+          "headings": [
+            "（二）单轴跟踪式地面光伏组件",
+            "（三）双轴跟踪式地面光伏组件",
+            "第六章 通信安装工程"
+          ]
+        },
+        {
+          "asset_id": "ef1142901d94a9a9",
+          "file": "2024全费用清单单价-第4册其他工程-Excel问答版.md",
+          "sha256": "98ed18f1e3c6ee1d17e3383d23812edca00d466a8619455cd048f23d2959c2ae",
+          "ranges": [
+            [
+              406,
+              450
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 190 行｜A列：一、清单单价包括内容\n\n- Excel 第 191 行｜A列：1.通信光缆敷设\n\n- Excel 第 192 行｜A列：（1）敷设埋式光缆：施工测量、敷设光缆、光缆接续、测试等。\n\n- Excel 第 193 行｜A列：（2）敷设管道（硅管）光缆：施工测量、敷设硅管、硅管试通及充气试验、敷设光缆、光缆接续、测试等。\n\n- Excel 第 194 行｜A列：（3）人工穿放管道光缆：施工测量、穿放光缆、光缆接续、测试等。\n\n- Excel 第 195 行｜A列：（4）敷设塑料管道：敷设塑料管、试通等。\n\n- Excel 第 196 行｜A列：（5）布放水底光缆：施工测量、检查光缆、布放水底光缆、光缆接续、测试等。\n\n- Excel 第 197 行｜A列：2.人（手）孔安装\n\n- Excel 第 198 行｜A列：（1）砌筑人（手）孔：人（手）孔砌筑、孔内附件安装。\n\n- Excel 第 199 行｜A列：（2）成品人（手）孔：成品人（手）孔安装。\n\n- Excel 第 200 行｜A列：3.敷设埋式及管道市话电缆\n\n- Excel 第 201 行｜A列：（1）敷设埋式市话电缆：敷设市话电缆、电缆接续等。\n\n- Excel 第 202 行｜A列：（2）敷设管道（通道）市话电缆：穿放电缆、电缆接续等。\n\n- Excel 第 203 行｜A列：4.光（电）缆保护与防护\n\n- Excel 第 204 行｜A列：（1）铺设保护管、铺设水泥砂袋、原土袋：铺设保护管、敷设水泥砂袋及原土袋等。\n\n- Excel 第 205 行｜A列：（2）标石、警示牌：埋设标石、警示牌等。\n\n- Excel 第 206 行｜A列：（3）防雷、防蚀：布放排流线、消弧线、安装避雷针等。\n\n- Excel 第 207 行｜A列：（4）GPS定位：测量、记录等。\n\n- Excel 第 208 行｜A列：二、清单单价不包括内容\n\n- Excel 第 209 行｜A列：1.敷设埋式、管道（含硅管）光缆清单单价中不含土石方挖填、光缆保护与防护、光缆穿越其他线路、人（手）孔、警示带及标石的埋设。\n\n- Excel 第 210 行｜A列：2.水下冲槽。\n\n- Excel 第 211 行｜A列：三、清单单价使用方法\n\n- Excel 第 212 行｜A列：1.通信线路工程各项清单单价按与管道同沟敷设编制，通信线路单独敷设时清单单价乘以0.84调整系数。"
+          ],
+          "headings": [
+            "第四册 其他工程",
+            "说 明",
+            "第一章 通信线路工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-064",
+      "body_sha256": "0cd9e98e088715c046933a6d90d81bdc4e0a20d86b67b552ebca6f65608beeb5",
+      "source_evidence": [
+        {
+          "asset_id": "c3f7eda0d116e2cc",
+          "file": "2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "sha256": "8ec3cb960cb685acca5ed9051d57a2f43f275aa6992b632367b96be293cc43e3",
+          "ranges": [
+            [
+              12980,
+              13002
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 6479 行｜A列（序号）=370｜B列（清单编码）=30703370｜C列（清单名称）=室内消火栓安装｜D列（计量单位）=套｜F列（清单单价）=155.38｜G列（其 中）=24.18｜H列（安全生产费（元））=4.42\n\n- Excel 第 6480 行｜B列（清单编码）=主材｜C列（清单名称）=室内消火栓｜D列（计量单位）=套｜E列（设备或）=1\n\n- Excel 第 6481 行｜A列（序号）=371｜B列（清单编码）=30703371｜C列（清单名称）=消防水泵接合器安装 DN100｜D列（计量单位）=套｜F列（清单单价）=425.7｜G列（其 中）=45.63｜H列（安全生产费（元））=12.1\n\n- Excel 第 6482 行｜B列（清单编码）=主材｜C列（清单名称）=消防水泵接合器｜D列（计量单位）=套｜E列（设备或）=1\n\n- Excel 第 6483 行｜A列（序号）=372｜B列（清单编码）=30703372｜C列（清单名称）=消防水泵接合器安装 DN150｜D列（计量单位）=套｜F列（清单单价）=602.57｜G列（其 中）=54.99｜H列（安全生产费（元））=17.13\n\n- Excel 第 6484 行｜B列（清单编码）=主材｜C列（清单名称）=消防水泵接合器｜D列（计量单位）=套｜E列（设备或）=1\n\n- Excel 第 6485 行｜A列（序号）=373｜B列（清单编码）=30703373｜C列（清单名称）=喷头安装 无吊顶｜D列（计量单位）=个｜F列（清单单价）=22.58｜G列（其 中）=3.32｜H列（安全生产费（元））=0.64\n\n- Excel 第 6486 行｜B列（清单编码）=主材｜C列（清单名称）=喷头｜D列（计量单位）=个｜E列（设备或）=1\n\n- Excel 第 6487 行｜A列（序号）=374｜B列（清单编码）=30703374｜C列（清单名称）=喷头安装 有吊顶｜D列（计量单位）=个｜F列（清单单价）=35.73｜G列（其 中）=4.95｜H列（安全生产费（元））=1.02\n\n- Excel 第 6488 行｜B列（清单编码）=主材｜C列（清单名称）=喷头｜D列（计量单位）=个｜E列（设备或）=1\n\n- Excel 第 6489 行｜A列（序号）=375｜B列（清单编码）=30703375｜C列（清单名称）=湿式报警装置安装 DN65｜D列（计量单位）=套｜F列（清单单价）=953.19｜G列（其 中）=86.58｜H列（安全生产费（元））=27.09\n\n- Excel 第 6490 行｜B列（清单编码）=主材｜C列（清单名称）=湿式报警装置｜D列（计量单位）=套｜E列（设备或）=1"
+          ],
+          "headings": [
+            "（三）水表组成安装",
+            "（四）给水设备",
+            "（一）水灭火系统安装"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-065",
+      "body_sha256": "7db1c565adc441744ccd146ac2e9c0263596f5bf7c3471e7217a0b8e720c8311",
+      "source_evidence": [
+        {
+          "asset_id": "c3f7eda0d116e2cc",
+          "file": "2024全费用清单单价-第3册通用安装工程-Excel问答版.md",
+          "sha256": "8ec3cb960cb685acca5ed9051d57a2f43f275aa6992b632367b96be293cc43e3",
+          "ranges": [
+            [
+              15158,
+              15204
+            ],
+            [
+              15364,
+              15382
+            ]
+          ],
+          "excerpts": [
+            "### 第九章 阴极保护工程\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第3册《通用安装工程》`，Excel 第 7547 行，A 列。\n\n- Excel 第 7548 行｜A列：本章清单单价适用于阴极保护安装工程。\n\n- Excel 第 7549 行｜A列：一、清单单价包括内容\n\n- Excel 第 7550 行｜A列：1.电源设备安装：设备开箱检查、清洁搬运、划线定位、安装固定、电气连接、调试、接地等。\n\n- Excel 第 7551 行｜A列：2.辅助阳极安装：阳极填料筛选、阳极埋设、同回流线连接、接头防腐绝缘等；深井阳极包含了阳极井钻孔及深井阳极安装。\n\n- Excel 第 7552 行｜A列：3.均压线连接：清单单价中综合考虑了80m电线的材料费。\n\n- Excel 第 7553 行｜A列：4.牺牲阳极安装：块状牺牲阳极包括阳极表面处理、焊接、填料配填、接线、焊点防腐；带状牺牲阳极包括阳极槽填料、阳极带敷设、连接保护体、焊点防腐等。\n\n- Excel 第 7554 行｜A列：5.测试桩安装：桩坑挖填、支座制安、测试桩安装、接线、调试等。\n\n- Excel 第 7555 行｜A列：6.电缆敷设：电缆沟挖填土方、电缆敷设、电缆头制作安装、铺砂盖板。\n\n- Excel 第 7556 行｜A列：7.馈电测试：测量穿越段两端土壤电阻率、连接临时阴极保护装置并测量记录电位及电流数据、计算防腐层电导率、出具报告。\n\n- Excel 第 7557 行｜A列：二、清单单价使用方法\n\n- Excel 第 7558 行｜A列：1.恒电位仪一体机柜规格按容纳两台以内恒电位仪考虑，机柜内每增加一台恒电位仪，清单单价增加20%。\n\n- Excel 第 7559 行｜A列：2.深井阳极按井深50m考虑，当井的深度不同时，按每增减10m调整清单单价。\n\n- Excel 第 7560 行｜A列：3.馈电测试适用于定向钻穿越段防腐层电导率检测。\n\n- Excel 第 7561 行｜A列：4.电缆敷设综合考虑了电缆沟铺砂盖板，使用时不得调整。\n\n- Excel 第 7562 行｜A列：三、工程量计算规则\n\n- Excel 第 7563 行｜A列：1.电源设备安装，不分型号、规格，以“台”为计量单位，设备的电气连接材料不作调整。\n\n- Excel 第 7564 行｜A列：2.馈电测试按照定向钻穿越次数计算工程量。\n\n**表头定位：Excel 第 7583 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价（元）｜G列=其 中\n\n**表头定位：Excel 第 7584 行**｜D列=单位｜E列=主材用量｜G列=规费（元）｜H列=安全生产\n\n#### 费（元）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第3册《通用安装工程》`，Excel 第 7585 行，H 列。\n\n### 第九章 阴极保护工程",
+            "- Excel 第 7671 行｜A列：三、阴极保护系统调试及馈电测试\n\n- Excel 第 7672 行｜A列：清单内容：保护单体极化、测电阻、阳极电位、输出电流调整、保护单位自然电位、保护电位、阳极接地电阻、输出电流调整；馈电测试：测量穿越段两端土壤电阻率、连接临时阴极保护装置并测量记录电位及电流数据、计算防腐层电导率、出具报告。\n\n- Excel 第 7673 行｜A列（序号）=7｜B列（清单编码）=30904007｜C列（清单名称）=阴极保护系统调试｜D列（单位）=km｜F列（清单单价（元））=1224.58｜G列（规费（元））=114.04｜H列（安全生产）=25.72\n\n- Excel 第 7674 行｜A列（序号）=8｜B列（清单编码）=30904008｜C列（清单名称）=站内阴保系统调试(强制电流)｜D列（单位）=站｜F列（清单单价（元））=1982.67｜G列（规费（元））=342.55｜H列（安全生产）=41.64\n\n- Excel 第 7675 行｜A列（序号）=9｜B列（清单编码）=30904009｜C列（清单名称）=站内阴保系统调试(牺牲阳极)｜D列（单位）=组｜F列（清单单价（元））=496.31｜G列（规费（元））=85.75｜H列（安全生产）=10.42\n\n- Excel 第 7676 行｜A列（序号）=10｜B列（清单编码）=30904010｜C列（清单名称）=馈电测试｜D列（单位）=次｜F列（清单单价（元））=18368.75｜G列（规费（元））=1710.54｜H列（安全生产）=385.81\n\n- Excel 第 7678 行｜A列：四、电缆敷设\n\n- Excel 第 7679 行｜A列：清单内容：电缆沟挖填土方、电缆敷设、电缆头制作安装、铺砂盖板。\n\n- Excel 第 7680 行｜A列（序号）=11｜B列（清单编码）=30904011｜C列（清单名称）=阴极保护电缆敷设｜D列（单位）=m｜F列（清单单价（元））=57.08｜G列（规费（元））=7.67｜H列（安全生产）=1.2\n\n- Excel 第 7681 行｜B列（清单编码）=主材｜C列（清单名称）=电缆｜D列（单位）=m｜E列（主材用量）=1.03"
+          ],
+          "headings": [
+            "第九章 阴极保护工程",
+            "费（元）",
+            "第九章 阴极保护工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-066",
+      "body_sha256": "feeaa7475638805ffef14e7fb63a673cfaae491142e7a0c32aa088dbdc51d8f2",
+      "source_evidence": [
+        {
+          "asset_id": "ef1142901d94a9a9",
+          "file": "2024全费用清单单价-第4册其他工程-Excel问答版.md",
+          "sha256": "98ed18f1e3c6ee1d17e3383d23812edca00d466a8619455cd048f23d2959c2ae",
+          "ranges": [
+            [
+              436,
+              450
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 205 行｜A列：（2）标石、警示牌：埋设标石、警示牌等。\n\n- Excel 第 206 行｜A列：（3）防雷、防蚀：布放排流线、消弧线、安装避雷针等。\n\n- Excel 第 207 行｜A列：（4）GPS定位：测量、记录等。\n\n- Excel 第 208 行｜A列：二、清单单价不包括内容\n\n- Excel 第 209 行｜A列：1.敷设埋式、管道（含硅管）光缆清单单价中不含土石方挖填、光缆保护与防护、光缆穿越其他线路、人（手）孔、警示带及标石的埋设。\n\n- Excel 第 210 行｜A列：2.水下冲槽。\n\n- Excel 第 211 行｜A列：三、清单单价使用方法\n\n- Excel 第 212 行｜A列：1.通信线路工程各项清单单价按与管道同沟敷设编制，通信线路单独敷设时清单单价乘以0.84调整系数。"
+          ],
+          "headings": [
+            "第四册 其他工程",
+            "说 明",
+            "第一章 通信线路工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-067",
+      "body_sha256": "7c77c7a89621483245eaa9b9f0dcea477e5b9ddcc938187a048da48e9b1916df",
+      "source_evidence": [
+        {
+          "asset_id": "ef1142901d94a9a9",
+          "file": "2024全费用清单单价-第4册其他工程-Excel问答版.md",
+          "sha256": "98ed18f1e3c6ee1d17e3383d23812edca00d466a8619455cd048f23d2959c2ae",
+          "ranges": [
+            [
+              406,
+              418
+            ],
+            [
+              782,
+              792
+            ],
+            [
+              880,
+              888
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 190 行｜A列：一、清单单价包括内容\n\n- Excel 第 191 行｜A列：1.通信光缆敷设\n\n- Excel 第 192 行｜A列：（1）敷设埋式光缆：施工测量、敷设光缆、光缆接续、测试等。\n\n- Excel 第 193 行｜A列：（2）敷设管道（硅管）光缆：施工测量、敷设硅管、硅管试通及充气试验、敷设光缆、光缆接续、测试等。\n\n- Excel 第 194 行｜A列：（3）人工穿放管道光缆：施工测量、穿放光缆、光缆接续、测试等。\n\n- Excel 第 195 行｜A列：（4）敷设塑料管道：敷设塑料管、试通等。\n\n- Excel 第 196 行｜A列：（5）布放水底光缆：施工测量、检查光缆、布放水底光缆、光缆接续、测试等。",
+            "- Excel 第 385 行｜A列（序号）=47｜B列（清单编码）=40101047｜C列（清单名称）=敷设埋式市话电缆 600对以上｜D列（单位）=km｜F列（（元））=12769.32｜G列（规费（元））=2021.71｜H列（安全生产费（元））=268.2\n\n- Excel 第 386 行｜B列（清单编码）=主材｜C列（清单名称）=电缆｜D列（单位）=km｜E列（主材用量）=1.02\n\n- Excel 第 387 行｜B列（清单编码）=主材｜C列（清单名称）=热可缩套管｜D列（单位）=套｜E列（主材用量）=1.01\n\n- Excel 第 388 行｜A列：八、敷设管道（通道）市话电缆\n\n- Excel 第 389 行｜A列：清单内容：穿放引线、安装托板、充气试验、检验测试电缆、敷设电缆、对号测试、芯线接续、烤缩套管、气压及绝缘试验、测试电缆各种电气指标、记录资料等。\n\n- Excel 第 390 行｜A列（序号）=48｜B列（清单编码）=40101048｜C列（清单名称）=人工敷设管道市话电缆 200对以下｜D列（单位）=km｜F列（（元））=7221.62｜G列（规费（元））=1036.05｜H列（安全生产费（元））=151.68",
+            "- Excel 第 434 行｜B列（清单编码）=主材｜C列（清单名称）=警示牌｜D列（单位）=个｜E列（主材用量）=1.01\n\n- Excel 第 435 行｜A列：十三、防雷、防蚀\n\n- Excel 第 436 行｜A列：清单内容：对地绝缘检查及处理：单盘检验及接续、回填后的对地绝缘检查、处理等。敷设排流线：拉直、接续、布放排流线等。安装消弧线及避雷针：挖沟、布放、回填等。\n\n- Excel 第 437 行｜A列（序号）=66｜B列（清单编码）=40101066｜C列（清单名称）=对地绝缘检查及处理｜D列（单位）=km｜F列（（元））=175.46｜G列（规费（元））=14.14｜H列（安全生产费（元））=3.69\n\n- Excel 第 438 行｜A列（序号）=67｜B列（清单编码）=40101067｜C列（清单名称）=安装防雷设施 敷设排流线 单条｜D列（单位）=km｜F列（（元））=3593.55｜G列（规费（元））=154.7｜H列（安全生产费（元））=75.48"
+          ],
+          "headings": [
+            "第四册 其他工程",
+            "说 明",
+            "第一章 通信线路工程"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-068",
+      "body_sha256": "4c6d55830006e8e3d16fec00487acd1b5fe046b09331b28d7d2dc9d72d02f53a",
+      "source_evidence": [
+        {
+          "asset_id": "ef1142901d94a9a9",
+          "file": "2024全费用清单单价-第4册其他工程-Excel问答版.md",
+          "sha256": "98ed18f1e3c6ee1d17e3383d23812edca00d466a8619455cd048f23d2959c2ae",
+          "ranges": [
+            [
+              916,
+              964
+            ]
+          ],
+          "excerpts": [
+            "### 第二章 道路工程（伴行/巡检道路）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第4册《其他工程》`，Excel 第 455 行，A 列。\n\n- Excel 第 456 行｜A列：本章清单单价适用于油气管道、液化天然气（LNG）接收站、储气库地面工程、油库等建设项目伴行/巡检道路建设。\n\n- Excel 第 457 行｜A列：一、清单单价包括内容\n\n- Excel 第 458 行｜A列：1.砂砾石路面、三合土路面：原路面平整、机铺机压、边沟。\n\n- Excel 第 459 行｜A列：2.混凝土主干道路：土方开挖、基底平整、15cm厚3:7灰土铺压+30cm厚三合土铺压+25cm厚C30砼浇捣养护、砼道牙安装。\n\n- Excel 第 460 行｜A列：3.普通混凝土道路：土方开挖、基底平整、15cm厚3:7灰土铺压+20cm厚三合土铺压+20cm厚C30砼浇捣养护、砼道牙安装。\n\n- Excel 第 461 行｜A列：4.沥青砼路面：土方开挖、基底平整、15cm厚3:7灰土铺压+30cm厚三合土铺压+6cm厚沥青混凝土摊铺、砼道牙安装。\n\n- Excel 第 462 行｜A列：二、清单单价不包括内容\n\n- Excel 第 463 行｜A列：1.伴行/巡检道路工程永久征地及施工临时占地费用。\n\n- Excel 第 464 行｜A列：2.大型土石方工程。\n\n- Excel 第 465 行｜A列：三、清单单价使用方法\n\n- Excel 第 466 行｜A列：1.按路面形式，以“㎡”为计量单位计算。\n\n**表头定位：Excel 第 473 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中\n\n**表头定位：Excel 第 474 行**｜D列=单位｜E列=主材用量｜F列=（元）｜G列=规费（元）｜H列=安全生产费\n\n#### （元）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第4册《其他工程》`，Excel 第 475 行，H 列。\n\n### 第二章 道路工程（伴行/巡检道路）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第4册《其他工程》`，Excel 第 476 行，A 列。\n\n- Excel 第 477 行｜A列：清单内容：1.砂砾石路面、三合土路面：原路面平整、机铺机压、边沟；2.混凝土主干道路：土方开挖、基底平整、15cm厚3:7灰土铺压+30cm厚三合土铺压+25cm厚C30砼浇捣养护、砼道牙安装；3.普通混凝土道路：土方开挖、基底平整、15cm厚3:7灰土铺压+20cm厚三合土铺压+20cm厚C30砼浇捣养护、砼道牙安装；4.沥青砼路面：土方开挖、基底平整、15cm厚3:7灰土铺压+30cm厚三合土铺压+6cm厚沥青混凝土摊铺、砼道牙安装\n\n- Excel 第 478 行｜A列（序号）=1｜B列（清单编码）=40201001｜C列（清单名称）=伴行/巡检道路 砂砾石路面｜D列（单位）=㎡｜F列（（元））=77.09｜G列（规费（元））=6.77｜H列（安全生产费）=1.62\n\n- Excel 第 479 行｜A列（序号）=2｜B列（清单编码）=40201002｜C列（清单名称）=伴行/巡检道路 三合土路面｜D列（单位）=㎡｜F列（（元））=74.91｜G列（规费（元））=6.58｜H列（安全生产费）=1.57\n\n- Excel 第 480 行｜A列（序号）=3｜B列（清单编码）=40201003｜C列（清单名称）=伴行/巡检道路 混凝土主干道路｜D列（单位）=㎡｜F列（（元））=300.24｜G列（规费（元））=26.36｜H列（安全生产费）=6.31\n\n- Excel 第 481 行｜A列（序号）=4｜B列（清单编码）=40201004｜C列（清单名称）=伴行/巡检道路 普通混凝土道路｜D列（单位）=㎡｜F列（（元））=248.18｜G列（规费（元））=21.79｜H列（安全生产费）=5.21\n\n- Excel 第 482 行｜A列（序号）=5｜B列（清单编码）=40201005｜C列（清单名称）=伴行/巡检道路 沥青砼路面｜D列（单位）=㎡｜F列（（元））=308.63｜G列（规费（元））=27.09｜H列（安全生产费）=6.48"
+          ],
+          "headings": [
+            "第二章 道路工程（伴行/巡检道路）",
+            "（元）",
+            "第二章 道路工程（伴行/巡检道路）"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-069",
+      "body_sha256": "193e9dce53f353107095798a26a6519512b5bcfb04c112d9a1829aaf1b7e48ec",
+      "source_evidence": [
+        {
+          "asset_id": "ef1142901d94a9a9",
+          "file": "2024全费用清单单价-第4册其他工程-Excel问答版.md",
+          "sha256": "98ed18f1e3c6ee1d17e3383d23812edca00d466a8619455cd048f23d2959c2ae",
+          "ranges": [
+            [
+              932,
+              964
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 462 行｜A列：二、清单单价不包括内容\n\n- Excel 第 463 行｜A列：1.伴行/巡检道路工程永久征地及施工临时占地费用。\n\n- Excel 第 464 行｜A列：2.大型土石方工程。\n\n- Excel 第 465 行｜A列：三、清单单价使用方法\n\n- Excel 第 466 行｜A列：1.按路面形式，以“㎡”为计量单位计算。\n\n**表头定位：Excel 第 473 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中\n\n**表头定位：Excel 第 474 行**｜D列=单位｜E列=主材用量｜F列=（元）｜G列=规费（元）｜H列=安全生产费\n\n#### （元）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第4册《其他工程》`，Excel 第 475 行，H 列。\n\n### 第二章 道路工程（伴行/巡检道路）\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第4册《其他工程》`，Excel 第 476 行，A 列。\n\n- Excel 第 477 行｜A列：清单内容：1.砂砾石路面、三合土路面：原路面平整、机铺机压、边沟；2.混凝土主干道路：土方开挖、基底平整、15cm厚3:7灰土铺压+30cm厚三合土铺压+25cm厚C30砼浇捣养护、砼道牙安装；3.普通混凝土道路：土方开挖、基底平整、15cm厚3:7灰土铺压+20cm厚三合土铺压+20cm厚C30砼浇捣养护、砼道牙安装；4.沥青砼路面：土方开挖、基底平整、15cm厚3:7灰土铺压+30cm厚三合土铺压+6cm厚沥青混凝土摊铺、砼道牙安装\n\n- Excel 第 478 行｜A列（序号）=1｜B列（清单编码）=40201001｜C列（清单名称）=伴行/巡检道路 砂砾石路面｜D列（单位）=㎡｜F列（（元））=77.09｜G列（规费（元））=6.77｜H列（安全生产费）=1.62\n\n- Excel 第 479 行｜A列（序号）=2｜B列（清单编码）=40201002｜C列（清单名称）=伴行/巡检道路 三合土路面｜D列（单位）=㎡｜F列（（元））=74.91｜G列（规费（元））=6.58｜H列（安全生产费）=1.57\n\n- Excel 第 480 行｜A列（序号）=3｜B列（清单编码）=40201003｜C列（清单名称）=伴行/巡检道路 混凝土主干道路｜D列（单位）=㎡｜F列（（元））=300.24｜G列（规费（元））=26.36｜H列（安全生产费）=6.31\n\n- Excel 第 481 行｜A列（序号）=4｜B列（清单编码）=40201004｜C列（清单名称）=伴行/巡检道路 普通混凝土道路｜D列（单位）=㎡｜F列（（元））=248.18｜G列（规费（元））=21.79｜H列（安全生产费）=5.21\n\n- Excel 第 482 行｜A列（序号）=5｜B列（清单编码）=40201005｜C列（清单名称）=伴行/巡检道路 沥青砼路面｜D列（单位）=㎡｜F列（（元））=308.63｜G列（规费（元））=27.09｜H列（安全生产费）=6.48"
+          ],
+          "headings": [
+            "第二章 道路工程（伴行/巡检道路）",
+            "（元）",
+            "第二章 道路工程（伴行/巡检道路）"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-070",
+      "body_sha256": "f4bcf601892be0d3af00bce036db27a24bf4ac50a1cf58588fdc11b4d8a349aa",
+      "source_evidence": [
+        {
+          "asset_id": "ef1142901d94a9a9",
+          "file": "2024全费用清单单价-第4册其他工程-Excel问答版.md",
+          "sha256": "98ed18f1e3c6ee1d17e3383d23812edca00d466a8619455cd048f23d2959c2ae",
+          "ranges": [
+            [
+              1956,
+              1988
+            ],
+            [
+              2176,
+              2184
+            ]
+          ],
+          "excerpts": [
+            "> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第4册《其他工程》`，Excel 第 976 行，A 列。\n\n- Excel 第 977 行｜A列：本章清单单价适用于油气管道投产前管道变形内检测、管道盗油孔排查内检测、管道综合内检测、管道IMU专项检测、漏磁内检测。\n\n- Excel 第 978 行｜A列：一、清单单价包括内容\n\n- Excel 第 979 行｜A列：1.提供检测动力源：电源、空压机等。\n\n- Excel 第 980 行｜A列：2.管道变形内检测：前期基础数据采集、运行内检测器、配合定位、出具报告、相关技术支持。\n\n- Excel 第 981 行｜A列：3.管道盗油孔排查内检测：前期基础数据采集、运行内检测器、配合定位、出具报告、相关技术支持。\n\n- Excel 第 982 行｜A列：4.管道综合内检测：投产前管道变形内检测和投产前管道盗油孔排查内检测。\n\n- Excel 第 983 行｜A列：5.管道IMU专项检测：前期基础数据采集、运行内检测器、配合定位、出具报告、相关技术支持。\n\n- Excel 第 984 行｜A列：6.管道漏磁内检测：前期基础数据采集、运行内检测器、配合定位、出具报告、相关技术支持。\n\n- Excel 第 985 行｜A列：二、清单单价不包括内容\n\n- Excel 第 986 行｜A列：1.收发球筒制作安装拆除及管道清管费用。\n\n- Excel 第 987 行｜A列：2.施工临时占地费用。\n\n- Excel 第 988 行｜A列：3.开挖验证及检测结果处置相关费用。\n\n- Excel 第 989 行｜A列：三、清单单价使用方法\n\n- Excel 第 990 行｜A列：1.管道变形内检测、管道盗油孔排查内检测、管道IMU专项检测、管道漏磁内检测清单单价均不含动力源，使用时单独计取检测动力源费用。\n\n- Excel 第 991 行｜A列：2.管道综合内检测包括管道变形内检测、管道盗油孔排查内检测两项内容，两种类型内检测器各自独立运行，检测动力源费用需分别计取。\n\n- Excel 第 992 行｜A列：3.若内检测段长度小于等于40km，按长度40km计算总价；内检测段长度大于40km时，按实际长度计算。",
+            "- Excel 第 1098 行｜A列（序号）=8｜B列（清单编码）=40406008｜C列（清单名称）=管道漏磁内检测 DN900｜D列（单位）=km｜F列（（元））=12534.67｜G列（规费（元））=378.12｜H列（安全生产费）=263.28\n\n- Excel 第 1099 行｜A列（序号）=9｜B列（清单编码）=40406009｜C列（清单名称）=管道漏磁内检测 DN1000｜D列（单位）=km｜F列（（元））=12976.22｜G列（规费（元））=386｜H列（安全生产费）=272.55\n\n- Excel 第 1100 行｜A列（序号）=10｜B列（清单编码）=40406010｜C列（清单名称）=管道漏磁内检测 DN1100｜D列（单位）=km｜F列（（元））=13708.99｜G列（规费（元））=393.87｜H列（安全生产费）=287.94\n\n- Excel 第 1101 行｜A列（序号）=11｜B列（清单编码）=40406011｜C列（清单名称）=管道漏磁内检测 DN1200｜D列（单位）=km｜F列（（元））=15422.07｜G列（规费（元））=452.95｜H列（安全生产费）=323.92\n\n- Excel 第 1102 行｜A列（序号）=12｜B列（清单编码）=40406012｜C列（清单名称）=管道漏磁内检测 DN1400｜D列（单位）=km｜F列（（元））=16924.91｜G列（规费（元））=492.34｜H列（安全生产费）=355.49"
+          ],
+          "headings": [
+            "（四）统建系统实施",
+            "清单内容：系统接入、调试、实施",
+            "第四章 投产前管道内检测"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-071",
+      "body_sha256": "ecff7e8adfe957723479a23a9421c2c3842016a4892f48468e61a577aa86c255",
+      "source_evidence": [
+        {
+          "asset_id": "6df81e7f127e93a8",
+          "file": "2024全费用清单单价-第5册参考计价依据-Excel问答版.md",
+          "sha256": "11ab29783e71715cce61ee4f5714586c7a9a04739f2bc432383bd2dc72b67f25",
+          "ranges": [
+            [
+              66,
+              104
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 29 行｜A列：六、《清单单价》编制的主要依据包括：\n\n- Excel 第 30 行｜A列：1. 国家及行业相关技术标准、设计规范、施工验收规范和质量评定标准。\n\n- Excel 第 31 行｜A列：2. 国家管网集团设计与工程建设准则（DEC）。\n\n- Excel 第 32 行｜A列：3. 《管道建设项目工程量清单计量规则》、《管道建设项目工程量清单计价规则》。\n\n- Excel 第 33 行｜A列：4. 典型工程设计施工图、标准图、通用设计图，施工组织设计、施工方案。\n\n- Excel 第 34 行｜A列：5. 典型项目工程量清单最高投标限价、投标报价、结算等资料。\n\n- Excel 第 35 行｜A列：七、《清单单价》按照常规的施工地理、气候和环境条件，符合质量标准和设计要求的施工方法、施工机械化程度和合理的劳动组织与工期编制。\n\n- Excel 第 36 行｜A列：1. 考虑到在下列特殊地区施工时施工效率降低因素，清单单价（除油气输送管道土石方与措施工程，工厂热煨弯管加工，工厂预制外防腐、保温、内涂层，管段运输过路过桥费，线路防护，其他工程中道路工程、智能化建设、中转站，参考计价依据中移动式天然气放空回收、场站绿化、完整性管理技术服务）按表1规定综合计取特殊地区施工增加费。\n\n#### 表1 特殊地区施工增加费调整系数表\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第5册《参考计价依据》`，Excel 第 37 行，A 列。\n\n**表头定位：Excel 第 38 行**｜A列=序号｜B列=特殊地区类型｜C列=场（站）｜D列=输送管道\n\n- Excel 第 39 行｜A列（序号）=1｜B列（特殊地区类型）=高原（2000m≤平均海拔＜2500m）｜C列（场（站））=0.047｜D列（输送管道）=0.068\n\n- Excel 第 40 行｜A列（序号）=2｜B列（特殊地区类型）=高原（平均海拔≥2500m）｜C列（场（站））=0.064｜D列（输送管道）=0.092\n\n- Excel 第 41 行｜A列（序号）=3｜B列（特殊地区类型）=沙漠、山区及丘陵、黄土梁峁沟壑地区｜C列（场（站））=——｜D列（输送管道）=0.031\n\n- Excel 第 42 行｜A列（序号）=4｜B列（特殊地区类型）=沼泽与水田、滩海｜C列（场（站））=——｜D列（输送管道）=0.055\n\n#### 注：\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第5册《参考计价依据》`，Excel 第 43 行，A 列。\n\n- Excel 第 44 行｜A列：1. 西藏地区高原特殊地区施工增加费根据实际情况另行确定。\n\n- Excel 第 45 行｜A列：2. 表1调整系数，除高原特殊地区外，不累加计算。\n\n- Excel 第 46 行｜A列：3. 场站工程只计取高原特殊地区施工增加费。"
+          ],
+          "headings": [
+            "总 说 明",
+            "表1 特殊地区施工增加费调整系数表",
+            "注："
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-072",
+      "body_sha256": "95fdf8aebc41fb6cb862bd407f6433a07644c68878ce26d9d0c702a730805645",
+      "source_evidence": [
+        {
+          "asset_id": "6df81e7f127e93a8",
+          "file": "2024全费用清单单价-第5册参考计价依据-Excel问答版.md",
+          "sha256": "11ab29783e71715cce61ee4f5714586c7a9a04739f2bc432383bd2dc72b67f25",
+          "ranges": [
+            [
+              104,
+              128
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 46 行｜A列：3. 场站工程只计取高原特殊地区施工增加费。\n\n- Excel 第 47 行｜A列：2. 考虑到在下列地区施工时，区域边远、社会依托差、远地施工等差异，清单单价（除油气输送管道土石方与措施工程，工厂热煨弯管加工，工厂预制外防腐、保温、内涂层，管段运输过路过桥费，线路防护，其他工程中道路工程、智能化建设、中转站，参考计价依据中移动式天然气放空回收、场站绿化、完整性管理技术服务）按表2规定综合进行地区差异调整。\n\n#### 表2 地区差异调整系数表\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第5册《参考计价依据》`，Excel 第 48 行，A 列。\n\n**表头定位：Excel 第 49 行**｜A列=序号｜B列=地区类型｜C列=场（站）｜D列=输送管道\n\n- Excel 第 50 行｜A列（序号）=1｜B列（地区类型）=甘肃省｜C列（场（站））=0.031｜D列（输送管道）=0.014\n\n- Excel 第 51 行｜A列（序号）=2｜B列（地区类型）=宁夏回族自治区｜C列（场（站））=0.042｜D列（输送管道）=0.022\n\n- Excel 第 52 行｜A列（序号）=3｜B列（地区类型）=内蒙古自治区｜C列（场（站））=0.038｜D列（输送管道）=0.02\n\n- Excel 第 53 行｜A列（序号）=4｜B列（地区类型）=新疆维吾尔自治区｜C列（场（站））=0.13｜D列（输送管道）=0.067\n\n- Excel 第 54 行｜A列（序号）=5｜B列（地区类型）=青海省、西藏自治区｜C列（场（站））=0.198｜D列（输送管道）=0.106\n\n- Excel 第 55 行｜A列：3. 对于部分改建项目，考虑安装与生产同时进行条件下施工效率降低因素，清单单价按5.7%比例计取安装与生产同时进行降效费，油气输送管道工程、采取硬隔离措施的LNG低温储罐及金属储罐工程不计取。\n\n- Excel 第 56 行｜A列：八、《清单单价》适用于初步设计概算编制；（预）可行性研究阶段编制估算投资时，可在《清单单价》基础上考虑8~10%估算与概算幅度差（除工厂热煨弯管加工，工厂预制外防腐、保温、内涂层，中转站，参考计价依据中移动式天然气放空回收、场站绿化、完整性管理技术服务）。\n\n- Excel 第 57 行｜A列：九、清单单价调整规则为：调整后清单单价=基础清单单价×（1+估算与概算幅度差）×（1+安装与生产同时进行降效调整系数）×（1+特殊地区施工增加费调整系数+地区差异调整系数）。"
+          ],
+          "headings": [
+            "表1 特殊地区施工增加费调整系数表",
+            "注：",
+            "表2 地区差异调整系数表"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-073",
+      "body_sha256": "82e149081081b27cc17662d9e5faf90f6aaec3c09074baf07589381bbcea436f",
+      "source_evidence": [
+        {
+          "asset_id": "6df81e7f127e93a8",
+          "file": "2024全费用清单单价-第5册参考计价依据-Excel问答版.md",
+          "sha256": "11ab29783e71715cce61ee4f5714586c7a9a04739f2bc432383bd2dc72b67f25",
+          "ranges": [
+            [
+              122,
+              128
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 54 行｜A列（序号）=5｜B列（地区类型）=青海省、西藏自治区｜C列（场（站））=0.198｜D列（输送管道）=0.106\n\n- Excel 第 55 行｜A列：3. 对于部分改建项目，考虑安装与生产同时进行条件下施工效率降低因素，清单单价按5.7%比例计取安装与生产同时进行降效费，油气输送管道工程、采取硬隔离措施的LNG低温储罐及金属储罐工程不计取。\n\n- Excel 第 56 行｜A列：八、《清单单价》适用于初步设计概算编制；（预）可行性研究阶段编制估算投资时，可在《清单单价》基础上考虑8~10%估算与概算幅度差（除工厂热煨弯管加工，工厂预制外防腐、保温、内涂层，中转站，参考计价依据中移动式天然气放空回收、场站绿化、完整性管理技术服务）。\n\n- Excel 第 57 行｜A列：九、清单单价调整规则为：调整后清单单价=基础清单单价×（1+估算与概算幅度差）×（1+安装与生产同时进行降效调整系数）×（1+特殊地区施工增加费调整系数+地区差异调整系数）。"
+          ],
+          "headings": [
+            "表1 特殊地区施工增加费调整系数表",
+            "注：",
+            "表2 地区差异调整系数表"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-074",
+      "body_sha256": "0ed38a85235aac16f6e05563c192ee870b397ed2d84bad67437882344a00b999",
+      "source_evidence": [
+        {
+          "asset_id": "6df81e7f127e93a8",
+          "file": "2024全费用清单单价-第5册参考计价依据-Excel问答版.md",
+          "sha256": "11ab29783e71715cce61ee4f5714586c7a9a04739f2bc432383bd2dc72b67f25",
+          "ranges": [
+            [
+              124,
+              128
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 55 行｜A列：3. 对于部分改建项目，考虑安装与生产同时进行条件下施工效率降低因素，清单单价按5.7%比例计取安装与生产同时进行降效费，油气输送管道工程、采取硬隔离措施的LNG低温储罐及金属储罐工程不计取。\n\n- Excel 第 56 行｜A列：八、《清单单价》适用于初步设计概算编制；（预）可行性研究阶段编制估算投资时，可在《清单单价》基础上考虑8~10%估算与概算幅度差（除工厂热煨弯管加工，工厂预制外防腐、保温、内涂层，中转站，参考计价依据中移动式天然气放空回收、场站绿化、完整性管理技术服务）。\n\n- Excel 第 57 行｜A列：九、清单单价调整规则为：调整后清单单价=基础清单单价×（1+估算与概算幅度差）×（1+安装与生产同时进行降效调整系数）×（1+特殊地区施工增加费调整系数+地区差异调整系数）。"
+          ],
+          "headings": [
+            "表1 特殊地区施工增加费调整系数表",
+            "注：",
+            "表2 地区差异调整系数表"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-075",
+      "body_sha256": "b578c7bc6b34cde2bdc2e21b1ba37161105daffbe0816d0d5d15b3cab7101698",
+      "source_evidence": [
+        {
+          "asset_id": "6df81e7f127e93a8",
+          "file": "2024全费用清单单价-第5册参考计价依据-Excel问答版.md",
+          "sha256": "11ab29783e71715cce61ee4f5714586c7a9a04739f2bc432383bd2dc72b67f25",
+          "ranges": [
+            [
+              964,
+              974
+            ],
+            [
+              1046,
+              1058
+            ],
+            [
+              1296,
+              1306
+            ]
+          ],
+          "excerpts": [
+            "- Excel 第 500 行｜A列：2.天然气放空回收量80万方及以下的，回收车配置由出资方结合工期、安全、技术、经济等因素确定。\n\n- Excel 第 501 行｜A列：3.天然气放空回收量80万方以上的，需配置2台回收车。\n\n- Excel 第 502 行｜A列：4.移动式天然气放空回收清单单价适用6%增值税税率。\n\n- Excel 第 503 行｜A列：四、工程量计算规则\n\n- Excel 第 504 行｜A列：移动式天然气放空回收以“次”为计量单位，按放空天然气回收量和投入回收车数量分别执行相应清单单价。\n\n**表头定位：Excel 第 506 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中",
+            "- Excel 第 539 行｜A列：2.支干线管道站场按照干线管道站场类型划分。\n\n- Excel 第 540 行｜A列：3.当站场功能叠加时，按照高阶功能站场定价。\n\n- Excel 第 541 行｜A列：4.当支线分输站工艺较为复杂（与干线分输站工艺复杂程度相当）时，由双方协商确认站场类别。\n\n- Excel 第 542 行｜A列：三、工程量计算规则\n\n- Excel 第 543 行｜A列：根据技术要求，以站场“座”为计量单位计算。\n\n#### 第二节 管道及站场风险评价\n\n> 来源定位：工作表 `《建设项目全费用工程量清单单价》-第5册《参考计价依据》`，Excel 第 544 行，A 列。",
+            "- Excel 第 650 行｜A列：2.定期检验专项效能评价：前期基础数据采集、数据分析、效能评价、出具报告、提供相关技术支持。\n\n- Excel 第 651 行｜A列：采用指标评价和对标等方法，对国家管网集团开展的管道定期检验在管道完整性管理方面取得的效果、效率和效益进行衡量，分析管道定期检验是否达到预期目标，提出管道定期检验标准、技术、质量以及工作安排和资源投入等方面的改进措施，达到提高管道本质安全和节约资金的目的。\n\n- Excel 第 652 行｜A列：二、工程量计算规则\n\n- Excel 第 653 行｜A列：1.资产完整性效能评价以“区域（省）公司”为计量单位计算。\n\n- Excel 第 654 行｜A列：2.定期检验专项效能评价根据区域（省）公司管道里程以“次”为计量单位计算。\n\n**表头定位：Excel 第 669 行**｜A列=序号｜B列=清单编码｜C列=清单名称｜D列=计量｜E列=设备或｜F列=清单单价｜G列=其 中"
+          ],
+          "headings": [
+            "第二节 管件预制安装（柔性内焊+全自动外焊）",
+            "第三节 穿跨越管段组装焊接（柔性内焊+全自动外焊）",
+            "第二章 移动式天然气放空回收"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-076",
+      "body_sha256": "c1b5464688e7e0cd3fd0ede8e591bd29bc02ceb73bdb1a1e5fa9cffcce06ef44",
+      "source_evidence": [
+        {
+          "asset_id": "ccbbfa9365e29784",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+          "sha256": "0dca559f70f9d7ad0abd6fd78a02d59340d0c53095dc36dafa3655ecf2a924ce",
+          "ranges": [
+            [
+              92,
+              102
+            ]
+          ],
+          "excerpts": [
+            "## 十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单\n\n单价；设备或主材费用按各章节说明或清单单价中所列用量单独计算。\n\n## 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费\n\n、总价措施费、 企业管理费、利润、规费、安全生产费以及一定范围与幅度内的风险费，增值税按国家和国家管网集团相关规定计算。\n\n## 十二、《清单单价》中，规费指按国家法律、法规及政府和有关部门规定必须缴纳或计取的费用，\n\n包括养老保险、失业保险、医疗保险、工伤保险、生育保险及住房公积金；安全生产费用是指企业按照规定标准提取，专门用于完善和改进安全生产条件的资金，清单单价按国家和国家管网集团相关规定，综合计取安全生产费。"
+          ],
+          "headings": [
+            "十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单",
+            "十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费",
+            "十二、《清单单价》中，规费指按国家法律、法规及政府和有关部门规定必须缴纳或计取的费用，"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-077",
+      "body_sha256": "4c81274a85a63da8224762414b10cb0ed57458e151457a4cacecf9f169e3dd66",
+      "source_evidence": [
+        {
+          "asset_id": "ccbbfa9365e29784",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+          "sha256": "0dca559f70f9d7ad0abd6fd78a02d59340d0c53095dc36dafa3655ecf2a924ce",
+          "ranges": [
+            [
+              96,
+              102
+            ]
+          ],
+          "excerpts": [
+            "## 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费\n\n、总价措施费、 企业管理费、利润、规费、安全生产费以及一定范围与幅度内的风险费，增值税按国家和国家管网集团相关规定计算。\n\n## 十二、《清单单价》中，规费指按国家法律、法规及政府和有关部门规定必须缴纳或计取的费用，\n\n包括养老保险、失业保险、医疗保险、工伤保险、生育保险及住房公积金；安全生产费用是指企业按照规定标准提取，专门用于完善和改进安全生产条件的资金，清单单价按国家和国家管网集团相关规定，综合计取安全生产费。"
+          ],
+          "headings": [
+            "十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单",
+            "十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费",
+            "十二、《清单单价》中，规费指按国家法律、法规及政府和有关部门规定必须缴纳或计取的费用，"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-078",
+      "body_sha256": "381d34abd214b4ccad728b1e4ee933d167d3c969e94f12629b2761bab5ec7ab8",
+      "source_evidence": [
+        {
+          "asset_id": "ccbbfa9365e29784",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+          "sha256": "0dca559f70f9d7ad0abd6fd78a02d59340d0c53095dc36dafa3655ecf2a924ce",
+          "ranges": [
+            [
+              92,
+              98
+            ]
+          ],
+          "excerpts": [
+            "## 十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单\n\n单价；设备或主材费用按各章节说明或清单单价中所列用量单独计算。\n\n## 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费\n\n、总价措施费、 企业管理费、利润、规费、安全生产费以及一定范围与幅度内的风险费，增值税按国家和国家管网集团相关规定计算。"
+          ],
+          "headings": [
+            "九、清单单价调整规则为",
+            "十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单",
+            "十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-079",
+      "body_sha256": "e8548c00d5594dfeac7dd1f2fd53ed734a9066f73e533c60761bd8d4e7c2101b",
+      "source_evidence": [
+        {
+          "asset_id": "ccbbfa9365e29784",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+          "sha256": "0dca559f70f9d7ad0abd6fd78a02d59340d0c53095dc36dafa3655ecf2a924ce",
+          "ranges": [
+            [
+              92,
+              98
+            ],
+            [
+              308,
+              318
+            ]
+          ],
+          "excerpts": [
+            "## 十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单\n\n单价；设备或主材费用按各章节说明或清单单价中所列用量单独计算。\n\n## 十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费\n\n、总价措施费、 企业管理费、利润、规费、安全生产费以及一定范围与幅度内的风险费，增值税按国家和国家管网集团相关规定计算。",
+            "## 一、清单单价包括内容\n\n1.三层 PE外防腐层：除锈、防腐层制作、检测。2.热煨弯管防腐：除锈、防腐层制作、检测。3.内减阻涂层：除锈、喷涂、检测。4.保温、绝热：保温及保护层预制、检测、聚氨酯泡沫及聚乙烯夹克材 料费、热缩防水帽安装及材料费。\n\n## 二、清单单价使用方法\n\n1.常温型外防腐层：聚乙烯防腐层最高设计温度不超过 $6 0 ^ { \\circ } \\mathrm { C }$ 。2.高温型外防腐层：聚乙烯防腐层最高设计温度不超过 $8 0 ^ { \\circ } \\mathrm { C }$ 3.内减阻涂层：内涂层干膜厚度65-160μm，内涂后管道内壁表面粗糙度≤10μm。4.管段防腐、保温列入工程费用中的设备购置费。\n\n## 三、工程量计算规则\n\n1.管段防腐、保温工程量，按防腐管段防腐保温面展开面积及规定损耗率（7‰）计算。建设项目全费用工程量清单单价<table><tr><td rowspan=2 colspan=1>序号</td><td rowspan=2 colspan=1>清单编码</td><td rowspan=2 colspan=1>清单名称</td><td rowspan=2 colspan=1>计量单位</td><td rowspan=2 colspan=1>设备或主材用量</td><td rowspan=2 colspan=1>清单单价（元）</td><td rowspan=1 colspan=2>其中</td></tr><tr><td rowspan=1 colspan=1>规费元）</td><td rowspan=1 colspan=1>安全生产费（元）</td></tr><tr><td rowspan=1 colspan=8>第四章管段防腐</td></tr><tr><td rowspan=1 colspan=8>第一节三层PE外防腐层</td></tr><tr><td rowspan=1 colspan=4>清单内容：除锈、防腐层制作、检测</td><td rowspan=1 colspan=4>日</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>010401001</td><td rowspan=1 colspan=1>三层PE外防腐层常温型普通级</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>75.22</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>010401002</td><td rowspan=1 colspan=1>三层PE外防腐层常温型加强级</td><td rowspan=1 colspan=1> $\\mathsf { m } ^ { 2 }$ </td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>79.65</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>3</td><td rowspan=1 colspan=1>010401003</td><td rowspan=1 colspan=1>三层PE外防腐层高温型普通级</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>77.88</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>010401004</td><td rowspan=1 colspan=1>三层PE外防腐层高温型加强级</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>82.30</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>5</td><td rowspan=1 colspan=1>010401005</td><td rowspan=1 colspan=1>三层PE外防腐层低温型普通级</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>79.65</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>6</td><td rowspan=1 colspan=1>010401006</td><td rowspan=1 colspan=1>三层PE外防腐层低温型加强级</td><td rowspan=1 colspan=1> $\\mathsf { m } ^ { 2 }$ </td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>84.07</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=8>第二节热煨弯管防腐</td></tr><tr><td rowspan=1 colspan=4>清单内容：除锈、防腐层制作、检测</td><td rowspan=1 colspan=4>□</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>010402001</td><td rowspan=1 colspan=1>双层熔结环氧粉末防腐层</td><td rowspan=1 colspan=1> $\\mathsf { m } ^ { 2 }$ </td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>216.81</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>010402002</td><td rowspan=1 colspan=1>单层熔结环氧粉末防腐层+聚丙烯胶粘带防护层</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>252.21</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>3</td><td rowspan=1 colspan=1>010402003</td><td rowspan=1 colspan=1>无溶剂型液体环氧防腐层+聚丙烯胶粘带防护层</td><td rowspan=1 colspan=1> $\\mathsf { m } ^ { 2 }$ </td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>296.46</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>010402004</td><td rowspan=1 colspan=1>聚乙烯热收缩带搭接包覆防腐层</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>92.92</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>5</td><td rowspan=1 colspan=1>010402005</td><td rowspan=1 colspan=1>聚乙烯复合带防腐层</td><td rowspan=1 colspan=1> $\\mathsf { m } ^ { 2 }$ </td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>314.16</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=8>第三节内减阻涂层</td></tr><tr><td rowspan=1 colspan=8>清单内容：除锈、喷涂、检测                                                   □</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>010403001</td><td rowspan=1 colspan=1>无溶剂型内减阻涂层</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>26.55</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=8>第四节保温、绝热□</td></tr><tr><td rowspan=1 colspan=8>清单内容：保温及保护层预制、检测、聚氨酯泡沫及聚乙烯夹克材料费、热缩防水帽安装及材料费</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>010404001</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D60.3以内30mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>155.72</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>010404002</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D114.3以内30mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>121.79</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>3</td><td rowspan=1 colspan=1>010404003</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D159以内30mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>112.89</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr></table>建设项目全费用工程量清单单价<table><tr><td rowspan=2 colspan=1>序号</td><td rowspan=2 colspan=1>清单编码</td><td rowspan=2 colspan=1>清单名称</td><td rowspan=2 colspan=1>计量单位</td><td rowspan=2 colspan=1>设备或主材用量</td><td rowspan=2 colspan=1>清单单价（元）</td><td rowspan=1 colspan=2>其中</td></tr><tr><td rowspan=1 colspan=1>规费元）</td><td rowspan=1 colspan=1>安全生产费（元）</td></tr><tr><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>010404004</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D219.1以内30mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>109.00</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>5</td><td rowspan=1 colspan=1>010404005</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D273以内30mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>104.92</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>6</td><td rowspan=1 colspan=1>010404006</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D406.4以内30mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>99.59</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>7</td><td rowspan=1 colspan=1>010404007</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D508以内30mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>97.96</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>8</td><td rowspan=1 colspan=1>010404008</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D60.3以内40mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>208.84</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>9</td><td rowspan=1 colspan=1>010404009</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D114.3以内40mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>159.81</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>10</td><td rowspan=1 colspan=1>010404010</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D159以内40mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>146.31</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>11</td><td rowspan=1 colspan=1>010404011</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D219.1以内40mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>139.27</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>12</td><td rowspan=1 colspan=1>010404012</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D273以内40mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>134.18</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>13</td><td rowspan=1 colspan=1>010404013</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D406.4以内40mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>125.50</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>14</td><td rowspan=1 colspan=1>010404014</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D508以内40mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>122.88</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>15</td><td rowspan=1 colspan=1>010404015</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D60.3以内50mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>268.88</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>16</td><td rowspan=1 colspan=1>010404016</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D114.3以内50mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>201.28</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>17</td><td rowspan=1 colspan=1>010404017</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D159以内50mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>180.29</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>18</td><td rowspan=1 colspan=1>010404018</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D219.1以内50mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>171.25</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr></table>建设项目全费用工程量清单单价<table><tr><td rowspan=2 colspan=1>序号</td><td rowspan=2 colspan=1>清单编码</td><td rowspan=2 colspan=1>清单名称</td><td rowspan=2 colspan=1>计量单位</td><td rowspan=2 colspan=1>设备或主材用量</td><td rowspan=2 colspan=1>清单单价（元)</td><td rowspan=1 colspan=2>其中</td></tr><tr><td rowspan=1 colspan=1>规费(元)</td><td rowspan=1 colspan=1>安全生产费（元)</td></tr><tr><td rowspan=1 colspan=1>19</td><td rowspan=1 colspan=1>010404019</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D273以内50mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>164.73</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>20</td><td rowspan=1 colspan=1>010404020</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D406.4以内50mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>152.47</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>21</td><td rowspan=1 colspan=1>010404021</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D508以内50mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>148.81</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>22</td><td rowspan=1 colspan=1>010404022</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D60.3以内60mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>334.40</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>23</td><td rowspan=1 colspan=1>010404023</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D114.3以内60mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>245.89</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>24</td><td rowspan=1 colspan=1>010404024</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D159以内60mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>217.59</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>25</td><td rowspan=1 colspan=1>010404025</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D219.1以内60mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>205.36</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>26</td><td rowspan=1 colspan=1>010404026</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D273以内60mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>197.20</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>27</td><td rowspan=1 colspan=1>010404027</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D406.4以内60mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>180.47</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>28</td><td rowspan=1 colspan=1>010404028</td><td rowspan=1 colspan=1>管段硬质聚氨酯泡沫塑料保温D508以内60mm厚</td><td rowspan=1 colspan=1>m²</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>174.76</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr></table>"
+          ],
+          "headings": [
+            "九、清单单价调整规则为",
+            "十、《清单单价》构成包括清单内容、清单编码、清单名称、计量单位、设备或主材用量、清单",
+            "十一、《清单单价》所确定价格为不含税全费用综合单价，包括人工费、材料费、施工机具使用费"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-080",
+      "body_sha256": "2eec3fc91380fa2fe8b7f01dd794394abdf937a36e7f4142ce52f8fbca62d9c9",
+      "source_evidence": [
+        {
+          "asset_id": "ccbbfa9365e29784",
+          "file": "2024全费用清单单价-第1册油气输送管道工程-正文问答版.md",
+          "sha256": "0dca559f70f9d7ad0abd6fd78a02d59340d0c53095dc36dafa3655ecf2a924ce",
+          "ranges": [
+            [
+              114,
+              126
+            ]
+          ],
+          "excerpts": [
+            "## 十四、清单名称中标有“××”者均包括“××”本身及以内，“××以上”者均不包括“××”\n\n本身。\n\n## 十五、除本说明、各章节说明或国家管网集团另有规定外，不得对《清单单价》进行调整或换算\n\n## 十六、《清单单价》涵盖子目不足部分，可按行业或工程所在地计价依据编制补充清单单价\n\n## 十七、《清单单价》由国家管网集团战略与执行部负责管理，由国家管网集团西气东输公司造价中\n\n心负责解释，根据实际情况进行动态调整。\n\n## 十八、本说明未尽事宜，详见各册、章说明"
+          ],
+          "headings": [
+            "十六、《清单单价》涵盖子目不足部分，可按行业或工程所在地计价依据编制补充清单单价",
+            "十七、《清单单价》由国家管网集团战略与执行部负责管理，由国家管网集团西气东输公司造价中",
+            "十八、本说明未尽事宜，详见各册、章说明"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-081",
+      "body_sha256": "685db6cae4ec43e74aa7518d5001b0df51b2f524d6163bdefdff37274fdf7c3c",
+      "source_evidence": [
+        {
+          "asset_id": "3d16701618141b48",
+          "file": "2024建设项目其他费用及相关费用计价依据-正文问答版.md",
+          "sha256": "398e0558b82609e7d363ec2dba97366bc85f67364967d0e3b3e45f4bd79dc987",
+          "ranges": [
+            [
+              658,
+              666
+            ]
+          ],
+          "excerpts": [
+            "## 第二十四条 建设期管道巡护费\n\n## 1.费用内容\n\n建设期管道巡护费是指建设单位委托运行单位履行建设期管道保护职责。管道回填后，运行单位组织开展管道日常巡线，确保埋地管道安全所发生的费用。\n\n## 2.计算方法\n\n输气管道建设期管道巡护费按5000元/公里计列。输油管道建设期管道巡护费按6000元/公里计列。根据管道巡护方案可以适当调整，不发生的项目不计列。"
+          ],
+          "headings": [
+            "第二十四条 建设期管道巡护费",
+            "1.费用内容",
+            "2.计算方法"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-082",
+      "body_sha256": "6268a722ea33561cc8ad82d8d975d019463e3ad75921dc417c55cbd82294ae92",
+      "source_evidence": [
+        {
+          "asset_id": "3d16701618141b48",
+          "file": "2024建设项目其他费用及相关费用计价依据-正文问答版.md",
+          "sha256": "398e0558b82609e7d363ec2dba97366bc85f67364967d0e3b3e45f4bd79dc987",
+          "ranges": [
+            [
+              672,
+              680
+            ]
+          ],
+          "excerpts": [
+            "## 第二十五条 国内设备运杂费\n\n## （一）费用内容\n\n国内设备运杂费是指从国内制造厂家运至施工现场所发生的运输费、装卸费、包装费、采购管理费（含采购代理费）、保管费、港口建设费、运输保险费等。不包括超限设备运输特殊措施费。\n\n## （二）计算方法\n\n国内设备（油气输送管道管段除外）运杂费＝设备出厂价×国内设备运杂费费率国内设备运杂费按表25费率计算。表25国内设备运杂费费率表<table><tr><td rowspan=1 colspan=1>序号</td><td rowspan=1 colspan=1>建设项目所在地区</td><td rowspan=1 colspan=1>费率（%)</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>吉林、辽宁、河北、山东、山西、江苏、浙江、安徽北京、天津、上海</td><td rowspan=1 colspan=1>6.43</td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>河南、陕西、湖北、湖南、江西、四川、重庆、福建广东、黑龙江</td><td rowspan=1 colspan=1>7.51</td></tr><tr><td rowspan=1 colspan=1>3</td><td rowspan=1 colspan=1>甘肃、宁夏、内蒙古、广西、海南、贵州、青海、云南</td><td rowspan=1 colspan=1>8.58</td></tr><tr><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>新疆、西藏</td><td rowspan=1 colspan=1>9.64</td></tr></table>油（气）输送管道管段运杂费按从钢管制造厂至中转库的运输实际情况计算。国内设备运杂费中的采购管理费以设备采购合同不含税金额为基数，按表26费率计费标准采用超额累进法计算。表26采购管理费费率表<table><tr><td rowspan=1 colspan=1>采购合同不含税金额（亿元）</td><td rowspan=1 colspan=1>费率（%）</td><td rowspan=1 colspan=1>备注</td></tr><tr><td rowspan=1 colspan=1>5以下</td><td rowspan=1 colspan=1>0.8</td><td rowspan=1 colspan=1>含5亿元</td></tr><tr><td rowspan=1 colspan=1>5~10</td><td rowspan=1 colspan=1>0.2</td><td rowspan=1 colspan=1>含10亿元</td></tr><tr><td rowspan=1 colspan=1>10以上</td><td rowspan=1 colspan=1>0.1</td><td rowspan=1 colspan=1></td></tr></table>"
+          ],
+          "headings": [
+            "第二十五条 国内设备运杂费",
+            "（一）费用内容",
+            "（二）计算方法"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-083",
+      "body_sha256": "02a8841a3a8713ef285212f2b6df42dc9a73eb5347ec291c5e2c8678e87cd19e",
+      "source_evidence": [
+        {
+          "asset_id": "3d16701618141b48",
+          "file": "2024建设项目其他费用及相关费用计价依据-正文问答版.md",
+          "sha256": "398e0558b82609e7d363ec2dba97366bc85f67364967d0e3b3e45f4bd79dc987",
+          "ranges": [
+            [
+              752,
+              758
+            ]
+          ],
+          "excerpts": [
+            "## 第三十条 建设期利息\n\n### （一）费用内容建设期利息是指在建设期内发生，并应计入固定资产的建设项目的负息资金的利息\n\n## （二）计算方法\n\n根据国家及集团公司规定，计核资产负债率、建设期间经营活动现金净流入及投资规模，以及为项目建设取得借贷资金、合理确定付息资金金额。利率按公司规定的负息资金利率或实际可取得的资金利率计算。每年负息资金是建设投资（含税）在各年的分配额。各年应计建设期利息＝（年初负息资金本息累计＋本年新增负息资金额/2）×负息资金利率"
+          ],
+          "headings": [
+            "第三十条 建设期利息",
+            "（一）费用内容建设期利息是指在建设期内发生，并应计入固定资产的建设项目的负息资金的利息",
+            "（二）计算方法"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-084",
+      "body_sha256": "9d10fe49efc77b3a52a5d06300551cd0c1e0eade2b47d713706325d85ccdd5b8",
+      "source_evidence": [
+        {
+          "asset_id": "3d16701618141b48",
+          "file": "2024建设项目其他费用及相关费用计价依据-正文问答版.md",
+          "sha256": "398e0558b82609e7d363ec2dba97366bc85f67364967d0e3b3e45f4bd79dc987",
+          "ranges": [
+            [
+              738,
+              748
+            ]
+          ],
+          "excerpts": [
+            "## 第二节 预备费\n\n## 第二十九条 基本预备费\n\n## （一）费用内容\n\n基本预备费是指在预可行性研究阶段、可行性研究阶段或初步设计阶段难以预料的工程费用和其他费用。基本预备费内容包括：在项目实施中可能增加的工程费用，一般自然灾害造成的损失和预防自然灾害所采取的措施费用，竣工验收时为鉴定质量而对隐蔽工程进行必要的挖掘和修复的费用，以及其他不确定因素而预留的工程建设费用。\n\n## （二）计算方法\n\n基本预备费＝（工程费用+其他费用+工程费用增值税+其他费用增值税）×基本预备费费率基本预备费按表31费率计算。需动用预备费时，应向投资造价管理部门申请或备案。表31基本预备费费率表<table><tr><td rowspan=1 colspan=1>序号</td><td rowspan=1 colspan=1>建设项目</td><td rowspan=1 colspan=1>预可行性研究阶段</td><td rowspan=1 colspan=1>可行性研究阶段</td><td rowspan=1 colspan=1>初步设计阶段</td></tr><tr><td rowspan=1 colspan=1>二</td><td rowspan=1 colspan=1>项目人民币部分</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>油（气）输送管道、油库</td><td rowspan=1 colspan=1>10%~ 12%</td><td rowspan=1 colspan=1>8%~10%</td><td rowspan=1 colspan=1>3%~4%</td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>储气库工程</td><td rowspan=1 colspan=1>10%~ 12%</td><td rowspan=1 colspan=1>8%~10%</td><td rowspan=1 colspan=1>5%~6%</td></tr><tr><td rowspan=1 colspan=1>3</td><td rowspan=1 colspan=1>液化天然气</td><td rowspan=1 colspan=1>10%~ 12%</td><td rowspan=1 colspan=1>8%~10%</td><td rowspan=1 colspan=1>4%~5%</td></tr><tr><td rowspan=1 colspan=1>二</td><td rowspan=1 colspan=1>项目外汇部分</td><td rowspan=1 colspan=1>4%~ 6%</td><td rowspan=1 colspan=1>2%~4%</td><td rowspan=1 colspan=1>0%~1%</td></tr></table>备注：项目外汇部分包括进口设备材料的货价和从属费用，不包括国外专利及专有技术使用费。"
+          ],
+          "headings": [
+            "第二十九条 基本预备费",
+            "（一）费用内容",
+            "（二）计算方法"
+          ]
+        },
+        {
+          "asset_id": "a8e01d63f42cb606",
+          "file": "2012石油建设项目其他费用和相关费用规定-正文问答版.md",
+          "sha256": "cb666d93a8bfc6c0272ab909c0f20f3159d1e545290893346a97329d02847085",
+          "ranges": [
+            [
+              864,
+              904
+            ]
+          ],
+          "excerpts": [
+            "# **第五章  预 备 费**\n\n**第二十九条**  基本预备费\n\n1. 费用内容\n\n基本预备费是指在预可行性研究阶段、可行性研究阶段或初步设计阶段难以预料的工程费用和其他费用。基本预备费内容包括：在项目实施中可能增加的工程和费用，一般自然灾害造成的损失和预防自然灾害所采取的措施费用，竣工验收时为鉴定质量而对隐蔽工程进行必要的挖掘和修复的费用。\n\n2. 计算方法\n\n基本预备费＝（工程费用＋其他费用）×基本预备费费率\n\n基本预备费按表21费率计算。\n\n**表21                       基本预备费费率表**\n\n<table><tr><td><p>序号</p></td><td><p>建设项目</p></td><td><p>项目建议书或预可行性研究阶段</p></td><td><p>可行性研究阶段</p></td><td><p>初步设计阶段</p></td></tr><tr><td><p>一</p></td><td><p>项目人民币部分</p></td><td></td><td></td><td></td></tr><tr><td><p>1</p></td><td><p>油气田和地下储气库</p></td><td><p>10%～12%</p></td><td><p>8%～10%</p></td><td><p>6%～7%</p></td></tr><tr><td><p>2</p></td><td><p>长输管道</p></td><td><p>10%～12%</p></td><td><p>8%～10%</p></td><td><p>4%～5%</p></td></tr><tr><td><p>3</p></td><td><p>炼油化工和液化天然气</p></td><td><p>10%～12%</p></td><td><p>8%～10%</p></td><td><p>5%～6%</p></td></tr><tr><td><p>4</p></td><td><p>其他建设项目（地下储气库和液化天然气建设项目除外）</p></td><td><p>10%～12%</p></td><td><p>8%～10%</p></td><td><p>4%～5%</p></td></tr><tr><td><p>二</p></td><td><p>项目外汇部分</p></td><td><p>4%～6%</p></td><td><p>2%～4%</p></td><td><p>0%～1%</p></td></tr></table>\n\n注：项目外汇部分包括进口设备材料的货价和从属费用，不包括国外专利及专有技术使用费。\n\n**第三十条**  价差预备费\n\n1. 费用内容\n\n价差预备费是指建设期内由于人工、设备、材料、机械等价格上涨以及政策调整、费率、利率、汇率变化等引起工程造价变化的预留费用。\n\n2．计算方法\n\n![](images/5e383d1d45b7de4b9fa9143e4e9ea41713e055a9d72ac00614059c40393f341c.jpg)\n\n式中  P—价差预备费；\n\nm—建设期；\n\nt —建设期第t年（t=1，2……m）；\n\nI<sub>t</sub>—第t年投入的工程费用（不包括进口设备材料购置费）；\n\nf —投资价格指数。\n\n投资价格指数由集团公司批准发布。目前投资价格指数为零。"
+          ],
+          "headings": [
+            "1. 费用内容",
+            "2. 计算方法",
+            "第五章  预 备 费"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-085",
+      "body_sha256": "bf00856918fbb13cc0ba0eda33797d517865d2f4f4727b0552dc2a0c9d5e6925",
+      "source_evidence": [
+        {
+          "asset_id": "3d16701618141b48",
+          "file": "2024建设项目其他费用及相关费用计价依据-正文问答版.md",
+          "sha256": "398e0558b82609e7d363ec2dba97366bc85f67364967d0e3b3e45f4bd79dc987",
+          "ranges": [
+            [
+              768,
+              786
+            ]
+          ],
+          "excerpts": [
+            "## 第三十二条 管道铺底油（气）费用\n\n### （一）费用内容管道铺底油（气）费用是指油（气）输送管道建成后在投产初期，需要提前向管道内注入一定量的管道铺底油（气）而发生的费\n\n用。\n\n### （二）计算方法管道铺底油（气）费用＝管道中的铺底油（气）量×铺底油（气）单价其中铺底油（气）单价按建设项目所在地油（气）当期或\n\n预期采购价格计入。如管道项目铺底气单独形成资产，不计取此项费用。\n\n## 第三十三条 储气库铺底气费用\n\n### （一）费用内容储气库铺底气费用系指储气库在投产初期，为了使储层的地层压力上升到最低工作压力，以便为储气库正常储存或释放天然气提\n\n供能量保证，需要提前向储层中注入一定量的储气库铺底气而发生的费用。\n\n## （二）计算方法\n\n储气库铺底气费用＝储气库铺底气量×铺底气单价其中铺底气单价按建设项目所在地天然气当期或预期采购价格计入。"
+          ],
+          "headings": [
+            "第三十三条 储气库铺底气费用",
+            "（一）费用内容储气库铺底气费用系指储气库在投产初期，为了使储层的地层压力上升到最低工作压力，以便为储气库正常储存或释放天然气提",
+            "（二）计算方法"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-086",
+      "body_sha256": "c610f8a9a45c4e59e3f9587d2e576d5a4262144458ec4d0f243c7c3e8e68f96a",
+      "source_evidence": [
+        {
+          "asset_id": "d9280c86ba95e6bb",
+          "file": "2005石油建设安装工程概算指标说明-正文问答版.md",
+          "sha256": "81ce3c44ca1c3758f11dc132883e3d6e303f69e092ef8b1ee8da75465bf4d664",
+          "ranges": [
+            [
+              310,
+              378
+            ]
+          ],
+          "excerpts": [
+            "# **第二章 静置设备安装工程**\n\n<a id=\"_Toc264641576\"></a>\n## 一、本章指标分为：\n\n第一节 一般容器安装：卧式容器、碳钢容器分段组对、碳钢容器分片组装、不锈钢容器分段组对、不锈钢容器分片组装。\n\n第二节 热交换设备安装：热交换设备、空气冷却器。\n\n第三节 塔器安装：塔（立式容器）整体、碳钢塔分段组对、碳钢塔分片组对、不锈钢塔分段组对、不锈钢塔分片组对、螺栓组对塔（设备）安装、塔盘安装、塔内衬合金板。\n\n第四节 催化裂化再生器、沉降器、旋风分离器安装。\n\n第五节 空气分馏塔安装：空气分馏塔整体安装、空气分馏塔分体安装。\n\n第六节 撬块安装：油、热系统撬块，水系统撬块，机泵类撬块。\n\n第七节 其他设备安装：分离器、收发球装置（汇气管）、天然气过滤器、装油鹤管及输油臂、阻火器、反应器、聚丙稀环管聚合反应器组对、玻璃钢罐。\n\n第八节 填充、脱脂、酸洗、钝化。\n\n<a id=\"_Toc264641577\"></a>\n## 二、指标包括内容：\n\n1．指标包括设备本体安装、基础二次灌浆。\n\n2．换热器安装指标包括了水压试验。\n\n3．空冷器安装指标包括了管束水压试验、空气吹扫、气密性试验、百叶窗调试及试运转，构架组对、焊接、吊装、找正、风机安装、调试、试运转。\n\n4．碳钢、不锈钢容器和塔类没备分段、分片组对（组装）指标包括分片、分段组装，组装胎具和组对吊装加固措施设施的制作、安装、拆除，焊缝热处理（焊前液化气预热、焊后热处理、预热器器具制作）、无损探伤、焊接工艺评定和焊接试板试验、压缩空气吹洗、水压试验。\n\n5．塔盘（筛板、浮阀、泡罩、舌型、混合型）安装指标包括塔盘安装、塔类固定件安装、泡罩塔盘鼓泡试验。\n\n6．催化裂化再生器、沉降器安装包括分片组对、拼装，焊缝无损探伤检验，吊耳制作，气密实验，设备吊装，组装平台铺设与拆除，现场吊装加固措施的制作、安装、拆除；无损探伤检验是按X光探伤考虑的。设计另有规定时单独计取。\n\n7．空气分馏塔安装指标包括塔本体安装、百叶窗调试及试运转、构架组对、风机安装、调试，空气分馏塔主体材料为铝合金。\n\n8．撬块安装指标包括撬块设备检查验收吊装就位找正、接管、接线、撬上连接件组焊及电气仪表连接件组装、紧固检修与调试。\n\n9．阻火器安装指标包括检查、清理、安装。\n\n10．填料填充指标包括筛选填料、清洗和填充。\n\n<a id=\"_Toc264641578\"></a>\n## 三、指标未包括内容：\n\n1．金属抱杆的安拆、移动及使用费。\n\n2．除特殊说明外的设备冲（吹）洗、水压试验、气密性试验。\n\n3．设备的除锈、刷油、防腐、衬里、绝热。\n\n4．设备安装指标不包括的设备的脱脂、酸洗及钝化。\n\n5．设备本体法兰以外的管道安装，非设备自带的附件、梯子、栏杆等。\n\n6．压力容器安装检验费。\n\n7．组装平台的铺设与拆除。\n\n8．氩弧焊接时的设备（容器）内充保护氩气费用。\n\n9．催化裂化再生器、沉降器、旋风分离器分片分段组对安装设备的焊缝焊前预热、后热及焊后热处理。\n\n<a id=\"_Toc264641579\"></a>\n## 四、指标使用方法：\n\n1．立卧式容器、碳钢塔和不锈钢塔整体安装指标子目，设备重量包括本体、附件、吊耳，随主体吊装的绝热层、管线、平台、梯子的重量之和，但不包括塔盘和填充物的重量；油（气）田加热炉安装套用立卧式容器整体安装相应指标子目乘以1.3的系数。"
+          ],
+          "headings": [
+            "二、指标包括内容：",
+            "三、指标未包括内容：",
+            "四、指标使用方法："
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-087",
+      "body_sha256": "812d4b4787801b5487e3b88e9f0ad7072e19689932dc086b3a6ef2b04182d4b5",
+      "source_evidence": [
+        {
+          "asset_id": "d9280c86ba95e6bb",
+          "file": "2005石油建设安装工程概算指标说明-正文问答版.md",
+          "sha256": "81ce3c44ca1c3758f11dc132883e3d6e303f69e092ef8b1ee8da75465bf4d664",
+          "ranges": [
+            [
+              424,
+              462
+            ],
+            [
+              786,
+              844
+            ]
+          ],
+          "excerpts": [
+            "第一节 锅炉及水处理装置安装：整体锅炉成套设备、通用锅炉吨位设备、水处理装置、余热锅炉、水套炉、蒸汽发生器、除尘（雾）设备。\n\n第二节 工业炉安装：燃烧炉、灼烧炉、化工火焰加热炉（裂解炉、转化炉、化肥装置加热炉、气化炉、芳烃装置加热炉、煤气发生炉）、炼油厂加热炉制安（金属结构制安、炉管、管板、管架、砖架及其它附件）、废热锅炉（合成氨装置废热系统、乙烯装置废热系统、甲烷蒸汽转化炉废热系统、鲁奇加压煤气化炉废热系统）、炉类附件及配件。\n\n第三节 炼油化工炉窑砌筑。\n\n<a id=\"_Toc264641582\"></a>\n## 二、指标的组合内容包括：\n\n1．整体锅炉成套设备安装包括的工作内容：\n\n（1）锅炉本体及本体范围内的管道、主汽阀门、热水阀门、安全门、给水阀门、水位警报、排污阀门、水位计、温度计、压力表以及相配套的附件安装。\n\n（2）上煤装置、除灰（渣）装置，体外省煤器等设备安装。以及随锅炉生产厂配套供货的烟风管系统和非标构件、配件的安装。\n\n（3）锅炉本体一次门以内的水压试验。\n\n（4）烘炉煮炉和调整安全门。\n\n2．通用散装锅炉安装包括：锅炉本体的钢架、汽包、水冷壁、过热器、省煤器、空气预热器、本体管路、吹灰装置、各种门孔构件、炉排安装、探伤检验、水压试验、烘炉煮炉等。\n\n3．钠离子交换锅炉水处理设备安装包括工作内容：设备及随设备供应的管子、管件、阀门等的安装，设备本体范围内的平台、梯子、栏杆的安装、填料的搬运、筛分、装填、衬里设备防腐层的检验、设备试运行的灌水和水压试验。\n\n4．余热锅炉、水套炉、燃烧炉、灼烧炉安装指标包括本体安装、基础二次灌浆。\n\n5．蒸汽发生器安装指标包括撬块安装、整体试压等。\n\n6．除尘器包括蜗壳、分离筒、导烟管、顶盖、排灰筒及支座的组合安装，不包括除尘器内衬的灌砌：除尘器其它附件安装包括导向导板、落灰管及冲灰器的组合安装。\n\n7．化学工业炉安装包括结构拼装、焊接，炉管清洗、吹除、坡口除锈、组对、调直、焊接、水压试验、气密试验，配合烘炉，焊缝预热、后热和探伤，现场组装平台铺设与拆除，并包括钢平台钢材的摊销。\n\n8．炼油厂加热炉制作、安装：\n\n（1）金属结构制作安装包括制作、组对安装、构件组装。\n\n（2）炉管及附件安装包括炉管检查、组对焊接、安装紧固、焊缝的探伤、水压试验、胎具制作安装与拆除。\n\n9．点火燃烧器、燃烧器安装指标只包括本体安装。\n",
+            "## **一、本章指标分为：**\n\n第一节 刷油工程：设备管道刷油、金属结构刷油、灰面（布面、玛蹄脂面）刷油、气柜刷油。\n\n第二节 防腐、防火涂料工程。\n\n第三节 手糊玻璃钢工程。\n\n第四节 橡胶板及塑料板衬里工程。\n\n第五节 喷镀（涂）工程。\n\n第六节 衬搪铅工程。\n\n第七节 砖板衬里工程：硅质胶泥衬砖板、树脂胶泥衬砖板、硅质胶泥抹面、耐酸砖板砌体热处理。\n\n第八节 绝热工程：管道绝热、设备绝热、球罐绝热、保护层（防潮层）安装。\n\n第九节 设备专用衬里及龟甲网安装工程。\n\n<a id=\"_Toc264641599\"></a>\n## **二、指标包括的内容：**\n\n1．指标中组合了各种管件、阀门、设备人孔、管口部分凹凸等的刷油、防腐、绝热工作内容。\n\n2．刷油指标包括除锈、刷油工作内容。\n\n3．防腐（防火）工程指标包括除锈、喷涂（涂刷）。\n\n4．手糊玻璃钢工程：指标组合内容包括除锈、下料、填料干燥过筛、胶料配制、刮腻子、玻璃丝布脱脂、衬贴玻璃布。\n\n5．橡胶板及塑料板衬里工程：适用于设备、管道、阀门的橡胶衬里和设备内表面软聚氯乙烯板的衬里工程。指标组合内容包括除锈、下料配浆、刷浆贴衬、火花检查、（硫化）、硬度检查。管道衬橡胶和阀门衬橡胶采用设备衬橡胶指标。\n\n6．喷镀（涂）工程指标适用于金属设备管道等表面气喷镀和塑料粉料的喷涂，指标综合除锈、金属丝脱脂、喷镀涂、质量检查。\n\n7．衬搪铅工程指标适用于金属设备表面衬铅、搪铅，指标综合了除锈、清洗、衬铅板、质量检查等。\n\n8．砖板衬里工程指标适用于金属设备的耐酸砖板的衬里，衬砌指标综合了除锈、衬砌、养生、酸洗，胶泥抹面指标综合了除锈、涂稀胶泥、分层抹平、酸洗、钩钉制安、挂铁丝网，耐酸砖板砌体热处理指标包括制作安装电炉、升温、记录、检查。\n\n9．绝热指标包括绝热材料的绑扎（粘结或涂抹），指标不包括绝热材料费，金属油罐绝热分板类和涂抹类两种绝热方式，综合了角钢固定圈的制作安装及型钢材料费。\n\n10．设备专用衬里及龟甲网安装工程中，衬里包括设备内壁除锈、人工涂抹、机械喷涂耐火耐磨浇注料、浇注料振捣、手工捣打、锚固钉及端板除锈（油）和安装、球形拱胎摊销等：龟甲网安装包括龟甲网除锈（油）、龟甲网与器壁、端板焊接。设备专用衬里及龟甲网安装工程指标中包括锚固钉和端板的材料费。\n\n<a id=\"_Toc264641600\"></a>\n## **三、指标未包括内容：**\n\n1．防腐（火）涂料费用。\n\n2．金属罐防腐绝热的超高增加费；\n\n3．设备专用衬里及龟甲网安装工程指标不包括隔热、耐磨等衬里料和龟甲网的主材费。\n\n<a id=\"_Toc264641601\"></a>\n## **四、指标使用方法：**\n\n1．刷油、防腐工程量原则上按其展开面积计算，当不能按展开面积计算时，按金属结构重量以100kg计算。\n\n2．刷油工程中管廊钢结构和钢管塔架按其重量套用相应指标时，应乘以系数0.66；H型钢钢结构按其重量套用相应指标时，应乘以系数0.48；铸铁管刷油套用相应的设备管道刷油指标时，乘以系数1.15；喷漆执行相应的刷油子目。刷油工程指标除带锈底漆为一遍外，其余均按两遍考虑。当设计为一遍时指标乘以系数0.52；若增加一遍时，指标乘以系数1.48。\n"
+          ],
+          "headings": [
+            "第三章 炉类及附属设备安装工程",
+            "一、本章指标共分为：",
+            "二、指标的组合内容包括："
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-088",
+      "body_sha256": "d8b3f9059c2ccc63c39a339a792c2108a7aa1958bfb3732831618e0478cc8181",
+      "source_evidence": [
+        {
+          "asset_id": "d9280c86ba95e6bb",
+          "file": "2005石油建设安装工程概算指标说明-正文问答版.md",
+          "sha256": "81ce3c44ca1c3758f11dc132883e3d6e303f69e092ef8b1ee8da75465bf4d664",
+          "ranges": [
+            [
+              968,
+              1030
+            ]
+          ],
+          "excerpts": [
+            "（2）10kV变配电装置：组合式成套箱式变电站安装、10kV室内变压器安装、10kV外附式变电站、10kV柱上变电站、低压配电屏、控制及保护屏、蓄电池。\n\n第三节 动力、照明及其它工程：\n\n动力设备安装、电机检查接线及调试、照明及其他器具安装、电缆敷设、配管配线、起重设备电气、防雷及接地装置。\n\n<a id=\"_Toc264641609\"></a>\n## **二、指标包括的内容：**\n\n（一）输供电工程\n\n1．35kV输电线路：\n\n（1）电杆组立包括材料工地运输、定位、底（卡）盘安装、挖电杆坑和拉线坑、挖接地槽、立杆、横担、叉梁、横梁、金具、绝缘子安装、拉线制作安装、接地及全部材料费，终端杆还包括杆上避雷器安装调试，避雷器设备费另计。\n\n（2）铁塔组立包括材料工地运输、定位、立塔、金具、绝缘子安装、接地、终端塔上避雷器安装调试及全部材料费，避雷器设备费另计。\n\n（3）铁塔基础包括材料工地运输、挖基础坑、钢筋加工制作、地脚螺栓制作、混凝土浇制、防腐及全部材料费。\n\n（4）导线／避雷线架设及跨越架设包括材料工地运输、导线／避雷线架设、跨越架设及全部材料费。\n\n2．10kV及以下供电线路：\n\n（1）电杆组立包括材料工地运输、定位、底（卡）盘安装、挖电杆坑和拉线坑、挖接地槽、立杆、横担、金具、绝缘子安装、拉线制作安装、接地、杆上设备安装调试，除断路器之外的全部设备材料费。\n\n（2）电杆加固及加高：电杆加固包括材料工地运输、毛石铺装、套管安装及全部材料费；电杆加高包括铁帽制安、横担安装及材料费。\n\n（3）导线架设包括材料工地运输、导线架设、跨越架设，导线主材另计。\n\n（二）变配电工程：\n\n1．35kV变配电装置：\n\n（1）35kV变压器安装包括变压器安装、干燥、油过滤、调试、引下线、母线、金具、绝缘子安装及相应的材料费，室内变压器安装还包括隔离开关、避雷器安装、穿墙套管安装、铁构件和电缆头制安。\n\n（2）35kV配电间隔指标包括设备本体安装调试、引下线、设备连线、金具、绝缘子安装、母线安装、调试、端子箱安装及材料费。\n\n（3）高压开关柜安装包括开关柜本体安装、柜上母线、绝缘子安装，基础槽钢制安、调试，包括除母线和绝缘子外的所有材料费用，母线和绝缘子按与柜体配套一同订货考虑，进线柜还包括穿墙套管及相应材料的安装。\n\n（4）单体配电安装指标包括设备本体安装、户外设备一侧的引下线或设备连线安装，绝缘子安装，调试及材料费。\n\n（5）户外补偿电容器装置指标包括设备本体安装、干燥，设备连线、母线安装、金具、绝缘子安装，电容器的支架及防雨棚制安、调试。\n\n2．10kV变配电装置\n\n（1）组合式成套箱式变电站安装组合了变电站本体安装、成套变电站系统调试。\n\n（2）10KV（6KV）变压器安装组合了变压器本体安装、变压器系统调试、变压器油过滤及取样分析、变压器干燥、高低压母线安装、绝缘子安装、穿墙套管安装、铁构件和一个热缩电缆头的制安，还包括铝母线、绝缘子、穿墙套管、高低压母线夹具、铁构件和一个热缩电缆头等全部材料费。\n\n（3）10kV外附式变电站指标包括挖填电杆及底卡盘坑、底卡盘安装、立杆、横担、金具、绝缘子安装、变压器安装、干燥、油过滤、调试、杆上设备安装调试、引下线、设备连线安装、接地低压侧引出线安装及材料费和部分设备费。\n\n（4）10kV柱上变电站指标包括材料工地运输、挖填电杆及底卡盘坑、底卡盘安装、立杆、横担、金具、绝缘子安装、变压器安装、干燥、油过滤、调试、杆上设备安装、调试、引下线、设备连线、配电箱安装及材料费和部分设备费。\n\n（5）低压配电屏指标包括配电盘柜安装、调试、基础槽钢制安、柜上母线、绝缘子安装。\n\n（6）单体配电指标包括设备本体安装、设备一侧的引下线或设备连线安装，绝缘子安装，调试。\n\n（7）控制、保护屏指标包括本体安装、基础槽钢制安、及相应的材料费。\n\n（8）蓄电池指标包括了蓄电池安装和蓄电池充放电。蓄电池安装指标包括了搬运、开箱、检查、安装、连接线、配注电解液、标志标号、护罩及防震支架的安装。\n\n（三）电气及照明工程：\n"
+          ],
+          "headings": [
+            "第九章 输变电、电气及照明工程",
+            "一、本章指标分为：",
+            "二、指标包括的内容："
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-089",
+      "body_sha256": "a26267168c60b65107cdac3a16ee23e154b9e38e540bac0f6e9ed0ed03c94cc9",
+      "source_evidence": [
+        {
+          "asset_id": "d9280c86ba95e6bb",
+          "file": "2005石油建设安装工程概算指标说明-正文问答版.md",
+          "sha256": "81ce3c44ca1c3758f11dc132883e3d6e303f69e092ef8b1ee8da75465bf4d664",
+          "ranges": [
+            [
+              590,
+              596
+            ],
+            [
+              746,
+              780
+            ]
+          ],
+          "excerpts": [
+            "## **三、指标不包括的内容：**\n\n1．不包括防雷接地、防腐、绝热及衬里、工艺管道安装。\n\n2．金属罐、气柜指标不包括空气泡沫产生器、喷淋、消防装置的制作安装、加热器及其安装；气柜指标不包括基础荷重预压实验。\n\n3．除特殊说明外不包括刷油。",
+            "8．给水排水器具指标包括本体安装、附件组对安装、支吊架制安、刷油、水压试验、材料费等全部内容。\n\n9．消防器具指标包括室内、室外（地上、地下）消火栓安装和结合器（地上、地下）安装，其内容包括本体安装调试、附件组对安装、支吊架制安、刷油、水压试验，室内消火栓安装包括消火栓和结门材料费，室外消火栓安装未包括消火栓材料费。喷头安装指标包括喷头密封性能抽查试验、安装，适用于金属罐喷淋降温。\n\n10．洗眼器、消防炮安装包括成套器具安装和附件的材料费。水灭火系统包括系统组件，气压水罐安装；气体灭火系统包括系统组件安装，二氧化碳称重检漏装置安装，组件试验；泡沫灭火系统包括泡沫发生器，泡沫比例混合器安装；油罐空气泡沫产生器安装指标包括泡沫器、过滤器及金属软管安装，还包括立管、管件安装及主材、支架制安及防腐、快速接口及闷盖。\n\n11．玻璃钢冷却塔安装包括现场组装、塔内风机及电机等附件的安装。\n\n12．循环水冷却塔安装包括塔体现场拼装、组装、吊装、管道连接、喷头安装、刷油防腐等；冷却塔风机安装包括拆卸检查、组装、安装、支架制安、刷油等；冷却塔填料包括现场组装、塔内安装。\n\n<a id=\"_Toc264641595\"></a>\n## **三、指标未包括内容：**\n\n1．管沟土方、管墩、井类砌筑及各种给排水构筑物。\n\n2．阀门、压力表、温度计安装；\n\n3．防腐、绝热；\n\n4．灭火系统的单体及系统调试。\n\n<a id=\"_Toc264641596\"></a>\n## **四、指标使用方法：**\n\n1．阀门安装执行第五章相应子目，压力表、温度计安装执行<a href=\"http://www.shcost.cn/Filesrch/htmlfiles/cnpc05/ZB1000.asp\"><u>第十章</u></a>相应子目，防腐、绝热执行<a href=\"http://www.shcost.cn/Filesrch/htmlfiles/cnpc05/ZB0700.asp\"><u>第七章</u></a>相应子目。\n\n2．无缝钢管管道安装执行<a href=\"http://www.shcost.cn/Filesrch/htmlfiles/cnpc05/ZB0500.asp\"><u>第五章</u></a>低压电弧焊相应子目，钢筋混凝土排水管当采用套环石棉水泥接口时，另加套环费，当采用钢丝网水泥接口时乘以1.1的系数。\n\n3．光排管散热器联管作为材料己列入指标，不得重复计算：各类型散热器不分明装或暗装，均按类型套用子目；柱型散热器为挂装时，可执行M132铸铁散热器安装子目；柱型和M132型铸铁散热器安装用拉条时，拉条材料费另计；板式、壁板式和闭式散热器已包括了托钩的安装。\n\n4．减压器、疏水器指标按综合口径以“组”为计量单位套用相应子目，单个减压器、疏水器及除污器、补偿器安装套用第五章阀门安装子目。\n\n5．消防器具按安装方式选用子目，水表、洗眼器、消防炮的材料费另计，泡沫灭火系统的气压水罐安装执行水灭火系统相应子目，油罐空气泡沫产生器安装指标按罐的容积以“套”为单位套用相应子目，每座罐所配的泡沫产生器的数量以设计为准，金属软管之前的水平管道和管支墩另计。\n\n6．循环水冷却塔安装按水流方向、风机直径以“座”为单位套用相应指标子目；冷却塔风机按风机直径以“座”为为单位套用相应指标子目；冷却塔填料按填料材料、形状以“m<sup>3</sup>”为单位套用相应指标子目。"
+          ],
+          "headings": [
+            "一、本章指标分为：",
+            "二、指标包括的内容：",
+            "三、指标不包括的内容："
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-090",
+      "body_sha256": "e321d6fc7e9da236061f208606e2eeb24c7224cc218354da7452112d1e3695b9",
+      "source_evidence": [
+        {
+          "asset_id": "d9280c86ba95e6bb",
+          "file": "2005石油建设安装工程概算指标说明-正文问答版.md",
+          "sha256": "81ce3c44ca1c3758f11dc132883e3d6e303f69e092ef8b1ee8da75465bf4d664",
+          "ranges": [
+            [
+              648,
+              709
+            ]
+          ],
+          "excerpts": [
+            "# **第五章 工艺管道安装工程**\n\n<a id=\"_Toc264641591\"></a>\n## **一、本章指标分为：**\n\n第一节 石油化工工艺管道安装：焊接钢管、碳钢板卷管、低压碳钢无缝钢管、中压碳钢无缝钢管、高压碳钢无缝钢管、不锈钢板卷管、低压不锈钢无缝钢管、中压不锈钢无缝钢管、高压不锈钢无缝钢管、低压铬钼钢管、中压铬钼钢管、高压铬钼钢管、低压钛管、中压钛管、铝板卷管、铝管、铜板卷管、铜管、衬里钢管、玻璃钢管、塑料管、伴热管安装，管道支架制安。\n\n第二节 石油天然气工艺管道安装：\n\n（1）室内管道安装：低压螺纹连接碳钢管道、低压碳钢管道（电弧焊）、低压碳钢管道（氩电联焊）、中压碳钢管道（电弧焊）、中压碳钢管道（氩电联焊）、高压碳钢管道（电弧焊）、高压碳钢管道（氩电联焊）、低压不锈钢管道（电弧焊）、低压不锈钢管道（氩电联焊）、塑料管道、玻璃钢管道。\n\n（2）室外管道安装：低压碳钢管道（电弧焊）、低压碳钢管道（氩电联焊）、中压碳钢管道（电弧焊）、中压碳钢管道（氩电联焊）、高压碳钢管道（电弧焊）、高压碳钢管道（氩电联焊）、低压不锈钢管道（电弧焊）、低压不锈钢管道（氩电联焊）、塑料管道、玻璃钢管道。\n\n第三节 阀门安装：低压螺纹阀门、低压法兰阀门、中压法兰阀门、高压法兰阀门、高压焊接阀门。\n\n## **二、指标包括内容：**\n\n1．管道安装包括直管安装、管件安装、法兰安装、吹扫、试压、探伤、衬里钢管预安装及法兰和管件的材料费，还包括了补偿器安装，但不包括补偿器主材费。\n\n2．阀门安装指标综合考虑了螺栓、垫片或透镜垫等材料费及研磨。\n\n## **三、指标未包括内容：**\n\n1．管道和阀门刷油、防腐、衬里、绝热、钝化与脱脂、支架的刷油、防腐。\n\n2．电动阀门安装不包括电动机检查接线与调试。\n\n3．管道安装中不包括绝缘法兰及管卡安装。\n\n## **四、指标使用方法：**\n\n1．指标压力等级划分：低压≤1.6MPa、1.6MPa<中压≤10.0Mpa、高压>10.0Mpa。\n\n2．管道安装的室内、室外界限是以建筑物外墙1.5m为界。\n\n3．黑色金属管道以“t”为计量单位套用相应子目，有色金属、塑料管道、玻璃钢管道以“10m”为计量单位套用相应子目，管道材料费另计。\n\n4．下列工艺管道安装套用第一节石油化工工艺管道安装指标相应子目时，应进行调整：\n\n（1）全厂工艺及供热外管安装人工和机械费乘以0.5系数，材料费乘以0.2系数。\n\n（2）各类型炼油厂的生产装置和辅助生产装置管道安装指标乘以0.95系数。\n\n（3）304L不锈钢管道安装人工和机械费乘以1.15的系数，材料费乘以1.2的系数；316L、TB347不锈钢管道安装人工和机械费乘以1.20的系数，材料费乘以1.25的系数。\n\n（4）复合板卷管安装套用碳钢板卷管安装子目，人工、材料、机械费分别乘以1.15、1.10和1.12的系数。\n\n5．下列工艺管道安装套用第二节石油天然气工艺管道安装指标相应子目时，应进行调整：\n\n（1）阀组间管道安装按相应子目乘以系数1.2。\n\n（2）油气处理装置管道安装按相应子目乘以系数1.15。\n\n6．跨接线安装指标是按碳钢跨接线考虑的，若为不锈钢时乘以1.8系数、铝或铝合金乘以1.1系数、铜时乘以1.87系数。\n\n7．阀门安装适用于各类管道上的阀门安装，类似阀门安装的其他器具均可参照执行阀门安装子目。\n\n8．阀门按连接方式和压力等级以“个”为计量单位套用相应子目，高、中压螺纹阀门安装套用低压相应子目时人工乘以系数1.2。\n\n9．中低压齿轮、液压传动、电动阀门安装执行相应的普通阀门安装定额，但电动机检查接线与调试执行其他有关章节子目。\n\n10．安全阀门安装套用普通阀门相应子目，人工费乘以系数1.5。"
+          ],
+          "headings": [
+            "二、指标包括内容：",
+            "三、指标未包括内容：",
+            "四、指标使用方法："
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-091",
+      "body_sha256": "32bb53673d456814de8fa7251d1f9e86f5e1a776e710070506d3d6f9c22630a0",
+      "source_evidence": [
+        {
+          "asset_id": "ffb4af8c045bcebc",
+          "file": "2024数字与信息化项目投资计价依据-正文问答版.md",
+          "sha256": "f0d646304239d60892c4d09f77e83f72af6a37a83d6c799b332f86e516efeff0",
+          "ranges": [
+            [
+              134,
+              142
+            ]
+          ],
+          "excerpts": [
+            "## （一） 硬件费用\n\n## 1. 费用内容\n\n硬件费用包括硬件设备购置费与资源租赁费。硬件设备购置费是指因项目建设所需而购买各类硬件设备所发生的费用，包括服务器类、存储类、网络类、安全类等硬件设备费用，费用包含设备价格及相应的安装调试费、材料费、运杂费等。资源租赁费是指项目建设期根据项目建设所需而租赁硬件、云服务、云平台等资源所发生的费用。\n\n## 2. 计算方法\n\n硬件设备购置费与资源租赁费，采用以下方式综合确定价格：（1）参考国家、行业或地区公布的信息类产品指导价格；（2）同类工程历史采购价；（3）市场询价。编制表格详见附表2。"
+          ],
+          "headings": [
+            "（一） 硬件费用",
+            "1. 费用内容",
+            "2. 计算方法"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-092",
+      "body_sha256": "2ca5c5cf262f085271a728fedd6b3206d115ee3b2374aa07484e1bbf52a4535a",
+      "source_evidence": [
+        {
+          "asset_id": "ffb4af8c045bcebc",
+          "file": "2024数字与信息化项目投资计价依据-正文问答版.md",
+          "sha256": "f0d646304239d60892c4d09f77e83f72af6a37a83d6c799b332f86e516efeff0",
+          "ranges": [
+            [
+              154,
+              156
+            ]
+          ],
+          "excerpts": [
+            "## （三） 采购管理费\n\n采购管理费是指经批准由北京智网数科技术有限公司开展的数字与信息化建设项目采购管理工作收取的费用，包括组织招标、签订合同、接收、验收、保管、发放、催交催运、质量检验等。采购管理费以项目软硬件设备购置金额为基数（不包括软件开发费），计算规则如下：可研阶段，采购管理费包含在软硬件设备购置费中，按不超过购置费（不含增值税）的10%计取，在投资估算中不单独计列；结算阶段，软硬件设备购置费据实结算，采购管理费按实际采购金额乘以对应费率进行结算。"
+          ],
+          "headings": [
+            "1. 费用内容",
+            "2. 计算方法",
+            "（三） 采购管理费"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-093",
+      "body_sha256": "857d4fcf4cb881669b6885b0d2859ccf1c5e7363af4fe251227fee1306b5419f",
+      "source_evidence": [
+        {
+          "asset_id": "ffb4af8c045bcebc",
+          "file": "2024数字与信息化项目投资计价依据-正文问答版.md",
+          "sha256": "f0d646304239d60892c4d09f77e83f72af6a37a83d6c799b332f86e516efeff0",
+          "ranges": [
+            [
+              176,
+              194
+            ]
+          ],
+          "excerpts": [
+            "## （二） 建设管理费\n\n建设管理费包括建设单位管理费、造价咨询费、架构看护费、第三方咨询费。\n\n## 1. 建设单位管理费\n\n建设单位管理费是指建设单位从可行性研究报告批复时至交付为止对项目进行管理、协调、监督、验收等工作所发生的管理费用。项目审计费、会议费等费用包含在建设单位管理费中，不单独计取。建设单位管理费根据工程费用，采用直线内插法进行计算，费率详见表4。表4建设单位管理费费率表<table><tr><td rowspan=1 colspan=1>工程费用（万元）</td><td rowspan=1 colspan=1>费率(%)</td></tr><tr><td rowspan=1 colspan=1>500及以下（≥100）</td><td rowspan=1 colspan=1>1.51</td></tr><tr><td rowspan=1 colspan=1>2000</td><td rowspan=1 colspan=1>1.27</td></tr><tr><td rowspan=1 colspan=1>5000</td><td rowspan=1 colspan=1>1.04</td></tr><tr><td rowspan=1 colspan=1>10000</td><td rowspan=1 colspan=1>0.91</td></tr><tr><td rowspan=1 colspan=1>30000</td><td rowspan=1 colspan=1>0.62</td></tr><tr><td rowspan=1 colspan=1>50000</td><td rowspan=1 colspan=1>0.55</td></tr><tr><td rowspan=1 colspan=1>100000及以上</td><td rowspan=1 colspan=1>0.49</td></tr></table>注：工程费用100万元以下的建设项目，建设单位管理费均按1.51万元计算。\n\n## 2. 造价咨询费\n\n造价咨询费是委托造价咨询单位在建设项目中从事招标控制价编制、工程结算审查、竣工决算编制等建设项目各阶段工程造价业务咨询服务，并出具工程造价咨询成果文件等业务活动所产生的费用。造价咨询费根据工程费用，采用直线内插法进行计算，费率详见表5。表5造价咨询费费率表<table><tr><td rowspan=1 colspan=1>工程费用（万元）</td><td rowspan=1 colspan=1>费率(%)</td></tr><tr><td rowspan=1 colspan=1>500及以下（≥100）</td><td rowspan=1 colspan=1>0.81</td></tr><tr><td rowspan=1 colspan=1>2000</td><td rowspan=1 colspan=1>0.69</td></tr><tr><td rowspan=1 colspan=1>5000</td><td rowspan=1 colspan=1>0.56</td></tr><tr><td rowspan=1 colspan=1>10000</td><td rowspan=1 colspan=1>0.49</td></tr><tr><td rowspan=1 colspan=1>30000</td><td rowspan=1 colspan=1>0.34</td></tr><tr><td rowspan=1 colspan=1>50000</td><td rowspan=1 colspan=1>0.29</td></tr><tr><td rowspan=1 colspan=1>100000及以上</td><td rowspan=1 colspan=1>0.27</td></tr></table>注：1.工程费用100万元以下的建设项目，造价咨询费均按0.81万元计算；2.工程费用中硬件费用、软件购置费按80%作为取费基数。\n\n## 3. 架构看护费\n\n按《架构管控咨询技术要求》，架构看护费包括：业务架构看护、数据架构看护、应用架构看护、技术架构看护。根据项目复杂程度按工程费的1.5%～3%计取，不开展架构看护工作的项目不计取架构看护费。\n\n## 4. 第三方咨询费\n\n第三方咨询费为由第三方专业机构或组织进行管理制度梳理、授权事项提炼、流程评估等工作发生的费用。不开展第三方咨询工作的项目不计取第三方咨询费。计算公式为：第三方咨询费=工作量（人天总数）×人员基准价人员基准价按表2基准价计算，编制表格详见附表6。"
+          ],
+          "headings": [
+            "2. 造价咨询费",
+            "3. 架构看护费",
+            "4. 第三方咨询费"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-094",
+      "body_sha256": "81adc6c2e31b7e94560b9127a3cd703dd172b08bf53bf2a666e5229899b29350",
+      "source_evidence": [
+        {
+          "asset_id": "ffb4af8c045bcebc",
+          "file": "2024数字与信息化项目投资计价依据-正文问答版.md",
+          "sha256": "f0d646304239d60892c4d09f77e83f72af6a37a83d6c799b332f86e516efeff0",
+          "ranges": [
+            [
+              196,
+              208
+            ]
+          ],
+          "excerpts": [
+            "## （三） 第三方测评费\n\n## 1. 软件功能与性能测评费\n\n指数字与信息化项目在验收前委托第三方测评机构依据经批准的数字与信息化项目可行性研究报告、设计方案等对系统进行功能性、非功能性、用户文档等测评所支出的费用，费率详见表6。表6软件功能与性能测评费费率表<table><tr><td rowspan=1 colspan=1>序号</td><td rowspan=1 colspan=1>计费基价X（万元）</td><td rowspan=1 colspan=1>费率（%)</td><td rowspan=1 colspan=1>速算增加额（万元）</td><td rowspan=1 colspan=1>最终费用（C)</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>X≤200</td><td rowspan=1 colspan=1>2.80</td><td rowspan=1 colspan=1>0</td><td rowspan=6 colspan=1>C=本档速算增加额+项目本档金额×本档费率</td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>200&lt;X≤500</td><td rowspan=1 colspan=1>2.40</td><td rowspan=1 colspan=1>5.6</td></tr><tr><td rowspan=1 colspan=1>3</td><td rowspan=1 colspan=1>500&lt;X≤1000</td><td rowspan=1 colspan=1>2.00</td><td rowspan=1 colspan=1>12.8</td></tr><tr><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>1000&lt;X≤2000</td><td rowspan=1 colspan=1>1.60</td><td rowspan=1 colspan=1>22.8</td></tr><tr><td rowspan=1 colspan=1>5</td><td rowspan=1 colspan=1>2000&lt;X≤5000</td><td rowspan=1 colspan=1>1.20</td><td rowspan=1 colspan=1>38.8</td></tr><tr><td rowspan=1 colspan=1>6</td><td rowspan=1 colspan=1>X&gt;5000</td><td rowspan=1 colspan=1>0.60</td><td rowspan=1 colspan=1>74.8</td></tr></table>注：1.软件功能与性能测评费计费基价为软件开发费；2.费用采用差额定率累进法计算，示例：X=1500万元，C=22.8+(1500-1000)×1.6÷100=30.8万元；3.结合项目实际情况，不发生时不计取。\n\n## 2. 安全等级保护测评费\n\n安全等级保护测评费是指建设单位委托第三方测评机构依据国家信息安全等级保护制度规定，按照有关管理规范和技术标准对未涉及国家秘密的信息系统安全保护状况进行分等级测试评估活动产生的费用。安全保护等级根据《GB/T 22240-2020信息安全技术网络安全等级保护定级指南》划分。计费基价详见表7。表7信息安全等级保护测评计费基价<table><tr><td rowspan=1 colspan=1>类别</td><td rowspan=1 colspan=3>私有云</td><td rowspan=1 colspan=3>四级</td><td rowspan=1 colspan=3>三级</td><td rowspan=1 colspan=3>二级</td></tr><tr><td rowspan=1 colspan=1>服务器规模（台）</td><td rowspan=1 colspan=1>100以内</td><td rowspan=1 colspan=1>101-200</td><td rowspan=1 colspan=1>200以上</td><td rowspan=1 colspan=1>100以内</td><td rowspan=1 colspan=1>101-200</td><td rowspan=1 colspan=1>200以上</td><td rowspan=1 colspan=1>100以内</td><td rowspan=1 colspan=1>101-200</td><td rowspan=1 colspan=1>200以上</td><td rowspan=1 colspan=1>100以内</td><td rowspan=1 colspan=1>101-200</td><td rowspan=1 colspan=1>200以上</td></tr><tr><td rowspan=1 colspan=1>计费基价（万元）</td><td rowspan=1 colspan=1>43</td><td rowspan=1 colspan=1>51</td><td rowspan=1 colspan=1>55</td><td rowspan=1 colspan=1>29</td><td rowspan=1 colspan=1>32</td><td rowspan=1 colspan=1>35</td><td rowspan=1 colspan=1>24</td><td rowspan=1 colspan=1>26</td><td rowspan=1 colspan=1>28</td><td rowspan=1 colspan=1>14</td><td rowspan=1 colspan=1>15</td><td rowspan=1 colspan=1>16</td></tr></table>注：1.“100以内”“101-200”“200以上”，代表信息系统的设备总量，包括该信息系统所属的所有网络设备、安全设备、服务器（如果服务器为虚拟主机或虚拟化设备，应按照虚拟化后的设备数量计算）等设备总和；2.测评费用中包含定级服务及等级保护定级专家评审费用；3.结合项目实际情况，不发生不计取。\n\n## 3. 其他测评费\n\n根据项目实际需要计取的其他测评费用，如：渗透测试、密码测评、攻防演练、安全保密测评等，费用应根据市场价格计算，不发生不计取。"
+          ],
+          "headings": [
+            "1. 软件功能与性能测评费",
+            "2. 安全等级保护测评费",
+            "3. 其他测评费"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-095",
+      "body_sha256": "62951ddde41992d3d23ceb3d894686dbb64b9d0e8e7f52a7eb237b77b0c3ba91",
+      "source_evidence": [
+        {
+          "asset_id": "ffb4af8c045bcebc",
+          "file": "2024数字与信息化项目投资计价依据-正文问答版.md",
+          "sha256": "f0d646304239d60892c4d09f77e83f72af6a37a83d6c799b332f86e516efeff0",
+          "ranges": [
+            [
+              236,
+              262
+            ]
+          ],
+          "excerpts": [
+            "## （二） 直接非人力成本\n\n直接非人力成本包括：\n\n1. 办公费，即开发方为开发此项目而产生的行政办公费用，如办公用品、通讯、邮寄、印刷和会议等；\n\n2. 差旅费，即开发方为开发此项目而产生的差旅费用，如交通、住宿和差旅补贴等；\n\n3. 开发培训费，即开发方为开发此项目而安排的培训产生的费用；\n\n4. 业务费，即开发方为完成此项目开发工作所需辅助活动产生的费用，如招待费、评审费和验收费等；\n\n5. 采购费，即开发方为开发此项目而需特殊采购专用资产或服务的费用，如专用设备费、专用软件费、技术协作费和专利费等；按附表10列项，不发生不计取；\n\n6. 其他，即未在以上项目列出但却是开发方为开发此项目所需花费的费用；按项目实际在附表10中列项，不发生不计取。\n\n## （三） 间接人力成本\n\n指开发方服务于开发管理整体需求的非项目组人员的人力资源费用分摊。包括开发部门经理、项目管理办公室人员、工程过程组人员、产品规划人员、组织级质量保证人员、组织级配置管理人员、商务采购人员和IT支持人员等的工资、奖金和福利等的分摊。\n\n## （四） 间接非人力成本\n\n指开发方不为开发某个特定项目而产生，但服务于整体开发活动的非人力成本分摊。包括：开发方开发场地房租、水电和物业，开发人员日常办公费用分摊，战略、市场宣传推广、品牌建设、知识产权专利等费用分摊，各种开发办公设备的租赁、维修、折旧分摊以及安全生产费等。\n\n## （五） 毛利润\n\n指开发方直接成本和间接成本之外，应承担的各种税费及税后净利润。"
+          ],
+          "headings": [
+            "（三） 间接人力成本",
+            "（四） 间接非人力成本",
+            "（五） 毛利润"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-096",
+      "body_sha256": "fa0f49e9773c5ced09a8e40a661448b64f81f9c7b2f720b6aa6f95d6fa1e1e47",
+      "source_evidence": [
+        {
+          "asset_id": "7c385d19f1706319",
+          "file": "2025中国软件行业基准数据-正文问答版.md",
+          "sha256": "f0efd7d297fc88ac64f835b26be33870e7b4033b6d6422f597c2fb3dc7eae577",
+          "ranges": [
+            [
+              322,
+              328
+            ]
+          ],
+          "excerpts": [
+            "## D.6基于行业数据评估的软件运维工作量周期是多长？\n\n缺省为一年。\n\n## D.7基于行业数据评估的软件开发或运维费用是否含税？\n\n含税。评估的开发或运维费用包含应用软件运维的直接人力成本、间接人力成本、间接非人力成本及合理利润（含税），但不包括直接非人力成本。D.8当前在很多行业实际的实践中，是根据建设费用按照一定比例确定运维费用的，这种方式与运维成本度量国标（GB/T 28827.7-2022）定义的方法完全不同，未来还可以基于比例测算运维费用吗？事实上，国标《信息技术服务 运行维护 第7部分：成本度量规范》（GB/T28827.7-2022）（以下简称“运维国标”）并不反对采用比例法确定运维费用。目前的行业基准数据中也给出了软件运维费用与建设费用的比例关系。比例法可以认为是一种简化后的“快速算法”，而运维国标所定义的方法给出了比例法的测算基础和依据，同时也能够很好地应对建设费用偏离实际成本时的运维成本评估问题。例如，在采用比例法时，如果项目建设期低价中标，或者部分IT 资产免费（如软件均为赠送，但也需要运维），其测算的运维费用就会严重偏离实际资源需求，而运维国标中定义的方法能够很好地应对此类情况。"
+          ],
+          "headings": [
+            "D.5在进行工作量估算时，如果所属业务领域不在行业基准数据的行业分类中怎么办？",
+            "D.6基于行业数据评估的软件运维工作量周期是多长？",
+            "D.7基于行业数据评估的软件开发或运维费用是否含税？"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-097",
+      "body_sha256": "4008d9e76348ed52d91e3611585a0975d7bac9acb66f3fa5fd11a92bbda13b6d",
+      "source_evidence": [
+        {
+          "asset_id": "7c385d19f1706319",
+          "file": "2025中国软件行业基准数据-正文问答版.md",
+          "sha256": "f0efd7d297fc88ac64f835b26be33870e7b4033b6d6422f597c2fb3dc7eae577",
+          "ranges": [
+            [
+              326,
+              328
+            ]
+          ],
+          "excerpts": [
+            "## D.7基于行业数据评估的软件开发或运维费用是否含税？\n\n含税。评估的开发或运维费用包含应用软件运维的直接人力成本、间接人力成本、间接非人力成本及合理利润（含税），但不包括直接非人力成本。D.8当前在很多行业实际的实践中，是根据建设费用按照一定比例确定运维费用的，这种方式与运维成本度量国标（GB/T 28827.7-2022）定义的方法完全不同，未来还可以基于比例测算运维费用吗？事实上，国标《信息技术服务 运行维护 第7部分：成本度量规范》（GB/T28827.7-2022）（以下简称“运维国标”）并不反对采用比例法确定运维费用。目前的行业基准数据中也给出了软件运维费用与建设费用的比例关系。比例法可以认为是一种简化后的“快速算法”，而运维国标所定义的方法给出了比例法的测算基础和依据，同时也能够很好地应对建设费用偏离实际成本时的运维成本评估问题。例如，在采用比例法时，如果项目建设期低价中标，或者部分IT 资产免费（如软件均为赠送，但也需要运维），其测算的运维费用就会严重偏离实际资源需求，而运维国标中定义的方法能够很好地应对此类情况。"
+          ],
+          "headings": [
+            "D.5在进行工作量估算时，如果所属业务领域不在行业基准数据的行业分类中怎么办？",
+            "D.6基于行业数据评估的软件运维工作量周期是多长？",
+            "D.7基于行业数据评估的软件开发或运维费用是否含税？"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-098",
+      "body_sha256": "1cfb96d47c377dcc768276aaf599a2b10fbef2856e4bfd13fb333b08cfcf05ad",
+      "source_evidence": [
+        {
+          "asset_id": "7c385d19f1706319",
+          "file": "2025中国软件行业基准数据-正文问答版.md",
+          "sha256": "f0efd7d297fc88ac64f835b26be33870e7b4033b6d6422f597c2fb3dc7eae577",
+          "ranges": [
+            [
+              232,
+              234
+            ]
+          ],
+          "excerpts": [
+            "## A.7开发团队背景调整因子参数表\n\n表 A.7开发团队背景调整因子参数表<table><tr><td rowspan=1 colspan=1>调整因子</td><td rowspan=1 colspan=1>判断标准</td><td rowspan=1 colspan=1>影响度</td></tr><tr><td rowspan=3 colspan=1>同类行业及项目的以往经验</td><td rowspan=1 colspan=1>为本行业开发过类似的项目</td><td rowspan=1 colspan=1>0.8</td></tr><tr><td rowspan=1 colspan=1>为其他行业开发过类似的项目，或为本行业开发过不同但相关的项目</td><td rowspan=1 colspan=1>1. 0</td></tr><tr><td rowspan=1 colspan=1>没有同类项目的背景</td><td rowspan=1 colspan=1>1.2</td></tr></table>"
+          ],
+          "headings": [
+            "A.5非功能性特征调整因子参数表",
+            "A.6开发平台调整因子参数表",
+            "A.7开发团队背景调整因子参数表"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-099",
+      "body_sha256": "3d4ddad0afe647029c9be62c8e858df78722f3927cfeaa8db189fb4a4cc7b4d3",
+      "source_evidence": [
+        {
+          "asset_id": "7c385d19f1706319",
+          "file": "2025中国软件行业基准数据-正文问答版.md",
+          "sha256": "f0efd7d297fc88ac64f835b26be33870e7b4033b6d6422f597c2fb3dc7eae577",
+          "ranges": [
+            [
+              278,
+              290
+            ]
+          ],
+          "excerpts": [
+            "基于中国软件行业基准数据库的运维成本估算，首先也是需要对规模进行估算，进而进行工作量、费用估算。从 B.2.1得知，该项目在预算阶段的规模为145.95个功能点。依据国标 GB/T28827.7-2022《信息技术服务 运行维护 第7部分：成本度量规范》标准中推荐使用方程法，计算公式如下：工作量=（软件规模×生产率）×运维级别要求调整因子×运维能力调整因子×运维系统及业务特征调整因子评估小组根据软件系统特征及运维要求，查表获得各调整因子如表B.4：表 B.4工作量调整因子<table><tr><td rowspan=1 colspan=1>工作量调整因子</td><td rowspan=1 colspan=1></td></tr><tr><td rowspan=1 colspan=1>运维级别要求调整因子</td><td rowspan=1 colspan=1>0.95</td></tr><tr><td rowspan=1 colspan=1>运维能力调整因子</td><td rowspan=1 colspan=1>1.00</td></tr><tr><td rowspan=1 colspan=1>运维系统及业务特征调整因子</td><td rowspan=1 colspan=1>1.14</td></tr><tr><td rowspan=1 colspan=1>工作量调整因子</td><td rowspan=1 colspan=1>0.95 × 1.00 × 1.14=1.08</td></tr></table>基于行业基准数据的应用软件运维生产率中值为0.81人时/FP。计算工作量（按照1人月等于21.75人天，1人天等于8人时计算）为：调整前的工作量为： $1 4 5 . 9 5 \\times 0 . 8 1 \\div 8 \\div 2 1 . 7 5 = 0 . 6 8$ 人月。调整后的工作量为：0.68人月×1.08=0.73人月。评估小组确认该项目费用为：工作量×人月费率+直接非人力成本。基于行业基准数据，北京市软件运维基准人月费率为26670元/人月。其中人月费率包括直接人力成本、间接人力成本和间接非人力成本。本项目不涉及直接非人力成本。评估小组根据北京市人月费率，确定项目运维费用的行业建议值为：0.73×26670÷10000 = 1.95万元。\n\n## B.3结果应用\n\n## 1、预算合理性评价\n\n将基于国标及行业基准数据计算的结果与实际预算进行比较后，评估小组认为原预算编制较为合理，批复金额处于行业合理范围之内。\n\n## 2、业务需求质量评价\n\n但通过基于早期文档的成本评估也发现该项目立项需求较为简单，结合后续项目变更记录以及验收文档，发现该项目存在由于立项时需求模糊导致的开发方交付功能不能完全满足业务部门需求的情况。后续业务部门及预算审批部门应加强立项时需求质量的把控。<!-- image-->\n\n## 附录 C 其他运维成本度量基准数据"
+          ],
+          "headings": [
+            "1、预算合理性评价",
+            "2、业务需求质量评价",
+            "附录 C 其他运维成本度量基准数据"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    },
+    {
+      "id": "cost-100",
+      "body_sha256": "7794a112387fe5ac10a3558dbb83b6065b3ad8c4adf91d301015234bae7ee79f",
+      "source_evidence": [
+        {
+          "asset_id": "7c385d19f1706319",
+          "file": "2025中国软件行业基准数据-正文问答版.md",
+          "sha256": "f0efd7d297fc88ac64f835b26be33870e7b4033b6d6422f597c2fb3dc7eae577",
+          "ranges": [
+            [
+              54,
+              60
+            ],
+            [
+              76,
+              78
+            ]
+          ],
+          "excerpts": [
+            "## 1. 背景与目的\n\n随着软件行业项目规模不断增长、项目复杂度不断提高，量化管理变得越来越重要。在项目管理中，预测、计划、控制和报告都是以数据为基础。因此，为成功实现项目量化管理，首先需要收集、分析度量数据，建立基准数据库。国际上软件产业发展水平较好的国家（如美国、印度、芬兰、荷兰、日本、韩国等），已建立行业级软件过程基准数据库。与此同时，很多国际基准比对标准组织从上个世纪九十年代就开始收集软件历史项目数据。中国软件行业基准数据库（以下简称“行业基准数据库”）是在国家有关政务部门的指导下，先后由中国电子技术标准化研究院、北京软件造价评估技术创新联盟牵头建设，由北京中基数联科技有限公司提供数据统计与分析技术支持。行业基准数据库主要服务于软件组织的生产及运维过程管理与改进、信息化工程造价估算、信息化工程监理和审计等。\n\n## 2. 术语与缩略语\n\n百分位数：在某实数集合中，对于集合内某元素X，如果该集合中有且仅有p%的数据不大于X，则称X为该集合的p百分位数。 生产率：本文中特指功能点耗时率，即每功能点开发或运维所消耗的工作量，单位为人时/功能点。其中开发工作量包含了开发团队从立项到交付的所有工程活动（如需求分析、设计、编码、集成、测试、实施）及相关的项目管理和支持活动所耗费的工作量；运维工作量包含了运维团队在限定运维周期（一年）内所有运维活动（如优化完善、例行操作、响应支持、调研评估）及相关的管理和支持活动所耗费的工作量。 缺陷密度：测试活动发现的缺陷数与实际软件规模之比，单位为缺陷数/功能点。其中缺陷数为项目交付前各类测试活动（包括内部测试及用户验收测试，但不包括单元测试）发现的缺陷之和。 交付质量：项目验收后6个月内发现的缺陷数与软件规模之比，单位为缺陷数/千功能点。",
+            "## 3.4数据分析方法\n\n基准数据采用基准比对方法来分析数据。基准比对（Benchmarking），即组织将自身的项目管理及研发数据与行业数据及最佳实践进行持续比较，通过数据分析比对，帮助组织了解现状、发现问题、实施改进并对未来建立预测。基准比对描述了组织在发展中某一时刻的过程状态，类似于一张“体检表”，指明组织在发展中的优劣。实施基准比对的组织可以依据这张“体检表”进行针对性的改进，并通过持续的比对从客观上验证组织所选取的度量体系或过程改进方案是否有效。基准比对的核心价值在于帮助相关组织找到“真正的问题”和“现实的方法”，并全面评价改进效果。在基于基准比对方法，生成行业基准数据的过程中，我们主要遵循以下原则或要求：对数据进行匿名化处理，以充分保护提交数据组织的商业秘密对数据进行严格的审核、可信度评价，保证数据质量对数据进行必要的规格化处理，保证数据的可比性剔除低可信度数据，并计算最新统计周期内各主要指标的百分位分布将主要指标最新的百分位分布与上一统计周期的数据进行加权平均，获得最新基准数据利用企业咨询及第三方评估数据对行业基准数据主要指标进行验证和优化，并剔除异常数据"
+          ],
+          "headings": [
+            "中国软件行业基准数据（CSBMK® -202510）",
+            "1. 背景与目的",
+            "2. 术语与缩略语"
+          ]
+        }
+      ],
+      "editorial_method": "逐篇依据原文整理；阅读提示不直接裁决价格或系数"
+    }
+  ],
+  "weknora_source_scope_changed": false
+}

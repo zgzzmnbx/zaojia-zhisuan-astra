@@ -39,7 +39,10 @@ export function installEntranceMotion(doc:Document=document){
    const fill=node.matches('.fs-column-row')?node.querySelector('.fs-column-track>i'):node.firstElementChild;
    if(fill)animate(fill,[{transform:'scaleX(0)',transformOrigin:'left center'},{transform:'scaleX(1)',transformOrigin:'left center'}],1000,delay+100,node);
   }else if(node.matches(plots)){
-   animate(node,[{opacity:.35,clipPath:'inset(0 100% 0 0)'},{opacity:1,clipPath:'inset(0 0% 0 0)'}],900,delay);
+   // Clipping the observed wrapper makes its intersection empty and restarts
+   // the entrance every frame. Reveal the SVG while observing stable geometry.
+   const surface=node.querySelector(':scope > svg.recharts-surface');
+   if(surface)animate(surface,[{opacity:.35,clipPath:'inset(0 100% 0 0)'},{opacity:1,clipPath:'inset(0 0% 0 0)'}],900,delay,node);
   }else if(node.matches(icons)){
    animate(node,[{opacity:0,transform:'scale(.65) rotate(-12deg)'},{opacity:1,transform:'scale(1.08) rotate(3deg)',offset:.65},{opacity:1,transform:'none'}],650,delay+100);
   }else if(node.matches(panels)){

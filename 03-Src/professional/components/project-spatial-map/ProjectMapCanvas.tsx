@@ -31,6 +31,7 @@ type RawTestMapLike = {
   once?: (eventName: string, callback: () => void) => void;
   setPaintProperty?: (layerId: string, property: string, value: string | number) => void;
   resize?: () => void;
+  fitBounds?: (bounds: [[number, number], [number, number]], options?: unknown) => void;
 };
 
 type TestProvinceFeature = {
@@ -288,6 +289,8 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
     const style = useConfiguredMapbox ? configuredStyle : TEST_MAP_STYLE_URL;
     let disposed = false;
     const abortController = new AbortController();
+    let resizeObserver: ResizeObserver | undefined;
+    let resizeFrame = 0;
     setStatus("loading");
     setMessage("正在加载 AntV L7 测试地图……");
 
@@ -431,7 +434,22 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
         const projectProvinceKeys = getProjectProvinceKeys(items);
         const addLayers = () => {
           if (disposed) return;
-          scene.fitBounds?.(CHINA_VIEW_BOUNDS, { padding: 26, maxZoom: 3.6, duration: 0 });
+          // The iframe can grow from split view to full screen after L7 loads.
+          // Resize the public map canvas before fitting, without rebuilding layers.
+          const viewportMap = scene.map || scene.getMapService?.().map || scene.getMap?.();
+          const fitViewport = () => {
+            cancelAnimationFrame(resizeFrame);
+            resizeFrame = requestAnimationFrame(() => {
+              if (disposed || !containerRef.current?.clientWidth) return;
+              viewportMap?.resize?.();
+              const options = { padding: { top: 72, bottom: 72, left: 36, right: 36 }, maxZoom: 3.6, duration: 0 };
+              if (viewportMap?.fitBounds) viewportMap.fitBounds(CHINA_VIEW_BOUNDS, options);
+              else scene.fitBounds?.(CHINA_VIEW_BOUNDS, options);
+            });
+          };
+          resizeObserver = new ResizeObserver(fitViewport);
+          if (containerRef.current) resizeObserver.observe(containerRef.current);
+          fitViewport();
           if (!useConfiguredMapbox) {
             // 当前 L7 版本通过 Scene.map 暴露 MapLibre 实例；保留旧版本取法，避免不同 L7 小版本下底图降级。
             const rawMap =
@@ -496,6 +514,8 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
     return () => {
       disposed = true;
       abortController.abort();
+      resizeObserver?.disconnect();
+      cancelAnimationFrame(resizeFrame);
       sceneRef.current?.destroy?.();
       sceneRef.current = null;
       selectedProjectBubbleLayerRef.current = null;

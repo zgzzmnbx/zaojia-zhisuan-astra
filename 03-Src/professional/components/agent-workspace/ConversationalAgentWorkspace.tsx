@@ -1,4 +1,4 @@
-import { Plus, Sparkles, X } from "lucide-react";
+import { Plus, Sparkles, X } from "../../../PhosphorIcons";
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import type { ProfessionalSkillSnapshot, ProfessionalSkillSummary } from "../skills/ProfessionalSkillSelector";
 import ZhisuanAvatar, { type ZhisuanAvatarState } from "../ZhisuanAvatar";
