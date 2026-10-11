@@ -11,6 +11,16 @@ vm.runInContext(readFileSync(new URL('../03-Src/vendor/gork/gork-catalog.js',imp
 const presets=context.window.GorkPresets,sequences=context.window.GorkCatalog.sequences.map((s:any)=>s.id);
 const normalize=(value:unknown)=>normalizeGorkPreferences(value,presets,sequences);
 
+test('layout and floating size migrate old preferences, clamp corrupt values and remain independent',()=>{
+ const old={appearance:{id:'gork'},expressions:{idle:'sleeping'}};
+ assert.equal(normalize(old).composerLayout,'roomy');assert.equal(normalize(old).floatingSize,56);
+ assert.equal(normalize({...old,composerLayout:'classic',floatingSize:128}).composerLayout,'classic');
+ assert.equal(normalize({...old,composerLayout:'classic',floatingSize:128}).floatingSize,128);
+ for(const value of [null,'128',NaN,Infinity])assert.equal(normalize({...old,floatingSize:value}).floatingSize,56);
+ assert.equal(normalize({floatingSize:1000}).floatingSize,128);assert.equal(normalize({floatingSize:0}).floatingSize,48);assert.equal(normalize({floatingSize:73}).floatingSize,72);
+ assert.equal(normalize({...old,floatingSize:128}).expressions.idle,'sleeping');
+});
+
 test('defaults and every original avatar and sequence are accepted without foreign configuration',()=>{
  assert.equal(presets.length,10);assert.equal(sequences.length,23);
  const initial=normalize(null);assert.equal(initial.appearance.id,'gork');

@@ -1,20 +1,48 @@
-/* Old zaojia-zhisuan welcome layout: centered copy, grid paper, bottom workbench.
-   Layout geometry follows frontend/src/styles.css at 5b6b8d2. All selectors
-   are isolated; components/colors use Astra's installed daisyUI 5 theme. */
+/* Welcome details follow DESIGN.md: theme light, fine linework, quiet depth. */
 .astra-welcome-v2{position:fixed;z-index:80;inset:0;display:flex;align-items:flex-start;justify-content:center;min-height:100dvh;overflow:auto;padding:44px clamp(22px,4vw,64px) 52px;background:linear-gradient(180deg,color-mix(in srgb,var(--color-primary) 7%,transparent),transparent 42px),linear-gradient(90deg,color-mix(in srgb,var(--color-base-content) 5%,transparent) 1px,transparent 1px),linear-gradient(180deg,color-mix(in srgb,var(--color-base-content) 5%,transparent) 1px,transparent 1px),var(--color-base-100);background-size:auto,90px 90px,90px 90px,auto;color:var(--color-base-content)}
 .aw2-appearance{position:absolute;right:clamp(22px,4vw,64px);top:18px;z-index:2;display:flex;gap:4px}
 .aw2-shell{position:relative;display:flex;flex-direction:column;align-items:center;width:min(1260px,100%);min-height:min(850px,calc(100dvh - 78px));padding:clamp(44px,7vh,80px) 0 0;border-inline:1px solid var(--color-base-300)}
 .aw2-shell::before,.aw2-shell::after{content:"";position:absolute;top:44px;width:18px;height:18px;border:1px solid var(--color-base-300);border-radius:6px;background:var(--color-base-100);box-shadow:0 4px 16px #0f172a14}
 .aw2-shell::before{left:-9px}.aw2-shell::after{right:-9px}
-.aw2-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-width:0;padding:0 20px;text-align:center}
+.aw2-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:min(640px,100%);min-width:0;padding:0 20px;text-align:center}
 .aw2-copy .aw2-kicker{display:inline-flex;align-items:center;gap:8px;height:auto;margin:0 0 22px;padding:8px 12px;border:1px solid var(--color-base-300);border-radius:999px;background:var(--color-base-100);color:var(--muted);font-size:13px;font-weight:650;line-height:1.5;box-shadow:0 8px 22px #0f172a0a}
-.aw2-kicker .astra-icon{width:15px;height:15px}.aw2-copy h1{max-width:820px;margin:0;color:var(--ink);font-family:var(--dws-font-family-ui);font-size:48px;font-weight:900;letter-spacing:0;line-height:1.05;outline:none}
-.aw2-role{margin:16px 0 0;color:var(--ink);font-size:28px;font-weight:750;line-height:1.18}.aw2-lead{max-width:660px;margin:14px 0 0;color:var(--muted);font-size:14px;line-height:1.65}
-.aw2-actions{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:28px}.aw2-enter.btn{min-height:42px;height:42px;padding:0 18px;gap:9px;border-radius:8px;font-size:14px;font-weight:700;box-shadow:0 10px 22px #0f172a22}.aw2-enter .astra-icon{width:20px;height:20px}.aw2-check{display:inline-flex;align-items:center;gap:8px;min-height:42px;color:var(--muted);font-size:13px;line-height:1.4;cursor:pointer}.aw2-status,.aw2-error{margin:12px 0 0;font-size:13px;color:var(--muted)}.aw2-error{color:var(--red)}
-.aw2-product-wrap{position:relative;z-index:1;width:min(1160px,calc(100% - 28px));margin-top:clamp(60px,7vh,70px)}
+.aw2-kicker .astra-icon{width:15px;height:15px}.astra-welcome-v2 .aw2-copy h1{max-width:820px;margin:0;color:var(--ink);font-family:var(--dws-font-family-ui);font-size:48px;font-weight:600;letter-spacing:3px;line-height:1.2;outline:none}
+.aw2-title-group{display:grid;justify-items:center;gap:12px}.aw2-copy .aw2-role{margin:0;color:var(--muted);font-size:16px;font-weight:400;letter-spacing:2px;line-height:1.5}.aw2-lead{max-width:660px;margin:14px 0 0;color:var(--muted);font-size:14px;line-height:1.65}
+.aw2-actions{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:28px}.aw2-enter.btn{min-height:42px;height:42px;padding:0 18px;gap:9px;border-radius:8px;font-size:14px;font-weight:700;box-shadow:0 10px 22px #0f172a22}.aw2-enter .astra-icon{width:20px;height:20px}.aw2-check{display:inline-flex;align-items:center;gap:8px;min-height:42px;color:var(--muted);font-size:13px;line-height:1.4;cursor:pointer}.aw2-status,.aw2-error{margin:12px 0 0;font-size:13px;color:var(--muted)}.aw2-error{color:var(--red)}
+.aw2-feedback{width:min(360px,100%);min-height:70px;margin:20px auto 0;text-align:left}.aw2-feedback .task-progress{width:100%}.aw2-feedback .aw2-error{margin:0;padding:12px 0;line-height:1.6}
+.aw2-product-wrap{position:relative;z-index:1;width:min(1160px,calc(100% - 28px));margin-top:32px}
 .aw2-product-frame{position:relative;z-index:1;overflow:hidden;border:1px solid var(--color-base-300);border-radius:16px;background:var(--paper);box-shadow:0 22px 70px #0f172a14;animation:aw2-workbench-rise 900ms cubic-bezier(.22,1,.36,1) 180ms both;}
 @keyframes aw2-workbench-rise{from{opacity:0;transform:translateY(72px)}to{opacity:1;transform:translateY(0)}}
 .aw2-bot-peek{position:absolute;z-index:0;top:-56px;left:calc(80% - 51px);width:102px;height:102px;transition:transform 500ms cubic-bezier(.4,0,.2,1)}.astra-welcome-v2:has(.aw2-enter:hover,.aw2-enter:focus-visible) .aw2-bot-peek{transform:translateY(-15%)}
 @media(max-width:1100px){.astra-welcome-v2{padding:26px 26px 52px}.aw2-shell{min-height:0}.aw2-product-wrap{width:min(100%,860px)}}
-@media(max-width:760px){.astra-welcome-v2{padding:18px 18px 36px}.aw2-shell{padding-top:66px}.aw2-copy{padding:0 16px}.aw2-copy h1{font-size:36px;line-height:1.08}.aw2-role{font-size:24px}.aw2-copy .aw2-kicker{font-size:12px;gap:6px}.aw2-actions{align-items:stretch;flex-direction:column;gap:8px}.aw2-enter.btn{width:100%}.aw2-check{font-size:13px;justify-content:center}.aw2-product-wrap{margin-top:60px;width:100%}.aw2-bot-peek{width:72px;height:72px;left:calc(80% - 36px);top:-40px}.aw2-bot-peek>.gork-companion{transform:scale(.7);transform-origin:top left}.aw2-product-frame{border-radius:12px}}
+@media(max-width:760px){.astra-welcome-v2{padding:18px 18px 36px}.aw2-shell{padding-top:66px}.aw2-copy{padding:0 16px}.astra-welcome-v2 .aw2-copy h1{font-size:36px;line-height:1.08}.aw2-role{font-size:24px}.aw2-copy .aw2-kicker{font-size:12px;gap:6px}.aw2-actions{align-items:stretch;flex-direction:column;gap:8px}.aw2-enter.btn{width:100%}.aw2-check{font-size:13px;justify-content:center}.aw2-product-wrap{margin-top:60px;width:100%}.aw2-bot-peek{width:72px;height:72px;left:calc(80% - 36px);top:-40px}.aw2-bot-peek>.gork-companion{transform:scale(.7);transform-origin:top left}.aw2-product-frame{border-radius:12px}}
 @media(prefers-reduced-motion:reduce){.aw2-product-frame{animation:none}}
+
+/* Decorative layers are static, hidden from accessibility, and never intercept input. */
+.astra-welcome-v2{isolation:isolate;background:radial-gradient(ellipse 640px 330px at 50% 130px,color-mix(in srgb,var(--astra-primary) 8%,transparent),transparent 76%),linear-gradient(180deg,color-mix(in srgb,var(--astra-primary) 3%,var(--astra-paper)),var(--astra-paper) 420px);color:var(--astra-ink)}
+.astra-welcome-v2::before{content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;background-image:linear-gradient(90deg,color-mix(in srgb,var(--astra-ink) 4%,transparent) 1px,transparent 1px),linear-gradient(180deg,color-mix(in srgb,var(--astra-ink) 4%,transparent) 1px,transparent 1px);background-size:90px 90px;mask-image:linear-gradient(180deg,#0009,transparent 380px,#0005 780px)}
+.aw2-shell{padding-top:clamp(26px,4vh,46px);border-inline-color:color-mix(in srgb,var(--astra-primary) 10%,transparent)}
+.aw2-shell::before,.aw2-shell::after{width:7px;height:7px;border-radius:2px;top:58px;border-color:color-mix(in srgb,var(--astra-primary) 25%,var(--astra-line));box-shadow:0 0 0 5px color-mix(in srgb,var(--astra-primary) 3%,transparent)}
+.aw2-shell::before{left:-4px}.aw2-shell::after{right:-4px}
+.aw2-copy{isolation:isolate}
+.aw2-engraving{position:absolute;z-index:-1;top:-10px;left:50%;width:min(850px,80vw);height:286px;transform:translateX(-50%);pointer-events:none;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 26%,transparent 40%,transparent 60%,#000 74%,#000 88%,transparent)}
+.aw2-engraving>i{position:absolute;inset:26px 8px 22px;border:1px solid color-mix(in srgb,var(--astra-primary) 15%,transparent);border-radius:50%;transform:rotate(-12deg)}
+.aw2-engraving>i:nth-child(2){inset:2px 58px 46px;border-color:color-mix(in srgb,var(--astra-primary) 9%,transparent);transform:rotate(12deg)}
+.aw2-engraving>span{position:absolute;left:17%;top:62%;width:6px;height:6px;border-radius:50%;background:var(--astra-paper);border:1px solid color-mix(in srgb,var(--astra-primary) 45%,var(--astra-paper));box-shadow:0 0 0 5px color-mix(in srgb,var(--astra-primary) 4%,transparent)}
+.aw2-engraving>span:last-child{left:auto;right:15%;top:23%;width:4px;height:4px;background:color-mix(in srgb,var(--astra-primary) 36%,var(--astra-paper))}
+.astra-welcome-v2 .aw2-copy h1{letter-spacing:3px;font-weight:600;color:var(--astra-ink)}
+.aw2-copy .aw2-role{font-weight:400;letter-spacing:2px;color:var(--astra-muted)}
+.astra-welcome-v2 .aw2-enter.btn{min-height:44px;height:44px;padding-inline:22px;border-radius:10px;border:1px solid #ffffff26;box-shadow:inset 0 1px #ffffff38,0 5px 12px color-mix(in srgb,var(--astra-primary) 18%,transparent),0 12px 28px color-mix(in srgb,var(--astra-primary) 10%,transparent);transition:box-shadow 180ms,transform 180ms}
+.astra-welcome-v2 .aw2-enter.btn:not(:disabled):is(:hover,:focus-visible){transform:translateY(-1px);box-shadow:inset 0 1px #ffffff48,0 8px 18px color-mix(in srgb,var(--astra-primary) 23%,transparent),0 16px 34px color-mix(in srgb,var(--astra-primary) 12%,transparent)}
+.aw2-check{color:var(--astra-muted)}
+.aw2-product-frame{border-color:color-mix(in srgb,var(--astra-primary) 14%,var(--astra-line));box-shadow:0 0 0 5px color-mix(in srgb,var(--astra-paper) 55%,transparent),0 0 0 6px color-mix(in srgb,var(--astra-primary) 5%,transparent),0 18px 54px color-mix(in srgb,var(--astra-ink) 8%,transparent)}
+@media(prefers-reduced-motion:reduce){.astra-welcome-v2 .aw2-enter.btn{transition:none;transform:none!important}}
+.aw2-feedback{width:min(320px,100%);min-height:32px;margin-top:10px}
+.aw2-feedback .task-progress{padding:0;border:0;border-radius:0;background:transparent}
+.aw2-feedback .task-progress__heading{gap:8px}
+.aw2-feedback .task-progress__spinner{width:20px;height:20px;border-radius:6px}
+.aw2-feedback .task-progress__spinner .astra-icon{width:14px;height:14px}
+.aw2-feedback .task-progress .task-progress__copy strong{font-size:12px;line-height:20px;font-weight:500}
+.aw2-feedback .task-progress__activity{height:16px}
+.aw2-feedback .task-progress--compact .task-progress__track{margin-top:6px;height:3px}
+.aw2-product-wrap{margin-top:18px}

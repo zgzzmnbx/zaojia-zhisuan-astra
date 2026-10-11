@@ -5,5 +5,10 @@ python-docx==1.2.0
 python-multipart==0.0.20
 pytest==9.0.1
 httpx==0.28.1
+markdown-it-py==4.2.0
+PyYAML==6.0.3
+fonttools==4.60.2
+Pillow>=12.2.1,<12.4
+olefile==0.47
 lark-oapi==1.4.24
 pywin32==312; sys_platform == 'win32'

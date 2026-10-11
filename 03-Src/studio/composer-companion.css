@@ -11,6 +11,14 @@
  .studio #shell.live-shell .composer-companion .gork-companion,.studio #shell.live-shell .composer-companion canvas{width:44px!important;height:44px!important}
 }
 
+/* Reserve the same left column in both rows; the larger avatar spans their height. */
+.studio #shell.live-shell .composer-input-row:has(>[data-layout=roomy]){grid-template-columns:84px minmax(0,1fr);gap:12px}
+.studio #shell.live-shell .composer-companion[data-layout=roomy]{width:84px;height:64px;align-items:flex-start;padding-top:6px;overflow:visible}
+.studio #shell.live-shell .composer-companion[data-layout=roomy] .gork-companion,.studio #shell.live-shell .composer-companion[data-layout=roomy] canvas{width:84px!important;height:84px!important;flex-shrink:0}
+.studio #shell.live-shell .composer:has([data-layout=roomy]) .composer-toolbar{margin-left:96px;flex-wrap:nowrap;min-width:0}
+.studio #shell.live-shell .composer:has([data-layout=roomy]) .composer-tools{min-width:0;flex:1;overflow-x:auto;scrollbar-width:thin;padding-block:2px}
+.studio #shell.live-shell .composer:has([data-layout=roomy]) .composer-tools>*,.studio #shell.live-shell .composer:has([data-layout=roomy]) .composer-toolbar>.btn{flex-shrink:0}
+
 /* Only the screenshot's conversation heading is condensed. */
 .studio #shell.live-shell .conversation-heading{padding:10px 18px;min-height:60px;align-items:center;border-bottom:1px solid var(--line);gap:10px;flex-shrink:0}
 .studio #shell.live-shell .conversation-identity,.studio #shell.live-shell .conversation-name{min-width:0;flex:1}

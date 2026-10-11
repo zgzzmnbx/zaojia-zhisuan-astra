@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "fonts": [
+    {
+      "ttf": "fzfangsong.ttf",
+      "families": [
+        "FZFangSong-Z02S",
+        "方正仿宋简体"
+      ],
+      "fs_type": 2,
+      "ttf_bytes": 3548232,
+      "ttf_sha256": "e2281b9f564c61b8d544c42ee2af54a26deb584d3eb83f0fa901038722114ee2",
+      "woff2": "fzfangsong.woff2",
+      "woff2_bytes": 1470044,
+      "woff2_sha256": "428c465e7e3eaf59ecb136b6eb889b0dff77e28b8e55090e7716350504c78e39"
+    },
+    {
+      "ttf": "fzhei.ttf",
+      "families": [
+        "FZHei-B01S",
+        "方正黑体简体"
+      ],
+      "fs_type": 2,
+      "ttf_bytes": 2882936,
+      "ttf_sha256": "6ae92972da427e17db39d83f6c326cc00e6f3030af10a44511a1b85302f49785",
+      "woff2": "fzhei.woff2",
+      "woff2_bytes": 1152892,
+      "woff2_sha256": "621517e9aa101ea32d5ecba9cd278e822189310603fde3ff229f30f6e5efa25b"
+    },
+    {
+      "ttf": "fzkai.ttf",
+      "families": [
+        "FZKai-Z03S",
+        "方正楷体简体"
+      ],
+      "fs_type": 2,
+      "ttf_bytes": 3838844,
+      "ttf_sha256": "699455b73fd9c7d25fbc3853d294ab5d9547b13c6c09fe741022db8d9baf3430",
+      "woff2": "fzkai.woff2",
+      "woff2_bytes": 1608256,
+      "woff2_sha256": "ed44fccb152c286db733da4849f90810e277f614a747319dd9e45d5bf567583a"
+    },
+    {
+      "ttf": "fzxiaobiaosong.ttf",
+      "families": [
+        "FZXiaoBiaoSong-B05S",
+        "方正小标宋简体"
+      ],
+      "fs_type": 2,
+      "ttf_bytes": 3835244,
+      "ttf_sha256": "f6154b97ee71bad19efa7f78edc152cf515c1f943220fc6e98360005d53d1c62",
+      "woff2": "fzxiaobiaosong.woff2",
+      "woff2_bytes": 1325164,
+      "woff2_sha256": "3f164fc1f3927577e957a965f368b7b62a4ccfda5a423f2f0e22d2d8804986d8"
+    },
+    {
+      "ttf": "simfang.ttf",
+      "families": [
+        "FangSong",
+        "仿宋"
+      ],
+      "fs_type": 8,
+      "ttf_bytes": 10570564,
+      "ttf_sha256": "fb8fd25dd5ffb09951f54d2038b7a44405659dcf7db059f502a34d62e4d689ee",
+      "woff2": "simfang.woff2",
+      "woff2_bytes": 4493340,
+      "woff2_sha256": "f3429eb1562a7e22885709d40f609975fddfec34567ea5185560ecf0eb055e76"
+    },
+    {
+      "ttf": "simhei.ttf",
+      "families": [
+        "SimHei",
+        "黑体"
+      ],
+      "fs_type": 8,
+      "ttf_bytes": 9745792,
+      "ttf_sha256": "9b1959db3b3abeb7efdaec26edf7dfe871a6039de8d614af7248575207be629e",
+      "woff2": "simhei.woff2",
+      "woff2_bytes": 3899968,
+      "woff2_sha256": "b7618f5025087ab01b727cf04e057ec0ddec0e2372a1a31e67cbe273754b43c9"
+    },
+    {
+      "ttf": "simkai.ttf",
+      "families": [
+        "KaiTi",
+        "楷体"
+      ],
+      "fs_type": 8,
+      "ttf_bytes": 11779732,
+      "ttf_sha256": "95b3e69321f4e55f6ecf36b29d1e31a0c1205acfde0117df6472a17494c3cbd2",
+      "woff2": "simkai.woff2",
+      "woff2_bytes": 5058052,
+      "woff2_sha256": "c58cd45768e706e2c79c52d2bffeed5ae6c192075e37dc1519a76a16e719d449"
+    },
+    {
+      "ttf": "simsun.ttf",
+      "families": [
+        "SimSun",
+        "宋体"
+      ],
+      "fs_type": 8,
+      "ttf_bytes": 18314228,
+      "ttf_sha256": "de8b4916a8f9c447f7751fe863848948e206bcf7d9d99d298b6a3349762823bf",
+      "woff2": "simsun.woff2",
+      "woff2_bytes": 6144316,
+      "woff2_sha256": "2b263ecf00dca29866f469ee610a611fc533c843ea53f2ee1afcce768e682d83"
+    },
+    {
+      "ttf": "times-new-roman.ttf",
+      "families": [
+        "Times New Roman"
+      ],
+      "fs_type": 8,
+      "ttf_bytes": 1190736,
+      "ttf_sha256": "931c5de5c70401d9324d5014c123802b4fb753000360ceb2f56c589403cd58c5",
+      "woff2": "times-new-roman.woff2",
+      "woff2_bytes": 516444,
+      "woff2_sha256": "e0de11fbcd8f5315862fa05b6349a19c9cc4476b9cb902e7ee585ce6922c9abb"
+    }
+  ]
+}

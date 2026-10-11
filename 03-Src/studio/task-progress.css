@@ -1,0 +1,24 @@
+.task-progress{--task-color:var(--astra-primary,#228be6);box-sizing:border-box;width:100%;min-width:0;padding:16px 18px;border:1px solid color-mix(in srgb,var(--task-color) 22%,var(--astra-line,#dce7f1));border-radius:12px;background:linear-gradient(115deg,color-mix(in srgb,var(--task-color) 7%,var(--astra-paper,#fff)),var(--astra-paper,#fff));color:var(--astra-ink,#203044)}
+.task-progress__heading{display:flex;align-items:center;gap:12px;min-width:0}
+.task-progress__spinner{display:flex;flex:none;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--task-color) 10%,transparent);color:var(--astra-accent,#1971c2)}
+.task-progress__spinner .astra-icon{display:flex;width:18px;height:18px;animation:task-spin 1.4s linear infinite}
+.task-progress__spinner svg{width:100%;height:100%}
+.task-progress__copy{flex:1;min-width:0}
+.task-progress .task-progress__copy strong{display:block;font-size:13px;line-height:1.6;font-weight:600;animation:task-breathe 2.8s ease-in-out infinite}
+.task-progress .task-progress__copy small{display:block;margin-top:3px;font-size:12px;line-height:1.6;color:var(--astra-muted,#586d82)}
+.task-progress__track{height:5px;overflow:hidden;position:relative;margin-top:13px;border-radius:99px;background:color-mix(in srgb,var(--task-color) 12%,transparent)}
+.task-progress__track>span{position:absolute;inset:0 auto 0 0;width:42%;border-radius:inherit;background:linear-gradient(90deg,transparent,var(--task-color) 45%,color-mix(in srgb,var(--task-color) 55%,white) 82%,transparent);animation:task-flow 2.2s cubic-bezier(.4,0,.2,1) infinite}
+.task-progress__activity{display:flex;align-items:center;gap:3px;height:18px;color:var(--astra-accent,#1971c2)}
+.task-progress__activity i{display:block;width:3px;height:9px;border-radius:3px;background:currentColor;animation:task-wave 1.2s ease-in-out infinite}
+.task-progress__activity i:nth-child(2){animation-delay:.16s}.task-progress__activity i:nth-child(3){animation-delay:.32s}
+.task-progress--compact{padding:12px;border-radius:9px}.task-progress--compact .task-progress__track{margin-top:10px;height:4px}
+.task-progress[data-animate="false"] *{animation-play-state:paused!important}
+.live-shell .cc-working.task-working{display:block;padding:0;border:0;background:none}
+.row-pricing-card>.task-progress{width:calc(100% - 24px);margin:12px}
+.document-preview__loading>.task-progress{max-width:460px;text-align:left}
+@keyframes task-spin{to{transform:rotate(360deg)}}
+@keyframes task-flow{from{transform:translateX(-105%)}to{transform:translateX(345%)}}
+@keyframes task-breathe{0%,100%{opacity:1}50%{opacity:.68}}
+@keyframes task-wave{0%,100%{transform:scaleY(.5);opacity:.5}50%{transform:scaleY(1.4);opacity:1}}
+@media(prefers-reduced-motion:reduce){.task-progress *{animation:none!important}.task-progress__track>span{width:100%;opacity:.5;transform:none}}
+.live-shell .task-progress-float{position:absolute;z-index:30;top:64px;right:20px;width:min(380px,calc(100% - 40px));pointer-events:none;filter:drop-shadow(0 6px 16px #0002)}

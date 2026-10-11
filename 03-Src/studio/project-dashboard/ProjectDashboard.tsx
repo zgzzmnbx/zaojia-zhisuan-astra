@@ -1,3 +1,4 @@
+import {TaskProgress} from "../TaskProgress";
 import {
   AlertTriangle,
   CircleX,
@@ -238,7 +239,7 @@ export default function ProjectDashboard({
       ) : null}
 
       {backfillMessage ? <div className="project-dashboard__backfill-message" role="status">{backfillMessage}</div> : null}
-      {opening?<div role="status" className="project-dashboard__backfill-message">正在恢复成果与关联对话…</div>:null}
+      {opening?<TaskProgress compact label="正在恢复成果与关联对话"/>:null}
       {openError ? <div className="project-dashboard__error" role="alert"><AlertTriangle size={16} />{openError}</div> : null}
       {error ? (
         <div className="project-dashboard__unavailable" role="alert">
@@ -296,9 +297,9 @@ export default function ProjectDashboard({
 
 function DashboardSkeleton() {
   return (
-    <div className="project-dashboard__skeleton" aria-label="正在加载项目看板">
+    <><TaskProgress label="正在加载项目看板" detail="读取项目统计与运行记录"/><div className="project-dashboard__skeleton" aria-label="正在加载项目看板">
       <div className="is-metrics">{Array.from({ length: 5 }, (_, index) => <i key={index} />)}</div>
       <div className="is-charts">{Array.from({ length: 4 }, (_, index) => <i key={index} />)}</div>
-    </div>
+    </div></>
   );
 }

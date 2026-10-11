@@ -1,0 +1,37 @@
+{
+  "id": "zaojia_report",
+  "version": "1.0.0",
+  "name": "专业报告",
+  "description": "适用于工程与造价报告，保留金额、单位、附表与复杂对象。",
+  "page": {
+    "width_mm": 210,
+    "height_mm": 297,
+    "top_mm": 37,
+    "bottom_mm": 35,
+    "left_mm": 28,
+    "right_mm": 26
+  },
+  "fonts": {
+    "title": "方正小标宋简体",
+    "body": "仿宋",
+    "heading1": "黑体",
+    "heading2": "楷体",
+    "heading3": "仿宋",
+    "heading4": "仿宋",
+    "latin": "Times New Roman"
+  },
+  "title_pt": 20,
+  "body_pt": 12,
+  "table_pt": 10.5,
+  "line_pt": 22,
+  "source": "专业报告工程预设；不作为国标正文认证",
+  "engineering_notes": [
+    "正文12pt、固定22pt行距为报告阅读策略",
+    "DOCX表格、横向节与行内强调原样保留"
+  ],
+  "not_covered": [
+    "版头版记及印章",
+    "物理印制装订",
+    "精确行字数与所有Office渲染一致性"
+  ]
+}

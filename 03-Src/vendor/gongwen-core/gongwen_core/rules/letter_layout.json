@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "mode": "sealed_single_organization",
+  "source": "GB/T 9704-2012 7.3.2、7.3.5.1",
+  "source_url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=F3CC9BEF482524C895FDA7A08BB4A70E",
+  "date_right_chars": 4,
+  "address_alignment": "left",
+  "signature_alignment": "center",
+  "date_alignment": "right",
+  "scope": "开头独立主送机关；文末相邻独立单一机关署名及阿拉伯数字年月日；不生成印章，不自动处理联合署名或合并段落"
+}

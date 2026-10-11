@@ -1243,6 +1243,25 @@
       "evidence": "00-docs/handoff/2026-10-09-双平台持续监护.md",
       "local_validation": "两工作区各196前端 / 36后端专项，构建与桌面亮暗通过；两次真实监督器退出9.546秒 / 9.891秒恢复，接收保持",
       "remaining_gate": "本局部任务完成；飞书原卡真实复核仍待验证，不扩大T15验收结论"
+    },
+    {
+      "id": "UI-0.9.70-model-risk-report",
+      "title": "模型生成原指定风险部分及完整报告Markdown",
+      "status": "done",
+      "scope": "用户批准真实模型报告修复与两聊天协作接入公文转换",
+      "evidence": "00-docs/handoff/2026-10-10-模型指定报告部分修复.md",
+      "local_validation": "真实非演示DeepSeek严格stop五段正文；原指定Word位置、Excel和其余正文保护；完整MD和自动编号及SHA归档；公文扉页、浏览器亮暗分页、实际下载与草稿恢复通过；两目录201前端/52联合后端、构建和17加载模块哈希通过",
+      "remaining_gate": "本局部修复已关闭；T16其它Office/WPS实机分页、DOC及长表专项不随本项核销",
+      "related_evidence": "00-docs/handoff/2026-10-10-风险报告公文转换.md"
+    },
+    {
+      "id": "UI-0.9.71-auto-report",
+      "title": "全自动生成报告与公文正文样式修复",
+      "status": "done",
+      "scope": "用户在公文协作聊天明确批准快捷入口统一生成报告，全自动无标题排版与聊天进展，修复正文误继承扉页字号",
+      "evidence": "00-docs/handoff/2026-10-10-风险卡生成报告.md",
+      "local_validation": "203前端/19公文测试与两目录构建通过；一次独立真实DeepSeek→MD→confirmed_title=none自动排版/Word预览下载，四阶段完成；正文及编号叶子16pt/28pt行距；原数据/扉页/表格/草稿保护；宿主PID52472的17模块与全部前端源码哈希一致",
+      "remaining_gate": "本局部追加需求完成；Office/WPS实机分页及T16其它专项保持原验收边界"
     }
   ]
 }

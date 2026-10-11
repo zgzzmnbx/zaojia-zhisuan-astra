@@ -1,0 +1,68 @@
+{
+  "id": "official_body",
+  "version": "1.3.0",
+  "name": "公文正文",
+  "description": "标题、正文与层级格式；保留原文内容。",
+  "page": {
+    "width_mm": 210,
+    "height_mm": 297,
+    "top_mm": 37,
+    "bottom_mm": 35,
+    "left_mm": 28,
+    "right_mm": 26,
+    "header_mm": 15,
+    "footer_mm": 25
+  },
+  "fonts": {
+    "title": "方正小标宋简体",
+    "body": "方正仿宋简体",
+    "heading1": "方正黑体简体",
+    "heading2": "方正楷体简体",
+    "heading3": "方正仿宋简体",
+    "heading4": "方正仿宋简体",
+    "latin": "方正仿宋简体"
+  },
+  "title_pt": 22,
+  "title_line_pt": 32,
+  "body_pt": 16,
+  "table_pt": 12,
+  "line_pt": 28,
+  "attachment_layout": true,
+  "unit_standard": {
+    "name": "创新公司公文格式示范-2026年10月9日",
+    "sha256": "cf63fcc26151b25b280e79dc9aaa1d7f26c8c9ce705b71d31b3f6c8d9590c997",
+    "adopted": [
+      "标题固定32磅",
+      "方正层级字体",
+      "页脚25毫米",
+      "主送顶格",
+      "附件组前空一行和名称续行对齐"
+    ],
+    "page_number_font": "宋体",
+    "page_number_note": "示范同时写方正宋体与宋体；按用户授权采用明确的宋体四号及外侧PAGE域，不更改字体限制标志。"
+  },
+  "source": "创新公司公文格式示范-2026年10月9日及集团公司正式文件格式要求；GB/T 9704-2012 5.1、5.2.1、5.2.2、7.3.1至7.3.5、7.5；下/右边距由版心尺寸推算。",
+  "engineering_notes": [
+    "按集团正式文件字体口径，普通中文正文及默认英文、数字使用方正仿宋简体；Times New Roman仅为显式选项。",
+    "单位示范：文章标题固定32pt、正文及层级28pt；页脚25mm，附件组前一正文行及名称续行对齐。页码按明确的宋体四号口径，已有页脚保留并复核。",
+    "28pt固定行距为工程设置，22行28字需目标字体与Office渲染核验。",
+    "表格12pt为可读性策略，不宣称完整发文合规。",
+    "表内单倍行距、段前后0、首行0、上下内边距1mm、自动行高为项目默认策略，不是国标强制数值。",
+    "导入Word普通表格仅规范间距；保留字体、字号、对齐、列宽及合并，复杂表格原样保留。"
+  ],
+  "not_covered": [
+    "版头版记及印章",
+    "物理印制装订",
+    "精确行字数与所有Office渲染一致性"
+  ],
+  "table": {
+    "line_multiple": 1.0,
+    "space_before_pt": 0,
+    "space_after_pt": 0,
+    "first_line_chars": 0,
+    "cell_vertical_margin_mm": 1.0,
+    "row_height": "auto",
+    "imported_fonts": "preserve",
+    "complex_tables": "preserve"
+  }
+}

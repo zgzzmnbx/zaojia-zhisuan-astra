@@ -22,5 +22,5 @@ export type ConversationCard = {
 };
 export type Message = {rowPricing?:import('./row-pricing').RowPricingState;review?:ReviewRequest;id:string; role:'user'|'assistant';text:string;actions?:Action[];card?:ConversationCard;error?:boolean;job?:string;context?:string;evidence?:any};
 export type Risk = {id:string; title:string; sheet_name:string; excel_row:number; metric:string; severity:string; severity_label:string; risk_type?:string; source?:string; key_text?:string; current_value?:number|string|null; reference_value?:number|string|null; deviation_percent?:number|string|null; sample_count?:number|string|null; message:string; suggested_action:string; evidence:{label:string;text:string}[]};
-export type Report = {filename:string;paragraphs:string[];tables:string[][][];note:string};
+export type Report = {job_id?:string;sha256?:string;filename:string;paragraphs:string[];tables:string[][][];note:string};
 export type SelectedCell = {sheet:string;row:number;column:number;header:string;value:Cell};

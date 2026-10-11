@@ -27,3 +27,13 @@ test('keyboard docking retains the other axis and Home restores default',()=>{
  assert.equal(cornerForKey('top-right','Home'),'bottom-left');
  assert.equal(cornerForKey('top-left','Escape'),null);
 });
+
+test('resized avatars dock, clamp and snap using their actual outer size',()=>{
+ for(const size of [56,64,92,136])for(const corner of GORK_CORNERS){
+  const p=cornerPosition(corner,1366,768,{left:60,top:58,bottom:48},size);
+  assert.ok(p.x>=60&&p.y>=58);assert.ok(p.x+size<=1346&&p.y+size<=700);
+  assert.equal(nearestCorner(p,1366,768,size),corner);
+  assert.deepEqual(clampGork({x:9999,y:9999},1366,768,size),{x:1366-size,y:768-size});
+ }
+ assert.equal(nearestCorner({x:620,y:320},1366,768,136),'bottom-right');
+});

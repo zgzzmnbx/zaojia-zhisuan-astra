@@ -144,8 +144,8 @@ export default function InlineReviewSetupCard({
       <header className="inline-review-setup__header">
         <span className="inline-review-setup__mark" aria-hidden="true"><UserRoundCheck size={19} /></span>
         <span className="inline-review-setup__title">
-          <small>协同复核 · 发送前设置</small>
-          <strong>选择平台、发送方式与复核人员</strong>
+          <small>协同复核</small>
+          <strong>发送同事复核</strong>
         </span>
         <span className={`inline-review-setup__state ${enabledTasks.length ? "is-sent" : canSubmit ? "is-ready" : ""}`}>
           {sending
@@ -158,7 +158,7 @@ export default function InlineReviewSetupCard({
 
       <div className="inline-review-setup__artifact">
         <FileSpreadsheet size={18} aria-hidden="true" />
-        <span><strong>{fileName || "当前填价成果.xlsx"}</strong><small>网页任务 {jobId} · 各平台分别冻结并保留复核任务</small></span>
+        <span title={`网页任务 ${jobId}`}><strong>{fileName || "当前填价成果.xlsx"}</strong><small>当前成果 · 发送前核对平台与人员</small></span>
         <b>{reviewRows} 行待复核</b>
       </div>
 
@@ -257,13 +257,14 @@ export default function InlineReviewSetupCard({
           </div>
         </section>
 
-        <section className={`inline-review-setup__step-card ${canSubmit || enabledTasks.length ? "is-complete" : peopleReady ? "is-current" : "is-locked"}`} aria-labelledby="inline-review-step-3">
+        <section className={`inline-review-setup__step-card inline-review-setup__final ${canSubmit ? "is-complete" : peopleReady ? "is-current" : "is-locked"}`} aria-labelledby="inline-review-step-3">
           <header className="inline-review-setup__step-card-header">
-            <i aria-hidden="true">{canSubmit || enabledTasks.length ? <Check size={14} /> : 3}</i>
-            <span><small>步骤 3</small><strong id="inline-review-step-3">确认要求并发送</strong></span>
+            <i aria-hidden="true"><ShieldCheck size={18} /></i>
+            <span><small>步骤 3</small><strong id="inline-review-step-3">最后确认</strong></span>
             <em>{audienceConfirmed ? "范围已核对" : "发送前最终确认"}</em>
           </header>
           <div className="inline-review-setup__step-card-body">
+            {enabledPlatforms.length>0&&<div className="inline-review-setup__send-summary" aria-label="本次发送范围">{enabledPlatforms.map(platform=><div key={platform.profileId}><span><strong>{platform.label}</strong><small>{platform.deliveryChannels.map(channel=>channel==='group'?'工作群':'个人私聊').join(' + ')||'未选择方式'}{platform.deliveryChannels.includes('group')?` · ${selectedGroup(platform)?.name||'未选择群'}`:''}</small></span><span>{platform.selectedReviewers.length?platform.people.filter(person=>platform.selectedReviewers.includes(person.person_ref)).map(person=><b key={person.person_ref}>{person.display_name}</b>):<small>未选人员</small>}</span></div>)}</div>}
             <details className="inline-review-setup__requirements">
               <summary><span><strong>截止 {deadline.replace("T", " ") || "未设置"}</strong><small>{instructions || "请填写复核说明"}</small></span><ChevronDown size={16} aria-hidden="true" /></summary>
               <div className="inline-review-setup__control-grid">
@@ -279,7 +280,7 @@ export default function InlineReviewSetupCard({
           <footer className="inline-review-setup__actions">
             <button className="inline-review-setup__cancel" type="button" disabled={sending} onClick={onCancel}><X size={15} />取消</button>
             <button className="inline-review-setup__refresh" type="button" disabled={loading || sending} onClick={() => onRefresh()}>{loading ? <Loader2 size={15} className="spin" /> : <RefreshCw size={15} />}读取全部平台目录</button>
-            <button className="inline-review-setup__submit" type="button" disabled={!canSubmit} onClick={hasExistingTask ? onOpenNewRoundConfirmation : onSubmit}>{sending ? <Loader2 size={15} className="spin" /> : <Send size={15} />}{hasExistingTask ? "发起或续开复核" : `向 ${enabledPlatforms.length || 0} 个平台发送`}</button>
+            <button className="inline-review-setup__submit" type="button" disabled={!canSubmit} onClick={hasExistingTask ? onOpenNewRoundConfirmation : onSubmit}>{sending ? <Loader2 size={15} className="spin" /> : <Send size={15} />}{sending?'正在发送…':hasExistingTask ? "确认发起或续开复核" : `确认发送 · ${enabledPlatforms.length} 平台`}</button>
           </footer>
         </section>
       </div>

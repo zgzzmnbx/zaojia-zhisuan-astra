@@ -1,4 +1,6 @@
 {
-  "project_root": "D:/Codex-Temp/260920-【公文格式】公文格式智能体v2.0-astra",
-  "core_version": "2.4.2"
+  "core_path": "03-Src/vendor/gongwen-core",
+  "core_version": "2.5.4",
+  "profile_version": "1.4.0",
+  "source_project": "D:/Codex-Temp/260920-【公文格式】公文格式智能体v2.0-astra"
 }

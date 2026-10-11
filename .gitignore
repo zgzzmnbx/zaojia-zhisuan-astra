@@ -22,4 +22,5 @@ dist/
 
 # Private workspace data and local service state
 runtime/
+03-Src/vendor/gongwen-core/gongwen_core/fonts/*.ttf
 .playwright-cli/

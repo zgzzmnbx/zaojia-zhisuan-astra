@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "source": "单位公文格式示范的宋体四号口径；GB/T 9704-2012 §7.5",
+  "font": "宋体",
+  "size_pt": 14,
+  "line_pt": 14,
+  "outside_chars": 1,
+  "odd_alignment": "right",
+  "even_alignment": "left",
+  "field_instruction": " PAGE \\* Arabic "
+}

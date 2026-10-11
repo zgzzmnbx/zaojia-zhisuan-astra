@@ -18,6 +18,37 @@
 .collaboration-access{margin:12px 16px;padding:14px 16px;border:1px solid var(--astra-line);border-radius:12px;background:var(--astra-paper);font-size:13px}.collaboration-access>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:600}.collaboration-access>div{padding-top:12px}.collaboration-enable{display:flex;gap:10px;align-items:center}.collaboration-access .muted{margin:10px 0;font-size:12px}.professional-surface:has(.collaboration-access){overflow:auto}.professional-surface:has(.collaboration-access)>iframe{flex:none;min-height:680px}
 @container inline-review-setup (max-width:450px){.astra-review .inline-review-setup__header{grid-template-columns:30px minmax(0,1fr)}.astra-review .inline-review-setup__state{grid-column:2;justify-self:start}.astra-review .inline-review-setup__title strong{font-size:14px}.astra-review .inline-review-setup__actions>button{flex:1 1 110px}.astra-review .inline-review-setup__artifact{grid-template-columns:auto minmax(0,1fr)}.astra-review .inline-review-setup__artifact>b{grid-column:2;justify-self:start}}
 .review-retry-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+/* Review settings: restrained surfaces, selected accents, one strong final checkpoint. */
+.astra-review .inline-review-setup{box-shadow:0 8px 28px color-mix(in srgb,var(--astra-ink) 5%,transparent)}
+.astra-review .inline-review-setup__header{padding:16px;background:linear-gradient(110deg,var(--astra-soft),var(--astra-paper) 80%);border-top:3px solid var(--astra-primary);gap:12px}
+.astra-review .inline-review-setup__mark{width:34px;height:34px;background:var(--astra-primary);color:#fff;border-color:transparent;box-shadow:0 4px 12px color-mix(in srgb,var(--astra-primary) 22%,transparent)}
+.astra-review .inline-review-setup__title{gap:4px}
+.astra-review .inline-review-setup__artifact{background:var(--astra-paper);border-style:dashed;margin:14px 16px 0;padding:10px}
+.astra-review .inline-review-setup__steps{margin:14px 16px 16px;gap:16px}
+.astra-review .inline-review-setup__step-card-header{background:var(--astra-paper);padding:10px 12px}
+.astra-review .inline-review-setup__step-card:is(.is-current,.is-complete)>.inline-review-setup__step-card-header{background:linear-gradient(90deg,color-mix(in srgb,var(--astra-primary) 5%,var(--astra-paper)),var(--astra-paper))}
+.astra-review .inline-review-setup__step-card-body{padding:12px;gap:12px}
+.astra-review .inline-review-setup__step-card.is-complete>.inline-review-setup__step-card-header>i{background:var(--astra-primary);color:#fff;border-color:transparent}
+.astra-review .inline-review-setup__step-card.is-current>.inline-review-setup__step-card-header>i{background:var(--astra-soft);color:var(--astra-accent);border-color:var(--astra-accent)}
+.astra-review .inline-review-setup__final{border:1px solid color-mix(in srgb,var(--astra-primary) 60%,var(--astra-line));box-shadow:0 5px 18px color-mix(in srgb,var(--astra-primary) 9%,transparent)}
+.astra-review .inline-review-setup__final:is(.is-current,.is-complete,.is-locked)>.inline-review-setup__step-card-header{background:linear-gradient(115deg,var(--astra-primary),color-mix(in srgb,var(--astra-primary) 76%,#172b4d));border-color:transparent}
+.astra-review .inline-review-setup__final>.inline-review-setup__step-card-header :is(strong,em){color:#fff}
+.astra-review .inline-review-setup__final>.inline-review-setup__step-card-header>i{background:#ffffff20;border-color:#ffffff40;color:#fff}
+.astra-review .inline-review-setup__send-summary{display:grid;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--astra-line)}
+.astra-review .inline-review-setup__send-summary>div{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.astra-review .inline-review-setup__send-summary>div>span{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.astra-review .inline-review-setup__send-summary strong{font-size:13px;color:var(--astra-ink)}
+.astra-review .inline-review-setup__send-summary small{font-size:12px;color:var(--astra-muted)}
+.astra-review .inline-review-setup__send-summary b{border-radius:6px;padding:3px 8px;background:var(--astra-soft);color:var(--astra-accent);font-size:12px;font-weight:600}
+.astra-review .inline-review-setup__confirmation{padding:14px;border:1px solid var(--astra-line);background:var(--astra-paper);transition:border-color 160ms,background-color 160ms}
+.astra-review .inline-review-setup__confirmation.is-confirmed{border-color:var(--astra-accent);background:var(--astra-soft)}
+.astra-review .inline-review-setup__confirmation small{color:var(--astra-muted)}
+.astra-review .inline-review-setup__actions{padding:12px;gap:8px;background:var(--astra-paper)}
+.astra-review .inline-review-setup__submit:not(:disabled){box-shadow:0 4px 12px color-mix(in srgb,var(--astra-primary) 22%,transparent);min-height:40px;padding-inline:18px}
+.review-progress-receipt{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;padding:14px;border:1px solid var(--astra-line);border-radius:12px;background:var(--astra-paper)}
+.review-progress-receipt__icon{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--astra-soft);color:var(--astra-accent)}
+.review-progress-receipt>div{display:grid;gap:4px;flex:1;min-width:160px}.review-progress-receipt strong{font-size:13px}.review-progress-receipt small{font-size:12px;color:var(--astra-muted)}
+@media(prefers-reduced-motion:reduce){.astra-review .inline-review-setup__confirmation{transition:none}}
 .astra-review :is(.inline-review-setup__step-card-body,.inline-review-setup__mode label,.inline-review-setup__people label,.inline-review-setup__task>div>span,.inline-review-setup__platform-refresh,.inline-review-setup__refresh,.inline-review-progress__refresh){background:var(--astra-paper);color:var(--astra-ink);border-color:var(--astra-line)}
 .astra-review :is(.inline-review-setup__platform-header,.inline-review-setup__platform.is-enabled>.inline-review-setup__platform-header,.inline-review-setup__platform-meta,.inline-review-setup__audience,.inline-review-setup__person-avatar,.inline-review-setup__reviewer-platform>header b,.inline-review-setup__requirements summary,.inline-review-setup__task,.inline-review-progress__platform>header,.inline-review-progress__hero-icon,.inline-review-progress__avatar,.inline-review-progress__empty){background:var(--astra-soft);color:var(--astra-ink);border-color:var(--astra-line);box-shadow:none}
 .astra-review :is(.inline-review-setup__mode label.is-active,.inline-review-setup__people label.is-selected,.inline-review-setup__people label.is-selected .inline-review-setup__person-avatar,.inline-review-setup__platform.is-enabled .inline-review-setup__platform-meta){background:var(--astra-soft);border-color:var(--astra-accent);color:var(--astra-accent)}
@@ -28,3 +59,13 @@
 .astra-review .inline-review-progress__platform-mark{background:var(--astra-soft);color:var(--astra-accent)}
 .astra-review .inline-review-progress__empty button{background:var(--astra-primary);color:white;border-color:var(--astra-primary)}
 @container inline-review-setup (max-width:330px){.astra-review .inline-review-setup__reviewer-platform>header,.astra-review .inline-review-setup__task footer{flex-wrap:wrap}.astra-review .inline-review-setup__platform-refresh{max-width:100%;white-space:normal;line-height:1.4}.astra-review .inline-review-setup__round-confirm>div{flex-wrap:wrap}}
+.astra-review .inline-review-setup__platform-header{background:var(--astra-canvas)}
+.astra-review .inline-review-setup__platform.is-enabled{border-color:color-mix(in srgb,var(--astra-primary) 48%,var(--astra-line))}
+.astra-review .inline-review-setup__platform.is-enabled>.inline-review-setup__platform-header{background:linear-gradient(95deg,var(--astra-soft),var(--astra-paper));box-shadow:inset 3px 0 var(--astra-primary)}
+.astra-review .inline-review-setup__platform-meta{background:var(--astra-paper);padding:4px 8px;border-radius:6px}
+.astra-review .inline-review-setup__people label.is-selected .inline-review-setup__person-avatar{background:var(--astra-primary-gradient,var(--astra-primary));color:white}
+.astra-review .inline-review-setup__mode label.is-active{background:var(--astra-selected-gradient,var(--astra-soft));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--astra-primary) 18%,transparent)}
+.astra-review .inline-review-setup__audience{background:var(--astra-canvas);border-left:2px solid var(--astra-primary)}
+.astra-review .inline-review-setup__requirements,.astra-review .inline-review-setup__requirements summary{background:var(--astra-canvas)}
+.astra-review .inline-review-setup__final:is(.is-current,.is-complete,.is-locked)>.inline-review-setup__step-card-header{background:var(--astra-primary-gradient,linear-gradient(115deg,var(--astra-primary),color-mix(in srgb,var(--astra-primary) 76%,#172b4d)))}
+.astra-review .inline-review-setup__submit:not(:disabled){background:var(--astra-primary-gradient,var(--astra-primary));color:#fff}

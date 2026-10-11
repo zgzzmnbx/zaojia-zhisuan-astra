@@ -9,6 +9,13 @@ export function GorkSettings(){
  const state=robotStates.find(s=>s.id===preview)!;
  return <div className="robot-settings">
   <p className="robot-scope">仅用于本项目网页中的智算形象。</p>
+  <section className="robot-placement" aria-labelledby="robot-placement-title">
+   <h3 id="robot-placement-title">大小与位置</h3>
+   <div className="robot-layout-options" role="group" aria-label="输入区机器人布局">{([{id:'roomy',title:'放大陪伴',detail:'84px · 工具栏向右避让'},{id:'classic',title:'原来布局',detail:'56px · 工具栏位于下方'}] as const).map(option=><button type="button" className="btn btn-ghost" key={option.id} aria-pressed={preferences.composerLayout===option.id} onClick={()=>saveGorkPreferences({...preferences,composerLayout:option.id})}><strong>{option.title}</strong><span>{option.detail}</span></button>)}</div>
+   <label className="robot-size-control" htmlFor="robot-floating-size"><span>独立悬浮大小<small>只调整全屏时的悬浮机器人</small></span><output htmlFor="robot-floating-size">{preferences.floatingSize} px</output></label>
+   <input id="robot-floating-size" className="range range-primary range-sm" type="range" min={48} max={128} step={4} value={preferences.floatingSize} aria-valuetext={`${preferences.floatingSize} 像素`} onChange={e=>saveGorkPreferences({...preferences,floatingSize:Number(e.target.value)})}/>
+   <div className="robot-size-scale" aria-hidden="true"><span>小 · 48</span><span>大 · 128</span></div>
+  </section>
   <section className="robot-preview" aria-label="形象与表情预览">
    <div className="robot-stage"><Gork size={116} state={state.state}/></div>
    <div className="robot-preview-controls"><strong>{robotPresets.find(p=>p.id===preferences.appearance.id)?.name}</strong><span>{state.label} · {expressionLabels[preferences.expressions[preview]]}</span>

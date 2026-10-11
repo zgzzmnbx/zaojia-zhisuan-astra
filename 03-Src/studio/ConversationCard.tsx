@@ -1,14 +1,16 @@
+import {TaskProgress} from './TaskProgress';
 import type {ReactNode} from 'react';
 import {FeeSummary} from './FeeSummary';
 import {Prose,sourceExcerpt} from './Prose';
 import {Gork,Icon} from './ui';
 import type {Action,Message} from './types';
+import {conversationActions} from './conversation-cards';
 import './conversation-cards.css';
 
 type Props={onCitations?:()=>void;citationsOpen?:boolean;inputSettings?:ReactNode;message:Message;onAction:(action:Action)=>void;unavailable:(action:Action)=>string|undefined};
 
 export function ConversationCard({message,onAction,unavailable,inputSettings,onCitations,citationsOpen}:Props){
-  const card=message.card!;
+  const card=message.card!,actions=conversationActions(message);
   if(message.evidence&&!message.error){
     const sources=message.evidence.sources||[];
     return <button type="button" className="knowledge-citation-trigger" aria-expanded={!!citationsOpen} aria-controls="astra-summary" onClick={onCitations}><Icon name="book"/><span>引用依据</span><span className="knowledge-citation-count">{sources.length?`${sources.length} 条`:'暂无引用'}</span><Icon name="arrow-right"/></button>;
@@ -31,10 +33,10 @@ export function ConversationCard({message,onAction,unavailable,inputSettings,onC
       {!inputSettings&&card.disclosure&&<details className="collapse cc-disclosure"><summary>{card.disclosure.label}<Icon name="chevron"/></summary><div>{card.kind==='source'?<Prose text={card.disclosure.lines.join('\n')}/>:card.disclosure.lines.map((line,i)=><p key={i}>{line}</p>)}</div></details>}
       {!inputSettings&&card.note&&<p className="cc-note">{refreshed?'修改依据已留存，公式与报告已刷新。':card.note}</p>}
     </div>
-    {!!message.actions?.length&&<footer className="cc-actions">{message.actions.map(a=>{const reason=unavailable(a);const finished=reason&&['结构已确认','匹配已完成','已刷新'].includes(reason);return <button key={a.action} type="button" className={`btn ${a.primary&&!reason?'btn-primary':'btn-ghost'}`} disabled={!!reason} title={reason} onClick={()=>onAction(a)}>{finished&&<Icon name="check"/>}{finished?reason:a.label}{a.primary&&!reason&&<Icon name="arrow-right"/>}</button>;})}</footer>}
+    {!!actions.length&&<footer className="cc-actions">{actions.map(a=>{const reason=unavailable(a);const finished=reason&&['结构已确认','匹配已完成','已刷新'].includes(reason);return <button key={a.action} type="button" className={`btn ${a.primary&&!reason?'btn-primary':'btn-ghost'}`} disabled={!!reason} title={reason} onClick={()=>onAction(a)}>{finished&&<Icon name="check"/>}{finished?reason:a.label}{a.primary&&!reason&&<Icon name="arrow-right"/>}</button>;})}</footer>}
   </section>;
 }
 
 export function WorkingCard({label,detail,showAvatar=true}:{label:string;detail?:string;showAvatar?:boolean}){
-  return <div className="cc-working" role="status">{showAvatar&&<Gork state="thinking" size={30} still/>}<div><strong>{label}</strong><small>{detail||'正在处理，完成后会在这里展示结果'}</small></div><span className="loading loading-spinner loading-sm" aria-hidden="true"/></div>;
+  return <div className="cc-working task-working"><TaskProgress label={label} detail={detail} leading={showAvatar?<Gork state="thinking" size={30} still/>:undefined}/></div>;
 }

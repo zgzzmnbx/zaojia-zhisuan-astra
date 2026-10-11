@@ -1,13 +1,13 @@
 .floating-gork-layer{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;overflow:visible;background:transparent;color:var(--ink);pointer-events:none;z-index:2147483647}
 .floating-gork-layer::backdrop{background:transparent;pointer-events:none}
-.floating-gork-dock{position:absolute;width:64px;height:64px;pointer-events:none}
-.floating-gork-handle{display:grid;place-items:center;width:64px;height:64px;padding:3px;border:1px solid color-mix(in srgb,var(--line) 75%,var(--blue));border-radius:50%;background:color-mix(in srgb,var(--paper) 94%,transparent);box-shadow:0 5px 20px #10233f24,0 1px 3px #10233f14;cursor:grab;touch-action:none;user-select:none;pointer-events:auto;transition:box-shadow .18s,border-color .18s}
+.floating-gork-dock{position:absolute;width:var(--floating-gork-size,64px);height:var(--floating-gork-size,64px);pointer-events:none}
+.floating-gork-handle{display:grid;place-items:center;width:var(--floating-gork-size,64px);height:var(--floating-gork-size,64px);padding:3px;border:1px solid color-mix(in srgb,var(--line) 75%,var(--blue));border-radius:50%;background:color-mix(in srgb,var(--paper) 94%,transparent);box-shadow:0 5px 20px #10233f24,0 1px 3px #10233f14;cursor:grab;touch-action:none;user-select:none;pointer-events:auto;transition:box-shadow .18s,border-color .18s}
 .floating-gork-handle:hover,.floating-gork-handle:focus-visible{border-color:var(--blue);box-shadow:0 6px 24px #10233f30,0 0 0 3px var(--blue-wash)}
 .floating-gork-handle:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .floating-gork-dock.is-dragging .floating-gork-handle{cursor:grabbing;box-shadow:0 10px 32px #10233f40}
 .floating-gork-handle .gork-companion{pointer-events:none}
-.floating-gork-positions{position:absolute;bottom:74px;left:0;display:grid;grid-template-columns:repeat(2,1fr);gap:4px;width:152px;padding:6px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:0 8px 30px #10233f24;pointer-events:auto}
-.floating-gork-dock[data-corner^=top] .floating-gork-positions{top:74px;bottom:auto}
+.floating-gork-positions{position:absolute;bottom:calc(var(--floating-gork-size,64px) + 10px);left:0;display:grid;grid-template-columns:repeat(2,1fr);gap:4px;width:152px;padding:6px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:0 8px 30px #10233f24;pointer-events:auto}
+.floating-gork-dock[data-corner^=top] .floating-gork-positions{top:calc(var(--floating-gork-size,64px) + 10px);bottom:auto}
 .floating-gork-dock[data-corner$=right] .floating-gork-positions{left:auto;right:0}
 .floating-gork-positions button{min-height:36px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
 .floating-gork-positions button:hover,.floating-gork-positions button[aria-pressed=true]{background:var(--blue-wash);color:var(--blue)}

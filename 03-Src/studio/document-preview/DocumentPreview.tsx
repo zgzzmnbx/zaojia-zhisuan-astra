@@ -35,6 +35,8 @@ import "./DocumentPreview.css";
 const FETCH_TIMEOUT_MS = 30_000;
 const RENDER_TIMEOUT_MS = 45_000;
 const FALLBACK_BASE_URL = "/";
+import {TaskProgress} from '../TaskProgress';
+
 export type DocumentPreviewStatus = "idle" | "loading" | "ready" | "error";
 export type DocumentPreviewSource =
   { kind: "url"; url: string } | { kind: "blob"; blob: Blob };
@@ -388,11 +390,9 @@ export default function DocumentPreview({
       {status === "loading" && (
         <div
           className="document-preview__loading"
-          role="status"
-          aria-live="polite"
+
         >
-          <strong>正在读取 Word 文档</strong>
-          <span>正在加载只读预览器…</span>
+          <TaskProgress label="正在读取 Word 文档" detail="解析文档与分页排版"/>
         </div>
       )}
     </div>

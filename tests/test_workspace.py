@@ -96,7 +96,9 @@ def test_workspace_save_does_not_wait_for_business_lock(client):
 
 def test_original_articles_and_network_available(client):
     articles=client.get('/api/knowledge-articles').json();graph=client.get('/api/knowledge-articles/graph').json()
-    assert articles['article_count']==50 and len(graph['nodes'])==50 and len(graph['edges'])==74
+    assert articles['article_count']==100 and len(graph['nodes'])==100 and len(graph['edges'])==202
+    frozen=json.loads((Path(__file__).resolve().parents[1]/'03-Src/engine/06-知识库问答资料/造价知识文章库/manifest.json').read_text(encoding='utf-8'))
+    assert {a['id'] for a in frozen['articles']} <= {a['id'] for a in articles['articles']}
     detail=client.get('/api/knowledge-articles/'+articles['articles'][0]['id']).json()['article']
     assert len(detail['body'])>100
 

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gongwen-core"
+version = "2.5.4"
+description = "Local, content-preserving official document formatting"
+requires-python = ">=3.12"
+dependencies = ["python-docx==1.2.0", "lxml>=6.0.2,<6.2", "markdown-it-py==4.2.0", "PyYAML==6.0.3", "Pillow>=12.2.1,<12.4", "olefile==0.47", "fonttools==4.60.2"]
+
+[project.scripts]
+gongwen = "gongwen_core.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+gongwen_core = ["profiles/*.json", "profiles/archive/*.json", "rules/*.json", "fonts/*.ttf", "fonts/manifest.json"]

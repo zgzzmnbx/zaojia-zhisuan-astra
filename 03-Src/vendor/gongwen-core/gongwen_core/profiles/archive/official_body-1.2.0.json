@@ -1,0 +1,50 @@
+{
+  "id": "official_body",
+  "version": "1.2.0",
+  "name": "公文正文",
+  "description": "标题、正文与层级格式；保留原文内容。",
+  "page": {
+    "width_mm": 210,
+    "height_mm": 297,
+    "top_mm": 37,
+    "bottom_mm": 35,
+    "left_mm": 28,
+    "right_mm": 26
+  },
+  "fonts": {
+    "title": "方正小标宋简体",
+    "body": "方正仿宋简体",
+    "heading1": "黑体",
+    "heading2": "楷体",
+    "heading3": "仿宋",
+    "heading4": "仿宋",
+    "latin": "方正仿宋简体"
+  },
+  "title_pt": 22,
+  "body_pt": 16,
+  "table_pt": 12,
+  "line_pt": 28,
+  "source": "集团公司正式文件格式要求（正文方正仿宋）；GB/T 9704-2012 5.1、5.2.1、5.2.2、7.3.1、7.3.3；下/右边距由版心尺寸推算。",
+  "engineering_notes": [
+    "按集团正式文件字体口径，普通中文正文及默认英文、数字使用方正仿宋简体；Times New Roman仅为显式选项。",
+    "28pt固定行距为工程设置，22行28字需目标字体与Office渲染核验。",
+    "表格12pt为可读性策略，不宣称完整发文合规。",
+    "表内单倍行距、段前后0、首行0、上下内边距1mm、自动行高为项目默认策略，不是国标强制数值。",
+    "导入Word普通表格仅规范间距；保留字体、字号、对齐、列宽及合并，复杂表格原样保留。"
+  ],
+  "not_covered": [
+    "版头版记及印章",
+    "物理印制装订",
+    "精确行字数与所有Office渲染一致性"
+  ],
+  "table": {
+    "line_multiple": 1.0,
+    "space_before_pt": 0,
+    "space_after_pt": 0,
+    "first_line_chars": 0,
+    "cell_vertical_margin_mm": 1.0,
+    "row_height": "auto",
+    "imported_fonts": "preserve",
+    "complex_tables": "preserve"
+  }
+}

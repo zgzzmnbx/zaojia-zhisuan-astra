@@ -1,9 +1,10 @@
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useId,useRef,useState} from 'react';
+import {Icon} from './ui';
 import InlineReviewSetupCard from '../professional/components/agent-workspace/InlineReviewSetupCard';
 import InlineReviewProgressCard from '../professional/components/agent-workspace/InlineReviewProgressCard';
 import {latestReviewTasksByPlatform} from '../professional/components/agent-workspace/reviewProgress';
 import {api,json} from './api';
-import {initialReviewEnabled,reviewPeople,reviewProblem,reviewPayload,type ReviewOptions,type ReviewPlatform,type ReviewRequest,type ReviewTask} from './review-flow';
+import {dispatchReviewPlatforms,initialReviewEnabled,reviewPeople,reviewProblem,reviewPayload,type ReviewOptions,type ReviewPlatform,type ReviewRequest,type ReviewTask} from './review-flow';
 import './review-conversation.css';
 
 const profiles=[['default','飞书'],['weact_cost','WeAct']] as const;
@@ -12,6 +13,7 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
  const [platforms,setPlatforms]=useState<ReviewPlatform[]>([]),[loading,setLoading]=useState(true),[sending,setSending]=useState(false),[feedback,setFeedback]=useState(''),[error,setError]=useState('');
  const [confirmed,setConfirmed]=useState(false),[round,setRound]=useState(false),[deadline,setDeadline]=useState(defaultDeadline),[instructions,setInstructions]=useState('请复核当前成果、匹配依据和风险项；在复核卡中填写意见后通过或退回。');
  const [tasks,setTasks]=useState<ReviewTask[]>([]),[fetchedAt,setFetchedAt]=useState(''),[external,setExternal]=useState(false);
+ const [progressOpen,setProgressOpen]=useState(false),progressId=useId();
  const alive=useRef(true),epoch=useRef(0),lock=useRef(false),controller=useRef<AbortController|null>(null);
  const edit=(id:string,fn:(p:ReviewPlatform)=>ReviewPlatform)=>{setConfirmed(false);setRound(false);setPlatforms(all=>all.map(p=>p.profileId===id?fn(p):p));};
  async function load(refresh=false){
@@ -42,17 +44,20 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
   lock.current=true;setSending(true);setRound(false);onBusy('正在发送同事复核');
   const selected=platforms.filter(p=>p.enabled);
   try{
-   const responses=await Promise.allSettled(selected.map(async p=>{
+   const responses=await dispatchReviewPlatforms(selected,async(p,index)=>{
+    onBusy(`正在发送 ${p.label} 复核（${index+1}/${selected.length}）`);
+    setFeedback(`正在提交 ${p.label}${index+1<selected.length?'，随后发送下一平台。':'。'}`);
     const payload=await api<{task:ReviewTask;created?:boolean;started_new_round?:boolean}>('/api/collaboration/external-dispatch/web-review',json(reviewPayload(p,request,instructions,deadline)));
     if(!payload.task||payload.task.platform!==p.profileId||payload.task.source_job_id!==request.jobId)throw new Error('复核回执与当前平台或成果不一致，请刷新核对。');
+    if(alive.current)setTasks(old=>[...old.filter(t=>t.platform!==p.profileId),payload.task]);
     return payload;
-   }));
+   },()=>alive.current);
    if(!alive.current)return;
    const notes:string[]=[];
    responses.forEach((outcome,index)=>{
     const p=selected[index];
     if(outcome.status==='fulfilled'){
-     const task=outcome.value.task;setTasks(old=>[...old.filter(t=>t.platform!==p.profileId),task]);
+     const task=outcome.value.task;
      const message=task.can_retry?'部分投递未完成，可仅重试失败步骤。':outcome.value.created||outcome.value.started_new_round?'已发起复核，请核对送达状态。':'已找到现有任务，没有重复发送。';
      edit(p.profileId,current=>({...current,task,enabled:false,feedback:message}));notes.push(`${p.label}：${message}`);
     }else{edit(p.profileId,current=>({...current,feedback:(outcome.reason as Error).message}));notes.push(`${p.label}：${(outcome.reason as Error).message}`);}
@@ -76,6 +81,7 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
    onDeadlineChange={value=>{setDeadline(value);setConfirmed(false);setRound(false);}} onInstructionsChange={value=>{setInstructions(value);setConfirmed(false);setRound(false);}}
    onAudienceConfirmedChange={setConfirmed} onRefresh={()=>void load(true)} onCancel={onClose} onSubmit={()=>void send()} onRetry={id=>void retry(id)} onOpenNewRoundConfirmation={()=>setRound(true)} onCloseNewRoundConfirmation={()=>setRound(false)} onConfirmNewRound={()=>void send(true)}/>:null}
   {request.kind==='setup'&&tasks.some(t=>t.can_retry)&&<div className="review-retry-actions">{platforms.filter(p=>p.task?.can_retry).map(p=><button key={p.profileId} className="btn btn-outline btn-sm" disabled={sending||busy||loading||!external} onClick={()=>void retry(p.profileId)}>仅重试 {p.label} 失败步骤</button>)}</div>}
-  {(request.kind==='progress'||tasks.length>0)&&<InlineReviewProgressCard snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose} onAddPlatform={request.kind==='progress'?onClose:()=>{setConfirmed(false);setPlatforms(all=>all.map(p=>({...p,enabled:p.configurationOk&&!p.task,expanded:!p.task||p.expanded})));}}/>}
+  {request.kind==='setup'&&tasks.length>0&&<div className="review-progress-receipt" role="status"><span className="review-progress-receipt__icon"><Icon name="check"/></span><div><strong>{tasks.length} 个平台已有复核任务</strong><small>送达状态与审核结果可在进度中查看</small></div><button type="button" className="btn btn-outline btn-sm" aria-expanded={progressOpen} aria-controls={progressId} onClick={()=>setProgressOpen(value=>!value)}><Icon name="menu"/>{progressOpen?'收起复核进度':'查看复核进度'}</button></div>}
+  <div id={progressId}>{(request.kind==='progress'||progressOpen)&&<InlineReviewProgressCard snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose} onAddPlatform={request.kind==='progress'?onClose:()=>{setConfirmed(false);setPlatforms(all=>all.map(p=>({...p,enabled:p.configurationOk&&!p.task,expanded:!p.task||p.expanded})));}}/>}</div>
  </div>;
 }

@@ -31,6 +31,7 @@ import professional_host
 import business_settings
 import row_assist
 import model_adapter
+import report_markdown
 professional_host.install(engine, paths)
 import knowledge_host
 knowledge_host.install(paths)
@@ -50,10 +51,10 @@ async def host_lifespan(_app):
         try:await watchdog
         except asyncio.CancelledError:pass
 
-app = FastAPI(title='智算Astra', version='0.9.1', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.9.2', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
+HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()
@@ -168,7 +169,7 @@ async def boundaries(request: Request, call_next):
                 return JSONResponse({'detail':'请先在 Astra 连接设置中明确启用外部协同，再配置平台。当前未发送消息。'},409)
             if request.url.path in {'/api/collaboration/external-dispatch/tasks','/api/collaboration/external-dispatch/web-review'} and not professional_host.config().get('external_enabled'):
                 return JSONResponse({'detail':'尚未启用外部协同，未发起派发'},409)
-            if request.url.path in {'/api/astra/row-assist/candidates','/api/astra/row-assist/details','/api/astra/row-assist/ask'} or request.url.path.startswith(('/api/astra/workspace/', '/api/astra/weknora/', '/api/astra/gork/notifications', '/api/knowledge/ask-stream', '/api/knowledge/requests/')) or request.url.path.endswith('/ai-matching/cancel'):
+            if request.url.path in {'/api/astra/documents/prepare','/api/astra/row-assist/candidates','/api/astra/row-assist/details','/api/astra/row-assist/ask'} or request.url.path.startswith(('/api/astra/workspace/', '/api/astra/weknora/', '/api/astra/gork/notifications', '/api/knowledge/ask-stream', '/api/knowledge/requests/')) or request.url.path.endswith('/ai-matching/cancel'):
 
                 try:
                     response = await call_next(request)
@@ -208,7 +209,7 @@ def health():
     provider=str(professional_host.model_preference().get('provider','deepseek'))
     return {'status':'ok','service':'zhisuan-astra','version':app.version,'ui_version':package['version'],
             'host_sources':HOST_SOURCES,'host_source_sha256':HOST_SOURCE_SHA256,'build':build,'pid':os.getpid(),'workspace':str(ROOT),
-            'runtime':str(paths.RUNTIME_DIR),'capabilities':['commands-v1','weknora-wiki-read-v1','batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1'],
+            'runtime':str(paths.RUNTIME_DIR),'capabilities':['gongwen-format-v2','commands-v1','weknora-wiki-read-v1','batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1'],
             'engine_version':engine.APP_VERSION,'isolated':True,'mode':'mechanical+ai_enhanced',
             'model_connected':False,'model_configured':bool(professional_host.model_key(provider)),
             'model_provider':provider,'external_sending':bool(professional_host.config().get('external_enabled',False))}
@@ -334,7 +335,24 @@ async def edit_cell(payload:dict=Body(...)):
 @app.post('/api/risk-report')
 async def risk_report(job_id:str=Form(...),provider:str|None=Form(default=None),model:str|None=Form(default=None),base_url:str|None=Form(default=None)):
     preference=professional_host.model_preference()
-    return await engine.generate_risk_report(job_id=job_id,provider=provider or preference['provider'],model=model or preference['model'],base_url=base_url or preference['baseUrl'])
+    return await asyncio.to_thread(_risk_report_sync,job_id,provider or preference['provider'],model or preference['model'],base_url or preference['baseUrl'],preference)
+
+def _risk_report_sync(job_id,provider,model,base_url,preference=None):
+    # The original async handler contains synchronous model / Word I/O.
+    # Validate model output before its tracked success, fact supplement and writes.
+    with model_adapter.report_request(preference):
+        data=asyncio.run(engine.generate_risk_report(job_id=job_id,provider=provider,model=model,base_url=base_url))
+    if data.get('risk_report_mode')!='demo_preset':
+        data={**data,'generated_by_model':True,'risk_report_mode':'model_generated',
+              'model_provider':provider,'model':model}
+    directory=paths.RUNTIME_DIR/job_id
+    # Preserve the original matching MD. Public Markdown is a separate, complete report.
+    state=engine._load_process_state(directory)
+    word=engine._state_path(directory,state,'output_report',required=False)
+    if word and word.is_file():
+        try:data={**data,**report_markdown.persist(directory,word,data)}
+        except RuntimeError as exc:raise HTTPException(422,str(exc)) from None
+    return data
 
 @app.post('/api/fill-assist/confirm')
 async def confirm_candidate(payload:dict=Body(...)):
@@ -380,7 +398,8 @@ def report(job_id:str):
     if not file or not file.is_file():raise HTTPException(404,'请先完成批量匹配，生成正式报告')
     file.resolve().relative_to(directory.resolve())
     document=Document(file)
-    return {'filename':file.name,'paragraphs':[p.text for p in document.paragraphs if p.text.strip()],
+    return {'job_id':job_id,'sha256':hashlib.sha256(file.read_bytes()).hexdigest(),
+            'filename':file.name,'paragraphs':[p.text for p in document.paragraphs if p.text.strip()],
             'tables':[[[cell.text for cell in row.cells] for row in table.rows] for table in document.tables],
             'note':'读取当前实际 DOCX 的正文与表格；此视图不模拟 Word 分页。完整排版请打开下载文件。'}
 

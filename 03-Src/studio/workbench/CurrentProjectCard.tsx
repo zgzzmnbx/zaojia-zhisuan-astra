@@ -1,3 +1,4 @@
+import {TaskProgress} from "../TaskProgress";
 import {FeeSummary} from '../FeeSummary';
 import {ProjectAssociationEmpty} from './ProjectAssociationEmpty';
 import type {Project} from '../useWorkspace';
@@ -7,7 +8,7 @@ import './current-project.css';
 
 type Props={project:CurrentProject|null;ready:boolean;openBoard:()=>void;openData:()=>void;openInput:()=>void;openTable:()=>void;openRisks:()=>void;assign:(id:string)=>void;newProject:()=>void;projects?:Project[];busy?:boolean;contextKey?:string;riskLoading?:boolean;riskError?:string;reloadRisks:()=>void;checkRisks:()=>void};
 export function CurrentProjectCard({project,ready,openBoard,openData,openInput,openTable,openRisks,assign,newProject,projects=[],busy=false,contextKey='',riskLoading=false,riskError='',reloadRisks,checkRisks}:Props){
- if(!ready)return <div className="current-project-empty" role="status"><span className="loading loading-spinner"/><p>正在切换当前项目…</p></div>;
+ if(!ready)return <TaskProgress label="正在切换当前项目"/>;
  if(!project)return <ProjectAssociationEmpty key={contextKey} projects={projects} busy={busy} assign={assign} newProject={newProject}/>;
  const distribution=[{key:'high',label:'高风险',value:project.severity.high},{key:'medium',label:'中风险',value:project.severity.medium},{key:'low',label:'低风险',value:project.severity.low},{key:'other',label:'其他',value:project.severity.other}];
  const priority=project.priorityRisk;

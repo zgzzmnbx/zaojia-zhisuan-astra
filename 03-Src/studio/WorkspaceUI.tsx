@@ -36,6 +36,7 @@ export function WorkspaceSidebar({workspace:w,navigation:n,busy,newChat,select,s
    <RailButton label="表格" icon="sheet" active={!panel&&activeView==='table'} onClick={()=>go(()=>open('table'))}/>
    <RailButton label="风险" icon="shield" active={!panel&&activeView==='risk'} onClick={()=>go(()=>open('risk'))}/>
    <RailButton label="文字报告" icon="report" active={!panel&&activeView==='report'} onClick={()=>go(()=>open('report'))}/>
+   <RailButton label="公文转换" icon="file" active={!panel&&activeView==='document'} onClick={()=>go(()=>open('document'))}/>
    <RailButton label="资料库" icon="library" active={!panel&&['knowledge','articles'].includes(activeView)} onClick={()=>go(()=>open('articles'))}/>
   </nav>
   <div className="rail-bottom"><RailButton label="设置" icon="settings" active={settingsActive} onClick={()=>go(settings)}/><div className="tooltip tooltip-right rail-tip" data-tip="石萌 · 独立工作空间"><span className="rail-profile" aria-label="石萌，独立工作空间" tabIndex={0}>石</span></div><span className="rail-version" aria-label={`应用版本 ${uiVersion}`} title={`造价智算 v${uiVersion}`}>v{uiVersion}</span></div>

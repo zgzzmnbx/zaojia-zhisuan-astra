@@ -1,0 +1,292 @@
+{
+  "source_project": "D:\\Codex-Temp\\260920-【公文格式】公文格式智能体v2.0-astra",
+  "source_git_head": "71d2c6855ed23dcd42672950b5f6355ee156dae7",
+  "core_version": "2.5.4",
+  "profile_version": "1.4.0",
+  "captured_at": "2026-10-10",
+  "note": "工作树内容按逐文件SHA256冻结，Git HEAD不代表未提交源码。字体仅在本机使用，不纳入Git；不复用原服务、配置、凭证或运行资料。",
+  "files": [
+    {
+      "path": "artifact_names.py",
+      "sha256": "333dd94e3bb80e5d1f518b78a3e52926f0c286a13d94b72a10db9ced180a933d",
+      "source": "03-Src/backend/app/artifact_names.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/__init__.py",
+      "sha256": "af68bbb0e63fac124737ca0b1f28c8bf8488464afbffba3b02c7fc866e6368b0",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/__init__.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/address_roles.py",
+      "sha256": "4eef025cc2b19c51a88555df6697fcc62f5dbb819d1b12c42021d42f1dd02055",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/address_roles.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/api.py",
+      "sha256": "da02c7f1daf7ab830145b96fa49c2bbd55e64cd4d52ef3747d5b73c69f9af15e",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/api.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/attachment_layout.py",
+      "sha256": "2df1bc4b806e9845aae1fb320388f0f084100bd65ea656f834a91cc7d12a759f",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/attachment_layout.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/bold_markers.py",
+      "sha256": "903b805acdc88ff05c6fdcee0efd185ceec7cf3d35e8ed8238e324ca197cf81c",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/bold_markers.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/chinese_punctuation.py",
+      "sha256": "747712d47ac9a260d517b7bb6fcb063ff0b3d81a547976811cbf8af7acd6eb4a",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/chinese_punctuation.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/cli.py",
+      "sha256": "0f8313c38b538e1bc055f9d7193da37a0a774c0795a297f63714e4dd11a8e1c3",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/cli.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/converters.py",
+      "sha256": "3cacd81b6c7c22e8dd50ae80e0f9b6e330b50821e1135cca609b72f22e81df5b",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/converters.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/docx_formatter.py",
+      "sha256": "237b2d92ea21a8ef0a6d6c7529a43c134f3b374ab81528c84dc399b44682c75d",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/docx_formatter.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/embedded_fonts.py",
+      "sha256": "0d8f8519c017004c4d1749e406db37dbc8f259c14841d1ae693d563ae30557f3",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/embedded_fonts.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/field_ranges.py",
+      "sha256": "46a5852366b66c7f1b27b6a16dd83cedf5070a8c362eeece3e725c681a29c667",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/field_ranges.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/fonts/__init__.py",
+      "sha256": "3a0b4496783ca57c5692676f9487638f8530311450a1095e5a6d06a7489e0737",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/__init__.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/fonts/fzfangsong.ttf",
+      "sha256": "e2281b9f564c61b8d544c42ee2af54a26deb584d3eb83f0fa901038722114ee2",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/fzfangsong.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/fzhei.ttf",
+      "sha256": "6ae92972da427e17db39d83f6c326cc00e6f3030af10a44511a1b85302f49785",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/fzhei.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/fzkai.ttf",
+      "sha256": "699455b73fd9c7d25fbc3853d294ab5d9547b13c6c09fe741022db8d9baf3430",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/fzkai.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/fzxiaobiaosong.ttf",
+      "sha256": "f6154b97ee71bad19efa7f78edc152cf515c1f943220fc6e98360005d53d1c62",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/fzxiaobiaosong.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/manifest.json",
+      "sha256": "9937e081ffd04c98f290e715bcf817e93201af46876f46bd475b70f35d216320",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/manifest.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/fonts/simfang.ttf",
+      "sha256": "fb8fd25dd5ffb09951f54d2038b7a44405659dcf7db059f502a34d62e4d689ee",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/simfang.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/simhei.ttf",
+      "sha256": "9b1959db3b3abeb7efdaec26edf7dfe871a6039de8d614af7248575207be629e",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/simhei.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/simkai.ttf",
+      "sha256": "95b3e69321f4e55f6ecf36b29d1e31a0c1205acfde0117df6472a17494c3cbd2",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/simkai.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/simsun.ttf",
+      "sha256": "de8b4916a8f9c447f7751fe863848948e206bcf7d9d99d298b6a3349762823bf",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/simsun.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/fonts/times-new-roman.ttf",
+      "sha256": "931c5de5c70401d9324d5014c123802b4fb753000360ceb2f56c589403cd58c5",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/fonts/times-new-roman.ttf",
+      "local_only": true
+    },
+    {
+      "path": "gongwen_core/letter_layout.py",
+      "sha256": "7d637ed838db3a67c0ebeb7f2de0fabbeb1c39d00dc306f35563de4cf582135a",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/letter_layout.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/markdown_reader.py",
+      "sha256": "ded3aea30c0b441387bec91c53c40d72e63c2ecc1ad58132e133b0ebc7cf9b5e",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/markdown_reader.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/models.py",
+      "sha256": "b047fcdd124c8bf53f2ad630dfdfb90aaa559489e6882acc84f77bd318136398",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/models.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/numbered_paragraphs.py",
+      "sha256": "9bc38be61ba65bd7b14c8400c368e4ce272be6b751e0363228179fd53ba8944e",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/numbered_paragraphs.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/page_numbers.py",
+      "sha256": "0ca8ddb6aa117d54d55c327893694e19779a8c102db24975da73b4f8b0ea4639",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/page_numbers.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/plain_numbering.py",
+      "sha256": "87abdd05d0f306321d647d53ffba050fb1521e5b44b705eca48797a9ecc3869b",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/plain_numbering.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles/archive/official_body-1.0.0.json",
+      "sha256": "3bfa983c78dc55eeca9921da5ef6a2571d53cd9e5e6225772f8e3ab01456b1d9",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles/archive/official_body-1.0.0.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles/archive/official_body-1.1.0.json",
+      "sha256": "27987bea7cc68086ed7b5d16ae15bdd0bf763455b01f5ffc6bb2b4d932260a5c",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles/archive/official_body-1.1.0.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles/archive/official_body-1.2.0.json",
+      "sha256": "be640eb1a0672db4f133098a358b3c180e86d51a1e44bdcb393eff842f37debc",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles/archive/official_body-1.2.0.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles/archive/official_body-1.3.0.json",
+      "sha256": "ae4e64cea6e3e21b50192e8e505b73cd81782f1062e930e68e8c90b97830d6f3",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles/archive/official_body-1.3.0.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles/archive/zaojia_report-1.0.0.json",
+      "sha256": "74d9a11f7ed1f88df665f76f746c9cec8395d7680190a30eac5cbf293348f22c",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles/archive/zaojia_report-1.0.0.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles/official_body.json",
+      "sha256": "c5470dc0873bcf11f273b2cf2bbf78b460f742e9087d8804d34a1ff6201342b2",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles/official_body.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles/zaojia_report.json",
+      "sha256": "bfdbcb979aa170c21bcbcd15fdb37dafede81adb99749c9c64eba557019b1c48",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles/zaojia_report.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/profiles.py",
+      "sha256": "367665d84b0409d77b3fb5f0d8102cbef14b363e84bcec80de5ba369b1edd4f8",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/profiles.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/proofreading.py",
+      "sha256": "6e6517e9d9779ce2eb21330722de346019d96cc790c5e0ff8b88fed33d071c30",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/proofreading.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/rules/letter_layout.json",
+      "sha256": "451b0de133fdba645afae23fcb614bc4251029903fb91708553235cdee996f1d",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/rules/letter_layout.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/rules/page_numbers.json",
+      "sha256": "f28796e4eae9b35e3dd25f71d10512585b39ea6f0b7703bf8b0f003c5f09292f",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/rules/page_numbers.json",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/space_cleanup.py",
+      "sha256": "ca710cbe6085a32be1f1cf053a3094190499be9c08c59c66252b4cd1777a3f66",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/space_cleanup.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/specifications.py",
+      "sha256": "e98483e2430e022294ec80d3138a6bb5a3c3da084f5eec51b71fcd16a2e92703",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/specifications.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/table_layout.py",
+      "sha256": "2670f0636637706164c4e96efe2114100a3c564648deddea3433b0d1d3888793",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/table_layout.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/title_confirmation.py",
+      "sha256": "6be1a5d3e4c63450e5ff6f793589347b47010424ded512e4b02759654fde6e80",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/title_confirmation.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/validation.py",
+      "sha256": "cfe448fe7f383c599835f49f08d3fa8ea0f42445cb4772a56fb85df55cf9f49f",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/validation.py",
+      "local_only": false
+    },
+    {
+      "path": "gongwen_core/writer.py",
+      "sha256": "e14fa3fc763625b007818a7c56f17d647017bd5138a0b43c5627a763b9b21fb9",
+      "source": "03-Src/packages/gongwen-core/src/gongwen_core/writer.py",
+      "local_only": false
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "f0a4f67ed360c0b3bb2620ce3a5788d89037a0971a896852e76fd4777170bcf2",
+      "source": "03-Src/packages/gongwen-core/pyproject.toml",
+      "local_only": false
+    }
+  ]
+}

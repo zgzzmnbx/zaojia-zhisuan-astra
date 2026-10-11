@@ -1,6 +1,16 @@
 import {feeSnapshot} from './fee-summary.ts';
 import type {Action,ConversationCard,Message,Result,Risk,SelectedCell,SheetConfig} from './types';
 
+/** Adapt saved cards without changing their persisted task binding or generating again. */
+export function conversationActions(message:Message):Action[] {
+  const actions=(message.actions||[]).map(action=>message.card?.kind==='review'&&action.action==='report'&&action.label==='查看报告'
+    ?{...action,label:'生成报告',action:'risk-report'}:action);
+  if(message.card?.kind==='artifact'&&['风险报告 · 公文格式','演示预设 · 公文格式'].includes(message.card.caption||'')&&!actions.some(action=>action.action==='report')){
+    return [...actions,{label:'查看报告',action:'report',primary:true}];
+  }
+  return actions;
+}
+
 /** Cards are snapshots of business responses; they never infer prices or completion. */
 export function inputCard(filename:string,sheets:SheetConfig[]):ConversationCard {
   return {kind:'input',title:'资料已就位，确认后开始编制',caption:'资料识别',icon:'sheet',status:'待你确认',tone:'attention',

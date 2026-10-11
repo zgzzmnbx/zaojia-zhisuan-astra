@@ -1,10 +1,37 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {actionUnavailable,artifactCard,inputCard,resultCard,reviewCard} from './conversation-cards.ts';
+import {actionUnavailable,artifactCard,conversationActions,inputCard,resultCard,reviewCard} from './conversation-cards.ts';
 
 const result={job_id:'job-a',summary:{matching_status:'completed',total_data_rows:12,matched_rows:11,unchanged_rows:1,review_rows:0},downloads:{excel:'/api/download/job-a/excel',report:'/api/download/job-a/report'}};
 const message={id:'message-a',context:'input-a',job:'job-a',role:'assistant',text:''};
 const state={context:'input-a',result,busy:false,needsRecalculate:false};
+
+test('saved completed report cards open the report without generation and keep task guards',()=>{
+  for(const caption of ['风险报告 · 公文格式','演示预设 · 公文格式']){
+    const saved={...message,card:{kind:'artifact',caption,title:'report.docx',icon:'file',status:'已生成'}};
+    const actions=conversationActions(saved);
+    assert.deepEqual(actions,[{label:'查看报告',action:'report',primary:true}]);
+    assert.equal(saved.actions,undefined);
+    assert.equal(actionUnavailable(saved,actions[0],state),undefined);
+    assert.match(actionUnavailable({...saved,job:'job-b'},actions[0],state),/历史卡片/);
+    assert.match(actionUnavailable(saved,actions[0],{...state,busy:true}),/正在执行/);
+    assert.equal(conversationActions({...saved,actions}).length,1);
+  }
+  assert.deepEqual(conversationActions({...message,card:artifactCard(result)}),[]);
+  assert.deepEqual(conversationActions({...message,card:{kind:'artifact',caption:'公文转换'}}),[]);
+});
+
+test('saved risk-check report buttons generate using the bound task and retain concurrency guards',()=>{
+  const saved={...message,card:reviewCard([]),actions:[{label:'查看全部风险与依据',action:'risk'},{label:'查看报告',action:'report'}]};
+  const actions=conversationActions(saved);
+  assert.deepEqual(actions[1],{label:'生成报告',action:'risk-report'});
+  assert.equal(saved.actions[1].action,'report');
+  assert.equal(actions[0],saved.actions[0]);
+  assert.equal(actionUnavailable(saved,actions[1],state),undefined);
+  assert.match(actionUnavailable({...saved,job:'job-b'},actions[1],state),/历史卡片/);
+  assert.match(actionUnavailable(saved,actions[1],{...state,busy:true}),/正在执行/);
+  assert.equal(conversationActions({...saved,card:artifactCard(result)})[1],saved.actions[1]);
+});
 
 test('confirmation from a previous input cannot process the replacement file',()=>{
   assert.match(actionUnavailable({...message,job:''},{action:'convert'},{...state,context:'input-b',result:null}),/历史卡片/);

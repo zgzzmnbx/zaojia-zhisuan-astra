@@ -1,11 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {initialReviewEnabled,reviewPeople,reviewProblem,reviewPayload,type ReviewPlatform,type ReviewRequest} from '../03-Src/studio/review-flow.ts';
+import {dispatchReviewPlatforms,initialReviewEnabled,reviewPeople,reviewProblem,reviewPayload,type ReviewPlatform,type ReviewRequest} from '../03-Src/studio/review-flow.ts';
 import {reviewConfirmationProblem,type ReviewSetupPlatform} from '../03-Src/professional/components/agent-workspace/review-setup-readiness.ts';
 const request:ReviewRequest={kind:'setup',jobId:'job-a',fileName:'成果.xlsx',projectName:'当前项目',version:2,reviewRows:3};
 function platform(id='default'):ReviewPlatform{return {profileId:id,label:id==='default'?'飞书':'WeAct',configurationOk:true,enabled:true,expanded:true,deliveryChannels:['direct'],group:'group-a',selectedReviewers:['one'],task:null,loading:false,feedback:'',options:{active_profile:id,platforms:[{profile_id:id,configuration_ok:true}],direct_delivery:{status:'available'},directory:{people:[{person_ref:'one',display_name:'复核甲'}],groups:[{group_ref:'group-a',name:'项目群',member_count:2,authorized:true,members_available:true,people:[{person_ref:'two',display_name:'复核乙'}]}]}}};}
 const validate=(items:ReviewPlatform[],confirmed=true)=>reviewProblem(items,confirmed,'请复核','2026-12-01T18:00');
 const setup=(id='default'):ReviewSetupPlatform=>({...platform(id),directDeliveryAvailable:true,groups:platform(id).options!.directory.groups});
+
+test('both platforms finish against the host single-writer guard without a 409 or duplicate send',async()=>{
+ let locked=false;const calls:string[]=[];
+ const replies=await dispatchReviewPlatforms(['default','weact_cost'],async id=>{
+  if(locked)throw Error('409 当前操作仍在执行');
+  locked=true;calls.push(id);await new Promise(resolve=>setTimeout(resolve,10));locked=false;return id;
+ });
+ assert.deepEqual(calls,['default','weact_cost']);
+ assert.deepEqual(replies,[{status:'fulfilled',value:'default'},{status:'fulfilled',value:'weact_cost'}]);
+});
+
+test('a failed platform does not skip the next platform or resend either request',async()=>{
+ const calls:string[]=[];const failure=Error('发送失败');
+ const replies=await dispatchReviewPlatforms(['default','weact_cost'],async id=>{calls.push(id);if(id==='default')throw failure;return id;});
+ assert.deepEqual(calls,['default','weact_cost']);assert.equal(replies[0].status,'rejected');assert.equal(replies[1].status,'fulfilled');
+});
+
+test('leaving the review during a request prevents queued platform dispatch',async()=>{
+ let active=true;const calls:string[]=[];
+ const replies=await dispatchReviewPlatforms(['default','weact_cost'],async id=>{calls.push(id);active=false;return id;},()=>active);
+ assert.deepEqual(calls,['default']);assert.equal(replies[0].status,'fulfilled');assert.equal(replies[1].status,'rejected');
+});
 test('confirmation explains the missing audience per enabled platform and clears when complete',()=>{
  const a=setup(),b=setup('weact_cost');a.selectedReviewers=[];
  assert.match(reviewConfirmationProblem([a,b]),/飞书.*复核人员/);
