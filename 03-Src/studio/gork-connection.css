@@ -1,0 +1,4 @@
+.studio #shell .gork-platform-icon.btn{color:var(--astra-muted);border:1px solid transparent}
+.studio #shell .gork-platform-icon.btn[data-tone="connected"]{color:color-mix(in srgb,var(--color-success) 60%,var(--astra-ink));background:color-mix(in srgb,var(--color-success) 9%,transparent)}
+.studio #shell .gork-platform-icon.btn[data-tone="error"]{color:color-mix(in srgb,var(--color-error) 60%,var(--astra-ink));background:color-mix(in srgb,var(--color-error) 9%,transparent)}
+.studio #shell .gork-platform-icon.btn:focus-visible{outline:2px solid var(--astra-accent);outline-offset:3px}

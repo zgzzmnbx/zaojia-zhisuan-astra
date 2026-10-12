@@ -12,7 +12,7 @@ def _count(event, key):
     return value if type(value) is int and value >= 0 else None
 
 
-def amount_text(event):
+def amount_text(event, *, spoken=False):
     amount = event.get('amount_summary')
     if (event.get('status') != 'completed' or not isinstance(amount, dict)
             or not event.get('attempt') or amount.get('attempt') != event['attempt']
@@ -29,12 +29,16 @@ def amount_text(event):
             return None
     except InvalidOperation:
         return None
+    unit = '元'
+    if spoken and value >= Decimal('10000'):
+        value /= Decimal('10000')
+        unit = '万元'
     number = format(value, 'f')
     if '.' in number:
         number = number.rstrip('0').rstrip('.')
     basis = '含税总额' if amount['basis'] == 'tax_included' else '不含税金额'
     unconfirmed = amount['calculation_status'] == 'unconfirmed'
-    return f'{"表内" if unconfirmed else ""}{basis}{number}元。' + ('公式重算未确认。' if unconfirmed else '')
+    return f'{"表内" if unconfirmed else ""}{basis}{number}{unit}。' + ('公式重算未确认。' if unconfirmed else '')
 
 
 def stage_presentation(event):

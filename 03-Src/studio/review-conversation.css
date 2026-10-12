@@ -63,6 +63,8 @@
 .astra-review .inline-review-setup__platform.is-enabled{border-color:color-mix(in srgb,var(--astra-primary) 48%,var(--astra-line))}
 .astra-review .inline-review-setup__platform.is-enabled>.inline-review-setup__platform-header{background:linear-gradient(95deg,var(--astra-soft),var(--astra-paper));box-shadow:inset 3px 0 var(--astra-primary)}
 .astra-review .inline-review-setup__platform-meta{background:var(--astra-paper);padding:4px 8px;border-radius:6px}
+.astra-review .inline-review-setup__platform-refresh{background:transparent;border-color:transparent;color:var(--astra-muted)}
+.astra-review .inline-review-setup__platform-refresh:hover:not(:disabled){background:var(--astra-soft);color:var(--astra-accent);border-color:var(--astra-line)}
 .astra-review .inline-review-setup__people label.is-selected .inline-review-setup__person-avatar{background:var(--astra-primary-gradient,var(--astra-primary));color:white}
 .astra-review .inline-review-setup__mode label.is-active{background:var(--astra-selected-gradient,var(--astra-soft));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--astra-primary) 18%,transparent)}
 .astra-review .inline-review-setup__audience{background:var(--astra-canvas);border-left:2px solid var(--astra-primary)}

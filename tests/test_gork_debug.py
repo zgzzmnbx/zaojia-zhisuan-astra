@@ -15,7 +15,7 @@ def test_manual_signal_allowed_with_automatic_off_no_business_event(fixture):
     payload=remote.sent[-1]
     assert payload['task_id'].startswith('debug-')
     assert payload['attempt'].startswith('debug-')
-    assert payload['text'].startswith('【调试·模拟数据】')
+    assert payload['text'].startswith('匹配完成，')
     assert '9447173元。公式重算未确认。' in payload['text']
     assert payload['amount_summary']['attempt']==payload['attempt']
     assert obj.debug_receipt(record['event_id'])['status']=='completed'
@@ -64,7 +64,7 @@ def test_debug_cannot_bypass_source_policy_or_closed_stage(fixture):
     assert not remote.sent
 
 
-def test_long_debug_templates_keep_prefix_and_full_amount_caveat(fixture):
+def test_long_debug_templates_use_stage_copy_and_keep_full_amount_caveat(fixture):
     obj,remote,clock=fixture
     settings=obj.settings.model_copy(deep=True);settings.sound=True
     settings.stages['match_completed'].text='说明'*145+'{amount}'
@@ -72,7 +72,43 @@ def test_long_debug_templates_keep_prefix_and_full_amount_caveat(fixture):
     obj._configure(settings);clock[0]+=1
     obj.debug_send('match_completed',True);obj.step()
     payload=remote.sent[-1]
-    assert payload['text'].startswith('【调试·模拟数据】')
-    assert payload['speech']['text'].startswith('调试消息，模拟数据。')
-    for text in [payload['text'],payload['speech']['text']]:
-        assert len(text)<=300 and text.endswith('9447173元。公式重算未确认。')
+    assert payload['text'].startswith('说明')
+    assert payload['speech']['text'].startswith('语音')
+    assert len(payload['text'])<=300 and payload['text'].endswith('9447173元。公式重算未确认。')
+    assert len(payload['speech']['text'])<=300 and payload['speech']['text'].endswith('944.7173万元。公式重算未确认。')
+
+
+def test_debug_and_business_copy_match_but_keep_separate_identity(fixture):
+    from test_gork_notifications import event
+    obj,remote,clock=fixture
+    settings=obj.settings.model_copy(deep=True);settings.sound=True
+    obj._configure(settings);clock[0]+=1
+    record=obj.debug_send('warning_found');obj.step()
+    debug=remote.sent[-1]
+    clock[0]+=1
+    obj.enqueue(event(clock,stage='warning_result',status='completed',warning_rows=2,review_rows=1));obj.step()
+    actual=remote.sent[-1]
+    assert debug['text']==actual['text']=='风险检查完成，2项需复核。'
+    assert debug['speech']['text']==actual['speech']['text']==debug['text']
+    assert debug['task_id'].startswith('debug-') and debug['task_id']!=actual['task_id']
+    assert obj.db().execute('SELECT debug FROM events WHERE id=?',(record['event_id'],)).fetchone()[0]==1
+
+
+def test_debug_and_business_amount_speech_use_wan_with_exact_yuan_snapshot(fixture):
+    from test_gork_notifications import event
+    obj,remote,clock=fixture
+    settings=obj.settings.model_copy(deep=True);settings.sound=True
+    obj._configure(settings);clock[0]+=1
+    obj.debug_send('match_completed',True,'26728500.00');obj.step()
+    debug=remote.sent[-1]
+    clock[0]+=1
+    actual_event=event(clock,stage='match_result',status='completed',review_rows=1)
+    actual_event['amount_summary']={'attempt':actual_event['attempt'],'value':'26728500.00',
+        'unit':'yuan','currency':'CNY','basis':'tax_included','calculation_status':'unconfirmed'}
+    obj.enqueue(actual_event);obj.step()
+    actual=remote.sent[-1]
+    for payload in (debug,actual):
+        assert payload['speech']['text']=='匹配完成，表内含税总额2672.85万元。公式重算未确认。1项待复核。'
+        assert '26728500元' in payload['text']
+        assert payload['amount_summary']['value']=='26728500.00'
+        assert payload['amount_summary']['unit']=='yuan'

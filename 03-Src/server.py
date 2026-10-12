@@ -40,18 +40,22 @@ assert paths.PROJECT_ROOT == ENGINE, 'Refuse to use an external business engine'
 @asynccontextmanager
 async def host_lifespan(_app):
     from app import feishu_app_bot
-    await asyncio.to_thread(collaboration_lifecycle.resume_receivers, feishu_app_bot,
-                            bool(professional_host.config().get('external_enabled')))
-    watchdog=asyncio.create_task(collaboration_lifecycle.monitor_receivers(
-        feishu_app_bot, lambda: professional_host.config().get('external_enabled')))
+    await asyncio.to_thread(gork_output.start)
+    watchdog=None
     try:
+        await asyncio.to_thread(collaboration_lifecycle.resume_receivers, feishu_app_bot,
+                                bool(professional_host.config().get('external_enabled')))
+        watchdog=asyncio.create_task(collaboration_lifecycle.monitor_receivers(
+            feishu_app_bot, lambda: professional_host.config().get('external_enabled')))
         yield
     finally:
-        watchdog.cancel()
-        try:await watchdog
-        except asyncio.CancelledError:pass
+        if watchdog:
+            watchdog.cancel()
+            try:await watchdog
+            except asyncio.CancelledError:pass
+        await asyncio.to_thread(gork_output.stop)
 
-app = FastAPI(title='智算Astra', version='0.9.4', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.9.10', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
@@ -412,7 +416,7 @@ async def digital_status():
         return {'available':reply.status_code==200}
     except httpx.HTTPError:return {'available':False}
 
-gork_notifications.install(app, engine, paths.RUNTIME_DIR)
+gork_output = gork_notifications.install(app, engine, paths.RUNTIME_DIR, manage_lifecycle=False)
 import runtime_console
 runtime_console_store = runtime_console.install(app)
 

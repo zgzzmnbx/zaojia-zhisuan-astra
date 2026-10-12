@@ -42,6 +42,7 @@ class Controller:
 @pytest.fixture
 def fixture(tmp_path, monkeypatch):
     monkeypatch.setattr(config, 'CONFIG', tmp_path/'config.json')
+    monkeypatch.setattr(bridge, 'read_console_health', lambda: {'app':'stopwatch-voice-companion','external_protocol':'1.0','instance':'test-console','robot':{'connected':True}})
     clock=[100.0]
     remote=Controller()
     obj=bridge.Notifications(tmp_path/'outbox.sqlite3',client_factory=lambda settings:remote,clock=lambda:clock[0])
@@ -109,6 +110,14 @@ def test_disabled_configuration_and_unreachable_console_are_distinct(fixture):
     result=obj._status(obj.settings)
     assert result['state']=='unavailable'
     assert 'private' not in result['message']
+
+
+def test_reachable_console_without_sending_worker_is_not_ready(fixture):
+    obj,remote,clock=fixture
+    result=obj._status(obj.settings)
+    assert result['state']=='error' and not result['worker_running']
+    assert '发送线程未运行' in result['message']
+    assert not remote.sent
 
 
 def test_precise_retry_after_response_lost_is_same_identity(fixture):
@@ -184,7 +193,7 @@ def test_amount_basis_caveat_required_in_custom_speech_and_attempt(fixture):
     p=remote.sent[-1]
     assert p['amount_summary']==summary
     assert p['speech']['mode']=='auto'
-    assert '表内含税总额9447173元。公式重算未确认。' in p['speech']['text']
+    assert '表内含税总额944.7173万元。公式重算未确认。' in p['speech']['text']
     clock[0]+=1;summary['attempt']='old'
     obj.enqueue(event(clock,'match_result','completed',amount_summary=summary));obj.step()
     assert 'amount_summary' not in remote.sent[-1]
@@ -237,6 +246,53 @@ def test_derived_review_sent_only_fresh_verified_feed(fixture):
     obj.feed=lambda:[event([99],'review_sent','sent'),fresh]
     obj.step();clock[0]+=6;obj.step()
     assert len(remote.sent)==1 and remote.sent[0]['stage']=='review_sent'
+
+
+def test_two_platform_delivery_notifications_are_one_per_result_round(fixture):
+    obj,remote,clock=fixture
+    obj.settings.sound=True
+    first=event(clock,'review_sent','sent',_review_scope='b'*64)
+    second={**first,'event_id':'weact-delivery','platform':'weact_cost'}
+    obj.feed=lambda:[first,second]
+    obj.step()
+    assert len(remote.sent)==1 and remote.sent[0]['speech']['text']=='复核资料已送达，等待同事反馈。'
+    assert obj.db().execute('SELECT count(*) FROM review_notices').fetchone()[0]==1
+    clock[0]+=6;obj.step()
+    assert len(remote.sent)==1
+    clock[0]+=1
+    obj.enqueue(event(clock,'review_sent','sent',_review_scope='c'*64));obj.step()
+    assert len(remote.sent)==2  # Explicit next round or different result gets its own notice.
+
+
+def test_delivery_watermark_survives_restart_and_outbox_retention(fixture):
+    obj,remote,clock=fixture
+    obj.enqueue(event(clock,'review_sent','sent',_review_scope='b'*64));obj.step()
+    obj.db().execute('DELETE FROM events');obj.db().commit()
+    restarted=bridge.Notifications(obj.database,client_factory=lambda settings:remote,clock=lambda:clock[0])
+    restarted.settings=obj.settings
+    clock[0]+=1
+    try:
+        restarted.enqueue(event(clock,'review_sent','sent',_review_scope='b'*64))
+        assert restarted.db().execute('SELECT count(*) FROM events').fetchone()[0]==0
+    finally:restarted.stop()
+
+
+def test_unsent_failed_delivery_notice_can_recover_from_other_platform(fixture):
+    obj,remote,clock=fixture
+    obj.enqueue(event(clock,'review_sent','sent',_review_scope='b'*64))
+    remote.fail=bridge.sdk.GorkError(403,'EXTERNAL_OUTPUT_DENIED');obj.step()
+    remote.fail=None;clock[0]+=1
+    obj.enqueue(event(clock,'review_sent','sent',_review_scope='b'*64));obj.step()
+    assert len(remote.sent)==2 and obj.db().execute("SELECT count(*) FROM events WHERE status='completed'").fetchone()[0]==1
+
+
+def test_manual_delivery_debug_clicks_remain_repeatable(fixture):
+    obj,remote,clock=fixture
+    obj._configure(obj.settings.model_copy(update={'sound':True}))
+    clock[0]+=1
+    obj.debug_send('review_sent');obj.step();clock[0]+=1
+    obj.debug_send('review_sent');obj.step()
+    assert len(remote.sent)==2 and all(p['speech'] for p in remote.sent)
 
 
 def test_non_retryable_error_retains_safe_code(fixture):

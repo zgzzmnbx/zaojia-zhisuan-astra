@@ -182,6 +182,7 @@ export default function InlineReviewSetupCard({
                         <span><strong>{platform.label}</strong><small>{platform.configurationOk ? "启用该平台发送" : "平台配置异常，暂不可用"}</small></span>
                       </label>
                       <span className="inline-review-setup__platform-meta">{platform.task ? platform.task.status_label : platform.enabled ? channels || "请选择方式" : "未启用"}</span>
+                      <button className="btn btn-ghost btn-square inline-review-setup__platform-refresh" type="button" aria-label={`刷新 ${platform.label} 群与成员`} title={`刷新 ${platform.label} 群与成员`} aria-busy={loading || platform.loading} disabled={sending || loading || platform.loading} onClick={() => onRefresh(platform.profileId)}>{loading || platform.loading ? <Loader2 size={16} className="spin" /> : <RefreshCw size={16} />}</button>
                       <button className="inline-review-setup__platform-expand" type="button" aria-label={`${platform.expanded ? "收起" : "展开"}${platform.label}设置`} aria-expanded={platform.expanded} onClick={() => onPlatformExpandedChange(platform.profileId, !platform.expanded)}><ChevronDown size={17} /></button>
                     </header>
                     {platform.expanded && (
@@ -206,7 +207,6 @@ export default function InlineReviewSetupCard({
                           </label>
                         )}
                         {platform.feedback ? <p className={`inline-review-setup__platform-feedback ${/失败|拒绝|不能|异常/.test(platform.feedback) ? "is-error" : ""}`}>{platform.feedback}</p> : null}
-                        <button className="inline-review-setup__platform-refresh" type="button" disabled={sending || platform.loading} onClick={() => onRefresh(platform.profileId)}>{platform.loading ? <Loader2 size={14} className="spin" /> : <RefreshCw size={14} />}刷新 {platform.label} 群与成员</button>
                       </div>
                     )}
                   </article>
@@ -226,7 +226,6 @@ export default function InlineReviewSetupCard({
             {enabledPlatforms.length ? (
               <div className="inline-review-setup__reviewer-platforms">
                 {enabledPlatforms.map((platform) => {
-                  const group = selectedGroup(platform);
                   const isTaskActive = Boolean(platform.task && !taskCanStartNextRound(platform.task));
                   return (
                     <article className="inline-review-setup__reviewer-platform" key={platform.profileId}>
@@ -241,7 +240,6 @@ export default function InlineReviewSetupCard({
                       ) : (
                         <div className="inline-review-setup__empty">{platform.loading ? <Loader2 size={17} className="spin" /> : <UsersRound size={17} />}<span>{platform.loading ? "正在读取人员目录……" : "当前范围没有可选择且已完成平台映射的人员。"}</span></div>
                       )}
-                      <div className="inline-review-setup__audience"><ShieldCheck size={15} aria-hidden="true" /><span><strong>{platform.deliveryChannels.includes("group") ? group?.name || "尚未选择工作群" : `${platform.label} 个人私聊`}</strong><small>{platform.deliveryChannels.includes("group") ? `群成员 ${group?.member_count ?? 0} 人；${platform.deliveryChannels.includes("direct") ? "同时逐一私聊已选人员" : "仅在群内 @ 已选人员"}` : "只向已勾选人员逐一发送，不自动扩展受众"}</small></span></div>
                       {platform.task && (
                         <section className="inline-review-setup__task" aria-label={`${platform.label}当前复核任务状态`}>
                           <header><span><CheckCircle2 size={16} /><strong>{platform.task.status_label}</strong><small>{platform.task.task_id} · {platform.label}</small></span>{platform.task.review_round ? <b>第 {platform.task.review_round} 轮</b> : null}</header>

@@ -78,12 +78,17 @@ def test_bad_queue_schema_fails_closed(tmp_path):
 
 def test_only_http_lifespan_resumes_receivers(monkeypatch):
     calls=[]
+    from types import SimpleNamespace
+    lifecycle=[]
+    monkeypatch.setattr(server,'gork_output',SimpleNamespace(start=lambda:lifecycle.append('start'),stop=lambda:lifecycle.append('stop')))
     monkeypatch.setattr(server.professional_host,'config',lambda:{'external_enabled':True})
     monkeypatch.setattr(server.collaboration_lifecycle,'resume_receivers',lambda bot,enabled:calls.append(enabled))
     assert calls==[]
     with TestClient(FastAPI(lifespan=server.host_lifespan)):
         assert calls==[True]
+        assert lifecycle==['start']
     assert calls==[True]
+    assert lifecycle==['start','stop']
 
 
 @pytest.mark.parametrize('missing', ['running','enabled','fresh','connected','identity_ready','backend_ok'])

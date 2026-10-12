@@ -55,8 +55,11 @@ def test_templates_cannot_evaluate_objects_or_drop_amount_caveat():
              'unit': 'yuan', 'basis': 'tax_included', 'calculation_status': 'unconfirmed'}}
     text = c.render_text(event, stage)
     assert len(text) <= 300 and text.endswith('表内含税总额9447173元。公式重算未确认。')
+    speech = c.render_text(event, stage, spoken=True)
+    assert len(speech) <= 300 and speech.endswith('表内含税总额944.7173万元。公式重算未确认。')
     stage.text = '匹配完成。'
     assert '公式重算未确认' in c.render_text(event, stage)
+    assert c.render_text(event, stage, spoken=True) == '匹配完成。 表内含税总额944.7173万元。公式重算未确认。'
     stage.text = '{warnings}'
     assert c.render_text({}, stage) == '请查看结果。'
 

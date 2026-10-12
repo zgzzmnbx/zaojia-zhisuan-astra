@@ -36,4 +36,4 @@ export function debugSubmission(record:{status:string;remote_confirmed?:boolean;
  if(!remote)return {label:'本地已提交 · 控制台尚未确认',message:'本地提交不代表小人已显示或语音已播放。'};
  return {label:'控制台已确认接收',message:'各端结果见下方回执；声音回执仍需实际听测。'};
 }
-export function deliveryLabel(value:string){return ({displayed:'已显示',accepted:'设备已接收',completed:'已完成',completed_by_os:'系统播放完成',not_requested:'未请求输出',queued:'已入队',playing:'播放中',failed:'输出失败',cancelled:'已取消',pending:'等待确认'} as Record<string,string>)[value]||'待核对';}
+export function deliveryLabel(value:string){return ({displayed:'已显示',accepted:'设备已接收',completed:'已完成',completed_by_os:'系统播放完成',device_playback_completed:'设备播放完成',not_requested:'未请求输出',queued:'已入队',playing:'播放中',failed:'输出失败',cancelled:'已取消',pending:'等待确认'} as Record<string,string>)[value]||'待核对';}

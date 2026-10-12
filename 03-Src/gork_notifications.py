@@ -8,6 +8,7 @@ import asyncio
 from contextvars import ContextVar
 from datetime import datetime, timezone
 import functools
+import hashlib
 import importlib.util
 import inspect
 import json
@@ -18,6 +19,7 @@ import sqlite3
 import threading
 import time
 from uuid import uuid4
+import httpx
 
 from fastapi import HTTPException
 import gork_config as config
@@ -27,6 +29,13 @@ sdk = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(sdk)
 request_round = ContextVar('astra_gork_request', default='')
 LIVE = {'queued', 'dispatching', 'active', 'partial'}
+
+
+def read_console_health():
+    with httpx.Client(trust_env=False, follow_redirects=False, timeout=2) as client:
+        reply = client.get('http://127.0.0.1:8766/api/health')
+        reply.raise_for_status()
+        return reply.json()
 
 
 def timestamp(value):
@@ -40,6 +49,34 @@ def timestamp(value):
 def error_code(exc):
     code = getattr(exc, 'code', '')
     return code if isinstance(code, str) and re.fullmatch(r'[A-Z_]{1,80}', code) else 'CONNECTION_UNAVAILABLE'
+
+
+def review_delivery_event(event, job_id, database, requested_at=None):
+    """Read verified delivery identity; approval updates are not new deliveries."""
+    identifier = str(event.get('event_id') or '')
+    if not identifier.endswith(':sent') or not database or not Path(database).is_file():
+        return None
+    collaboration = identifier[:-5]
+    try:
+        with sqlite3.connect(Path(database).resolve().as_uri() + '?mode=ro', uri=True, timeout=2) as db:
+            db.row_factory = sqlite3.Row
+            task = db.execute("""SELECT submission_hash,review_round,platform_profile_id,submission_received_at
+                FROM tasks WHERE task_id=? AND source_task_id=? AND task_kind='external_dispatch'
+                AND submission_delivery_status='sent' AND review_card_status='sent'""", (collaboration, job_id)).fetchone()
+            if not task or not re.fullmatch(r'[a-f0-9]{64}', task['submission_hash']) or task['review_round'] < 1:
+                return None
+            sent = db.execute("""SELECT MAX(created_at) FROM dispatch_attempts WHERE task_id=? AND status='sent'
+                AND (step IN ('review_file','review_card') OR step LIKE 'review_file:%' OR step LIKE 'review_card:%')
+                AND created_at>=?""", (collaboration, task['submission_received_at'])).fetchone()[0]
+    except (sqlite3.Error, TypeError, ValueError):
+        return None
+    scope = hashlib.sha256(f"{job_id}:{task['submission_hash']}:r{task['review_round']}".encode()).hexdigest()
+    delivered_at = sent or task['submission_received_at']
+    if timestamp(requested_at) > timestamp(delivered_at):
+        delivered_at = requested_at  # The committed producer milestone retains subsecond precision.
+    return {**event, 'job_id': job_id, 'event_id': f"{collaboration}:r{task['review_round']}:sent",
+            'occurred_at': delivered_at, 'platform': task['platform_profile_id'],
+            '_review_scope': scope}
 
 
 class Notifications:
@@ -60,6 +97,8 @@ class Notifications:
         self.debug_task = 'debug-' + uuid4().hex
         self.debug_attempt = 'debug-' + uuid4().hex
         self.connection = None
+        self.next_connect = 0
+        self.platform = {'state': 'checking', 'message': '正在连接 Gork', 'checked_at': 0}
 
     def _client(self, settings):
         config.token(settings)  # Validate independent source; never return secret to UI.
@@ -79,6 +118,7 @@ class Notifications:
                     receipt TEXT NOT NULL DEFAULT '{}', error TEXT NOT NULL DEFAULT '');
                 CREATE TABLE IF NOT EXISTS cancellations(task TEXT, attempt TEXT, expires REAL,
                     PRIMARY KEY(task,attempt));
+                CREATE TABLE IF NOT EXISTS review_notices(scope TEXT PRIMARY KEY, event_id TEXT NOT NULL);
             ''')
             if 'debug' not in {row[1] for row in self.connection.execute('PRAGMA table_info(events)')}:
                 self.connection.execute('ALTER TABLE events ADD COLUMN debug INTEGER NOT NULL DEFAULT 0')
@@ -100,6 +140,7 @@ class Notifications:
             except HTTPException:
                 self.cached_status = {'state': 'error', 'message': '阶段通知设置无法读取，已停止输出'}
             self.cutoff = self.clock()
+            self.next_connect = 0
             if self.worker is None:
                 self.worker = threading.Thread(target=self._run, name='astra-gork-output', daemon=True)
                 self.worker.start()
@@ -115,6 +156,51 @@ class Notifications:
                 self.connection = None
             self.worker = None
             self.client = None
+
+    def reconnect(self):
+        # Read-only health/authentication renewal; never launches Gork or takes its owner.
+        now = self.clock()
+        if now < self.next_connect:
+            return
+        self.next_connect = now + 10
+        previous = self.platform['state']
+        result = {'state': 'error', 'message': 'Gork 连接异常，正在自动重试', 'checked_at': now}
+        try:
+            health = read_console_health()
+            if (not isinstance(health, dict) or health.get('app') != 'stopwatch-voice-companion'
+                    or health.get('external_protocol') != '1.0' or not isinstance(health.get('instance'), str)
+                    or not isinstance(health.get('robot'), dict)):
+                raise ValueError('identity')
+            client = self.client_factory(self.settings)
+            state = self.validate_remote(client, self.settings)
+            self.client = client  # Reload the already authorized token after console restart/rotation.
+            result.update(state='connected', message='Gork 已连接',
+                          robot_connected=health['robot'].get('connected') is True,
+                          notifications_enabled=self.settings.enabled, instance=health['instance'])
+            if previous != 'connected':
+                self.cached_status = {'state': 'ready' if self.settings.enabled else 'disabled',
+                                      'message': '等待新阶段，历史事件不补播' if self.settings.enabled else '阶段通知已关闭'}
+        except httpx.ConnectError:
+            result.update(state='offline', message='Gork 未打开，启动后将自动连接')
+        except HTTPException as exc:
+            result['message'] = str(exc.detail)
+        except sdk.GorkError as exc:
+            result['message'] = 'Gork 授权或接口异常：' + error_code(exc)
+        except Exception:
+            pass
+        if result['state'] != 'connected':
+            self.client = None
+        self.platform = result
+
+    def platform_status(self):
+        with self.lock:
+            result = dict(self.platform)
+            result['worker_running'] = self.worker is not None and self.worker.is_alive()
+            if not result['worker_running']:
+                result.update(state='error', message='通知连接线程未运行')
+            elif result['checked_at'] and self.clock() - result['checked_at'] > 20:
+                result.update(state='error', message='Gork 连接检测超时，正在自动恢复')
+            return result
 
     def begin(self, identifier):
         with self.lock:
@@ -234,6 +320,16 @@ class Notifications:
         producer = str(event.get('event_id') or '')
         if not producer or db.execute('SELECT 1 FROM events WHERE producer=?', (producer,)).fetchone():
             return
+        review_scope = event.get('_review_scope') if key == 'review_sent' and not debug else None
+        if review_scope and re.fullmatch(r'[a-f0-9]{64}', review_scope):
+            previous = db.execute('SELECT event_id FROM review_notices WHERE scope=?', (review_scope,)).fetchone()
+            if previous:
+                notice = db.execute('SELECT status,receipt FROM events WHERE id=?', (previous['event_id'],)).fetchone()
+                # Retry an output that never reached either endpoint; retained watermarks prevent historical replay.
+                if not notice or notice['status'] not in {'failed','expired','cancelled','superseded','interrupted'} or json.loads(notice['receipt']).get('delivery'):
+                    return
+        else:
+            review_scope = None
         if db.execute("SELECT count(*) FROM events WHERE status='pending'").fetchone()[0] >= 64:
             self.cached_status = {'state': 'error', 'message': '阶段通知队列已满，专业处理继续'}
             return
@@ -242,12 +338,11 @@ class Notifications:
             return
         db.execute('INSERT INTO sequences(task,value) VALUES(?,1) ON CONFLICT(task) DO UPDATE SET value=value+1', (job,))
         sequence = db.execute('SELECT value FROM sequences WHERE task=?', (job,)).fetchone()[0]
-        text_stage = stage.model_copy(update={'text': '【调试·模拟数据】' + stage.text}) if debug else stage
-        text = config.render_text(event, text_stage)
+        text = config.render_text(event, stage)
         speech = None
         if self.settings.sound and stage.speech:
-            speech_stage = stage.model_copy(update={'text': ('调试消息，模拟数据。' if debug else '') + (stage.speech_text or stage.text)})
-            speech = {'text': config.render_text(event, speech_stage), 'mode': self.settings.speech_mode,
+            speech_stage = stage.model_copy(update={'text': stage.speech_text or stage.text})
+            speech = {'text': config.render_text(event, speech_stage, spoken=True), 'mode': self.settings.speech_mode,
                       'target': self.settings.speech_target if stage.speech_target == 'inherit' else stage.speech_target}
             if not speech['text'].strip():
                 speech = None
@@ -267,6 +362,8 @@ class Notifications:
         db.execute('INSERT INTO events(id,producer,payload,status,deadline,next_try,heartbeat,request_round,debug) VALUES(?,?,?,?,?,?,?,?,?)',
                    (payload['event_id'], producer, json.dumps(payload, ensure_ascii=False), 'pending',
                     occurred + stage.ttl_ms / 1000, 0, 0, event.get('_request', ''), int(debug)))
+        if review_scope:
+            db.execute('INSERT OR REPLACE INTO review_notices(scope,event_id) VALUES(?,?)', (review_scope, payload['event_id']))
         db.commit()
 
     def debug_send(self, stage_id, include_amount=False, amount='9447173.00'):
@@ -321,7 +418,12 @@ class Notifications:
 
     def step(self):
         with self.lock:
+            self.reconnect()
             now = self.clock()
+            if self.platform['state'] != 'connected':
+                self.db().execute("UPDATE events SET status='expired' WHERE status='pending' AND deadline<=?", (now,))
+                self.db().commit()
+                return
             cancellations=self.db().execute('SELECT task,attempt FROM cancellations WHERE confirmed=0 AND expires>? AND next_try<=? LIMIT 8',(now,now)).fetchall()
             if cancellations:
                 if self.client is None:
@@ -396,6 +498,7 @@ class Notifications:
         with self.lock:
             result = dict(self.cached_status)
             result['active_operations'] = len(self.active)
+            result['worker_running'] = self.worker is not None and self.worker.is_alive()
             try:
                 client = self.client_factory(settings)
                 if settings.enabled:
@@ -407,6 +510,8 @@ class Notifications:
                 result.update(policy=state.get('policy'), current_sound_target=state.get('current_sound_target'), paused=state.get('paused'))
                 if not settings.enabled:
                     result.update(state='disabled', message='阶段通知已关闭，可配置后保存')
+                elif not result['worker_running']:
+                    result.update(state='error', message='通知发送线程未运行，请重新启动智算服务')
                 elif result['state'] in {'disabled', 'unavailable'}:
                     result.update(state='ready', message='等待新阶段，历史事件不补播')
             except HTTPException as exc:
@@ -422,7 +527,7 @@ class Notifications:
             return result
 
 
-def install(app, engine, runtime):
+def install(app, engine, runtime, *, manage_lifecycle=True):
     from app import sentinel_events, task_monitoring
     instance = Notifications(config.ROOT / 'runtime/astra-gork-notifications/outbox.sqlite3',
                              feed=lambda: engine.get_current_monitored_task()['events'])
@@ -439,7 +544,26 @@ def install(app, engine, runtime):
     sentinel_events.atomic_json = observe_write
     old_events = task_monitoring._events
     def linked_events(row, job_id, runtime_dir, dispatch_db_path=None):
-        return [{**event, 'job_id': job_id} for event in old_events(row, job_id, runtime_dir, dispatch_db_path)]
+        if not re.fullmatch(r'[A-Za-z0-9_-]{1,100}', str(job_id)):
+            return []
+        requested = {}
+        for path in sorted((Path(runtime_dir) / job_id / 'sentinel-events').glob('*.json'), reverse=True)[:100]:
+            try:
+                if path.stat().st_size > 2_000_000:
+                    continue
+                raw = json.loads(path.read_text(encoding='utf-8'))
+                if raw.get('stage') == 'review_requested':
+                    identifier = str(raw.get('collaboration_task_id') or '')
+                    if timestamp(raw.get('occurred_at')) > timestamp(requested.get(identifier)):
+                        requested[identifier] = raw['occurred_at']
+            except (OSError, ValueError, AttributeError):
+                continue
+        events = []
+        for event in old_events(row, job_id, runtime_dir, dispatch_db_path):
+            linked = review_delivery_event(event, job_id, dispatch_db_path, requested.get(event['event_id'][:-5])) if event.get('stage') == 'review_sent' else {**event, 'job_id': job_id}
+            if linked:
+                events.append(linked)
+        return events
     task_monitoring._events = linked_events
     # Replace whole routes: FastAPI caches coroutine classification in handlers.
     for route in list(app.router.routes):
@@ -476,6 +600,7 @@ def install(app, engine, runtime):
             return call
         app.router.routes.remove(route)
         app.add_api_route(route.path, wrap(original, report), methods=list(route.methods), response_model=route.response_model)
-    app.add_event_handler('startup', instance.start)
-    app.add_event_handler('shutdown', instance.stop)
+    if manage_lifecycle:
+        app.add_event_handler('startup', instance.start)
+        app.add_event_handler('shutdown', instance.stop)
     return instance

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / '03-Src'))
-from gork_stages import stage_presentation
+from gork_stages import amount_text, stage_presentation
 
 
 @pytest.mark.parametrize('stage,status,expression,duration', [
@@ -50,3 +50,27 @@ def test_amount_and_review_keep_actual_attempt_and_caveat():
     assert 'NaN' not in stage_presentation(event)['text']
     event['amount_summary']['value'] = '1e-99999999'
     assert '总额' not in stage_presentation(event)['text']
+
+
+@pytest.mark.parametrize('value,spoken', [
+    ('0.00', '0元'), ('9999.99', '9999.99元'), ('10000.00', '1万元'),
+    ('26728500.00', '2672.85万元'), ('9447173.00', '944.7173万元'),
+    ('10000.000001', '1.0000000001万元'), ('1000000000000', '100000000万元'),
+])
+def test_spoken_amount_uses_wan_exactly_without_changing_snapshot(value, spoken):
+    event = {'status': 'completed', 'attempt': 'current',
+             'amount_summary': {'attempt': 'current', 'value': value, 'unit': 'yuan',
+             'currency': 'CNY', 'basis': 'tax_excluded', 'calculation_status': 'unconfirmed'}}
+    assert amount_text(event, spoken=True) == f'表内不含税金额{spoken}。公式重算未确认。'
+    assert event['amount_summary']['value'] == value and event['amount_summary']['unit'] == 'yuan'
+    assert '万元' not in amount_text(event)
+    event['amount_summary']['attempt'] = 'old'
+    assert amount_text(event, spoken=True) is None
+
+
+@pytest.mark.parametrize('value', ['NaN', '-1', '1e4', '1000000000001'])
+def test_spoken_amount_keeps_validation(value):
+    event = {'status': 'completed', 'attempt': 'current',
+             'amount_summary': {'attempt': 'current', 'value': value, 'unit': 'yuan',
+             'currency': 'CNY', 'basis': 'tax_included', 'calculation_status': 'recalculated'}}
+    assert amount_text(event, spoken=True) is None

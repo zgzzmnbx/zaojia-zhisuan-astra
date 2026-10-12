@@ -1,5 +1,6 @@
 """Independent, versioned Astra preferences for Gork stage output."""
 from __future__ import annotations
+import asyncio
 import json
 from pathlib import Path
 import re
@@ -137,18 +138,18 @@ def stage_key(event):
     return stage if stage in expected and event.get('status') == expected[stage] else None
 
 
-def render_text(event, stage):
+def render_text(event, stage, *, spoken=False):
     from gork_stages import amount_text
     reviews, warnings = event.get('review_rows'), event.get('warning_rows')
     reviews = reviews if type(reviews) is int and reviews >= 0 else None
     warnings = warnings if type(warnings) is int and warnings >= 0 else None
-    values = {'amount': amount_text(event) or '请查看结果。',
+    amount = amount_text(event, spoken=spoken)
+    values = {'amount': amount or '请查看结果。',
               'review': f'{reviews}项待复核。' if reviews else '',
               'warnings': '请查看结果。' if warnings is None else f'{warnings}项需复核。' if warnings else '未发现经验偏离。',
               'task': str(event.get('task_name') or '当前任务')[:80]}
     text = re.sub(r'\{(amount|review|warnings|task)\}', lambda m: values[m[1]], stage.text)
     # Keep the complete tax basis / caveat even after a long user-authored template.
-    amount = amount_text(event)
     if amount and amount not in text[:300]:
         plain = re.sub(r'\{(amount|review|warnings|task)\}', lambda m: '' if m[1] == 'amount' else values[m[1]], stage.text)
         return plain[:299 - len(amount)].rstrip() + ' ' + amount
@@ -164,6 +165,13 @@ async def get_settings():
     return {'settings': settings.model_dump(), 'defaults': default_stages(),
             'stages': [{'id': x[0], 'label': x[1]} for x in DEFINITIONS],
             'status': status}
+
+
+@router.get('/platform')
+async def platform_status():
+    if not bridge:
+        return {'state': 'error', 'message': 'Gork 联动尚未初始化', 'checked_at': 0}
+    return await asyncio.to_thread(bridge.platform_status)
 
 
 @router.put('')
