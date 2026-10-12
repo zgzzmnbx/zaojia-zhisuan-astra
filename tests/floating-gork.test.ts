@@ -37,3 +37,18 @@ test('resized avatars dock, clamp and snap using their actual outer size',()=>{
  }
  assert.equal(nearestCorner({x:620,y:320},1366,768,136),'bottom-right');
 });
+
+import {gorkTransferFrames,GORK_TRANSFER_MS} from '../03-Src/studio/gork-transfer.ts';
+test('handoff flight starts at the composer size and ends exactly at the dock',()=>{
+ const frames=gorkTransferFrames({x:340,y:840,size:84},{x:116,y:820,size:72},993);
+ assert.equal(frames[0].transform,'translate(224px, 20px) rotate(0deg) scale(1.1666666666666667, 1.1666666666666667)');
+ assert.equal(frames.at(-1)!.transform,'translate(0px, 0px) rotate(0deg) scale(1, 1)');
+ assert.equal(GORK_TRANSFER_MS,650);
+ assert.ok(frames.every((f,i)=>i===0||f.offset>frames[i-1].offset));
+});
+test('handoff lift remains inside the viewport for high and low landing corners',()=>{
+ for(const y of [70,840])for(const size of [48,84,128]){
+  const to={x:1300,y,size};const frames=gorkTransferFrames({x:120,y:850,size:84},to,993);
+  for(const frame of frames){const translation=frame.transform.match(/translate\(([-.\d]+)px, ([-.\d]+)px\)/)!;const center=y+Number(translation[2]);assert.ok(center>=24&&center<=969);assert.ok(!frame.transform.includes('NaN'));}
+ }
+});

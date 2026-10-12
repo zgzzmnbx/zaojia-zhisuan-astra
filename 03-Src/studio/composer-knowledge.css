@@ -15,7 +15,8 @@
 .knowledge-answer-heading{gap:10px;padding-block:8px}
 .knowledge-answer-symbol{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--blue-wash);color:var(--blue)}
 .knowledge-answer-heading>strong{color:var(--ink)}
-.live-shell .knowledge-answer-body .astra-prose table{border:1px solid var(--line);border-radius:9px;border-collapse:separate;border-spacing:0;background:var(--paper);font-variant-numeric:tabular-nums;scrollbar-width:thin}
+.live-shell .knowledge-answer-body .astra-prose-table-scroll{border:1px solid var(--line);border-radius:9px;background:var(--paper)}
+.live-shell .knowledge-answer-body .astra-prose table{border:0;border-radius:0;border-collapse:separate;border-spacing:0;background:var(--paper);font-variant-numeric:tabular-nums}
 .live-shell .knowledge-answer-body .astra-prose :is(th,td){padding:11px 13px;border:0;border-bottom:1px solid var(--line);line-height:1.7;vertical-align:top}
 .live-shell .knowledge-answer-body .astra-prose th{background:color-mix(in srgb,var(--astra-primary) 9%,var(--paper));color:var(--blue);font-weight:600;white-space:normal}
 .live-shell .knowledge-answer-body .astra-prose th+th{border-left:1px solid color-mix(in srgb,var(--astra-primary) 9%,transparent)}

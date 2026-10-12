@@ -70,7 +70,7 @@ export default function InlineReviewProgressCard({ snapshot, refreshing, onRefre
         <div className="inline-review-progress__heading">
           <div>
             <h3>审核进度</h3>
-            <span className={`inline-review-progress__state is-${summary.tone}`}>{summary.label}</span>
+            <span data-review-motion-value={summary.tone} className={`inline-review-progress__state is-${summary.tone}`}>{summary.label}</span>
           </div>
           <p title={snapshot.fileName}>{snapshot.fileName}</p>
         </div>
@@ -95,17 +95,17 @@ export default function InlineReviewProgressCard({ snapshot, refreshing, onRefre
       ) : snapshot.tasks.length > 0 ? (
         <>
           <section className="inline-review-progress__summary" aria-label="审核汇总">
-            <div className="is-total"><span><UsersRound size={15} />复核人数</span><strong>{summary.total}</strong><small>两平台合计</small></div>
-            <div className="is-approved"><span><CheckCircle2 size={15} />已通过</span><strong>{summary.approved}</strong><small>审核结论通过</small></div>
-            <div className="is-pending"><span><Clock3 size={15} />待审核</span><strong>{summary.pending}</strong><small>尚未提交结论</small></div>
-            <div className="is-returned"><span><RotateCcw size={15} />已退回</span><strong>{summary.returned}</strong><small>需修改后再发起</small></div>
+            <div className="is-total"><span><UsersRound size={15} />复核人数</span><strong data-review-motion-value={summary.total}>{summary.total}</strong><small>两平台合计</small></div>
+            <div className="is-approved"><span><CheckCircle2 size={15} />已通过</span><strong data-review-motion-value={summary.approved}>{summary.approved}</strong><small>审核结论通过</small></div>
+            <div className="is-pending"><span><Clock3 size={15} />待审核</span><strong data-review-motion-value={summary.pending}>{summary.pending}</strong><small>尚未提交结论</small></div>
+            <div className="is-returned"><span><RotateCcw size={15} />已退回</span><strong data-review-motion-value={summary.returned}>{summary.returned}</strong><small>需修改后再发起</small></div>
           </section>
 
           <section className="inline-review-progress__completion" aria-label={`已处理 ${summary.processed} 人，共 ${summary.total} 人`}>
             <div><span>已处理 {summary.processed} / {summary.total}</span><strong>{summary.processedPercent}%</strong></div>
             <div className="inline-review-progress__track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={summary.processedPercent}>
-              <i className="is-approved" style={{ width: `${summary.total ? summary.approved / summary.total * 100 : 0}%` }} />
-              <i className="is-returned" style={{ width: `${summary.total ? summary.returned / summary.total * 100 : 0}%` }} />
+              <i data-review-motion-value={`${summary.total ? summary.approved / summary.total * 100 : 0}%`} className="is-approved" style={{ width: `${summary.total ? summary.approved / summary.total * 100 : 0}%` }} />
+              <i data-review-motion-value={`${summary.total ? summary.returned / summary.total * 100 : 0}%`} className="is-returned" style={{ width: `${summary.total ? summary.returned / summary.total * 100 : 0}%` }} />
             </div>
           </section>
 
@@ -134,7 +134,7 @@ export default function InlineReviewProgressCard({ snapshot, refreshing, onRefre
                         <div className={`inline-review-progress__reviewer is-${kind}`} key={`${task.task_id}-${reviewer.name}-${index}`}>
                           <span className="inline-review-progress__avatar">{reviewer.name.trim().slice(0, 1) || "人"}</span>
                           <div><strong>{reviewer.name}</strong><small title={reviewDetail}>{reviewDetail}</small></div>
-                          <b>{kind === "approved" ? <Check size={13} /> : kind === "returned" ? <RotateCcw size={13} /> : <Clock3 size={13} />}{reviewer.status}</b>
+                          <b data-review-motion-value={kind}>{kind === "approved" ? <Check size={13} /> : kind === "returned" ? <RotateCcw size={13} /> : <Clock3 size={13} />}{reviewer.status}</b>
                         </div>
                       );
                     }) : <p className="inline-review-progress__no-reviewer">当前任务没有可展示的复核人记录。</p>}

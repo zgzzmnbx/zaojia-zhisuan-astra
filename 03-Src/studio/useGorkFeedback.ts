@@ -10,5 +10,5 @@ export function useGorkFeedback(){
   document.addEventListener('visibilitychange',visibility);
   return()=>{document.removeEventListener('visibilitychange',visibility);current.dispose();policy.current=null;};
  },[]);
- return {value,success:()=>policy.current?.success(),warning:()=>policy.current?.warning(),reset:()=>policy.current?.reset(),observeWarning:(key:string,present:boolean)=>policy.current?.observeWarning(key,present)};
+ return {value,presented:(duration:number)=>policy.current?.presented(duration),interruptSuccess:()=>policy.current?.interruptSuccess(),success:()=>policy.current?.success(),warning:()=>policy.current?.warning(),reset:()=>policy.current?.reset(),observeWarning:(key:string,present:boolean)=>policy.current?.observeWarning(key,present)};
 }

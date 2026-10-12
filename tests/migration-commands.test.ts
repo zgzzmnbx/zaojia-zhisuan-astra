@@ -25,3 +25,10 @@ test('unqualified topics explain and provide an optional action',()=>{
 
 import {resultCard} from '../03-Src/studio/conversation-cards.ts';
 test('AI pending cards name the actual mode and require field confirmation',()=>{const card=resultCard({job_id:'test',summary:{matching_status:'pending',total_data_rows:1} as any,downloads:{},ai_matching:{requested_mode:'ai_enhanced',ai_stage:'awaiting_analysis'}});assert.match(card.facts![0].value,/AI 增强/);assert.match(card.note!,/核对 AI/);});
+
+test('chat routes navigation before broad legacy conversion and warning patterns',()=>{
+ for(const [text,action] of [['打开公文转换','document'],['查看风险详情','risk'],['打开 Excel 表格','table'],['打开 Word 报告','report'],['打开资料库','library'],['准备同事复核','collaboration'],['打开列映射与转换','mapping']]){
+  const command=resolveCommand(text);assert.equal(command?.kind,'action',text);assert.equal(command?.action,action,text);
+ }
+ for(const text of ['怎么打开公文转换？','不要打开公文转换','“打开公文转换”是什么意思'])assert.equal(resolveCommand(text)?.kind,'explain',text);
+});

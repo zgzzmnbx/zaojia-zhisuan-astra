@@ -9,7 +9,7 @@ type Props = {
   profileLoading: boolean;
   onReview: () => void;
   onOpenRun: (projectId: string, runId: string, target: "preview" | "report") => Promise<void>;
-  mapTheme?: "geography" | "showcase";
+  mapTheme?: "geography" | "aerial";
 };
 
 function normalizePlaceName(value: string) {
@@ -40,7 +40,7 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
   const places = profile?.places?.length ? profile.places : item.places;
   const isReal = !item.is_demo;
   const isL7TestMap = source?.map_provider === "antv-l7" || source?.map_runtime_mode === "l7_test";
-  const isShowcase = mapTheme === "showcase";
+  const isAerial = mapTheme === "aerial";
   const evidenceItems = Array.isArray(profile?.evidence)
     ? profile.evidence.filter((entry): entry is Record<string, unknown> => Boolean(entry && typeof entry === "object")).slice(0, 6)
     : [];
@@ -80,12 +80,12 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
         <dl className="project-spatial-map__meta-list">
           <div><dt>识别方式</dt><dd>{item.recognition_method === "demo_fixture" ? "演示样本" : item.recognition_method || "未记录"}</dd></div>
           <div><dt>地点版本</dt><dd>{profile?.source_version || source?.source_version || "未记录"}</dd></div>
-          <div><dt>地图归属</dt><dd>{isShowcase ? "本地展示几何（测试）" : source?.source_authority || "待配置"}</dd></div>
-          <div><dt>许可</dt><dd>{isShowcase ? "本地展示层；非正式制图成果" : source?.license || "待配置"}</dd></div>
+          <div><dt>地图归属</dt><dd>{isAerial ? "Natural Earth / EOX / AntV 测试省界" : source?.source_authority || "待配置"}</dd></div>
+          <div><dt>许可</dt><dd>{isAerial ? <a href="/globe/attribution.html" target="_blank" rel="noreferrer">Natural Earth 公共领域；EOX 2016 CC BY 4.0 · 来源详情</a> : source?.license || "待配置"}</dd></div>
           <div><dt>坐标系</dt><dd>{source?.coordinate_system || places[0]?.coordinate_system || "未记录"}</dd></div>
-          {isShowcase ? <div><dt>地图模式</dt><dd>SVG 展示地图</dd></div> : isL7TestMap ? <div><dt>地图模式</dt><dd>AntV L7 测试项目</dd></div> : <div><dt>审图号</dt><dd>{source?.map_approval_number || "待配置"}</dd></div>}
+          {isAerial ? <div><dt>地图模式</dt><dd>MapLibre 三维地球</dd></div> : isL7TestMap ? <div><dt>地图模式</dt><dd>AntV L7 测试项目</dd></div> : <div><dt>审图号</dt><dd>{source?.map_approval_number || "待配置"}</dd></div>}
         </dl>
-        {isShowcase ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />展示主题使用本地测试几何和项目台账；省域颜色、台湾岛与南海群岛均为展示示意，不作为正式制图成果。</p> : isL7TestMap ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />测试项目直接使用 AntV L7；地点为代表点示意，不作为正式制图成果。</p> : !source?.approved_for_formal_map ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />当前为展示代表点资产，正式底图和审图号完成配置前不作为正式制图成果。</p> : null}
+        {isAerial ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />省界使用本地测试几何，地点来自同一项目台账；不作为正式制图成果。</p> : isL7TestMap ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />测试项目直接使用 AntV L7；地点为代表点示意，不作为正式制图成果。</p> : !source?.approved_for_formal_map ? <p className="project-spatial-map__warning"><ShieldCheck size={14} />当前为展示代表点资产，正式底图和审图号完成配置前不作为正式制图成果。</p> : null}
         {profile?.confirmed_by ? <p className="project-spatial-map__confirmed"><UserRound size={14} />确认人：{profile.confirmed_by} · {profile.confirmed_at}</p> : null}
       </details>
         {isReal && profile?.pending_candidates?.length ? <p className="project-spatial-map__warning"><AlertTriangle size={14} />发现 {profile.pending_candidates.length} 个新地点候选，当前已确认结果未被覆盖，请进入人工复核。</p> : null}
@@ -104,7 +104,7 @@ export default function ProjectMapDetail({ item, profile, profileLoading, onRevi
         </section>
       ) : null}
 
-      {!source?.approved_for_formal_map || isL7TestMap || isShowcase ? <p className="project-spatial-map__map-notice"><ShieldCheck size={16} />测试地图 · 地点示意，非正式制图成果</p> : null}
+      {!source?.approved_for_formal_map || isL7TestMap || isAerial ? <p className="project-spatial-map__map-notice"><ShieldCheck size={16} />测试地图 · 地点示意，非正式制图成果</p> : null}
       {isReal ? <div className="project-spatial-map__detail-actions">
         {isReal ? <button type="button" className="project-spatial-map__button project-spatial-map__button--primary" onClick={onReview}>{profile?.pending_candidates?.length ? "复核新候选" : profile?.recognition_status === "confirmed" ? "修正地点" : "人工确认地点"}</button> : null}
         {isReal && item.latest_run_id ? <button type="button" className="project-spatial-map__button" onClick={() => void onOpenRun(item.project_id, item.latest_run_id, "preview")}><ExternalLink size={14} />打开结果预览</button> : null}

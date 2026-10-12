@@ -1,4 +1,5 @@
-export type CommandAction='match'|'analysis'|'warning'|'risk-report'|'download-excel'|'download-word'|'collaboration'|'review-progress'|'convert'|'recalculate';
+import {resolveQuickCommand,type QuickActionId} from './quick-actions.ts';
+export type CommandAction=QuickActionId|'download-excel'|'download-word'|'convert'|'recalculate';
 const commands:[CommandAction,RegExp,string,string][]=[
  ['review-progress',/复核.*(进度|状态|到哪)|审核.*(进度|状态|到哪)|(查询|查看).*(复核|审核)/,'查询复核进度','复核进度读取当前任务的轮次与回执，不会重新执行预警。'],
  ['match',/批量匹配/,'批量匹配','批量匹配使用已确认的表格结构，填写价格和双系数并生成成果。'],
@@ -12,6 +13,8 @@ const commands:[CommandAction,RegExp,string,string][]=[
  ['convert',/转换/,'转换表格','转换先按确认的工作表和字段映射生成待匹配预览。'],
 ];
 export function resolveCommand(message:string){
+ const shortcut=resolveQuickCommand(message);
+ if(shortcut)return {kind:'action' as const,action:shortcut,label:message.trim(),text:''};
  const text=message.replace(/\s+/g,'').toLowerCase();
  const found=commands.find(([,pattern])=>pattern.test(text));
  const explanation=/怎么|如何|为什么|是什么|什么意思|依据|来源|了解|解释|介绍|告诉我|能否|是否|吗|[？?]|不要|不需要|别|不执行|不转换|不匹配|不重算|取消|停止|引用|[“”「」"`]/.test(text);

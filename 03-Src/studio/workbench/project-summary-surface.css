@@ -1,0 +1,53 @@
+/* Project summary only: mapping, citations and full-height work surfaces retain
+   their own geometry. The existing entrance controller owns panel motion. */
+@media (min-width:1025px) {
+ .studio #shell.live-shell .four-surface.surface-floating:not(.summary-fallback)>.project-summary-surface {
+  top:24px;right:20px;bottom:auto;height:auto;max-height:calc(100% - 72px);
+  border-color:color-mix(in srgb,var(--line) 88%,var(--astra-primary));
+  border-radius:20px;background:var(--paper);
+  box-shadow:0 20px 60px -20px #0b193c35,0 4px 14px -5px #0b193c18,inset 0 1px 0 color-mix(in srgb,var(--paper) 88%,white);
+  animation:none;transition:none;
+ }
+}
+.studio #shell.live-shell .four-surface.surface-floating>.project-summary-surface>.summary-heading {
+ min-height:44px;padding:7px 18px;margin:0;flex:none;
+ background:linear-gradient(115deg,color-mix(in srgb,var(--astra-primary) 6%,var(--paper)),var(--paper) 75%);
+ border-bottom:1px solid color-mix(in srgb,var(--line) 65%,transparent);
+}
+.project-summary-surface .summary-heading h2{color:var(--muted);font-size:13px;letter-spacing:.04em}
+.studio #shell .project-summary-surface .summary-heading .btn{width:28px;min-width:28px;height:28px;min-height:28px;padding:0;border-radius:8px}
+.studio #shell .project-summary-surface>.summary-body{flex:0 1 auto;padding:0;overscroll-behavior:contain;scrollbar-width:thin}
+.studio #shell .project-summary-surface .cp-compact{padding:14px 18px 12px}
+.project-summary-surface .current-project-heading{gap:10px}
+.project-summary-surface .cp-project-icon{background:transparent;border:1px solid var(--cp-line);border-radius:10px}
+.project-summary-surface .cp-compact h3{font-weight:600;line-height:1.5}
+.project-summary-surface .cp-compact .fee-summary{margin-top:12px;padding-bottom:10px;margin-bottom:0}
+
+
+
+@container (min-width:400px) {
+ .project-summary-surface .cp-compact .fs-chart-legend li{grid-template-columns:minmax(0,1fr) auto auto;gap:4px;min-height:20px}
+ .project-summary-surface .cp-compact .fs-chart-legend small{grid-column:auto}
+}
+.project-summary-surface .cp-refined .cp-review-overview{gap:0;margin-top:0}
+.project-summary-surface .cp-refined .cp-matching,
+.project-summary-surface .cp-refined .cp-risk-review{padding:12px 0;border:0;border-radius:0;background:transparent}
+.project-summary-surface .cp-refined .cp-risk-review{border-top:1px solid var(--cp-line);padding-bottom:4px}
+.project-summary-surface .cp-match-metrics{margin-top:8px}
+.project-summary-surface .cp-match-track{height:6px;background:var(--cp-inset)}
+.project-summary-surface .cp-match-track>span{background:linear-gradient(90deg,var(--astra-chart-5),var(--cp-primary))}
+.project-summary-surface .cp-risk-counters{gap:8px}
+.project-summary-surface .cp-refined .cp-risk-count{display:flex;align-items:center;justify-content:space-between;gap:4px;padding:6px 0;background:transparent;border-radius:0}
+.project-summary-surface .cp-risk-count>strong{margin:0;font-size:16px}
+.project-summary-surface .cp-priority-risk{margin-top:6px;padding:8px;border:1px solid color-mix(in srgb,var(--cp-risk-tone) 16%,var(--cp-line));border-radius:10px;background:color-mix(in srgb,var(--cp-risk-tone) 4%,var(--cp-surface))}
+.project-summary-surface .cp-priority-risk:hover{background:color-mix(in srgb,var(--cp-risk-tone) 8%,var(--cp-surface))}
+.project-summary-surface .cp-refined .cp-source-details{margin-top:10px;border:0;border-top:1px solid var(--cp-line);border-radius:0}
+.project-summary-surface .cp-refined .cp-source-details>summary{padding:10px 0;gap:8px;border-radius:6px}
+.project-summary-surface .cp-file-mark{width:24px;height:24px;background:transparent}
+.project-summary-surface .cp-source-details>summary>span:nth-child(2){display:flex;align-items:baseline;gap:10px}
+.project-summary-surface .cp-source-details summary small{flex:none}
+.project-summary-surface .cp-source-details summary strong{margin:0;min-width:0}
+.project-summary-surface .cp-source-body{padding:0 8px 12px}
+.project-summary-surface .cp-refined>footer.cp-navigation{position:static;margin-top:0;padding-top:8px;border-top:1px solid var(--cp-line);box-shadow:none;gap:4px}
+.project-summary-surface .cp-navigation>button{background:transparent;border:0;min-height:32px;gap:6px;border-radius:8px}
+.project-summary-surface .cp-navigation>button:hover{background:color-mix(in srgb,var(--cp-primary) 7%,var(--cp-surface));color:var(--astra-accent,var(--cp-primary))}

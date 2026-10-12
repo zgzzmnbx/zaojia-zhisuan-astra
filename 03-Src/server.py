@@ -51,10 +51,10 @@ async def host_lifespan(_app):
         try:await watchdog
         except asyncio.CancelledError:pass
 
-app = FastAPI(title='智算Astra', version='0.9.2', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.9.4', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
+HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()
@@ -209,7 +209,7 @@ def health():
     provider=str(professional_host.model_preference().get('provider','deepseek'))
     return {'status':'ok','service':'zhisuan-astra','version':app.version,'ui_version':package['version'],
             'host_sources':HOST_SOURCES,'host_source_sha256':HOST_SOURCE_SHA256,'build':build,'pid':os.getpid(),'workspace':str(ROOT),
-            'runtime':str(paths.RUNTIME_DIR),'capabilities':['gongwen-format-v2','commands-v1','weknora-wiki-read-v1','batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1'],
+            'runtime':str(paths.RUNTIME_DIR),'capabilities':['gongwen-format-v2','commands-v1','weknora-wiki-read-v1','batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1','runtime-console-v1'],
             'engine_version':engine.APP_VERSION,'isolated':True,'mode':'mechanical+ai_enhanced',
             'model_connected':False,'model_configured':bool(professional_host.model_key(provider)),
             'model_provider':provider,'external_sending':bool(professional_host.config().get('external_enabled',False))}
@@ -413,5 +413,8 @@ async def digital_status():
     except httpx.HTTPError:return {'available':False}
 
 gork_notifications.install(app, engine, paths.RUNTIME_DIR)
+import runtime_console
+runtime_console_store = runtime_console.install(app)
+
 if (ROOT/'04-output').exists():
     app.mount('/',StaticFiles(directory=ROOT/'04-output',html=True),name='studio')

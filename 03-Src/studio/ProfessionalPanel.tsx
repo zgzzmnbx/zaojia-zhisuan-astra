@@ -5,7 +5,7 @@ import type {Palette} from './appearance';
 import {ConnectionSettings} from './ConnectionSettings';
 import {useEffect,useRef,useState} from 'react';
 import type {View,SheetConfig} from './types';
-export const professionalTitles:Partial<Record<View,string>>={'collaboration-settings':'协同设置',workload:'工作量抓取',experience:'经验池导入',settlement:'结算审核',memory:'知识记忆',map:'项目地图',showcase:'项目展示地图',skills:'专业能力治理',advanced:'编制与 AI 确认',analysis:'费用与风险图表',word:'Word 分页预览',configuration:'专业设置',dispatch:'协同派发与复核',originalqa:'原问答与对比',tracefull:'任务血缘与轨迹',knowledgebase:'知识库管理'};
+export const professionalTitles:Partial<Record<View,string>>={'collaboration-settings':'协同设置',workload:'工作量抓取',experience:'经验池导入',settlement:'结算审核',memory:'知识记忆',map:'项目地图',aerial:'项目鸟瞰',skills:'专业能力治理',advanced:'编制与 AI 确认',analysis:'费用与风险图表',word:'Word 分页预览',configuration:'专业设置',dispatch:'协同派发与复核',originalqa:'原问答与对比',tracefull:'任务血缘与轨迹',knowledgebase:'知识库管理'};
 export function isProfessional(view:string){return view!=='word'&&view in professionalTitles;}
 export type KnowledgeSeed={id:string;context:string;title:string;question:string;conclusion:string;sourceReference:string;evidenceSummary:string;sourceType:'knowledge_answer';jobId:string};
 export type ProfessionalReceipt={title:string;path:string;jobId:string;view:View;downloads:Record<string,string>};

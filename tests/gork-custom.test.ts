@@ -4,7 +4,7 @@ import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
 import {customGorkEntries} from '../03-Src/studio/gork-custom-data.ts';
 import {normalizeGorkPreferences,gorkExpression} from '../03-Src/studio/gork-preferences.ts';
-import {mountGorkPlayer} from '../03-Src/studio/gork-custom.ts';
+import {mountGorkPlayer,gorkExpressionDuration} from '../03-Src/studio/gork-custom.ts';
 
 function runtime(){
  const frames=new Map<number,Function>();let id=0;
@@ -50,5 +50,26 @@ test('switching standard and custom expressions retains one player and disposes 
   player.set('happy');assert.equal(mounts,1);assert.equal(active,1);
   for(const entry of customGorkEntries){player.set(entry.id);assert.equal(active,1);}
   player.set('idle');assert.equal(active,1);player.dispose();assert.equal(active,0);
+ }finally{delete (globalThis as any).window;}
+});
+
+
+test('custom success uses entry plus the complete writing cycle',()=>{
+ const entry=customGorkEntries.find(e=>e.scene==='writing')!;
+ assert.equal(gorkExpressionDuration(entry.id,{}),8450);
+ assert.equal(gorkExpressionDuration('unknown',{}),3000);
+ assert.equal(gorkExpressionDuration('happy',{sequences:[{id:'happy',steps:[{transitionMs:600,holdMs:4000}]}]}),4600);
+});
+test('custom exit hands off once, latest target wins, and urgent work bypasses the exit',()=>{
+ let active=0,exits=0;const callbacks:Function[]=[],started:string[]=[];
+ const create=()=>{active++;return {set(){},dispose(){active--;}};};
+ (globalThis as any).window={GorkAvatar:{mount:create},GorkScenePlayer:{mount:(_c:any,_d:any,opts:any)=>{callbacks.push(opts.onIdle);return {...create(),complete(){exits++;}};}}};
+ try{
+  const writing=customGorkEntries.find(e=>e.scene==='writing')!.id;
+  const p=mountGorkPlayer({} as HTMLCanvasElement,{}, {still:false,expression:writing,appearance:{},onStarted:e=>started.push(e)});
+  p.set('idle');p.set('listening');assert.equal(exits,1);assert.deepEqual(started,[writing]);assert.equal(active,1);
+  callbacks[0]();assert.deepEqual(started,[writing,'listening']);assert.equal(active,1);
+  p.set(writing);p.set('idle');p.set('working',true);assert.equal(started.at(-1),'working');callbacks[1]();assert.equal(started.at(-1),'working');assert.equal(active,1);
+  p.set(writing);p.set('idle');p.dispose();callbacks[2]();assert.equal(active,0);
  }finally{delete (globalThis as any).window;}
 });

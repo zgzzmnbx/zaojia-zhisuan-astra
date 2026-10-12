@@ -123,7 +123,6 @@ import {
 
 const ProjectDashboard = lazy(() => import("./components/project-dashboard/ProjectDashboard"));
 const ProjectSpatialMap = lazy(() => import("./components/project-spatial-map/ProjectSpatialMap"));
-const ProjectShowcasePage = lazy(() => import("./components/project-spatial-map/showcase/ProjectShowcasePage"));
 const SettlementAuditWorkbench = lazy(() => import("./components/settlement-audit/SettlementAuditWorkbench"));
 const PROJECT_DASHBOARD_PRELOAD_DELAY_MS = 5_000;
 const API_BASE = "";
@@ -246,7 +245,7 @@ type ColumnMapping = Record<MappingField, string>;
 type DaweibaModuleId = "agent" | "fill" | "preview" | "experience" | "workload" | "settlement" | "report" | "knowledge" | "collaboration" | "digital-project-assistant";
 type KnowledgeWorkspaceTab = "status" | KnowledgeArticlesTab;
 type KnowledgeArticlePresentation = KnowledgeArticleMeta & { body: string };
-type FillWorkspaceView = "dashboard" | "spatial" | "showcase" | "new";
+type FillWorkspaceView = "dashboard" | "spatial" | "aerial" | "new";
 
 function readInitialColorMode(): ColorMode {
   try {
@@ -2478,6 +2477,7 @@ export function App() {
 
 function DaweibaApp() {
   const [astraView,setAstraView]=useState("workload");
+  const [astraActive,setAstraActive]=useState(false);
   const astraRestore=useRef(0);
   const astraLoadedJob=useRef("");
   const astraSeed=useRef("");
@@ -2503,7 +2503,7 @@ function DaweibaApp() {
       if(routeChanged){setAstraRow(null);openedAstraRow.current="";}
       if(businessChanged||routeChanged)await loadAstraBusiness().catch(error=>notifyParent("error",{message:String(error)}));
       if(currentContext.context!==next.context||currentContext.jobId!==next.jobId||currentContext.view!==next.view)return;
-      setAstraView(next.view);setColorMode(next.dark?"dark":"light");
+      setAstraActive(next.active);setAstraView(next.view);setColorMode(next.dark?"dark":"light");
       document.documentElement.dataset.astraView=next.view;
       document.documentElement.dataset.astraActive=String(next.active);
       if(routeChanged){
@@ -2521,9 +2521,9 @@ function DaweibaApp() {
       }
       if(routeChanged&&next.view==="collaboration-settings")setActiveCollaborationTab("tasks");
       if(routeChanged&&next.view==="experience")setIsExperienceImportCollapsed(false);
-      const modules:Record<string,DaweibaModuleId>={workload:"workload",experience:"experience",settlement:"settlement",advanced:"fill",analysis:"preview",word:"report",dispatch:"collaboration","collaboration-settings":"collaboration",map:"fill",showcase:"fill",originalqa:"agent",knowledgebase:"knowledge",tracefull:"preview"};
+      const modules:Record<string,DaweibaModuleId>={workload:"workload",experience:"experience",settlement:"settlement",advanced:"fill",analysis:"preview",word:"report",dispatch:"collaboration","collaboration-settings":"collaboration",map:"fill",aerial:"fill",originalqa:"agent",knowledgebase:"knowledge",tracefull:"preview"};
       if(routeChanged)setActiveDaweibaModule(next.active?(modules[next.view]||"knowledge"):"knowledge");
-      if(routeChanged)setFillWorkspaceView(next.view==="map"?"spatial":next.view==="showcase"?"showcase":"new");
+      if(routeChanged)setFillWorkspaceView(next.view==="map"?"spatial":next.view==="aerial"?"aerial":"new");
       if(routeChanged&&next.active&&next.view==="configuration")openUnifiedSettings("zhisuan");
       if(routeChanged&&next.active&&next.view==="memory")openUnifiedSettings("memory");
       if(next.active&&next.view==="tracefull")setIsTaskDetailOpen(true);
@@ -2654,7 +2654,6 @@ function DaweibaApp() {
   const [knowledgeNetworkQuery, setKnowledgeNetworkQuery] = useState("");
   const [hasOpenedProjectDashboard, setHasOpenedProjectDashboard] = useState(false);
   const [hasOpenedProjectSpatialMap, setHasOpenedProjectSpatialMap] = useState(false);
-  const [hasOpenedProjectShowcaseMap, setHasOpenedProjectShowcaseMap] = useState(false);
   const [keepSettlementWorkspace, setKeepSettlementWorkspace] = useState(false);
   const [digitalProjectAssistantFrameKey, setDigitalProjectAssistantFrameKey] = useState(0);
   const [digitalProjectAssistantFrameStatus, setDigitalProjectAssistantFrameStatus] = useState<"loading" | "ready" | "timeout">("loading");
@@ -3096,16 +3095,11 @@ function DaweibaApp() {
   }, [activeDaweibaModule]);
 
   useEffect(() => {
-    if (activeDaweibaModule === "fill" && fillWorkspaceView === "spatial") {
+    if (activeDaweibaModule === "fill" && ["spatial", "aerial"].includes(fillWorkspaceView)) {
       setHasOpenedProjectSpatialMap(true);
     }
   }, [activeDaweibaModule, fillWorkspaceView]);
 
-  useEffect(() => {
-    if (activeDaweibaModule === "fill" && fillWorkspaceView === "showcase") {
-      setHasOpenedProjectShowcaseMap(true);
-    }
-  }, [activeDaweibaModule, fillWorkspaceView]);
 
   useEffect(() => {
     if (activeDaweibaModule === "knowledge" && knowledgeWorkspaceTab === "network") {
@@ -3128,7 +3122,7 @@ function DaweibaApp() {
       return;
     }
     const isProjectDashboardActive =
-      activeDaweibaModule === "fill" && ["dashboard", "spatial", "showcase"].includes(fillWorkspaceView);
+      activeDaweibaModule === "fill" && ["dashboard", "spatial", "aerial"].includes(fillWorkspaceView);
     setIsAiDockCollapsed(isProjectDashboardActive);
   }, [activeDaweibaModule, fillWorkspaceView, isAgentPrimary]);
 
@@ -11910,19 +11904,19 @@ function DaweibaApp() {
             </button>
             <button
               type="button"
-              className={fillWorkspaceView === "spatial" ? "is-active" : ""}
-              aria-current={fillWorkspaceView === "spatial" ? "page" : undefined}
+              className={["spatial", "aerial"].includes(fillWorkspaceView) ? "is-active" : ""}
+              aria-current={["spatial", "aerial"].includes(fillWorkspaceView) ? "page" : undefined}
               onClick={() => setFillWorkspaceView("spatial")}
             >
               全国项目
             </button>
             <button
               type="button"
-              className={fillWorkspaceView === "showcase" ? "is-active" : ""}
-              aria-current={fillWorkspaceView === "showcase" ? "page" : undefined}
-              onClick={() => setFillWorkspaceView("showcase")}
+              className={fillWorkspaceView === "aerial" ? "is-active" : ""}
+              aria-current={fillWorkspaceView === "aerial" ? "page" : undefined}
+              onClick={() => setFillWorkspaceView("aerial")}
             >
-              地图展示
+              项目鸟瞰
             </button>
             <button
               type="button"
@@ -11941,24 +11935,13 @@ function DaweibaApp() {
           </Suspense>
         ) : null}
 
-        {hasOpenedProjectShowcaseMap ? (
-          <div className="daweiba-project-showcase-host" hidden={activeDaweibaModule !== "fill" || fillWorkspaceView !== "showcase"}>
-            <Suspense fallback={<div className="daweiba-project-dashboard-loading"><Loader2 className="spin" size={18} />正在载入项目展示地图……</div>}>
-              <ProjectShowcasePage
-                active={activeDaweibaModule === "fill" && fillWorkspaceView === "showcase" && (!isAgentPrimary || isWorkspacePreviewOpen)}
-                apiBase={API_BASE}
-                colorMode={colorMode}
-                onOpenRun={openProjectRun}
-              />
-            </Suspense>
-          </div>
-        ) : null}
 
         {hasOpenedProjectSpatialMap ? (
-          <div className="daweiba-project-spatial-map-host" hidden={activeDaweibaModule !== "fill" || fillWorkspaceView !== "spatial"}>
+          <div className="daweiba-project-spatial-map-host" hidden={activeDaweibaModule !== "fill" || !["spatial", "aerial"].includes(fillWorkspaceView)}>
             <Suspense fallback={<div className="daweiba-project-dashboard-loading"><Loader2 className="spin" size={18} />正在载入全国项目地图……</div>}>
               <ProjectSpatialMap
-                active={activeDaweibaModule === "fill" && fillWorkspaceView === "spatial" && (!isAgentPrimary || isWorkspacePreviewOpen)}
+                aerial={fillWorkspaceView === "aerial"}
+                active={astraActive && activeDaweibaModule === "fill" && ["spatial", "aerial"].includes(fillWorkspaceView) && (!isAgentPrimary || isWorkspacePreviewOpen)}
                 apiBase={API_BASE}
                 colorMode={colorMode}
                 onOpenRun={openProjectRun}

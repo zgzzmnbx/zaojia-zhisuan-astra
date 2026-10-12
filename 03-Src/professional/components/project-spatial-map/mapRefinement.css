@@ -68,7 +68,7 @@
 .project-spatial-map--geography .project-spatial-map__list-range { margin-left: auto; }
 .project-spatial-map--geography .project-spatial-map__cards { grid-template-columns: repeat(4,minmax(0,1fr)); }
 .project-spatial-map--geography .project-spatial-map__project-card { min-height: 60px; padding: 10px 12px; border-radius: 8px; border-color: var(--ps-border); transition: background .15s, border-color .15s; }
-.project-spatial-map--geography .project-spatial-map__project-card.is-selected { box-shadow: inset 3px 0 var(--ps-primary); }
+
 .project-spatial-map--geography .project-spatial-map__project-card.is-selected .project-spatial-map__card-main b { color: var(--ps-primary); }
 /* Keep the map usable in the existing narrow desktop split view. */
 @media (max-width: 1100px) {

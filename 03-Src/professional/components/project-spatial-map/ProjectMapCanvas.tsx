@@ -1,3 +1,4 @@
+import {loadMapRuntime} from '../../../map-resources';
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import { DEFAULT_SPATIAL_MAP_SOURCE, type SpatialMapItem, type SpatialMapSource, type SpatialMapStatus } from "./projectSpatialMapUtils";
 import { CHINA_TAIWAN_TEST_RING, CHINA_TEST_MASK_RINGS, SOUTH_CHINA_SEA_TEST_POINTS } from "./chinaTestMask";
@@ -31,6 +32,7 @@ type RawTestMapLike = {
   once?: (eventName: string, callback: () => void) => void;
   setPaintProperty?: (layerId: string, property: string, value: string | number) => void;
   resize?: () => void;
+  stop?: () => void;
   fitBounds?: (bounds: [[number, number], [number, number]], options?: unknown) => void;
 };
 
@@ -254,6 +256,8 @@ function fallbackText(items: SpatialMapItem[], mapReady: boolean) {
 }
 
 export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, onMapStatus, mapReady, mapSource = DEFAULT_SPATIAL_MAP_SOURCE, active }: Props) {
+  const [started,setStarted] = useState(active);
+  useEffect(()=>{if(active)setStarted(true);else {const scene=sceneRef.current;const map=scene?.map||scene?.getMapService?.().map||scene?.getMap?.();map?.stop?.();}},[active]);
   const rawId = useId();
   const containerId = `project-spatial-l7-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -283,7 +287,7 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
 
   useEffect(() => {
     const token = "";
-    if(!active)return;
+    if(!started)return;
     const configuredStyle = "";
     const useConfiguredMapbox = Boolean(token && configuredStyle);
     const style = useConfiguredMapbox ? configuredStyle : TEST_MAP_STYLE_URL;
@@ -310,10 +314,7 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
 
     async function mountL7() {
       try {
-        const [{ LineLayer, PointLayer, PolygonLayer, Scene }, { Mapbox, MapLibre }] = await Promise.all([
-          import("@antv/l7"),
-          import("@antv/l7-maps"),
-        ]);
+        const [{ LineLayer, PointLayer, PolygonLayer, Scene }, { Mapbox, MapLibre }] = await loadMapRuntime();
         if (disposed || !containerRef.current) return;
         const mapOptions: Record<string, unknown> = {
           style,
@@ -437,11 +438,15 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
           // The iframe can grow from split view to full screen after L7 loads.
           // Resize the public map canvas before fitting, without rebuilding layers.
           const viewportMap = scene.map || scene.getMapService?.().map || scene.getMap?.();
+          let lastSize = "";
           const fitViewport = () => {
             cancelAnimationFrame(resizeFrame);
             resizeFrame = requestAnimationFrame(() => {
               if (disposed || !containerRef.current?.clientWidth) return;
               viewportMap?.resize?.();
+              const size = `${containerRef.current.clientWidth}:${containerRef.current.clientHeight}`;
+              if(size === lastSize)return;
+              lastSize = size;
               const options = { padding: { top: 72, bottom: 72, left: 36, right: 36 }, maxZoom: 3.6, duration: 0 };
               if (viewportMap?.fitBounds) viewportMap.fitBounds(CHINA_VIEW_BOUNDS, options);
               else scene.fitBounds?.(CHINA_VIEW_BOUNDS, options);
@@ -520,7 +525,7 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
       sceneRef.current = null;
       selectedProjectBubbleLayerRef.current = null;
     };
-  }, [active,containerId, items, mapReady, onMapStatus, onSelect]);
+  }, [started,containerId, items, mapReady, onMapStatus, onSelect]);
 
   if (status === "fallback") {
     return (

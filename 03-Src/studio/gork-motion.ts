@@ -29,18 +29,25 @@ type Clock={now:()=>number;after:(callback:()=>void,delay:number)=>unknown;cance
 const clock:Clock={now:()=>performance.now(),after:(fn,delay)=>setTimeout(fn,delay),cancel:id=>clearTimeout(id as ReturnType<typeof setTimeout>)};
 
 /** One renderer, one optional reaction timer; visibility is supplied by the React adapter. */
-export function createGorkController(mount:(state:string,still:boolean)=>Player,notify:(status:Status)=>void,time:Clock=clock,durationFor:(state:string)=>number=()=>3200){
+export function createGorkController(mount:(state:string,still:boolean)=>Player,notify:(status:Status)=>void,time:Clock=clock,durationFor:(state:string)=>number=()=>3200,workDelayMs=0){
   let inputs:Inputs={state:'idle',visible:false,paused:false};
   let player:Player|undefined,rendered='',wasStill=false,disposed=false,timer:unknown;
-  let reaction:{state:string;expires:number}|undefined;
+  let reaction:{state:string;expires:number;duration:number}|undefined;
+  let workTimer:unknown,heldState:string|undefined;
+  const clearWork=()=>{if(workTimer!==undefined)time.cancel(workTimer);workTimer=undefined;heldState=undefined;};
   const clearReaction=()=>{reaction=undefined;if(timer!==undefined)time.cancel(timer);timer=undefined;};
   const release=()=>{player?.dispose();player=undefined;rendered='';};
   function render(){
     if(disposed)return;
-    if(!inputs.visible){clearReaction();release();notify({state:inputs.state,active:false});return;}
+    if(!inputs.visible){clearWork();clearReaction();release();notify({state:inputs.state,active:false});return;}
     if(inputs.paused||inputs.state==='confused')clearReaction();
     if(reaction&&reaction.expires<=time.now())clearReaction();
-    const state=(inputs.state==='idle'||inputs.state==='listening')&&reaction?reaction.state:inputs.state;
+    const base=heldState||inputs.state;
+    const state=(base==='idle'||base==='listening')&&reaction?reaction.state:base;
+    if(reaction&&state===reaction.state&&reaction.expires===Infinity){
+      reaction.expires=time.now()+reaction.duration;
+      timer=time.after(()=>{timer=undefined;reaction=undefined;render();},reaction.duration);
+    }
     if(!player||wasStill!==inputs.paused||(inputs.paused&&rendered!==state)){
       release();player=mount(state,inputs.paused);wasStill=inputs.paused;
     }else if(rendered!==state)player.set(state);
@@ -49,16 +56,20 @@ export function createGorkController(mount:(state:string,still:boolean)=>Player,
   return {
     update(next:Inputs){
       if(next.state!==inputs.state&&['working','searching','thinking'].includes(next.state))clearReaction();
+      const working=['working','searching','thinking'].includes(next.state);
+      if(!next.visible||next.paused||!working)clearWork();
+      else if(workDelayMs>0&&player&&heldState===undefined&&['idle','listening'].includes(rendered)){
+        heldState=rendered;workTimer=time.after(()=>{clearWork();render();},workDelayMs);
+      }
       inputs=next;render();
     },
     react(state:string,completion=false){
       if(disposed||!inputs.visible||inputs.paused||inputs.state==='confused')return false;
       // Play never masks a real task. An actual completion can wait for busy to clear.
       if(!completion&&inputs.state!=='idle'&&inputs.state!=='listening')return false;
-      const duration=completion?2000:Math.max(1,durationFor(state));
-      clearReaction();reaction={state,expires:time.now()+duration};
-      timer=time.after(()=>{timer=undefined;reaction=undefined;render();},duration);render();return true;
+      const duration=Math.max(completion?3000:1,durationFor(state));
+      clearReaction();reaction={state,expires:Infinity,duration};render();return true;
     },
-    dispose(){disposed=true;clearReaction();release();},
+    dispose(){disposed=true;clearWork();clearReaction();release();},
   };
 }

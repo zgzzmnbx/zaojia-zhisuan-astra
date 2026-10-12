@@ -13,9 +13,11 @@ export function FeeSummary({snapshot,historical=false,compact=false}:{snapshot:F
  const s=snapshot,composition=s.finalComposition,valid=composition.length>0&&composition.every(item=>item.share!==null);
  let offset=0;
  return <section className={`fee-summary ${compact?'fs-compact':''}`} aria-label={historical?'本次金额快照':'当前任务费用汇总'}>
-  {!compact&&<header className="fs-heading"><h4>{historical?'本次金额快照':'费用汇总'}</h4><span>{s.unit||'单位未标注'}{historical&&s.version!==null?` · 版本 ${s.version}`:''}</span></header>}
-  <div className="fs-total"><span>含税总额{compact?` · ${s.unit||'单位未标注'}`:''}</span><strong title={s.totalWithTax===null?'表内无有效金额':String(s.totalWithTax)}>{amount(s.totalWithTax)}</strong><span className={`fs-status fs-${s.status}`}>{s.status==='dirty'?'修改后待重算':s.status==='recalculated'?'公式已重算':'公式未确认重算'}</span></div>
-  <dl className="fs-tax"><div><dt>不含税金额</dt><dd title={String(s.totalWithoutTax??'')}>{amount(s.totalWithoutTax)}</dd></div><div><dt>增值税</dt><dd title={String(s.vat??'')}>{amount(s.vat)}</dd></div></dl>
+  {!compact&&<header className="fs-heading"><h4>{historical?'本次金额快照':'费用汇总'}</h4>{historical&&s.version!==null&&<span>版本 {s.version}</span>}</header>}
+  <div className="fs-amounts" role="group" aria-label={`金额摘要，${s.unit||'单位未标注'}`}>
+   <div className="fs-total"><span className="fs-total-label">含税总额<small>单位：{s.unit||'未标注'}</small></span><strong title={s.totalWithTax===null?'表内无有效金额':String(s.totalWithTax)}>{amount(s.totalWithTax)}</strong><span className={`fs-status fs-${s.status}`}>{s.status==='dirty'?'修改后待重算':s.status==='recalculated'?'公式已重算':'公式未确认重算'}</span></div>
+   <dl className="fs-tax"><div><dt>不含税金额</dt><dd title={s.totalWithoutTax===null?'表内无有效金额':String(s.totalWithoutTax)}>{amount(s.totalWithoutTax)}</dd></div><div><dt>税金<span>增值税</span></dt><dd title={s.vat===null?'表内无有效金额':String(s.vat)}>{amount(s.vat)}</dd></div></dl>
+  </div>
   <div className="fs-breakdowns">
    <figure className="fs-chart"><figcaption>最终费用构成</figcaption>
     <div className="fs-donut" role="img" aria-label={valid?composition.map(item=>`${item.label} ${percent(item.share)}`).join('，'):'占比不可计算'}>

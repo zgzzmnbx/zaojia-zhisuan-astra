@@ -185,7 +185,7 @@ export const capabilityIconNames = {
   "memory": "brain",
   "collaboration-settings": "sliders-horizontal",
   "dispatch": "paper-plane-tilt",
-  "showcase": "globe-hemisphere-east",
+  "aerial": "globe-hemisphere-east",
   "tracefull": "path",
   "digital": "desktop",
   "universe": "planet",

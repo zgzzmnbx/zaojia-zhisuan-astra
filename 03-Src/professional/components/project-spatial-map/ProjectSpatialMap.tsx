@@ -19,10 +19,12 @@ import {
 import "./projectSpatialMap.css";
 import "./mapRefinement.css";
 
+const ProjectGlobe = lazy(() => import("./ProjectGlobe"));
 const ProjectMapCanvas = lazy(() => import("./ProjectMapCanvas"));
 
 type Props = {
   active: boolean;
+  aerial?: boolean;
   apiBase: string;
   colorMode: "light" | "dark";
   onOpenRun: (projectId: string, runId: string, target: "preview" | "report") => Promise<void>;
@@ -64,7 +66,7 @@ function responseError(payload: unknown, fallback: string) {
   return payload && typeof payload === "object" && "detail" in payload ? String(payload.detail) : fallback;
 }
 
-export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRun }: Props) {
+export default function ProjectSpatialMap({ active, aerial = false, apiBase, colorMode, onOpenRun }: Props) {
   const [scope, setScope] = useState<SpatialScope>("demo");
   const [keyword, setKeyword] = useState("");
   const [spatialType, setSpatialType] = useState("");
@@ -87,9 +89,14 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
   const filterButtonRef = useRef<HTMLButtonElement | null>(null);
   const filterDialogRef = useRef<HTMLElement | null>(null);
   const filterSearchRef = useRef<HTMLInputElement | null>(null);
+  const projectCardsRef = useRef<HTMLDivElement | null>(null);
   const lastAutoLoadKeyRef = useRef("");
+  const loadRequest = useRef(0);
+  useEffect(()=>()=>{loadRequest.current++;},[]);
 
   const load = useCallback(async (signal?: AbortSignal) => {
+    const request=++loadRequest.current;
+    const current=()=>request===loadRequest.current&&!signal?.aborted;
     setIsLoading(true);
     setError("");
     const query = spatialMapQuery({ scope, keyword, spatialType, status: statusFilter, risk: riskFilter, dateFrom, dateTo });
@@ -97,6 +104,7 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
       const mapResponse = await fetch(`${apiBase}/api/projects/map?${query}`, { signal });
       const mapPayload = await mapResponse.json().catch(() => ({}));
       if (!mapResponse.ok) throw new Error(responseError(mapPayload, "项目地图读取失败"));
+      if(!current())return false;
       const nextPayload = mapPayload as SpatialMapPayload;
       setPayload(nextPayload);
       if (scope === "real") {
@@ -106,12 +114,14 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
         const unlocatedResponse = await fetch(`${apiBase}/api/projects/unlocated?${unlocatedQuery}`, { signal });
         const unlocatedPayload = await unlocatedResponse.json().catch(() => ({}));
         if (!unlocatedResponse.ok) throw new Error(responseError(unlocatedPayload, "未定位项目读取失败"));
+        if(!current())return false;
         setUnlocated(unlocatedPayload as UnlocatedPayload);
       } else {
         setUnlocated(EMPTY_UNLOCATED);
       }
+      return true;
     } catch (reason) {
-      if ((reason as Error).name === "AbortError") return;
+      if (!current() || (reason as Error).name === "AbortError") return false;
       if (scope === "demo") {
         setPayload({ ...EMPTY_PAYLOAD, message: "后端暂不可用，已使用本地演示地点清单。" });
         setUnlocated(EMPTY_UNLOCATED);
@@ -122,7 +132,7 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
         setError((reason as Error).message || "真实项目地图读取失败");
       }
     } finally {
-      setIsLoading(false);
+      if(current())setIsLoading(false);
     }
   }, [apiBase, dateFrom, dateTo, keyword, riskFilter, scope, spatialType, statusFilter]);
 
@@ -130,12 +140,12 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
 
   useEffect(() => {
     if (!active || lastAutoLoadKeyRef.current === autoLoadKey) return undefined;
-    lastAutoLoadKeyRef.current = autoLoadKey;
     const controller = new AbortController();
-    const timer = window.setTimeout(() => void load(controller.signal), 120);
+    const timer = window.setTimeout(() => void load(controller.signal).then(ok=>{if(ok&&!controller.signal.aborted)lastAutoLoadKeyRef.current=autoLoadKey;}), 0);
     return () => {
       window.clearTimeout(timer);
       controller.abort();
+      loadRequest.current++;
     };
   }, [active, autoLoadKey, load]);
 
@@ -173,7 +183,8 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
     };
   }, [isFilterOpen]);
 
-  const items = payload.items || [];
+  const items = useMemo(()=>payload.scope===scope ? payload.items || [] : [],[payload,scope]);
+  const visibleTotal=payload.scope===scope?payload.total:0;
   const selectedItem = useMemo(
     () => items.find((item) => item.project_id === selectedProjectId) || items[0] || null,
     [items, selectedProjectId],
@@ -188,6 +199,16 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
     if (selectedItem.project_id !== selectedProjectId) setSelectedProjectId(selectedItem.project_id);
   }, [selectedItem, selectedProjectId]);
 
+  useEffect(()=>{
+    if(!aerial||!active)return;
+    const strip=projectCardsRef.current;
+    const card=strip?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if(!strip||!card)return;
+    const left=card.getBoundingClientRect().left-strip.getBoundingClientRect().left+strip.scrollLeft;
+    if(left<strip.scrollLeft)strip.scrollLeft=left;
+    else if(left+card.offsetWidth>strip.scrollLeft+strip.clientWidth)strip.scrollLeft=left+card.offsetWidth-strip.clientWidth;
+  },[aerial,active,selectedItem?.project_id]);
+
   useEffect(() => {
     if (!active || !selectedItem || selectedItem.is_demo || scope !== "real") {
       setSelectedProfile(null);
@@ -195,17 +216,18 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
       return undefined;
     }
     const controller = new AbortController();
+    setSelectedProfile(null);
     setIsProfileLoading(true);
     fetch(`${apiBase}/api/projects/${selectedItem.project_id}/spatial`, { signal: controller.signal })
       .then(async (response) => {
         const next = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(responseError(next, "空间审计资料读取失败"));
-        setSelectedProfile(next as SpatialProfile);
+        if(!controller.signal.aborted)setSelectedProfile(next as SpatialProfile);
       })
       .catch((reason) => {
         if ((reason as Error).name !== "AbortError") setSelectedProfile(null);
       })
-      .finally(() => setIsProfileLoading(false));
+      .finally(() => {if(!controller.signal.aborted)setIsProfileLoading(false);});
     return () => controller.abort();
   }, [active, apiBase, selectedItem, scope]);
 
@@ -282,7 +304,7 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
   }, [dateFrom, dateTo, keyword, riskFilter, spatialType, statusFilter]);
 
   return (
-    <div className={`project-spatial-map project-spatial-map--geography project-spatial-map--${colorMode}`}>
+    <div className={`project-spatial-map project-spatial-map--geography project-spatial-map--${colorMode} ${aerial ? "project-spatial-map--aerial" : ""}`}>
       {activeFilterChips.length ? <div className="project-spatial-map__active-filters" aria-label="已应用地图筛选"><span>已应用筛选</span>{activeFilterChips.map((chip) => <em key={chip}>{chip}</em>)}<button type="button" onClick={clearAppliedFilters}>清除筛选</button></div> : null}
 
       {isFilterOpen ? (
@@ -311,10 +333,11 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
 
       <div className="project-spatial-map__workspace">
         <section className="project-spatial-map__map-panel" aria-label="项目地图主视图">
+          {aerial && active && <Suspense fallback={<div className="globe-loading" role="status">正在加载三维地球…</div>}><ProjectGlobe items={items} selectedProjectId={selectedItem?.project_id || ""} onSelect={setSelectedProjectId} /></Suspense>}
       <div className="astra-map-toolbar project-spatial-map__floating-tools">
       <div className="project-spatial-map__scope-tabs" role="tablist" aria-label="项目地图数据范围">
         <button type="button" role="tab" aria-selected={scope === "demo"} className={scope === "demo" ? "is-active" : ""} onClick={() => setScope("demo")}><Map size={15} />演示项目 <small>8</small></button>
-        <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => setScope("real")}><ListFilter size={15} />真实项目 <small>{scope === "real" ? payload.total : ""}</small></button>
+        <button type="button" role="tab" aria-selected={scope === "real"} className={scope === "real" ? "is-active" : ""} onClick={() => setScope("real")}><ListFilter size={15} />真实项目 <small>{scope === "real" ? visibleTotal : ""}</small></button>
       </div>
       <header className="project-spatial-map__header">
         <div>
@@ -332,26 +355,26 @@ export default function ProjectSpatialMap({ active, apiBase, colorMode, onOpenRu
           {isLoading && !items.length ? <div className="project-spatial-map__loading"><Loader2 size={18} className="spin" />正在读取项目地点……</div> : null}
           {!isLoading || items.length ? (
             <Suspense fallback={<div className="project-spatial-map__loading"><Loader2 size={18} className="spin" />正在加载地图组件……</div>}>
-              <ProjectMapCanvas active={active} items={items} selectedProjectId={selectedItem?.project_id || ""} onSelect={setSelectedProjectId} onMapStatus={onMapStatus} mapReady={Boolean(payload.map_ready)} mapSource={payload.map_source} />
+              <div hidden={aerial}><ProjectMapCanvas active={active && !aerial} items={items} selectedProjectId={selectedItem?.project_id || ""} onSelect={setSelectedProjectId} onMapStatus={onMapStatus} mapReady={Boolean(payload.map_ready)} mapSource={payload.map_source} /></div>
             </Suspense>
           ) : null}
           <div className="project-spatial-map__map-caption"><span>图例</span><i className="is-point" />点位 <i className="is-area" />区域中心 <i className="is-corridor" />廊道关系</div>
         </section>
-        <ProjectMapDetail item={selectedItem} profile={selectedProfile} profileLoading={isProfileLoading} onReview={() => selectedItem && void openReview(selectedItem.project_id)} onOpenRun={onOpenRun} />
+        <ProjectMapDetail mapTheme={aerial ? "aerial" : "geography"} item={selectedItem} profile={selectedProfile?.project_id === selectedItem?.project_id ? selectedProfile : null} profileLoading={isProfileLoading} onReview={() => selectedItem && void openReview(selectedItem.project_id)} onOpenRun={onOpenRun} />
       </div>
 
       <section className="project-spatial-map__project-list" aria-label="项目地点清单">
         <div className="project-spatial-map__section-heading"><h2>项目地点</h2><div className="project-spatial-map__summary" aria-label="地图项目概览">
-        <span><b>{payload.total}</b>个项目</span><span><i className="is-point" />点位 {counts.POINT}</span><span><i className="is-area" />区域 {counts.AREA}</span><span><i className="is-corridor" />廊道 {counts.CORRIDOR}</span>{scope === "real" ? <span className="project-spatial-map__unlocated-summary">待定位 {unlocated.total}</span> : null}
-      </div><span className="project-spatial-map__list-range">{items.length} / {payload.total}</span></div>
-        {items.length ? <div className="project-spatial-map__cards">{items.map((item) => <button key={item.project_id} type="button" aria-pressed={selectedItem?.project_id === item.project_id} title={item.project_name} className={`project-spatial-map__project-card ${selectedItem?.project_id === item.project_id ? "is-selected" : ""}`} onClick={() => setSelectedProjectId(item.project_id)}><span className={`project-spatial-map__card-marker is-${item.spatial_type.toLowerCase() || "unknown"}`} /><span className="project-spatial-map__card-main"><b>{item.project_name}</b><small>{item.display_location || "未识别地点"}</small></span><span className="project-spatial-map__card-meta"><em>{spatialTypeLabel(item.spatial_type)}</em><em>{riskLabel(item.risk_level)}</em></span><ChevronRight size={16} /></button>)}</div> : <div className="project-spatial-map__empty-list">当前筛选没有可展示的项目。</div>}
+        <span><b>{visibleTotal}</b>个项目</span><span><i className="is-point" />点位 {counts.POINT}</span><span><i className="is-area" />区域 {counts.AREA}</span><span><i className="is-corridor" />廊道 {counts.CORRIDOR}</span>{scope === "real" ? <span className="project-spatial-map__unlocated-summary">待定位 {unlocated.total}</span> : null}
+      </div><span className="project-spatial-map__list-range">{items.length} / {visibleTotal}</span></div>
+        {items.length ? <div ref={projectCardsRef} className="project-spatial-map__cards">{items.map((item) => <button key={item.project_id} type="button" aria-pressed={selectedItem?.project_id === item.project_id} title={item.project_name} className={`project-spatial-map__project-card ${selectedItem?.project_id === item.project_id ? "is-selected" : ""}`} onClick={() => setSelectedProjectId(item.project_id)}><span className={`project-spatial-map__card-marker is-${item.spatial_type.toLowerCase() || "unknown"}`} /><span className="project-spatial-map__card-main"><b>{item.project_name}</b><small>{item.display_location || "未识别地点"}</small></span><span className="project-spatial-map__card-meta"><em>{spatialTypeLabel(item.spatial_type)}</em><em>{riskLabel(item.risk_level)}</em></span><ChevronRight size={16} /></button>)}</div> : <div className="project-spatial-map__empty-list">当前筛选没有可展示的项目。</div>}
       </section>
 
       {scope === "real" ? (
-        <section className="project-spatial-map__unlocated" aria-label="待定位项目">
+        <details className="project-spatial-map__unlocated" open={aerial ? undefined : true}><summary>待定位项目 · {unlocated.total}</summary><section aria-label="待定位项目">
           <div className="project-spatial-map__section-heading"><div><span className="project-spatial-map__eyebrow">人工复核队列</span><h2>待定位项目</h2></div><span>{unlocated.total} 项</span></div>
           {unlocated.items.length ? <div className="project-spatial-map__unlocated-list">{unlocated.items.map((item) => <div key={item.project_id}><div><b>{item.project_name}</b><small>{spatialStatusLabel(item.recognition_status)} · {item.display_location}</small></div><button type="button" className="project-spatial-map__button" onClick={() => void openReview(item.project_id)}>人工确认</button></div>)}</div> : <p className="project-spatial-map__muted">当前没有待定位项目。</p>}
-        </section>
+        </section></details>
       ) : null}
 
       <ProjectLocationReviewDialog open={isReviewOpen} apiBase={apiBase} profile={selectedProfile} onClose={closeReview} onSaved={onSaved} />

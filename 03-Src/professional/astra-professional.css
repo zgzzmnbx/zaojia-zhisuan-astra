@@ -64,12 +64,12 @@ html[data-astra-view="collaboration-settings"] .shell.layout-daweiba .daweiba-co
 .shell.layout-daweiba.theme-dark .knowledge-candidate-modal>.modal-title button{background:var(--db-surface-tint);color:var(--db-text)}
 
 /* The host owns the shared dashboard title and navigation. */
-html:is([data-astra-view="map"],[data-astra-view="showcase"]) .daweiba-workspace-frame{padding:12px}
-html:is([data-astra-view="map"],[data-astra-view="showcase"]) .project-spatial-map{padding:0;min-height:0}
+html:is([data-astra-view="map"],[data-astra-view="aerial"]) .daweiba-workspace-frame{padding:12px}
+html:is([data-astra-view="map"],[data-astra-view="aerial"]) .project-spatial-map{padding:0;min-height:0}
 .astra-map-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px}
 .astra-map-toolbar .project-spatial-map__header{margin:0;align-items:center}
-.astra-map-toolbar .project-spatial-map__header>div:first-child,.astra-map-toolbar .project-showcase-page__separation-note{display:none}
-.astra-map-toolbar .project-spatial-map__scope-tabs,.astra-map-toolbar .project-showcase-page__toolbar{margin:0}
+.astra-map-toolbar .project-spatial-map__header>div:first-child{display:none}
+.astra-map-toolbar .project-spatial-map__scope-tabs{margin:0}
 @media(max-width:600px){.astra-map-toolbar{gap:8px}.astra-map-toolbar .project-spatial-map__header-actions{justify-content:flex-start}}
 html[data-astra-view="collaboration-settings"] .shell.layout-daweiba .daweiba-collaboration-tabs button{flex:1 0 118px;white-space:nowrap}
 html[data-astra-view="collaboration-settings"] .shell.layout-daweiba .daweiba-collaboration-section-title{flex-wrap:wrap;gap:8px}

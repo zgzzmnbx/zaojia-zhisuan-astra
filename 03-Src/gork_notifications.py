@@ -398,15 +398,22 @@ class Notifications:
             result['active_operations'] = len(self.active)
             try:
                 client = self.client_factory(settings)
-                caps, state = client.capabilities(), client.status()
-                if caps.get('protocol_version') != '1.0' or state.get('source') != 'astra':
-                    raise ValueError()
+                if settings.enabled:
+                    state = self.validate_remote(client, settings)
+                else:
+                    caps, state = client.capabilities(), client.status()
+                    if caps.get('protocol_version') != '1.0' or state.get('source') != 'astra':
+                        raise ValueError()
                 result.update(policy=state.get('policy'), current_sound_target=state.get('current_sound_target'), paused=state.get('paused'))
                 if not settings.enabled:
                     result.update(state='disabled', message='阶段通知已关闭，可配置后保存')
-            except HTTPException:
+                elif result['state'] in {'disabled', 'unavailable'}:
+                    result.update(state='ready', message='等待新阶段，历史事件不补播')
+            except HTTPException as exc:
                 if not settings.enabled:
                     result.update(state='unconfigured', message='尚未登记 Astra 程序凭据')
+                else:
+                    result.update(state='error', message=str(exc.detail))
             except Exception as exc:
                 result.update(state='unavailable', message='通用通知接口未就绪：' + error_code(exc))
             rows = self.db().execute('SELECT id,payload,status,receipt,error FROM events ORDER BY rowid DESC LIMIT 8').fetchall()

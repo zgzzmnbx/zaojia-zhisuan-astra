@@ -32,3 +32,24 @@
 @media(prefers-reduced-motion:reduce){.quick-menu-panel,.quick-menu-handle,.quick-menu-handle>.astra-icon:last-child,.studio .quick-feature,.quick-feature-icon{transition:none}.studio .quick-feature:hover:not(:disabled){transform:none}}
 
 @container(min-width:500px){.quick-feature-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* A lifted base with a single small gesture; labels and hit targets stay still. */
+.quick-feature-icon{transition:transform 240ms cubic-bezier(.2,.8,.2,1),background 220ms,box-shadow 240ms;transform-origin:center}
+.composer-quick-menu.is-open .quick-feature:is(:hover,:focus-visible):not(:disabled) .quick-feature-icon{transform:translateY(-2px) scale(1.05);background:color-mix(in srgb,var(--astra-primary) 16%,var(--paper));box-shadow:0 4px 10px color-mix(in srgb,var(--astra-primary) 12%,transparent)}
+.quick-feature-icon>svg{transform-origin:center;transform-box:fill-box}
+.quick-feature-icon[data-motion=lift]{--quick-gesture:quick-icon-lift}
+.quick-feature-icon[data-motion=turn]{--quick-gesture:quick-icon-turn}
+.quick-feature-icon[data-motion=sway]{--quick-gesture:quick-icon-sway}
+.quick-feature-icon[data-motion=greet]{--quick-gesture:quick-icon-greet}
+.quick-feature-icon[data-motion=gear]{--quick-gesture:quick-icon-gear}
+.composer-quick-menu.is-open .quick-feature:is(:hover,:focus-visible):not(:disabled) .quick-feature-icon>svg{animation:var(--quick-gesture) 520ms cubic-bezier(.22,.8,.25,1) 1 both}
+@keyframes quick-icon-lift{0%,100%{transform:translateY(0)}45%{transform:translateY(-1.5px)}}
+@keyframes quick-icon-turn{0%,100%{transform:rotate(0)}45%{transform:rotate(12deg)}}
+@keyframes quick-icon-sway{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg)}60%{transform:rotate(3deg)}}
+@keyframes quick-icon-greet{0%,100%{transform:scale(1)}45%{transform:scale(1.07)}}
+@keyframes quick-icon-gear{0%,100%{transform:rotate(0)}45%{transform:rotate(30deg)}}
+@media(prefers-reduced-motion:reduce){
+ .composer-quick-menu .quick-feature-icon{transition:none}
+ .composer-quick-menu.is-open .quick-feature:is(:hover,:focus-visible):not(:disabled) .quick-feature-icon{transform:none;box-shadow:none}
+ .composer-quick-menu.is-open .quick-feature:is(:hover,:focus-visible):not(:disabled) .quick-feature-icon>svg{animation:none}
+}

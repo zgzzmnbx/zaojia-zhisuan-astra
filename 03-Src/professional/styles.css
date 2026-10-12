@@ -13214,7 +13214,6 @@ tbody tr:hover .row-ai-cell {
 
 .shell.layout-daweiba .daweiba-project-dashboard-host[hidden],
 .shell.layout-daweiba .daweiba-project-spatial-map-host[hidden],
-.shell.layout-daweiba .daweiba-project-showcase-host[hidden],
 .shell.layout-daweiba .daweiba-fill-grid[hidden] {
   display: none !important;
 }
@@ -13231,11 +13230,6 @@ tbody tr:hover .row-ai-cell {
   overflow: auto;
 }
 
-.shell.layout-daweiba .daweiba-project-showcase-host {
-  min-width: 0;
-  min-height: 0;
-  overflow: auto;
-}
 
 .shell.layout-daweiba .daweiba-workspace-frame.is-daweiba-module-fill > .daweiba-fill-grid {
   align-self: start;

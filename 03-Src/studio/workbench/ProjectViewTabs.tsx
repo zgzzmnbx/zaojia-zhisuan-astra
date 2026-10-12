@@ -2,8 +2,8 @@ import {ChevronLeft,ChevronRight} from '../../PhosphorIcons';
 import {useEffect,useRef,useState,type KeyboardEvent} from 'react';
 import './project-view-tabs.css';
 
-export type ProjectTab='board'|'map'|'showcase'|'runs';
-const tabs=[['board','项目总览'],['map','全国项目'],['showcase','地图展示'],['runs','运行记录']] as const;
+export type ProjectTab='board'|'map'|'aerial'|'runs';
+const tabs=[['board','项目总览'],['map','全国项目'],['aerial','项目鸟瞰'],['runs','运行记录']] as const;
 export function ProjectViewTabs({active,select}:{active:ProjectTab;select:(tab:ProjectTab)=>void}){
  const strip=useRef<HTMLDivElement>(null);
  const [edges,setEdges]=useState({left:false,right:false});

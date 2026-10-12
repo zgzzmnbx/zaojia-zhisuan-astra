@@ -2,7 +2,7 @@ import {useEffect,useLayoutEffect,useRef,useState,type CSSProperties} from 'reac
 import {Icon} from './ui';
 import {QuickFeatureIcon} from './QuickFeatureIcon';
 import {capabilityGroups} from './CapabilityHub';
-import {quickCommands,quickDestinations,quickUnavailable,type QuickState} from './quick-actions';
+import {quickCommands,quickDestinations,quickUnavailable,quickPrompt,type QuickState} from './quick-actions';
 import './composer-quick-menu.css';
 import type {QuickPreferences} from './QuickSettings';
 
@@ -34,7 +34,7 @@ export function ComposerQuickMenu({active,context,state,run,preferences,custom}:
  },[open]);
  const tile=(id:string,_icon:string,label:string,description?:string)=>{
   const reason=id.startsWith('custom:')?(!state.ready?'工作空间正在恢复':state.busy?'当前任务正在执行':undefined):quickUnavailable(id,state);
-  return <button type="button" data-quick-item key={id} className="btn btn-ghost quick-feature" disabled={!!reason} title={reason||description||label} onClick={()=>choose(id)}><QuickFeatureIcon id={id}/><span className="quick-feature-label">{label}</span>{reason&&<span className="quick-feature-reason">{reason}</span>}</button>;
+  return <button type="button" data-quick-item key={id} className="btn btn-ghost quick-feature" disabled={!!reason} title={reason||(quickPrompt(id)?`${description||label} · 发送「${quickPrompt(id)}」`:description||label)} onClick={()=>choose(id)}><QuickFeatureIcon id={id}/><span className="quick-feature-label">{label}</span>{reason&&<span className="quick-feature-reason">{reason}</span>}</button>;
  };
  return <div ref={root} className={`composer-quick-menu ${open?'is-open':''}`} style={{'--quick-available-height':`${height}px`} as CSSProperties}
   onPointerEnter={cancelTimer}

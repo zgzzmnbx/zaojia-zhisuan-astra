@@ -2,7 +2,7 @@ export type LayoutMode='preview'|'chat'|'custom';
 export type LayoutPreference={policy:'auto'|'manual';mode:LayoutMode;ratio:number};
 export const LAYOUT_KEY='astra.workbench-layout.v1';
 export const PREVIEW_RATIO=.32,CHAT_RATIO=.65,SEPARATOR_SIZE=12;
-export const largeViews=new Set(['architecture','example','universe','table','mapping','projects','map','showcase','settlement','analysis','word','advanced']);
+export const largeViews=new Set(['architecture','example','universe','table','mapping','projects','map','aerial','settlement','analysis','word','advanced']);
 export function preferredMode(view:string):'preview'|'chat'{return largeViews.has(view)?'preview':'chat';}
 export function automaticLayout(view:string):LayoutPreference{const mode=preferredMode(view);return {policy:'auto',mode,ratio:mode==='preview'?PREVIEW_RATIO:CHAT_RATIO};}
 export function normalizeLayout(value:unknown,view='table'):LayoutPreference{const v=value as Partial<LayoutPreference>|null;if(v?.policy==='manual'&&Number.isFinite(v.ratio))return {policy:'manual',mode:['preview','chat','custom'].includes(v.mode||'')?v.mode!:'custom',ratio:Math.max(.15,Math.min(.85,v.ratio!))};return automaticLayout(view);}

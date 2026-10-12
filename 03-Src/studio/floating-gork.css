@@ -13,3 +13,7 @@
 .floating-gork-positions button:hover,.floating-gork-positions button[aria-pressed=true]{background:var(--blue-wash);color:var(--blue)}
 .floating-gork-positions button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
 @media(prefers-reduced-motion:reduce){.floating-gork-handle{transition:none}}
+
+/* One short handoff, with no competing CSS transition on the moving dock. */
+.floating-gork-dock.is-transferring{transform-origin:center;will-change:transform}
+.floating-gork-dock.is-transferring .floating-gork-handle{transition:none}

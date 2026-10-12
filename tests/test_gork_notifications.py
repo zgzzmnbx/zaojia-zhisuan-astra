@@ -68,6 +68,49 @@ def test_no_history_first_enable_or_disabled_output(fixture):
     assert obj.inbox.empty() and not remote.sent
 
 
+def test_enabled_restart_status_checks_connection_without_sending(fixture):
+    obj,remote,clock=fixture
+    obj.stop()
+    restarted=bridge.Notifications(obj.database,client_factory=lambda settings:remote,clock=lambda:clock[0])
+    restarted.start()
+    try:
+        status=restarted._status(config.load())
+        assert status['state']=='ready'
+        assert '等待新阶段' in status['message']
+        assert not remote.sent
+        remote.paused=True
+        assert '已暂停' in restarted._status(config.load())['message']
+        remote.paused=False
+        assert restarted._status(config.load())['state']=='ready'
+    finally:
+        restarted.stop()
+
+
+@pytest.mark.parametrize('reason',['disabled','paused','display','speech','priority'])
+def test_status_does_not_report_ready_when_permission_is_missing(fixture,reason):
+    obj,remote,clock=fixture
+    if reason=='disabled':remote.enabled=False
+    if reason=='paused':remote.paused=True
+    if reason=='display':remote.policy['display_targets']=[]
+    if reason=='speech':remote.policy['speech_targets']=[]
+    if reason=='priority':remote.policy['max_priority']=0
+    obj.settings.sound=True
+    result=obj._status(obj.settings)
+    assert result['state']=='error'
+    assert not remote.sent
+
+
+def test_disabled_configuration_and_unreachable_console_are_distinct(fixture):
+    obj,remote,clock=fixture
+    disabled=obj.settings.model_copy(update={'enabled':False})
+    assert obj._status(disabled)['state']=='disabled'
+    def unavailable(settings):raise TimeoutError('private connection detail')
+    obj.client_factory=unavailable
+    result=obj._status(obj.settings)
+    assert result['state']=='unavailable'
+    assert 'private' not in result['message']
+
+
 def test_precise_retry_after_response_lost_is_same_identity(fixture):
     obj,remote,clock=fixture
     obj.enqueue(event(clock));remote.fail=TimeoutError('private secret payload never echoed')

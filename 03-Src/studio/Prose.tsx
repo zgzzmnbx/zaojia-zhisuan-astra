@@ -32,5 +32,5 @@ export function normalizeAnswerTables(text:string){
  return lines.join('\n');
 }
 export function Prose({text}:{text:string}){
-  return <div className="astra-prose"><Markdown remarkPlugins={[remarkGfm]} skipHtml components={{img:({alt})=><span>{alt||'图片'}</span>,a:({href,children})=>/^https?:\/\//.test(href||'')?<a href={href} target="_blank" rel="noopener noreferrer">{children}</a>:<span>{children}</span>}}>{cleanSource(text)}</Markdown></div>;
+  return <div className="astra-prose"><Markdown remarkPlugins={[remarkGfm]} skipHtml components={{table:({node:_node,children,...props})=><div className="astra-prose-table-scroll" role="region" aria-label="表格" tabIndex={0}><table {...props}>{children}</table></div>,img:({alt})=><span>{alt||'图片'}</span>,a:({href,children})=>/^https?:\/\//.test(href||'')?<a href={href} target="_blank" rel="noopener noreferrer">{children}</a>:<span>{children}</span>}}>{cleanSource(text)}</Markdown></div>;
 }

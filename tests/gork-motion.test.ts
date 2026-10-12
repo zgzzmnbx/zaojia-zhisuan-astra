@@ -16,10 +16,11 @@ function feedbackFixture(){
  return {feedback,timers,advance,value:()=>value};
 }
 
-test('2.0 success lasts 2 seconds and warning lasts 10 seconds, independent of pose duration',()=>{
+test('success starts when presented for a full cycle; warning remains 10 seconds',()=>{
  const f=feedbackFixture();f.feedback.warning();f.advance(9999);assert.equal(f.value().warning,true);
  f.advance(1);assert.equal(gorkActivity('','',false,f.value()),'idle');
- f.feedback.success();f.advance(1999);assert.equal(f.value().success,true);
+ f.feedback.success();f.advance(5000);assert.equal(f.value().success,true);assert.equal(f.timers.size,0);
+ f.feedback.presented(8450);f.advance(8449);assert.equal(f.value().success,true);
  f.advance(1);assert.equal(gorkActivity('','',true,f.value()),'listening');assert.equal(f.timers.size,0);
 });
 test('the same warning result never extends its deadline; an explicit new check can replay',()=>{
@@ -48,13 +49,13 @@ test('restoring/switching context clears transient feedback; disposal cancels la
  f.feedback.success();f.feedback.dispose();assert.equal(f.timers.size,0);
  f.feedback.warning();f.advance(20000);assert.equal(f.timers.size,0);
 });
-function fixture(){
+function fixture(workDelayMs=0){
   let now=0,id=0;const timers=new Map<number,{fn:()=>void;due:number}>();
   const mounts:{state:string;still:boolean;disposed:boolean}[]=[],changes:string[]=[],statuses:{state:string;active:boolean}[]=[];
   const controller=createGorkController((state,still)=>{
     const record={state,still,disposed:false};mounts.push(record);
     return {set:(next:string)=>{record.state=next;changes.push(next);},dispose:()=>{record.disposed=true;}};
-  },status=>statuses.push(status),{now:()=>now,after:(fn,delay)=>{timers.set(++id,{fn,due:now+delay});return id;},cancel:n=>{timers.delete(n as number);}});
+  },status=>statuses.push(status),{now:()=>now,after:(fn,delay)=>{timers.set(++id,{fn,due:now+delay});return id;},cancel:n=>{timers.delete(n as number);}},undefined,workDelayMs);
   const update=(state='idle',visible=true,paused=false)=>controller.update({state,visible,paused});
   const advance=(elapsed:number)=>{now+=elapsed;for(const [key,t] of timers)if(t.due<=now){timers.delete(key);t.fn();}};
   return {controller,update,advance,mounts,changes,statuses,timers,status:()=>statuses.at(-1)!};
@@ -93,7 +94,7 @@ test('greeting expires back to the current input state, without replaying',()=>{
 test('play cannot mask work; actual completion waits for busy and runs once',()=>{
   const f=fixture();f.update('working');assert.equal(f.controller.react('greeting'),false);
   assert.ok(f.controller.react('happy',true));assert.equal(f.status().state,'working');
-  f.update();assert.equal(f.status().state,'happy');f.advance(2000);assert.equal(f.status().state,'idle');
+  f.update();assert.equal(f.status().state,'happy');f.advance(3200);assert.equal(f.status().state,'idle');
 });
 test('error cancels any queued completion; returning to idle does not celebrate',()=>{
   const f=fixture();f.update('working');f.controller.react('happy',true);f.update('confused');
@@ -133,4 +134,23 @@ test('real pinned renderer leaves no RAF after pause, visibility change or dispo
   c.update({state:'idle',visible:true,paused:false});assert.equal(frames.size,1);
   c.update({state:'idle',visible:false,paused:false});assert.equal(frames.size,0);
   c.update({state:'idle',visible:true,paused:false});c.dispose();assert.equal(frames.size,0);
+});
+
+
+test('presentation acknowledgements do not extend success; new work discards pending and running feedback',()=>{
+ const f=feedbackFixture();f.feedback.success();f.feedback.presented(8450);f.advance(6000);
+ f.feedback.presented(8450);f.advance(2450);assert.equal(f.value().success,false);
+ f.feedback.success();f.feedback.interruptSuccess();f.feedback.presented(8450);assert.equal(f.value().success,false);assert.equal(f.timers.size,0);
+ f.feedback.success();f.feedback.presented(8450);f.feedback.interruptSuccess();assert.equal(f.timers.size,0);
+});
+test('short work pulses are filtered without delaying completion, errors or interruption of success',()=>{
+ const f=fixture(180);f.update();f.update('working');f.advance(100);f.update();assert.deepEqual(f.changes,[]);
+ f.update('searching');f.advance(100);f.update('thinking');f.advance(80);assert.equal(f.status().state,'thinking');
+ f.update('happy');f.update('working');assert.equal(f.status().state,'working');
+ f.update();f.update('working');f.update('confused');assert.equal(f.status().state,'confused');assert.equal(f.timers.size,0);
+ f.update();f.update('working');f.update('working',false);assert.equal(f.timers.size,0);
+});
+test('completion reaction time is not consumed behind work',()=>{
+ const f=fixture();f.update('working');f.controller.react('happy',true);f.advance(10000);
+ f.update();assert.equal(f.status().state,'happy');f.advance(3199);assert.equal(f.status().state,'happy');f.advance(1);assert.equal(f.status().state,'idle');
 });

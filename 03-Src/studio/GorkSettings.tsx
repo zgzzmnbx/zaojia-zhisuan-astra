@@ -1,11 +1,15 @@
 import {useState} from 'react';
 import {Gork} from './Gork';
+import {Icon} from './ui';
+import {gorkExpressionDuration} from './gork-custom';
 import {expressionLabels,robotStates,type RobotState} from './gork-preferences';
 import {resetGorkPreferences,robotExpressions,robotPresets,saveGorkPreferences,useGorkSettings} from './useGorkSettings';
 import './gork-settings.css';
 
 export function GorkSettings(){
  const {preferences,error}=useGorkSettings();const [preview,setPreview]=useState<RobotState>('idle');
+ const [replay,setReplay]=useState(0);
+ const duration=gorkExpressionDuration(preferences.expressions[preview],(window as any).GorkCatalog);
  const state=robotStates.find(s=>s.id===preview)!;
  return <div className="robot-settings">
   <p className="robot-scope">仅用于本项目网页中的智算形象。</p>
@@ -17,9 +21,10 @@ export function GorkSettings(){
    <div className="robot-size-scale" aria-hidden="true"><span>小 · 48</span><span>大 · 128</span></div>
   </section>
   <section className="robot-preview" aria-label="形象与表情预览">
-   <div className="robot-stage"><Gork size={116} state={state.state}/></div>
+   <div className="robot-stage"><Gork replay={replay} size={116} state={state.state}/></div>
    <div className="robot-preview-controls"><strong>{robotPresets.find(p=>p.id===preferences.appearance.id)?.name}</strong><span>{state.label} · {expressionLabels[preferences.expressions[preview]]}</span>
     <div className="robot-state-switch" role="group" aria-label="预览状态">{robotStates.map(s=><button type="button" key={s.id} aria-pressed={preview===s.id} onClick={()=>setPreview(s.id)}>{s.label}</button>)}</div>
+    <div className="robot-preview-timing"><span>一轮约 {(Math.round(duration/100)/10).toFixed(1)} 秒 · 循环预览</span><button type="button" className="btn btn-ghost btn-sm" onClick={()=>setReplay(n=>n+1)}><Icon name="refresh"/>重播</button></div>
    </div>
   </section>
   <section aria-labelledby="robot-shapes"><h3 id="robot-shapes">选择形象</h3><div className="robot-presets">{robotPresets.map(p=><button type="button" key={p.id} aria-label={`形象 ${p.name}`} aria-pressed={preferences.appearance.id===p.id} onClick={()=>saveGorkPreferences({...preferences,appearance:{id:p.id,bodyColor:p.colors.body,eyeColor:p.colors.eyes}})}><Gork size={44} still expressionOverride="idle" appearanceOverride={{id:p.id,bodyColor:p.colors.body,eyeColor:p.colors.eyes}}/><span>{p.name}</span></button>)}</div></section>

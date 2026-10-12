@@ -5,3 +5,7 @@
 .studio dialog[open]::backdrop{animation:astra-backdrop-in 220ms ease-out}
 @keyframes astra-backdrop-in{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.studio dialog[open]::backdrop{animation:none}}
+
+/* Shared observer owns both progress entrance and real value changes. */
+.studio .inline-review-progress__track i{transition:none}
+.studio .inline-review-progress__summary strong{border-radius:5px}
