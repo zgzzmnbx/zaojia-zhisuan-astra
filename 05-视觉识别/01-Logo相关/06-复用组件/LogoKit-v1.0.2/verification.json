@@ -1,0 +1,110 @@
+{
+  "version": "1.0.2",
+  "checkedAt": "2026-10-13T11:48:43.417Z",
+  "checks": [
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "original",
+      "file": "造价智算-original-全部动效.glb",
+      "bytes": 963508,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "graphite",
+      "file": "造价智算-graphite-全部动效.glb",
+      "bytes": 963516,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "astra",
+      "file": "造价智算-astra-全部动效.glb",
+      "bytes": 963500,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "mantine-blue",
+      "file": "造价智算-mantine-blue-全部动效.glb",
+      "bytes": 963520,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "emerald",
+      "file": "造价智算-emerald-全部动效.glb",
+      "bytes": 963508,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "nord",
+      "file": "造价智算-nord-全部动效.glb",
+      "bytes": 963500,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "silk",
+      "file": "造价智算-silk-全部动效.glb",
+      "bytes": 963496,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "autumn",
+      "file": "造价智算-autumn-全部动效.glb",
+      "bytes": 963504,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "palette": "original",
+    "file": "Blender\\造价智算-原版蓝-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  },
+  {
+    "palette": "graphite",
+    "file": "Blender\\造价智算-石墨灰黑-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  },
+  {
+    "palette": "astra",
+    "file": "Blender\\造价智算-Astra 蓝-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  },
+  {
+    "palette": "mantine-blue",
+    "file": "Blender\\造价智算-Mantine 蓝-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  },
+  {
+    "palette": "emerald",
+    "file": "Blender\\造价智算-翡翠绿-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  },
+  {
+    "palette": "nord",
+    "file": "Blender\\造价智算-北境蓝-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  },
+  {
+    "palette": "silk",
+    "file": "Blender\\造价智算-丝绒紫-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  },
+  {
+    "palette": "autumn",
+    "file": "Blender\\造价智算-秋日铜-四姿态-v1.2.2.blend",
+    "reopened": true,
+    "partClips": 20,
+    "rootPoseClips": 4,
+    "tailTravel": 1.1712738446246864,
+    "returned": true
+  }
+]

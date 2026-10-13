@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "date": "2026-10-13",
+  "kind": "generated-design-concepts",
+  "businessAcceptance": false,
+  "images": [
+    {
+      "file": "01-项目初始首页.png",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1805108,
+      "sha256": "30a1100253fd4527a2968fe0d3b5eaab190944bf99782572865b90cbd65cf9ca"
+    },
+    {
+      "file": "02-任务进行中.png",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1916003,
+      "sha256": "634e37671a47a45110498adfbff08dcf4f8c1192b240f42c418d26832727f504"
+    },
+    {
+      "file": "03-夜航结果详情.png",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1861093,
+      "sha256": "c705725dd85ec6eb759f339aa1991535a1ad8de120c73162243df402a4b0af2c"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "version": "5.2.2 LTS",
+  "binary": "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+  "config_path": "C:\\Users\\zgzzm\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\config",
+  "language": "en_US",
+  "cycles_available": true,
+  "devices": [
+    {
+      "name": "Intel Core Ultra X7 358H",
+      "type": "CPU",
+      "id": "CPU",
+      "use": false
+    },
+    {
+      "name": "Intel(R) Arc(TM) B390 GPU",
+      "type": "ONEAPI",
+      "id": "ONEAPI_Intel(R) oneAPI Unified Runtime over Level-Zero V2_Intel(R) Arc(TM) B390 GPU_0000:00:02.0",
+      "use": true
+    }
+  ],
+  "languages": [
+    [
+      "zh_HANS",
+      "Chinese (Simplified) - 简体中文"
+    ],
+    [
+      "zh_HANT",
+      "Chinese (Traditional) - 繁體中文"
+    ]
+  ]
+}

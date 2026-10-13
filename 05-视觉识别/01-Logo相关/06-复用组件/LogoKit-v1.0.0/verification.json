@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "checkedAt": "2026-10-13T10:55:05.887Z",
+  "checks": [
+    {
+      "palette": "original",
+      "file": "造价智算-original-全部动效.glb",
+      "bytes": 845168,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "graphite",
+      "file": "造价智算-graphite-全部动效.glb",
+      "bytes": 845176,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "astra",
+      "file": "造价智算-astra-全部动效.glb",
+      "bytes": 845160,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "mantine-blue",
+      "file": "造价智算-mantine-blue-全部动效.glb",
+      "bytes": 845176,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "emerald",
+      "file": "造价智算-emerald-全部动效.glb",
+      "bytes": 845168,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "nord",
+      "file": "造价智算-nord-全部动效.glb",
+      "bytes": 845160,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "silk",
+      "file": "造价智算-silk-全部动效.glb",
+      "bytes": 845156,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "autumn",
+      "file": "造价智算-autumn-全部动效.glb",
+      "bytes": 845164,
+      "clips": 22,
+      "idleDuration": 22,
+      "actualMixerVerified": true
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "version": "5.2.2 LTS",
+  "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\logo-3d-v1\\ZSuan-Stepped-Z-animated-v1.glb",
+  "meshes": [
+    "Lower_Beam",
+    "Step_Lower",
+    "Step_Center",
+    "Step_Upper",
+    "Upper_Beam"
+  ],
+  "actions": [
+    "Center_Block_Float_Turn_Return"
+  ],
+  "animation_samples": [
+    {
+      "frame": 0,
+      "center_world": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "frame": 27,
+      "center_world": [
+        0.0,
+        -1.5,
+        0.0
+      ],
+      "quaternion": [
+        0.9936802983283997,
+        0.0,
+        0.0,
+        0.11224721372127533
+      ]
+    },
+    {
+      "frame": 54,
+      "center_world": [
+        0.0,
+        -1.5,
+        0.0
+      ],
+      "quaternion": [
+        0.10682177543640137,
+        -0.0,
+        -0.0,
+        -0.9942781925201416
+      ]
+    },
+    {
+      "frame": 105,
+      "center_world": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion": [
+        1.0,
+        0.0,
+        0.0,
+        -1.2246468525851679e-16
+      ]
+    },
+    {
+      "frame": 209,
+      "center_world": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion": [
+        1.0,
+        0.0,
+        0.0,
+        -1.2246468525851679e-16
+      ]
+    }
+  ],
+  "devices": [
+    {
+      "name": "Intel Core Ultra X7 358H",
+      "type": "CPU",
+      "use": false
+    },
+    {
+      "name": "Intel(R) Arc(TM) B390 GPU",
+      "type": "ONEAPI",
+      "use": true
+    }
+  ],
+  "selected_render_device": "GPU",
+  "gpu_smoke_passed": true,
+  "language": "zh_HANS",
+  "saved_preferences": true,
+  "blend_file": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\logo-3d-v1\\Blender\\造价智算-阶梯Z-v1.0.0.blend",
+  "preview_file": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\logo-3d-v1\\Blender\\造价智算-阶梯Z-Blender预览.png",
+  "full_preview_passed": true
+}

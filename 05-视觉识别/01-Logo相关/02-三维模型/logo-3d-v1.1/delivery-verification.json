@@ -1,0 +1,108 @@
+{
+  "version": "1.1.0",
+  "video": {
+    "width": 720,
+    "height": 720,
+    "fps": "30/1",
+    "frames": "198",
+    "duration": "6.600000",
+    "codec": "h264"
+  },
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 3695,
+      "sha256": "d878be952ef38b881c081ed675c62ba91952b5e3af7578256461e8af5b8e7670"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "bytes": 505,
+      "sha256": "a3cf8c17f5bd3984bc3fe435a28e7f5819ec5829e8fae0bb7c33d5f61ee1ad3b"
+    },
+    {
+      "file": "THIRD-PARTY-LICENSES.txt",
+      "bytes": 2191,
+      "sha256": "c82aacf8691f678d5f70978d3d52642957a8be26684b43514431f853963f5efe"
+    },
+    {
+      "file": "造价智算-3D-动效预览.html",
+      "bytes": 1055855,
+      "sha256": "d7b135fc0d63f60f87e080c7d1eef430368695b3814b516d528679b2fd4e4866"
+    },
+    {
+      "file": "造价智算-原位翻转-v1.1.mp4",
+      "bytes": 191386,
+      "sha256": "cdae37026d964635ee9d61ff5267e3a1f78fc5fce64e702f2433128a1a3b06d0"
+    },
+    {
+      "file": "ZSuan-Stepped-Z-animated-v1.1.glb",
+      "bytes": 316832,
+      "sha256": "488f45b30c42024b409ed0d45877ecc7c5e84a46a2cf843e38b7ee165bf0edfe"
+    },
+    {
+      "file": "Blender/造价智算-阶梯Z-原位翻转-v1.1.0.blend",
+      "bytes": 167841,
+      "sha256": "f031f2a05858d2ad18d096440e4aaacf864a9babcf720482c430bbc37a63e445"
+    },
+    {
+      "file": "Blender/造价智算-原位翻转-v1.1.png",
+      "bytes": 1178903,
+      "sha256": "f2f38625f3f4aa5f96cb42b56fe88ea4e9c4901d6cfb8c51b4223cf5e80e4bf3"
+    },
+    {
+      "file": "model.mjs",
+      "bytes": 3136,
+      "sha256": "66cf73adf6fd61e871cb91d066f0e718c38fd65a87be76248a0d3adaf812cd46"
+    },
+    {
+      "file": "viewer.js",
+      "bytes": 8023,
+      "sha256": "b733a1ce1631a8151a3b5174af9ed2482fba9b5a1fdf95697356cc2ac2b11879"
+    },
+    {
+      "file": "template.html",
+      "bytes": 3669,
+      "sha256": "2b63eeee0929538a7e867f81918eeae3223ad357561a1b454828895a437779af"
+    },
+    {
+      "file": "build.mjs",
+      "bytes": 2114,
+      "sha256": "9802586581f2cab4e7e31b4ce8262e2b1ed4972762de94e80ad1dfc43dc8be80"
+    },
+    {
+      "file": "verify.mjs",
+      "bytes": 4544,
+      "sha256": "9d871a2c5a781938c52cf4273adbdd42da03031b11d8002c3f7f1e8a9885f6c1"
+    },
+    {
+      "file": "build_blender.py",
+      "bytes": 3672,
+      "sha256": "eb7b4a0910c959d7b40aed16d23678cd4eb139192626ff9b493c9e07f59aba54"
+    },
+    {
+      "file": "verify_blender.py",
+      "bytes": 1804,
+      "sha256": "ac664fe0493ebbce1178cf187d00259ad1bd9b0fe7282d078a9ccddea7dc5de1"
+    },
+    {
+      "file": "package_delivery.py",
+      "bytes": 3085,
+      "sha256": "6d05d2e119f1735e23596ea072182ab2fefb0ecba07d978374ed075949374311"
+    },
+    {
+      "file": "verification.json",
+      "bytes": 2820,
+      "sha256": "2b2068ce3fcf78fe96afcf7a0e5f2b3b22b93ecd40a98a9abf89f528788afd07"
+    },
+    {
+      "file": "blender-verification.json",
+      "bytes": 4411,
+      "sha256": "f55909ca5307c08b4d9cad982f348f8d6a9e288d96c21303660d1cea50510d67"
+    },
+    {
+      "file": "blender-reopen-verification.json",
+      "bytes": 1936,
+      "sha256": "2e440d71c49d259158510df32f7b6f1ea91c8ceb66d3898ceb404af441ae3219"
+    }
+  ]
+}

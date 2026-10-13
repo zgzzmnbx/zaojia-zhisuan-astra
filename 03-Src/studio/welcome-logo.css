@@ -1,0 +1,15 @@
+.welcome-logo{position:relative;flex:0 0 88px;width:88px;height:128px;color:var(--astra-primary)}
+.welcome-logo-stage{position:absolute;inset:0 -32px;overflow:hidden}
+.welcome-logo-stage canvas{display:block;width:100%;height:100%;pointer-events:none}
+.welcome-logo-fallback{position:absolute;top:8px;left:-12px;width:112px;height:112px;pointer-events:none}
+.welcome-logo-trigger.btn{position:absolute;left:-24px;bottom:0;width:28px;min-width:28px;height:28px;min-height:28px;padding:6px;border-radius:8px;color:var(--astra-muted);opacity:0;pointer-events:none;transition:opacity 160ms,background 160ms}
+.welcome-logo:hover .welcome-logo-trigger,.welcome-logo:focus-within .welcome-logo-trigger{opacity:1;pointer-events:auto}
+.welcome-logo-trigger .astra-icon{width:16px;height:16px}
+.welcome-logo-controls{position:absolute;right:calc(100% + 12px);top:50%;transform:translateY(-50%);z-index:3;display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--astra-line);border-radius:12px;background:var(--astra-paper);box-shadow:0 8px 24px color-mix(in srgb,var(--astra-ink) 10%,transparent);white-space:nowrap}
+.welcome-logo-controls[hidden]{display:none!important}
+.welcome-logo-controls select{width:116px;min-height:32px;padding:4px 8px;border:1px solid var(--astra-line);border-radius:7px;background:var(--astra-paper);color:var(--astra-ink);font-family:inherit;font-size:var(--dws-font-size-12,12px);cursor:pointer}
+.welcome-logo-controls option{color:var(--astra-ink);background:var(--astra-paper)}
+.welcome-logo-controls .btn{width:32px;min-width:32px;height:32px;min-height:32px;padding:7px;color:var(--astra-muted)}
+.welcome-logo-controls .astra-icon{width:16px;height:16px}
+.welcome-logo :is(select,button):focus-visible{outline:2px solid var(--astra-accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.welcome-logo-trigger.btn{transition:none}}

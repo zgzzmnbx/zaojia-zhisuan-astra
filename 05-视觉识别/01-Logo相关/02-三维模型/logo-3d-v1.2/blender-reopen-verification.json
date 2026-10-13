@@ -1,0 +1,22 @@
+{
+  "version": "1.2.0",
+  "reopened": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\01-Logo相关\\02-三维模型\\logo-3d-v1.2\\Blender-modular\\造价智算-精细模型-组装-v1.2.0.blend",
+  "true_cubes": 13,
+  "characters": 4,
+  "animations_per_cube": 16,
+  "fps": 30,
+  "frames": 360,
+  "hero": "Lower_Cube_5",
+  "checks": [
+    "all cube dimensions equal",
+    "assembly loop selected",
+    "hero moves alone at beginning",
+    "all thirteen cubes separate",
+    "hero returns last",
+    "four characters visible in final lockup",
+    "hero repeats a turn at end",
+    "final pose restored"
+  ],
+  "saved_engine": "CYCLES",
+  "saved_samples": 64
+}

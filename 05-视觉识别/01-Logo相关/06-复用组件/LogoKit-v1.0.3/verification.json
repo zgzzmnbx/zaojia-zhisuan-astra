@@ -1,0 +1,247 @@
+{
+  "version": "1.0.3",
+  "checkedAt": "2026-10-13T11:48:43.417Z",
+  "checks": [
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "original",
+      "file": "造价智算-original-全部动效.glb",
+      "bytes": 963508,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "graphite",
+      "file": "造价智算-graphite-全部动效.glb",
+      "bytes": 963516,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "astra",
+      "file": "造价智算-astra-全部动效.glb",
+      "bytes": 963500,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "mantine-blue",
+      "file": "造价智算-mantine-blue-全部动效.glb",
+      "bytes": 963520,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "emerald",
+      "file": "造价智算-emerald-全部动效.glb",
+      "bytes": 963508,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "nord",
+      "file": "造价智算-nord-全部动效.glb",
+      "bytes": 963500,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "silk",
+      "file": "造价智算-silk-全部动效.glb",
+      "bytes": 963496,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "ringDuration": 10,
+      "waveDuration": 8,
+      "newMotionsMixerVerified": true,
+      "palette": "autumn",
+      "file": "造价智算-autumn-全部动效.glb",
+      "bytes": 963504,
+      "clips": 24,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    }
+  ],
+  "modelChecksInheritedFrom": "1.0.2",
+  "pageSequences": {
+    "welcome": {
+      "samples": [
+        {
+          "index": 0,
+          "cycle": 0,
+          "mode": "static",
+          "at": 0.04219999998807907,
+          "wall": 0.001300000011920929,
+          "draws": 3
+        },
+        {
+          "index": 1,
+          "cycle": 0,
+          "mode": "wave",
+          "at": 3.006399999976158,
+          "wall": 2.967699999988079,
+          "draws": 3
+        },
+        {
+          "index": 2,
+          "cycle": 0,
+          "mode": "static",
+          "at": 9.177999999952332,
+          "wall": 9.1395,
+          "draws": 362
+        },
+        {
+          "index": 3,
+          "cycle": 0,
+          "mode": "ring",
+          "at": 12.155499999952331,
+          "wall": 12.125199999988078,
+          "draws": 362
+        },
+        {
+          "index": 0,
+          "cycle": 1,
+          "mode": "static",
+          "at": 20.177999999916516,
+          "wall": 20.148300000011922,
+          "draws": 815
+        }
+      ],
+      "outside": 0,
+      "restMoves": 0,
+      "done": true,
+      "latest": {
+        "time": 20.177999999916516,
+        "phase": "rest",
+        "mode": "static",
+        "waiting": true,
+        "scheduled": false
+      }
+    },
+    "studio": {
+      "samples": [
+        {
+          "index": 0,
+          "cycle": 0,
+          "mode": "static",
+          "at": 0.005699999988079071,
+          "wall": 0.00019999998807907106,
+          "draws": 1
+        },
+        {
+          "index": 1,
+          "cycle": 0,
+          "mode": "wave",
+          "at": 20.00759999996424,
+          "wall": 20.0105,
+          "draws": 1
+        },
+        {
+          "index": 2,
+          "cycle": 0,
+          "mode": "static",
+          "at": 26.178899999976046,
+          "wall": 26.18219999998808,
+          "draws": 357
+        },
+        {
+          "index": 3,
+          "cycle": 0,
+          "mode": "tail",
+          "at": 46.16149999999989,
+          "wall": 46.16539999997616,
+          "draws": 357
+        },
+        {
+          "index": 4,
+          "cycle": 0,
+          "mode": "static",
+          "at": 48.57570000002386,
+          "wall": 48.58409999996424,
+          "draws": 494
+        },
+        {
+          "index": 5,
+          "cycle": 0,
+          "mode": "idle",
+          "at": 68.60510000000002,
+          "wall": 68.61339999997615,
+          "draws": 494
+        },
+        {
+          "index": 0,
+          "cycle": 1,
+          "mode": "static",
+          "at": 78.94789999998909,
+          "wall": 78.94259999996424,
+          "draws": 1092
+        }
+      ],
+      "outside": 0,
+      "restMoves": 0,
+      "done": true,
+      "latest": {
+        "time": 78.94789999998909,
+        "phase": "rest",
+        "mode": "static",
+        "waiting": true,
+        "scheduled": false
+      }
+    }
+  },
+  "webLifecycle": {
+    "actualHTTP": true,
+    "offscreenFreezeAndResume": true,
+    "visibilityEventFreeze": true,
+    "nativeBackgroundVisibility": "headless tabs remain visible; visibilitychange injected",
+    "pausePersistedAfterReload": true,
+    "manualAndCycleRestore": true,
+    "darkPreview": true
+  },
+  "testsPassed": 255
+}

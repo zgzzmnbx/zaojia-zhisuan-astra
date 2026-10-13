@@ -11,7 +11,7 @@
 .studio #shell .icon-rail .rail-button.is-active::after{content:"";position:absolute;left:-8px;top:12px;width:3px;height:18px;border-radius:0 3px 3px 0;background:var(--blue)}
 .icon-rail .rail-button:focus-visible,.icon-rail .rail-profile:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .icon-rail .rail-button .astra-icon{width:21px;height:21px}.icon-rail .rail-button .astra-icon svg{width:21px;height:21px}
-.icon-rail .rail-brand .astra-mark{width:32px;height:32px;font-size:20px;padding:0;border-radius:10px;display:grid;place-items:center}
+.studio .icon-rail .rail-brand .zsuan-brand-mark{width:34px;height:38px;stroke:none}
 .icon-rail .rail-actions.menu{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;min-width:0;width:44px;flex:1}
 .icon-rail .rail-bottom{display:flex;align-items:center;flex-direction:column;gap:10px;margin-top:auto;padding-top:8px}
 .icon-rail .rail-profile{display:grid;place-items:center;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--ink);font-size:12px;cursor:default}

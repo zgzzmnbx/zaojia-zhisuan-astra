@@ -1,0 +1,147 @@
+{
+  "testedVersion": "0.1.7",
+  "checks": [
+    "默认信息流开启",
+    "未手动覆盖时遵循减少动效设置",
+    "七建筑按编号依次连接",
+    "六段连续管线的站点距离严格递增",
+    "实际 shader 信号随时间推进",
+    "真实画布帧发生流动变化",
+    "暂停后信号位置不变且停止空闲帧",
+    "选择建筑不重启暂停的信号",
+    "键盘恢复信号且保留草稿",
+    "受控隐藏事件停止信息流计算",
+    "受控恢复事件保留用户选定的播放状态",
+    "后台时间不被补算成信号跳跃"
+  ],
+  "assertionCount": 12,
+  "state": {
+    "theme": {
+      "scheme": "light",
+      "background": "#edf3f8",
+      "buildingFinish": "original-matte",
+      "buildingMaterials": [
+        {
+          "name": "Warm plaster",
+          "color": [
+            0.95,
+            0.94,
+            0.91
+          ],
+          "metalness": 0,
+          "roughness": 0.7200000286102295
+        },
+        {
+          "name": "Cool shadow",
+          "color": [
+            0.6800000071525574,
+            0.75,
+            0.8199999928474426
+          ],
+          "metalness": 0,
+          "roughness": 0.6499999761581421
+        },
+        {
+          "name": "Porcelain white",
+          "color": [
+            0.83,
+            0.87,
+            0.92
+          ],
+          "metalness": 0,
+          "roughness": 0.6000000238418579
+        }
+      ]
+    },
+    "bloom": {
+      "enabled": false,
+      "strength": 0.6,
+      "threshold": 0.75,
+      "contactShadows": true,
+      "contactStrength": 0.75
+    },
+    "ready": true,
+    "active": null,
+    "auto": false,
+    "flow": {
+      "playing": false,
+      "distance": 4.034549999999722,
+      "shaderDistance": 4.034549999999722,
+      "glow": 0,
+      "length": 98.4708133038656,
+      "order": [
+        "import",
+        "price",
+        "risk",
+        "knowledge",
+        "report",
+        "review",
+        "table"
+      ],
+      "stopDistances": [
+        0,
+        9.03324052001283,
+        25.274546981950984,
+        53.89980553451619,
+        73.63331123622633,
+        83.38730760215546,
+        98.4708133038656
+      ],
+      "ports": [
+        [
+          -7.4,
+          0.72,
+          8.3
+        ],
+        [
+          -4.9,
+          0.72,
+          1.5
+        ],
+        [
+          4.5,
+          0.72,
+          8.7
+        ],
+        [
+          -7.4,
+          0.72,
+          -4.1
+        ],
+        [
+          6.45,
+          0.72,
+          -2.5
+        ],
+        [
+          6.5,
+          0.72,
+          -9.25
+        ],
+        [
+          -3.05,
+          0.72,
+          -8.5
+        ]
+      ],
+      "segments": 6
+    },
+    "shadows": true,
+    "shadowMap": true,
+    "draft": "",
+    "chatOpen": true,
+    "camera": [
+      30,
+      33,
+      38.00000000000001
+    ],
+    "target": [
+      -1.9999999999999991,
+      0.5999999999999999,
+      -1
+    ],
+    "framePending": false,
+    "triangles": 1,
+    "drawCalls": 1
+  }
+}

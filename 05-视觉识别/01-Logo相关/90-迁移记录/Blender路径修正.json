@@ -1,0 +1,23 @@
+[
+  {
+    "file": "02-三维模型/logo-3d-v1/Blender/造价智算-阶梯Z-v1.0.0.blend",
+    "previousRenderOutput": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\logo-3d-v1\\Blender\\造价智算-阶梯Z-Blender预览.png",
+    "currentRenderOutput": "//renders/ZSuan-",
+    "externalLibraries": 0,
+    "externalImages": 0
+  },
+  {
+    "file": "02-三维模型/logo-3d-v1.1/Blender/造价智算-阶梯Z-原位翻转-v1.1.0.blend",
+    "previousRenderOutput": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\logo-3d-v1.1\\Blender\\造价智算-原位翻转-v1.1.png",
+    "currentRenderOutput": "//renders/ZSuan-",
+    "externalLibraries": 0,
+    "externalImages": 0
+  },
+  {
+    "file": "02-三维模型/logo-3d-v1.2/Blender-modular/造价智算-精细模型-组装-v1.2.0.blend",
+    "previousRenderOutput": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\logo-3d-v1.2\\Blender-modular\\造价智算-横式组合.png",
+    "currentRenderOutput": "//renders/ZSuan-",
+    "externalLibraries": 0,
+    "externalImages": 0
+  }
+]

@@ -1,0 +1,7 @@
+# Render intermediates, historical drafts, local receipts and backup snapshots
+**/frames/
+**/*.blend1
+**/*.log
+**/__pycache__/
+**/历史草稿-五部件/
+90-迁移记录/*.zip

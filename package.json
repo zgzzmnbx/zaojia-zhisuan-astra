@@ -1,13 +1,13 @@
 {
   "name": "zhisuan-astra",
-  "version": "0.9.108",
+  "version": "0.9.115",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5189 --strictPort",
     "build": "node tools/build-astra.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 5189 --strictPort",
-    "test": "node --test 03-Src/core.test.js 03-Src/studio/workbook.test.mjs 03-Src/studio/table/legacy-preview.test.mjs 03-Src/studio/conversation-cards.test.mjs 03-Src/studio/weknora-stream.test.mjs tests/projectDashboardUtils.test.ts tests/gork-motion.test.ts tests/current-project.test.ts tests/floating-chat-clearance.test.ts tests/four-presentation.test.ts tests/gork-console-parity.test.ts tests/gork-pointer-smoothing.test.ts tests/workbench-layout.test.ts tests/platform-status.test.ts tests/gork-platform-status.test.ts tests/floating-gork.test.ts tests/fee-summary.test.ts tests/quick-actions.test.ts tests/gork-preferences.test.ts tests/review-flow.test.ts tests/risk-visuals.test.ts tests/risk-location.test.ts tests/row-pricing.test.ts tests/gork-custom.test.ts tests/migration-commands.test.ts tests/batch-recovery.test.ts tests/gork-notification-feedback.test.ts tests/icon-system.test.mjs tests/build-assets.test.mjs tests/knowledge-recommendations.test.mjs tests/knowledge-galaxy.test.mjs tests/risk-document.test.ts tests/welcome-demo.test.mjs tests/map-preload.test.mjs tests/runtime-console.test.ts tests/project-aerial.test.ts tests/globe-motion.test.ts",
+    "test": "node --test 03-Src/core.test.js 03-Src/studio/workbook.test.mjs 03-Src/studio/table/legacy-preview.test.mjs 03-Src/studio/conversation-cards.test.mjs 03-Src/studio/weknora-stream.test.mjs tests/projectDashboardUtils.test.ts tests/gork-motion.test.ts tests/current-project.test.ts tests/floating-chat-clearance.test.ts tests/four-presentation.test.ts tests/gork-console-parity.test.ts tests/gork-pointer-smoothing.test.ts tests/workbench-layout.test.ts tests/platform-status.test.ts tests/gork-platform-status.test.ts tests/floating-gork.test.ts tests/fee-summary.test.ts tests/quick-actions.test.ts tests/gork-preferences.test.ts tests/review-flow.test.ts tests/risk-visuals.test.ts tests/risk-location.test.ts tests/row-pricing.test.ts tests/gork-custom.test.ts tests/migration-commands.test.ts tests/batch-recovery.test.ts tests/gork-notification-feedback.test.ts tests/icon-system.test.mjs tests/build-assets.test.mjs tests/knowledge-recommendations.test.mjs tests/knowledge-galaxy.test.mjs tests/risk-document.test.ts tests/welcome-demo.test.mjs tests/map-preload.test.mjs tests/runtime-console.test.ts tests/project-aerial.test.ts tests/globe-motion.test.ts tests/welcome-logo.test.mjs",
     "start": ".venv/Scripts/python.exe tools/run_server.py",
     "build:frontend-debug": "node tools/build-astra.mjs --frontend-debug",
     "dev:frontend-debug": "vite --mode frontend-debug --config vite.frontend-debug.config.js --host 127.0.0.1 --port 5189 --strictPort"

@@ -3,14 +3,15 @@ import {useEffect,useRef,useState,type ReactNode} from 'react';
 import {ThemeButton,ThemeModeButton} from './AppearanceControls';
 import {Gork,Icon} from './ui';
 import {WelcomeWorkspacePreview} from './WelcomeWorkspacePreview';
+import {WelcomeLogo} from './WelcomeLogo';
 import {DEBUG_MODE} from '../frontend-debug/mock-adapter';
 import './welcome-screen.css';
 
 const preferenceKey='astra.skip-welcome.v1';
 export function readSkipWelcome(){try{return localStorage.getItem(preferenceKey)==='true';}catch{return false;}}
-type Props={runtimeStatus?:ReactNode;ready:boolean;busy:boolean;dark:boolean;toggleTheme:()=>void;openAppearance:()=>void;currentTitle?:string;hasWork:boolean;error?:string;enter:()=>void;newChat:()=>void;open:(view:string)=>void};
+type Props={openLogo?:()=>void;logoActive?:boolean;runtimeStatus?:ReactNode;ready:boolean;busy:boolean;dark:boolean;toggleTheme:()=>void;openAppearance:()=>void;currentTitle?:string;hasWork:boolean;error?:string;enter:()=>void;newChat:()=>void;open:(view:string)=>void};
 /** Welcome surface follows DESIGN.md; the lower preview remains a synthetic example. */
-export function WelcomeScreen({runtimeStatus,ready,busy,dark,toggleTheme,openAppearance,error,enter}:Props){
+export function WelcomeScreen({runtimeStatus,ready,busy,dark,toggleTheme,openAppearance,error,enter,openLogo,logoActive}:Props){
  const [skip,setSkip]=useState(readSkipWelcome),[preferenceError,setPreferenceError]=useState('');
  const [entering,setEntering]=useState(false);
  const heading=useRef<HTMLHeadingElement>(null),bot=useRef<HTMLDivElement>(null);
@@ -23,8 +24,8 @@ export function WelcomeScreen({runtimeStatus,ready,busy,dark,toggleTheme,openApp
    <section className="aw2-copy" aria-labelledby="aw2-title">
     <div className="aw2-engraving" aria-hidden="true"><i/><i/><span/><span/></div>
     {DEBUG_MODE&&<p className="aw2-kicker badge badge-outline"><Icon name="shield"/>前端调试 · 模拟数据 · 外连已隔离</p>}
-    <div className="aw2-title-group"><h1 id="aw2-title" ref={heading} tabIndex={-1}>造价智算</h1>
-    <p className="aw2-role">工程造价辅助智能体</p></div>
+    <div className="aw2-title-group"><WelcomeLogo dark={dark} active={logoActive} openLibrary={openLogo}/><div className="aw2-brand-copy"><h1 id="aw2-title" ref={heading} tabIndex={-1}>造价智算</h1>
+    <p className="aw2-role">工程造价辅助智能体</p></div></div>
     <div className="aw2-actions"><button className="btn btn-primary aw2-enter" type="button" disabled={entering||busy||(!ready&&!error)} onClick={()=>void enterStudio()}><Icon name="spark"/>{entering?'正在进入…':'进入系统'}</button><label className="aw2-check"><input className="checkbox checkbox-sm" type="checkbox" checked={skip} onChange={e=>savePreference(e.target.checked)}/><span>下次直接进入主界面</span></label></div>
     <div className="aw2-feedback">
      {!ready&&!error&&<TaskProgress compact label="正在恢复工作空间"/>}

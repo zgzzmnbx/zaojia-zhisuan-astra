@@ -1,0 +1,7 @@
+# 可再生成的临时缓存和诊断记录；源文件、模型、交付图及验收 JSON 保留。
+**/preview-build/
+**/browser-load.js
+**/*.log
+**/*.blend1
+**/*.blend2
+**/__pycache__/

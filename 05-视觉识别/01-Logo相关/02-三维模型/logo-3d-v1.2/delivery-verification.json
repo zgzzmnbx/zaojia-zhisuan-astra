@@ -1,0 +1,143 @@
+{
+  "version": "1.2.0",
+  "video": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "frames": 360,
+    "duration": 12,
+    "codec": "h264"
+  },
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 7446,
+      "sha256": "423fdbd9f9dfc86d9a617c0c0ddc71026975431854331ef104c0f5e2fd04a9ba"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "bytes": 1109,
+      "sha256": "8210c1c0eaa40060e9b838dca8d9d77310ee0bda9c9fc0b15254e1cf30a3e5a2"
+    },
+    {
+      "file": "THIRD-PARTY-LICENSES.txt",
+      "bytes": 2191,
+      "sha256": "c82aacf8691f678d5f70978d3d52642957a8be26684b43514431f853963f5efe"
+    },
+    {
+      "file": "造价智算-精细模型与组装动效.html",
+      "bytes": 4884585,
+      "sha256": "846cb14f65413a47e79b1428a732e5a760eb321145b0979ca69efde27d613571"
+    },
+    {
+      "file": "造价智算-模块组装与灵动块-v1.2.mp4",
+      "bytes": 1057548,
+      "sha256": "15ec8626a793722f0c61cb990c10a88545aaede2511615421c61b73b076a379a"
+    },
+    {
+      "file": "ZSuan-brand-v1.2.glb",
+      "bytes": 1272864,
+      "sha256": "94d8de8e7e44b2465d945f924cf6f6aaf2f6c21454de5d24894f184ee7010109"
+    },
+    {
+      "file": "ZSuan-vertical-v1.2.glb",
+      "bytes": 1272868,
+      "sha256": "74d42c73e7bafbb3aa0559ad0a931773903004566206554d98f2e5ea8767e66f"
+    },
+    {
+      "file": "ZSuan-icon-v1.2.glb",
+      "bytes": 622656,
+      "sha256": "7a38738437d93ff79205ab32a5566a3e1a2a8daaf5554b643fa32fbb600976fa"
+    },
+    {
+      "file": "Blender-modular/造价智算-精细模型-组装-v1.2.0.blend",
+      "bytes": 579023,
+      "sha256": "fa1e8ef2fd903c6c6851729d5828a842198186b0abe056e3c392c659152e7496"
+    },
+    {
+      "file": "Blender-modular/造价智算-横式组合.png",
+      "bytes": 1454330,
+      "sha256": "424f71cc05e328c683510dfb973fc4bbd7f32b1c6df744ee15276101ab3f6b55"
+    },
+    {
+      "file": "Blender-modular/造价智算-竖式组合.png",
+      "bytes": 1211393,
+      "sha256": "c966e669da93d05afa565dcef952246262fe8de982ddc10786a4bc963c05b9e3"
+    },
+    {
+      "file": "model.mjs",
+      "bytes": 7756,
+      "sha256": "1de41354d13290940ceb07fddb6b66ac31317a3bbdd7b95faa57cfdee3cb5ca9"
+    },
+    {
+      "file": "wordmark.json",
+      "bytes": 3164,
+      "sha256": "82b51f1357e4dab2489d3eb954d8df09a7a7bab837fa46eec700685b16709a7d"
+    },
+    {
+      "file": "viewer.js",
+      "bytes": 8206,
+      "sha256": "dc877a8d5cfd47ea1ef5392c4fd652d6c5c64f995ef0e82e49adea56e51ff168"
+    },
+    {
+      "file": "template.html",
+      "bytes": 4255,
+      "sha256": "8a4ae7b9dc77ef20d6132bc9073e3556d4049f595cb9718f9ba98c5d3c8a13d9"
+    },
+    {
+      "file": "build.mjs",
+      "bytes": 2064,
+      "sha256": "9cf1798971e224f4ec1928994d51cea608d4966e74713af6c9c7cc14c5126182"
+    },
+    {
+      "file": "verify.mjs",
+      "bytes": 4168,
+      "sha256": "a887d2a54a7c58d4e57e628ccb3c3f564e4ad71b085c9c2c4e69c817d86eb955"
+    },
+    {
+      "file": "build_blender.py",
+      "bytes": 6833,
+      "sha256": "7a53b48aaf7628e528731f3feb4014ad9dca3fb4085334e93ea0a3d707b38c01"
+    },
+    {
+      "file": "render_movie.py",
+      "bytes": 1500,
+      "sha256": "584b44b2351505e3c8428f37397ac0bade336e6324fcc8b6bacb5b98442be328"
+    },
+    {
+      "file": "finish_workspace.py",
+      "bytes": 1356,
+      "sha256": "782e8e59f4863d2d26a46462adbb862432dacd3d2522607428e3fb93879c9eea"
+    },
+    {
+      "file": "verify_blender.py",
+      "bytes": 2832,
+      "sha256": "6aa94b234b12e764a6fc9f1a4e04e636fb4bad142f62594abb2031c59c448535"
+    },
+    {
+      "file": "package_delivery.py",
+      "bytes": 3283,
+      "sha256": "b1b6484b48b760eb8605e00d1cd8c755c14b81bfa2080c3a24624c7092352cf0"
+    },
+    {
+      "file": "extract_wordmark.py",
+      "bytes": 1770,
+      "sha256": "e08cef5a014465952ddeaede2e55241f54367aaebd48b0ef8dd7e1ea85f4151d"
+    },
+    {
+      "file": "verification.json",
+      "bytes": 2301,
+      "sha256": "695c8a0c19d30e78cd59e74ca2e6bb9743950a8c38e3c4753c943e662cbb6cc7"
+    },
+    {
+      "file": "blender-verification.json",
+      "bytes": 6765,
+      "sha256": "bcb1bc54114f1aa7fef6a7599f5b7246ef4b9a6d632adbf6847abf98fe219898"
+    },
+    {
+      "file": "blender-reopen-verification.json",
+      "bytes": 691,
+      "sha256": "fb177638e4411684207f86d1449cb423e844607c3b367a56acd74869c6b1cc7d"
+    }
+  ]
+}

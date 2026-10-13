@@ -1,0 +1,298 @@
+{
+  "version": "1.0.0",
+  "date": "2026-10-13",
+  "generator": "native image_gen",
+  "template": "gpt-image-2/references/ui-mockups/chat-interface-scene.md",
+  "purpose": "项目任务平台概念评审；数据为示例，不代表真实业务运行。",
+  "images": [
+    {
+      "filename": "01-项目初始首页.png",
+      "title": "项目初始首页",
+      "reference": "D:/Codex-Temp/260613-【智算Astra】/05-视觉识别/02-3D场景/white-sandbox-v0.1.0/preview-overview.png",
+      "prompt": {
+        "type": "desktop web application concept mockup, image edit from a screenshot",
+        "goal": "将现有造价智算白模沙盘升级为项目初始任务平台，生成可评审的高保真界面设计效果图。仅概念设计，所有任务数据为示例。",
+        "canvas": "16:10 横向桌面截图，尽可能高分辨率，整屏正视 UI，无设备外框，无浏览器栏，无海报大标题，单张完整界面，不做多图拼贴。",
+        "reference": {
+          "role": "edit target and geometry/style reference",
+          "invariants": "保留参考图中白模工业沙盘的设计语言、功能建筑意象、浅蓝河道、道路桥梁、白色管线、屋顶功能雕塑和巨大的竖向表格屏幕建筑；可以轻调镜头与建筑投影位置，为更好的界面构图让位。不得把模型改成城市天际线、真实工厂照片或金属建筑。"
+        },
+        "platform": {
+          "name": "造价智算",
+          "language": "简体中文",
+          "desktop_only": true
+        },
+        "composition": {
+          "navigation": "最左侧一条 52px 的轻盈图标栏，品牌小图标沿用参考图，不设计新 Logo。",
+          "header": "顶部只有一条紧凑工具栏：品牌 造价智算，示例项目 · 管道工程，当前任务 控制价编制，成果版本。靠右为 沙盘 / 工作台 分段切换、夜航图标、设置图标。",
+          "chat": "左侧宽约整屏 24% 的毛玻璃对话面板，上沿距顶栏 24px，下沿距屏幕 28px。标题 ZSuan；正文像真实可用的中文助手聊天，16px 等效字体，留白舒适；固定底部输入框、附件图标、发送蓝色按钮。不画新的吉祥物角色。",
+          "scene": "沙盘是主角，在其余约 72% 区域大幅呈现，透视精确、细节精致，建筑保持足够大。不让大卡片把沙盘全部遮住。",
+          "labels": "建筑上方为小型半透明毛玻璃名称标牌，14px 加粗等效字体、清楚深色字，底色通透约60%，每节点下方一行状态。标签避让，不遮建筑雕塑，无重叠无密集连线。",
+          "footer": "场景底部居中只有小巧悬浮镜头控制条。左下小字 概念设计 · 示例数据。"
+        },
+        "style": {
+          "rendering": "premium Blender / Cycles architectural miniature integrated with a refined functional enterprise app. Physically plausible bevels, contact shadows, ceramic matte surfaces, crisp Chinese typography, restrained blue accents. Strong spatial immersion, professional product design, generous whitespace, editorial clarity.",
+          "day": "柔和白昼，灰白背景，暖白陶瓷建筑，细致倒角、屋面层次、门窗凹槽、设备基础、管道支架与少量小树。侧向柔光，清晰柔软接触阴影，不发灰、不欠曝。河流是真正的浅天蓝，不是深蓝也不是灰蓝。",
+          "glass": "半透明毛玻璃面板，背景可隐约透出，细白边与轻柔阴影，字体清晰；不要厚重不透明白色卡片。"
+        },
+        "constraints": {
+          "must_keep": [
+            "左侧完整对话与输入区",
+            "3D 场景占据视觉主体",
+            "七个建筑功能的可辨识造型",
+            "中文文字准确且可读",
+            "所有示例数值只使用本提示词给定值",
+            "单张页面截图，精致且能实际落地"
+          ],
+          "avoid": [
+            "顶部堆叠统计卡",
+            "巨型标题和标语",
+            "复杂 HUD、六边形科幻框",
+            "彩虹配色",
+            "所有建筑同时强光闪烁",
+            "金属、镜面、夸张 bloom",
+            "移动端手机外框",
+            "乱码、假英文、占位 lorem ipsum",
+            "参考图的旧示例聊天原文"
+          ]
+        },
+        "variant": {
+          "state": "新项目初始状态；白昼、开阔全景。全部功能建筑安静，清单导入建筑轻微蓝色轮廓强调，没有已完成数量、金额或虚假进度。",
+          "header_version": "未生成成果",
+          "conversation": {
+            "messages": [
+              {
+                "role": "assistant",
+                "text": "项目已就绪。上传清单后，我们从字段检查开始。"
+              },
+              {
+                "role": "user",
+                "text": "帮我编制这份工程的控制价。"
+              }
+            ],
+            "action_card": {
+              "title": "导入项目清单",
+              "body": "拖入 Excel，或从项目资料中选择",
+              "primary": "上传清单",
+              "secondary": "选择项目资料"
+            },
+            "composer": "向智算说明你的任务…"
+          },
+          "node_texts": [
+            "01 清单导入 / 待上传",
+            "02 智能填价 / 待开始",
+            "03 风险复核 / 待开始",
+            "04 知识检索 / 随时可查",
+            "05 报告生成 / 待开始",
+            "06 协同复核 / 未发送",
+            "07 表格大屏 / 暂无成果"
+          ],
+          "scene": "与参考图同一园区，调整更精致的摄影构图，模型略向右靠，模型在上下空间里充分舒展。白色管线静置，少量淡蓝接点，河流平静。表格大屏是白色立式表格雕塑，空白网格清晰可见，少量蓝色表头。不要右侧详情抽屉。这是一张欢迎开始工作的舒适工作首页。"
+        }
+      }
+    },
+    {
+      "filename": "02-任务进行中.png",
+      "title": "任务进行中",
+      "reference": "D:/Codex-Temp/260613-【智算Astra】/05-视觉识别/02-3D场景/white-sandbox-v0.1.0/preview-overview.png",
+      "prompt": {
+        "type": "desktop web application concept mockup, image edit from a screenshot",
+        "goal": "将现有造价智算白模沙盘升级为项目初始任务平台，生成可评审的高保真界面设计效果图。仅概念设计，所有任务数据为示例。",
+        "canvas": "16:10 横向桌面截图，尽可能高分辨率，整屏正视 UI，无设备外框，无浏览器栏，无海报大标题，单张完整界面，不做多图拼贴。",
+        "reference": {
+          "role": "edit target and geometry/style reference",
+          "invariants": "保留参考图中白模工业沙盘的设计语言、功能建筑意象、浅蓝河道、道路桥梁、白色管线、屋顶功能雕塑和巨大的竖向表格屏幕建筑；可以轻调镜头与建筑投影位置，为更好的界面构图让位。不得把模型改成城市天际线、真实工厂照片或金属建筑。"
+        },
+        "platform": {
+          "name": "造价智算",
+          "language": "简体中文",
+          "desktop_only": true
+        },
+        "composition": {
+          "navigation": "最左侧一条 52px 的轻盈图标栏，品牌小图标沿用参考图，不设计新 Logo。",
+          "header": "顶部只有一条紧凑工具栏：品牌 造价智算，示例项目 · 管道工程，当前任务 控制价编制，成果版本。靠右为 沙盘 / 工作台 分段切换、夜航图标、设置图标。",
+          "chat": "左侧宽约整屏 24% 的毛玻璃对话面板，上沿距顶栏 24px，下沿距屏幕 28px。标题 ZSuan；正文像真实可用的中文助手聊天，16px 等效字体，留白舒适；固定底部输入框、附件图标、发送蓝色按钮。不画新的吉祥物角色。",
+          "scene": "沙盘是主角，在其余约 72% 区域大幅呈现，透视精确、细节精致，建筑保持足够大。不让大卡片把沙盘全部遮住。",
+          "labels": "建筑上方为小型半透明毛玻璃名称标牌，14px 加粗等效字体、清楚深色字，底色通透约60%，每节点下方一行状态。标签避让，不遮建筑雕塑，无重叠无密集连线。",
+          "footer": "场景底部居中只有小巧悬浮镜头控制条。左下小字 概念设计 · 示例数据。"
+        },
+        "style": {
+          "rendering": "premium Blender / Cycles architectural miniature integrated with a refined functional enterprise app. Physically plausible bevels, contact shadows, ceramic matte surfaces, crisp Chinese typography, restrained blue accents. Strong spatial immersion, professional product design, generous whitespace, editorial clarity.",
+          "day": "柔和白昼，灰白背景，暖白陶瓷建筑，细致倒角、屋面层次、门窗凹槽、设备基础、管道支架与少量小树。侧向柔光，清晰柔软接触阴影，不发灰、不欠曝。河流是真正的浅天蓝，不是深蓝也不是灰蓝。",
+          "glass": "半透明毛玻璃面板，背景可隐约透出，细白边与轻柔阴影，字体清晰；不要厚重不透明白色卡片。"
+        },
+        "constraints": {
+          "must_keep": [
+            "左侧完整对话与输入区",
+            "3D 场景占据视觉主体",
+            "七个建筑功能的可辨识造型",
+            "中文文字准确且可读",
+            "所有示例数值只使用本提示词给定值",
+            "单张页面截图，精致且能实际落地"
+          ],
+          "avoid": [
+            "顶部堆叠统计卡",
+            "巨型标题和标语",
+            "复杂 HUD、六边形科幻框",
+            "彩虹配色",
+            "所有建筑同时强光闪烁",
+            "金属、镜面、夸张 bloom",
+            "移动端手机外框",
+            "乱码、假英文、占位 lorem ipsum",
+            "参考图的旧示例聊天原文"
+          ]
+        },
+        "variant": {
+          "state": "同一项目正在智能填价，白昼。用户与智算对话在左边，蓝色信号沿导入到填价的管线传递。",
+          "header_version": "当前运行 · 第 1 次",
+          "conversation": {
+            "messages": [
+              {
+                "role": "user",
+                "text": "清单已上传，开始匹配。"
+              },
+              {
+                "role": "assistant",
+                "text": "已读取 2 张工作表，共 128 项。正在匹配单价与系数。"
+              }
+            ],
+            "action_card": {
+              "title": "智能填价进行中",
+              "body": "已处理 86 / 128 项",
+              "progress": "67%",
+              "secondary": "取消本次运行"
+            },
+            "composer": "继续补充要求…"
+          },
+          "node_texts": [
+            "01 清单导入 / 已导入 128 项",
+            "02 智能填价 / 处理中 86 / 128",
+            "03 风险复核 / 等待填价结果",
+            "04 知识检索 / 随时可查",
+            "05 报告生成 / 待开始",
+            "06 协同复核 / 未发送",
+            "07 表格大屏 / 当前运行"
+          ],
+          "scene": "局部略推近模型中心的算盘造型智能填价建筑，依然能看到园区主要建筑。填价标牌被蓝色细边轻轻选中，标牌下方一条极细67%进度线。入口到中心管线有真实体积的蓝色信号珠与柔光；其他线路没有发光。巨型表格大屏显示清晰稀疏表格、少量已填蓝色单元格和一个当前行指示。不要累计金额、不显示尚未产生的风险数字。不要再增加右侧大型数据卡，保持场景主体。"
+        }
+      }
+    },
+    {
+      "filename": "03-夜航结果详情.png",
+      "title": "夜航结果详情",
+      "reference": "D:/Codex-Temp/260613-【智算Astra】/05-视觉识别/02-3D场景/white-sandbox-v0.1.0/preview-night.png",
+      "prompt": {
+        "type": "desktop web application concept mockup, image edit from a screenshot",
+        "goal": "将现有造价智算白模沙盘升级为项目初始任务平台，生成可评审的高保真界面设计效果图。仅概念设计，所有任务数据为示例。",
+        "canvas": "16:10 横向桌面截图，尽可能高分辨率，整屏正视 UI，无设备外框，无浏览器栏，无海报大标题，单张完整界面，不做多图拼贴。",
+        "reference": {
+          "role": "edit target and geometry/style reference",
+          "invariants": "保留参考图中白模工业沙盘的设计语言、功能建筑意象、浅蓝河道、道路桥梁、白色管线、屋顶功能雕塑和巨大的竖向表格屏幕建筑；可以轻调镜头与建筑投影位置，为更好的界面构图让位。不得把模型改成城市天际线、真实工厂照片或金属建筑。"
+        },
+        "platform": {
+          "name": "造价智算",
+          "language": "简体中文",
+          "desktop_only": true
+        },
+        "composition": {
+          "navigation": "最左侧一条 52px 的轻盈图标栏，品牌小图标沿用参考图，不设计新 Logo。",
+          "header": "顶部只有一条紧凑工具栏：品牌 造价智算，示例项目 · 管道工程，当前任务 控制价编制，成果版本。靠右为 沙盘 / 工作台 分段切换、夜航图标、设置图标。",
+          "chat": "左侧宽约整屏 24% 的毛玻璃对话面板，上沿距顶栏 24px，下沿距屏幕 28px。标题 ZSuan；正文像真实可用的中文助手聊天，16px 等效字体，留白舒适；固定底部输入框、附件图标、发送蓝色按钮。不画新的吉祥物角色。",
+          "scene": "沙盘是主角，在其余约 72% 区域大幅呈现，透视精确、细节精致，建筑保持足够大。不让大卡片把沙盘全部遮住。",
+          "labels": "建筑上方为小型半透明毛玻璃名称标牌，14px 加粗等效字体、清楚深色字，底色通透约60%，每节点下方一行状态。标签避让，不遮建筑雕塑，无重叠无密集连线。",
+          "footer": "场景底部居中只有小巧悬浮镜头控制条。左下小字 概念设计 · 示例数据。"
+        },
+        "style": {
+          "rendering": "premium Blender / Cycles architectural miniature integrated with a refined functional enterprise app. Physically plausible bevels, contact shadows, ceramic matte surfaces, crisp Chinese typography, restrained blue accents. Strong spatial immersion, professional product design, generous whitespace, editorial clarity.",
+          "day": "柔和白昼，灰白背景，暖白陶瓷建筑，细致倒角、屋面层次、门窗凹槽、设备基础、管道支架与少量小树。侧向柔光，清晰柔软接触阴影，不发灰、不欠曝。河流是真正的浅天蓝，不是深蓝也不是灰蓝。",
+          "glass": "半透明毛玻璃面板，背景可隐约透出，细白边与轻柔阴影，字体清晰；不要厚重不透明白色卡片。"
+        },
+        "constraints": {
+          "must_keep": [
+            "左侧完整对话与输入区",
+            "3D 场景占据视觉主体",
+            "七个建筑功能的可辨识造型",
+            "中文文字准确且可读",
+            "所有示例数值只使用本提示词给定值",
+            "单张页面截图，精致且能实际落地"
+          ],
+          "avoid": [
+            "顶部堆叠统计卡",
+            "巨型标题和标语",
+            "复杂 HUD、六边形科幻框",
+            "彩虹配色",
+            "所有建筑同时强光闪烁",
+            "金属、镜面、夸张 bloom",
+            "移动端手机外框",
+            "乱码、假英文、占位 lorem ipsum",
+            "参考图的旧示例聊天原文"
+          ]
+        },
+        "variant": {
+          "state": "同一项目的夜航结果查看状态；智能填价与风险检查结束，报告已生成但仍待审阅。暗色哑光建筑保留雕塑意图，蓝色霓虹沿屋顶关键边缘与管线，窗户暗淡，景物仍读得清楚。",
+          "header_version": "成果 v1",
+          "conversation": {
+            "messages": [
+              {
+                "role": "assistant",
+                "text": "填价已完成。128 项已匹配，含税合计 248.60 万元。"
+              },
+              {
+                "role": "assistant",
+                "text": "风险检查发现 3 项待复核，其中 1 项重点风险。"
+              },
+              {
+                "role": "user",
+                "text": "先看看填价结果。"
+              }
+            ],
+            "action_card": {
+              "title": "本次成果 · v1",
+              "primary": "打开工作表",
+              "secondary": "查看风险"
+            },
+            "composer": "继续处理当前任务…"
+          },
+          "node_texts": [
+            "01 清单导入 / 已完成",
+            "02 智能填价 / 128 项 · 248.60 万元",
+            "03 风险复核 / 3 项待复核",
+            "04 知识检索 / 6 条引用",
+            "05 报告生成 / 已生成 · 待审阅",
+            "06 协同复核 / 未发送",
+            "07 表格大屏 / 当前成果 v1"
+          ],
+          "details_card": {
+            "position": "右侧靠近被选中填价建筑的一张窄毛玻璃卡片，约20%屏幕宽，与左侧对话形成呼应，中央保留可见模型，使用短连接线锚定建筑。",
+            "title": "智能填价",
+            "badge": "已完成",
+            "metrics": [
+              [
+                "匹配数量",
+                "128 / 128"
+              ],
+              [
+                "含税合计",
+                "248.60 万元"
+              ]
+            ],
+            "rows": [
+              [
+                "待确认",
+                "0 项"
+              ],
+              [
+                "成果版本",
+                "v1"
+              ]
+            ],
+            "footer": "示例数据",
+            "primary": "打开工作表",
+            "close": "右上关闭图标"
+          },
+          "scene": "精致夜航控制舱氛围，背景深海军蓝，地面和建筑深蓝灰哑光陶瓷，清晰轮廓，有限冰蓝霓虹，淡淡体积光；亮度克制，表格屏有柔和青蓝表头与稀疏表格，不是巨型霓虹灯。浅蓝河道在夜色中保留蓝色，但明显弱于信号灯。避免金属、镜面、紫粉电竞风。"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1073 @@
+[
+  {
+    "relative": "2026-10-13-3d-workspace\\A-悬浮工程核心.png",
+    "bytes": 1712991,
+    "sha256": "B6C8B08FE82DA0915339077A3FBE2F40773C0F6A76A7F90FABB6058AADEFC9ED",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\2026-10-13-3d-workspace\\A-悬浮工程核心.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\2026-10-13-3d-workspace\\A-悬浮工程核心.png"
+  },
+  {
+    "relative": "2026-10-13-3d-workspace\\B-管网微缩沙盘.png",
+    "bytes": 2030069,
+    "sha256": "1AA667BF0793D43FD6DF73D5D67CE55407428C761F24742811653E62293EA91D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\2026-10-13-3d-workspace\\B-管网微缩沙盘.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\2026-10-13-3d-workspace\\B-管网微缩沙盘.png"
+  },
+  {
+    "relative": "2026-10-13-3d-workspace\\C-深色知识星核.png",
+    "bytes": 1864087,
+    "sha256": "C9B4CBC4858EA3771CF13273CF54D1EF216BFE244DFAD8455D6F59AF49E22A89",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\2026-10-13-3d-workspace\\C-深色知识星核.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\2026-10-13-3d-workspace\\C-深色知识星核.png"
+  },
+  {
+    "relative": "2026-10-13-3d-workspace\\prompts.json",
+    "bytes": 19187,
+    "sha256": "A4D332362112307090B9CBB226D9FF3149427AEDDAA251B5B3FA8253F9478ACC",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\2026-10-13-3d-workspace\\prompts.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\2026-10-13-3d-workspace\\prompts.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\白模空间-独立预览.html",
+    "bytes": 6645749,
+    "sha256": "FC20E18AFE420E71D1535DAE3AB10B0AF1141FDEFA795130AC510D7628EF3016",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\白模空间-独立预览.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\白模空间-独立预览.html"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\add_blender_pipeline.py",
+    "bytes": 2208,
+    "sha256": "78C1B65DFA94F4CB9708228F9061AFF29AB1916513E93CDC0C32392DA94104F8",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\add_blender_pipeline.py",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\add_blender_pipeline.py"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\blender-build-v2.log",
+    "bytes": 2469,
+    "sha256": "723D3C0AB7A2DCFDAF8C03264C2C4FA8711DA1FB4DFAEA8DE92296474481AEBB",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-build-v2.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\blender-build-v2.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\blender-build.log",
+    "bytes": 2468,
+    "sha256": "3ADD564BC1281C71556837C26E6EE9C4A4007CA33670C542F3DC401C77B8E099",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-build.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\blender-build.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\blender-final.log",
+    "bytes": 2558,
+    "sha256": "EBDE670EFC7814CF983B9509230D4798F1A18CA44C8DF88C64132BB074FC4B18",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-final.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\blender-final.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\blender-flow.log",
+    "bytes": 639,
+    "sha256": "CC6C1676B995163420844B1C446C826D575D91B21167833ED106386AC9D7CA58",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-flow.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\blender-flow.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\blender-overview.png",
+    "bytes": 2434757,
+    "sha256": "F121DCEF2EA2C9CAAF649EEA92E7306E5868393340B80AA413399B9B95F8D9CB",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-overview.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\blender-overview.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\blender-sculptures.log",
+    "bytes": 2469,
+    "sha256": "15A31FAD82AA95AB3290A77EC5FCDB0A728C3376CC7C2868ABB5AD39FF1DA48C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-sculptures.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\blender-sculptures.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\browser-acceptance.json",
+    "bytes": 3371,
+    "sha256": "31024C014ECC819764503331026ABC1AB6AAD26C6750EAC084FA06A78B577A0E",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\browser-acceptance.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\browser-acceptance.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\browser-check.js",
+    "bytes": 6817,
+    "sha256": "48494A2D1D32A1A7BE18038BEBB6D0E1EEA8ACDF68F79557C0661C13465D2E0F",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\browser-check.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\browser-check.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\browser-check.log",
+    "bytes": 9298,
+    "sha256": "13BFCDBA15E6D9C4361833773D24E39AB50FD5EC79E9926DEB5329B9F438011D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\browser-check.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\browser-check.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\browser-load.js",
+    "bytes": 6657139,
+    "sha256": "3DDE4E6DB519479BB048964217F5CA042DC1581210BDBFADB3B5DC0C46B886FF",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\browser-load.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\browser-load.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\browser-load.log",
+    "bytes": 6657193,
+    "sha256": "95B6F65AA205F51A340C187D66D07AA25FE7C27D9BF5689F955D99BDE58AAD2D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\browser-load.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\browser-load.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\build_preview.mjs",
+    "bytes": 1797,
+    "sha256": "23D00E22B5C282067700F7D301A1A7686A01253E71CBF03B3F0D5D6E243ABEB2",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\build_preview.mjs",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\build_preview.mjs"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\build_scene.py",
+    "bytes": 20021,
+    "sha256": "4B38BC681260B044CD342B47DCA7B2E035211FD0ED4D4DDAAB10E6BBE9EF3CFD",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\build_scene.py",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\build_scene.py"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\CHANGELOG.md",
+    "bytes": 901,
+    "sha256": "32C4464B9BEDFFB47D2AB8420E453E0F28CFDC9B4AB055BE4CB0F123BC978FD5",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\CHANGELOG.md",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\CHANGELOG.md"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\current-overview.png",
+    "bytes": 417446,
+    "sha256": "C1928C4463C7F26691FC77329B9D83663D5895EC9255ADC33233545102088C4A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\current-overview.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\current-overview.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\delivery-manifest.json",
+    "bytes": 3256,
+    "sha256": "270BD8C9D1DB533D41922C38F0489B1D220455CFEB53765220D114AB4AA53D5A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\delivery-manifest.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\delivery-manifest.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\finalize_delivery.mjs",
+    "bytes": 2451,
+    "sha256": "C9299DAF5A7C95DE761A063F79D6A4B49D5A7A034B993A479E691ECCFE606251",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\finalize_delivery.mjs",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\finalize_delivery.mjs"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\finalize-delivery.log",
+    "bytes": 1454,
+    "sha256": "7D46DF0AF4D8D711710ABF8ED32143A217046A121F3A642B357A3C1967629137",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\finalize-delivery.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\finalize-delivery.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\flow-acceptance.json",
+    "bytes": 2008,
+    "sha256": "FF4E304D01084BDF99E70DDA0C1B98BEF371CF0ACDDF82D44595B920C78AB316",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\flow-acceptance.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\flow-acceptance.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\flow-check.js",
+    "bytes": 3392,
+    "sha256": "2B0B610B533EA862D2C8E2545F0C57B3B0CDE288A6536A18EC60E97FEDA0BD5D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\flow-check.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\flow-check.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\flow-check.log",
+    "bytes": 4722,
+    "sha256": "34A176B0B1C21F4E3464DDB70AE2802ED267259135EC7559E1984F3A9184DA81",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\flow-check.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\flow-check.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\index.html",
+    "bytes": 4642,
+    "sha256": "3279F4D93392F4A3C0FBA5E64721FC3D4DA941E2183AD0289632D2D86563CDED",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\index.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\index.html"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\information-flow.js",
+    "bytes": 3779,
+    "sha256": "82500138B7AA2D207B3EC3E95B1165DB2E2BFB40F1A9D7FCD8FA65D6ADD3E555",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\information-flow.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\information-flow.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\information-flow.mp4",
+    "bytes": 319719,
+    "sha256": "4644429244DF49C0393D040977331DFF8FB1396D15100662FEC92F9D72420157",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\information-flow.mp4",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\information-flow.mp4"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\information-flow.webm",
+    "bytes": 1826404,
+    "sha256": "BC03B2D0D1E37138E13F9C7DDC3394D8D3F1C2B14EFC3C10CA299D937C79F29B",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\information-flow.webm",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\information-flow.webm"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\main.js",
+    "bytes": 18692,
+    "sha256": "26C7B24C2121E459B6A3537BDBF16BE43F59C2CFE98FB73D97BAAECF45B3F198",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\main.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\main.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\pale-river-blender.log",
+    "bytes": 507,
+    "sha256": "3E4AEB5E49CB91E4F72B04523AF6EA6A521F66FE916BD9D6CA5E688142CEE74D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\pale-river-blender.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\pale-river-blender.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\pale-river-build.log",
+    "bytes": 1051,
+    "sha256": "875E7238C8AB28D7A752C08BE5EFB74839C01FEF33B746AF86ED35D248FD5A9D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\pale-river-build.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\pale-river-build.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\pipeline-route.json",
+    "bytes": 1174,
+    "sha256": "F15FE14D53ECFAA8277277EEA06E114F4A61F8B606E0EDCF5FA8D13FD5213B77",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\pipeline-route.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\pipeline-route.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build.log",
+    "bytes": 1051,
+    "sha256": "6664C7610C7171C6827175BDB9E40BC8DECDBA6D368886BC18737A836695FBE2",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-current.png",
+    "bytes": 727945,
+    "sha256": "57E28237FBC3AB6BE609D827757B58257F2B876AA4082C2639ED0350D21EC5BD",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-current.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-current.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-information-flow.png",
+    "bytes": 744032,
+    "sha256": "2D51412FA4CC6CC6053F67BD26E14EDE6269533E57240F04AAFE5532F178AAFD",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-information-flow.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-information-flow.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-overview.png",
+    "bytes": 737256,
+    "sha256": "32D1C9532F85EA1BC4EE821EB13D98F24B8437F0C42CDE58FC6ED23AA410C518",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-overview.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-overview.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-pale-river.png",
+    "bytes": 744098,
+    "sha256": "21B0FA15F7103208F57C0A2F70B3046216ED4C23B4DAFFC1DDA615325840AA5C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-pale-river.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-pale-river.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-risk.png",
+    "bytes": 1322541,
+    "sha256": "EB4A90AD84D912497C328E9773828EF8A9CDF94E4991AEC2F6686FCCCE09027B",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-risk.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-risk.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-shadows-off.png",
+    "bytes": 443976,
+    "sha256": "289F2D6F7BE6034CF7056D510E1F155ACB9FE5367569B63F5B5A584878B3FA4D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-shadows-off.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-shadows-off.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-table.png",
+    "bytes": 978731,
+    "sha256": "670064FD6510B59735C098DBBD8624E6AE0787E09743BC9EDCFE0B144AD6E9C4",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-table.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-table.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\project-build-flow.log",
+    "bytes": 8221,
+    "sha256": "32B79313B2B9D210C61CC8580520E3135F66F2011546DCC791FB3EE95369EEB4",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\project-build-flow.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\project-build-flow.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\project-build-river.log",
+    "bytes": 8221,
+    "sha256": "92D21BDB218C5E5FE3A73782AA7B2B2A243903C40D6640D78C7B940F6B038BB3",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\project-build-river.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\project-build-river.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\project-tests-flow.log",
+    "bytes": 24398,
+    "sha256": "EBD206C086D4A8594752FC84B9D462DBE020EE5301CA06FF12051A2442791926",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\project-tests-flow.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\project-tests-flow.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\project-tests-river.log",
+    "bytes": 24393,
+    "sha256": "72F8B400D76CE7CFB230BAB4E13B892AD7A842ED02A49AD3FA59D201E9250A8A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\project-tests-river.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\project-tests-river.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\README.md",
+    "bytes": 6860,
+    "sha256": "09F38DF9D0351380A9CFD780B52B66B0850A14DB20FFCF18E553471E7CC4AF36",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\README.md",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\README.md"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\record-flow.js",
+    "bytes": 1137,
+    "sha256": "54F71E2779A45D1EF00D63487287DF62291E41B1EC18AB53992FC3C13668A6DB",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\record-flow.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\record-flow.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\record-flow.log",
+    "bytes": 2053,
+    "sha256": "9F46D8570D7F2F4C0DD40CFF6D7AE7D0EE31C09F8E104B489DB5C2ABCBEDBC60",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\record-flow.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\record-flow.log"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\scene-manifest.json",
+    "bytes": 830,
+    "sha256": "576380DF9C75920D36756B45758B2ADACAAB2927CA8C0F15EFEA7EED17100FED",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\scene-manifest.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\scene-manifest.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\soften_river.mjs",
+    "bytes": 1555,
+    "sha256": "EFDB644A2BF47C28F7F618807B4F56CB9D8EFE826E695197FDC8474E87E32E91",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\soften_river.mjs",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\soften_river.mjs"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\soften_river.py",
+    "bytes": 655,
+    "sha256": "AD9A753C9FB906F8F56E9B0CF1B27DCA7FC5C6BEE27EBBC4E89D8744AEEBD076",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\soften_river.py",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\soften_river.py"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\style.css",
+    "bytes": 9995,
+    "sha256": "1825D6882B916B15AC0C328CAECBC79958F04FA075A48F2837A3B988C2AAB695",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\style.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\style.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\white-sandbox-flow.blend",
+    "bytes": 416176,
+    "sha256": "C21DC6BA5F24CC90DAD5060DD675E3BEA5E1482B77272934C9853888C0AF7D29",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\white-sandbox-flow.blend",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox-flow.blend"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\white-sandbox-flow.blend1",
+    "bytes": 416166,
+    "sha256": "0069B3E8BAEFBDC2381433AB4775BF4C36F21B26C36AFBD24BA15DC167420191",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\white-sandbox-flow.blend1",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox-flow.blend1"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\white-sandbox-flow.blend2",
+    "bytes": 416192,
+    "sha256": "5A44ED600F582EE45F7EC6A84CC7161EE44A96F057E19AB133299A142F3E9634",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\white-sandbox-flow.blend2",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox-flow.blend2"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\white-sandbox.blend",
+    "bytes": 401178,
+    "sha256": "663D5E6AFC07E6A7638D3A345024803106D5F51C56B6258FB78548C51F28D0A4",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\white-sandbox.blend",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox.blend"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\white-sandbox.blend1",
+    "bytes": 401182,
+    "sha256": "624ABE337D684B8F43FD0F5599FE17761A5DAE581F6D969C0C6CB3C470FFC812",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\white-sandbox.blend1",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox.blend1"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\white-sandbox.blend2",
+    "bytes": 401227,
+    "sha256": "1B01F4FA43713F8FE0203038A5E63F8B7D6B8998561A32254E3832AAE626E7C8",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\white-sandbox.blend2",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox.blend2"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\white-sandbox.glb",
+    "bytes": 4343304,
+    "sha256": "53C213A4EC8CCE6B4FEF7F119C92D44341DA791F96FB44B9FC986E4298FF1C3C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\white-sandbox.glb",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox.glb"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-information-flow\\白模空间-独立预览.html",
+    "bytes": 6619468,
+    "sha256": "FE8BAD69EC69620A9F1D7218D9B2414EEEEF20F2E3E134508E1337CF5906F445",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-information-flow\\白模空间-独立预览.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-information-flow\\白模空间-独立预览.html"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-information-flow\\delivery-manifest.json",
+    "bytes": 1824,
+    "sha256": "3218DAF14BC80E2BB19F42E7191E81211A1B6765FAB8401936CD0796050CD9D1",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-information-flow\\delivery-manifest.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-information-flow\\delivery-manifest.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-information-flow\\index.html",
+    "bytes": 4428,
+    "sha256": "7DFEBB9AA077E6C1B10E619CC895419A76F69BDAA1734B9AE98B560ACDD2D061",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-information-flow\\index.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-information-flow\\index.html"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-information-flow\\main.js",
+    "bytes": 17943,
+    "sha256": "060AA04524A6C2E8FFFE95B9A40EB09FD9395C4026F1982817A811F4F5315581",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-information-flow\\main.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-information-flow\\main.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-information-flow\\README.md",
+    "bytes": 4837,
+    "sha256": "8AD46D4A70FCB814508D032DFBA63B8ADF4F0EAF226171CFA0BB1B6B50D5B159",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-information-flow\\README.md",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-information-flow\\README.md"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\白模空间-独立预览.html",
+    "bytes": 6641276,
+    "sha256": "3FB34355C6DF5C4B297DC928891E3933217507DE3357966172A0FD3BB0A159BC",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\白模空间-独立预览.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\白模空间-独立预览.html"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\delivery-manifest.json",
+    "bytes": 3097,
+    "sha256": "4A78BB9FDFE730F8CD29CEEC06A2CC34F3DE472766C763CC98934AC8274E375B",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\delivery-manifest.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\delivery-manifest.json"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\information-flow.mp4",
+    "bytes": 251610,
+    "sha256": "B66F7622941F8B995B7F29AEDD6C7F5C86EFC8C12B358E749547B0D14C5EEA2E",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\information-flow.mp4",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\information-flow.mp4"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\preview-information-flow.png",
+    "bytes": 747951,
+    "sha256": "6B0B55A382291604C115040933E4DFB0BAEC4E3D6710E0FFCA79CF3D23A89CFF",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\preview-information-flow.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\preview-information-flow.png"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\README.md",
+    "bytes": 6580,
+    "sha256": "DD2FC7B3590CB6D1B14280479D8C2C5D4DC547BBBC49F6CEB53966D0F713D10E",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\README.md",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\README.md"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox-flow.blend",
+    "bytes": 416772,
+    "sha256": "DC7E0F6E19F9895AAA52E88BD08F5F3F2C52EDE6EE9BEEF8E78D9EE0919F533A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox-flow.blend",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox-flow.blend"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox.blend",
+    "bytes": 407867,
+    "sha256": "5A7954D0B4C3488D228EDDDE85E3DB3F545546D5625FC0C6CAC11C43B735859C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox.blend",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox.blend"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox.glb",
+    "bytes": 4343380,
+    "sha256": "233700E6CC21CE00DEA3F04A47B30E14F01EE8C9E1E7C4365EF362FA4A54778A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox.glb",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\backups\\before-pale-river\\white-sandbox.glb"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\licenses\\phosphor-MIT.txt",
+    "bytes": 1092,
+    "sha256": "DDBE6082EC3CF979DB47E5AF549D2849C5D6182B3E005EF91CE1DBB9EB122F11",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\licenses\\phosphor-MIT.txt",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\licenses\\phosphor-MIT.txt"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\licenses\\three-MIT.txt",
+    "bytes": 1081,
+    "sha256": "8B378EBE60E2FE500158CB0AC71CB5E8B7D92953C2ABCC63A0EB90499653B5BC",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\licenses\\three-MIT.txt",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\licenses\\three-MIT.txt"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\index.html",
+    "bytes": 4747,
+    "sha256": "9A7D47FEEC2C336DAD3E61705586A07E603F4C878171E466C6682D7711E22233",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\index.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\index.html"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-Ce1xFo_1.js",
+    "bytes": 4726617,
+    "sha256": "62F5FF711F50BE98FDBE53663E01AAFF78E16F20827108A87EB1B3F29DCF6838",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-Ce1xFo_1.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-Ce1xFo_1.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-CgCIVPaR.js",
+    "bytes": 6515911,
+    "sha256": "88C6B593F19C07CF6303122AE3B8B2675D446B242D40CB3AE42364FD64C20F21",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-CgCIVPaR.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-CgCIVPaR.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-CThH-xeI.js",
+    "bytes": 6515915,
+    "sha256": "97FD4EC8CC1072D0E7DBDE128D5191239FE13A6AC300F11D33AA93A199527BE0",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-CThH-xeI.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-CThH-xeI.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-D1OhUC1k.js",
+    "bytes": 4726918,
+    "sha256": "7EBD09FCD01CF53FD9DEC1FC9DF1408F7C5FA9D53F68967AEA60E43FB9435053",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-D1OhUC1k.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-D1OhUC1k.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-DLv7D6eK.js",
+    "bytes": 6495673,
+    "sha256": "25A3961E6FEAF3754C3F8153D97C05668D043157C98A6202B04DB56253236258",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-DLv7D6eK.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-DLv7D6eK.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-luSvp2Yl.js",
+    "bytes": 6516019,
+    "sha256": "46AA19C9B23DDBF5E7B3792F2489616A5EEFA7BB77AD4CE0A67145EBAE42CDEE",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-luSvp2Yl.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-luSvp2Yl.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-pKvceLrA.js",
+    "bytes": 6515911,
+    "sha256": "57522CE7FF933BD69E5D21E797DB9610C40EFE382874B7CE8AFBA727EF5A0798",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-pKvceLrA.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-pKvceLrA.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-RAGKHGN8.js",
+    "bytes": 6494425,
+    "sha256": "FE03D7034806F13E78BF04ED095053DC867CA2570207F251D241B69501A122A2",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-RAGKHGN8.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-RAGKHGN8.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\index-wsYrjhou.js",
+    "bytes": 6494137,
+    "sha256": "F235A9D7EEDB4842F761C35C41CB97D6DEFB6F78C0B7F34F5E550DFB23B37D32",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\index-wsYrjhou.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\index-wsYrjhou.js"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-BWztcuZM.css",
+    "bytes": 124333,
+    "sha256": "43E5F5FA1A6B4CBDBEBF58093FEEC98D40455559CBD839BE827B2288EB3225C7",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-BWztcuZM.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-BWztcuZM.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-CnEXVk2I.css",
+    "bytes": 120610,
+    "sha256": "876340B72F9ED0999B78932A1F258150141E6AEA09A579052488D927DF65CADA",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CnEXVk2I.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CnEXVk2I.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-CR-ljHtD.css",
+    "bytes": 115084,
+    "sha256": "2302A2DF8597C1D6D2AADF8585809FB6DBFC66CA93C2388D89363247A604374D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CR-ljHtD.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CR-ljHtD.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-CUfqmr_E.css",
+    "bytes": 125187,
+    "sha256": "57C7FF8146B70B007CE5EF1EE4E81591AE599057BD6C57E00EC75505F979CC53",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CUfqmr_E.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CUfqmr_E.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-CYlsAjkt.css",
+    "bytes": 113583,
+    "sha256": "DB39970D52D91FB49B00011FC3F05E171D6E53D1C3CA497551D2FEBF82E7CA97",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CYlsAjkt.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-CYlsAjkt.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-D1-MwLvN.css",
+    "bytes": 120528,
+    "sha256": "8A4991E563FF6D016175F78FB8A83B2C9EAF1725CF396AA21421BDE5C52EC5E9",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-D1-MwLvN.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-D1-MwLvN.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-DVRKGos2.css",
+    "bytes": 124131,
+    "sha256": "B2DE3FC39B32BF59F659EE551433F5D058DD1D8E7C8275948869BF965C2A71F7",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-DVRKGos2.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-DVRKGos2.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-Em7NTNGH.css",
+    "bytes": 109880,
+    "sha256": "ED9405E61F9079E032C72E27730694599B4781704745677C16D76C4B2F4C210C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-Em7NTNGH.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-Em7NTNGH.css"
+  },
+  {
+    "relative": "white-sandbox-v0.1.0\\preview-build\\assets\\style-WnkoReeX.css",
+    "bytes": 53222,
+    "sha256": "0098FF666925DE57FD3B161941FCAF0937506F8371ABCE7E6A3846A3B829F17D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\preview-build\\assets\\style-WnkoReeX.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\preview-build\\assets\\style-WnkoReeX.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\两版风格对比.html",
+    "bytes": 1893189,
+    "sha256": "E1F3892AC6AE8677C9459E5896A7C05BE1BC96329A5319513D248CBCEDD4E156",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\两版风格对比.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\两版风格对比.html"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\blender-build.log",
+    "bytes": 3758,
+    "sha256": "545176A7A0FEF84E4E04997B6E298A1B4F006ED5B412BD1AC31B0A54C6678176",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\blender-build.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\blender-build.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\browser-check.js",
+    "bytes": 6748,
+    "sha256": "E9D812C522FC150B99088F28165898BC14A1D5B85F3159E9B852CDB15E512D46",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\browser-check.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\browser-check.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\build_preview.mjs",
+    "bytes": 2113,
+    "sha256": "872D4468A49169E08A89789B008F0933A069E05B69E35F4AC926B16EAC7290E5",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\build_preview.mjs",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\build_preview.mjs"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\build_variants.py",
+    "bytes": 15244,
+    "sha256": "7D09D53CDEFFB89CE9DF0FB7EBCD683B2F487DACE3F2FFA83AC9EEF90D65229C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\build_variants.py",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\build_variants.py"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\delivery-manifest.json",
+    "bytes": 2953,
+    "sha256": "FB1B40E737D47DA9C31836638BCD2D7CA6832968A765ABB269328C4B826AEB98",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\delivery-manifest.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\delivery-manifest.json"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\finalize_delivery.mjs",
+    "bytes": 4830,
+    "sha256": "D5C9FB596DF26A0212E2C8F288DB72BA8B74482A6A939ACECF3C4EF0117C9BE8",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\finalize_delivery.mjs",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\finalize_delivery.mjs"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\geometry_helpers.py",
+    "bytes": 5320,
+    "sha256": "CE7060EB27DF1560C8989C40943855415A01D4C18AE7340CED66AA725976A1F6",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\geometry_helpers.py",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\geometry_helpers.py"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\index.html",
+    "bytes": 4499,
+    "sha256": "9D83293B2C01612F83903A82C556B2B50EDB13301B5C2C574F4E4063EA910A9D",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\index.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\index.html"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\main.js",
+    "bytes": 20162,
+    "sha256": "F85125A9F406485DD4BE833DB4143936E2BB15F779A29ADD47D65F75A5003110",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\main.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\main.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\prepare_app.mjs",
+    "bytes": 5196,
+    "sha256": "ED9A594DF0C4456BF914E4732B3092B918689D722FE49C1D1CD3E5C7735DA7EA",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\prepare_app.mjs",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\prepare_app.mjs"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\project-build.log",
+    "bytes": 8957,
+    "sha256": "0411C3D30407F9F5A89EBA37198D6314B5E3B7A667F8849F28C94592A8DBB0DC",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\project-build.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\project-build.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\project-tests.log",
+    "bytes": 24401,
+    "sha256": "227873D5A2223FC9C66874322AAC56FB828B4EEF0AE389A41EC24CC7441E705C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\project-tests.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\project-tests.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\README.md",
+    "bytes": 5618,
+    "sha256": "C8680E3F4D781B883E85879C39E78E183D37195889364AE677D8EC4D002E6220",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\README.md",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\README.md"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\style.css",
+    "bytes": 10008,
+    "sha256": "D1785EC530BB1CF79FB7FA7CF8638A5A993F6AD45F407FF1FE364ABDB53CED51",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\style.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\style.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\themes.css",
+    "bytes": 6668,
+    "sha256": "5AD080AB1EF70A4721B2FB77876C7F532CC0021A992A846FFB08C6A40FD7A512",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\themes.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\themes.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\licenses\\phosphor-MIT.txt",
+    "bytes": 1092,
+    "sha256": "DDBE6082EC3CF979DB47E5AF549D2849C5D6182B3E005EF91CE1DBB9EB122F11",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\licenses\\phosphor-MIT.txt",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\licenses\\phosphor-MIT.txt"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\licenses\\three-MIT.txt",
+    "bytes": 1081,
+    "sha256": "8B378EBE60E2FE500158CB0AC71CB5E8B7D92953C2ABCC63A0EB90499653B5BC",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\licenses\\three-MIT.txt",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\licenses\\three-MIT.txt"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\独立预览.html",
+    "bytes": 4131744,
+    "sha256": "B83C0D4F628E62A7D5CA9E1C916D012143CE94367243A4E70D7459432EA8C874",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\独立预览.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\独立预览.html"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\blender-overview.png",
+    "bytes": 2921514,
+    "sha256": "DDDC8ED69DDA4D71FB62D0728C8C90D4977B3D931849060E576D61E6B05E73B2",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\blender-overview.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\blender-overview.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\browser-acceptance.json",
+    "bytes": 2335,
+    "sha256": "6B981875C2A3B79CA37E409B3868ED5681755F9B4C39A9CD04AFADC29F587545",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\browser-acceptance.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\browser-acceptance.json"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\browser-check.log",
+    "bytes": 8765,
+    "sha256": "3F6304E3BF718966715270BFBEA204244F8D7B8B38745FF3B4B2109410AF53A2",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\browser-check.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\browser-check.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\browser-console.log",
+    "bytes": 58,
+    "sha256": "5E022534A5FE0FEEB06A8FC815FF2AD8E4598AAE62E789579DB7DBCBFB58BC2A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\browser-console.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\browser-console.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\browser-load.js",
+    "bytes": 4143561,
+    "sha256": "86C1AA005C4EA63CA178B6860687C647A7558203FDA2F8B8872BE68827CBF544",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\browser-load.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\browser-load.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\browser-load.log",
+    "bytes": 4143858,
+    "sha256": "315E0F956736EDE8C8319BEC92E79C479257D65A5CFE1D18871CFB775F4F75D5",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\browser-load.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\browser-load.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-overview.png",
+    "bytes": 677202,
+    "sha256": "4456F71E877CC27A4544DCD2700F95C503B4EEC6DE2B7F1782C94C8D3973DE3A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-overview.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-overview.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-risk.png",
+    "bytes": 1222878,
+    "sha256": "85486BEF47B6F1E0E16D68F1E81FBF54186DA0CC42E431D68F0A81A985FAA55C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-risk.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-risk.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-shadows-off.png",
+    "bytes": 533523,
+    "sha256": "D441E5EB3C286F365F7EE0ACFACB0BE8D116E0EF902E1407DD3D1ED8A3282A8C",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-shadows-off.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-shadows-off.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-table.png",
+    "bytes": 975575,
+    "sha256": "5D5FE21F1EC7FB086009C7B2007DE767E350C1651D57A377C890D8AAE062D24B",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-table.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-table.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\scene.blend",
+    "bytes": 266797,
+    "sha256": "B03243CE25A3072C681BCE002F60D86A9BFA7682086F3EBEE6D9642B1914D7DE",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\scene.blend",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\scene.blend"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\scene.glb",
+    "bytes": 2511948,
+    "sha256": "C86778314367EA8565D3219BDD9500EC36E5967564DE0321AB8BB01F91FA9429",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\scene.glb",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\scene.glb"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-build\\index.html",
+    "bytes": 4604,
+    "sha256": "48B85BB1D1FA7CF0C3DE892E7E042F68AB14A72DBA171247F09974F8FB9F2139",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-build\\index.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-build\\index.html"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\index-BuZhbmad.js",
+    "bytes": 4073744,
+    "sha256": "9C3348B221E71243AE94A35D58C2A376976964A3D82008D476E0278526D124CA",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\index-BuZhbmad.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\index-BuZhbmad.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\index-cc-Ju7f2.js",
+    "bytes": 4073762,
+    "sha256": "3CC9F9E55398F5CFD3329338D11DF72466BF0FF7484D939A2CFE38ACB4137D71",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\index-cc-Ju7f2.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\index-cc-Ju7f2.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-BJUKzcKl.css",
+    "bytes": 53477,
+    "sha256": "9EC75C914842FD5951FD30614275800F00A019657F0D8F5605F1768E2B292AA5",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-BJUKzcKl.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-BJUKzcKl.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-CTFmpXWi.css",
+    "bytes": 65986,
+    "sha256": "3660B79EF3999F0BA8A4E58FFC07C9DE2608F76DFC109FF690260CBF10261781",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-CTFmpXWi.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-CTFmpXWi.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-DpUMittM.css",
+    "bytes": 121734,
+    "sha256": "D2FAEE7C6B4F8A7217F32675219A3C7785BA7C4FFBDDF98E0CE41B42EAC0CED5",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-DpUMittM.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\obsidian\\preview-build\\assets\\style-DpUMittM.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\references\\bruno-site.png",
+    "bytes": 78804,
+    "sha256": "F1D133CA9942D57A67E760EC7D6468D7165A7BFDEAB656296C4C4864B765DB95",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\references\\bruno-site.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\references\\bruno-site.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\references\\bruno-started.png",
+    "bytes": 82930,
+    "sha256": "526947FC71FA7668C9EF1CDF9C1AC9A7131913707450B53592A4439691BFC72F",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\references\\bruno-started.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\references\\bruno-started.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\独立预览.html",
+    "bytes": 6296308,
+    "sha256": "09F98E4A188D3554D172A9DB6CF3D91A2FE9BEEC5A6D236F9BFFE317E1F016A6",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\独立预览.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\独立预览.html"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\blender-overview.png",
+    "bytes": 2693221,
+    "sha256": "255C5F2EDF07A9FE59EE4E806BE11E0B67089EBD7D7543FD485D4BC5F0B576CB",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\blender-overview.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\blender-overview.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\browser-acceptance.json",
+    "bytes": 2349,
+    "sha256": "AAAF0FB7716C54A721499075E3152A94DC251CD5E4EFED3B635F76A4E8E38757",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\browser-acceptance.json",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\browser-acceptance.json"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\browser-check.log",
+    "bytes": 8779,
+    "sha256": "5B537DE6B5EB2907A4798DCCBCCBF10578847DAFB9CD333A28A3D2C6D902B505",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\browser-check.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\browser-check.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\browser-console.log",
+    "bytes": 58,
+    "sha256": "5E022534A5FE0FEEB06A8FC815FF2AD8E4598AAE62E789579DB7DBCBFB58BC2A",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\browser-console.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\browser-console.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\browser-load.js",
+    "bytes": 6307491,
+    "sha256": "79EEE359F9BEF78293C573FA099BDFB780910EE713E8BBC0E3371FC5549AA0F9",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\browser-load.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\browser-load.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\browser-load.log",
+    "bytes": 6307879,
+    "sha256": "1A452DCBB5034D965603CC51922C13BABD221F5F910FCEEAEE3EC7EEEE53F652",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\browser-load.log",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\browser-load.log"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-overview.png",
+    "bytes": 740170,
+    "sha256": "EABABB2C114FED12BDBF588C5296788047F00228F7466C92D6A4FCCB62AA514E",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-overview.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-overview.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-risk.png",
+    "bytes": 1292378,
+    "sha256": "349F7717F1DFC44C50F863082D423FE09D9D35974FBCD42E8DC637B07F3C73D4",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-risk.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-risk.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-shadows-off.png",
+    "bytes": 438438,
+    "sha256": "A88002AF51E938CE3AAC490759F5311102A8256FA5DF1BAD85FE6EE5B9F289C0",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-shadows-off.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-shadows-off.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-table.png",
+    "bytes": 991382,
+    "sha256": "8561A47770E2D079B3B6A841C903B9F84F0D827760A0A1C5504D0AD3930EE493",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-table.png",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-table.png"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\scene.blend",
+    "bytes": 384758,
+    "sha256": "D35E8F8F209948E8E45C24179DF6278AFB63AE9A7160BABA613A0BD6B5558D30",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\scene.blend",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\scene.blend"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\scene.glb",
+    "bytes": 4150440,
+    "sha256": "61C4D9BCDB6D24124F91F4BE8EAC9FC507E20C1AD9E307E59C99843548435DDD",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\scene.glb",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\scene.glb"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-build\\index.html",
+    "bytes": 4604,
+    "sha256": "CF0DBA01B58BA1A9DDA41B6ACECA437EA467BC673E93D39F2F31D4B2B5C1BE26",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-build\\index.html",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-build\\index.html"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\index-BO44sdA_.js",
+    "bytes": 6238324,
+    "sha256": "51985A6EE8E4F02228B58141AF2C86840921B044C4865ED581DECF4D16F275AD",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\index-BO44sdA_.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\index-BO44sdA_.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\index-GO0YucN2.js",
+    "bytes": 6238306,
+    "sha256": "5191E2C66CA8DF2D9FC97097F21B303CF083F37C25C941C1356B6635B806D223",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\index-GO0YucN2.js",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\index-GO0YucN2.js"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-BJUKzcKl.css",
+    "bytes": 53477,
+    "sha256": "9EC75C914842FD5951FD30614275800F00A019657F0D8F5605F1768E2B292AA5",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-BJUKzcKl.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-BJUKzcKl.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-BzEZxuaa.css",
+    "bytes": 122875,
+    "sha256": "39EB29C1C41D9FC11E2E4269C7E8307B228D1BE37E57288A9E269DF771C9D36F",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-BzEZxuaa.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-BzEZxuaa.css"
+  },
+  {
+    "relative": "alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-C19ISR4Z.css",
+    "bytes": 118188,
+    "sha256": "84AF7F7077F165A6FE68A3CCF5D2DF12AFAAD470F63954B345B07430321A9202",
+    "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-C19ISR4Z.css",
+    "destination": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\alternative-styles-v0.1.0\\terracotta\\preview-build\\assets\\style-C19ISR4Z.css"
+  }
+]

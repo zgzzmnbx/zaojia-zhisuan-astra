@@ -1,0 +1,32 @@
+async(page)=>{
+ const checks=[],state=()=>page.evaluate(()=>window.__whiteSandbox.getState()),assert=(ok,name)=>{if(!ok)throw new Error(name);checks.push(name)};
+ const button=page.getByRole('button',{name:'夜航模式',exact:true}),flow=page.getByRole('switch',{name:'信息流',exact:true});
+ if((await state()).theme.scheme==='dark')await button.click();
+ await flow.uncheck();await page.waitForFunction(()=>!window.__whiteSandbox.getState().framePending);
+ const day=await state();assert(day.theme.scheme==='light'&&day.bloom.contactShadows,'默认日间白模和接触阴影可用');
+ await page.mouse.move(10,80);const dayFrame=await page.locator('#scene canvas').screenshot();
+ await page.getByRole('textbox',{name:'向智算提问'}).fill('夜航切换保留草稿');
+ await button.click();await page.waitForFunction(()=>!window.__whiteSandbox.getState().framePending);
+ const night=await state();assert(night.theme.scheme==='dark'&&night.theme.background==='#08131f','夜航切换实际三维背景');
+ assert(night.theme.buildingMaterials.every((m,i)=>m.metalness===0&&m.roughness===day.theme.buildingMaterials[i].roughness&&m.color[0]<day.theme.buildingMaterials[i].color[0]*.2)&&night.bloom.enabled&&!night.bloom.contactShadows&&night.flow.glow===3,'夜航建筑压暗并保留哑光质感，启用霓虹光晕');
+ assert(night.draft==='夜航切换保留草稿'&&day.camera.every((v,i)=>Math.abs(v-night.camera[i])<1e-7),'主题切换保留草稿与视角');
+ assert(!night.flow.playing&&night.flow.distance===day.flow.distance&&night.shadows,'夜航不重启信号且保留阴影开关');
+ const nightFrame=await page.locator('#scene canvas').screenshot();assert(!dayFrame.equals(nightFrame),'实际三维画布呈现不同夜间灯光');
+ assert(await button.getAttribute('aria-pressed')==='true','夜航按钮可读取选中状态');
+ const glass=await page.locator('#chat').evaluate(el=>{const c=getComputedStyle(el);return {background:c.backgroundColor,blur:c.backdropFilter,color:c.color}});
+ assert(glass.background.includes('0.64')&&glass.blur.includes('22px'),'夜间聊天保持半透明毛玻璃');
+ await page.getByRole('button',{name:'进入风险复核',exact:true}).click();await page.waitForFunction(()=>!window.__whiteSandbox.getState().framePending);
+ const selected=await state();await button.click();await page.waitForFunction(()=>!window.__whiteSandbox.getState().framePending);
+ assert((await state()).active==='risk'&&(await state()).camera.every((v,i)=>Math.abs(v-selected.camera[i])<1e-7),'功能展开后切换主题不重置当前建筑');
+ await button.focus();await page.keyboard.press('Space');await page.waitForFunction(()=>!window.__whiteSandbox.getState().framePending);
+ assert((await state()).theme.scheme==='dark','夜航支持键盘空格切换');
+ await page.setViewportSize({width:1366,height:900});
+ assert(await page.locator('.top-right').evaluate(el=>{const r=el.getBoundingClientRect();return r.left>document.querySelector('.top-left').getBoundingClientRect().right&&r.right<=innerWidth}),'1366 桌面顶栏无重叠');
+ await page.locator('#enter-demo').click();assert(await page.locator('.table-preview').isVisible(),'夜航可打开功能操作示例');
+ await page.setViewportSize({width:1600,height:1000});await page.keyboard.press('Escape');await page.waitForFunction(()=>!window.__whiteSandbox.getState().framePending);
+ await page.getByRole('textbox',{name:'向智算提问'}).fill('');await page.mouse.move(10,80);
+ await page.screenshot({path:'05-视觉识别/02-3D场景/white-sandbox-v0.1.0/preview-night.png'});
+ await button.click();await page.waitForFunction(()=>!window.__whiteSandbox.getState().framePending);await page.mouse.move(10,80);
+ const restored=await state();assert(restored.theme.scheme==='light'&&JSON.stringify(restored.theme.buildingMaterials)===JSON.stringify(day.theme.buildingMaterials),'切回日间恢复原始建筑材质');
+ return {checks,assertionCount:checks.length,state:restored,glass};
+}

@@ -1,0 +1,186 @@
+{
+  "version": "1.0.0",
+  "glbBytes": 295784,
+  "htmlBytes": 1027387,
+  "bounds": [
+    3.4000000953674316,
+    3.6800000071525574,
+    0.8600000143051147
+  ],
+  "meshes": [
+    "Lower_Beam",
+    "Step_Lower",
+    "Step_Center",
+    "Step_Upper",
+    "Upper_Beam"
+  ],
+  "animation": "Center_Block_Float_Turn_Return",
+  "checks": [
+    "exported GLB reload",
+    "five separate meshes",
+    "real quaternion rotation",
+    "stationary beam invariants",
+    "rotation collision clearance",
+    "pause",
+    "return",
+    "cycle repeat",
+    "offline HTML syntax and resources"
+  ],
+  "samples": [
+    {
+      "time": 0,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "time": 0.325,
+      "position": [
+        0,
+        0,
+        0.7500378874039648
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "time": 0.65,
+      "position": [
+        0,
+        0,
+        1.4985460037753602
+      ],
+      "quaternion": [
+        0,
+        0.00026908787286973677,
+        0,
+        0.9999999637958575
+      ]
+    },
+    {
+      "time": 1.2,
+      "position": [
+        0,
+        0,
+        1.5
+      ],
+      "quaternion": [
+        0,
+        0.4713966780853577,
+        0,
+        0.8819213267176331
+      ]
+    },
+    {
+      "time": 1.75,
+      "position": [
+        0,
+        0,
+        1.5
+      ],
+      "quaternion": [
+        0,
+        1.0000000112023428,
+        0,
+        0
+      ]
+    },
+    {
+      "time": 2.3,
+      "position": [
+        0,
+        0,
+        1.5
+      ],
+      "quaternion": [
+        0,
+        0.47139667808512137,
+        0,
+        -0.8819213267177595
+      ]
+    },
+    {
+      "time": 2.85,
+      "position": [
+        0,
+        0,
+        1.498545995975511
+      ],
+      "quaternion": [
+        0,
+        0.0002690864293679129,
+        0,
+        -0.9999999637962459
+      ]
+    },
+    {
+      "time": 3.5,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        1.2246468525851679e-16,
+        0,
+        -1
+      ]
+    },
+    {
+      "time": 6.9,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        1.2246468525851679e-16,
+        0,
+        -1
+      ]
+    },
+    {
+      "time": 7,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "time": 7.65,
+      "position": [
+        0,
+        0,
+        1.4985460037753602
+      ],
+      "quaternion": [
+        0,
+        0.00026908787286974214,
+        0,
+        0.9999999637958575
+      ]
+    }
+  ],
+  "browserVisualAcceptance": "pending: built-in browser blocked file protocol; no bypass attempted"
+}

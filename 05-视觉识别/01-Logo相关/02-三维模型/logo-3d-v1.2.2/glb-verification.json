@@ -1,0 +1,149 @@
+{
+  "version": "1.2.2",
+  "files": [
+    {
+      "file": "GLB/astra/ZSuan-astra-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/astra/ZSuan-astra-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/astra/ZSuan-astra-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/autumn/ZSuan-autumn-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/autumn/ZSuan-autumn-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/autumn/ZSuan-autumn-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/emerald/ZSuan-emerald-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/emerald/ZSuan-emerald-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/emerald/ZSuan-emerald-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/graphite/ZSuan-graphite-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/graphite/ZSuan-graphite-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/graphite/ZSuan-graphite-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/mantine-blue/ZSuan-mantine-blue-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/mantine-blue/ZSuan-mantine-blue-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/mantine-blue/ZSuan-mantine-blue-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/nord/ZSuan-nord-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/nord/ZSuan-nord-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/nord/ZSuan-nord-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/original/ZSuan-original-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/original/ZSuan-original-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/original/ZSuan-original-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/silk/ZSuan-silk-brand-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/silk/ZSuan-silk-icon-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    },
+    {
+      "file": "GLB/silk/ZSuan-silk-vertical-v1.2.2.glb",
+      "animations": 20,
+      "parts": 13,
+      "posePlaybackVerified": 4
+    }
+  ]
+}

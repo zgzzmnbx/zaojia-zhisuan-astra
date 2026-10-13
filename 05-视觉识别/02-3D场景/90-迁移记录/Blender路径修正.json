@@ -1,0 +1,14 @@
+[
+  {
+    "file": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox.blend",
+    "previousOutput": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-overview.png",
+    "output": "//renders/white-sandbox-",
+    "missingImages": []
+  },
+  {
+    "file": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox-flow.blend",
+    "previousOutput": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\design-concepts\\white-sandbox-v0.1.0\\blender-overview.png",
+    "output": "//renders/white-sandbox-flow-",
+    "missingImages": []
+  }
+]

@@ -1,0 +1,99 @@
+{
+  "version": "1.2.1",
+  "parts": [
+    "Lower_Cube_1",
+    "Lower_Cube_2",
+    "Lower_Cube_3",
+    "Lower_Cube_4",
+    "Lower_Cube_5",
+    "Step_Lower",
+    "Step_Center",
+    "Step_Upper",
+    "Upper_Cube_1",
+    "Upper_Cube_2",
+    "Upper_Cube_3",
+    "Upper_Cube_4",
+    "Upper_Cube_5"
+  ],
+  "hero": "Lower_Cube_5",
+  "allPartsTrueCubes": true,
+  "constantScale": true,
+  "collisionChecks": [
+    "12-second choreography at 120 Hz",
+    "every cube, every axis, assembled and exploded",
+    "interrupted motion safely transitions to assemble / explode"
+  ],
+  "glbs": [
+    {
+      "id": "brand",
+      "bytes": 1272912,
+      "meshes": 17,
+      "clips": [
+        "Assembly_Loop",
+        "Explode",
+        "Assemble",
+        "Turn_Lower_Cube_1",
+        "Turn_Lower_Cube_2",
+        "Turn_Lower_Cube_3",
+        "Turn_Lower_Cube_4",
+        "Turn_Lower_Cube_5",
+        "Turn_Step_Lower",
+        "Turn_Step_Center",
+        "Turn_Step_Upper",
+        "Turn_Upper_Cube_1",
+        "Turn_Upper_Cube_2",
+        "Turn_Upper_Cube_3",
+        "Turn_Upper_Cube_4",
+        "Turn_Upper_Cube_5"
+      ]
+    },
+    {
+      "id": "vertical",
+      "bytes": 1272912,
+      "meshes": 17,
+      "clips": [
+        "Assembly_Loop",
+        "Explode",
+        "Assemble",
+        "Turn_Lower_Cube_1",
+        "Turn_Lower_Cube_2",
+        "Turn_Lower_Cube_3",
+        "Turn_Lower_Cube_4",
+        "Turn_Lower_Cube_5",
+        "Turn_Step_Lower",
+        "Turn_Step_Center",
+        "Turn_Step_Upper",
+        "Turn_Upper_Cube_1",
+        "Turn_Upper_Cube_2",
+        "Turn_Upper_Cube_3",
+        "Turn_Upper_Cube_4",
+        "Turn_Upper_Cube_5"
+      ]
+    },
+    {
+      "id": "icon",
+      "bytes": 622700,
+      "meshes": 13,
+      "clips": [
+        "Assembly_Loop",
+        "Explode",
+        "Assemble",
+        "Turn_Lower_Cube_1",
+        "Turn_Lower_Cube_2",
+        "Turn_Lower_Cube_3",
+        "Turn_Lower_Cube_4",
+        "Turn_Lower_Cube_5",
+        "Turn_Step_Lower",
+        "Turn_Step_Center",
+        "Turn_Step_Upper",
+        "Turn_Upper_Cube_1",
+        "Turn_Upper_Cube_2",
+        "Turn_Upper_Cube_3",
+        "Turn_Upper_Cube_4",
+        "Turn_Upper_Cube_5"
+      ]
+    }
+  ],
+  "htmlBytes": 705258,
+  "browserInteraction": "Not yet tested; prior file protocol block not bypassed"
+}

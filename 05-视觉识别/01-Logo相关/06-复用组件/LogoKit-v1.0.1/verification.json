@@ -1,0 +1,86 @@
+{
+  "version": "1.0.1",
+  "checkedAt": "2026-10-13T11:34:19.723Z",
+  "checks": [
+    {
+      "palette": "original",
+      "file": "造价智算-original-全部动效.glb",
+      "bytes": 838596,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "graphite",
+      "file": "造价智算-graphite-全部动效.glb",
+      "bytes": 838604,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "astra",
+      "file": "造价智算-astra-全部动效.glb",
+      "bytes": 838588,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "mantine-blue",
+      "file": "造价智算-mantine-blue-全部动效.glb",
+      "bytes": 838608,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "emerald",
+      "file": "造价智算-emerald-全部动效.glb",
+      "bytes": 838596,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "nord",
+      "file": "造价智算-nord-全部动效.glb",
+      "bytes": 838588,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "silk",
+      "file": "造价智算-silk-全部动效.glb",
+      "bytes": 838584,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    },
+    {
+      "palette": "autumn",
+      "file": "造价智算-autumn-全部动效.glb",
+      "bytes": 838592,
+      "clips": 22,
+      "idleDuration": 12,
+      "maxTravel": 0.27202938116441366,
+      "quarterTurnsVerified": 13,
+      "actualMixerVerified": true
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import {Button,Icon,Modal,Note} from './ui';
 import {workspaceApi,useWorkspace,type Asset,type Conversation,type Project} from './useWorkspace';
 import {useSidebar} from './useSidebar';
 import {uiVersion} from './version';
+import {BrandMark} from './brand/BrandMark';
 
 type Workspace=ReturnType<typeof useWorkspace>;
 type RailPanel='projects'|'history';
@@ -25,7 +26,7 @@ export function WorkspaceSidebar({workspace:w,navigation:n,busy,newChat,select,s
  useEffect(()=>{if(!n.visible||!active)setPanel(null)},[n.visible,active]);
  useEffect(()=>{if(!panel)return;const root=n.sidebarRef.current;root?.querySelector<HTMLButtonElement>('[data-rail-panel-close]')?.focus();const outside=(e:PointerEvent)=>{if(root&&!root.contains(e.target as Node))setPanel(null)};const key=(e:KeyboardEvent)=>{if(e.key==='Escape'&&!document.querySelector('dialog[open]')){e.preventDefault();close();}};document.addEventListener('pointerdown',outside);document.addEventListener('keydown',key);return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',key)};},[panel]);
  return <aside className="sidebar icon-rail" id="project-sidebar" ref={n.sidebarRef} hidden={!n.visible} role={n.mobile?'dialog':undefined} aria-modal={n.mobile&&n.sidebar?true:undefined} aria-label="主导航">
-  <div className="tooltip tooltip-right rail-tip rail-brand" data-tip={n.mobile?'收起导航':'造价智算 · 当前对话'}><button type="button" className="btn btn-ghost btn-square rail-button" data-sidebar-close={n.mobile||undefined} aria-label={n.mobile?'收起项目菜单':'返回当前对话'} title={n.mobile?'收起导航':'当前对话'} onClick={()=>n.mobile?n.setSidebar(false):go(()=>open('chat'))}>{n.mobile?<Icon name="close"/>:<span className="brand-mark astra-mark">A</span>}</button></div>
+  <div className="tooltip tooltip-right rail-tip rail-brand" data-tip={n.mobile?'收起导航':'造价智算 · 当前对话'}><button type="button" className="btn btn-ghost btn-square rail-button" data-sidebar-close={n.mobile||undefined} aria-label={n.mobile?'收起项目菜单':'返回当前对话'} title={n.mobile?'收起导航':'当前对话'} onClick={()=>n.mobile?n.setSidebar(false):go(()=>open('chat'))}>{n.mobile?<Icon name="close"/>:<BrandMark active={active&&n.visible&&!settingsActive}/>}</button></div>
   <nav className="rail-actions menu" aria-label="工作区入口">
    <RailButton label="聊天" icon="message" active={!panel&&activeView==='chat'&&!settingsActive} onClick={()=>go(()=>open('chat'))}/>
    <RailButton label="新对话" icon="new-chat" disabled={busy||!w.ready} onClick={()=>go(newChat)}/>

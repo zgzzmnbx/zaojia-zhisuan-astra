@@ -1,0 +1,82 @@
+[
+  {
+    "palette": "original",
+    "name": "原版蓝",
+    "blend": "Blender\\造价智算-原版蓝-v1.2.1.blend",
+    "png": "PNG\\造价智算-原版蓝.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  },
+  {
+    "palette": "graphite",
+    "name": "石墨灰黑",
+    "blend": "Blender\\造价智算-石墨灰黑-v1.2.1.blend",
+    "png": "PNG\\造价智算-石墨灰黑.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  },
+  {
+    "palette": "astra",
+    "name": "Astra 蓝",
+    "blend": "Blender\\造价智算-Astra 蓝-v1.2.1.blend",
+    "png": "PNG\\造价智算-Astra 蓝.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  },
+  {
+    "palette": "mantine-blue",
+    "name": "Mantine 蓝",
+    "blend": "Blender\\造价智算-Mantine 蓝-v1.2.1.blend",
+    "png": "PNG\\造价智算-Mantine 蓝.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  },
+  {
+    "palette": "emerald",
+    "name": "翡翠绿",
+    "blend": "Blender\\造价智算-翡翠绿-v1.2.1.blend",
+    "png": "PNG\\造价智算-翡翠绿.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  },
+  {
+    "palette": "nord",
+    "name": "北境蓝",
+    "blend": "Blender\\造价智算-北境蓝-v1.2.1.blend",
+    "png": "PNG\\造价智算-北境蓝.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  },
+  {
+    "palette": "silk",
+    "name": "丝绒紫",
+    "blend": "Blender\\造价智算-丝绒紫-v1.2.1.blend",
+    "png": "PNG\\造价智算-丝绒紫.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  },
+  {
+    "palette": "autumn",
+    "name": "秋日铜",
+    "blend": "Blender\\造价智算-秋日铜-v1.2.1.blend",
+    "png": "PNG\\造价智算-秋日铜.png",
+    "reopened": true,
+    "animatedPoseFingerprint": "5468db99ea7eba7ecd6a8ec7cf1d430d717542440755ad3c059bceafbc9a9948",
+    "cubes": 13,
+    "tracksPerCube": 16
+  }
+]

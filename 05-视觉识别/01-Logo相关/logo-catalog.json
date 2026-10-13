@@ -1,0 +1,52 @@
+{
+  "catalogVersion": "1.0.7",
+  "modelVersion": "1.2.2",
+  "name": "造价智算 · 阶梯 Z",
+  "currentDirectory": "02-三维模型/logo-3d-v1.2.2",
+  "preview": "02-三维模型/logo-3d-v1.2.2/造价智算-姿态与多配色动效.html",
+  "blend": "02-三维模型/logo-3d-v1.2.2/Blender/造价智算-原版蓝-四姿态-v1.2.2.blend",
+  "video": "02-三维模型/logo-3d-v1.2/造价智算-模块组装与灵动块-v1.2.mp4",
+  "palettes": [
+    "original",
+    "graphite",
+    "astra",
+    "mantine-blue",
+    "emerald",
+    "nord",
+    "silk",
+    "autumn"
+  ],
+  "paletteIndex": "02-三维模型/logo-3d-v1.2.2/README.md",
+  "motions": [
+    "static",
+    "idle",
+    "ring",
+    "wave",
+    "sway",
+    "tail",
+    "scatter",
+    "assembly"
+  ],
+  "welcomeVersion": "0.9.115",
+  "libraryVersion": "1.0.3",
+  "libraryDirectory": "06-复用组件/LogoKit-v1.0.3",
+  "settingsUrl": "http://127.0.0.1:5189/logo.html",
+  "libraryPackage": "05-交付包/造价智算-Logo复用组件-v1.0.3.zip",
+  "pageSequences": {
+    "welcome": {
+      "restSeconds": 3,
+      "motions": [
+        "wave",
+        "ring"
+      ]
+    },
+    "studio": {
+      "restSeconds": 20,
+      "motions": [
+        "wave",
+        "tail",
+        "idle"
+      ]
+    }
+  }
+}

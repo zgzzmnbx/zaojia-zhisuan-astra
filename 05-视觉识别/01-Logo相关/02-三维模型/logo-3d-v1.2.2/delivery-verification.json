@@ -1,0 +1,260 @@
+{
+  "version": "1.2.2",
+  "palettes": 8,
+  "animatedGLBs": 24,
+  "editableBlends": 8,
+  "clipsPerGLB": 20,
+  "newPoses": 4,
+  "files": [
+    {
+      "file": "Blender/造价智算-Astra 蓝-四姿态-v1.2.2.blend",
+      "bytes": 705921,
+      "sha256": "2289313c83480470bde5d15e4fc8ac026bb27c27982b7111ec0c86e5217ab57d"
+    },
+    {
+      "file": "Blender/造价智算-Mantine 蓝-四姿态-v1.2.2.blend",
+      "bytes": 705895,
+      "sha256": "494549e09be2380f184ba93fec9c96153f4ce309558d45cdc5bba37cc38eede2"
+    },
+    {
+      "file": "Blender/造价智算-丝绒紫-四姿态-v1.2.2.blend",
+      "bytes": 705909,
+      "sha256": "11c56063d52f2af41d5c7e84b95453f193d5c0277d0dfc71838813cf87319969"
+    },
+    {
+      "file": "Blender/造价智算-北境蓝-四姿态-v1.2.2.blend",
+      "bytes": 705895,
+      "sha256": "81b6c0921331a75d83f01be3fd97b7275eb5e38aec41a3717d177db3ac87c989"
+    },
+    {
+      "file": "Blender/造价智算-原版蓝-四姿态-v1.2.2.blend",
+      "bytes": 706025,
+      "sha256": "4299932822a60f1b411f55b10977cc38eeea5cba9ad5ec730e45c81b396b049b"
+    },
+    {
+      "file": "Blender/造价智算-石墨灰黑-四姿态-v1.2.2.blend",
+      "bytes": 706006,
+      "sha256": "c654625353011b73c70cf7e0b90edcba2db86aab20c69f8044eff8c612e55d02"
+    },
+    {
+      "file": "Blender/造价智算-秋日铜-四姿态-v1.2.2.blend",
+      "bytes": 705810,
+      "sha256": "ba312127a696c786b66044647783eb0e0cfe0aeff0f4ec72743ac1c5ad10ae94"
+    },
+    {
+      "file": "Blender/造价智算-翡翠绿-四姿态-v1.2.2.blend",
+      "bytes": 705850,
+      "sha256": "e053bd42a7162e35fd613dc4b1c4b78d7787d5ae616fa5f1c8762e7f13fa9408"
+    },
+    {
+      "file": "GLB/astra/ZSuan-astra-brand-v1.2.2.glb",
+      "bytes": 1396108,
+      "sha256": "dff0c8048a8de3bafcb39ffaf63d2ffd9bd67c5f83339fe181bfd8042f08ab71"
+    },
+    {
+      "file": "GLB/astra/ZSuan-astra-icon-v1.2.2.glb",
+      "bytes": 745608,
+      "sha256": "bba02c840c260269575d3bee55ce0838c95b81d9486abf577eb8c0b6d3c7a747"
+    },
+    {
+      "file": "GLB/astra/ZSuan-astra-vertical-v1.2.2.glb",
+      "bytes": 1396108,
+      "sha256": "f7f0a31db84c932a0213eddb0adc187fc014c9e25e5b1d1d59f712e7e57d74ba"
+    },
+    {
+      "file": "GLB/autumn/ZSuan-autumn-brand-v1.2.2.glb",
+      "bytes": 1396108,
+      "sha256": "598d59fc7c7e8c456fa5950974f0fa193ebd5a9fc5753e85da492b9e01cc4c1d"
+    },
+    {
+      "file": "GLB/autumn/ZSuan-autumn-icon-v1.2.2.glb",
+      "bytes": 745612,
+      "sha256": "611ded1d05e6375fa1869e2cbf92bf249b538598882e6a826636d42dc5cf9072"
+    },
+    {
+      "file": "GLB/autumn/ZSuan-autumn-vertical-v1.2.2.glb",
+      "bytes": 1396112,
+      "sha256": "a292f5cb9958801d51b2ea64659a6a983befd0828b92f8be3fa0671b16e0e9e6"
+    },
+    {
+      "file": "GLB/emerald/ZSuan-emerald-brand-v1.2.2.glb",
+      "bytes": 1396104,
+      "sha256": "0118168b21dcca39a74cc38dafdba2fba25c9cc07e0548849100a163e1a7025b"
+    },
+    {
+      "file": "GLB/emerald/ZSuan-emerald-icon-v1.2.2.glb",
+      "bytes": 745612,
+      "sha256": "70aa60ae665caf0fe76c0ea802f239162983c5e7af800295679c3d3252954f13"
+    },
+    {
+      "file": "GLB/emerald/ZSuan-emerald-vertical-v1.2.2.glb",
+      "bytes": 1396104,
+      "sha256": "c1d93d769c7ebb76427784d80a4756d14da4abab76ff49ed1f6b22686cda4fd2"
+    },
+    {
+      "file": "GLB/graphite/ZSuan-graphite-brand-v1.2.2.glb",
+      "bytes": 1396120,
+      "sha256": "2fb66f89a35fa26dfe47aac229174b33275d1f4f7440d001198934cdd9ca9b74"
+    },
+    {
+      "file": "GLB/graphite/ZSuan-graphite-icon-v1.2.2.glb",
+      "bytes": 745620,
+      "sha256": "09ff38d8b1e6ac7666a21bacac084b6aaffe8fa7b2c70b2c7c9f781927b3967e"
+    },
+    {
+      "file": "GLB/graphite/ZSuan-graphite-vertical-v1.2.2.glb",
+      "bytes": 1396120,
+      "sha256": "394e5b44736fcf39e28f140ec24a3a9960ba1e7949629d40993d9b0bbf4cc066"
+    },
+    {
+      "file": "GLB/mantine-blue/ZSuan-mantine-blue-brand-v1.2.2.glb",
+      "bytes": 1396120,
+      "sha256": "483fba65c27f952b2a14e9d331a21533b222765a618e81cc2afddff2efeceb28"
+    },
+    {
+      "file": "GLB/mantine-blue/ZSuan-mantine-blue-icon-v1.2.2.glb",
+      "bytes": 745620,
+      "sha256": "cbc09e4d6b2a206b5d9db139332bd1598b58868197bca92d33d78480f83f7020"
+    },
+    {
+      "file": "GLB/mantine-blue/ZSuan-mantine-blue-vertical-v1.2.2.glb",
+      "bytes": 1396124,
+      "sha256": "070dabb66712457faefb5f3eb16792c31b6b528e7b237fb9edcb2c572511c897"
+    },
+    {
+      "file": "GLB/nord/ZSuan-nord-brand-v1.2.2.glb",
+      "bytes": 1396096,
+      "sha256": "f6e1469367c6cdf3e2406da5f345c803ed811cdfa900a8abac7c95364984194c"
+    },
+    {
+      "file": "GLB/nord/ZSuan-nord-icon-v1.2.2.glb",
+      "bytes": 745608,
+      "sha256": "e6d14a96c49e4f06cc0b9973369153d3906232de79454c773cfe3f519ffa4b30"
+    },
+    {
+      "file": "GLB/nord/ZSuan-nord-vertical-v1.2.2.glb",
+      "bytes": 1396096,
+      "sha256": "22f500fcd279489738e28bb4901b6b640c1bf5d63ce26995a77bd7bccaa077f1"
+    },
+    {
+      "file": "GLB/original/ZSuan-original-brand-v1.2.2.glb",
+      "bytes": 1396112,
+      "sha256": "382c5be7bf837e64a11cdcacfbcda43009a315b884f4479a282e5c12dab9c04b"
+    },
+    {
+      "file": "GLB/original/ZSuan-original-icon-v1.2.2.glb",
+      "bytes": 745612,
+      "sha256": "893c3e3d20dd45f551d2b93a921caf24e4c9fc9f7d633fd6e4b79e7e263aef2d"
+    },
+    {
+      "file": "GLB/original/ZSuan-original-vertical-v1.2.2.glb",
+      "bytes": 1396112,
+      "sha256": "4ba2ef73bdfcdb6ecd49af1a54ea340c6c066e77d4f6f9b7c62e057169aaee14"
+    },
+    {
+      "file": "GLB/silk/ZSuan-silk-brand-v1.2.2.glb",
+      "bytes": 1396100,
+      "sha256": "3bbf41613b46d944deedd61abb51580616d023e47e6285c9b680410b5f2ec29f"
+    },
+    {
+      "file": "GLB/silk/ZSuan-silk-icon-v1.2.2.glb",
+      "bytes": 745608,
+      "sha256": "98d848a00acd270c6a148eba72c6fbba95158593a8e9f12bff3a5069f55c3163"
+    },
+    {
+      "file": "GLB/silk/ZSuan-silk-vertical-v1.2.2.glb",
+      "bytes": 1396104,
+      "sha256": "b40dc6cf7e14db79be94bfa308c31acada3ec7058baeff646630f8626a53fe70"
+    },
+    {
+      "file": "README.md",
+      "bytes": 5565,
+      "sha256": "707aff909ff090c6716886379baec7f0db5600647eb46122adffc72c6295e497"
+    },
+    {
+      "file": "THIRD-PARTY-LICENSES.txt",
+      "bytes": 2191,
+      "sha256": "c82aacf8691f678d5f70978d3d52642957a8be26684b43514431f853963f5efe"
+    },
+    {
+      "file": "blender-verification.json",
+      "bytes": 1926,
+      "sha256": "e3e73889404f81672b09408ae8470c6016d2719df5c6c42ab34d34ce4c48d200"
+    },
+    {
+      "file": "build.mjs",
+      "bytes": 1840,
+      "sha256": "c57ad27863a4b1aa80df20c08c6b2283745fdf4e4f513533ed74cebef53b1015"
+    },
+    {
+      "file": "build_blender.py",
+      "bytes": 3042,
+      "sha256": "60632568fd21f8ecaa09d65b2361c970d2d885d800ac95540b7e60a3ed1369d9"
+    },
+    {
+      "file": "export-model.mjs",
+      "bytes": 1071,
+      "sha256": "be19b72b3432c0c30b796c136c3bae323e785a16682edd5ac69e085c4580ccd7"
+    },
+    {
+      "file": "glb-verification.json",
+      "bytes": 3597,
+      "sha256": "bdf5c98d7c618021e33eca744eddb5341567b783bed75dceb194304effebc2d1"
+    },
+    {
+      "file": "model.mjs",
+      "bytes": 7758,
+      "sha256": "8be793282dff46500ab30009a49822ea9eb4b525bce9d95b0d7e0f3b31158242"
+    },
+    {
+      "file": "motion-options.mjs",
+      "bytes": 378,
+      "sha256": "b411416ed3d61f6b3f9f3d26a95b40f34dc1f44c5701a0ba2bfd627b2a4e0a28"
+    },
+    {
+      "file": "motions.mjs",
+      "bytes": 1733,
+      "sha256": "545144868d6cac78fdf6343f7ae1722a5ac19a3ea242ec943a7fb905deb845f9"
+    },
+    {
+      "file": "package_delivery.py",
+      "bytes": 1373,
+      "sha256": "532e55fd93a7c290bf46f37d9cc5db39d2bf54da4e8f63cca70b841c04cc8d13"
+    },
+    {
+      "file": "palettes.json",
+      "bytes": 7032,
+      "sha256": "86b976a5236dd6c462ff38537c8c6311cd730a891ad68df4396999daaf2bb5cb"
+    },
+    {
+      "file": "palettes.mjs",
+      "bytes": 1986,
+      "sha256": "5cf7416f2ec988791e858f78cb4e9d9de59f61c47e25bb5a3af89e9ce0bb743a"
+    },
+    {
+      "file": "template.html",
+      "bytes": 5357,
+      "sha256": "8c22b043b7f6d20feff2bd25e183bb92d6ca9b2f135bce846f8939ccf34237cd"
+    },
+    {
+      "file": "verify.mjs",
+      "bytes": 2161,
+      "sha256": "a501ba3ea6df8e4436e1a7ea60d0307827014499b186bba27dff6448fd21d46e"
+    },
+    {
+      "file": "viewer.js",
+      "bytes": 10766,
+      "sha256": "015de24bed539019f99f9857aea1b12e3a0a561b5524d719b2c405b09dd21db2"
+    },
+    {
+      "file": "wordmark.json",
+      "bytes": 3164,
+      "sha256": "82b51f1357e4dab2489d3eb954d8df09a7a7bab837fa46eec700685b16709a7d"
+    },
+    {
+      "file": "造价智算-姿态与多配色动效.html",
+      "bytes": 707136,
+      "sha256": "a04c17120317c8e4ba5f31868e64824b71e7364314a092d4ebe74d22c4a79dec"
+    }
+  ]
+}

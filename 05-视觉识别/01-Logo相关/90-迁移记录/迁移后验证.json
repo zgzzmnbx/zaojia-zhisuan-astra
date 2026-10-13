@@ -1,0 +1,132 @@
+{
+  "catalogVersion": "1.0.0",
+  "modelVersion": "1.2.0",
+  "migrationFiles": 667,
+  "originalBytes": 474106669,
+  "originalHashesMatchedBeforeAdaptations": true,
+  "unchangedFilesAfterAdaptations": 650,
+  "pathAndDocumentationAdaptations": [
+    {
+      "file": "02-三维模型/logo-3d-v1/build.mjs",
+      "before": "4bf92c4609c03271af3666564d9bc838d597b110391cb6c2d8a5b30c2578e99e",
+      "after": "6895a2f38d99f72cd609f98a013602488c4cb983c44b29d8bbabaa75d36bdc32"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1/README.md",
+      "before": "f9e201f080fa739bc671fa08b0a830151f11c643de6c48fc6f1d67f1bbf38cc7",
+      "after": "e07d85c4ea7bded8002c05888922fd3fa9a606e7015fc9f666a7e3ed1dbf2530"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1/Blender/造价智算-阶梯Z-v1.0.0.blend",
+      "before": "c0eb0a1595f0b501b1b314c5079c8a211a0a5c82bf090517237a603a551dc454",
+      "after": "2605bd69f1a6814eadac77a48859907e58f8c5cf988aaf8a81e45f841e3f95b8"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.1/build.mjs",
+      "before": "9802586581f2cab4e7e31b4ce8262e2b1ed4972762de94e80ad1dfc43dc8be80",
+      "after": "3632c967e94d4491c3198339d4acaa4995ebecb09f671fca7d610eede67ee3cd"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.1/package_delivery.py",
+      "before": "6d05d2e119f1735e23596ea072182ab2fefb0ecba07d978374ed075949374311",
+      "after": "b5daed894b04c55cc54030b7570a263945b8c75e02ba0e903e265b0272cbd3bd"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.1/README.md",
+      "before": "d878be952ef38b881c081ed675c62ba91952b5e3af7578256461e8af5b8e7670",
+      "after": "f205d1a3177f1409c1d5c7f3d99033550a8f3773576a40c836e6f0c32ffbc4db"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.1/Blender/造价智算-阶梯Z-原位翻转-v1.1.0.blend",
+      "before": "f031f2a05858d2ad18d096440e4aaacf864a9babcf720482c430bbc37a63e445",
+      "after": "fd7b74bfe0716d13a187bf190afa065421973b34a5cfdeef437a6ed0e9145e84"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/blender-reopen-verification.json",
+      "before": "303fbbec98351818625cede4c21c3ae5f6fa3ceb39bca5ff772d3ad0a4a9c584",
+      "after": "fb177638e4411684207f86d1449cb423e844607c3b367a56acd74869c6b1cc7d"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/build.mjs",
+      "before": "3e333de43060638a8e6ad73487a039ecf080fbca72c0e270aed22db02ff05187",
+      "after": "9cf1798971e224f4ec1928994d51cea608d4966e74713af6c9c7cc14c5126182"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/CHANGELOG.md",
+      "before": "695c8d01cc74f25ecd164a67b9b05527f8ee0b302a55c1ba2e52681188375fb0",
+      "after": "8210c1c0eaa40060e9b838dca8d9d77310ee0bda9c9fc0b15254e1cf30a3e5a2"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/delivery-verification.json",
+      "before": "95b461b678eaa2489486e2a1abdbe87912d234a56dc7d5192d80789657c51b40",
+      "after": "f630412c232bd8262cb289722c980ec3fba6befe0ad7e90466f3f64e6fcb524d"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/extract_wordmark.py",
+      "before": "67a64f6460ac8a30de564174e482baa56b0ea70ab821354d319e1655ef8501c1",
+      "after": "e08cef5a014465952ddeaede2e55241f54367aaebd48b0ef8dd7e1ea85f4151d"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/package_delivery.py",
+      "before": "0e8dc0d8513566758986ca4e813e4bbb4c271883a981a89374fd3b33806943af",
+      "after": "b1b6484b48b760eb8605e00d1cd8c755c14b81bfa2080c3a24624c7092352cf0"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/README.md",
+      "before": "c4b11b62d3fef44a3fb2c988746c8fd175d0bcd1e15ecd5c60cb1ab049254b67",
+      "after": "423fdbd9f9dfc86d9a617c0c0ddc71026975431854331ef104c0f5e2fd04a9ba"
+    },
+    {
+      "file": "02-三维模型/logo-3d-v1.2/Blender-modular/造价智算-精细模型-组装-v1.2.0.blend",
+      "before": "92dfdfd8ec14df94e258eed55630742cefa495d1d1eedf4c1d201c2c9c08a760",
+      "after": "fa1e8ef2fd903c6c6851729d5828a842198186b0abe056e3c392c659152e7496"
+    },
+    {
+      "file": "04-Blender环境/blender-setup-v1/安装与配置说明.md",
+      "before": "833807ee8385d97adee03d8dced6e1cd00c0bc1f8cc08c6f90a81481db960884",
+      "after": "290055df8ef7ae1ef0d38e4548904f6cb44f2e44244b73550d4161f0d1475d8e"
+    },
+    {
+      "file": "04-Blender环境/blender-setup-v1/configure_logo.py",
+      "before": "23e7790f50c6d4485bdfa8d99c2668bc74ead4f67c1d993485caa2e787d810fd",
+      "after": "7592c0759c54feab2617cd127d8e255d303b5c4bbccf83d9eddfe33b7d952044"
+    }
+  ],
+  "scriptSyntaxChecks": 24,
+  "localMarkdownLinks": 17,
+  "rebuildBitIdentical": [
+    "造价智算-精细模型与组装动效.html",
+    "ZSuan-brand-v1.2.glb",
+    "ZSuan-vertical-v1.2.glb",
+    "ZSuan-icon-v1.2.glb"
+  ],
+  "archives": [
+    {
+      "file": "05-交付包\\造价智算-13块组装与灵动块-v1.2.0.zip",
+      "bytes": 5745474,
+      "sha256": "1c2acb7041b699737021b5a14fb04784884581cebc4e0f67cb403b47e7400b87"
+    },
+    {
+      "file": "05-交付包\\历史打包\\造价智算-13块组装与灵动块-v1.2.0.zip",
+      "bytes": 5744126,
+      "sha256": "267c11a7b2aaefed3a0fd81b565541b2231b3a5e4331b226b8f71b03591b0eeb"
+    },
+    {
+      "file": "05-交付包\\历史打包\\造价智算-3D-原位翻转-v1.1.0.zip",
+      "bytes": 1810224,
+      "sha256": "368c87e2ea13a676ed2dad1e91f30c69e96d21256a7924b84c9d4cd8061a4fc8"
+    },
+    {
+      "file": "05-交付包\\历史打包\\造价智算-3D-阶梯Z-v1.0.0.zip",
+      "bytes": 252836,
+      "sha256": "25070ed707f1628ed3703b392af7a54e5a954c6ffac05adc8e5ce446d4502681"
+    }
+  ],
+  "copiedOriginalsUnchanged": true,
+  "projectTests": {
+    "passed": 245,
+    "failed": 0
+  },
+  "projectBuild": "passed",
+  "browserInteraction": "Not retested; prior file protocol limitation remains"
+}
