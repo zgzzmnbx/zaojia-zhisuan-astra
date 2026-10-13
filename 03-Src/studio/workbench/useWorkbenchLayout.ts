@@ -1,14 +1,14 @@
 import {useEffect,useRef,useState,type CSSProperties,type KeyboardEvent,type PointerEvent} from 'react';
 import {clampRatio,createResizeSession,floatingPreviewBounds,floatingConversationSpace,keyboardRatio,ratioBounds} from './layout-state';
 import type {usePresentation} from './usePresentation';
-export function useWorkbenchLayout(presentation:ReturnType<typeof usePresentation>){
- const {state}=presentation,mode=state.mode;
+export function useWorkbenchLayout(presentation:ReturnType<typeof usePresentation>,sandboxHome=false,sandboxChatCollapsed=false){
+ const {state}=presentation,mode=sandboxHome?'content':state.mode;
  const [width,setWidth]=useState(1200),[wide,setWide]=useState(()=>matchMedia('(min-width:1025px)').matches),[dragRatio,setDragRatio]=useState<number|null>(null);
  const [floatBounds,setFloatBounds]=useState(()=>floatingPreviewBounds(1200,720,100,510));
  const ref=useRef<HTMLDivElement>(null),latest=useRef(state);latest.current=state;
  const summary=mode==='summary',content=mode==='content'||mode==='fullscreen',expanded=mode==='fullscreen';
- const fitsFloat=wide&&floatBounds.available&&!floatBounds.compact,floating=summary&&fitsFloat,split=mode==='content'&&wide;
- const summaryFallback=summary&&!fitsFloat,chatActive=mode==='chat'||(wide&&!expanded&&!summaryFallback);
+ const fitsFloat=wide&&floatBounds.available&&!floatBounds.compact,floating=summary&&fitsFloat,split=mode==='content'&&wide&&!(sandboxHome&&sandboxChatCollapsed);
+ const summaryFallback=summary&&!fitsFloat,chatActive=!(sandboxHome&&sandboxChatCollapsed)&&(mode==='chat'||(wide&&!expanded&&!summaryFallback));
  const chatSpace=floatingConversationSpace(width,floatBounds.width,floating,false,true);
  const drag=useRef<{pointerId:number;node:HTMLElement;session:ReturnType<typeof createResizeSession>;cursor:string;select:string}|null>(null);
  function finish(cancel=false){const d=drag.current;if(!d)return;drag.current=null;document.body.style.cursor=d.cursor;document.body.style.userSelect=d.select;setDragRatio(null);if(!cancel)presentation.resize(d.session.finish().ratio);if(d.node.hasPointerCapture?.(d.pointerId))d.node.releasePointerCapture(d.pointerId);}
@@ -25,6 +25,6 @@ export function useWorkbenchLayout(presentation:ReturnType<typeof usePresentatio
  function key(event:KeyboardEvent<HTMLDivElement>){if(!split)return;if(event.key==='Escape'&&drag.current){event.preventDefault();finish(true);return;}const next=keyboardRatio(ratio,event.key,width,event.shiftKey);if(next===null)return;event.preventDefault();presentation.resize(next)}
  return {ref,ratio,wide,dragging:dragRatio!==null,floating,split,expanded,summary,summaryFallback,chatActive,previewActive:content,floatBounds,
   style:{'--floating-reserve':`${chatSpace.reserve}px`,'--chat-size':`${Math.max(0,(width-12)*ratio)}px`,'--float-top':`${floatBounds.top}px`,'--float-right':`${floatBounds.right}px`,'--float-width':`${floatBounds.width}px`,'--float-height':`${floatBounds.height}px`} as CSSProperties,
-  separator:{onPointerDown:start,onPointerMove:move,onPointerUp:(e:PointerEvent<HTMLDivElement>)=>{if(e.pointerId===drag.current?.pointerId)finish()},onPointerCancel:(e:PointerEvent<HTMLDivElement>)=>{if(e.pointerId===drag.current?.pointerId)finish(true)},onLostPointerCapture:(e:PointerEvent<HTMLDivElement>)=>{if(e.pointerId===drag.current?.pointerId)finish()},onKeyDown:key,role:'separator','aria-orientation':'vertical' as const,'aria-label':'调整聊天和内容宽度','aria-controls':'astra-conversation astra-preview','aria-valuemin':Math.round(bounds.min*100),'aria-valuemax':Math.round(bounds.max*100),'aria-valuenow':Math.round(ratio*100),'aria-valuetext':`聊天 ${Math.round(ratio*100)}%，内容 ${Math.round((1-ratio)*100)}%`,tabIndex:split?0:-1}
+  separator:{onPointerDown:start,onPointerMove:move,onPointerUp:(e:PointerEvent<HTMLDivElement>)=>{if(e.pointerId===drag.current?.pointerId)finish()},onPointerCancel:(e:PointerEvent<HTMLDivElement>)=>{if(e.pointerId===drag.current?.pointerId)finish(true)},onLostPointerCapture:(e:PointerEvent<HTMLDivElement>)=>{if(e.pointerId===drag.current?.pointerId)finish()},onKeyDown:key,role:'separator','aria-orientation':'vertical' as const,'aria-label':'调整聊天和内容宽度','aria-controls':sandboxHome?'astra-conversation astra-sandbox':'astra-conversation astra-preview','aria-valuemin':Math.round(bounds.min*100),'aria-valuemax':Math.round(bounds.max*100),'aria-valuenow':Math.round(ratio*100),'aria-valuetext':`聊天 ${Math.round(ratio*100)}%，内容 ${Math.round((1-ratio)*100)}%`,tabIndex:split?0:-1}
  };
 }

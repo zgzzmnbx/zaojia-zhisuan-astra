@@ -1,0 +1,74 @@
+/* The retained conversation floats on the same canvas; its layout and state stay intact. */
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{background:radial-gradient(ellipse at 22% 60%,#bcdced55,transparent 60%),var(--canvas)}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation{position:relative;z-index:2;margin:16px 0 16px 16px;border:1px solid color-mix(in srgb,var(--paper) 80%,transparent);border-radius:20px;background:color-mix(in srgb,var(--paper) 66%,transparent);backdrop-filter:blur(24px) saturate(115%);box-shadow:0 16px 48px #183d5912;overflow:hidden}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation .conversation-heading,.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation .composer-wrap,.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation .messages{background:transparent}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.workbench-separator{background:transparent}
+.sandbox-workbench>.workbench-separator::before{background:transparent}
+.sandbox-workbench>.workbench-separator>span:first-child{opacity:.6}
+.sandbox-surface{grid-column:3;grid-row:1;position:relative;min-width:0;min-height:0;overflow:hidden}
+.project-sandbox{--glass:color-mix(in srgb,var(--paper) 65%,transparent);position:relative;width:100%;height:100%;min-height:0;overflow:hidden;isolation:isolate;color:var(--ink);container-type:inline-size}
+.sandbox-canvas,.sandbox-canvas>canvas,.sandbox-markers{position:absolute;inset:0;width:100%;height:100%}
+.sandbox-canvas>canvas{display:block;touch-action:none}
+.sandbox-toolbar{position:absolute;z-index:5;top:20px;left:24px;right:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;pointer-events:none}
+.sandbox-toolbar>*{pointer-events:auto}.sandbox-project{display:flex;flex-direction:column;min-width:0;max-width:60%;gap:4px}
+.sandbox-eyebrow{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.sandbox-project>strong{font-size:20px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:650}
+.sandbox-project .select{height:30px;min-height:30px;max-width:260px;width:100%;padding-left:0;font-size:13px;color:var(--muted);background-color:transparent;border:0;box-shadow:none}
+.sandbox-switch{display:flex;align-items:center;gap:4px;padding:4px;background:var(--glass);backdrop-filter:blur(18px);border:1px solid color-mix(in srgb,var(--paper) 85%,transparent);border-radius:12px;box-shadow:0 4px 18px #1739560a}
+.sandbox-mode-current{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue);font-size:13px;font-weight:600}
+.sandbox-mode-current .astra-icon{width:16px;height:16px}.sandbox-switch .btn{font-size:13px;min-height:30px;height:30px}
+.sandbox-markers{pointer-events:none;z-index:2}
+.sandbox-marker{position:absolute;top:0;left:0;pointer-events:auto;display:flex;flex-direction:column;text-align:left;gap:3px;width:150px;min-height:64px;padding:9px 12px;border-radius:11px;border:1px solid color-mix(in srgb,var(--paper) 83%,transparent);background:color-mix(in srgb,var(--paper) 57%,transparent);backdrop-filter:blur(12px);color:var(--ink);box-shadow:0 4px 15px #1636510d;cursor:pointer;transition:background .18s,border-color .18s;will-change:transform}
+.sandbox-marker:hover,.sandbox-marker.selected{background:color-mix(in srgb,var(--paper) 88%,transparent);border-color:var(--blue);z-index:4}
+.sandbox-marker:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.sandbox-marker-title{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:14px;line-height:1.4;font-weight:700}
+.sandbox-marker-title small{font-size:12px;color:var(--blue);font-weight:650}
+.sandbox-node-status{display:flex;align-items:center;gap:5px;font-size:12px;line-height:1.4;color:var(--muted)}
+.sandbox-node-status i{width:6px;height:6px;border-radius:50%;border:1px solid currentColor;flex-shrink:0}
+.sandbox-marker[data-tone=done] .sandbox-node-status,.sandbox-marker[data-tone=running] .sandbox-node-status{color:var(--blue)}
+.sandbox-marker[data-tone=done] .sandbox-node-status i,.sandbox-marker[data-tone=running] .sandbox-node-status i{background:currentColor}
+.sandbox-marker[data-tone=attention] .sandbox-node-status{font-weight:650;color:var(--ink)}
+.sandbox-marker[data-tone=error] .sandbox-node-status{color:var(--error,#bc4343)}
+.sandbox-node-summary{font-size:12px;line-height:1.4;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.sandbox-pin{position:absolute;width:1px;height:15px;top:100%;left:50%;background:color-mix(in srgb,var(--blue) 30%,transparent)}
+.sandbox-pin::after{content:'';position:absolute;bottom:-5px;left:-3px;width:7px;height:7px;background:var(--blue);border:2px solid var(--paper);border-radius:50%;box-shadow:0 0 0 3px #ffffff38}
+.sandbox-node-detail{position:absolute;z-index:6;top:124px;right:20px;width:286px;max-height:calc(100% - 226px);overflow:auto;padding:18px;gap:14px;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px #0f294423}
+.sandbox-node-detail>header{display:flex;justify-content:space-between;align-items:center;gap:8px}.sandbox-node-detail h2{font-size:20px;font-weight:650;margin:3px 0 0}
+.sandbox-detail-state{align-self:flex-start;padding:4px 9px;border-radius:6px;background:var(--blue-wash);color:var(--blue);font-size:13px}
+.sandbox-node-detail dl{display:flex;flex-direction:column;gap:12px;margin:0}.sandbox-node-detail dl>div{display:flex;flex-direction:column;gap:4px}.sandbox-node-detail dt{font-size:12px;color:var(--muted)}.sandbox-node-detail dd{margin:0;font-size:14px;overflow-wrap:anywhere;line-height:1.6}
+.sandbox-disabled-reason{font-size:13px;line-height:1.6;color:var(--muted);margin:0}.sandbox-node-detail>.btn{min-height:36px;font-size:13px;flex-shrink:0}
+.sandbox-view-controls{position:absolute;z-index:5;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:3px;padding:6px 8px;width:max-content;max-width:calc(100% - 32px);border-radius:13px;background:var(--glass);border:1px solid color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:blur(20px);box-shadow:0 6px 24px #16324b15}
+.sandbox-view-controls .btn{height:30px;min-height:30px;font-size:12px;gap:5px;padding-inline:8px}.sandbox-view-controls .btn-square{width:30px;padding:0}.sandbox-view-controls .astra-icon{width:16px;height:16px}
+.sandbox-view-controls label{display:flex;align-items:center;gap:5px;padding:0 7px;font-size:12px;white-space:nowrap;color:var(--muted);cursor:pointer}.sandbox-view-controls .toggle{color:var(--blue)}
+.sandbox-scene-caption{position:absolute;bottom:7px;left:20px;font-size:12px;color:var(--muted);pointer-events:none}
+.sandbox-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;font-size:14px;color:var(--muted);pointer-events:none}
+.project-sandbox[data-ready=false]:not(.scene-fallback) .sandbox-markers{visibility:hidden}
+.sandbox-load-error{position:absolute;top:130px;left:24px;right:24px;z-index:3;font-size:14px;line-height:1.7}.sandbox-load-error .btn{margin-right:8px}
+.scene-fallback .sandbox-markers{inset:260px 24px 100px;width:auto;height:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-content:start;overflow:auto;pointer-events:auto}
+.scene-fallback .sandbox-marker{position:relative;width:100%;transform:none!important;visibility:visible!important}.scene-fallback .sandbox-pin{display:none}
+[data-astra-scheme=dark] .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{background:radial-gradient(ellipse at 20% 65%,#11384c70,transparent 70%),var(--canvas)}
+[data-astra-scheme=dark] .sandbox-marker{border-color:color-mix(in srgb,var(--blue) 18%,transparent)}
+@container(max-width:650px){.sandbox-marker{width:132px;padding:7px 9px}.sandbox-toolbar{left:16px;right:16px}.sandbox-project>strong{font-size:16px}.sandbox-view-controls{gap:0;padding:5px}.sandbox-view-controls label{padding-inline:4px}.sandbox-node-detail{right:16px}}
+@media(prefers-reduced-motion:reduce){.sandbox-marker{transition:none}}
+
+.sandbox-node-summary>span{display:block;overflow:hidden;text-overflow:ellipsis}.sandbox-node-summary>.sandbox-amount{font-size:14px;font-weight:700;line-height:1.6;color:var(--blue);font-variant-numeric:tabular-nums}
+/* Two separate targets match the original scene: focus a building, or inspect its result. */
+.sandbox-toolbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}.sandbox-all{background:var(--glass);backdrop-filter:blur(14px);font-size:13px}
+.sandbox-all-menu{position:absolute;z-index:9;top:70px;right:20px;display:grid;gap:3px;padding:8px;width:190px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(24px);box-shadow:0 14px 40px #15345224}
+.sandbox-all-menu>.btn{justify-content:flex-start;font-size:14px;gap:12px}.sandbox-all-menu>.btn>span{font-size:12px;color:var(--blue)}
+.sandbox-marker,.sandbox-marker:hover,.sandbox-marker.selected{padding:0;gap:5px;min-height:0;border:0;box-shadow:none;background:transparent;backdrop-filter:none;pointer-events:none}
+.sandbox-marker-title,.sandbox-result-trigger{width:100%;pointer-events:auto;border:1px solid color-mix(in srgb,var(--paper) 72%,transparent);border-radius:9px;background:color-mix(in srgb,var(--paper) 62%,transparent);backdrop-filter:blur(12px) saturate(120%);color:var(--ink);cursor:pointer;box-shadow:0 3px 15px #335c7814}
+.sandbox-marker-title{justify-content:center;padding:9px 10px;line-height:1.4}.sandbox-result-trigger{display:flex;flex-direction:column;gap:4px;text-align:left;padding:6px 9px;background:color-mix(in srgb,var(--paper) 57%,transparent)}
+.sandbox-marker-title:hover,.sandbox-marker.selected>.sandbox-marker-title,.sandbox-result-trigger:hover,.sandbox-result-trigger[aria-expanded=true]{border-color:var(--blue);background:color-mix(in srgb,var(--paper) 80%,transparent)}
+.sandbox-marker button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}.sandbox-pin{pointer-events:none}
+.project-sandbox[data-focused=true] .sandbox-marker:not(.selected){opacity:.56}.project-sandbox[data-focused=true] .sandbox-marker:hover,.project-sandbox[data-focused=true] .sandbox-marker:focus-within{opacity:1}
+.sandbox-zone-description{font-size:14px;line-height:1.8;color:var(--muted);margin:0}
+.sandbox-result-card{position:absolute;z-index:8;margin:0;width:292px;max-width:calc(100% - 32px);max-height:calc(100% - 210px);overflow:auto;padding:16px;gap:12px;background:color-mix(in srgb,var(--paper) 86%,transparent);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(22px) saturate(130%);box-shadow:0 18px 55px #203b5b30}
+.sandbox-result-card>header{display:flex;align-items:center;justify-content:space-between;gap:8px}.sandbox-result-card h2{font-size:16px;font-weight:700;margin:0}.sandbox-result-card dl{margin:0;display:grid;gap:12px}.sandbox-result-card dl>div{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px}.sandbox-result-card dt{font-size:12px;color:var(--muted);line-height:1.7}.sandbox-result-card dd{margin:0;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.sandbox-result-card footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px;font-size:12px;color:var(--muted)}
+.sandbox-result-card footer .btn{font-size:13px;color:var(--blue)}
+[data-astra-scheme=dark] .sandbox-marker-title,[data-astra-scheme=dark] .sandbox-result-trigger{border-color:color-mix(in srgb,var(--blue) 25%,transparent)}
+@container(max-width:650px){.sandbox-all{font-size:12px;padding-inline:7px}.sandbox-toolbar-actions{gap:4px}.sandbox-switch{gap:0;padding:3px}.sandbox-mode-current{padding-inline:6px}.sandbox-project{max-width:42%}}
+
+.studio #shell.live-shell .adjustable-workbench.sandbox-chat-collapsed{grid-template-columns:minmax(0,1fr)}
+.studio #shell.live-shell .sandbox-chat-collapsed>.conversation,.studio #shell.live-shell .sandbox-chat-collapsed>.workbench-separator{display:none!important}
+.sandbox-chat-collapsed>.sandbox-surface{grid-column:1}
