@@ -4,6 +4,7 @@ import {api} from '../api';
 import {zones} from './zones.js';
 import {sandboxNodes,runningZone,type SandboxInput,type ZoneId} from './node-state';
 import {mountSandbox} from './scene.mjs';
+import {nextTaskActivity,type TaskActivity} from './task-activity';
 import type {ReviewProgressTask} from '../../professional/components/agent-workspace/reviewProgress';
 
 type Props={variant:'immersive'|'card';immersive:()=>void;context:string;active:boolean;dark:boolean;title:string;taskId:string;tasks:{id:string;title:string}[];input:Omit<SandboxInput,'reviewTasks'|'reviewError'>;chatCollapsed:boolean;toggleChat:()=>void;classic:()=>void;toggleDark:()=>void;selectTask:(id:string)=>void;enter:(action:string)=>void};
@@ -14,6 +15,10 @@ export default function ProjectSandbox(props:Props){
  const [ready,setReady]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[selected,setSelected]=useState<ZoneId|null>(null),[shadows,setShadows]=useState(true),[orbit,setOrbit]=useState(false);
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches),[flowChoice,setFlowChoice]=useState<boolean|null>(null);
  const [review,setReview]=useState<{job:string;tasks:ReviewProgressTask[]|null;error:string}>({job:'',tasks:null,error:''});
+ const [activity,setActivity]=useState<TaskActivity|null>(null),focusedActivity=useRef(0);
+ const [pageVisible,setPageVisible]=useState(()=>!document.hidden);
+ useEffect(()=>{const update=()=>setPageVisible(!document.hidden);document.addEventListener('visibilitychange',update);return()=>document.removeEventListener('visibilitychange',update)},[]);
+ useEffect(()=>{setActivity(previous=>nextTaskActivity(previous,{ready:props.input.ready,busy:props.input.busy,qaRunning:props.input.qaRunning,error:props.input.operationError,cancelVersion:props.input.cancelVersion}))},[props.input.ready,props.input.busy,props.input.qaRunning,props.input.operationError,props.input.cancelVersion]);
  const job=props.input.project?.jobId===props.input.result?.job_id?props.input.result?.job_id||'':'';
  useEffect(()=>{const m=matchMedia('(prefers-reduced-motion: reduce)'),update=()=>setReduced(m.matches);m.addEventListener('change',update);update();return()=>m.removeEventListener('change',update)},[]);
  useEffect(()=>{
@@ -21,9 +26,15 @@ export default function ProjectSandbox(props:Props){
   try{api=mountSandbox(el,markers.current,props.context,(id:ZoneId)=>focusZone(id),()=>setReady(true),(message:string)=>setError(message),()=>setOrbit(false));scene.current=api;(el as any).__sandboxState=api.state;}catch{setError('当前设备无法开启三维画面，可使用下方功能入口或经典界面。')}
   return()=>{api?.dispose();scene.current=null;delete (el as any).__sandboxState};
  },[props.context,retry]);
- useEffect(()=>{scene.current?.setOptions({compact:props.variant==='card',active:props.active,dark:props.dark,shadows,orbit:orbit&&!reduced,flow:flowChoice??!reduced,running:runningZone(props.input.busy,props.input.qaRunning)})},[props.context,props.variant,props.chatCollapsed,props.active,props.dark,shadows,orbit,reduced,flowChoice,props.input.busy,props.input.qaRunning,retry]);
+ useEffect(()=>{scene.current?.setOptions({activity:!!activity,compact:props.variant==='card',active:props.active,dark:props.dark,shadows,orbit:orbit&&!reduced,flow:flowChoice??!reduced,running:runningZone(props.input.busy,props.input.qaRunning)})},[!!activity,props.context,props.variant,props.chatCollapsed,props.active,props.dark,shadows,orbit,reduced,flowChoice,props.input.busy,props.input.qaRunning,retry]);
  useEffect(()=>{setSelected(null);setResultId(null);setMenu(false);if(lastVariant.current!==props.variant)modeButton.current?.focus({preventScroll:true});lastVariant.current=props.variant},[props.variant]);
  useEffect(()=>{scene.current?.select(selected);if(selected)closeButton.current?.focus({preventScroll:true})},[selected,retry]);
+ useEffect(()=>{
+  if(activity?.phase!=='running'||!ready||focusedActivity.current===activity.run)return;
+  focusedActivity.current=activity.run;
+  if(!props.active||document.hidden)return;
+  setSelected(null);setResultId(null);setOrbit(false);scene.current?.focusTask(activity.zone);
+ },[activity,ready,props.active]);
  useEffect(()=>{if(!job||!props.active)return;const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;let inFlight=false;
   const read=async()=>{if(document.hidden||inFlight)return;inFlight=true;try{const response=await api<{items:ReviewProgressTask[]}>('/api/collaboration/external-dispatch/tasks?limit=100',{signal:controller.signal});if(!controller.signal.aborted)setReview({job,tasks:response.items,error:''})}catch(e){if(!controller.signal.aborted)setReview({job,tasks:null,error:(e as Error).message})}finally{inFlight=false;if(!controller.signal.aborted&&!document.hidden)timer=setTimeout(read,15000)}};
   const visibility=()=>{clearTimeout(timer);if(!document.hidden)void read()};void read();document.addEventListener('visibilitychange',visibility);
@@ -37,7 +48,7 @@ export default function ProjectSandbox(props:Props){
  function close(){const id=selected;setResultId(null);setSelected(null);scene.current?.home();if(id)markers.current.get(id)?.querySelector<HTMLButtonElement>('.sandbox-marker-title')?.focus({preventScroll:true})}
  useEffect(()=>{if(!props.active)return;const escape=(e:KeyboardEvent)=>{if(e.key!=='Escape'||(!resultId&&!selected&&!menu&&!orbit))return;e.preventDefault();e.stopImmediatePropagation();if(resultId)closeResult();else if(menu)setMenu(false);else if(selected)close();else setOrbit(false)};document.addEventListener('keydown',escape,true);return()=>document.removeEventListener('keydown',escape,true)},[props.active,resultId,selected,menu,orbit]);
  useEffect(()=>{scene.current?.refresh()},[JSON.stringify(nodes),ready]);
- return <section className={`project-sandbox ${props.variant==='card'?'sandbox-card-mode':''} ${error?'scene-fallback':''}`} aria-label="项目沙盘工作台" data-ready={ready} data-focused={!!selected} data-running={runningZone(props.input.busy,props.input.qaRunning)||'idle'}>
+ return <section className={`project-sandbox ${props.variant==='card'?'sandbox-card-mode':''} ${error?'scene-fallback':''}`} aria-label="项目沙盘工作台" data-ready={ready} data-focused={!!selected} data-motion-paused={!props.active||!pageVisible} data-focused-stage={activity?.phase==='running'?activity.zone:undefined} data-running={runningZone(props.input.busy,props.input.qaRunning)||'idle'}>
   <div className="sandbox-canvas" ref={host}/>
   <header className="sandbox-toolbar">
    <div className="sandbox-project"><span className="sandbox-eyebrow">项目工作台</span><strong title={props.title}>{props.title}</strong><label><span className="sr-only">当前项目任务</span><select className="select select-ghost" aria-label="当前项目任务" value={props.taskId} disabled={!props.input.ready||!!props.input.busy} onChange={e=>props.selectTask(e.target.value)}>{props.tasks.map(t=><option key={t.id} value={t.id}>{t.title}</option>)}</select></label></div>
@@ -49,7 +60,13 @@ export default function ProjectSandbox(props:Props){
   <div className="sandbox-markers" aria-label="项目功能节点">{nodes.map((node,i)=><div key={node.id} ref={el=>{if(el)markers.current.set(node.id,el);else markers.current.delete(node.id)}} className={`sandbox-marker ${selected===node.id?'selected':''}`} data-zone={node.id} data-tone={node.tone}>
    <button className="sandbox-marker-title" aria-label={`进入${node.title}`} aria-pressed={selected===node.id} onClick={()=>focusZone(node.id)}><small>{String(i+1).padStart(2,'0')}</small><span>{node.title}</span></button>
    <button className="sandbox-result-trigger" data-tone={node.tone} aria-label={`${node.title}结果：${node.status}，${node.summary}`} aria-expanded={resultId===node.id} aria-controls="sandbox-result-card" onClick={()=>resultId===node.id?closeResult():setResultId(node.id)}><span className="sandbox-node-status"><i/>{node.status}</span><span className="sandbox-node-summary" title={node.summary}>{node.id==='price'?node.summary.split(' · ').map((part,i)=><span key={i} className={i===1?'sandbox-amount':undefined}>{part}</span>):node.summary}</span></button><span className="sandbox-pin" aria-hidden="true"/>
+   {node.tone==='running'&&<div className="sandbox-stage-progress" role="progressbar" aria-label={`${node.title}处理中`} aria-valuetext={props.input.busy||'处理中'}><span/></div>}
   </div>)}</div>
+  {activity&&<div className="sandbox-task-activity" data-phase={activity.phase} role="status">
+   <span className="sandbox-activity-icon" aria-hidden="true"><Icon name={activity.phase==='running'?'clock':activity.phase==='error'?'alert':activity.phase==='cancelled'?'pause':'check'}/></span>
+   <div><strong>{nodes.find(n=>n.id===activity.zone)?.title}<small>{activity.phase==='running'?'进行中':activity.phase==='error'?'未完成':activity.phase==='cancelled'?'已停止':'处理结束'}</small></strong><span title={activity.label}>{activity.label}</span></div>
+   <button type="button" className="btn btn-ghost btn-square btn-sm" aria-label="定位当前步骤" title="定位当前步骤" onClick={()=>{setSelected(null);setResultId(null);setOrbit(false);scene.current?.focusTask(activity.zone)}}><Icon name="pin"/></button>
+  </div>}
   {resultNode&&<section ref={resultCard} id="sandbox-result-card" className="sandbox-result-card card" role="dialog" aria-label={`${resultNode.title}结果详情`}>
    <header><h2>{resultNode.title}</h2><button ref={resultClose} className="btn btn-ghost btn-square btn-sm" aria-label="关闭节点结果" onClick={()=>closeResult()}><Icon name="close"/></button></header>
    <span className="sandbox-detail-state">{resultNode.status}</span><dl>{resultNode.facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>

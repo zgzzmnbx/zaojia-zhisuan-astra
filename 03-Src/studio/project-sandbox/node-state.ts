@@ -4,10 +4,10 @@ import type {ReviewProgressTask} from '../../professional/components/agent-works
 import {latestReviewTasksByPlatform,summarizeReviewProgress} from '../../professional/components/agent-workspace/reviewProgress.ts';
 export type ZoneId='import'|'price'|'risk'|'knowledge'|'report'|'review'|'table';
 export type NodeState={id:ZoneId;title:string;status:string;summary:string;tone:'idle'|'running'|'done'|'attention'|'error';facts:[string,string][];action:string;actionLabel:string;disabled?:string};
-export type SandboxInput={ready:boolean;project:CurrentProject|null;result:Result|null;filename:string;sheets:SheetConfig[];busy:string;qaRunning:boolean;needsRecalculate:boolean;riskLoading:boolean;riskError:string;reportReady:boolean;citations:number;reviewTasks:ReviewProgressTask[]|null;reviewError:string};
+export type SandboxInput={ready:boolean;project:CurrentProject|null;result:Result|null;filename:string;sheets:SheetConfig[];busy:string;qaRunning:boolean;operationError?:string;cancelVersion?:number;needsRecalculate:boolean;riskLoading:boolean;riskError:string;reportReady:boolean;citations:number;reviewTasks:ReviewProgressTask[]|null;reviewError:string};
 const count=(v:unknown)=>typeof v==='number'&&Number.isFinite(v)?Math.max(0,v):null;
 export function runningZone(busy:string,qa=false):ZoneId|null{
- if(qa)return 'knowledge';if(/报告|文稿|排版/.test(busy))return 'report';if(/经验池.*阈值|预警|风险/.test(busy))return 'risk';if(/匹配|填价|候选/.test(busy))return 'price';if(/识别|上传|转换/.test(busy))return 'import';if(/派发|发送|复核进度/.test(busy))return 'review';if(/重算|单元格|工作表|保存.*值/.test(busy))return 'table';return null;
+ if(qa||/检索|知识依据/.test(busy))return 'knowledge';if(/报告|文稿|排版|Markdown|Word|公文/.test(busy))return 'report';if(/经验池.*阈值|预警|风险/.test(busy))return 'risk';if(/转换|识别|上传|载入.*样本|载入.*样例/.test(busy))return 'import';if(/匹配|填价|候选/.test(busy))return 'price';if(/派发|发送|复核进度/.test(busy))return 'review';if(/重算|单元格|工作表|保存.*值/.test(busy))return 'table';return null;
 }
 export function sandboxNodes(input:SandboxInput):NodeState[]{
  const p=input.project,r=input.ready&&p?.jobId&&p.jobId===input.result?.job_id?input.result:null,s=r?.summary;

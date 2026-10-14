@@ -6,6 +6,7 @@ import {sandboxFrame,resultCardPosition} from '../03-Src/studio/project-sandbox/
 import {PerspectiveCamera,Vector3} from 'three';
 import {createMarkerLayout,type MarkerInput} from '../03-Src/studio/project-sandbox/marker-layout.ts';
 import {normalizeAppearance} from '../03-Src/studio/appearance.ts';
+import {nextTaskActivity} from '../03-Src/studio/project-sandbox/task-activity.ts';
 const input=():SandboxInput=>({ready:true,project:{jobId:'a',riskLoaded:false,fees:null} as any,result:{job_id:'a',artifact_version:3,summary:{matching_status:'completed',total_data_rows:10,matched_rows:8,review_rows:2,table_preview:{sheets:[{},{}]}}} as any,filename:'a.xlsx',sheets:[],busy:'',qaRunning:false,needsRecalculate:false,riskLoading:false,riskError:'',reportReady:false,citations:0,reviewTasks:[],reviewError:''});
 const node=(i:SandboxInput,id:string)=>sandboxNodes(i).find(n=>n.id===id)!;
 test('sandbox never borrows amounts or completion from a previous task',()=>{const i=input();i.project={...i.project!,jobId:'other'};for(const id of ['price','report','table'])assert.equal(node(i,id).tone,'idle');assert.ok(node(i,'price').disabled);i.ready=false;i.citations=4;assert.equal(node(i,'knowledge').status,'随时可查');assert.ok(sandboxNodes(i).every(n=>n.disabled==='工作空间正在恢复'));});
@@ -94,4 +95,30 @@ test('sandbox transparency validates persisted values and retains glass amount i
  assert.equal(normalizeAppearance({sandboxChatTransparency:-5}).sandboxChatTransparency,0);
  const saved=normalizeAppearance(JSON.parse(JSON.stringify({palette:'silk',dark:false,sandboxChatBackground:'solid',sandboxChatTransparency:61})));
  assert.equal(saved.sandboxChatBackground,'solid');assert.equal(saved.sandboxChatTransparency,61);assert.equal(saved.palette,'silk');
+});
+
+test('task stages distinguish import conversion from matching and keep report substeps together',()=>{
+ assert.equal(runningZone('转换为待匹配预览'),'import');
+ for(const label of ['正在生成文字报告','正在整理 Markdown','正在转换公文格式','正在打开 Word 预览'])assert.equal(runningZone(label),'report');
+ assert.equal(runningZone('载入 V3.1 正式样本副本'),'import');assert.equal(runningZone('正在打开对话'),null);
+});
+test('live stage feedback starts once, preserves substep identity, and never replays history',()=>{
+ const idle={ready:true,busy:'',qaRunning:false};assert.equal(nextTaskActivity(null,idle),null);
+ const first=nextTaskActivity(null,{...idle,busy:'正在生成文字报告'})!;
+ const same=nextTaskActivity(first,{...idle,busy:'正在生成文字报告'});assert.equal(same,first);
+ const substep=nextTaskActivity(first,{...idle,busy:'正在整理 Markdown'})!;assert.equal(substep.run,first.run);
+ const settled=nextTaskActivity(substep,idle)!;assert.equal(settled.phase,'settled');assert.equal(nextTaskActivity(settled,idle),settled);
+ const next=nextTaskActivity(settled,{...idle,busy:'检查经验池预警'})!;assert.equal(next.zone,'risk');assert.equal(next.run,first.run+1);
+ assert.equal(nextTaskActivity(next,{...idle,ready:false}),null);
+});
+test('failed and cancelled work never becomes successful progress, stale errors are ignored',()=>{
+ const idle={ready:true,busy:'',qaRunning:false,error:'旧错误',cancelVersion:2};
+ const running=nextTaskActivity(null,{...idle,busy:'正在匹配价格'})!;
+ assert.equal(nextTaskActivity(running,idle)?.phase,'settled');
+ assert.equal(nextTaskActivity(running,{...idle,error:'本次请求失败'})?.phase,'error');
+ assert.equal(nextTaskActivity(running,{...idle,cancelVersion:3})?.phase,'cancelled');
+});
+
+test('live task banner reserves space below markers without covering pricing and risk details',()=>{
+ for(const compact of [true,false]){const normal=sandboxFrame(1400,800,420,false,compact),active=sandboxFrame(1400,800,420,false,compact,true);assert.equal(normal.height-active.height,80);assert.ok(active.y+active.height<=800-170)}
 });

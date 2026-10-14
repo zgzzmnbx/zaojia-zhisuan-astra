@@ -122,3 +122,18 @@
 :root[data-sandbox-chat-background=solid] .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation{background:var(--paper);backdrop-filter:none}
 :root[data-sandbox-chat-background=solid] .studio #shell.live-shell .sandbox-workbench>.conversation .composer{background:var(--paper)}
 :root[data-sandbox-chat-background=solid] .studio #shell.live-shell .sandbox-workbench>.conversation .conversation-heading{background:transparent}
+
+/* Live task feedback: fixed track, no fabricated percentage. */
+.sandbox-marker[data-tone=running]{z-index:6!important;opacity:1!important}
+.sandbox-marker[data-tone=running]>.sandbox-marker-title,.sandbox-marker[data-tone=running]>.sandbox-result-trigger{border-color:#228be6;box-shadow:0 0 0 1px #228be626,0 6px 22px #228be61c}
+.sandbox-stage-progress{position:absolute;bottom:-2px;left:8px;right:8px;height:4px;border-radius:4px;overflow:hidden;background:#228be633;pointer-events:none}
+.sandbox-stage-progress>span{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#228be666,#228be6,#8bd4ff);animation:sandbox-task-stream 1.6s ease-in-out infinite}
+@keyframes sandbox-task-stream{from{transform:translateX(-105%)}to{transform:translateX(370%)}}
+.sandbox-task-activity{position:absolute;z-index:5;bottom:85px;left:calc(50% + var(--sandbox-safe-left,0px)/2);transform:translateX(-50%);display:flex;align-items:center;gap:12px;width:360px;max-width:calc(100% - var(--sandbox-safe-left,0px) - 40px);padding:10px 12px;border:1px solid #228be638;border-radius:14px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(18px);box-shadow:0 8px 28px #16365118}
+.sandbox-activity-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#228be619;color:#228be6;flex-shrink:0}
+.sandbox-task-activity>div{flex:1;min-width:0}.sandbox-task-activity strong{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:650}.sandbox-task-activity small{font-size:12px;font-weight:500;color:#228be6}.sandbox-task-activity>div>span{display:block;font-size:12px;line-height:1.6;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sandbox-task-activity[data-phase=error]{border-color:var(--error,#bc4343)}.sandbox-task-activity[data-phase=error] small{color:var(--error,#bc4343)}
+.project-sandbox[data-focused=true] .sandbox-task-activity{display:none}
+.project-sandbox[data-motion-paused=true] .sandbox-stage-progress>span{animation-play-state:paused}
+.sandbox-card-mode .sandbox-task-activity{left:50%;max-width:calc(100% - 28px);bottom:74px}
+@media(prefers-reduced-motion:reduce){.sandbox-stage-progress>span{animation:none;transform:translateX(80%);opacity:.85}}
