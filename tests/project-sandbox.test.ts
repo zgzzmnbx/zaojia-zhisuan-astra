@@ -1,5 +1,5 @@
-import {roofSignPose,createRoofLabels} from '../03-Src/studio/project-sandbox/roof-labels.mjs';
-import {Scene,Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
+import {createRoofAnchors} from '../03-Src/studio/project-sandbox/roof-labels.mjs';
+import {Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
 import {createIdleOrbit} from '../03-Src/studio/project-sandbox/idle-orbit.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -51,7 +51,7 @@ test('hover or keyboard focus locks the click target while the camera moves',()=
  const engine=createMarkerLayout();const first=engine.update([sign('a')],markerFrame,0).placements[0];
  engine.update([{...sign('a'),locked:true}],markerFrame,10);
  for(let t=20;t<=200;t+=20){const p=engine.update([{...sign('a',650+t,400+t/3),locked:true}],markerFrame,t,true).placements[0];assert.equal(p.x,first.x);assert.equal(p.y,first.y)}
- const released=engine.update([sign('a',850,400+200/3)],markerFrame,220).placements[0];assert.equal(released.x,first.x);assert.equal(released.y,first.y);
+ const released=engine.update([sign('a',850,400+200/3)],markerFrame,220).placements[0];assert.equal(released.x,850-released.width/2-120,'unlock returns to the bounded anchor neighborhood');assert.equal(released.y,first.y);
 });
 test('crowding hides status before relocating titles, then restores only after clearing',()=>{
  const engine=createMarkerLayout(),items=[sign('a'),sign('b',650,465)];
@@ -155,29 +155,13 @@ test('holding input and hovered markers prevent auto orbit; disposal cancels fut
 });
 
 
-test('roof sign stays attached to its joint and faces the camera throughout an orbit',()=>{
- const camera=new PerspectiveCamera(38,1400/800,.1,250),foot=new Vector3(4,6,-2);
- for(const angle of [0,.8,1.6,3.2,5.9])for(const distance of [20,50,100]){
-  camera.position.set(Math.cos(angle)*distance,20,Math.sin(angle)*distance);camera.lookAt(foot);camera.updateMatrixWorld();
-  const pose=roofSignPose(camera,foot,150,90,800);
-  assert.ok(Math.abs(pose.quaternion.dot(camera.quaternion))>0.999999);
-  const bottom=pose.center.clone().add(new Vector3(0,-pose.worldHeight/2,0).applyQuaternion(pose.quaternion));
-  assert.ok(bottom.distanceTo(foot)<1e-10,'rotation must not displace the roof joint');
-  const left=pose.center.clone().add(new Vector3(-pose.worldWidth/2,0,0).applyQuaternion(pose.quaternion)).project(camera);
-  const right=pose.center.clone().add(new Vector3(pose.worldWidth/2,0,0).applyQuaternion(pose.quaternion)).project(camera);
-  assert.ok(Math.abs((right.x-left.x)*700-150*pose.scale)<1e-8);
-  assert.ok(pose.scale>=1&&pose.scale<=1.25,'keep text readable while zooming');
- }
-});
-
-test('roof supports use their own building surface and release all scene objects',()=>{
- const scene=new Scene(),model=new Group(),building=new Group();building.userData.zone='risk';
+test('flat roof labels anchor to their own building surface without creating scene geometry',()=>{
+ const model=new Group(),building=new Group();building.userData.zone='risk';
  const mesh=new Mesh(new BoxGeometry(4,6,4),new MeshBasicMaterial());mesh.position.set(2,3,4);building.add(mesh);model.add(building);
- const labels=createRoofLabels(scene,[{id:'risk',anchor:[2,12,4]}]);labels.attach(model);
- assert.deepEqual(labels.state()[0].roof,[2,6,4]);assert.equal(labels.state()[0].foot[1],7.15);
- const camera=new PerspectiveCamera(38,1,.1,250);camera.position.set(20,20,20);camera.lookAt(2,6,4);camera.updateMatrixWorld();
- labels.update('risk',camera,150,80,800,true,false);assert.equal(labels.state()[0].visible,true);
- labels.hide();assert.equal(labels.state()[0].visible,false);labels.dispose();assert.equal(scene.children.length,0);mesh.geometry.dispose();mesh.material.dispose();
+ const anchors=createRoofAnchors([{id:'risk',anchor:[2,12,4]}]);anchors.attach(model);
+ assert.deepEqual(anchors.state()[0].roof,[2,6,4]);assert.equal(anchors.foot('risk').y,6.35);
+ const copy=anchors.foot('risk');copy.y=99;assert.equal(anchors.foot('risk').y,6.35);
+ assert.equal(model.children.length,1);mesh.geometry.dispose();mesh.material.dispose();
 });
 
 test('roof-label preference is opt-in and preserves existing appearance values',()=>{
@@ -185,4 +169,23 @@ test('roof-label preference is opt-in and preserves existing appearance values',
  assert.equal(normalizeAppearance({sandboxRoofLabels:'yes'}).sandboxRoofLabels,false);
  const p=normalizeAppearance({sandboxRoofLabels:true,palette:'emerald',sandboxAutoOrbit:false});
  assert.equal(p.sandboxRoofLabels,true);assert.equal(p.palette,'emerald');assert.equal(p.sandboxAutoOrbit,false);
+});
+
+
+test('repeated collisions and pointer locks never accumulate displacement beyond the building neighborhood',()=>{
+ const engine=createMarkerLayout(),frame={x:0,y:0,width:1400,height:900};let time=0;
+ for(let turn=0;turn<60;turn++){
+  const ax=400+(turn%4)*125,ay=350+(turn%3)*80;
+  const items=[{...sign('price',ax,ay),priority:true},{...sign('risk',ax+20,ay+20),priority:true},{...sign('report',ax-20,ay+30)}];
+  engine.update(items,frame,time,true);time+=350;
+  engine.update(items,frame,time,false,true);time+=350;
+  const result=engine.update(items,frame,time,false,true);
+  for(const p of result.placements){const m=items.find(m=>m.id===p.id)!;const bx=Math.max(frame.x,Math.min(m.ax-m.width/2,frame.width-m.width));const by=Math.max(frame.y,Math.min(m.ay-m.height-18,frame.height-m.titleHeight));assert.ok(Math.abs(p.x-bx)<=120.001);assert.ok(Math.abs(p.y-by)<=120.001)}
+  engine.update(items.map(m=>({...m,locked:m.id==='report'})),frame,time+10);
+  engine.update(items.map(m=>({...m,ax:m.ax+450,ay:m.ay+200,locked:m.id==='report'})),frame,time+20,true);
+  const unlocked=engine.update(items.map(m=>({...m,ax:m.ax+450,ay:m.ay+200})),frame,time+30,true);
+  const report=unlocked.placements.find(p=>p.id==='report')!,m=items[2];assert.ok(Math.abs(report.x-(m.ax+450-m.width/2))<=120.001);
+  time+=400;
+ }
+ engine.reset();const reset=engine.update([sign('risk',600,400)],frame,time,true).placements[0];assert.equal(reset.x,600-reset.width/2);
 });

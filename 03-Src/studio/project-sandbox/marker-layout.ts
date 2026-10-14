@@ -3,6 +3,7 @@ export type MarkerInput={id:string;ax:number;ay:number;width:number;height:numbe
 type Point={x:number;y:number};
 type State={dx:number;dy:number;condensed:boolean;x:number;y:number;locked:boolean;from?:Point;to?:Point;start:number};
 export type MarkerPlacement=Point&{id:string;width:number;height:number;condensed:boolean;locked:boolean};
+const MAX_OFFSET=120;
 const clamp=(v:number,min:number,max:number)=>Math.max(min,Math.min(v,max));
 function intersection(a:MarkerPlacement,b:MarkerPlacement,pad=0){
  const w=Math.min(a.x+a.width+pad,b.x+b.width+pad)-Math.max(a.x,b.x);
@@ -40,7 +41,7 @@ export function createMarkerLayout(){
      // Keep the hit target still, even if an automatic orbit passes underneath it.
      s.to=undefined;s.from=undefined;
      s.x=clamp(s.x,frame.x,frame.x+frame.width-m.width);s.y=clamp(s.y,frame.y,frame.y+frame.height-m.titleHeight);
-    }else if(s.locked){const b=base(m,frame);s.dx=s.x-b.x;s.dy=s.y-b.y;}
+    }else if(s.locked){const b=base(m,frame);s.dx=clamp(s.x-b.x,-MAX_OFFSET,MAX_OFFSET);s.dy=clamp(s.y-b.y,-MAX_OFFSET,MAX_OFFSET);}
     if(moving){s.to=undefined;s.from=undefined}else if(!m.locked)animating=advance(s,time,reduced)||animating;
     s.locked=!!m.locked;
    }
@@ -62,15 +63,16 @@ export function createMarkerLayout(){
      const start=rect(m,s,frame),overlap=collision(start);
      if(overlap>240){
       let best=start,bestScore=overlap*20;
-      // A bounded local adjustment cannot send a sign across the whole scene.
+      // Bound total displacement from the building, not from the previous displaced position.
       for(const dy of [0,-24,24,-48,48,-80,80,-120,120])for(const dx of [0,-24,24,-48,48,-80,80,-120,120]){
-       const p={...start,x:clamp(start.x+dx,frame.x,frame.x+frame.width-m.width),y:clamp(start.y+dy,frame.y,frame.y+frame.height-start.height)};
+       const origin=base(m,frame);
+       const p={...start,x:clamp(origin.x+dx,frame.x,frame.x+frame.width-m.width),y:clamp(origin.y+dy,frame.y,frame.y+frame.height-start.height)};
        const score=collision(p)*20+(p.x-start.x)**2+(p.y-start.y)**2;
        if(score<bestScore){best=p;bestScore=score}
       }
       // Hysteresis: insignificant improvements never change an established position.
       if(collision(best)<overlap*.55&&Math.hypot(best.x-start.x,best.y-start.y)>8){
-       const b=base(m,frame);s.from={x:s.dx,y:s.dy};s.to={x:best.x-b.x,y:best.y-b.y};s.start=time;
+       const b=base(m,frame);s.from={x:s.dx,y:s.dy};s.to={x:clamp(best.x-b.x,-MAX_OFFSET,MAX_OFFSET),y:clamp(best.y-b.y,-MAX_OFFSET,MAX_OFFSET)};s.start=time;
        animating=advance(s,time,reduced)||animating;
       }
      }

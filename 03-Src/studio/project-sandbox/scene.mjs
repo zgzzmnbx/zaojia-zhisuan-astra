@@ -8,7 +8,7 @@ import {createContactShadows} from './contact-shadows.js';
 import {createNightRenderer} from './night-renderer.js';
 import {zones} from './zones.js';
 import {sandboxFrame} from './scene-layout.ts';
-import {createRoofLabels} from './roof-labels.mjs';
+import {createRoofAnchors} from './roof-labels.mjs';
 import {createMarkerLayout} from './marker-layout.ts';
 
 const poses=new Map();
@@ -31,7 +31,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  for(const radius of [3.2,3.7]){const ring=new THREE.Mesh(new THREE.RingGeometry(radius,radius+.07,80),new THREE.MeshBasicMaterial({color:0x228be6,transparent:true,opacity:.6,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;beacon.add(ring)}
  scene.add(beacon);
  const original=new WeakMap(),abort=new AbortController(),events=new AbortController(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const roofLabels=createRoofLabels(scene,zones);
+ const roofAnchors=createRoofAnchors(zones);
  const markerLayout=createMarkerLayout();let markerSnapshot={placements:[],pending:false,reflows:0};
  let model=null,disposed=false,raf=0,inView=true,width=1,height=1,flight=null,down=null,selected=null,frames=0,shadowDraws=0;
  let frame=sandboxFrame(1,1);
@@ -58,28 +58,21 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  function project(time,moving){
   if(options.roofLabels){
    const placements=[];
-   for(const zone of zones){
-    const el=markers.get(zone.id);if(!el)continue;
-    el.dataset.condensed='false';el.dataset.locked='false';el.dataset.priority=String(zone.id==='price'||zone.id==='risk'||zone.id===options.running);
-    const w=el.offsetWidth||150,h=el.offsetHeight||38;
-    const pose=roofLabels.update(zone.id,camera,w,h,height,!!model,options.dark),p=pose.foot.clone().project(camera);
-    const visible=!!model&&pose.depth>camera.near&&p.z>=-1&&p.z<=1;
-    el.style.visibility=visible?'visible':'hidden';
-    const x=(p.x+1)*width/2-w*pose.scale/2,y=(1-p.y)*height/2-h*pose.scale;
-    el.style.transform=`translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) scale(${pose.scale})`;
-    placements.push({id:zone.id,x,y,width:w*pose.scale,height:h*pose.scale,condensed:false,locked:false});
-   }
-   markerSnapshot={placements,pending:false,reflows:0};return false;
+   for(const zone of zones){const el=markers.get(zone.id);if(!el)continue;el.dataset.condensed='false';el.dataset.locked='false';el.dataset.priority=String(zone.id==='price'||zone.id==='risk');
+    const p=roofAnchors.foot(zone.id).project(camera),w=el.offsetWidth||150,h=el.offsetHeight||80;
+    el.style.visibility=model&&p.z>=-1&&p.z<=1?'visible':'hidden';const x=(p.x+1)*width/2-w/2,y=(1-p.y)*height/2-h-18;
+    el.style.transform=`translate3d(${x}px,${y}px,0)`;const pin=el.querySelector('.sandbox-pin');if(pin){pin.style.height='18px';pin.style.transform='none'}placements.push({id:zone.id,x,y,width:w,height:h});
+   }markerSnapshot={placements,pending:false,reflows:0};return false;
   }
-  roofLabels.hide();
   const inputs=[],anchors=new Map();
   for(const zone of zones){
    const el=markers.get(zone.id);if(!el)continue;const p=new THREE.Vector3(...zone.anchor).project(camera);
-   const hidden=p.z>1||p.z< -1||!model;el.style.visibility=hidden?'hidden':'visible';if(hidden)continue;
+   const ax=(p.x+1)*width/2,ay=(1-p.y)*height/2;
+   const hidden=p.z>1||p.z< -1||!model||ax<frame.x-80||ax>frame.x+frame.width+80||ay<frame.y-80||ay>frame.y+frame.height+100;el.style.visibility=hidden?'hidden':'visible';if(hidden)continue;
    const title=el.querySelector('.sandbox-marker-title'),result=el.querySelector('.sandbox-result-trigger');
    const titleHeight=title?.offsetHeight||38,resultHeight=result?.offsetHeight||0,w=el.offsetWidth||150;
-   const ax=(p.x+1)*width/2,ay=(1-p.y)*height/2;anchors.set(zone.id,{ax,ay});
-   inputs.push({id:zone.id,ax,ay,width:w,height:titleHeight+(resultHeight?resultHeight+5:0),titleHeight,tailHeight:el.dataset.progressOpen==='true'?(el.querySelector('.sandbox-progress-content')?.offsetHeight||20):0,priority:zone.id==='price'||zone.id==='risk'||zone.id===options.running||el.dataset.progressOpen==='true',selected:zone.id===selected,locked:el.matches(':hover')||el.contains(document.activeElement)});
+   anchors.set(zone.id,{ax,ay});
+   inputs.push({id:zone.id,ax,ay,width:w,height:titleHeight+(resultHeight?resultHeight+5:0),titleHeight,tailHeight:el.dataset.progressOpen==='true'?(el.querySelector('.sandbox-progress-content')?.offsetHeight||20):0,priority:zone.id==='price'||zone.id==='risk'||zone.id===options.running||el.dataset.progressOpen==='true',selected:zone.id===selected,locked:!flight&&(el.matches(':hover')||!!el.querySelector(':focus-visible'))});
   }
   markerSnapshot=markerLayout.update(inputs,frame,time,moving,reduced.matches);
   for(const p of markerSnapshot.placements){
@@ -112,9 +105,10 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  const visibility=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;if(inView)request();else stop()});visibility.observe(host);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else request()},{signal:events.signal});
  const rays=new THREE.Raycaster(),pointer=new THREE.Vector2();
- function hit(e){if(!model)return null;const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);rays.setFromCamera(pointer,camera);let object=rays.intersectObject(model,true)[0]?.object;while(object&&!object.userData.zone)object=object.parent;return object?.userData.zone||null;}
+ function hit(e){if(!model)return null;const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);rays.setFromCamera(pointer,camera);const intersection=rays.intersectObject(model,true)[0];let object=intersection?.object;while(object&&!object.userData.zone)object=object.parent;return object?.userData.zone?{id:object.userData.zone,action:'focus'}:null;}
+
  renderer.domElement.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY};onOrbitStop?.();flight=null;options.orbit=false;controls.autoRotate=false;request()},{signal:events.signal});
- renderer.domElement.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<5){const id=hit(e);if(id)onSelect(id)}down=null},{signal:events.signal});
+ renderer.domElement.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<5){const hitResult=hit(e);if(hitResult)onSelect(hitResult.id,hitResult.action);else onSelect(null,'home')}down=null},{signal:events.signal});
  renderer.domElement.addEventListener('pointercancel',()=>down=null,{signal:events.signal});
  renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();stop();onError('三维画面已暂停，可切回经典界面继续工作。')},{signal:events.signal});
  controls.addEventListener('change',request);
@@ -123,18 +117,18 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  renderer.domElement.style.cursor='grab';renderer.domElement.addEventListener('pointermove',e=>{renderer.domElement.style.cursor=down?'grabbing':hit(e)?'pointer':'grab'},{signal:events.signal});
  const loader=new GLTFLoader();
  fetch(modelUrl,{signal:abort.signal}).then(r=>{if(!r.ok)throw Error('模型文件读取失败');return r.arrayBuffer()}).then(buffer=>loader.parseAsync(buffer,'')).then(gltf=>{
-  if(disposed){releaseObject(gltf.scene);return}model=gltf.scene;model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);roofLabels.attach(model);theme();onReady();request();
+  if(disposed){releaseObject(gltf.scene);return}model=gltf.scene;model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);roofAnchors.attach(model);theme();onReady();request();
  }).catch(error=>{if(!disposed&&error.name!=='AbortError')onError('沙盘加载失败，可以重试或使用经典界面。')});
  theme();request();
  return {
   setOptions(next){const previous=options;options={...options,...next};if(previous.roofLabels!==options.roofLabels)markerLayout.reset();if(previous.compact!==options.compact){markerLayout.reset();selected=null;resize();home(false)}else reframe();if(previous.dark!==options.dark)theme();if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow);if(allowed())request();else stop();},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},
   focusTask(id){const zone=zones.find(z=>z.id===id);if(!zone)return;selected=null;options.orbit=false;controls.autoRotate=false;onOrbitStop?.();reframe();const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(direction.y,.5);direction.normalize();fly(target.clone().addScaledVector(direction,32*Math.max(1,.8/(frame.width/frame.height))),target);request()},
-  select(id){selected=id;reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,25*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
-  home(){selected=null;reframe();theme();home()},
+  select(id){if(id===selected)return;selected=id;markerLayout.reset();reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,25*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
+  home(){selected=null;markerLayout.reset();reframe();theme();home()},
   zoom(factor){const delta=camera.position.clone().sub(controls.target).multiplyScalar(factor).clampLength(17,110);fly(controls.target.clone().add(delta),controls.target)},
   refresh:request,
-  state:()=>({roofLabels:options.roofLabels,roofSigns:roofLabels.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
-  dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();roofLabels.dispose();contacts.dispose();night.dispose();releaseObject(scene);sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
+  state:()=>({roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
+  dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();night.dispose();releaseObject(scene);sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
  };
 }

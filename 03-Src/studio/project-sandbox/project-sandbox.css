@@ -149,11 +149,5 @@
 .sandbox-node-progress[data-phase=running] .sandbox-progress-content,.sandbox-node-progress[data-phase=settled] .sandbox-progress-content{height:20px;padding-block:8px}
 .sandbox-node-progress[data-phase=running] .sandbox-progress-content>span,.sandbox-node-progress[data-phase=settled] .sandbox-progress-content>span{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-/* Roof signs share the existing buttons and live state; only their spatial placement changes. */
-.project-sandbox[data-roof-labels=true] .sandbox-marker{gap:0;transform-origin:0 0;border:1px solid color-mix(in srgb,var(--blue) 32%,var(--paper));border-radius:8px;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(12px);box-shadow:0 3px 0 color-mix(in srgb,var(--blue) 24%,var(--paper)),0 7px 16px #183e5928}
-.project-sandbox[data-roof-labels=true] .sandbox-marker-title{width:100%;border:0;border-radius:7px 7px 0 0;background:transparent;box-shadow:none}
-.project-sandbox[data-roof-labels=true] .sandbox-result-trigger{border:0;border-top:1px solid color-mix(in srgb,var(--blue) 15%,transparent);border-radius:0 0 7px 7px;background:transparent;box-shadow:none}
-.project-sandbox[data-roof-labels=true] .sandbox-pin{display:none}
-.project-sandbox[data-roof-labels=true] .sandbox-marker.selected{border-color:var(--blue)}
-.project-sandbox[data-roof-labels=true] .sandbox-marker[data-priority=true]{z-index:6!important}
 .sandbox-label-setting{border-right:1px solid var(--line);margin-right:4px}
+.project-sandbox[data-roof-labels=true] .sandbox-result-trigger{display:flex}
