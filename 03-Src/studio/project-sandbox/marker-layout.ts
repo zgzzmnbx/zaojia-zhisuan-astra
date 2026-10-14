@@ -1,5 +1,5 @@
 type Frame={x:number;y:number;width:number;height:number};
-export type MarkerInput={id:string;ax:number;ay:number;width:number;height:number;titleHeight:number;locked?:boolean;selected?:boolean;priority?:boolean};
+export type MarkerInput={id:string;ax:number;ay:number;width:number;height:number;titleHeight:number;tailHeight?:number;locked?:boolean;selected?:boolean;priority?:boolean};
 type Point={x:number;y:number};
 type State={dx:number;dy:number;condensed:boolean;x:number;y:number;locked:boolean;from?:Point;to?:Point;start:number};
 export type MarkerPlacement=Point&{id:string;width:number;height:number;condensed:boolean;locked:boolean};
@@ -16,7 +16,7 @@ export function createMarkerLayout(){
  let signature='',changedAt=0,dirty=true,reflows=0;
  const base=(m:MarkerInput,f:Frame)=>({x:clamp(m.ax-m.width/2,f.x,f.x+f.width-m.width),y:clamp(m.ay-m.height-18,f.y,f.y+f.height-m.titleHeight)});
  function rect(m:MarkerInput,s:State,f:Frame):MarkerPlacement{
-  const b=base(m,f),height=s.condensed?m.titleHeight:m.height;
+  const b=base(m,f),height=s.condensed?m.titleHeight:m.height+(m.tailHeight||0);
   return {id:m.id,x:clamp(b.x+s.dx,f.x,f.x+f.width-m.width),y:clamp(b.y+s.dy,f.y,f.y+f.height-height),width:m.width,height,condensed:s.condensed,locked:!!m.locked};
  }
  function advance(s:State,time:number,reduced:boolean){
@@ -28,7 +28,7 @@ export function createMarkerLayout(){
  return {
   update(items:MarkerInput[],frame:Frame,time:number,moving=false,reduced=false){
    // Quarter-pixel tolerance ignores floating-point noise and animated shaders.
-   const next=JSON.stringify([frame,...items.map(m=>[m.id,Math.round(m.ax*4),Math.round(m.ay*4),m.width,m.height,m.titleHeight,!!m.locked,!!m.selected,!!m.priority])]);
+   const next=JSON.stringify([frame,...items.map(m=>[m.id,Math.round(m.ax*4),Math.round(m.ay*4),m.width,m.height,m.titleHeight,m.tailHeight||0,!!m.locked,!!m.selected,!!m.priority])]);
    if(next!==signature){signature=next;changedAt=time;dirty=true}
    if(moving){changedAt=time;dirty=true}
    let animating=false;
@@ -56,7 +56,7 @@ export function createMarkerLayout(){
      const current=rect(m,s,frame);
      const collision=(p:MarkerPlacement,pad=0)=>occupied.reduce((n,o)=>n+intersection(p,o,pad),0);
      // Collapse content before displacing the title. Restore only with ample clearance.
-     if(s.condensed){const full={...current,height:m.height};if(!collision(full,18)&&full.y+full.height<=frame.y+frame.height-12)s.condensed=false}
+     if(s.condensed){const full={...current,height:m.height+(m.tailHeight||0)};if(!collision(full,18)&&full.y+full.height<=frame.y+frame.height-12)s.condensed=false}
      else if(!m.priority&&!m.selected&&collision(current)>240&&m.height>m.titleHeight)s.condensed=true;
      if(s.condensed!==current.condensed){const resized=rect(m,s,frame);s.dx+=current.x-resized.x;s.dy+=current.y-resized.y}
      const start=rect(m,s,frame),overlap=collision(start);

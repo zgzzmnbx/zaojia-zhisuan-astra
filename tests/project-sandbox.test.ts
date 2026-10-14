@@ -120,10 +120,13 @@ test('failed and cancelled work never becomes successful progress, stale errors 
  assert.equal(nextTaskActivity(running,{...idle,cancelVersion:3})?.phase,'cancelled');
 });
 
-test('live task banner reserves space below markers without covering pricing and risk details',()=>{
- for(const compact of [true,false]){const normal=sandboxFrame(1400,800,420,false,compact),active=sandboxFrame(1400,800,420,false,compact,true);assert.equal(normal.height-active.height,80);assert.ok(active.y+active.height<=800-170)}
+test('unfolding progress reserves space below the status without shifting its anchor',()=>{
+ const engine=createMarkerLayout(),normal={...sign('risk',650,400),priority:true};
+ const before=engine.update([normal],markerFrame,0).placements[0];
+ const during=engine.update([{...normal,tailHeight:40}],markerFrame,10).placements[0];
+ assert.equal(during.x,before.x);assert.equal(during.y,before.y);assert.equal(during.height,before.height+40);assert.equal(during.condensed,false);
+ const after=engine.update([normal],markerFrame,20).placements[0];assert.equal(after.y,before.y);assert.equal(after.height,before.height);
 });
-
 
 test('automatic orbit preferences default on and validate persisted delays',()=>{
  assert.equal(normalizeAppearance({}).sandboxAutoOrbit,true);assert.equal(normalizeAppearance({}).sandboxOrbitDelay,15);

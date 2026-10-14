@@ -32,11 +32,6 @@
 .sandbox-node-summary{font-size:12px;line-height:1.4;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
 .sandbox-pin{position:absolute;width:1px;height:15px;top:100%;left:50%;background:color-mix(in srgb,var(--blue) 30%,transparent)}
 .sandbox-pin::after{content:'';position:absolute;bottom:-5px;left:-3px;width:7px;height:7px;background:var(--blue);border:2px solid var(--paper);border-radius:50%;box-shadow:0 0 0 3px #ffffff38}
-.sandbox-node-detail{position:absolute;z-index:6;top:124px;right:20px;width:286px;max-height:calc(100% - 226px);overflow:auto;padding:18px;gap:14px;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px #0f294423}
-.sandbox-node-detail>header{display:flex;justify-content:space-between;align-items:center;gap:8px}.sandbox-node-detail h2{font-size:20px;font-weight:650;margin:3px 0 0}
-.sandbox-detail-state{align-self:flex-start;padding:4px 9px;border-radius:6px;background:var(--blue-wash);color:var(--blue);font-size:13px}
-.sandbox-node-detail dl{display:flex;flex-direction:column;gap:12px;margin:0}.sandbox-node-detail dl>div{display:flex;flex-direction:column;gap:4px}.sandbox-node-detail dt{font-size:12px;color:var(--muted)}.sandbox-node-detail dd{margin:0;font-size:14px;overflow-wrap:anywhere;line-height:1.6}
-.sandbox-disabled-reason{font-size:13px;line-height:1.6;color:var(--muted);margin:0}.sandbox-node-detail>.btn{min-height:36px;font-size:13px;flex-shrink:0}
 .sandbox-view-controls{position:absolute;z-index:5;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:3px;padding:6px 8px;width:max-content;max-width:calc(100% - 32px);border-radius:13px;background:var(--glass);border:1px solid color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:blur(20px);box-shadow:0 6px 24px #16324b15}
 .sandbox-view-controls .btn{height:30px;min-height:30px;font-size:12px;gap:5px;padding-inline:8px}.sandbox-view-controls .btn-square{width:30px;padding:0}.sandbox-view-controls .astra-icon{width:16px;height:16px}
 .sandbox-view-controls label{display:flex;align-items:center;gap:5px;padding:0 7px;font-size:12px;white-space:nowrap;color:var(--muted);cursor:pointer}.sandbox-view-controls .toggle{color:var(--blue)}
@@ -48,24 +43,19 @@
 .scene-fallback .sandbox-marker{position:relative;width:100%;transform:none!important;visibility:visible!important}.scene-fallback .sandbox-pin{display:none}
 [data-astra-scheme=dark] .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{background:radial-gradient(ellipse at 20% 65%,#11384c70,transparent 70%),var(--canvas)}
 [data-astra-scheme=dark] .sandbox-marker{border-color:color-mix(in srgb,var(--blue) 18%,transparent)}
-@container(max-width:650px){.sandbox-marker{width:132px;padding:7px 9px}.sandbox-toolbar{left:16px;right:16px}.sandbox-project>strong{font-size:16px}.sandbox-view-controls{gap:0;padding:5px}.sandbox-view-controls label{padding-inline:4px}.sandbox-node-detail{right:16px}}
 @media(prefers-reduced-motion:reduce){.sandbox-marker{transition:none}}
 
 .sandbox-node-summary>span{display:block;overflow:hidden;text-overflow:ellipsis}.sandbox-node-summary>.sandbox-amount{font-size:14px;font-weight:700;line-height:1.6;color:var(--blue);font-variant-numeric:tabular-nums}
-/* Two separate targets match the original scene: focus a building, or inspect its result. */
+/* Titles focus buildings; status cards enter the existing professional feature. */
 .sandbox-toolbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}.sandbox-all{background:var(--glass);backdrop-filter:blur(14px);font-size:13px}
 .sandbox-all-menu{position:absolute;z-index:9;top:70px;right:20px;display:grid;gap:3px;padding:8px;width:190px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(24px);box-shadow:0 14px 40px #15345224}
 .sandbox-all-menu>.btn{justify-content:flex-start;font-size:14px;gap:12px}.sandbox-all-menu>.btn>span{font-size:12px;color:var(--blue)}
 .sandbox-marker,.sandbox-marker:hover,.sandbox-marker.selected{padding:0;gap:5px;min-height:0;border:0;box-shadow:none;background:transparent;backdrop-filter:none;pointer-events:none}
 .sandbox-marker-title,.sandbox-result-trigger{width:100%;pointer-events:auto;border:1px solid color-mix(in srgb,var(--paper) 72%,transparent);border-radius:9px;background:color-mix(in srgb,var(--paper) 62%,transparent);backdrop-filter:blur(12px) saturate(120%);color:var(--ink);cursor:pointer;box-shadow:0 3px 15px #335c7814}
 .sandbox-marker-title{justify-content:center;padding:9px 10px;line-height:1.4}.sandbox-result-trigger{display:flex;flex-direction:column;gap:4px;text-align:left;padding:6px 9px;background:color-mix(in srgb,var(--paper) 57%,transparent)}
-.sandbox-marker-title:hover,.sandbox-marker.selected>.sandbox-marker-title,.sandbox-result-trigger:hover,.sandbox-result-trigger[aria-expanded=true]{border-color:var(--blue);background:color-mix(in srgb,var(--paper) 80%,transparent)}
+.sandbox-marker-title:hover,.sandbox-marker.selected>.sandbox-marker-title,.sandbox-result-trigger:hover,.sandbox-result-trigger:focus-visible{border-color:var(--blue);background:color-mix(in srgb,var(--paper) 80%,transparent)}
 .sandbox-marker button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}.sandbox-pin{pointer-events:none}
 .project-sandbox[data-focused=true] .sandbox-marker:not(.selected){opacity:.56}.project-sandbox[data-focused=true] .sandbox-marker:hover,.project-sandbox[data-focused=true] .sandbox-marker:focus-within{opacity:1}
-.sandbox-zone-description{font-size:14px;line-height:1.8;color:var(--muted);margin:0}
-.sandbox-result-card{position:absolute;z-index:8;margin:0;width:292px;max-width:calc(100% - 32px);max-height:calc(100% - 210px);overflow:auto;padding:16px;gap:12px;background:color-mix(in srgb,var(--paper) 86%,transparent);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(22px) saturate(130%);box-shadow:0 18px 55px #203b5b30}
-.sandbox-result-card>header{display:flex;align-items:center;justify-content:space-between;gap:8px}.sandbox-result-card h2{font-size:16px;font-weight:700;margin:0}.sandbox-result-card dl{margin:0;display:grid;gap:12px}.sandbox-result-card dl>div{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px}.sandbox-result-card dt{font-size:12px;color:var(--muted);line-height:1.7}.sandbox-result-card dd{margin:0;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.sandbox-result-card footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px;font-size:12px;color:var(--muted)}
-.sandbox-result-card footer .btn{font-size:13px;color:var(--blue)}
 [data-astra-scheme=dark] .sandbox-marker-title,[data-astra-scheme=dark] .sandbox-result-trigger{border-color:color-mix(in srgb,var(--blue) 25%,transparent)}
 @container(max-width:650px){.sandbox-all{font-size:12px;padding-inline:7px}.sandbox-toolbar-actions{gap:4px}.sandbox-switch{gap:0;padding:3px}.sandbox-mode-current{padding-inline:6px}.sandbox-project{max-width:42%}}
 
@@ -86,9 +76,6 @@
 .sandbox-workbench .sandbox-scene-caption{left:calc(var(--sandbox-safe-left,0px) + 24px)}
 .sandbox-workbench .sandbox-load-error{left:calc(var(--sandbox-safe-left,0px) + 24px)}
 .sandbox-workbench .scene-fallback .sandbox-markers{left:calc(var(--sandbox-safe-left,0px) + 24px)}
-.project-sandbox[data-detail-placement=bottom] .sandbox-node-detail{top:auto;bottom:78px;right:20px;width:min(430px,calc(100% - var(--sandbox-safe-left,0px) - 40px));max-height:calc(48% - 20px);padding:14px;gap:10px}
-.project-sandbox[data-detail-placement=bottom] .sandbox-node-detail dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.project-sandbox[data-detail-placement=bottom] .sandbox-zone-description{display:none}
 
 /* Classic workspace: the chat is the page; the sandbox is a floating card. */
 .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic{display:block;--sandbox-card-width:min(60%,calc(100% - 400px));background:var(--paper)}
@@ -106,7 +93,6 @@
 .sandbox-card-mode .sandbox-view-controls .btn{padding-inline:5px}.sandbox-card-mode .sandbox-view-controls label{padding-inline:3px}
 .sandbox-card-mode .sandbox-scene-caption{font-size:12px;left:14px;bottom:5px}
 .sandbox-card-mode .sandbox-all-menu{top:62px}
-.sandbox-card-mode[data-detail-placement=bottom] .sandbox-node-detail{left:14px;right:14px;width:auto;bottom:78px}
 .sandbox-card-mode.scene-fallback .sandbox-marker{width:auto}.sandbox-card-mode.scene-fallback .sandbox-marker-title{width:100%;border-radius:9px;gap:8px}.sandbox-card-mode.scene-fallback .sandbox-marker-title>span{display:inline}
 
 /* Crowded signs keep their title and reveal details without moving the hit target. */
@@ -126,17 +112,26 @@
 /* Live task feedback: fixed track, no fabricated percentage. */
 .sandbox-marker[data-tone=running]{z-index:6!important;opacity:1!important}
 .sandbox-marker[data-tone=running]>.sandbox-marker-title,.sandbox-marker[data-tone=running]>.sandbox-result-trigger{border-color:#228be6;box-shadow:0 0 0 1px #228be626,0 6px 22px #228be61c}
-.sandbox-stage-progress{position:absolute;bottom:-2px;left:8px;right:8px;height:4px;border-radius:4px;overflow:hidden;background:#228be633;pointer-events:none}
-.sandbox-stage-progress>span{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#228be666,#228be6,#8bd4ff);animation:sandbox-task-stream 1.6s ease-in-out infinite}
+.sandbox-node-progress{position:absolute;top:calc(100% - 2px);left:0;right:0;display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .24s ease,opacity .18s ease;pointer-events:none;border-radius:0 0 9px 9px;background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(12px);box-shadow:0 6px 16px #1636510d}
+.sandbox-node-progress[data-open=true]{grid-template-rows:1fr;opacity:1}
+.sandbox-node-progress>div{min-height:0;overflow:hidden}
+.sandbox-progress-content{height:40px;box-sizing:border-box;padding:7px 9px 9px;display:flex;flex-direction:column;gap:5px;border:1px solid color-mix(in srgb,var(--blue) 30%,transparent);border-top:0;border-radius:0 0 9px 9px}
+.sandbox-progress-content>span{font-size:12px;line-height:16px;color:var(--blue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sandbox-stage-progress{height:3px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#228be633}
+.sandbox-stage-progress>span{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#228be666,#228be6,#8bd4ff)}
+.sandbox-node-progress[data-open=true][data-phase=running] .sandbox-stage-progress>span{animation:sandbox-task-stream 1.6s ease-in-out infinite}
+.sandbox-node-progress[data-phase=settled] .sandbox-stage-progress>span{width:100%;transform:none;transition:width .2s ease}
+.sandbox-node-progress[data-phase=error] .sandbox-progress-content>span{color:var(--error,#bc4343)}
+.sandbox-node-progress[data-phase=error] .sandbox-stage-progress>span{background:var(--error,#bc4343)}
+.sandbox-node-progress[data-phase=cancelled] .sandbox-stage-progress>span{background:var(--muted)}
+.sandbox-marker[data-progress-open=true]>.sandbox-result-trigger{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.sandbox-card-mode .sandbox-marker[data-progress-open=true]{width:140px}
+.sandbox-card-mode .sandbox-marker[data-progress-open=true] .sandbox-marker-title{width:100%}
+.sandbox-card-mode .sandbox-marker[data-progress-open=true] .sandbox-result-trigger{display:flex}
+.sandbox-result-trigger:disabled{cursor:default;opacity:1}
 @keyframes sandbox-task-stream{from{transform:translateX(-105%)}to{transform:translateX(370%)}}
-.sandbox-task-activity{position:absolute;z-index:5;bottom:85px;left:calc(50% + var(--sandbox-safe-left,0px)/2);transform:translateX(-50%);display:flex;align-items:center;gap:12px;width:360px;max-width:calc(100% - var(--sandbox-safe-left,0px) - 40px);padding:10px 12px;border:1px solid #228be638;border-radius:14px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(18px);box-shadow:0 8px 28px #16365118}
-.sandbox-activity-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#228be619;color:#228be6;flex-shrink:0}
-.sandbox-task-activity>div{flex:1;min-width:0}.sandbox-task-activity strong{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:650}.sandbox-task-activity small{font-size:12px;font-weight:500;color:#228be6}.sandbox-task-activity>div>span{display:block;font-size:12px;line-height:1.6;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sandbox-task-activity[data-phase=error]{border-color:var(--error,#bc4343)}.sandbox-task-activity[data-phase=error] small{color:var(--error,#bc4343)}
-.project-sandbox[data-focused=true] .sandbox-task-activity{display:none}
-.project-sandbox[data-motion-paused=true] .sandbox-stage-progress>span{animation-play-state:paused}
-.sandbox-card-mode .sandbox-task-activity{left:50%;max-width:calc(100% - 28px);bottom:74px}
-@media(prefers-reduced-motion:reduce){.sandbox-stage-progress>span{animation:none;transform:translateX(80%);opacity:.85}}
+.project-sandbox[data-motion-paused=true] .sandbox-stage-progress>span{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.sandbox-node-progress,.sandbox-stage-progress>span{transition:none}.sandbox-node-progress[data-open=true][data-phase=running] .sandbox-stage-progress>span{animation:none;transform:translateX(80%);opacity:.85}}
 
 /* Low-frequency scene controls stay behind a compact disclosure. */
 .sandbox-view-options{display:flex;align-items:center;gap:3px;padding-left:6px;border-left:1px solid color-mix(in srgb,var(--muted) 20%,transparent)}
@@ -148,3 +143,9 @@
 .sandbox-card-mode .sandbox-marker[data-zone="price"] .sandbox-result-trigger,.sandbox-card-mode .sandbox-marker[data-zone="risk"] .sandbox-result-trigger{display:flex}
 
 .sandbox-orbit-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;font-size:14px}.sandbox-orbit-setting .select{width:130px}.sandbox-orbit-help{font-size:12px;line-height:1.6;color:var(--muted);margin:12px 0 0}
+
+@container(max-width:650px){.sandbox-marker{width:132px}.sandbox-toolbar{left:16px;right:16px}.sandbox-project>strong{font-size:16px}.sandbox-view-controls{gap:0;padding:5px}.sandbox-view-controls label{padding-inline:4px}}
+
+/* The existing status already says processing; keep its folded extension to one track. */
+.sandbox-node-progress[data-phase=running] .sandbox-progress-content,.sandbox-node-progress[data-phase=settled] .sandbox-progress-content{height:20px;padding-block:8px}
+.sandbox-node-progress[data-phase=running] .sandbox-progress-content>span,.sandbox-node-progress[data-phase=settled] .sandbox-progress-content>span{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}

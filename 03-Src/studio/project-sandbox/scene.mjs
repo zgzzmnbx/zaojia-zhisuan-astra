@@ -7,7 +7,7 @@ import {createInformationFlow} from './information-flow.js';
 import {createContactShadows} from './contact-shadows.js';
 import {createNightRenderer} from './night-renderer.js';
 import {zones} from './zones.js';
-import {sandboxFrame,resultCardPosition} from './scene-layout.ts';
+import {sandboxFrame} from './scene-layout.ts';
 import {createMarkerLayout} from './marker-layout.ts';
 
 const poses=new Map();
@@ -31,7 +31,6 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  scene.add(beacon);
  const original=new WeakMap(),abort=new AbortController(),events=new AbortController(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const markerLayout=createMarkerLayout();let markerSnapshot={placements:[],pending:false,reflows:0};
- let resultId=null,resultCard=null;
  let model=null,disposed=false,raf=0,inView=true,width=1,height=1,flight=null,down=null,selected=null,frames=0,shadowDraws=0;
  let frame=sandboxFrame(1,1);
  let options={compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,shadows:true,flow:true,running:null,orbit:false};
@@ -62,22 +61,17 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
    const title=el.querySelector('.sandbox-marker-title'),result=el.querySelector('.sandbox-result-trigger');
    const titleHeight=title?.offsetHeight||38,resultHeight=result?.offsetHeight||0,w=el.offsetWidth||150;
    const ax=(p.x+1)*width/2,ay=(1-p.y)*height/2;anchors.set(zone.id,{ax,ay});
-   inputs.push({id:zone.id,ax,ay,width:w,height:titleHeight+(resultHeight?resultHeight+5:0),titleHeight,priority:zone.id==='price'||zone.id==='risk'||zone.id===options.running,selected:zone.id===selected,locked:zone.id===resultId||el.matches(':hover')||el.contains(document.activeElement)});
+   inputs.push({id:zone.id,ax,ay,width:w,height:titleHeight+(resultHeight?resultHeight+5:0),titleHeight,tailHeight:el.dataset.progressOpen==='true'?(el.querySelector('.sandbox-progress-content')?.offsetHeight||20):0,priority:zone.id==='price'||zone.id==='risk'||zone.id===options.running||el.dataset.progressOpen==='true',selected:zone.id===selected,locked:el.matches(':hover')||el.contains(document.activeElement)});
   }
   markerSnapshot=markerLayout.update(inputs,frame,time,moving,reduced.matches);
   for(const p of markerSnapshot.placements){
    const el=markers.get(p.id),{ax,ay}=anchors.get(p.id);
-   el.dataset.condensed=String(p.condensed);el.dataset.locked=String(p.locked);el.dataset.priority=String(p.id==='price'||p.id==='risk'||p.id===options.running);
+   el.dataset.condensed=String(p.condensed);el.dataset.locked=String(p.locked);el.dataset.priority=String(p.id==='price'||p.id==='risk'||p.id===options.running||el.dataset.progressOpen==='true');
    el.style.transform=`translate3d(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px,0)`;
-   const pin=el.querySelector('.sandbox-pin'),dx=ax-p.x-p.width/2,dy=ay-p.y-p.height;
+   const pin=el.querySelector('.sandbox-pin'),dx=ax-p.x-p.width/2,dy=ay-p.y-el.offsetHeight;
    if(pin){pin.style.height=`${Math.hypot(dx,dy)}px`;pin.style.transformOrigin='top';pin.style.transform=`rotate(${Math.atan2(-dx,dy)}rad)`;}
   }
-  positionResult();return markerSnapshot.pending;
- }
- function positionResult(){
-  if(!resultId||!resultCard)return;const root=markers.get(resultId);if(!root)return;const a=root.getBoundingClientRect(),base=host.getBoundingClientRect(),w=resultCard.offsetWidth,h=resultCard.offsetHeight;
-  const {x,y}=resultCardPosition(frame,{left:a.left-base.left,right:a.right-base.left,top:a.top-base.top},{width:w,height:h});
-  resultCard.style.left=`${Math.round(x)}px`;resultCard.style.top=`${Math.round(y)}px`;
+  return markerSnapshot.pending;
  }
  let lastRenderTime=0;
  function render(time){const delta=lastRenderTime?Math.min(.05,Math.max(0,(time-lastRenderTime)/1000)):1/60;lastRenderTime=time;raf=0;if(!allowed())return;
@@ -91,9 +85,8 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  function reframe(){
   const rect=host.getBoundingClientRect(),chat=host.closest('.workbench')?.querySelector('#astra-conversation');
   const chatRight=!options.compact&&chat?.getClientRects().length?chat.getBoundingClientRect().right-rect.left+16:0;
-  frame=sandboxFrame(width,height,chatRight,!!selected,options.compact,options.activity&&!selected);
+  frame=sandboxFrame(width,height,chatRight,false,options.compact);
   host.parentElement.style.setProperty('--sandbox-safe-left',`${frame.left}px`);
-  host.parentElement.dataset.detailPlacement=frame.sideDetail?'side':'bottom';
   camera.setViewOffset(width,height,frame.offsetX,frame.offsetY,width,height);
  }
  function resize(){const rect=host.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldHeight=height,oldUsable=width-frame.left,changed=width!==rect.width||height!==rect.height;width=rect.width;height=rect.height;camera.aspect=width/height;reframe();if(oldHeight>1&&!flight){const scale=height/oldHeight*oldUsable/(width-frame.left);camera.position.sub(controls.target).multiplyScalar(scale).clampLength(17,110).add(controls.target);controls.update()}if(changed){renderer.setSize(width,height);night.resize(width,height)}request()}
@@ -122,7 +115,6 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   select(id){selected=id;reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,25*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
   home(){selected=null;reframe();theme();home()},
   zoom(factor){const delta=camera.position.clone().sub(controls.target).multiplyScalar(factor).clampLength(17,110);fly(controls.target.clone().add(delta),controls.target)},
-  setResultCard(id,element){resultId=id;resultCard=element;positionResult();},
   refresh:request,
   state:()=>({zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
   dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();night.dispose();releaseObject(scene);sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
