@@ -7,6 +7,7 @@ import {createInformationFlow} from './information-flow.js';
 import {createContactShadows} from './contact-shadows.js';
 import {createNightRenderer} from './night-renderer.js';
 import {zones} from './zones.js';
+import {sandboxFrame,resultCardPosition} from './scene-layout.ts';
 
 const poses=new Map();
 function releaseObject(root){const geometries=new Set(),materials=new Set(),textures=new Set();root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v)}});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
@@ -27,7 +28,8 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  const original=new WeakMap(),abort=new AbortController(),events=new AbortController(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  let resultId=null,resultCard=null;
  let model=null,disposed=false,raf=0,inView=true,width=1,height=1,flight=null,down=null,selected=null,frames=0,shadowDraws=0;
- let options={active:true,dark:false,shadows:true,flow:true,running:null,orbit:false};
+ let frame=sandboxFrame(1,1);
+ let options={compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,shadows:true,flow:true,running:null,orbit:false};
  function allowed(){return !disposed&&options.active&&inView&&!document.hidden}
  function request(){if(!raf&&allowed())raf=requestAnimationFrame(render)}
  function stop(){cancelAnimationFrame(raf);raf=0;flow.suspend();}
@@ -55,7 +57,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
    const w=el.offsetWidth||150,h=el.offsetHeight||78,ax=(p.x+1)*width/2,ay=(1-p.y)*height/2;
    const desired={x:ax-w/2,y:ay-h-18},candidates=[];
    for(let ring=0;ring<8;ring++)for(let step=0;step<(ring?12:1);step++){
-    const angle=step*Math.PI/6,x=Math.max(12,Math.min(width-w-12,desired.x+Math.cos(angle)*ring*48)),y=Math.max(120,Math.min(height-h-100,desired.y+Math.sin(angle)*ring*48));
+    const angle=step*Math.PI/6,x=Math.max(frame.x,Math.min(frame.x+frame.width-w,desired.x+Math.cos(angle)*ring*48)),y=Math.max(frame.y,Math.min(frame.y+frame.height-h,desired.y+Math.sin(angle)*ring*48));
     const overlaps=placed.filter(r=>x<r.x+r.w+10&&x+w+10>r.x&&y<r.y+r.h+8&&y+h+8>r.y).length;
     candidates.push({x,y,cost:overlaps*100000+(x-desired.x)**2+(y-desired.y)**2});
    }
@@ -69,9 +71,8 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  }
  function positionResult(){
   if(!resultId||!resultCard)return;const root=markers.get(resultId);if(!root)return;const a=root.getBoundingClientRect(),base=host.getBoundingClientRect(),w=resultCard.offsetWidth,h=resultCard.offsetHeight;
-  let x=a.right-base.left+12,y=Math.max(116,Math.min(a.top-base.top,height-h-92));if(x+w>width-16)x=a.left-base.left-w-12;
-  if(selected&&x+w>width-326)x=width-326-w-12;
-  resultCard.style.left=`${Math.round(Math.max(12,Math.min(x,width-w-12)))}px`;resultCard.style.top=`${Math.round(y)}px`;
+  const {x,y}=resultCardPosition(frame,{left:a.left-base.left,right:a.right-base.left,top:a.top-base.top},{width:w,height:h});
+  resultCard.style.left=`${Math.round(x)}px`;resultCard.style.top=`${Math.round(y)}px`;
  }
  function render(time){raf=0;if(!allowed())return;
   if(flight){const t=Math.min(1,(time-flight.start)/950),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);if(t===1)flight=null;}
@@ -79,9 +80,17 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   if(flight||moving||controls.autoRotate||flow.getState().playing)request();
  }
  function fly(position,target){if(reduced.matches){camera.position.copy(position);controls.target.copy(target);controls.update()}else flight={p0:camera.position.clone(),p1:position.clone(),t0:controls.target.clone(),t1:target.clone(),start:performance.now()};request()}
- function home(animate=true){const target=new THREE.Vector3(-1,1,-1),position=new THREE.Vector3(30,33,38).normalize().multiplyScalar(60*Math.max(1,1.1/camera.aspect)).add(target);if(animate)fly(position,target);else{camera.position.copy(position);controls.target.copy(target);controls.update();request()}}
- function resize(){const rect=host.getBoundingClientRect();if(!rect.width||!rect.height)return;width=rect.width;height=rect.height;camera.aspect=width/height;camera.updateProjectionMatrix();renderer.setSize(width,height);night.resize(width,height);request()}
- const observer=new ResizeObserver(resize);observer.observe(host);resize();const pose=poses.get(context);if(pose){camera.position.fromArray(pose.position);controls.target.fromArray(pose.target);controls.update()}else home(false);
+ function home(animate=true){const target=new THREE.Vector3(-1,1,-1),position=new THREE.Vector3(30,33,38).normalize().multiplyScalar(54*Math.max(1,1.08/((width-frame.left)/height))).add(target);if(animate)fly(position,target);else{camera.position.copy(position);controls.target.copy(target);controls.update();request()}}
+ function reframe(){
+  const rect=host.getBoundingClientRect(),chat=host.closest('.workbench')?.querySelector('#astra-conversation');
+  const chatRight=!options.compact&&chat?.getClientRects().length?chat.getBoundingClientRect().right-rect.left+16:0;
+  frame=sandboxFrame(width,height,chatRight,!!selected,options.compact);
+  host.parentElement.style.setProperty('--sandbox-safe-left',`${frame.left}px`);
+  host.parentElement.dataset.detailPlacement=frame.sideDetail?'side':'bottom';
+  camera.setViewOffset(width,height,frame.offsetX,frame.offsetY,width,height);
+ }
+ function resize(){const rect=host.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldHeight=height,oldUsable=width-frame.left,changed=width!==rect.width||height!==rect.height;width=rect.width;height=rect.height;camera.aspect=width/height;reframe();if(oldHeight>1&&!flight){const scale=height/oldHeight*oldUsable/(width-frame.left);camera.position.sub(controls.target).multiplyScalar(scale).clampLength(17,110).add(controls.target);controls.update()}if(changed){renderer.setSize(width,height);night.resize(width,height)}request()}
+ const observer=new ResizeObserver(resize);observer.observe(host);const chat=host.closest('.workbench')?.querySelector('#astra-conversation');if(chat)observer.observe(chat);resize();const pose=poses.get(context);if(pose){camera.position.fromArray(pose.position);controls.target.fromArray(pose.target);controls.update()}else home(false);
  const visibility=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;if(inView)request();else stop()});visibility.observe(host);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else request()},{signal:events.signal});
  const rays=new THREE.Raycaster(),pointer=new THREE.Vector2();
@@ -98,13 +107,13 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  }).catch(error=>{if(!disposed&&error.name!=='AbortError')onError('沙盘加载失败，可以重试或使用经典界面。')});
  theme();request();
  return {
-  setOptions(next){const previous=options;options={...options,...next};if(previous.dark!==options.dark)theme();if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}flow.setStage(null);flow.setPlaying(options.flow);if(allowed())request();else stop();},
-  select(id){selected=id;if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,25*Math.max(1,1/camera.aspect)),target)}}theme();request()},
-  home(){selected=null;theme();home()},
+  setOptions(next){const previous=options;options={...options,...next};if(previous.compact!==options.compact){selected=null;resize();home(false)}else reframe();if(previous.dark!==options.dark)theme();if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}flow.setStage(null);flow.setPlaying(options.flow);if(allowed())request();else stop();},
+  select(id){selected=id;reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,25*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
+  home(){selected=null;reframe();theme();home()},
   zoom(factor){const delta=camera.position.clone().sub(controls.target).multiplyScalar(factor).clampLength(17,110);fly(controls.target.clone().add(delta),controls.target)},
   setResultCard(id,element){resultId=id;resultCard=element;positionResult();},
   refresh:request,
-  state:()=>({zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
+  state:()=>({zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
   dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();night.dispose();releaseObject(scene);sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
  };
 }

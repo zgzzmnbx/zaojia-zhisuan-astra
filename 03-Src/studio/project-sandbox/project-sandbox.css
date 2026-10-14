@@ -72,3 +72,39 @@
 .studio #shell.live-shell .adjustable-workbench.sandbox-chat-collapsed{grid-template-columns:minmax(0,1fr)}
 .studio #shell.live-shell .sandbox-chat-collapsed>.conversation,.studio #shell.live-shell .sandbox-chat-collapsed>.workbench-separator{display:none!important}
 .sandbox-chat-collapsed>.sandbox-surface{grid-column:1}
+
+/* Immersive workspace: one continuous 3D canvas beneath the retained chat. */
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{display:block;isolation:isolate}
+.studio #shell.live-shell .sandbox-workbench>.sandbox-surface{position:absolute;inset:0;z-index:0;width:100%;height:100%}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation{position:absolute;inset:16px auto 16px 16px;width:calc(var(--chat-size) - 16px);height:auto;max-width:none;margin:0;z-index:10;background:color-mix(in srgb,var(--paper) 58%,transparent);backdrop-filter:blur(28px) saturate(120%);box-shadow:0 18px 56px #173d5924,inset 0 1px 0 #ffffff80}
+.studio #shell.live-shell .sandbox-workbench>.conversation .composer{background:color-mix(in srgb,var(--paper) 78%,transparent)}
+.studio #shell.live-shell .sandbox-workbench>.conversation .conversation-heading{background:color-mix(in srgb,var(--paper) 25%,transparent)}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.workbench-separator{position:absolute;z-index:11;left:calc(var(--chat-size) - 6px);top:32px;bottom:32px;width:12px;height:auto;background:transparent;border:0}
+.sandbox-workbench>.workbench-separator::before,.sandbox-workbench>.workbench-separator::after{display:none}
+.sandbox-workbench .sandbox-toolbar{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+.sandbox-workbench .sandbox-view-controls{left:calc(50% + var(--sandbox-safe-left,0px)/2);max-width:calc(100% - var(--sandbox-safe-left,0px) - 32px)}
+.sandbox-workbench .sandbox-scene-caption{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+.sandbox-workbench .sandbox-load-error{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+.sandbox-workbench .scene-fallback .sandbox-markers{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+.project-sandbox[data-detail-placement=bottom] .sandbox-node-detail{top:auto;bottom:78px;right:20px;width:min(430px,calc(100% - var(--sandbox-safe-left,0px) - 40px));max-height:calc(48% - 20px);padding:14px;gap:10px}
+.project-sandbox[data-detail-placement=bottom] .sandbox-node-detail dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.project-sandbox[data-detail-placement=bottom] .sandbox-zone-description{display:none}
+
+/* Classic workspace: the chat is the page; the sandbox is a floating card. */
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic{display:block;--sandbox-card-width:clamp(400px,42%,580px);background:var(--paper)}
+.studio #shell.live-shell .four-surface.sandbox-classic>.conversation{height:100%;width:100%;max-width:none;margin:0;padding-right:calc(var(--sandbox-card-width) + 36px);box-sizing:border-box}
+.studio #shell.live-shell .four-surface.sandbox-classic>.conversation>.messages{padding-inline:28px}
+.studio #shell.live-shell .four-surface.sandbox-classic>.sandbox-surface{position:absolute;z-index:8;top:18px;right:18px;bottom:auto;width:var(--sandbox-card-width);height:min(720px,calc(100% - 42px));border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 48px #173d591c;overflow:hidden}
+.sandbox-card-mode .sandbox-toolbar{top:14px;left:16px;right:12px;gap:8px;align-items:center}
+.sandbox-card-mode .sandbox-project{max-width:32%}.sandbox-card-mode .sandbox-project>strong{font-size:16px}
+.sandbox-card-mode .sandbox-eyebrow,.sandbox-card-mode .sandbox-project>label{display:none}
+.sandbox-card-mode .sandbox-marker{width:110px}
+.sandbox-card-mode .sandbox-marker-title{width:110px;height:34px;padding:0 6px;gap:5px;font-size:13px;border-radius:9px;background:color-mix(in srgb,var(--paper) 84%,transparent)}
+.sandbox-card-mode .sandbox-result-trigger{display:none}
+.sandbox-card-mode .sandbox-marker-title small{font-size:13px}
+.sandbox-card-mode .sandbox-view-controls{bottom:22px;gap:0;padding:5px}
+.sandbox-card-mode .sandbox-view-controls .btn{padding-inline:5px}.sandbox-card-mode .sandbox-view-controls label{padding-inline:3px}
+.sandbox-card-mode .sandbox-scene-caption{font-size:12px;left:14px;bottom:5px}
+.sandbox-card-mode .sandbox-all-menu{top:62px}
+.sandbox-card-mode[data-detail-placement=bottom] .sandbox-node-detail{left:14px;right:14px;width:auto;bottom:78px}
+.sandbox-card-mode.scene-fallback .sandbox-marker{width:auto}.sandbox-card-mode.scene-fallback .sandbox-marker-title{width:100%;border-radius:9px;gap:8px}.sandbox-card-mode.scene-fallback .sandbox-marker-title>span{display:inline}
