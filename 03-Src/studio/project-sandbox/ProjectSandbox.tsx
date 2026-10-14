@@ -4,10 +4,11 @@ import {api} from '../api';
 import {zones} from './zones.js';
 import {sandboxNodes,runningZone,type SandboxInput,type ZoneId} from './node-state';
 import {mountSandbox} from './scene.mjs';
+import {useIdleOrbit} from './useIdleOrbit';
 import {nextTaskActivity,type TaskActivity} from './task-activity';
 import type {ReviewProgressTask} from '../../professional/components/agent-workspace/reviewProgress';
 
-type Props={variant:'immersive'|'card';immersive:()=>void;context:string;active:boolean;dark:boolean;title:string;taskId:string;tasks:{id:string;title:string}[];input:Omit<SandboxInput,'reviewTasks'|'reviewError'>;chatCollapsed:boolean;toggleChat:()=>void;classic:()=>void;toggleDark:()=>void;selectTask:(id:string)=>void;enter:(action:string)=>void};
+type Props={autoOrbit:boolean;orbitDelay:number;orbitSettings:()=>void;variant:'immersive'|'card';immersive:()=>void;context:string;active:boolean;dark:boolean;title:string;taskId:string;tasks:{id:string;title:string}[];input:Omit<SandboxInput,'reviewTasks'|'reviewError'>;chatCollapsed:boolean;toggleChat:()=>void;classic:()=>void;toggleDark:()=>void;selectTask:(id:string)=>void;enter:(action:string)=>void};
 export default function ProjectSandbox(props:Props){
  const host=useRef<HTMLDivElement>(null),markers=useRef(new Map<string,HTMLDivElement>()),scene=useRef<ReturnType<typeof mountSandbox>|null>(null),closeButton=useRef<HTMLButtonElement>(null),resultCard=useRef<HTMLElement>(null),resultClose=useRef<HTMLButtonElement>(null);
  const modeButton=useRef<HTMLButtonElement>(null),lastVariant=useRef(props.variant);
@@ -19,6 +20,8 @@ export default function ProjectSandbox(props:Props){
  const controlsRef=useRef<HTMLDivElement>(null),controlsButton=useRef<HTMLButtonElement>(null);
  const [controlsOpen,setControlsOpen]=useState(false);
  const [pageVisible,setPageVisible]=useState(()=>!document.hidden);
+ const idleOrbit=useIdleOrbit(props.autoOrbit,props.orbitDelay,!ready||!props.active||!pageVisible||reduced||!!props.input.busy||props.input.qaRunning||!!selected||!!resultId||menu||controlsOpen,()=>{setOrbit(false);scene.current?.pauseOrbit()});
+ const orbiting=orbit||idleOrbit;
  useEffect(()=>{const update=()=>setPageVisible(!document.hidden);document.addEventListener('visibilitychange',update);return()=>document.removeEventListener('visibilitychange',update)},[]);
  useEffect(()=>{setActivity(previous=>nextTaskActivity(previous,{ready:props.input.ready,busy:props.input.busy,qaRunning:props.input.qaRunning,error:props.input.operationError,cancelVersion:props.input.cancelVersion}))},[props.input.ready,props.input.busy,props.input.qaRunning,props.input.operationError,props.input.cancelVersion]);
  const job=props.input.project?.jobId===props.input.result?.job_id?props.input.result?.job_id||'':'';
@@ -28,7 +31,7 @@ export default function ProjectSandbox(props:Props){
   try{api=mountSandbox(el,markers.current,props.context,(id:ZoneId)=>focusZone(id),()=>setReady(true),(message:string)=>setError(message),()=>setOrbit(false));scene.current=api;(el as any).__sandboxState=api.state;}catch{setError('当前设备无法开启三维画面，可使用下方功能入口或经典界面。')}
   return()=>{api?.dispose();scene.current=null;delete (el as any).__sandboxState};
  },[props.context,retry]);
- useEffect(()=>{scene.current?.setOptions({activity:!!activity,compact:props.variant==='card',active:props.active,dark:props.dark,shadows,orbit:orbit&&!reduced,flow:flowChoice??!reduced,running:runningZone(props.input.busy,props.input.qaRunning)})},[!!activity,props.context,props.variant,props.chatCollapsed,props.active,props.dark,shadows,orbit,reduced,flowChoice,props.input.busy,props.input.qaRunning,retry]);
+ useEffect(()=>{scene.current?.setOptions({activity:!!activity,compact:props.variant==='card',active:props.active,dark:props.dark,shadows,orbit:orbiting&&!reduced,flow:flowChoice??!reduced,running:runningZone(props.input.busy,props.input.qaRunning)})},[!!activity,props.context,props.variant,props.chatCollapsed,props.active,props.dark,shadows,orbiting,reduced,flowChoice,props.input.busy,props.input.qaRunning,retry]);
  useEffect(()=>{setSelected(null);setResultId(null);setMenu(false);if(lastVariant.current!==props.variant)modeButton.current?.focus({preventScroll:true});lastVariant.current=props.variant},[props.variant]);
  useEffect(()=>{scene.current?.select(selected);if(selected)closeButton.current?.focus({preventScroll:true})},[selected,retry]);
  useEffect(()=>{
@@ -51,7 +54,7 @@ export default function ProjectSandbox(props:Props){
  function close(){const id=selected;setResultId(null);setSelected(null);scene.current?.home();if(id)markers.current.get(id)?.querySelector<HTMLButtonElement>('.sandbox-marker-title')?.focus({preventScroll:true})}
  useEffect(()=>{if(!props.active)return;const escape=(e:KeyboardEvent)=>{if(e.key!=='Escape'||(!controlsOpen&&!resultId&&!selected&&!menu&&!orbit))return;e.preventDefault();e.stopImmediatePropagation();if(controlsOpen){setControlsOpen(false);controlsButton.current?.focus({preventScroll:true})}else if(resultId)closeResult();else if(menu)setMenu(false);else if(selected)close();else setOrbit(false)};document.addEventListener('keydown',escape,true);return()=>document.removeEventListener('keydown',escape,true)},[props.active,resultId,selected,menu,orbit,controlsOpen]);
  useEffect(()=>{scene.current?.refresh()},[JSON.stringify(nodes),ready]);
- return <section className={`project-sandbox ${props.variant==='card'?'sandbox-card-mode':''} ${error?'scene-fallback':''}`} aria-label="项目沙盘工作台" data-ready={ready} data-focused={!!selected} data-motion-paused={!props.active||!pageVisible} data-focused-stage={activity?.phase==='running'?activity.zone:undefined} data-running={runningZone(props.input.busy,props.input.qaRunning)||'idle'}>
+ return <section className={`project-sandbox ${props.variant==='card'?'sandbox-card-mode':''} ${error?'scene-fallback':''}`} aria-label="项目沙盘工作台" data-auto-orbit={idleOrbit} data-ready={ready} data-focused={!!selected} data-motion-paused={!props.active||!pageVisible} data-focused-stage={activity?.phase==='running'?activity.zone:undefined} data-running={runningZone(props.input.busy,props.input.qaRunning)||'idle'}>
   <div className="sandbox-canvas" ref={host}/>
   <header className="sandbox-toolbar">
    <div className="sandbox-project"><span className="sandbox-eyebrow">项目工作台</span><strong title={props.title}>{props.title}</strong><label><span className="sr-only">当前项目任务</span><select className="select select-ghost" aria-label="当前项目任务" value={props.taskId} disabled={!props.input.ready||!!props.input.busy} onChange={e=>props.selectTask(e.target.value)}>{props.tasks.map(t=><option key={t.id} value={t.id}>{t.title}</option>)}</select></label></div>
@@ -86,12 +89,12 @@ export default function ProjectSandbox(props:Props){
   <div ref={controlsRef} className="sandbox-view-controls" aria-label="沙盘视图控制" data-expanded={controlsOpen}>
    <button ref={controlsButton} type="button" className="btn btn-ghost btn-sm sandbox-controls-toggle" aria-label={controlsOpen?'收起沙盘视图控制':'展开沙盘视图控制'} aria-expanded={controlsOpen} aria-controls="sandbox-view-options" onClick={()=>setControlsOpen(v=>!v)} title={controlsOpen?'收起视图控制':'沙盘视图控制'}><Icon name="sliders"/><span>视图</span><Icon name="chevron"/></button>
    {controlsOpen&&<div id="sandbox-view-options" className="sandbox-view-options">
-   <button className="btn btn-ghost btn-sm" aria-pressed={orbit} disabled={reduced} title={reduced?'已遵循减少动效':'自动环游'} onClick={()=>{if(selected)close();setOrbit(v=>!v)}}><Icon name={orbit?'pause':'play'}/>{orbit?'暂停':'环游'}</button>
+   <button className="btn btn-ghost btn-sm" aria-pressed={orbiting} disabled={reduced} title={reduced?'已遵循减少动效':'自动环游'} onClick={()=>{if(selected)close();setOrbit(!orbiting)}}><Icon name={orbiting?'pause':'play'}/>{orbiting?'暂停':'环游'}</button>
    <button className="btn btn-ghost btn-square btn-sm" aria-label="放大沙盘" onClick={()=>scene.current?.zoom(.85)}><Icon name="magnifying-glass-plus"/></button><button className="btn btn-ghost btn-square btn-sm" aria-label="缩小沙盘" onClick={()=>scene.current?.zoom(1.18)}><Icon name="magnifying-glass-minus"/></button>
    <button className="btn btn-ghost btn-square btn-sm" aria-label="沙盘回到全景" onClick={()=>{setResultId(null);setSelected(null);setOrbit(false);scene.current?.home()}}><Icon name="home"/></button>
    <label title="静态建筑使用缓存阴影"><input type="checkbox" className="toggle toggle-xs" checked={shadows} onChange={e=>setShadows(e.target.checked)}/>阴影</label>
    <label title="蓝色信息流动效，不表示任务执行进度"><input type="checkbox" className="toggle toggle-xs" checked={flowChoice??!reduced} onChange={e=>setFlowChoice(e.target.checked)}/>信息流</label>
-   <button className="btn btn-ghost btn-sm" aria-pressed={props.dark} onClick={props.toggleDark}><Icon name={props.dark?'sun':'moon'}/>{props.dark?'日间':'夜航'}</button>
+   <button className="btn btn-ghost btn-sm" aria-pressed={props.dark} onClick={props.toggleDark}><Icon name={props.dark?'sun':'moon'}/>{props.dark?'日间':'夜航'}</button><button type="button" className="btn btn-ghost btn-square btn-sm" aria-label="自动环游设置" title="自动环游设置" onClick={props.orbitSettings}><Icon name="settings"/></button>
    </div>}
   </div>
   <span className="sandbox-scene-caption">{props.input.result?.job_id?`任务 ${props.input.result.job_id.slice(0,8)}`:'从一份清单开始'}{props.input.project?.debug?' · 演示数据':''}{(flowChoice??!reduced)?' · 信息流示意':''}</span>

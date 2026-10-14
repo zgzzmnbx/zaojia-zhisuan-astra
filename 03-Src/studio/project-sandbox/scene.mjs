@@ -20,7 +20,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;
  renderer.domElement.setAttribute('aria-hidden','true');host.append(renderer.domElement);
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,250),controls=new OrbitControls(camera,renderer.domElement);
- controls.enableDamping=true;controls.dampingFactor=.085;controls.minDistance=17;controls.maxDistance=110;controls.minPolarAngle=.26;controls.maxPolarAngle=Math.PI*.46;controls.autoRotateSpeed=.24;
+ controls.enableDamping=true;controls.dampingFactor=.085;controls.minDistance=17;controls.maxDistance=110;controls.minPolarAngle=.26;controls.maxPolarAngle=Math.PI*.46;controls.autoRotateSpeed=.12;
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment(),env=pmrem.fromScene(room,.04);scene.environment=env.texture;pmrem.dispose();room.dispose();
  const hemi=new THREE.HemisphereLight(0xf5faff,0x93abc6,.35),sun=new THREE.DirectionalLight(0xfffbf5,3.2),fill=new THREE.DirectionalLight(0xe2edff,.22);
  sun.position.set(-16,32,20);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});sun.shadow.camera.updateProjectionMatrix();fill.position.set(20,18,-25);scene.add(hemi,sun,fill);
@@ -79,10 +79,11 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   const {x,y}=resultCardPosition(frame,{left:a.left-base.left,right:a.right-base.left,top:a.top-base.top},{width:w,height:h});
   resultCard.style.left=`${Math.round(x)}px`;resultCard.style.top=`${Math.round(y)}px`;
  }
- function render(time){raf=0;if(!allowed())return;
+ let lastRenderTime=0;
+ function render(time){const delta=lastRenderTime?Math.min(.05,Math.max(0,(time-lastRenderTime)/1000)):1/60;lastRenderTime=time;raf=0;if(!allowed())return;
   if(flight){const t=Math.min(1,(time-flight.start)/950),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);if(t===1)flight=null;}
   if(beacon.visible){beacon.children.forEach((ring,i)=>{const pulse=reduced.matches?.5:(Math.sin(time/650-i*1.5)+1)/2;ring.scale.setScalar(1+pulse*.08);ring.material.opacity=.3+pulse*.4})}
-  controls.autoRotate=options.orbit&&!flight;const moving=controls.update();flow.tick(time);night.render();frames++;const markerPending=project(time,!!flight||moving||controls.autoRotate||!!down||!!host.closest('.is-resizing'));
+  controls.autoRotate=options.orbit&&!flight;const moving=controls.update(delta);flow.tick(time);night.render();frames++;const markerPending=project(time,!!flight||moving||controls.autoRotate||!!down||!!host.closest('.is-resizing'));
   if(flight||moving||controls.autoRotate||flow.getState().playing||markerPending||(beacon.visible&&!reduced.matches))request();
  }
  function fly(position,target){if(reduced.matches){camera.position.copy(position);controls.target.copy(target);controls.update()}else flight={p0:camera.position.clone(),p1:position.clone(),t0:controls.target.clone(),t1:target.clone(),start:performance.now()};request()}
@@ -116,6 +117,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  theme();request();
  return {
   setOptions(next){const previous=options;options={...options,...next};if(previous.compact!==options.compact){markerLayout.reset();selected=null;resize();home(false)}else reframe();if(previous.dark!==options.dark)theme();if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow);if(allowed())request();else stop();},
+  pauseOrbit(){options.orbit=false;controls.autoRotate=false;},
   focusTask(id){const zone=zones.find(z=>z.id===id);if(!zone)return;selected=null;options.orbit=false;controls.autoRotate=false;onOrbitStop?.();reframe();const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(direction.y,.5);direction.normalize();fly(target.clone().addScaledVector(direction,32*Math.max(1,.8/(frame.width/frame.height))),target);request()},
   select(id){selected=id;reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,25*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
   home(){selected=null;reframe();theme();home()},

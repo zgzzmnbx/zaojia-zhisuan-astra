@@ -146,3 +146,5 @@
 .sandbox-card-mode .sandbox-marker[data-zone="price"],.sandbox-card-mode .sandbox-marker[data-zone="risk"]{width:140px}
 .sandbox-card-mode .sandbox-marker[data-zone="price"] .sandbox-marker-title,.sandbox-card-mode .sandbox-marker[data-zone="risk"] .sandbox-marker-title{width:140px}
 .sandbox-card-mode .sandbox-marker[data-zone="price"] .sandbox-result-trigger,.sandbox-card-mode .sandbox-marker[data-zone="risk"] .sandbox-result-trigger{display:flex}
+
+.sandbox-orbit-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;font-size:14px}.sandbox-orbit-setting .select{width:130px}.sandbox-orbit-help{font-size:12px;line-height:1.6;color:var(--muted);margin:12px 0 0}

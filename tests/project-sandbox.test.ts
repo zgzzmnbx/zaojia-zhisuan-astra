@@ -1,3 +1,4 @@
+import {createIdleOrbit} from '../03-Src/studio/project-sandbox/idle-orbit.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {sandboxNodes,runningZone,type SandboxInput} from '../03-Src/studio/project-sandbox/node-state.ts';
@@ -121,4 +122,29 @@ test('failed and cancelled work never becomes successful progress, stale errors 
 
 test('live task banner reserves space below markers without covering pricing and risk details',()=>{
  for(const compact of [true,false]){const normal=sandboxFrame(1400,800,420,false,compact),active=sandboxFrame(1400,800,420,false,compact,true);assert.equal(normal.height-active.height,80);assert.ok(active.y+active.height<=800-170)}
+});
+
+
+test('automatic orbit preferences default on and validate persisted delays',()=>{
+ assert.equal(normalizeAppearance({}).sandboxAutoOrbit,true);assert.equal(normalizeAppearance({}).sandboxOrbitDelay,15);
+ for(const delay of [0,-1,NaN,20,'15'])assert.equal(normalizeAppearance({sandboxOrbitDelay:delay}).sandboxOrbitDelay,15);
+ const p=normalizeAppearance({sandboxAutoOrbit:false,sandboxOrbitDelay:60});assert.equal(p.sandboxAutoOrbit,false);assert.equal(p.sandboxOrbitDelay,60);
+});
+
+function idleFixture(){
+ let now=0,id=0,allowed=true;const timers=new Map<number,{at:number;fn:()=>void}>(),states:boolean[]=[];
+ const idle=createIdleOrbit(v=>states.push(v),()=>allowed,{set:(fn,ms)=>{timers.set(++id,{at:now+ms,fn});return id},clear:key=>{timers.delete(key as number)}});
+ return {idle,states,timers,allow:(v:boolean)=>{allowed=v},tick:(ms:number)=>{now+=ms;for(const [key,t] of [...timers])if(t.at<=now){timers.delete(key);t.fn()}}};
+}
+test('idle orbit waits a full interval after every input and stops immediately',()=>{
+ const f=idleFixture();f.idle.configure({enabled:true,blocked:false,delay:15000});f.tick(14000);assert.deepEqual(f.states,[]);
+ f.idle.activity();f.tick(14000);assert.deepEqual(f.states,[]);f.tick(1000);assert.deepEqual(f.states,[true]);f.idle.activity();assert.deepEqual(f.states,[true,false]);assert.equal(f.timers.size,1);
+});
+test('busy, reduced motion, hidden and disabled gates cancel deadlines and restart from zero',()=>{
+ const f=idleFixture();f.idle.configure({enabled:true,blocked:false,delay:15000});f.tick(14000);f.idle.configure({enabled:true,blocked:true,delay:15000});f.tick(60000);assert.deepEqual(f.states,[]);
+ f.idle.configure({enabled:true,blocked:false,delay:15000});f.tick(14999);assert.deepEqual(f.states,[]);f.tick(1);assert.deepEqual(f.states,[true]);f.idle.configure({enabled:false,blocked:false,delay:15000});assert.deepEqual(f.states,[true,false]);assert.equal(f.timers.size,0);
+});
+test('holding input and hovered markers prevent auto orbit; disposal cancels future work',()=>{
+ const f=idleFixture();f.idle.configure({enabled:true,blocked:false,delay:10000});f.idle.hold(true);f.tick(60000);assert.deepEqual(f.states,[]);f.idle.hold(false);f.allow(false);f.tick(10000);assert.deepEqual(f.states,[]);
+ f.allow(true);f.idle.activity();f.tick(10000);assert.deepEqual(f.states,[true]);f.idle.dispose();assert.deepEqual(f.states,[true,false]);f.idle.activity();f.tick(60000);assert.equal(f.timers.size,0);assert.deepEqual(f.states,[true,false]);
 });
