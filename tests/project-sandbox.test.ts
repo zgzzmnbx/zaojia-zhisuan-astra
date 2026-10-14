@@ -4,6 +4,7 @@ import {sandboxNodes,runningZone,type SandboxInput} from '../03-Src/studio/proje
 import {readWorkbenchStyles} from '../03-Src/studio/project-sandbox/workbench-preference.ts';
 import {sandboxFrame,resultCardPosition} from '../03-Src/studio/project-sandbox/scene-layout.ts';
 import {PerspectiveCamera,Vector3} from 'three';
+import {createMarkerLayout,type MarkerInput} from '../03-Src/studio/project-sandbox/marker-layout.ts';
 const input=():SandboxInput=>({ready:true,project:{jobId:'a',riskLoaded:false,fees:null} as any,result:{job_id:'a',artifact_version:3,summary:{matching_status:'completed',total_data_rows:10,matched_rows:8,review_rows:2,table_preview:{sheets:[{},{}]}}} as any,filename:'a.xlsx',sheets:[],busy:'',qaRunning:false,needsRecalculate:false,riskLoading:false,riskError:'',reportReady:false,citations:0,reviewTasks:[],reviewError:''});
 const node=(i:SandboxInput,id:string)=>sandboxNodes(i).find(n=>n.id===id)!;
 test('sandbox never borrows amounts or completion from a previous task',()=>{const i=input();i.project={...i.project!,jobId:'other'};for(const id of ['price','report','table'])assert.equal(node(i,id).tone,'idle');assert.ok(node(i,'price').disabled);i.ready=false;i.citations=4;assert.equal(node(i,'knowledge').status,'随时可查');assert.ok(sandboxNodes(i).every(n=>n.disabled==='工作空间正在恢复'));});
@@ -28,4 +29,34 @@ test('result cards flip at the edge and remain outside the floating chat',()=>{
   const p=resultCardPosition(f,anchor,size);assert.ok(p.x>=f.x);assert.ok(p.x+size.width<=f.x+f.width);assert.ok(p.y>=f.y);assert.ok(p.y+size.height<=f.y+f.height);
  }
  const card=sandboxFrame(580,720,0,true,true);assert.equal(card.left,0);assert.equal(card.sideDetail,false);
+});
+const markerFrame={x:300,y:100,width:700,height:600};
+const sign=(id:string,ax=650,ay=400):MarkerInput=>({id,ax,ay,width:150,height:100,titleHeight:38});
+test('moving camera keeps relative marker positions and only settles after 300ms',()=>{
+ const engine=createMarkerLayout();let state=engine.update([sign('a'),sign('b',660)],markerFrame,0,true);
+ for(let t=16;t<=320;t+=16){state=engine.update([sign('a',650+t/10),sign('b',660+t/10)],markerFrame,t,true);assert.equal(state.reflows,0);assert.equal(state.placements[0].condensed,false)}
+ const items=[sign('a',682),sign('b',692)];
+ assert.equal(engine.update(items,markerFrame,619).reflows,0);
+ state=engine.update(items,markerFrame,620);assert.equal(state.reflows,1);
+ const x=state.placements[0].x;state=engine.update(items,markerFrame,636);assert.ok(Math.abs(state.placements[0].x-x)<25,'local correction eases instead of jumping');
+ state=engine.update(items,markerFrame,1000);assert.equal(state.pending,false);assert.equal(state.reflows,1);
+ for(let t=1100;t<2000;t+=16)assert.equal(engine.update(items,markerFrame,t).reflows,1);
+});
+test('hover or keyboard focus locks the click target while the camera moves',()=>{
+ const engine=createMarkerLayout();const first=engine.update([sign('a')],markerFrame,0).placements[0];
+ engine.update([{...sign('a'),locked:true}],markerFrame,10);
+ for(let t=20;t<=200;t+=20){const p=engine.update([{...sign('a',650+t,400+t/3),locked:true}],markerFrame,t,true).placements[0];assert.equal(p.x,first.x);assert.equal(p.y,first.y)}
+ const released=engine.update([sign('a',850,400+200/3)],markerFrame,220).placements[0];assert.equal(released.x,first.x);assert.equal(released.y,first.y);
+});
+test('crowding hides status before relocating titles, then restores only after clearing',()=>{
+ const engine=createMarkerLayout(),items=[sign('a'),sign('b',650,465)];
+ const before=engine.update(items,markerFrame,0);const compact=engine.update(items,markerFrame,300);
+ assert.equal(compact.placements[0].condensed,true);assert.equal(compact.placements[0].x,before.placements[0].x);assert.equal(compact.placements[0].y,before.placements[0].y);
+ assert.equal(engine.update(items,markerFrame,1000).placements[0].condensed,true);
+ const clear=[sign('a'),sign('b',920,600)];engine.update(clear,markerFrame,1100);assert.equal(engine.update(clear,markerFrame,1400).placements[0].condensed,false);
+});
+test('subpixel noise does not trigger repeated packing and reduced motion settles instantly',()=>{
+ const engine=createMarkerLayout(),items=[sign('a'),sign('b',660)];engine.update(items,markerFrame,0);const settled=engine.update(items,markerFrame,300,false,true);assert.equal(settled.pending,false);
+ for(let t=400;t<1000;t+=16){const s=engine.update([sign('a',650.01),sign('b',660.01)],markerFrame,t);assert.equal(s.reflows,1);assert.equal(s.pending,false)}
+ for(const p of settled.placements){assert.ok(p.x>=markerFrame.x);assert.ok(p.x+p.width<=markerFrame.x+markerFrame.width);assert.ok(p.y>=markerFrame.y)}
 });

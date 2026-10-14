@@ -1,0 +1,102 @@
+[
+  {
+    "zone": "land",
+    "role": "body",
+    "sourceObjects": 129
+  },
+  {
+    "zone": "import",
+    "role": "body",
+    "sourceObjects": 4
+  },
+  {
+    "zone": "import",
+    "role": "window",
+    "sourceObjects": 4
+  },
+  {
+    "zone": "import",
+    "role": "symbol",
+    "sourceObjects": 9
+  },
+  {
+    "zone": "price",
+    "role": "body",
+    "sourceObjects": 44
+  },
+  {
+    "zone": "price",
+    "role": "window",
+    "sourceObjects": 6
+  },
+  {
+    "zone": "price",
+    "role": "symbol",
+    "sourceObjects": 16
+  },
+  {
+    "zone": "risk",
+    "role": "body",
+    "sourceObjects": 61
+  },
+  {
+    "zone": "risk",
+    "role": "symbol",
+    "sourceObjects": 5
+  },
+  {
+    "zone": "knowledge",
+    "role": "body",
+    "sourceObjects": 30
+  },
+  {
+    "zone": "knowledge",
+    "role": "window",
+    "sourceObjects": 1
+  },
+  {
+    "zone": "knowledge",
+    "role": "symbol",
+    "sourceObjects": 10
+  },
+  {
+    "zone": "report",
+    "role": "body",
+    "sourceObjects": 17
+  },
+  {
+    "zone": "report",
+    "role": "window",
+    "sourceObjects": 1
+  },
+  {
+    "zone": "report",
+    "role": "symbol",
+    "sourceObjects": 8
+  },
+  {
+    "zone": "review",
+    "role": "body",
+    "sourceObjects": 12
+  },
+  {
+    "zone": "review",
+    "role": "window",
+    "sourceObjects": 6
+  },
+  {
+    "zone": "review",
+    "role": "symbol",
+    "sourceObjects": 10
+  },
+  {
+    "zone": "table",
+    "role": "body",
+    "sourceObjects": 14
+  },
+  {
+    "zone": "table",
+    "role": "screen",
+    "sourceObjects": 75
+  }
+]

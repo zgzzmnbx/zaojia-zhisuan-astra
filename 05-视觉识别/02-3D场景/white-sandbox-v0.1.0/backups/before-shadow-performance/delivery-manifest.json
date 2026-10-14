@@ -1,0 +1,158 @@
+{
+  "version": "0.1.7",
+  "date": "2026-10-13",
+  "blender": "5.2.2 LTS",
+  "browserAssertions": 60,
+  "preferenceReloadChecks": 2,
+  "nightMode": true,
+  "buildingFinish": "matte-day-and-night",
+  "browserErrorCount": 0,
+  "browserWarningCount": 0,
+  "businessIntegrated": false,
+  "shadowsDefaultOn": true,
+  "dayContactShadows": true,
+  "dayMaterialLayers": true,
+  "architecturalDetails": true,
+  "frostedGlass": true,
+  "flowDefaultOnUnlessReducedMotion": true,
+  "visibilityCheck": "controlled visibilitychange event in headless browser",
+  "projectTestsPassed": 249,
+  "projectBuildPassed": true,
+  "artifacts": [
+    {
+      "name": "white-sandbox.blend",
+      "sha256": "1aa4f79a4b50503a26596bcf89476733853e88304e8511364ac2ea487d92b2f3",
+      "bytes": 547404
+    },
+    {
+      "name": "white-sandbox-flow.blend",
+      "sha256": "83e5e6c731bbf590c28de19dc95a364307f7353ab5afb6c7bd7ffb49051c76cd",
+      "bytes": 555635
+    },
+    {
+      "name": "white-sandbox.glb",
+      "sha256": "bf9a428cbcaaa8ef061b5eff358ad697943a16effe677ca8fa588ec653475e26",
+      "bytes": 6917092
+    },
+    {
+      "name": "白模空间-独立预览.html",
+      "sha256": "8d7892dd2a62552293d1d94cd1de10cffe8bb0b3788c657f47ea23c2ef06b940",
+      "bytes": 10135859
+    },
+    {
+      "name": "blender-overview.png",
+      "sha256": "f68eed616421895071f7e486d298ad0ba9ed974fe92e09cefc5778646805f02f",
+      "bytes": 2462539
+    },
+    {
+      "name": "preview-overview.png",
+      "sha256": "88e9da6ac96cf9fb4ea10e314f5752c6a116459026257e5edd29af50b1299c18",
+      "bytes": 696947
+    },
+    {
+      "name": "preview-risk.png",
+      "sha256": "88a4b9666146d4597bd8ab152647f2eb3762480984ef6b073830e934f21d21d8",
+      "bytes": 1118675
+    },
+    {
+      "name": "preview-table.png",
+      "sha256": "10649ec4fd5d77d6fb55be9e7aee7007ad29372a674d88973552fe6a53ace8d5",
+      "bytes": 878911
+    },
+    {
+      "name": "preview-shadows-off.png",
+      "sha256": "828c9fb284e7e5bc27fb0a2e455a79526b970703a1a6d05d7fda3ef24730396e",
+      "bytes": 491128
+    },
+    {
+      "name": "preview-information-flow.png",
+      "sha256": "59d7e5b6131e63e428218d06d80ef75b30826d04d77af21d0bd1f31bdc6140ca",
+      "bytes": 696231
+    },
+    {
+      "name": "preview-pale-river.png",
+      "sha256": "21b0fa15f7103208f57c0a2f70b3046216ed4c23b4daffc1dda615325840aa5c",
+      "bytes": 744098
+    },
+    {
+      "name": "information-flow.mp4",
+      "sha256": "01d24528e4641968db2f591f6d3193fd47ba2567600424f8406b07ff2d3275aa",
+      "bytes": 264169
+    },
+    {
+      "name": "pipeline-route.json",
+      "sha256": "f15fe14d53ecfaa8277277eea06e114f4a61f8b606e0edcf5fa8d13fd5213b77",
+      "bytes": 1174
+    },
+    {
+      "name": "information-flow.js",
+      "sha256": "d9580f6a44a264f08bc556bdfd867f09146037fcd18a4ad5a326c1d366c8d9a7",
+      "bytes": 3993
+    },
+    {
+      "name": "browser-acceptance.json",
+      "sha256": "3df3b7625a476e2157ccbd3f991abbb3f5a6163de538a4c2af56995ded8467e5",
+      "bytes": 4372
+    },
+    {
+      "name": "flow-acceptance.json",
+      "sha256": "cc9d5d88aa545f1b9bbd62cbb8c71091061f1a1be54439d51995643a5060445f",
+      "bytes": 2986
+    },
+    {
+      "name": "README.md",
+      "sha256": "ea1b50adf8fe8e8a45dd8b0a326fbf1c4fec337cc1829acd399f573a54884d35",
+      "bytes": 9163
+    },
+    {
+      "name": "CHANGELOG.md",
+      "sha256": "e326e8bf6f3cc7ac0d7dcd9659fbe352e7aa762a8eef720ef9028f651a3750d1",
+      "bytes": 2165
+    },
+    {
+      "name": "build_scene.py",
+      "sha256": "4ae88328d482d07d056d4f3a1834a10c00a2581c72bf6fd3524f34335d6c4045",
+      "bytes": 20113
+    },
+    {
+      "name": "day_details.py",
+      "sha256": "279b50fa96c3a6e005e85ad5069e24cf9bdacae4ac46048aa45cc99dc1ecdd08",
+      "bytes": 6689
+    },
+    {
+      "name": "scene-manifest.json",
+      "sha256": "da739ad1c99a3f758c3ac8cc73092d2f88251b9c3d8ad0b66485b53ab32489c9",
+      "bytes": 830
+    },
+    {
+      "name": "main.js",
+      "sha256": "a0a0570a5d6b4a61f138f4e692f8d9e7cb2d36f1dd9d519fc26bd012e599d406",
+      "bytes": 19449
+    },
+    {
+      "name": "scene-theme.js",
+      "sha256": "1bd6d30b4186a4731fdc5ff092bcd83780ace7f3cb862ca55415f6f6db926163",
+      "bytes": 3531
+    },
+    {
+      "name": "night-renderer.js",
+      "sha256": "023327e78294ee6e8e9d7adc2f4b0e0ae04f2bd90676abd22c409d5ece3cb054",
+      "bytes": 1801
+    },
+    {
+      "name": "night.css",
+      "sha256": "be71cf8766ae5864c213fe4ced710caa821568b54a8fc99580240b03c64e204b",
+      "bytes": 3377
+    },
+    {
+      "name": "preview-night.png",
+      "sha256": "f3ac070eda59d79b9d86cfb962ad7fcd5dcec2a2f2b03356837267e7a80618cd",
+      "bytes": 724759
+    },
+    {
+      "name": "night-acceptance.json",
+      "sha256": "7f05f86dc305ae7162c07f0e781bdc8dfea514125002a811ec3b457b7c8dd6be",
+      "bytes": 3619
+    }
+  ]
+}
