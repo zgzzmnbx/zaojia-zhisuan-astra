@@ -59,12 +59,12 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
    const title=el.querySelector('.sandbox-marker-title'),result=el.querySelector('.sandbox-result-trigger');
    const titleHeight=title?.offsetHeight||38,resultHeight=result?.offsetHeight||0,w=el.offsetWidth||150;
    const ax=(p.x+1)*width/2,ay=(1-p.y)*height/2;anchors.set(zone.id,{ax,ay});
-   inputs.push({id:zone.id,ax,ay,width:w,height:titleHeight+(resultHeight?resultHeight+5:0),titleHeight,selected:zone.id===selected,locked:zone.id===resultId||el.matches(':hover')||el.contains(document.activeElement)});
+   inputs.push({id:zone.id,ax,ay,width:w,height:titleHeight+(resultHeight?resultHeight+5:0),titleHeight,priority:zone.id==='price'||zone.id==='risk',selected:zone.id===selected,locked:zone.id===resultId||el.matches(':hover')||el.contains(document.activeElement)});
   }
   markerSnapshot=markerLayout.update(inputs,frame,time,moving,reduced.matches);
   for(const p of markerSnapshot.placements){
    const el=markers.get(p.id),{ax,ay}=anchors.get(p.id);
-   el.dataset.condensed=String(p.condensed);el.dataset.locked=String(p.locked);
+   el.dataset.condensed=String(p.condensed);el.dataset.locked=String(p.locked);el.dataset.priority=String(p.id==='price'||p.id==='risk');
    el.style.transform=`translate3d(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px,0)`;
    const pin=el.querySelector('.sandbox-pin'),dx=ax-p.x-p.width/2,dy=ay-p.y-p.height;
    if(pin){pin.style.height=`${Math.hypot(dx,dy)}px`;pin.style.transformOrigin='top';pin.style.transform=`rotate(${Math.atan2(-dx,dy)}rad)`;}

@@ -1,5 +1,5 @@
 type Frame={x:number;y:number;width:number;height:number};
-export type MarkerInput={id:string;ax:number;ay:number;width:number;height:number;titleHeight:number;locked?:boolean;selected?:boolean};
+export type MarkerInput={id:string;ax:number;ay:number;width:number;height:number;titleHeight:number;locked?:boolean;selected?:boolean;priority?:boolean};
 type Point={x:number;y:number};
 type State={dx:number;dy:number;condensed:boolean;x:number;y:number;locked:boolean;from?:Point;to?:Point;start:number};
 export type MarkerPlacement=Point&{id:string;width:number;height:number;condensed:boolean;locked:boolean};
@@ -28,13 +28,14 @@ export function createMarkerLayout(){
  return {
   update(items:MarkerInput[],frame:Frame,time:number,moving=false,reduced=false){
    // Quarter-pixel tolerance ignores floating-point noise and animated shaders.
-   const next=JSON.stringify([frame,...items.map(m=>[m.id,Math.round(m.ax*4),Math.round(m.ay*4),m.width,m.height,m.titleHeight,!!m.locked,!!m.selected])]);
+   const next=JSON.stringify([frame,...items.map(m=>[m.id,Math.round(m.ax*4),Math.round(m.ay*4),m.width,m.height,m.titleHeight,!!m.locked,!!m.selected,!!m.priority])]);
    if(next!==signature){signature=next;changedAt=time;dirty=true}
    if(moving){changedAt=time;dirty=true}
    let animating=false;
    for(const m of items){
     let s=states.get(m.id);
     if(!s){s={dx:0,dy:0,condensed:false,x:0,y:0,locked:false,start:time};const p=rect(m,s,frame);s.x=p.x;s.y=p.y;states.set(m.id,s)}
+    if(m.priority)s.condensed=false;
     if(m.locked){
      // Keep the hit target still, even if an automatic orbit passes underneath it.
      s.to=undefined;s.from=undefined;
@@ -45,17 +46,18 @@ export function createMarkerLayout(){
    }
    if(dirty&&!moving&&time-changedAt>=300){
     dirty=false;reflows++;
-    const ordered=[...items].sort((a,b)=>Number(!!b.locked)-Number(!!a.locked)||Number(!!b.selected)-Number(!!a.selected));
+    const ordered=[...items].sort((a,b)=>Number(!!b.locked)-Number(!!a.locked)||Number(!!b.priority)-Number(!!a.priority)||Number(!!b.selected)-Number(!!a.selected));
     const placed:MarkerPlacement[]=[];
     for(const m of ordered){
      const s=states.get(m.id)!;
      if(m.locked){placed.push({...rect(m,s,frame),x:s.x,y:s.y});continue}
-     const occupied=[...placed,...ordered.filter(n=>n.id!==m.id&&!placed.some(p=>p.id===n.id)).map(n=>rect(n,states.get(n.id)!,frame))];
+     // Pricing and risk keep their full footprint; ordinary signs yield to them.
+     const occupied=[...placed,...ordered.filter(n=>n.id!==m.id&&!placed.some(p=>p.id===n.id)&&(!m.priority||n.priority||n.locked)).map(n=>rect(n,states.get(n.id)!,frame))];
      const current=rect(m,s,frame);
      const collision=(p:MarkerPlacement,pad=0)=>occupied.reduce((n,o)=>n+intersection(p,o,pad),0);
      // Collapse content before displacing the title. Restore only with ample clearance.
      if(s.condensed){const full={...current,height:m.height};if(!collision(full,18)&&full.y+full.height<=frame.y+frame.height-12)s.condensed=false}
-     else if(!m.selected&&collision(current)>240&&m.height>m.titleHeight)s.condensed=true;
+     else if(!m.priority&&!m.selected&&collision(current)>240&&m.height>m.titleHeight)s.condensed=true;
      if(s.condensed!==current.condensed){const resized=rect(m,s,frame);s.dx+=current.x-resized.x;s.dy+=current.y-resized.y}
      const start=rect(m,s,frame),overlap=collision(start);
      if(overlap>240){

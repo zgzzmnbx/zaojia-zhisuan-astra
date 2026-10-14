@@ -60,3 +60,24 @@ test('subpixel noise does not trigger repeated packing and reduced motion settle
  for(let t=400;t<1000;t+=16){const s=engine.update([sign('a',650.01),sign('b',660.01)],markerFrame,t);assert.equal(s.reflows,1);assert.equal(s.pending,false)}
  for(const p of settled.placements){assert.ok(p.x>=markerFrame.x);assert.ok(p.x+p.width<=markerFrame.x+markerFrame.width);assert.ok(p.y>=markerFrame.y)}
 });
+
+test('pricing and risk keep full details while ordinary selected signs yield first',()=>{
+ const engine=createMarkerLayout(),items=[{...sign('ordinary'),selected:true},{...sign('price'),priority:true},{...sign('risk',650,465),priority:true}];
+ engine.update(items,markerFrame,0);
+ const result=engine.update(items,markerFrame,300,false,true);
+ const price=result.placements.find(p=>p.id==='price')!,risk=result.placements.find(p=>p.id==='risk')!,ordinary=result.placements[0];
+ for(const p of [price,risk]){assert.equal(p.condensed,false);assert.equal(p.height,100)}
+ const overlap=(a:typeof price,b:typeof price)=>Math.max(0,Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.height,b.y+b.height)-Math.max(a.y,b.y));
+ assert.equal(overlap(price,risk),0);assert.ok(overlap(price,ordinary)<=900);assert.ok(overlap(risk,ordinary)<=900);
+ const precedence=createMarkerLayout(),pair=[{...sign('ordinary'),selected:true},{...sign('price'),priority:true}];
+ const initial=precedence.update(pair,markerFrame,0).placements[1],settled=precedence.update(pair,markerFrame,300,false,true).placements[1];
+ assert.equal(settled.x,initial.x);assert.equal(settled.y,initial.y);
+ for(let t=400;t<700;t+=16){const s=engine.update(items.map(m=>({...m,ax:m.ax+t/20})),markerFrame,t,true);assert.ok(s.placements.filter(p=>p.id!=='ordinary').every(p=>!p.condensed&&p.height===100))}
+});
+
+test('priority restores previously condensed details immediately, including during motion',()=>{
+ const engine=createMarkerLayout(),items=[sign('price'),sign('other',650,465)];
+ engine.update(items,markerFrame,0);assert.equal(engine.update(items,markerFrame,300).placements[0].condensed,true);
+ const protectedItems=items.map(m=>({...m,priority:m.id==='price'}));
+ const p=engine.update(protectedItems,markerFrame,310,true).placements[0];assert.equal(p.condensed,false);assert.equal(p.height,100);
+});
