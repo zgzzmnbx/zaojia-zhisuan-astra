@@ -109,14 +109,25 @@
 
 /* Live task feedback: fixed track, no fabricated percentage. */
 .sandbox-marker[data-tone=running]{z-index:6!important;opacity:1!important}
-.sandbox-marker[data-tone=running]>.sandbox-marker-title,.sandbox-marker[data-tone=running]>.sandbox-result-trigger{border-color:#228be6;box-shadow:0 0 0 1px #228be626,0 6px 22px #228be61c}
+.project-sandbox .sandbox-marker[data-tone=running]>.sandbox-marker-title,
+.project-sandbox .sandbox-marker[data-tone=running]>.sandbox-result-trigger,
+.project-sandbox .sandbox-marker[data-tone=running]>.sandbox-node-progress{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff);border-color:color-mix(in srgb,var(--astra-primary) 75%,white);box-shadow:0 5px 20px color-mix(in srgb,var(--astra-primary) 24%,transparent)}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-marker-title small,
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-status,
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-summary,
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-amount{color:var(--astra-primary-content,#fff)}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-status{font-weight:650}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-progress-content{border-color:color-mix(in srgb,var(--astra-primary) 75%,white)}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-stage-progress{background:#ffffff38}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-stage-progress>span{background:linear-gradient(90deg,#ffffff70,#fff)}
+.project-sandbox .sandbox-marker[data-tone=running] button:focus-visible{outline-color:var(--astra-primary);outline-offset:3px}
 .sandbox-node-progress{position:absolute;top:calc(100% - 2px);left:0;right:0;display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .24s ease,opacity .18s ease;pointer-events:none;border-radius:0 0 9px 9px;background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(12px);box-shadow:0 6px 16px #1636510d}
 .sandbox-node-progress[data-open=true]{grid-template-rows:1fr;opacity:1}
 .sandbox-node-progress>div{min-height:0;overflow:hidden}
 .sandbox-progress-content{height:40px;box-sizing:border-box;padding:7px 9px 9px;display:flex;flex-direction:column;gap:5px;border:1px solid color-mix(in srgb,var(--blue) 30%,transparent);border-top:0;border-radius:0 0 9px 9px}
 .sandbox-progress-content>span{font-size:12px;line-height:16px;color:var(--blue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sandbox-stage-progress{height:3px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#228be633}
-.sandbox-stage-progress>span{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#228be666,#228be6,#8bd4ff)}
+.sandbox-stage-progress{height:3px;flex-shrink:0;border-radius:4px;overflow:hidden;background:color-mix(in srgb,var(--astra-primary) 20%,transparent)}
+.sandbox-stage-progress>span{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--astra-primary) 40%,transparent),var(--astra-primary),color-mix(in srgb,var(--astra-primary) 45%,white))}
 .sandbox-node-progress[data-open=true][data-phase=running] .sandbox-stage-progress>span{animation:sandbox-task-stream 1.6s ease-in-out infinite}
 .sandbox-node-progress[data-phase=settled] .sandbox-stage-progress>span{width:100%;transform:none;transition:width .2s ease}
 .sandbox-node-progress[data-phase=error] .sandbox-progress-content>span{color:var(--error,#bc4343)}
