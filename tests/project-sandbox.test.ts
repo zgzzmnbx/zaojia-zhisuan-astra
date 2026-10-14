@@ -1,3 +1,5 @@
+import {roofSignPose,createRoofLabels} from '../03-Src/studio/project-sandbox/roof-labels.mjs';
+import {Scene,Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
 import {createIdleOrbit} from '../03-Src/studio/project-sandbox/idle-orbit.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -150,4 +152,37 @@ test('busy, reduced motion, hidden and disabled gates cancel deadlines and resta
 test('holding input and hovered markers prevent auto orbit; disposal cancels future work',()=>{
  const f=idleFixture();f.idle.configure({enabled:true,blocked:false,delay:10000});f.idle.hold(true);f.tick(60000);assert.deepEqual(f.states,[]);f.idle.hold(false);f.allow(false);f.tick(10000);assert.deepEqual(f.states,[]);
  f.allow(true);f.idle.activity();f.tick(10000);assert.deepEqual(f.states,[true]);f.idle.dispose();assert.deepEqual(f.states,[true,false]);f.idle.activity();f.tick(60000);assert.equal(f.timers.size,0);assert.deepEqual(f.states,[true,false]);
+});
+
+
+test('roof sign stays attached to its joint and faces the camera throughout an orbit',()=>{
+ const camera=new PerspectiveCamera(38,1400/800,.1,250),foot=new Vector3(4,6,-2);
+ for(const angle of [0,.8,1.6,3.2,5.9])for(const distance of [20,50,100]){
+  camera.position.set(Math.cos(angle)*distance,20,Math.sin(angle)*distance);camera.lookAt(foot);camera.updateMatrixWorld();
+  const pose=roofSignPose(camera,foot,150,90,800);
+  assert.ok(Math.abs(pose.quaternion.dot(camera.quaternion))>0.999999);
+  const bottom=pose.center.clone().add(new Vector3(0,-pose.worldHeight/2,0).applyQuaternion(pose.quaternion));
+  assert.ok(bottom.distanceTo(foot)<1e-10,'rotation must not displace the roof joint');
+  const left=pose.center.clone().add(new Vector3(-pose.worldWidth/2,0,0).applyQuaternion(pose.quaternion)).project(camera);
+  const right=pose.center.clone().add(new Vector3(pose.worldWidth/2,0,0).applyQuaternion(pose.quaternion)).project(camera);
+  assert.ok(Math.abs((right.x-left.x)*700-150*pose.scale)<1e-8);
+  assert.ok(pose.scale>=1&&pose.scale<=1.25,'keep text readable while zooming');
+ }
+});
+
+test('roof supports use their own building surface and release all scene objects',()=>{
+ const scene=new Scene(),model=new Group(),building=new Group();building.userData.zone='risk';
+ const mesh=new Mesh(new BoxGeometry(4,6,4),new MeshBasicMaterial());mesh.position.set(2,3,4);building.add(mesh);model.add(building);
+ const labels=createRoofLabels(scene,[{id:'risk',anchor:[2,12,4]}]);labels.attach(model);
+ assert.deepEqual(labels.state()[0].roof,[2,6,4]);assert.equal(labels.state()[0].foot[1],7.15);
+ const camera=new PerspectiveCamera(38,1,.1,250);camera.position.set(20,20,20);camera.lookAt(2,6,4);camera.updateMatrixWorld();
+ labels.update('risk',camera,150,80,800,true,false);assert.equal(labels.state()[0].visible,true);
+ labels.hide();assert.equal(labels.state()[0].visible,false);labels.dispose();assert.equal(scene.children.length,0);mesh.geometry.dispose();mesh.material.dispose();
+});
+
+test('roof-label preference is opt-in and preserves existing appearance values',()=>{
+ assert.equal(normalizeAppearance({}).sandboxRoofLabels,false);
+ assert.equal(normalizeAppearance({sandboxRoofLabels:'yes'}).sandboxRoofLabels,false);
+ const p=normalizeAppearance({sandboxRoofLabels:true,palette:'emerald',sandboxAutoOrbit:false});
+ assert.equal(p.sandboxRoofLabels,true);assert.equal(p.palette,'emerald');assert.equal(p.sandboxAutoOrbit,false);
 });

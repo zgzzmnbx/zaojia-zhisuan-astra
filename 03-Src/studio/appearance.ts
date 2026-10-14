@@ -11,12 +11,12 @@ export const palettes=[
 ] as const;
 export type Palette=typeof palettes[number]['id'];
 export type SandboxChatBackground='glass'|'solid';
-export type Appearance={palette:Palette;dark:boolean;sandboxChatBackground:SandboxChatBackground;sandboxChatTransparency:number;sandboxAutoOrbit:boolean;sandboxOrbitDelay:number};
+export type Appearance={palette:Palette;dark:boolean;sandboxChatBackground:SandboxChatBackground;sandboxChatTransparency:number;sandboxRoofLabels:boolean;sandboxAutoOrbit:boolean;sandboxOrbitDelay:number};
 export const appearanceKey='astra.appearance.v1';
-export const defaultAppearance:Appearance={palette:'astra',dark:false,sandboxChatBackground:'glass',sandboxChatTransparency:42,sandboxAutoOrbit:true,sandboxOrbitDelay:15};
+export const defaultAppearance:Appearance={palette:'astra',dark:false,sandboxChatBackground:'glass',sandboxChatTransparency:42,sandboxRoofLabels:false,sandboxAutoOrbit:true,sandboxOrbitDelay:15};
 export function normalizeAppearance(value:unknown):Appearance{
  const v=value as Partial<Appearance>|null;
- return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true,sandboxChatBackground:v?.sandboxChatBackground==='solid'?'solid':'glass',sandboxChatTransparency:typeof v?.sandboxChatTransparency==='number'&&Number.isFinite(v.sandboxChatTransparency)?Math.round(Math.max(0,Math.min(80,v.sandboxChatTransparency))):42,sandboxAutoOrbit:v?.sandboxAutoOrbit!==false,sandboxOrbitDelay:[10,15,30,60].includes(v?.sandboxOrbitDelay as number)?v!.sandboxOrbitDelay!:15};
+ return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true,sandboxChatBackground:v?.sandboxChatBackground==='solid'?'solid':'glass',sandboxChatTransparency:typeof v?.sandboxChatTransparency==='number'&&Number.isFinite(v.sandboxChatTransparency)?Math.round(Math.max(0,Math.min(80,v.sandboxChatTransparency))):42,sandboxRoofLabels:v?.sandboxRoofLabels===true,sandboxAutoOrbit:v?.sandboxAutoOrbit!==false,sandboxOrbitDelay:[10,15,30,60].includes(v?.sandboxOrbitDelay as number)?v!.sandboxOrbitDelay!:15};
 }
 export function readAppearance():Appearance{
  try{return normalizeAppearance(JSON.parse(localStorage.getItem(appearanceKey)||'null'));}catch{return {...defaultAppearance};}
@@ -36,5 +36,5 @@ export function useAppearance(darkOverride?:boolean){
   try{localStorage.setItem(appearanceKey,JSON.stringify(appearance));setError('');}
   catch{setError('当前浏览器无法保存偏好，本次配色仍已生效。');}
  },[appearance,darkOverride]);
- return {...appearance,dark:darkOverride??appearance.dark,error,setPalette:(palette:Palette)=>setAppearance(current=>({...current,palette})),setDark:(dark:boolean)=>setAppearance(current=>({...current,dark})),setSandboxChatBackground:(sandboxChatBackground:SandboxChatBackground)=>setAppearance(current=>({...current,sandboxChatBackground})),setSandboxChatTransparency:(sandboxChatTransparency:number)=>setAppearance(current=>normalizeAppearance({...current,sandboxChatTransparency})),setSandboxAutoOrbit:(sandboxAutoOrbit:boolean)=>setAppearance(current=>({...current,sandboxAutoOrbit})),setSandboxOrbitDelay:(sandboxOrbitDelay:number)=>setAppearance(current=>normalizeAppearance({...current,sandboxOrbitDelay})),reset:()=>setAppearance({...defaultAppearance})};
+ return {...appearance,dark:darkOverride??appearance.dark,error,setPalette:(palette:Palette)=>setAppearance(current=>({...current,palette})),setDark:(dark:boolean)=>setAppearance(current=>({...current,dark})),setSandboxChatBackground:(sandboxChatBackground:SandboxChatBackground)=>setAppearance(current=>({...current,sandboxChatBackground})),setSandboxChatTransparency:(sandboxChatTransparency:number)=>setAppearance(current=>normalizeAppearance({...current,sandboxChatTransparency})),setSandboxRoofLabels:(sandboxRoofLabels:boolean)=>setAppearance(current=>({...current,sandboxRoofLabels})),setSandboxAutoOrbit:(sandboxAutoOrbit:boolean)=>setAppearance(current=>({...current,sandboxAutoOrbit})),setSandboxOrbitDelay:(sandboxOrbitDelay:number)=>setAppearance(current=>normalizeAppearance({...current,sandboxOrbitDelay})),reset:()=>setAppearance({...defaultAppearance})};
 }
