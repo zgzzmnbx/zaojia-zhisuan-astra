@@ -5,6 +5,7 @@ import {readWorkbenchStyles} from '../03-Src/studio/project-sandbox/workbench-pr
 import {sandboxFrame,resultCardPosition} from '../03-Src/studio/project-sandbox/scene-layout.ts';
 import {PerspectiveCamera,Vector3} from 'three';
 import {createMarkerLayout,type MarkerInput} from '../03-Src/studio/project-sandbox/marker-layout.ts';
+import {normalizeAppearance} from '../03-Src/studio/appearance.ts';
 const input=():SandboxInput=>({ready:true,project:{jobId:'a',riskLoaded:false,fees:null} as any,result:{job_id:'a',artifact_version:3,summary:{matching_status:'completed',total_data_rows:10,matched_rows:8,review_rows:2,table_preview:{sheets:[{},{}]}}} as any,filename:'a.xlsx',sheets:[],busy:'',qaRunning:false,needsRecalculate:false,riskLoading:false,riskError:'',reportReady:false,citations:0,reviewTasks:[],reviewError:''});
 const node=(i:SandboxInput,id:string)=>sandboxNodes(i).find(n=>n.id===id)!;
 test('sandbox never borrows amounts or completion from a previous task',()=>{const i=input();i.project={...i.project!,jobId:'other'};for(const id of ['price','report','table'])assert.equal(node(i,id).tone,'idle');assert.ok(node(i,'price').disabled);i.ready=false;i.citations=4;assert.equal(node(i,'knowledge').status,'随时可查');assert.ok(sandboxNodes(i).every(n=>n.disabled==='工作空间正在恢复'));});
@@ -80,4 +81,17 @@ test('priority restores previously condensed details immediately, including duri
  engine.update(items,markerFrame,0);assert.equal(engine.update(items,markerFrame,300).placements[0].condensed,true);
  const protectedItems=items.map(m=>({...m,priority:m.id==='price'}));
  const p=engine.update(protectedItems,markerFrame,310,true).placements[0];assert.equal(p.condensed,false);assert.equal(p.height,100);
+});
+
+test('older appearance preferences retain their theme and get the existing glass background',()=>{
+ const p=normalizeAppearance({palette:'emerald',dark:true});
+ assert.equal(p.palette,'emerald');assert.equal(p.dark,true);assert.equal(p.sandboxChatBackground,'glass');assert.equal(p.sandboxChatTransparency,42);
+});
+
+test('sandbox transparency validates persisted values and retains glass amount in solid mode',()=>{
+ for(const value of [null,{},'broken',{sandboxChatTransparency:'80'},{sandboxChatTransparency:NaN}])assert.equal(normalizeAppearance(value).sandboxChatTransparency,42);
+ assert.equal(normalizeAppearance({sandboxChatTransparency:99}).sandboxChatTransparency,80);
+ assert.equal(normalizeAppearance({sandboxChatTransparency:-5}).sandboxChatTransparency,0);
+ const saved=normalizeAppearance(JSON.parse(JSON.stringify({palette:'silk',dark:false,sandboxChatBackground:'solid',sandboxChatTransparency:61})));
+ assert.equal(saved.sandboxChatBackground,'solid');assert.equal(saved.sandboxChatTransparency,61);assert.equal(saved.palette,'silk');
 });

@@ -95,3 +95,8 @@
 :root[data-astra-palette="mantine-blue"] .shell.layout-daweiba .primary-button:not(:disabled){background:var(--astra-primary-gradient)!important;color:var(--astra-primary-content)!important}
 :root[data-astra-palette="mantine-blue"] .studio :is(.session.active,.settings-navigation .is-active){background:var(--astra-selected-gradient)}
 .appearance-preview[data-astra-palette="mantine-blue"] .ap-chat b{background:var(--astra-primary-gradient)}
+.sandbox-chat-appearance{border:0;border-top:1px solid var(--line);margin:20px 0 0;padding:16px 0 0;min-width:0}
+.sandbox-chat-appearance legend{font-size:14px;font-weight:650;color:var(--ink);padding:0 8px 0 0}
+.sandbox-chat-transparency{display:grid;gap:10px;font-size:13px;color:var(--ink)}
+.sandbox-chat-transparency>span{display:flex;justify-content:space-between;align-items:center}.sandbox-chat-transparency output{font-variant-numeric:tabular-nums;color:var(--blue)}
+.sandbox-chat-transparency .range{width:100%}.sandbox-chat-transparency small{font-size:12px;color:var(--muted)}

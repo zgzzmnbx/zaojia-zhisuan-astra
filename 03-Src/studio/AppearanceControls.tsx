@@ -1,4 +1,4 @@
-import {palettes,type Palette} from './appearance';
+import {palettes,type Palette,type SandboxChatBackground} from './appearance';
 import {Icon} from './ui';
 export function ThemeModeButton({dark,toggle}:{dark:boolean;toggle:()=>void}){
  const label=dark?'切换到亮色模式':'切换到深色模式';
@@ -7,7 +7,7 @@ export function ThemeModeButton({dark,toggle}:{dark:boolean;toggle:()=>void}){
 export function ThemeButton({open,className='',expanded,label='主题配色'}:{open:()=>void;className?:string;expanded?:boolean;label?:string}){
  return <button type="button" className={`btn btn-ghost btn-square theme-trigger ${className}`} aria-label={label} aria-haspopup="dialog" aria-expanded={expanded} title="外观与主题" onClick={open}><span aria-hidden="true"/></button>;
 }
-export function AppearanceControls({palette,dark,setPalette,setDark,reset,error}:{palette:Palette;dark:boolean;setPalette:(p:Palette)=>void;setDark:(d:boolean)=>void;reset:()=>void;error:string}){
+export function AppearanceControls({palette,dark,setPalette,setDark,reset,error,sandboxChatBackground,sandboxChatTransparency,setSandboxChatBackground,setSandboxChatTransparency}:{palette:Palette;dark:boolean;setPalette:(p:Palette)=>void;setDark:(d:boolean)=>void;reset:()=>void;error:string;sandboxChatBackground:SandboxChatBackground;sandboxChatTransparency:number;setSandboxChatBackground:(v:SandboxChatBackground)=>void;setSandboxChatTransparency:(v:number)=>void}){
  return <section className="appearance-controls" aria-label="外观偏好">
   <div className="appearance-intro"><div><h3>外观</h3></div></div>
   <div className="appearance-mode" role="group" aria-label="明暗模式">
@@ -20,6 +20,13 @@ export function AppearanceControls({palette,dark,setPalette,setDark,reset,error}
     <span className="appearance-choice-title"><strong>{p.name}</strong>{palette===p.id?<Icon name="check"/>:<i/>}</span>
    </button>)}
   </div>
+  <fieldset className="sandbox-chat-appearance"><legend>沙盘聊天背景</legend>
+   <div className="appearance-mode" role="group" aria-label="沙盘聊天背景">
+    <button type="button" aria-pressed={sandboxChatBackground==='glass'} onClick={()=>setSandboxChatBackground('glass')}>磨砂玻璃</button>
+    <button type="button" aria-pressed={sandboxChatBackground==='solid'} onClick={()=>setSandboxChatBackground('solid')}>默认聊天背景</button>
+   </div>
+   {sandboxChatBackground==='glass'&&<label className="sandbox-chat-transparency"><span>透明度<output>{sandboxChatTransparency}%</output></span><input className="range range-primary range-sm" type="range" min="0" max="80" step="1" aria-label="沙盘聊天背景透明度" aria-valuetext={`${sandboxChatTransparency}%`} value={sandboxChatTransparency} onChange={e=>setSandboxChatTransparency(Number(e.target.value))}/><span className="transparency-scale"><small>更实</small><small>更透</small></span></label>}
+  </fieldset>
   <div className="appearance-footer">{error&&<p role="status">{error}</p>}<button type="button" className="text-button" onClick={reset}>恢复默认</button></div>
  </section>;
 }

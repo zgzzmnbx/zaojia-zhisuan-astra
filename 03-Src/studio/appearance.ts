@@ -10,20 +10,23 @@ export const palettes=[
  {id:'graphite',name:'石墨灰',reference:'Lofi',description:'低彩度，让内容更突出'},
 ] as const;
 export type Palette=typeof palettes[number]['id'];
-export type Appearance={palette:Palette;dark:boolean};
+export type SandboxChatBackground='glass'|'solid';
+export type Appearance={palette:Palette;dark:boolean;sandboxChatBackground:SandboxChatBackground;sandboxChatTransparency:number};
 export const appearanceKey='astra.appearance.v1';
-export const defaultAppearance:Appearance={palette:'astra',dark:false};
+export const defaultAppearance:Appearance={palette:'astra',dark:false,sandboxChatBackground:'glass',sandboxChatTransparency:42};
 export function normalizeAppearance(value:unknown):Appearance{
  const v=value as Partial<Appearance>|null;
- return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true};
+ return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true,sandboxChatBackground:v?.sandboxChatBackground==='solid'?'solid':'glass',sandboxChatTransparency:typeof v?.sandboxChatTransparency==='number'&&Number.isFinite(v.sandboxChatTransparency)?Math.round(Math.max(0,Math.min(80,v.sandboxChatTransparency))):42};
 }
 export function readAppearance():Appearance{
  try{return normalizeAppearance(JSON.parse(localStorage.getItem(appearanceKey)||'null'));}catch{return {...defaultAppearance};}
 }
-export function applyAppearance(value:Appearance){
+export function applyAppearance(value:Pick<Appearance,'palette'|'dark'>&Partial<Appearance>){
  const v=normalizeAppearance(value),root=document.documentElement;
  root.dataset.astraPalette=v.palette;root.dataset.astraScheme=v.dark?'dark':'light';
  root.dataset.theme=v.dark?'dark':'light';root.style.colorScheme=v.dark?'dark':'light';
+ root.dataset.sandboxChatBackground=v.sandboxChatBackground;
+ root.style.setProperty('--astra-sandbox-chat-opacity',`${100-v.sandboxChatTransparency}%`);
  document.body?.toggleAttribute('data-dark',v.dark);
 }
 export function useAppearance(darkOverride?:boolean){
@@ -33,5 +36,5 @@ export function useAppearance(darkOverride?:boolean){
   try{localStorage.setItem(appearanceKey,JSON.stringify(appearance));setError('');}
   catch{setError('当前浏览器无法保存偏好，本次配色仍已生效。');}
  },[appearance,darkOverride]);
- return {...appearance,dark:darkOverride??appearance.dark,error,setPalette:(palette:Palette)=>setAppearance(current=>({...current,palette})),setDark:(dark:boolean)=>setAppearance(current=>({...current,dark})),reset:()=>setAppearance({...defaultAppearance})};
+ return {...appearance,dark:darkOverride??appearance.dark,error,setPalette:(palette:Palette)=>setAppearance(current=>({...current,palette})),setDark:(dark:boolean)=>setAppearance(current=>({...current,dark})),setSandboxChatBackground:(sandboxChatBackground:SandboxChatBackground)=>setAppearance(current=>({...current,sandboxChatBackground})),setSandboxChatTransparency:(sandboxChatTransparency:number)=>setAppearance(current=>normalizeAppearance({...current,sandboxChatTransparency})),reset:()=>setAppearance({...defaultAppearance})};
 }
