@@ -7,12 +7,12 @@ const percent=(value:number|null)=>value===null?'—':`${(value*100).toLocaleStr
 function Breakdown({items,professional=false}:{items:FeeItem[];professional?:boolean}){
  return <table className="fs-table"><caption className="sr-only">{professional?'专业费用（浮动前）':'最终费用构成'}</caption><thead><tr><th scope="col">{professional?'专业':'费用项目'}</th><th scope="col">金额</th><th scope="col">占比</th></tr></thead><tbody>{items.map((item,index)=><tr key={`${item.label}-${index}`}><th scope="row"><span>{!professional&&<i style={{background:`var(--fs-color-${index%2})`}}/>}{item.label}</span></th><td title={item.value===null?'表内无有效金额':String(item.value)}>{amount(item.value)}</td><td>{percent(item.share)}</td></tr>)}</tbody></table>;
 }
-export function FeeSummary({snapshot,historical=false,compact=false}:{snapshot:FeeSnapshot|null;historical?:boolean;compact?:boolean}){
+export function FeeSummary({snapshot,historical=false,compact=false,overview=false}:{snapshot:FeeSnapshot|null;historical?:boolean;compact?:boolean;overview?:boolean}){
  const gradientId=`fee-${useId().replace(/:/g,'')}`;
  if(!snapshot)return <section className="fee-summary fs-empty" aria-label="费用汇总">费用汇总暂不可用</section>;
  const s=snapshot,composition=s.finalComposition,valid=composition.length>0&&composition.every(item=>item.share!==null);
  let offset=0;
- return <section className={`fee-summary ${compact?'fs-compact':''}`} aria-label={historical?'本次金额快照':'当前任务费用汇总'}>
+ return <section className={`fee-summary ${compact?'fs-compact':''} ${overview?'fs-overview':''}`} aria-label={historical?'本次金额快照':'当前任务费用汇总'}>
   {!compact&&<header className="fs-heading"><h4>{historical?'本次金额快照':'费用汇总'}</h4>{historical&&s.version!==null&&<span>版本 {s.version}</span>}</header>}
   <div className="fs-amounts" role="group" aria-label={`金额摘要，${s.unit||'单位未标注'}`}>
    <div className="fs-total"><span className="fs-total-label">含税总额<small>单位：{s.unit||'未标注'}</small></span><strong title={s.totalWithTax===null?'表内无有效金额':String(s.totalWithTax)}>{amount(s.totalWithTax)}</strong><span className={`fs-status fs-${s.status}`}>{s.status==='dirty'?'修改后待重算':s.status==='recalculated'?'公式已重算':'公式未确认重算'}</span></div>
@@ -27,7 +27,7 @@ export function FeeSummary({snapshot,historical=false,compact=false}:{snapshot:F
     <ul className="fs-chart-legend">{composition.map((item,i)=><li key={item.label}><span><i style={{background:`var(--fs-color-${i%2})`}}/>{item.label}</span><strong title={String(item.value??'')}>{amount(item.value)}</strong><small>{percent(item.share)}</small></li>)}</ul>
     {!composition.length&&<p className="fs-missing">表内暂无费用构成</p>}
    </figure>
-   {!!s.professionalComposition.length&&<figure className="fs-chart"><figcaption>专业费用<span>浮动前</span></figcaption>
+   {!overview&&!!s.professionalComposition.length&&<figure className="fs-chart"><figcaption>专业费用<span>浮动前</span></figcaption>
     <div className="fs-column-chart" aria-label="专业费用横向柱状图">{s.professionalComposition.map(item=><div className="fs-column-row" key={item.label}>
      <div className="fs-column-label"><span title={item.label}>{item.label}</span><strong title={String(item.value??'')}>{amount(item.value)}</strong></div>
      <div className="fs-column-value"><span className="fs-column-track" aria-hidden="true">{item.share!==null&&<i style={{width:`${item.share*100}%`}}/>}</span><span>{percent(item.share)}</span></div>
