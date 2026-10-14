@@ -109,10 +109,8 @@
 
 /* Live task feedback: fixed track, no fabricated percentage. */
 .sandbox-marker[data-tone=running]{z-index:6!important;opacity:1!important}
-.project-sandbox .sandbox-marker[data-tone=running]>.sandbox-marker-title,
 .project-sandbox .sandbox-marker[data-tone=running]>.sandbox-result-trigger,
 .project-sandbox .sandbox-marker[data-tone=running]>.sandbox-node-progress{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff);border-color:color-mix(in srgb,var(--astra-primary) 75%,white);box-shadow:0 5px 20px color-mix(in srgb,var(--astra-primary) 24%,transparent)}
-.project-sandbox .sandbox-marker[data-tone=running] .sandbox-marker-title small,
 .project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-status,
 .project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-summary,
 .project-sandbox .sandbox-marker[data-tone=running] .sandbox-amount{color:var(--astra-primary-content,#fff)}

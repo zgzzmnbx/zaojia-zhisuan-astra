@@ -419,7 +419,7 @@ function App(){
     const data=await api<Inspection>('/api/inspect',form({file:next}));const assetId=existingAssetId||(await persistInput(next)).id;setInputFileId(assetId);
     conversationContext.current=crypto.randomUUID();loadedJob.current='';
     setInputConversationId(workspace.currentConversation()?.id||'');setFile(next);setProject(next.name.replace(/\.xlsx$/i,''));setResult(null);setReport(null);setRisks([]);setSources(null);setSheetIndex(0);setNeedsRecalculate(false);
-    const prepared=prepareSheets(data.sheets);setSheets(prepared);setMappingExpanded(false);setMappingSheet(0);setMappingOpen(false);if(token===presentation.interactionToken())showMapping();
+    const prepared=prepareSheets(data.sheets);setSheets(prepared);setMappingExpanded(false);setMappingSheet(0);setMappingOpen(false);if(!sandboxVisible&&token===presentation.interactionToken())showMapping();
     add(`请帮我编制这份控制价：${next.name}`,undefined,'user');
     add('资料已读取。我们先确认结构，再交给专业规则匹配。',[{label:'确认结构并转换',action:'convert',primary:true},{label:'核对字段',action:'mapping'}],'assistant',false,inputCard(next.name,prepared));
   });}
@@ -429,7 +429,7 @@ function App(){
     const data=await api<Inspection>('/api/inspect',form({file:next}));setInputFileId((await persistInput(next)).id);
     conversationContext.current=crypto.randomUUID();loadedJob.current='';
     setInputConversationId(workspace.currentConversation()?.id||'');setFile(next);setProject(DEBUG_MODE?'合成调试项目（非业务资料）':'V3.1 勘察测量控制价');setResult(null);setRisks([]);setReport(null);setSources(null);setSheetIndex(0);setNeedsRecalculate(false);
-    const prepared=prepareSheets(data.sheets);setSheets(prepared);setMappingExpanded(false);setMappingSheet(0);setMappingOpen(false);if(token===presentation.interactionToken())showMapping();
+    const prepared=prepareSheets(data.sheets);setSheets(prepared);setMappingExpanded(false);setMappingSheet(0);setMappingOpen(false);if(!sandboxVisible&&token===presentation.interactionToken())showMapping();
     add(DEBUG_MODE?'用合成样例走一遍前端交互流程。':'用 V3.1 正式样本走一遍编制流程。',undefined,'user');
     add('样本副本已就位。这次会实际运行规则，生成 Excel 和 Word 成果。',[{label:'确认结构并转换',action:'convert',primary:true},{label:'核对字段',action:'mapping'}],'assistant',false,inputCard(next.name,prepared));
   });}
