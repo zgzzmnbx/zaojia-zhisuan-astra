@@ -137,3 +137,8 @@
 .project-sandbox[data-motion-paused=true] .sandbox-stage-progress>span{animation-play-state:paused}
 .sandbox-card-mode .sandbox-task-activity{left:50%;max-width:calc(100% - 28px);bottom:74px}
 @media(prefers-reduced-motion:reduce){.sandbox-stage-progress>span{animation:none;transform:translateX(80%);opacity:.85}}
+
+/* Low-frequency scene controls stay behind a compact disclosure. */
+.sandbox-view-options{display:flex;align-items:center;gap:3px;padding-left:6px;border-left:1px solid color-mix(in srgb,var(--muted) 20%,transparent)}
+.sandbox-controls-toggle .astra-icon:last-child{width:12px;height:12px;transform:rotate(180deg)}
+.sandbox-view-controls[data-expanded="true"] .sandbox-controls-toggle .astra-icon:last-child{transform:none}

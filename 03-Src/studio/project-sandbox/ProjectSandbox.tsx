@@ -16,6 +16,8 @@ export default function ProjectSandbox(props:Props){
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches),[flowChoice,setFlowChoice]=useState<boolean|null>(null);
  const [review,setReview]=useState<{job:string;tasks:ReviewProgressTask[]|null;error:string}>({job:'',tasks:null,error:''});
  const [activity,setActivity]=useState<TaskActivity|null>(null),focusedActivity=useRef(0);
+ const controlsRef=useRef<HTMLDivElement>(null),controlsButton=useRef<HTMLButtonElement>(null);
+ const [controlsOpen,setControlsOpen]=useState(false);
  const [pageVisible,setPageVisible]=useState(()=>!document.hidden);
  useEffect(()=>{const update=()=>setPageVisible(!document.hidden);document.addEventListener('visibilitychange',update);return()=>document.removeEventListener('visibilitychange',update)},[]);
  useEffect(()=>{setActivity(previous=>nextTaskActivity(previous,{ready:props.input.ready,busy:props.input.busy,qaRunning:props.input.qaRunning,error:props.input.operationError,cancelVersion:props.input.cancelVersion}))},[props.input.ready,props.input.busy,props.input.qaRunning,props.input.operationError,props.input.cancelVersion]);
@@ -45,8 +47,9 @@ export default function ProjectSandbox(props:Props){
  function closeResult(restore=true){const id=resultId;setResultId(null);if(restore&&id)markers.current.get(id)?.querySelector<HTMLButtonElement>('.sandbox-result-trigger')?.focus({preventScroll:true})}
  useEffect(()=>{scene.current?.setResultCard(resultId,resultCard.current);if(resultId)resultClose.current?.focus({preventScroll:true});return()=>scene.current?.setResultCard(null,null)},[resultId,retry]);
  useEffect(()=>{if(!resultId)return;const outside=(e:PointerEvent)=>{if(!resultCard.current?.contains(e.target as Node)&&!markers.current.get(resultId)?.contains(e.target as Node))closeResult(false)};document.addEventListener('pointerdown',outside);return()=>document.removeEventListener('pointerdown',outside)},[resultId]);
+ useEffect(()=>{if(!controlsOpen)return;const outside=(e:PointerEvent)=>{if(!controlsRef.current?.contains(e.target as Node))setControlsOpen(false)};document.addEventListener('pointerdown',outside);return()=>document.removeEventListener('pointerdown',outside)},[controlsOpen]);
  function close(){const id=selected;setResultId(null);setSelected(null);scene.current?.home();if(id)markers.current.get(id)?.querySelector<HTMLButtonElement>('.sandbox-marker-title')?.focus({preventScroll:true})}
- useEffect(()=>{if(!props.active)return;const escape=(e:KeyboardEvent)=>{if(e.key!=='Escape'||(!resultId&&!selected&&!menu&&!orbit))return;e.preventDefault();e.stopImmediatePropagation();if(resultId)closeResult();else if(menu)setMenu(false);else if(selected)close();else setOrbit(false)};document.addEventListener('keydown',escape,true);return()=>document.removeEventListener('keydown',escape,true)},[props.active,resultId,selected,menu,orbit]);
+ useEffect(()=>{if(!props.active)return;const escape=(e:KeyboardEvent)=>{if(e.key!=='Escape'||(!controlsOpen&&!resultId&&!selected&&!menu&&!orbit))return;e.preventDefault();e.stopImmediatePropagation();if(controlsOpen){setControlsOpen(false);controlsButton.current?.focus({preventScroll:true})}else if(resultId)closeResult();else if(menu)setMenu(false);else if(selected)close();else setOrbit(false)};document.addEventListener('keydown',escape,true);return()=>document.removeEventListener('keydown',escape,true)},[props.active,resultId,selected,menu,orbit,controlsOpen]);
  useEffect(()=>{scene.current?.refresh()},[JSON.stringify(nodes),ready]);
  return <section className={`project-sandbox ${props.variant==='card'?'sandbox-card-mode':''} ${error?'scene-fallback':''}`} aria-label="项目沙盘工作台" data-ready={ready} data-focused={!!selected} data-motion-paused={!props.active||!pageVisible} data-focused-stage={activity?.phase==='running'?activity.zone:undefined} data-running={runningZone(props.input.busy,props.input.qaRunning)||'idle'}>
   <div className="sandbox-canvas" ref={host}/>
@@ -80,13 +83,16 @@ export default function ProjectSandbox(props:Props){
    {chosen.id==='price'&&props.input.result&&<button className="btn btn-ghost btn-sm" disabled={!!props.input.busy} onClick={()=>props.enter('advanced')}>核对单价与系数</button>}
    {chosen.id==='risk'&&props.input.result?.summary.matching_status==='completed'&&<button className="btn btn-ghost btn-sm" disabled={!!props.input.busy} onClick={()=>props.enter('warning')}>重新检查风险</button>}
   </aside>}
-  <div className="sandbox-view-controls" aria-label="沙盘视图控制">
+  <div ref={controlsRef} className="sandbox-view-controls" aria-label="沙盘视图控制" data-expanded={controlsOpen}>
+   <button ref={controlsButton} type="button" className="btn btn-ghost btn-sm sandbox-controls-toggle" aria-label={controlsOpen?'收起沙盘视图控制':'展开沙盘视图控制'} aria-expanded={controlsOpen} aria-controls="sandbox-view-options" onClick={()=>setControlsOpen(v=>!v)} title={controlsOpen?'收起视图控制':'沙盘视图控制'}><Icon name="sliders"/><span>视图</span><Icon name="chevron"/></button>
+   {controlsOpen&&<div id="sandbox-view-options" className="sandbox-view-options">
    <button className="btn btn-ghost btn-sm" aria-pressed={orbit} disabled={reduced} title={reduced?'已遵循减少动效':'自动环游'} onClick={()=>{if(selected)close();setOrbit(v=>!v)}}><Icon name={orbit?'pause':'play'}/>{orbit?'暂停':'环游'}</button>
    <button className="btn btn-ghost btn-square btn-sm" aria-label="放大沙盘" onClick={()=>scene.current?.zoom(.85)}><Icon name="magnifying-glass-plus"/></button><button className="btn btn-ghost btn-square btn-sm" aria-label="缩小沙盘" onClick={()=>scene.current?.zoom(1.18)}><Icon name="magnifying-glass-minus"/></button>
    <button className="btn btn-ghost btn-square btn-sm" aria-label="沙盘回到全景" onClick={()=>{setResultId(null);setSelected(null);setOrbit(false);scene.current?.home()}}><Icon name="home"/></button>
    <label title="静态建筑使用缓存阴影"><input type="checkbox" className="toggle toggle-xs" checked={shadows} onChange={e=>setShadows(e.target.checked)}/>阴影</label>
    <label title="蓝色信息流动效，不表示任务执行进度"><input type="checkbox" className="toggle toggle-xs" checked={flowChoice??!reduced} onChange={e=>setFlowChoice(e.target.checked)}/>信息流</label>
    <button className="btn btn-ghost btn-sm" aria-pressed={props.dark} onClick={props.toggleDark}><Icon name={props.dark?'sun':'moon'}/>{props.dark?'日间':'夜航'}</button>
+   </div>}
   </div>
   <span className="sandbox-scene-caption">{props.input.result?.job_id?`任务 ${props.input.result.job_id.slice(0,8)}`:'从一份清单开始'}{props.input.project?.debug?' · 演示数据':''}{(flowChoice??!reduced)?' · 信息流示意':''}</span>
  </section>;
