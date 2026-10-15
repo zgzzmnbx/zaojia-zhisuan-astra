@@ -5,7 +5,7 @@ export function useIdleOrbit(enabled:boolean,delay:number,blocked:boolean,stopMa
  const [running,setRunning]=useState(false),controller=useRef<ReturnType<typeof createIdleOrbit>|null>(null),onInput=useRef(stopManual);
  onInput.current=stopManual;
  useEffect(()=>{
-  const idle=createIdleOrbit(setRunning,()=>!document.hidden&&!document.querySelector('dialog[open],.sandbox-marker:hover,.sandbox-marker:focus-within'),{set:(fn,ms)=>setTimeout(fn,ms),clear:id=>clearTimeout(id as ReturnType<typeof setTimeout>)});
+  const idle=createIdleOrbit(setRunning,()=>!document.hidden&&!document.querySelector('dialog[open],.sandbox-marker :focus-visible'),{set:(fn,ms)=>setTimeout(fn,ms),clear:id=>clearTimeout(id as ReturnType<typeof setTimeout>)});
   controller.current=idle;
   const stop=(e:Event)=>{if(!(e.target instanceof Element)||!e.target.closest('.sandbox-view-controls'))onInput.current()};
   const activity=(e:Event)=>{stop(e);idle.activity()};

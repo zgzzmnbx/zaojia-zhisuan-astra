@@ -1,7 +1,7 @@
 import type {DocumentSource} from './document-types';
 import type {ConversationCard} from './types';
 export function reportProgressCard(stage:number,failed=false):ConversationCard{
- const labels=['生成文字报告','整理 Markdown','公文排版','打开预览'];
+ const labels=['生成文字报告','整理 Markdown','公文排版','保存成果'];
  return {kind:'confirmation',title:'生成报告',caption:'自动处理',icon:'file',status:failed?'未完成':stage===4?'已完成':labels[stage],tone:failed?'error':stage===4?'success':undefined,
   steps:labels.map((label,index)=>({label,state:index<stage?'done':index===stage?'current':'waiting'}))};
 }

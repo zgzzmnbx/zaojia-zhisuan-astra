@@ -160,3 +160,11 @@
 
 .sandbox-label-setting{border-right:1px solid var(--line);margin-right:4px}
 .project-sandbox[data-roof-labels=true] .sandbox-result-trigger{display:flex}
+
+/* Compact project identity and persistent camera controls. */
+.sandbox-project>strong{max-width:18em}.sandbox-card-mode .sandbox-project{max-width:30%}.sandbox-card-mode .sandbox-project>strong{max-width:14em}
+.sandbox-view-options{display:block;width:420px;padding:12px;max-width:calc(100cqw - 40px)}
+.sandbox-view-toggles{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sandbox-camera-settings{display:grid;gap:14px;padding:14px 4px 2px}.sandbox-camera-settings>label{display:grid;grid-template-columns:1fr auto;padding:0;gap:10px;font-size:13px;color:var(--ink)}
+.sandbox-camera-settings .range{grid-column:1/-1;width:100%;color:var(--astra-primary)}.sandbox-camera-settings output{font-variant-numeric:tabular-nums;color:var(--muted)}
+.sandbox-camera-settings>small{font-size:12px;color:var(--muted)}.sandbox-idle-setting{display:flex;align-items:center;justify-content:space-between;gap:12px}.sandbox-idle-setting label{padding:0}.sandbox-idle-setting .select{width:100px;font-size:12px;min-height:30px;height:30px}

@@ -10,6 +10,7 @@ import {zones} from './zones.js';
 import {sandboxFrame} from './scene-layout.ts';
 import {createRoofAnchors} from './roof-labels.mjs';
 import {createMarkerLayout} from './marker-layout.ts';
+import {sandboxCameraDistances} from './view-settings.ts';
 import {createSandboxMaterials} from './materials.mjs';
 
 const poses=new Map();
@@ -22,7 +23,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;
  renderer.domElement.setAttribute('aria-hidden','true');host.append(renderer.domElement);
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,250),controls=new OrbitControls(camera,renderer.domElement);
- controls.enableDamping=true;controls.dampingFactor=.085;controls.minDistance=17;controls.maxDistance=110;controls.minPolarAngle=.26;controls.maxPolarAngle=Math.PI*.46;controls.autoRotateSpeed=.12;
+ controls.enableDamping=true;controls.dampingFactor=.085;controls.minDistance=14;controls.maxDistance=110;controls.minPolarAngle=.26;controls.maxPolarAngle=Math.PI*.46;controls.autoRotateSpeed=.22;
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment(),env=pmrem.fromScene(room,.04);scene.environment=env.texture;pmrem.dispose();room.dispose();
  const hemi=new THREE.HemisphereLight(0xf5faff,0x93abc6,.35),sun=new THREE.DirectionalLight(0xfffbf5,3.2),fill=new THREE.DirectionalLight(0xe2edff,.22);
  sun.position.set(-16,32,20);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});sun.shadow.camera.updateProjectionMatrix();fill.position.set(20,18,-25);scene.add(hemi,sun,fill);
@@ -34,14 +35,14 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  const abort=new AbortController(),events=new AbortController(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const roofAnchors=createRoofAnchors(zones);
  const markerLayout=createMarkerLayout();let markerSnapshot={placements:[],pending:false,reflows:0};
- let model=null,materials=null,disposed=false,raf=0,inView=true,width=1,height=1,flight=null,down=null,selected=null,frames=0,shadowDraws=0;
+ let taskTarget=null,model=null,materials=null,disposed=false,raf=0,inView=true,width=1,height=1,flight=null,down=null,selected=null,frames=0,shadowDraws=0;
  let frame=sandboxFrame(1,1);
- let options={roofLabels:false,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:false,shadows:true,flow:true,running:null,orbit:false};
+ let options={roofLabels:false,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:false,elevation:28,zoom:125,shadows:true,flow:true,running:null,orbit:false};
  function allowed(){return !disposed&&options.active&&inView&&!document.hidden}
  function request(){if(!raf&&allowed())raf=requestAnimationFrame(render)}
  function stop(){cancelAnimationFrame(raf);raf=0;flight=null;flow.suspend();}
  function theme(){
-  const dark=options.dark,cool=options.cool;scene.background=new THREE.Color(dark?'#08131f':'#edf3f8');floor.material.color.set(dark?'#101f2c':'#e7eff8');scene.environmentIntensity=dark?.19:.22;renderer.toneMappingExposure=dark?.79:.8;
+  const dark=options.dark,cool=options.cool;scene.background=new THREE.Color(dark?'#08131f':'#edf3f8');floor.material.color.set(dark?'#101f2c':'#ffffff');floor.material.emissive.set(dark?0x000000:0xe5edf5);floor.material.emissiveIntensity=dark?0:.25;scene.environmentIntensity=dark?.19:.22;renderer.toneMappingExposure=dark?.79:.8;
   sun.color.set(dark?0xb5d9ff:cool?0xf3f8ff:0xfffbf5);sun.intensity=dark?.85:3.2;sun.shadow.bias=dark?-.00025:-.0002;sun.shadow.normalBias=dark?.025:.065;sun.shadow.radius=dark?4:2;sun.shadow.intensity=dark?1:.85;
   fill.color.set(dark?0x4394cf:0xe2edff);fill.intensity=dark?.45:cool?.32:.22;hemi.color.set(dark?0xa5d4fa:0xf5faff);hemi.groundColor.set(dark?0x172c42:0x93abc6);hemi.intensity=dark?.32:cool?.45:.35;
   materials?.apply({dark,cool,selected});night.setEnabled(dark);night.resize(width,height);contacts.setNight(dark);flow.setNight(dark);renderer.shadowMap.needsUpdate=true;
@@ -83,7 +84,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   if(flight||moving||controls.autoRotate||flow.getState().playing||markerPending||(beacon.visible&&!reduced.matches))request();
  }
  function fly(position,target){if(reduced.matches){camera.position.copy(position);controls.target.copy(target);controls.update()}else flight={p0:camera.position.clone(),p1:position.clone(),t0:controls.target.clone(),t1:target.clone(),start:performance.now()};request()}
- function home(animate=true){const target=new THREE.Vector3(-1,1,-1),position=new THREE.Vector3(30,33,38).normalize().multiplyScalar(54*Math.max(1,1.08/((width-frame.left)/height))).add(target);if(animate)fly(position,target);else{camera.position.copy(position);controls.target.copy(target);controls.update();request()}}
+ function home(animate=true){taskTarget=null;const target=new THREE.Vector3(-1,2.5,-1),position=new THREE.Vector3(30,Math.hypot(30,38)*Math.tan(options.elevation*Math.PI/180),38).normalize().multiplyScalar(sandboxCameraDistances(options.zoom).overview*Math.max(1,1.08/((width-frame.left)/height))).add(target);if(animate)fly(position,target);else{camera.position.copy(position);controls.target.copy(target);controls.update();request()}}
  function reframe(){
   const rect=host.getBoundingClientRect(),chat=host.closest('.workbench')?.querySelector('#astra-conversation');
   const chatRight=!options.compact&&chat?.getClientRects().length?chat.getBoundingClientRect().right-rect.left+16:0;
@@ -112,14 +113,14 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  }).catch(error=>{if(!disposed&&error.name!=='AbortError')onError('沙盘加载失败，可以重试或使用经典界面。')});
  theme();request();
  return {
-  setOptions(next){const previous=options;options={...options,...next};if(previous.roofLabels!==options.roofLabels)markerLayout.reset();if(previous.compact!==options.compact){markerLayout.reset();selected=null;theme();resize();home(false)}else reframe();if(previous.dark!==options.dark||previous.cool!==options.cool)theme();if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow);if(allowed())request();else stop();},
+  setOptions(next){const previous=options;options={...options,...next};if(previous.running&&!options.running)taskTarget=null;if(previous.roofLabels!==options.roofLabels)markerLayout.reset();if(previous.compact!==options.compact){markerLayout.reset();selected=null;theme();resize();home(false)}else reframe();if(previous.dark!==options.dark||previous.cool!==options.cool)theme();if(previous.elevation!==options.elevation&&!selected&&!taskTarget)home();if(previous.zoom!==options.zoom){if(selected){const id=selected;selected=null;this.select(id)}else if(taskTarget)this.focusTask(taskTarget)}if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow);if(allowed())request();else stop();},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},
-  focusTask(id){const zone=zones.find(z=>z.id===id);if(!zone)return;selected=null;theme();options.orbit=false;controls.autoRotate=false;onOrbitStop?.();reframe();const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(direction.y,.5);direction.normalize();fly(target.clone().addScaledVector(direction,32*Math.max(1,.8/(frame.width/frame.height))),target);request()},
-  select(id){if(id===selected)return;selected=id;markerLayout.reset();reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,25*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
+  focusTask(id){taskTarget=id;const zone=zones.find(z=>z.id===id);if(!zone)return;selected=null;theme();options.orbit=false;controls.autoRotate=false;onOrbitStop?.();reframe();const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(direction.y,.5);direction.normalize();fly(target.clone().addScaledVector(direction,sandboxCameraDistances(options.zoom).task*Math.max(1,.8/(frame.width/frame.height))),target);request()},
+  select(id){if(id===selected)return;taskTarget=null;selected=id;markerLayout.reset();reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,sandboxCameraDistances(options.zoom).building*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
   home(){selected=null;markerLayout.reset();reframe();theme();home()},
   zoom(factor){const delta=camera.position.clone().sub(controls.target).multiplyScalar(factor).clampLength(17,110);fly(controls.target.clone().add(delta),controls.target)},
   refresh:request,
-  state:()=>({roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
+  state:()=>({roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,elevation:options.elevation,zoom:options.zoom,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
   dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();night.dispose();releaseObject(scene);sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
  };
 }

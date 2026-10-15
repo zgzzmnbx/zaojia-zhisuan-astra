@@ -189,3 +189,8 @@ test('repeated collisions and pointer locks never accumulate displacement beyond
  }
  engine.reset();const reset=engine.update([sign('risk',600,400)],frame,time,true).placements[0];assert.equal(reset.x,600-reset.width/2);
 });
+
+test('temporary orbit gates rearm without requiring another user input',()=>{
+ const f=idleFixture();f.allow(false);f.idle.configure({enabled:true,blocked:false,delay:10000});f.tick(10000);assert.deepEqual(f.states,[]);assert.equal(f.timers.size,1);
+ f.allow(true);f.tick(10000);assert.deepEqual(f.states,[true]);f.idle.dispose();assert.equal(f.timers.size,0);
+});
