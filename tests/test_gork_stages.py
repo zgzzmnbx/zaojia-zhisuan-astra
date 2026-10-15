@@ -53,11 +53,11 @@ def test_amount_and_review_keep_actual_attempt_and_caveat():
 
 
 @pytest.mark.parametrize('value,spoken', [
-    ('0.00', '0元'), ('9999.99', '9999.99元'), ('10000.00', '1万元'),
-    ('26728500.00', '2672.85万元'), ('9447173.00', '944.7173万元'),
-    ('10000.000001', '1.0000000001万元'), ('1000000000000', '100000000万元'),
+    ('0.00', '0万'), ('0.000001', '不足1万'), ('9999.99', '不足1万'), ('10000.00', '1万'),
+    ('26728500.00', '2672万'), ('9447173.00', '944万'), ('19999.99', '1万'),
+    ('10000.000001', '1万'), ('1000000000000', '100000000万'),
 ])
-def test_spoken_amount_uses_wan_exactly_without_changing_snapshot(value, spoken):
+def test_spoken_amount_uses_integer_wan_without_rounding_or_changing_snapshot(value, spoken):
     event = {'status': 'completed', 'attempt': 'current',
              'amount_summary': {'attempt': 'current', 'value': value, 'unit': 'yuan',
              'currency': 'CNY', 'basis': 'tax_excluded', 'calculation_status': 'unconfirmed'}}

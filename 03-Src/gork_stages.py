@@ -30,10 +30,11 @@ def amount_text(event, *, spoken=False):
     except InvalidOperation:
         return None
     unit = '元'
-    if spoken and value >= Decimal('10000'):
-        value /= Decimal('10000')
-        unit = '万元'
-    number = format(value, 'f')
+    below_wan = spoken and Decimal(0) < value < Decimal('10000')
+    if spoken:
+        value //= Decimal('10000')
+        unit = '万'
+    number = '不足1' if below_wan else format(value, 'f')
     if '.' in number:
         number = number.rstrip('0').rstrip('.')
     basis = '含税总额' if amount['basis'] == 'tax_included' else '不含税金额'

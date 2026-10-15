@@ -55,7 +55,7 @@ async def host_lifespan(_app):
             except asyncio.CancelledError:pass
         await asyncio.to_thread(gork_output.stop)
 
-app = FastAPI(title='智算Astra', version='0.9.10', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.9.11', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}

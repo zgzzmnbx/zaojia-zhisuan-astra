@@ -75,7 +75,7 @@ def test_long_debug_templates_use_stage_copy_and_keep_full_amount_caveat(fixture
     assert payload['text'].startswith('说明')
     assert payload['speech']['text'].startswith('语音')
     assert len(payload['text'])<=300 and payload['text'].endswith('9447173元。公式重算未确认。')
-    assert len(payload['speech']['text'])<=300 and payload['speech']['text'].endswith('944.7173万元。公式重算未确认。')
+    assert len(payload['speech']['text'])<=300 and payload['speech']['text'].endswith('944万。公式重算未确认。')
 
 
 def test_debug_and_business_copy_match_but_keep_separate_identity(fixture):
@@ -108,7 +108,7 @@ def test_debug_and_business_amount_speech_use_wan_with_exact_yuan_snapshot(fixtu
     obj.enqueue(actual_event);obj.step()
     actual=remote.sent[-1]
     for payload in (debug,actual):
-        assert payload['speech']['text']=='匹配完成，表内含税总额2672.85万元。公式重算未确认。1项待复核。'
+        assert payload['speech']['text']=='匹配完成，表内含税总额2672万。公式重算未确认。1项待复核。'
         assert '26728500元' in payload['text']
         assert payload['amount_summary']['value']=='26728500.00'
         assert payload['amount_summary']['unit']=='yuan'

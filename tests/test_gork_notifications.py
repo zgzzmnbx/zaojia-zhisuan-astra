@@ -193,7 +193,7 @@ def test_amount_basis_caveat_required_in_custom_speech_and_attempt(fixture):
     p=remote.sent[-1]
     assert p['amount_summary']==summary
     assert p['speech']['mode']=='auto'
-    assert '表内含税总额944.7173万元。公式重算未确认。' in p['speech']['text']
+    assert '表内含税总额944万。公式重算未确认。' in p['speech']['text']
     clock[0]+=1;summary['attempt']='old'
     obj.enqueue(event(clock,'match_result','completed',amount_summary=summary));obj.step()
     assert 'amount_summary' not in remote.sent[-1]
