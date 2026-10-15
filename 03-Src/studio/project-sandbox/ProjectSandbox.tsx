@@ -13,6 +13,9 @@ export default function ProjectSandbox(props:Props){
  const selectRef=useRef<(id:ZoneId|null,action:string)=>void>(()=>{});
  const modeButton=useRef<HTMLButtonElement>(null),lastVariant=useRef(props.variant);
  const [menu,setMenu]=useState(false);
+ const [cool,setCool]=useState(()=>{try{return localStorage.getItem('astra.sandbox.day-tone')==='cool'}catch{return false}});
+ function changeTone(value:boolean){setCool(value);try{localStorage.setItem('astra.sandbox.day-tone',value?'cool':'original')}catch{}}
+ useEffect(()=>{const update=(e:StorageEvent)=>{if(e.key==='astra.sandbox.day-tone')setCool(e.newValue==='cool')};window.addEventListener('storage',update);return()=>window.removeEventListener('storage',update)},[]);
  const [ready,setReady]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[selected,setSelected]=useState<ZoneId|null>(null),[shadows,setShadows]=useState(true),[orbit,setOrbit]=useState(false);
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches),[flowChoice,setFlowChoice]=useState<boolean|null>(null);
  const [review,setReview]=useState<{job:string;tasks:ReviewProgressTask[]|null;error:string}>({job:'',tasks:null,error:''});
@@ -34,7 +37,7 @@ export default function ProjectSandbox(props:Props){
   try{api=mountSandbox(el,markers.current,props.context,(id:ZoneId|null,action:string)=>selectRef.current(id,action),()=>setReady(true),(message:string)=>setError(message),()=>setOrbit(false));scene.current=api;(el as any).__sandboxState=api.state;}catch{setError('当前设备无法开启三维画面，可使用下方功能入口或经典界面。')}
   return()=>{api?.dispose();scene.current=null;delete (el as any).__sandboxState};
  },[props.context,retry]);
- useEffect(()=>{scene.current?.setOptions({roofLabels:props.roofLabels,compact:props.variant==='card',active:props.active,dark:props.dark,shadows,orbit:orbiting&&!reduced,flow:flowChoice??!reduced,running:runningZone(props.input.busy,props.input.qaRunning)})},[props.roofLabels,props.context,props.variant,props.chatCollapsed,props.active,props.dark,shadows,orbiting,reduced,flowChoice,props.input.busy,props.input.qaRunning,retry]);
+ useEffect(()=>{scene.current?.setOptions({roofLabels:props.roofLabels,compact:props.variant==='card',active:props.active,dark:props.dark,cool,shadows,orbit:orbiting&&!reduced,flow:flowChoice??!reduced,running:runningZone(props.input.busy,props.input.qaRunning)})},[props.roofLabels,props.context,props.variant,props.chatCollapsed,props.active,props.dark,cool,shadows,orbiting,reduced,flowChoice,props.input.busy,props.input.qaRunning,retry]);
  useEffect(()=>{setSelected(null);setMenu(false);if(lastVariant.current!==props.variant)modeButton.current?.focus({preventScroll:true});lastVariant.current=props.variant},[props.variant]);
  useEffect(()=>{scene.current?.select(selected)},[selected,retry]);
  useEffect(()=>{
@@ -67,6 +70,7 @@ export default function ProjectSandbox(props:Props){
    <button className="btn btn-ghost btn-sm" aria-pressed={orbiting} disabled={reduced} title={reduced?'已遵循减少动效':'自动环游'} onClick={()=>{if(selected)resetView();setOrbit(!orbiting)}}><Icon name={orbiting?'pause':'play'}/>{orbiting?'暂停':'环游'}</button>
    <button className="btn btn-ghost btn-square btn-sm" aria-label="放大沙盘" onClick={()=>scene.current?.zoom(.85)}><Icon name="magnifying-glass-plus"/></button><button className="btn btn-ghost btn-square btn-sm" aria-label="缩小沙盘" onClick={()=>scene.current?.zoom(1.18)}><Icon name="magnifying-glass-minus"/></button>
 
+   <label title={props.dark?'冷白色调仅作用日间，退出夜航后生效':'日间采用冷白材质与柔和蓝色补光'}><input type="checkbox" className="toggle toggle-xs" checked={cool} disabled={props.dark} onChange={e=>changeTone(e.target.checked)}/>冷白色调</label>
    <label title="静态建筑使用缓存阴影"><input type="checkbox" className="toggle toggle-xs" checked={shadows} onChange={e=>setShadows(e.target.checked)}/>阴影</label>
    <label title="蓝色信息流动效，不表示任务执行进度"><input type="checkbox" className="toggle toggle-xs" checked={flowChoice??!reduced} onChange={e=>setFlowChoice(e.target.checked)}/>信息流</label>
    <button className="btn btn-ghost btn-sm" aria-pressed={props.dark} onClick={props.toggleDark}><Icon name={props.dark?'sun':'moon'}/>{props.dark?'日间':'夜航'}</button><button type="button" className="btn btn-ghost btn-square btn-sm" aria-label="自动环游设置" title="自动环游设置" onClick={props.orbitSettings}><Icon name="settings"/></button>
