@@ -168,3 +168,31 @@ test('moving endpoints retains GPU geometry, flow phase and accurate endpoint un
  assert.ok(uniforms.uControl.value.toArray().every(Number.isFinite));
  visual.reposition({x:0,y:0,z:0},{x:0,y:0,z:0});assert.ok(uniforms.uControl.value.toArray().every(Number.isFinite));visual.dispose();
 });
+
+
+test('hover orbit speed eases to 30 percent, tolerates picking gaps, then recovers',async()=>{
+ const {createGalaxyHoverSpeed}=await import('../03-Src/studio/knowledge-articles/galaxy-hover-speed.mjs');
+ const speed=createGalaxyHoverSpeed();assert.equal(speed.factor,1);speed.hover(true);
+ const first=speed.step(1/60);assert.ok(first<1&&first>.9);
+ for(let i=0;i<90;i++)speed.step(1/60);
+ assert.equal(speed.factor,.3);
+ speed.hover(false);for(let i=0;i<20;i++)speed.step(1/60);
+ assert.equal(speed.factor,.3);
+ speed.hover(true);assert.equal(speed.step(1/60),.3);
+ speed.hover(false);for(let i=0;i<30;i++)speed.step(1/60);
+ assert.ok(speed.factor>.3&&speed.factor<.6);
+ for(let i=0;i<150;i++)speed.step(1/60);
+ assert.equal(speed.factor,1);
+});
+
+test('hover speed is frame-rate independent and reset clears stale hover',async()=>{
+ const {createGalaxyHoverSpeed}=await import('../03-Src/studio/knowledge-articles/galaxy-hover-speed.mjs');
+ const slow=createGalaxyHoverSpeed(),fast=createGalaxyHoverSpeed();slow.hover(true);fast.hover(true);
+ for(let i=0;i<5;i++)slow.step(1/10);for(let i=0;i<60;i++)fast.step(1/120);
+ assert.ok(Math.abs(slow.factor-fast.factor)<1e-10);
+ slow.hover(false);fast.hover(false);
+ for(let i=0;i<10;i++)slow.step(1/10);for(let i=0;i<120;i++)fast.step(1/120);
+ assert.ok(Math.abs(slow.factor-fast.factor)<1e-10);
+ slow.hover(true);slow.reset();assert.equal(slow.step(1/60),1);
+ const initial=fast.factor;fast.step(0);assert.equal(fast.factor,initial);
+});

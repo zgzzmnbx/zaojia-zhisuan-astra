@@ -1,3 +1,4 @@
+import {sandboxDefaults} from './project-sandbox/defaults.ts';
 import {useLayoutEffect,useState} from 'react';
 
 export const palettes=[
@@ -13,10 +14,10 @@ export type Palette=typeof palettes[number]['id'];
 export type SandboxChatBackground='glass'|'solid';
 export type Appearance={palette:Palette;dark:boolean;sandboxChatBackground:SandboxChatBackground;sandboxChatTransparency:number;sandboxRoofLabels:boolean;sandboxAutoOrbit:boolean;sandboxOrbitDelay:number};
 export const appearanceKey='astra.appearance.v1';
-export const defaultAppearance:Appearance={palette:'astra',dark:false,sandboxChatBackground:'glass',sandboxChatTransparency:42,sandboxRoofLabels:false,sandboxAutoOrbit:true,sandboxOrbitDelay:15};
+export const defaultAppearance:Appearance={palette:'astra',dark:false,sandboxChatBackground:'glass',sandboxChatTransparency:42,sandboxRoofLabels:sandboxDefaults.roofLabels,sandboxAutoOrbit:sandboxDefaults.autoOrbit,sandboxOrbitDelay:sandboxDefaults.orbitDelay};
 export function normalizeAppearance(value:unknown):Appearance{
  const v=value as Partial<Appearance>|null;
- return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true,sandboxChatBackground:v?.sandboxChatBackground==='solid'?'solid':'glass',sandboxChatTransparency:typeof v?.sandboxChatTransparency==='number'&&Number.isFinite(v.sandboxChatTransparency)?Math.round(Math.max(0,Math.min(80,v.sandboxChatTransparency))):42,sandboxRoofLabels:v?.sandboxRoofLabels===true,sandboxAutoOrbit:v?.sandboxAutoOrbit!==false,sandboxOrbitDelay:[10,15,30,60].includes(v?.sandboxOrbitDelay as number)?v!.sandboxOrbitDelay!:15};
+ return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true,sandboxChatBackground:v?.sandboxChatBackground==='solid'?'solid':'glass',sandboxChatTransparency:typeof v?.sandboxChatTransparency==='number'&&Number.isFinite(v.sandboxChatTransparency)?Math.round(Math.max(0,Math.min(80,v.sandboxChatTransparency))):42,sandboxRoofLabels:typeof v?.sandboxRoofLabels==='boolean'?v.sandboxRoofLabels:sandboxDefaults.roofLabels,sandboxAutoOrbit:v?.sandboxAutoOrbit!==false,sandboxOrbitDelay:[2,5,10,15,30,60].includes(v?.sandboxOrbitDelay as number)?v!.sandboxOrbitDelay!:sandboxDefaults.orbitDelay};
 }
 export function readAppearance():Appearance{
  try{return normalizeAppearance(JSON.parse(localStorage.getItem(appearanceKey)||'null'));}catch{return {...defaultAppearance};}

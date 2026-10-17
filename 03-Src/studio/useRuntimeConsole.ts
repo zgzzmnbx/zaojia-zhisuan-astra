@@ -1,11 +1,11 @@
-import {useEffect,useMemo,useRef,useState} from 'react';
+import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {DEBUG_MODE} from '../frontend-debug/mock-adapter';
 import {mergeConsoleEvents,type ConsoleEvent,type ConsoleSnapshot} from './runtime-console';
 
 export function useRuntimeConsole(busy:string,failed:boolean,ready:boolean){
  const [open,setPanelOpen]=useState(false),[paused,setPaused]=useState(true),[events,setEvents]=useState<ConsoleEvent[]>([]),[local,setLocal]=useState<ConsoleEvent[]>([]);
  const collecting=open&&!paused;
- function setOpen(value:boolean){if(!value)setPaused(true);setPanelOpen(value);}
+ const setOpen=useCallback((value:boolean)=>{if(!value)setPaused(true);setPanelOpen(value);},[]);
  const [snapshot,setSnapshot]=useState<ConsoleSnapshot|null>(null),[connection,setConnection]=useState('');
  const [notice,setNotice]=useState(''),[now,setNow]=useState(Date.now());
  const cursor=useRef({after:0,instance:''}),sequence=useRef(0),busyStart=useRef(Date.now()),lastBusy=useRef('');

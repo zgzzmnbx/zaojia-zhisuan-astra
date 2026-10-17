@@ -9,6 +9,12 @@ const count=(v:unknown)=>typeof v==='number'&&Number.isFinite(v)?Math.max(0,v):n
 export function runningZone(busy:string,qa=false):ZoneId|null{
  if(qa||/检索|知识依据/.test(busy))return 'knowledge';if(/报告|文稿|排版|Markdown|Word|公文/.test(busy))return 'report';if(/经验池.*阈值|预警|风险/.test(busy))return 'risk';if(/转换|识别|上传|载入.*样本|载入.*样例/.test(busy))return 'import';if(/匹配|填价|候选/.test(busy))return 'price';if(/派发|发送|复核进度/.test(busy))return 'review';if(/重算|单元格|工作表|保存.*值/.test(busy))return 'table';return null;
 }
+/** Restore completed color from current, valid result data, never just request settlement. */
+export function completedSandboxZones(input:SandboxInput):ZoneId[]{
+ if(!input.ready)return [];
+ const nodes=sandboxNodes({...input,busy:'',qaRunning:false});
+ return nodes.filter(n=>n.tone==='done'||(n.id==='risk'&&n.status==='检查完成')).map(n=>n.id);
+}
 export function sandboxNodes(input:SandboxInput):NodeState[]{
  const p=input.project,r=input.ready&&p?.jobId&&p.jobId===input.result?.job_id?input.result:null,s=r?.summary;
  const completed=s?.matching_status==='completed',dirty=!!r&&(input.needsRecalculate||!!r.needs_recalculate),total=count(s?.total_data_rows),matched=count(s?.matched_rows);
@@ -25,6 +31,16 @@ export function sandboxNodes(input:SandboxInput):NodeState[]{
   {id:'review',title:'协同复核',status:input.reviewError?'读取失败':!r?'未发送':input.reviewTasks===null?'读取中':'未发送',summary:input.reviewError?'回执暂不可用':'确认后发送，跟踪回执',tone:input.reviewError?'error':'idle',facts:[['回执',input.reviewError||(!r?'尚无可复核成果':input.reviewTasks===null?'正在读取':'尚未派发')]],action:'collaboration',actionLabel:'准备同事复核',disabled:!completed?'请先完成填价':undefined},
   {id:'table',title:'表格大屏',status:r?(dirty?'待重算':'成果就绪'):'暂无成果',summary:r?`${s?.table_preview?.sheets?.length||1} 张工作表 · ${versionText}`:'工作表与当前成果',tone:r?(dirty?'attention':'done'):'idle',facts:[['成果版本',versionText],['重算状态',r?(dirty?'待重新计算':r.formula_recalculated?'已确认重算':'公式重算未确认'):'尚无成果']],action:'table',actionLabel:'打开工作表',disabled:!r?'请先导入清单并完成转换':undefined},
  ];
+
+ if(r){
+  nodes[0].facts.push(['清单行数',total===null?'尚未取得':`${total} 项`]);
+  if(completed)nodes[1].facts.push(['保留原值',s?.unchanged_rows==null?'尚未取得':`${s.unchanged_rows} 项`]);
+  if(p?.riskLoaded&&!input.riskError&&!input.riskLoading){
+   nodes[2].facts.push(['风险分布',`高 ${p.severity.high} · 中 ${p.severity.medium} · 低 ${p.severity.low} · 其他 ${p.severity.other}`]);
+   if(p.priorityRisk)nodes[2].facts.push(['重点事项',p.priorityRisk.title],['所在位置',`${p.priorityRisk.sheet_name} · 第 ${p.priorityRisk.excel_row} 行`]);
+  }
+  nodes[6].facts.push(['工作表数量',String(s?.table_preview?.sheets?.length||1)],['预览范围','前 50 行；完整内容可下载 Excel']);
+ }
  const fee=r?p?.fees:null;
  if(completed&&fee){const amount=fee.totalWithTax!==null&&fee.unit?`${fee.totalWithTax.toLocaleString('zh-CN',{maximumFractionDigits:2})} ${fee.unit}`:'尚未取得';nodes[1].facts.push(['含税合计',amount],['公式状态',dirty?'待重算':r?.formula_recalculated?'已重算':'重算未确认']);if(amount!=='尚未取得')nodes[1].summary+=` · ${amount}`;}
  if(r&&input.reviewTasks&&!input.reviewError){const tasks=latestReviewTasksByPlatform(input.reviewTasks,r.job_id),review=summarizeReviewProgress(tasks);if(tasks.length){const delivered=tasks.every(t=>t.review_card_status==='sent'&&t.submission_delivery_status==='sent');Object.assign(nodes[5],{status:delivered?`最近一轮 · ${review.label}`:'送达待核验',summary:`${review.approved} 人通过 · ${review.pending} 人待回复`,tone:review.returned?'attention':delivered&&review.tone==='completed'?'done':'attention',facts:[['结果范围','最近派发轮次，当前成果版本请在复核进度中核对'],['复核情况',`${review.total} 人 · ${review.returned} 人退回`],['送达状态',delivered?'文件与复核卡已送达':'存在未完成送达步骤']],action:'review-progress',actionLabel:'查看复核进度'});}}

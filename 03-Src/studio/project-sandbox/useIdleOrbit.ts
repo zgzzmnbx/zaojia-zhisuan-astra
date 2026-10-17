@@ -13,7 +13,8 @@ export function useIdleOrbit(enabled:boolean,delay:number,blocked:boolean,stopMa
   const up=()=>{idle.hold(false)};
   const blur=()=>{onInput.current();idle.hold(true)};
   const focus=()=>idle.hold(false);
-  const events=['pointermove','wheel','keydown','input','focusin'] as const;
+  // Hover is not a camera gesture: moving to a label must not cancel manual or idle orbit.
+  const events=['wheel','keydown','input','focusin'] as const;
   for(const event of events)document.addEventListener(event,activity,{capture:true,passive:true});
   document.addEventListener('pointerdown',down,true);document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',up,true);
   window.addEventListener('blur',blur);window.addEventListener('focus',focus);

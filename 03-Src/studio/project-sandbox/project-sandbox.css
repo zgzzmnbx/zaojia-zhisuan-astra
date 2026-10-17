@@ -170,3 +170,48 @@
 .sandbox-camera-settings>small{font-size:12px;color:var(--muted)}.sandbox-idle-setting{display:flex;align-items:center;justify-content:space-between;gap:12px}.sandbox-idle-setting label{padding:0}.sandbox-idle-setting .select{width:100px;font-size:12px;min-height:30px;height:30px}
 
 .sandbox-ground-tones{border:0;padding:0;margin:0;min-width:0}.sandbox-ground-tones legend{font-size:13px;color:var(--ink);margin-bottom:8px}.sandbox-ground-tones>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.sandbox-ground-tones .btn{border:1px solid var(--line);border-radius:8px;height:34px;gap:6px}.sandbox-ground-tones .btn[aria-pressed=true]{border-color:var(--astra-primary);background:color-mix(in srgb,var(--astra-primary) 10%,var(--paper));color:var(--astra-primary-ink)}.sandbox-ground-tones i{width:14px;height:14px;border-radius:50%;border:1px solid #8896a844;flex-shrink:0}.sandbox-ground-tones:disabled{opacity:.5}
+
+.sandbox-group-logo>div{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sandbox-view-options{max-height:calc(100cqh - 96px);overflow-y:auto;overscroll-behavior:contain}
+
+/* Focused buildings reveal their own information, directly below the status. */
+.project-sandbox .sandbox-marker.selected{width:var(--sandbox-focus-card-width,280px);max-width:calc(100cqw - 40px);z-index:8!important;opacity:1!important}
+.project-sandbox .sandbox-marker.selected>.sandbox-marker-title{width:100%}
+.project-sandbox .sandbox-marker.selected>.sandbox-result-trigger{display:flex;position:relative;top:auto;visibility:visible;opacity:1;pointer-events:auto;border-bottom-left-radius:0;border-bottom-right-radius:0;box-shadow:none;padding:10px 13px;background:color-mix(in srgb,var(--paper) 88%,transparent)}
+.project-sandbox .sandbox-marker.selected .sandbox-node-summary{white-space:normal}
+.sandbox-node-info{pointer-events:auto;margin-top:-5px;cursor:default;border:1px solid color-mix(in srgb,var(--blue) 26%,var(--paper));border-top:0;border-radius:0 0 12px 12px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(20px) saturate(115%);box-shadow:0 12px 28px #16365120;animation:sandbox-info-reveal .65s ease-in-out both;overflow:hidden;transform-origin:top}
+.sandbox-node-facts{max-height:min(220px,25vh,var(--sandbox-detail-facts-height,220px));overflow:auto;overscroll-behavior:contain;padding:2px 13px 8px;scrollbar-width:thin}
+.sandbox-node-facts dl{margin:0;display:grid;gap:0}.sandbox-node-facts dl>div{padding:8px 0;border-top:1px solid var(--line);display:grid;gap:4px}
+.sandbox-node-facts dt{font-size:12px;line-height:1.4;color:var(--muted)}.sandbox-node-facts dd{margin:0;font-size:13px;line-height:1.55;color:var(--ink);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.sandbox-node-info footer{padding:0 13px 12px;display:grid;gap:7px}.sandbox-node-info footer .btn{width:100%;font-size:13px;min-height:32px;height:auto;padding:7px 10px}.sandbox-node-info footer small{font-size:12px;line-height:1.5;color:var(--muted)}
+[data-astra-scheme=dark] .sandbox-node-info{background:color-mix(in srgb,var(--paper) 91%,transparent);border-color:color-mix(in srgb,var(--blue) 30%,transparent)}
+@keyframes sandbox-info-reveal{from{max-height:0}to{max-height:340px}}
+@media(prefers-reduced-motion:reduce){.sandbox-node-info{animation:none}}
+
+.sandbox-marker.selected>.sandbox-pin{visibility:hidden}
+.sandbox-node-facts dl>div{grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:baseline;padding-block:9px}
+.sandbox-node-facts dt{line-height:1.55}
+
+.project-sandbox .sandbox-marker.selected[data-tone=running]>.sandbox-result-trigger{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff)}
+
+/* The building shader and its card share one visible-time animation clock. */
+.project-sandbox .sandbox-stage-progress>span{width:100%;transform:scaleX(var(--sandbox-task-fill,0));transform-origin:left center;animation:none!important;transition:none}
+.project-sandbox .sandbox-marker[data-paint-phase=held] .sandbox-stage-progress{opacity:.6}
+
+/* Selection travels with the existing label; no delayed fade or replacement card. */
+.project-sandbox .sandbox-marker{transition:width .65s ease-in-out}
+@media(prefers-reduced-motion:reduce){.project-sandbox .sandbox-marker{transition:none}}
+
+.sandbox-fps{display:inline-block;min-width:96px;margin-right:12px;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none}
+
+.sandbox-switch .btn[aria-pressed="true"]{background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue)}
+.summary-heading .sandbox-switch{--glass:var(--canvas);backdrop-filter:none;box-shadow:none;flex-shrink:0}
+
+.studio #shell.live-shell .four-surface .summary-heading .sandbox-switch .btn{width:auto;min-width:48px;height:32px;min-height:32px;padding:0 10px;font-size:13px}
+
+/* Keep the reading column and composer on one inset without reducing type. */
+@media(min-width:1025px){
+ .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic>.conversation>:is(.conversation-heading,.context-line,.messages,.composer-wrap){padding-inline:clamp(32px,6%,48px)}
+ .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation>:is(.conversation-heading,.context-line,.messages,.composer-wrap){padding-inline:24px}
+ .studio #shell.live-shell .adjustable-workbench.four-surface.surface-floating>.conversation>:is(.conversation-heading,.context-line,.composer-wrap){padding-inline:48px}
+}

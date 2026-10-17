@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>价格匹配 · 图形解释预览</title>
+  <link rel="stylesheet" href="/assets/daisyui-5.7.47.css">
+  <link rel="stylesheet" href="./study.css">
+  <script src="./study.js" defer></script>
+</head>
+<body>
+<main class="workbench">
+  <header class="heading">
+    <div class="brand-mark" aria-hidden="true">Z</div>
+    <div><h1>价格匹配依据 <span class="badge">交互预览</span></h1><p>表2－通用工程测量费用 <span>／</span> 第 5 行 <span>／</span> 单价 · 元/个</p></div>
+  <section class="context merged-context" aria-label="当前清单条件">
+    <div class="context-label"><span class="eyebrow">当前清单</span><strong>首级控制测量</strong></div>
+    <div class="features" id="features"></div>
+    <span class="context-hint">点击条件，查看候选差异</span>
+  </section>
+    <div class="header-actions"><button class="btn btn-ghost" id="theme">深色预览</button><button class="btn btn-primary" id="play">播放匹配说明</button></div>
+  </header>
+
+  <section class="map-section" aria-label="价格匹配路径">
+    <div class="section-heading"><h2>这个价格，从哪里来？</h2><div class="legend"><span><i class="solid"></i>要素一致</span><span><i class="outline"></i>存在差异</span><span><i class="dash"></i>经验参考</span></div></div>
+    <div class="flow" id="flow">
+      <svg class="connections" aria-hidden="true" viewBox="0 0 1000 300" preserveAspectRatio="none"><path d="M170 143 H235 Q250 143 250 128 V63 Q250 48 265 48 H300 M250 128 V228 Q250 243 265 243 H300"/><path d="M455 48 H475 Q490 48 490 63 V123 Q490 138 505 138 H550 M455 243 H475 Q490 243 490 228 V153 Q490 138 505 138"/><path class="primary-path" d="M170 143 H235 Q250 143 250 128 V63 Q250 48 265 48 H300 M455 48 H475 Q490 48 490 63 V123 Q490 138 505 138 H550 M750 138 H820"/><path class="reference-path" d="M660 260 V220"/></svg>
+      <div class="flow-origin stage" data-stage="0"><span class="step">01 / 读取条件</span><div class="document-icon" aria-hidden="true"><span></span><span></span><span></span></div><h3>本行计价条件</h3><p>4 个非空要素<br>单位：个</p><span class="small-tag">按字段逐项对照</span></div>
+      <div class="flow-candidates stage" data-stage="1"><span class="step">02 / 比较候选</span><div id="candidate-groups"></div></div>
+      <div class="flow-selected stage" data-stage="2"><span class="step">03 / 查看依据</span><div id="selected-node"></div><div class="experience"><span class="diamond">◇</span><div><strong>经验池同类样本 <b>4,274</b></strong><p>1 条样本，仅作复核参考</p></div></div></div>
+      <div class="flow-result stage" data-stage="3"><span class="step">04 / 人工复核</span><div class="result-icon" aria-hidden="true">✓</div><h3>核对后再采用</h3><p>要素一致 ≠ 已经填写<br>还需核对适用条件</p><button class="btn btn-outline" id="open-evidence">查看选中依据 <span>↗</span></button></div>
+    </div>
+    <div class="playback-note" role="status" id="playback-note">点击候选价格，查看它与当前清单的联系。</div>
+  </section>
+  <section class="lower-grid">
+    <div class="matrix-panel">
+      <div class="compact-comparison" hidden><span class="eyebrow">当前对照</span><h2 id="compact-price">4,274 元/个</h2><p id="compact-note">4/4 要素一致</p><div id="compact-candidates" class="candidate-buttons"></div><p>选中候选只联动对照，不会改变这份分析报告。</p><button class="btn btn-outline" id="return-matrix">返回完整对照</button></div>
+      <div class="comparison-content">
+      <div class="section-heading"><h2>逐项对照</h2><button class="btn btn-ghost btn-sm" id="reset">显示全部条件</button></div>
+      <div class="table-wrap"><table class="table"><caption>截图中可辨识的 6 条候选 · 点击价格切换依据</caption><thead><tr><th>候选价格 <small>元/个</small></th><th data-feature="0">工程类别</th><th data-feature="1">测量层级</th><th data-feature="2">测量等级</th><th data-feature="3">复杂程度</th><th>相似度</th><th>要素一致</th></tr></thead><tbody id="matrix"></tbody></table></div>
+      <div class="price-chart"><div class="section-heading"><h3>候选价格位置</h3><span>单位：元/个</span></div><div id="plot" class="plot"></div><div class="axis"><span>2,821</span><span>5,500</span></div></div>
+      <div class="matrix-footer"><span>● 候选价格　◇ 经验池样本</span><span>相似度表示要素一致程度，不代表价格正确概率。</span></div>
+      </div>
+    </div>
+    <aside class="detail-panel report-panel" aria-label="匹配依据与AI分析">
+      <div class="report-toolbar"><div class="tabs tabs-border" role="tablist" aria-label="依据与分析"><button class="tab" id="tab-evidence" role="tab" aria-controls="panel-evidence" aria-selected="false" tabindex="-1">匹配依据</button><button class="tab tab-active" id="tab-analysis" role="tab" aria-controls="panel-analysis" aria-selected="true">AI 分析</button></div><button class="btn btn-ghost btn-sm" id="expand-report" aria-expanded="false" aria-controls="panel-analysis">展开报告 ↗</button></div>
+      <section role="tabpanel" id="panel-evidence" aria-labelledby="tab-evidence" tabindex="0" hidden><div id="detail" aria-live="polite"></div><p class="evidence-help">选择左侧候选，逐项比较单位、要素和记录位置。</p></section>
+      <section role="tabpanel" id="panel-analysis" aria-labelledby="tab-analysis" tabindex="0">
+        <p class="report-meta">第 5 行 · 示例报告 <span>未调用模型</span></p>
+        <div class="report-summary"><span class="report-kicker">建议优先复核</span><div class="report-amount">4,274 <small>元/个</small><span class="badge review-badge">示例建议 · 待确认</span></div><p>单位及 4 项要素一致，经验样本同价。适用范围与版本仍需核实。</p></div>
+        <section class="report-section"><h3><span class="section-dot" aria-hidden="true"></span>为什么选它</h3><p>4/4 要素一致，来源可追溯。<button class="citation" data-reference="rule" aria-label="查看依据1：计价库第24行">[1]</button><br>经验池有 1 条同价样本，仅作参考。<button class="citation" data-reference="experience" aria-label="查看依据2：经验池样本">[2]</button></p></section>
+        <section class="report-section"><div class="section-heading"><h3><span class="section-dot" aria-hidden="true"></span>其他价格差在哪</h3><button class="source-link" id="compare-candidate">对照此候选 ↗</button></div><p>3,203 元：候选为 E 级，本行为 C 级。</p><p id="report-selection-note" class="report-selection-note" role="status"></p></section>
+        <section class="report-section"><h3><span class="section-dot" aria-hidden="true"></span>还需确认</h3><p>计价依据适用范围、版本与当前填写记录。</p></section>
+        <div id="report-reference" class="report-reference" hidden tabindex="-1"><div class="section-heading"><strong id="reference-title"></strong><button class="btn btn-ghost btn-sm" id="close-reference" aria-label="收起引用依据">收起</button></div><p id="reference-body"></p></div>
+        <div class="report-full" hidden>
+          <section class="report-section"><h3>适用条件核验</h3><p>本示例按“控制测量／首级控制测量／GPS测量C级／中等／个”对照候选。要素一致只能说明字段吻合，仍需核验计价依据版本、适用区域、费用包含范围及单位口径。</p></section>
+          <section class="report-section"><h3>经验样本的使用边界</h3><p>当前仅展示 1 条 4,274 元的同类样本，不能据此推断市场区间或认定价格正确。样本原始文件、日期与项目条件尚未加载。</p></section>
+          <section class="report-section"><h3>填写前的核对事项</h3><ol><li>打开计价库第 24 行，确认原始条目及其适用说明。</li><li>核对现有填写值与采用记录；若有差异，先确认差异原因。</li><li>价格与依据确认后，由用户单独执行填写。</li></ol></section>
+        </div>
+        <div class="report-bottom"><span>分析不自动写入价格</span><button class="btn btn-outline btn-sm" disabled title="独立预览未接入模型，当前为静态示例报告">重新分析</button></div>
+      </section>
+    </aside>
+  </section>
+  <footer class="page-footer"><span><i></i>独立概念预览 · v1.0.3</span><span>按截图摘录 6 条候选；条件与报告为展示示例，不代表实际模型结论。</span></footer>
+</main>
+<dialog class="modal" id="evidence-dialog" aria-labelledby="dialog-title"><div class="modal-box"><form method="dialog"><button class="btn btn-sm btn-circle btn-ghost close" aria-label="关闭依据">✕</button></form><span class="eyebrow">候选依据</span><h2 id="dialog-title">来源与要素对照</h2><div id="dialog-body"></div><p class="dialog-disclaimer">此页展示截图中的候选与交互方案。当前实际填写值、采用原因和原始文件未在此预览中加载。</p><form method="dialog"><button class="btn btn-primary">返回比较</button></form></div><form method="dialog" class="modal-backdrop"><button>关闭</button></form></dialog>
+</body>
+</html>

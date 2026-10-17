@@ -46,6 +46,93 @@ def test_debug_manual_heartbeat_and_cancel_new_round(fixture):
     with pytest.raises(HTTPException):obj.debug_heartbeat(second['event_id'])
 
 
+def test_saving_settings_during_debug_starts_a_fresh_debug_attempt(fixture):
+    obj,remote,clock=fixture
+    first=obj.debug_send('match_start');obj.step()
+    old_attempt=first['attempt']
+    clock[0]+=1
+    obj._configure(obj.settings.model_copy(update={'sound':False}))
+    clock[0]+=1
+    second=obj.debug_send('match_completed');obj.step()
+    assert second['attempt']!=old_attempt
+    assert remote.cancelled[-1][1]==old_attempt
+    assert remote.sent[-1]['stage']=='match_completed'
+
+
+def test_cancelled_debug_attempt_recovers_without_releasing_old_cancellation(fixture):
+    obj,remote,clock=fixture
+    old=obj.debug_attempt
+    obj.cancel(obj.debug_task,old)
+    record=obj.debug_send('match_completed');obj.step()
+    assert record['attempt']!=old
+    assert obj.db().execute('SELECT 1 FROM cancellations WHERE task=? AND attempt=?',
+                            (obj.debug_task,old)).fetchone()
+    assert len(remote.sent)==1 and remote.sent[0]['speech'] is None
+
+
+def test_immediate_debug_after_save_is_new_but_business_history_stays_blocked(fixture):
+    from test_gork_notifications import event
+    obj,remote,clock=fixture
+    obj._configure(obj.settings.model_copy(update={'sound':False}))
+    assert obj.enqueue(event(clock))=='ASTRA_GORK_OLD_EVENT'
+    record=obj.debug_send('match_completed');obj.step()
+    assert len(remote.sent)==1 and remote.sent[0]['event_id']==record['event_id']
+
+
+def test_closed_stage_and_full_queue_report_distinct_reasons(fixture):
+    from test_gork_notifications import event
+    obj,remote,clock=fixture
+    settings=obj.settings.model_copy(deep=True);settings.stages['match_completed'].enabled=False
+    obj._configure(settings)
+    with pytest.raises(HTTPException,match='ASTRA_GORK_STAGE_DISABLED'):
+        obj.debug_send('match_completed')
+    settings=obj.settings.model_copy(deep=True);settings.stages['match_completed'].enabled=True
+    obj._configure(settings);clock[0]+=1
+    for index in range(64):
+        item=event(clock);item.update(job_id=f'{index:032x}',event_id=f'queued-{index}')
+        assert obj.enqueue(item) is None
+    with pytest.raises(HTTPException,match='ASTRA_GORK_QUEUE_FULL'):
+        obj.debug_send('match_completed')
+    assert not remote.sent
+    clock[0]+=91
+    record=obj.debug_send('match_completed');obj.step()
+    assert len(remote.sent)==1 and remote.sent[0]['event_id']==record['event_id']
+    assert obj.db().execute("SELECT count(*) FROM events WHERE status='expired'").fetchone()[0]==64
+
+
+def test_host_worker_dispatches_new_debug_after_http_settings_save(fixture,monkeypatch):
+    import time
+    import server, gork_config, gork_link
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    obj,remote,clock=fixture
+    monkeypatch.setattr(server,'gork_output',obj)
+    monkeypatch.setattr(gork_config,'bridge',obj)
+    monkeypatch.setattr(server.professional_host,'config',lambda:{'external_enabled':False})
+    async def legacy_status():return {'tracking':False,'message':'测试控制台'}
+    monkeypatch.setattr(gork_link,'console_status',legacy_status)
+    app=FastAPI(lifespan=server.host_lifespan);app.include_router(gork_config.router)
+    route='/api/astra/gork/notifications'
+    with TestClient(app) as client:
+        clock[0]+=1
+        first=client.post(route+'/debug/send',json={'stage':'match_start'})
+        assert first.status_code==200
+        for _ in range(100):
+            if remote.sent:break
+            time.sleep(.02)
+        assert remote.sent and obj.worker.is_alive()
+        saved=client.put(route,json=obj.settings.model_dump())
+        assert saved.status_code==200
+        second=client.post(route+'/debug/send',json={'stage':'match_completed'})
+        assert second.status_code==200 and second.json()['attempt']!=first.json()['attempt']
+        for _ in range(100):
+            receipt=client.get(route+'/debug/'+second.json()['event_id']).json()
+            if receipt['status']=='completed':break
+            time.sleep(.02)
+        assert receipt['status']=='completed' and receipt['delivery']=={'desktop':'displayed'}
+        assert remote.sent[-1]['stage']=='match_completed' and remote.sent[-1]['speech'] is None
+
+
 @pytest.mark.parametrize('amount',['NaN','-1','1e4','invalid','1000000000001'])
 def test_debug_invalid_amount_not_output(fixture,amount):
     obj,remote,clock=fixture

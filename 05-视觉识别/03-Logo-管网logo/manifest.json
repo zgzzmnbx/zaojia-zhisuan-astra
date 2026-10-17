@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "ui": "0.10.25",
+  "sourceUnchanged": true,
+  "redColor": "#C00000",
+  "components": 5,
+  "whiteRegions": "empty space",
+  "files": {
+    "contours.json": "3bd2466436564ce23fc921c5f8778ed8aa646ab15727be71b6cdf8108c754e88",
+    "export_glb.mjs": "4690b3059ebbf95d1a4149eff2018fd5aa33e3abca9e5770cf83f5e655b5b8e4",
+    "model.mjs": "67986620fa960406006aa1e66565e439b87c6403563cf6a98a6405b19f8658e7",
+    "README.md": "c09ebaa0643d48b657087f8443a5ff820997813c55e384745f0a5b5fae4c3091",
+    "trace_logo.py": "1bdda141d6315e09ce706b99a3359b02a7ca3fe2c0a806b18d77f88822ac0631",
+    "管网Logo-原色.glb": "21221d2d1564adab6ff209bdb0c25a25229ad2f4768a44d08010cddd6efe8ecf",
+    "管网Logo-白模.glb": "aea1f1203bcc4ffa68dccc042aa820574134c1a7354d1d2da75be6c25c74a0ee",
+    "管网Logo-红色轮廓.svg": "beb4d09a4d7a0f41486ee6c90cf59d997b36237da167c10633f24c333e1d8459",
+    "管网Logo.png": "10f4aca97ae0f02cba55428580512f3136c240d937bc261b5014923e6750abfa"
+  }
+}

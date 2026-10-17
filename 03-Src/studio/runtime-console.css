@@ -21,3 +21,9 @@
 @container runtimebox (max-width:520px){.runtime-session,.runtime-grip,.runtime-uptime{display:none}.runtime-shell-prompt>span{display:none}.runtime-row{grid-template-columns:40px 60px 42px minmax(0,1fr);gap:6px}}
 @keyframes runtime-log-arrive{from{background:color-mix(in srgb,var(--rc-cyan) 10%,transparent)}to{background:transparent}}@keyframes runtime-caret{50%{opacity:.15}}@keyframes runtime-pulse{50%{opacity:.45}}
 @media(prefers-reduced-motion:reduce){.runtime-row,.runtime-console[data-streaming=true] .runtime-cursor,.runtime-status[data-working=true] .runtime-dot{animation:none}}
+
+/* Logs live inside Settings; no floating surface or background collection. */
+.settings-section-runtime-console{display:flex;flex-direction:column;overflow:hidden}
+.settings-section-runtime-console>.settings-section-title{display:none}
+.runtime-console.runtime-settings-console{position:relative;inset:auto;display:flex!important;flex:1;flex-direction:column;min-height:0;width:100%;height:100%;box-shadow:none}
+.runtime-settings-title,.runtime-settings-title:active{cursor:default;touch-action:auto}

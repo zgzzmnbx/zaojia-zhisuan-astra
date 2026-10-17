@@ -1,3 +1,4 @@
+import { createGalaxyHoverSpeed } from './galaxy-hover-speed.mjs';
 import ForceGraph3D from '3d-force-graph';
 import SpriteText from 'three-spritetext';
 import { Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, SphereGeometry, TorusGeometry, Vector3 } from 'three';
@@ -10,10 +11,12 @@ import { DEFAULT_GALAXY_SETTINGS, normalizeGalaxySettings } from './galaxy-setti
 export function mountKnowledgeGalaxy(element, data, callbacks) {
   const graph = new ForceGraph3D(element, { controlType: 'orbit', rendererConfig: { alpha: true, antialias: true } });
   const model = galaxyData(data);
+  const hoverSpeed = createGalaxyHoverSpeed();
   const owned = [];
   const linkVisuals = new Map();
   const nodeById = new Map(model.nodes.map(node => [node.id, node]));
   let enabled = false, visible = false, dragging = false, hovered = null, selected = null, query = '';
+  let pointerInside = false;
   let stopped = false, running = true, wakeQueued = false, idleTimer, elapsed = 0, last = performance.now();
   let flight = null, overview = null, shapeFlight = null;
   let settings = {...DEFAULT_GALAXY_SETTINGS}, flowTime=0, flowSpeed=1, rotationSpeed=1;
@@ -67,7 +70,7 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
   const beforeRender = scene.onBeforeRender;
   scene.onBeforeRender = (...args) => {
     beforeRender?.apply(scene, args);
-    const now = performance.now(), delta = Math.min(.05, (now - last) / 1000); last = now;
+    const now = performance.now(), frameTime = (now - last) / 1000, delta = Math.min(.05, frameTime); last = now;
     if (shapeFlight && visible && !document.hidden) {
       shapeFlight.elapsed+=delta*1000;
       const t=enabled?Math.min(1,shapeFlight.elapsed/850):1, eased=t*t*(3-2*t);
@@ -90,7 +93,8 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
     // Orbit may yield to pointer/search/camera flights; light keeps its phase.
     flowSpeed=approach(flowSpeed,settings.flowSpeed,delta,enabled);
     rotationSpeed=approach(rotationSpeed,settings.rotationSpeed,delta,enabled);
-    controls.autoRotateSpeed=(selected ? .32 : 1.1)*rotationSpeed;
+    if(visible && !document.hidden)hoverSpeed.step(frameTime);
+    controls.autoRotateSpeed=(selected ? .32 : 1.1)*rotationSpeed*hoverSpeed.factor;
     if (flowing()) { elapsed += delta; flowTime += delta*flowSpeed; }
     galaxy.update(elapsed * 1.65, renderer.getPixelRatio());
     for (const [link, visual] of linkVisuals) visual.update(flowTime,delta,linkStyleTarget(link,selected,settings),enabled);
@@ -135,9 +139,9 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
     if (stopped) return;
     clearTimeout(idleTimer);
     controls.autoRotate = moving();
-    controls.autoRotateSpeed = (selected ? .32 : 1.1)*rotationSpeed;
+    controls.autoRotateSpeed = (selected ? .32 : 1.1)*rotationSpeed*hoverSpeed.factor;
     controls.minDistance = selected ? 24 : 75;
-    if (document.hidden || !visible) { graph.pauseAnimation(); running = false; return; }
+    if (document.hidden || !visible) { hoverSpeed.reset(); graph.pauseAnimation(); running = false; return; }
     if (!running) { running = true; last = performance.now(); graph.resumeAnimation(); }
     if (!flowing() && !dragging && !flight && !shapeFlight) idleTimer = setTimeout(() => {
       if (!stopped && !flowing() && !dragging && !flight && !shapeFlight) { graph.pauseAnimation(); running = false; }
@@ -157,7 +161,11 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
     }
     wake();
   }
-  graph.onNodeHover(node => { hovered = node?.id || null; callbacks.onHover(node || null); highlight(); });
+  graph.onNodeHover(node => {
+    // Upstream keeps raycasting its last pointer position after canvas exit.
+    if (!pointerInside) return;
+    hovered = node?.id || null; hoverSpeed.hover(!!node); callbacks.onHover(node || null); highlight();
+  });
   function flyTo(position, target, duration = 480) {
     controls.autoRotate = false; controls.enableDamping = false;
     if (!enabled) {
@@ -173,7 +181,7 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
   }
   function inspect(id) {
     if (id === selected) return;
-    hovered = null; callbacks.onHover(null);
+    hovered = null; hoverSpeed.hover(false); callbacks.onHover(null);
     const node = model.nodes.find(item => item.id === id);
     if (node) {
       if (!selected) overview = { position: graph.camera().position.clone(), target: controls.target.clone() };
@@ -208,9 +216,12 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
   const visibility = () => { callbacks.onVisibility(visible && !document.hidden); wake(); };
   document.addEventListener('visibilitychange', visibility);
   element.addEventListener('pointermove', wake, { passive: true });
+  const enter = () => { pointerInside = true; };
+  element.addEventListener('pointerenter', enter);
   const leave = event => {
+    pointerInside = false;
     if (event.relatedTarget?.closest?.('.knowledge-network-graph__hover-card')) return;
-    hovered = null; callbacks.onHover(null); highlight();
+    hovered = null; hoverSpeed.hover(false); callbacks.onHover(null); highlight();
   };
   element.addEventListener('pointerleave', leave);
   const contextLost = event => { event.preventDefault(); callbacks.onError(); };
@@ -245,7 +256,7 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
         flyTo(position,target,220);
       }
     },
-    clearHover() { hovered = null; callbacks.onHover(null); highlight(); },
+    clearHover() { hovered = null; hoverSpeed.hover(false); callbacks.onHover(null); highlight(); },
     reset,
     zoom(factor) {
       cancelFlight();
@@ -255,9 +266,10 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
       camera.position.copy(target).add(offset); controls.update(); wake();
     },
     dispose() {
-      stopped = true; clearTimeout(idleTimer); flight = null; shapeFlight=null;
+      stopped = true; hoverSpeed.reset(); clearTimeout(idleTimer); flight = null; shapeFlight=null;
       observer.disconnect(); intersection.disconnect(); document.removeEventListener('visibilitychange', visibility);
       element.removeEventListener('pointermove', wake); element.removeEventListener('pointerleave', leave);
+      element.removeEventListener('pointerenter', enter);
       renderer.domElement.removeEventListener('webglcontextlost', contextLost);
       element.removeEventListener('pointerdown', start, true); element.removeEventListener('wheel', wheel, true);
       window.removeEventListener('pointerup', end); window.removeEventListener('pointercancel', end); window.removeEventListener('blur', end);

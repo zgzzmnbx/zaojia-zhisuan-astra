@@ -48,7 +48,7 @@ export function RowAssist({state,job,context,active,blocked,headers,change,saved
   {data&&<div className="pricing-analysis"><div className="pricing-caption"><span><Icon name="spark"/>{state.generated?'模型分析':'辅助分析'}</span>{running&&<button className="text-button" onClick={stop}>停止</button>}</div>{running?<TaskProgress compact label="模型正在分析候选" detail="结合匹配要素与来源，生成填写建议"/>:state.answer?<><span className="pricing-model-label">{state.generated?'模型已返回 · 请核对后采用':'本地依据 · 未生成模型答案'}</span><PricingAnalysis text={state.answer}/></>:<p className="muted">{state.phase==='saved'?'已确认数值，请重算公式与报告。':'分析已停止，可重新分析。'}</p>}</div>}
   {state.error&&<p className="pricing-error" role="alert">{state.error}</p>}
   <footer className="pricing-footer"><span>{state.phase==='saved'?`已填写 ${priceText(state.savedValue)} · 仅修改当前字段`:!active?'历史快照 · 重新分析后可填写':'确认后只填写本行当前字段'}</span>{!running&&<button className="text-button" disabled={blocked||!!saving} onClick={retry}><Icon name="refresh"/>重新分析</button>}</footer>
-  {details&&data&&<PricingDetails data={data} close={()=>setDetails(false)} professional={()=>{setDetails(false);professional(data.row_context);}}/>}
+  {details&&data&&<PricingDetails data={data} state={state} active={active} blocked={blocked||!!saving} stop={stop} retry={()=>{setDetails(false);retry();}} close={()=>setDetails(false)} professional={()=>{setDetails(false);professional(data.row_context);}}/>}
  </section>;
 }
 

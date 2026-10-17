@@ -275,6 +275,9 @@ class Notifications:
             settings = settings.model_copy(update={'revision': settings.revision + 1})
             config.write(settings)
             self.settings, self.client = settings, client
+            # Saving cancels the old policy's output, including its debug attempt.
+            # Keep that cancellation for late events; new manual output has a new identity.
+            self.debug_attempt = 'debug-' + uuid4().hex
             self.cutoff = self.clock()
             while not self.inbox.empty():
                 try:
@@ -309,17 +312,21 @@ class Notifications:
         occurred = timestamp(event.get('occurred_at'))
         debug = event.get('_debug') is True
         valid_job = re.fullmatch(r'debug-[a-f0-9]{32}' if debug else r'[a-f0-9]{32}', job)
-        if not key or not valid_job or occurred <= self.cutoff or occurred > self.clock() + 30:
-            return
+        if not key or not valid_job or occurred <= 0 or occurred > self.clock() + 30:
+            return 'ASTRA_GORK_INVALID_EVENT'
+        if not debug and occurred <= self.cutoff:
+            return 'ASTRA_GORK_OLD_EVENT'
         if event.get('_request') in self.cancelled_requests:
-            return
+            return 'ASTRA_GORK_TASK_CANCELLED'
         stage = self.settings.stages[key]
-        if not stage.enabled or occurred + stage.ttl_ms / 1000 <= self.clock():
-            return
+        if not stage.enabled:
+            return 'ASTRA_GORK_STAGE_DISABLED'
+        if occurred + stage.ttl_ms / 1000 <= self.clock():
+            return 'ASTRA_GORK_EVENT_EXPIRED'
         db = self.db()
         producer = str(event.get('event_id') or '')
         if not producer or db.execute('SELECT 1 FROM events WHERE producer=?', (producer,)).fetchone():
-            return
+            return 'ASTRA_GORK_DUPLICATE_EVENT'
         review_scope = event.get('_review_scope') if key == 'review_sent' and not debug else None
         if review_scope and re.fullmatch(r'[a-f0-9]{64}', review_scope):
             previous = db.execute('SELECT event_id FROM review_notices WHERE scope=?', (review_scope,)).fetchone()
@@ -327,15 +334,18 @@ class Notifications:
                 notice = db.execute('SELECT status,receipt FROM events WHERE id=?', (previous['event_id'],)).fetchone()
                 # Retry an output that never reached either endpoint; retained watermarks prevent historical replay.
                 if not notice or notice['status'] not in {'failed','expired','cancelled','superseded','interrupted'} or json.loads(notice['receipt']).get('delivery'):
-                    return
+                    return 'ASTRA_GORK_DUPLICATE_EVENT'
         else:
             review_scope = None
-        if db.execute("SELECT count(*) FROM events WHERE status='pending'").fetchone()[0] >= 64:
-            self.cached_status = {'state': 'error', 'message': '阶段通知队列已满，专业处理继续'}
-            return
         attempt = event.get('attempt') or 'event:' + producer
         if db.execute('SELECT 1 FROM cancellations WHERE task=? AND attempt=? AND expires>?', (job, attempt, self.clock())).fetchone():
-            return
+            return 'ASTRA_GORK_TASK_CANCELLED'
+        # Expired unsent entries must not consume capacity while the worker reconnects.
+        db.execute("UPDATE events SET status='expired' WHERE status='pending' AND deadline<=?", (self.clock(),))
+        db.commit()
+        if db.execute("SELECT count(*) FROM events WHERE status='pending'").fetchone()[0] >= 64:
+            self.cached_status = {'state': 'error', 'message': '阶段通知队列已满，专业处理继续'}
+            return 'ASTRA_GORK_QUEUE_FULL'
         db.execute('INSERT INTO sequences(task,value) VALUES(?,1) ON CONFLICT(task) DO UPDATE SET value=value+1', (job,))
         sequence = db.execute('SELECT value FROM sequences WHERE task=?', (job,)).fetchone()[0]
         text = config.render_text(event, stage)
@@ -373,6 +383,9 @@ class Notifications:
             client = self.client_factory(settings)
             self.validate_remote(client, settings)
             self.settings, self.client = settings, client
+            if self.db().execute('SELECT 1 FROM cancellations WHERE task=? AND attempt=? AND expires>?',
+                                 (self.debug_task, self.debug_attempt, self.clock())).fetchone():
+                self.debug_attempt = 'debug-' + uuid4().hex
             key = {'match_completed':'match_result','match_failed':'match_result',
                    'warning_completed':'warning_result','warning_found':'warning_result',
                    'warning_failed':'warning_result'}.get(stage_id, stage_id)
@@ -387,10 +400,16 @@ class Notifications:
                                           'attempt':self.debug_attempt,'calculation_status':'unconfirmed'}
                 if not amount_text(event):
                     raise HTTPException(422, '请输入有效的模拟金额（元），不使用真实任务数据')
-            self.enqueue(event)
+            rejection = self.enqueue(event)
+            if rejection:
+                reasons = {'ASTRA_GORK_STAGE_DISABLED': '此阶段未启用，请在阶段设置中开启并保存',
+                           'ASTRA_GORK_QUEUE_FULL': '本地通知队列已满，请稍后重试',
+                           'ASTRA_GORK_TASK_CANCELLED': '该轮调试已取消，请发送新信号',
+                           'ASTRA_GORK_EVENT_EXPIRED': '调试信号已过期，请检查本机时间后重试'}
+                raise HTTPException(409, reasons.get(rejection, '调试信号校验未通过，请重新检测后重试') + '：' + rejection)
             row = self.db().execute('SELECT id FROM events WHERE producer=?', (event['event_id'],)).fetchone()
             if not row:
-                raise HTTPException(409, '此阶段已关闭或队列已满，未发送调试通知')
+                raise HTTPException(409, '调试提交结果尚未确认，请重新读取回执：ASTRA_GORK_SUBMISSION_UNCONFIRMED')
             return self.debug_receipt(row['id'])
 
     def debug_receipt(self, event_id):

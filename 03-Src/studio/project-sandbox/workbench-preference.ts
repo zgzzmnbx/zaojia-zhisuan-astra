@@ -1,8 +1,8 @@
 import {useEffect,useState} from 'react';
-export type WorkbenchStyle='sandbox'|'classic';
+export type WorkbenchStyle='sandbox'|'classic'|'simple';
 export const workbenchStyleKey='astra.project-workbench.v1';
 export function readWorkbenchStyles(raw:string|null):Record<string,WorkbenchStyle>{
- try{const value=JSON.parse(raw||'{}');if(!value||typeof value!=='object'||Array.isArray(value))return {};return Object.fromEntries(Object.entries(value).filter(([key,value])=>key!=='__proto__'&&key!=='constructor'&&(value==='sandbox'||value==='classic'))) as Record<string,WorkbenchStyle>}catch{return {}}
+ try{const value=JSON.parse(raw||'{}');if(!value||typeof value!=='object'||Array.isArray(value))return {};return Object.fromEntries(Object.entries(value).filter(([key,value])=>key!=='__proto__'&&key!=='constructor'&&(value==='sandbox'||value==='classic'||value==='simple'))) as Record<string,WorkbenchStyle>}catch{return {}}
 }
 export function useWorkbenchStyle(context:string){
  const [styles,setStyles]=useState(()=>{try{return readWorkbenchStyles(localStorage.getItem(workbenchStyleKey))}catch{return {}}});

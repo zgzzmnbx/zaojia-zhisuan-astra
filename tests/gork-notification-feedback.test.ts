@@ -16,6 +16,16 @@ test('network failures never claim an unconfirmed request was not sent',()=>{
   assert.ok(!result.title.includes('未发送'));
  }
 });
+test('local admission reasons distinguish disabled stage, capacity and unconfirmed submission',()=>{
+ const disabled=notificationFailure('此阶段未启用：ASTRA_GORK_STAGE_DISABLED','send');
+ const full=notificationFailure('本地通知队列已满：ASTRA_GORK_QUEUE_FULL','send');
+ assert.match(disabled.title,/此阶段未启用/);assert.match(disabled.message,/阶段设置.*保存/);
+ assert.match(full.title,/本地通知队列已满/);assert.match(full.message,/过期.*自动清理/);
+ assert.equal(disabled.console,false);assert.equal(full.console,false);
+ assert.notEqual(disabled.message,full.message);
+ const uncertain=notificationFailure('ASTRA_GORK_SUBMISSION_UNCONFIRMED','send');
+ assert.equal(uncertain.title,'发送结果尚未确认');assert.match(uncertain.message,/回执.*避免重复/);
+});
 test('cancel and receipt failures do not overwrite original submission with a fake rejection',()=>{
  assert.equal(notificationFailure('HTTP_ERROR','cancel').title,'取消尚未确认');
  assert.equal(notificationFailure('HTTP_ERROR','receipt').title,'回执读取失败');

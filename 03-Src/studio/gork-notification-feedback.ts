@@ -1,6 +1,13 @@
 export type DebugOperation='send'|'cancel'|'heartbeat'|'receipt'|'delivery';
 export type NotificationFeedback={title:string;message:string;code:string;console:boolean};
 const reasons:Record<string,[string,string]>={
+ ASTRA_GORK_STAGE_DISABLED:['此阶段未启用','请在阶段设置中开启“发送此阶段”，保存后再调试。'],
+ ASTRA_GORK_QUEUE_FULL:['本地通知队列已满','请等待现有通知处理后重试；过期的排队信号会自动清理。'],
+ ASTRA_GORK_TASK_CANCELLED:['该轮调试已取消','请重新发送，系统会使用新的调试轮次。'],
+ ASTRA_GORK_EVENT_EXPIRED:['调试信号已过期','请检查本机时间后重新发送。'],
+ ASTRA_GORK_INVALID_EVENT:['调试信号校验未通过','请重新检测连接后重试，并检查本机时间。'],
+ ASTRA_GORK_DUPLICATE_EVENT:['信号已提交','请查看最近通知回执，避免重复发送。'],
+ ASTRA_GORK_OLD_EVENT:['信号早于当前设置','历史信号不会补播，请重新发送调试信号。'],
  EXTERNAL_CLIENT_DISABLED:['Astra 来源未启用','先在 Gork 通知哨兵关闭旧 Astra 兼容轮询，再启用 Astra 来源。'],
  EXTERNAL_AUTH_REQUIRED:['Astra 凭据无效','请在 Gork 核对 Astra 登记，并在连接设置中选择对应凭据文件。'],
  EXTERNAL_SOURCE_MISMATCH:['Astra 凭据不匹配','请使用 Gork 为 Astra 单独登记的凭据文件。'],
@@ -20,11 +27,12 @@ const reasons:Record<string,[string,string]>={
  EXTERNAL_RECEIPT_NOT_FOUND:['控制台未找到此回执','请重新检测连接并核对当前调试信号。'],
 };
 export function notificationFailure(raw:string,operation:DebugOperation,tracking=false):NotificationFeedback{
- const code=raw.match(/\b(?:EXTERNAL_[A-Z_]+|CONNECTION_UNAVAILABLE|HTTP_ERROR)\b/)?.[0]||'';
+ const code=raw.match(/\b(?:ASTRA_GORK_[A-Z_]+|EXTERNAL_[A-Z_]+|CONNECTION_UNAVAILABLE|HTTP_ERROR)\b/)?.[0]||'';
  const reason=reasons[code];
  const transport=['HTTP_ERROR','CONNECTION_UNAVAILABLE'].includes(code)||/fetch|network|timeout|网络|超时|连接失败/i.test(raw);
  const prefix=operation==='send'?'未发送':operation==='cancel'?'取消尚未确认':operation==='heartbeat'?'报活尚未确认':operation==='delivery'?'控制台未确认输出':'回执读取失败';
- if(reason)return {title:`${prefix} · ${reason[0]}`,message:reason[1],code,console:true};
+ if(code==='ASTRA_GORK_SUBMISSION_UNCONFIRMED')return {title:'发送结果尚未确认',message:'请重新读取最近通知回执，避免重复发送。',code,console:false};
+ if(reason)return {title:`${prefix} · ${reason[0]}`,message:reason[1],code,console:!code.startsWith('ASTRA_GORK_')};
  if(tracking&&/轮询|哨兵|pull/i.test(raw))return {title:`${prefix} · 旧 Astra 哨兵仍在运行`,message:'先在 Gork 通知哨兵关闭旧 Astra 兼容轮询，再启用 Astra 来源。',code,console:true};
  if(transport)return {title:operation==='send'?'发送结果尚未确认':prefix,message:operation==='send'?'无法确认 Gork 是否接收信号。请检查控制台是否运行，再重新读取回执，避免重复发送。':'无法连接 Gork，现有信号的远端状态尚未确认。请检查控制台并重新读取回执。',code:code||'CONNECTION_UNAVAILABLE',console:true};
  const safe=raw.replace(/\b[A-Z][A-Z_]{3,}\b/g,'').replace(/^[^：]*未确认[：:]\s*/,'').trim();

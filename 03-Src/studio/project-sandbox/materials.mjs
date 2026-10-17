@@ -1,9 +1,10 @@
 import {Color} from 'three';
+import {createBuildingPaint} from './building-paint.mjs';
 
 // glTF materials are shared across buildings. Give each zone its own material
 // instances before applying selection, and update each instance only once.
 export function createSandboxMaterials(root){
- const scopes=new Map(),entries=[],sources=new Set();
+ const scopes=new Map(),entries=[],sources=new Set(),paint=createBuildingPaint();
  root.traverse(object=>{
   if(!object.isMesh)return;
   let owner=object;while(owner&&!owner.userData.zone)owner=owner.parent;
@@ -12,7 +13,7 @@ export function createSandboxMaterials(root){
    sources.add(source);
    let byZone=scopes.get(source);if(!byZone){byZone=new Map();scopes.set(source,byZone);}
    if(!byZone.has(zone)){
-    const material=source.clone();byZone.set(zone,material);
+    const material=source.clone();byZone.set(zone,material);paint.attach(material,zone);
     entries.push({material,zone,color:source.color.clone(),emissive:source.emissive.clone(),intensity:source.emissiveIntensity});
    }
    return byZone.get(zone);
@@ -22,7 +23,7 @@ export function createSandboxMaterials(root){
  // Clones retain shared textures; only release the unused source materials.
  sources.forEach(material=>material.dispose());
  const highlight=new Color(0x167ed0);
- return {apply({dark=false,cool=false,selected=null}={}){
+ return {paint:paint.frame,apply({dark=false,cool=false,selected=null}={}){
   for(const {material:m,zone,color,emissive,intensity} of entries){
    m.color.copy(color);m.emissive.copy(emissive);m.emissiveIntensity=intensity;
    if(dark&&['Warm plaster','Porcelain white','Cool shadow','Limestone foundation','Ceramic trim','Architectural recess'].includes(m.name))m.color.multiplyScalar(m.name==='Warm plaster'?.08:.14);

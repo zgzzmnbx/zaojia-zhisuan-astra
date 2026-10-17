@@ -5,9 +5,9 @@ export {Gork} from './Gork';
 export function Icon({name}:{name:string}){return <span className="astra-icon" aria-hidden="true" dangerouslySetInnerHTML={{__html:icon(name)}}/>;}
 export function Button({children,onClick,icon:name,primary=false,disabled=false,title}:{children?:ReactNode;onClick?:()=>void;icon?:string;primary?:boolean;disabled?:boolean;title?:string}){return <button type="button" className={`btn ${primary?'btn-primary':'btn-outline'}`} onClick={onClick} disabled={disabled} title={title}>{name&&<Icon name={name}/>} {children}</button>;}
 export function Note({children}:{children:ReactNode}){return <div className="notice"><Icon name="info"/><span>{children}</span></div>;}
-export function Modal({title,children,close}:{title:string;children:ReactNode;close:()=>void}){
+export function Modal({title,heading,children,close}:{title:string;heading?:ReactNode;children:ReactNode;close:()=>void}){
   const ref=useRef<HTMLDialogElement>(null);useEffect(()=>{const dialog=ref.current;const trigger=document.activeElement instanceof HTMLElement?document.activeElement:null;dialog?.showModal();return()=>{dialog?.close();if(trigger?.isConnected)trigger.focus({preventScroll:true});};},[]);
-  return <dialog className="modal" ref={ref} onCancel={e=>{e.preventDefault();close();}}><div className="modal-box"><header className="modal-heading"><h2>{title}</h2><button className="btn btn-ghost btn-square" aria-label="关闭弹窗" onClick={close}><Icon name="close"/></button></header>{children}</div><form method="dialog" className="modal-backdrop" onSubmit={e=>e.preventDefault()}><button onClick={close} aria-label="关闭弹窗背景">关闭</button></form></dialog>;
+  return <dialog className="modal" aria-label={title} ref={ref} onCancel={e=>{e.preventDefault();close();}}><div className="modal-box"><header className="modal-heading">{heading??<h2>{title}</h2>}<button className="btn btn-ghost btn-square" aria-label="关闭弹窗" onClick={close}><Icon name="close"/></button></header>{children}</div><form method="dialog" className="modal-backdrop" onSubmit={e=>e.preventDefault()}><button onClick={close} aria-label="关闭弹窗背景">关闭</button></form></dialog>;
 }
 export function Universe({open}:{open:(view:string)=>void}){
   const ref=useRef<HTMLDivElement>(null),controller=useRef<{setMotion:(value:boolean,allowReduced:boolean)=>void;reset:()=>void}|null>(null);

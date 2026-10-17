@@ -8,6 +8,7 @@ export const settingsSections = [
  {id:'collaboration-settings',label:'协同设置',icon:'users'},
  {id:'robot',label:'机器人设置',icon:'robot'},
  {id:'gork',label:'机器人联动',icon:'link'},
+ {id:'runtime-console',label:'运行日志',icon:'monitor'},
 ] as const;
 export type SettingsSection=typeof settingsSections[number]['id']|'example';
 /** Settings routes never change the conversation's content presentation. */
