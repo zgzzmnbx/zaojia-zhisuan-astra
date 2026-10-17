@@ -1,10 +1,12 @@
-import {useEffect,useId,useRef,useState} from 'react';
+import {lazy,Suspense,useEffect,useId,useRef,useState} from 'react';
 import {api,json} from './api';
 import {Button,Icon,Modal} from './ui';
-import {Prose} from './Prose';
-import {priceText,pricingAnalysisSections,type RowCandidates,type PriceCandidate,type RowPricingState} from './row-pricing';
-import {candidateAgreement,numericPrice,pricePosition,pricingConditions,pricingGroups} from './pricing-visual';
+import {PricingAnalysis} from './PricingAnalysis';
+import {priceText,type RowCandidates,type PriceCandidate,type RowPricingState} from './row-pricing';
+import {candidateAgreement,numericPrice,pricePosition,pricingConditions} from './pricing-visual';
 import './pricing-visual.css';
+const PricingFlow=lazy(()=>import('./PricingFlow'));
+
 
 type Distribution={count:number;min?:number;max?:number;mean?:number;median?:number;bins:{min:number;max:number;count:number}[]};
 type Details={rules:{items:PriceCandidate[];total:number;distribution:Distribution};experience:{items:{value:number;source_file:string;source_sheet:string;source_row:number;pool_row:number}[];total:number;match_detail:string;distribution:Distribution};trace:{kind:string;title:string;text?:string;source?:string;source_rows?:unknown[];summary?:string;detail?:string;rows?:unknown[]}[]};
@@ -17,8 +19,6 @@ export function PricingDetails(props:Props){
 function PricingDetailsView({data,state,active,blocked,close,professional,retry,stop}:Props){
  const coefficient=/系数/.test(data.row_context.target_header),unit=coefficient?'':`元/${String(data.context.row['单位']||'单位')}`;
  const conditions=pricingConditions(data.context.row),uid=useId();
- const analysisParts=pricingAnalysisSections(state.answer||'');
- const analysisPreface=analysisParts[0]?.title===''&&analysisParts[0].body.startsWith('**结构化排序首选：')?analysisParts[0]:undefined;
  const [details,setDetails]=useState<Details>(),[error,setError]=useState(''),[requestVersion,setRequestVersion]=useState(0);
  const [selectedId,setSelectedId]=useState(''),[tab,setTab]=useState<'basis'|'analysis'>('analysis'),[expanded,setExpanded]=useState(false),[step,setStep]=useState(-1);
  const scroll=useRef<HTMLDivElement>(null),panel=useRef<HTMLElement>(null),expandButton=useRef<HTMLButtonElement>(null);
@@ -28,16 +28,15 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
  },[data.token,requestVersion]);
  useEffect(()=>{
   if(step<0)return;
+  if(expanded){setStep(-1);return;}
   const timer=window.setTimeout(()=>setStep(value=>value>=3?-1:value+1),1100);
   const hide=()=>{if(document.hidden)setStep(-1);};document.addEventListener('visibilitychange',hide);
   return()=>{clearTimeout(timer);document.removeEventListener('visibilitychange',hide);};
- },[step]);
+ },[step,expanded]);
  const candidates=details?.rules.items||[];
  const selected=candidates.find(c=>c.id===selectedId)||candidates[0];
- const agreement=selected?candidateAgreement(selected):null;
- const groups=pricingGroups(candidates);
  const running=active&&['loading','analyzing'].includes(state.phase);
- function select(candidate:PriceCandidate){setSelectedId(candidate.id);}
+ function select(candidate:PriceCandidate){setSelectedId(candidate.id);setStep(-1);}
  function showBasis(){setTab('basis');panel.current?.focus({preventScroll:true});}
  function collapse(){setExpanded(false);expandButton.current?.focus({preventScroll:true});}
  const title=`${coefficient?'系数':'价格'}匹配依据`;
@@ -47,12 +46,7 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
    {error?<div className="pricing-map-empty" role="alert"><p>{error}</p><Button onClick={()=>setRequestVersion(v=>v+1)}>重新读取依据</Button></div>:!details?<div className="pricing-map-empty" role="status"><span className="loading loading-spinner"/>正在读取具体样本与规则</div>:<>
     <section className="pricing-map-path" aria-label="匹配路径">
      <div className="pricing-map-caption"><h3>这个{coefficient?'系数':'价格'}，从哪里来？</h3><small>规则匹配 → 候选比较 → 人工确认</small></div>
-     <div className="pricing-map-flow"><PricingConnections selectedId={selected?.id} count={candidates.length}/>
-      <section className={`pricing-map-stage ${step===0?'explaining':''}`}><small>01 / 读取条件</small><span className="pricing-map-document"><Icon name="sheet"/></span><h4>本行计价条件</h4><p>{conditions.length} 个非空要素<br/>单位：{String(data.context.row['单位']||'未记录')}</p><small>当前值 {priceText(data.row_context.current_value)}</small></section>
-      <section className={`pricing-map-stage ${step===1?'explaining':''}`}><small>02 / 比较候选</small><div className="pricing-map-groups">{groups.map(group=><div key={group.key} className={group.items.some(c=>c.id===selected?.id)?'is-selected':''}><div><span>{group.label}</span><small>{group.items.length} 条</small></div><div className="pricing-map-choices">{group.items.map(c=><button key={c.id} aria-pressed={selected?.id===c.id} title={`${c.basis}；${c.reason}`} onClick={()=>select(c)}>{priceText(c.value)}</button>)}</div></div>)}{!groups.length&&<p>没有符合条件的规则候选</p>}</div></section>
-      <section className={`pricing-map-stage ${step===2?'explaining':''}`}><small>03 / 查看依据</small>{selected?<><button className="pricing-map-selected" onClick={showBasis} aria-label={`查看 ${priceText(selected.value)} 的匹配依据`}><span>正在查看的候选 <SimilarityBadge value={selected.similarity}/></span><strong>{priceText(selected.value)} <small>{unit}</small></strong>{agreement&&<span className="pricing-map-segments" aria-label={`${agreement.matched}/${agreement.total} 要素一致`}>{Array.from({length:agreement.total},(_,i)=><i key={i} className={i<agreement.matched?'matched':''}/>)}</span>}<small>{selected.basis}</small></button><p className="pricing-map-reference">经验池 {details.experience.total} 条同类样本{details.experience.distribution.count>0&&<> · 均值 {priceText(details.experience.distribution.mean)}</>}<br/><small>仅作复核参考</small></p></>:<p className="pricing-map-empty">暂无可比较的候选，可查看分析与历史依据。</p>}</section>
-      <section className={`pricing-map-stage ${step===3?'explaining':''}`}><small>04 / 人工复核</small><span className="pricing-map-check"><Icon name="check"/></span><h4>{state.phase==='saved'?'已确认填写':'核对后再采用'}</h4><p>{state.phase==='saved'?`已填写 ${priceText(state.savedValue)}`:'选中候选不等于已填写'}<br/>还需核对适用条件</p><button className="btn btn-outline btn-sm" disabled={!selected} onClick={showBasis}>查看选中依据 <Icon name="arrow-up-right"/></button></section>
-     </div>
+     <Suspense fallback={<div className="pricing-flow-loading" role="status">正在载入交互路径，下方仍可查看完整依据。</div>}><PricingFlow conditions={conditions} candidates={candidates} selected={selected} select={select} unit={unit} current={data.row_context.current_value} saved={state.phase==='saved'} savedValue={state.savedValue} step={step} showBasis={showBasis} returnToChat={close} experienceCount={details.experience.total} experienceMean={details.experience.distribution.count>0?details.experience.distribution.mean:undefined} visible={!expanded}/></Suspense>
      <div className="pricing-map-playback" role="status">{step>=0?['读取本行要素与计价单位。','按规则返回的要素一致程度比较候选。','查看所选候选来源、差异和经验样本。','由你核对条件，返回聊天确认填写。'][step]:'点击候选数值，查看与本行的关系。'}</div>
     </section>
     <div className="pricing-map-bottom">
@@ -63,7 +57,7 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
      </section>
      <aside className="pricing-map-report" ref={panel} tabIndex={-1} aria-label="候选依据与分析报告"><div className="pricing-map-report-heading"><div role="tablist" aria-label="依据与分析">{(['basis','analysis'] as const).map(value=><button role="tab" id={`${uid}-${value}`} aria-controls={`${uid}-panel`} aria-selected={tab===value} tabIndex={tab===value?0:-1} key={value} onClick={()=>setTab(value)} onKeyDown={e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const next=e.key==='Home'?'basis':e.key==='End'?'analysis':value==='basis'?'analysis':'basis';setTab(next);document.getElementById(`${uid}-${next}`)?.focus();}}}>{value==='basis'?'匹配依据':'AI 分析'}</button>)}</div><button className="btn btn-ghost btn-sm" ref={expandButton} aria-expanded={expanded} onClick={()=>{if(expanded)collapse();else{setExpanded(true);scroll.current?.scrollTo({top:0});}}}>{expanded?'收起报告':'展开报告'}<Icon name={expanded?'chevron':'arrow-up-right'}/></button></div>
       <section role="tabpanel" id={`${uid}-panel`} aria-labelledby={`${uid}-${tab}`} className="pricing-map-report-body">
-       {tab==='basis'?selected?<><div className="pricing-map-report-summary"><small>所选候选 · {selected.source_label}</small><strong>{priceText(selected.value)} <small>{unit}</small></strong><p>{selected.reason}</p></div><h4>来源与适用依据</h4><p>{selected.basis}</p>{selected.risk_tips?.length?<><h4>采用前核对</h4><ul>{selected.risk_tips.map((tip,i)=><li key={i}>{tip}</li>)}</ul></>:<p>请结合本行条件核对适用范围。</p>}<small>切换候选只更新依据，不会改写已有模型报告。</small></>:<p>暂无选中候选。</p>:<><div className="pricing-map-caption"><small>第 {data.row_context.row_number} 行 · {data.row_context.target_header}</small><span className="badge badge-ghost">{running?'分析中':state.generated?'模型分析':'本地依据'}</span></div>{running?<p role="status" className="pricing-map-empty"><span className="loading loading-spinner"/>正在结合当前行与候选分析</p>:state.answer?<div className="pricing-map-answer">{analysisParts.filter(part=>part!==analysisPreface).map((part,i)=><section key={i} className={part.title==='结论'?'pricing-map-report-summary':''}>{part.title&&<h4>{part.title}</h4>}<Prose text={part.body}/></section>)}{analysisPreface&&<details className="pricing-map-samples"><summary>规则排序说明</summary><Prose text={analysisPreface.body}/></details>}</div>:<p className="pricing-map-empty">{state.phase==='stopped'?'分析已停止。':'暂无分析报告。'}</p>}{state.error&&<p role="alert" className="pricing-error">{state.error}</p>}<div className="pricing-map-report-actions"><small>{state.generated?'模型建议，需人工核对':'未生成模型答案'}{!active?' · 历史快照':''}</small>{running?<Button onClick={stop}>停止分析</Button>:<Button icon="refresh" disabled={blocked} onClick={retry}>重新分析</Button>}</div></>}
+       {tab==='basis'?selected?<><div className="pricing-map-report-summary"><small>所选候选 · {selected.source_label}</small><strong>{priceText(selected.value)} <small>{unit}</small></strong><p>{selected.reason}</p></div><h4>来源与适用依据</h4><p>{selected.basis}</p>{selected.risk_tips?.length?<><h4>采用前核对</h4><ul>{selected.risk_tips.map((tip,i)=><li key={i}>{tip}</li>)}</ul></>:<p>请结合本行条件核对适用范围。</p>}<small>切换候选只更新依据，不会改写已有模型报告。</small></>:<p>暂无选中候选。</p>:<><div className="pricing-map-caption"><small>第 {data.row_context.row_number} 行 · {data.row_context.target_header}</small><span className="badge badge-ghost">{running?'分析中':state.generated?'模型分析':'本地依据'}</span></div>{running?<p role="status" className="pricing-map-empty"><span className="loading loading-spinner"/>正在结合当前行与候选分析</p>:state.answer?<div className="pricing-map-answer"><PricingAnalysis text={state.answer}/></div>:<p className="pricing-map-empty">{state.phase==='stopped'?'分析已停止。':'暂无分析报告。'}</p>}{state.error&&<p role="alert" className="pricing-error">{state.error}</p>}<div className="pricing-map-report-actions"><small>{state.generated?'模型建议，需人工核对':'未生成模型答案'}{!active?' · 历史快照':''}</small>{running?<Button onClick={stop}>停止分析</Button>:<Button icon="refresh" disabled={blocked} onClick={retry}>重新分析</Button>}</div></>}
       </section>
      </aside>
     </div>
@@ -71,26 +65,6 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
   </div>
   <footer className="pricing-map-footer"><small>相似度不代表命中概率{details&&details.rules.total>200?' · 展示前 200 条，分布统计全部有效数值':''}。</small><div><Button icon="spark" onClick={professional}>专业逐字段分析</Button><Button onClick={close}>返回聊天</Button></div></footer>
  </div></Modal>;
-}
-function PricingConnections({selectedId,count}:{selectedId?:string;count:number}){
- const svg=useRef<SVGSVGElement>(null),[drawing,setDrawing]=useState<{width:number;height:number;paths:{d:string;active:boolean}[]}>();
- useEffect(()=>{
-  const flow=svg.current?.parentElement;if(!flow)return;
-  const draw=()=>{
-   const box=flow.getBoundingClientRect(),stages=flow.querySelectorAll<HTMLElement>('.pricing-map-stage');
-   const selected=flow.querySelector('.pricing-map-selected');if(!selected||stages.length!==4)return;
-   const source=stages[0].getBoundingClientRect(),target=selected.getBoundingClientRect(),review=stages[3].getBoundingClientRect();
-   const curve=(x1:number,y1:number,x2:number,y2:number)=>'M'+[x1-box.x,y1-box.y]+' C'+[x1+(x2-x1)/2-box.x,y1-box.y]+' '+[x1+(x2-x1)/2-box.x,y2-box.y]+' '+[x2-box.x,y2-box.y];
-   const groupViewport=flow.querySelector('.pricing-map-groups')!.getBoundingClientRect();
-   const paths=[...flow.querySelectorAll('.pricing-map-groups>div')].filter(group=>{const r=group.getBoundingClientRect();return r.top+r.height/2>=groupViewport.top&&r.top+r.height/2<=groupViewport.bottom;}).map(group=>{const r=group.getBoundingClientRect();return {d:curve(source.right,source.top+source.height/2,r.left,r.top+r.height/2)+' '+curve(r.right,r.top+r.height/2,target.left,target.top+target.height/2),active:group.classList.contains('is-selected')};});
-   paths.push({d:curve(target.right,target.top+target.height/2,review.left,review.top+review.height/2),active:true});
-   setDrawing({width:box.width,height:box.height,paths});
-  };
-  draw();const observer=new ResizeObserver(draw);observer.observe(flow);
-  const groups=flow.querySelector('.pricing-map-groups');groups?.addEventListener('scroll',draw,{passive:true});
-  return()=>{observer.disconnect();groups?.removeEventListener('scroll',draw);};
- },[selectedId,count]);
- return <svg ref={svg} className="pricing-map-connections" aria-hidden="true" viewBox={drawing?'0 0 '+drawing.width+' '+drawing.height:undefined}>{drawing?.paths.map((p,i)=><path key={i} d={p.d} className={p.active?'active':''}/>)}</svg>;
 }
 function DistributionSummary({label,data}:{label:string;data:Distribution}){return <section><strong>{label} · {data.count} 条</strong>{data.count?<dl>{[['最低',data.min],['中位',data.median],['均值',data.mean],['最高',data.max]].map(([name,value])=><div key={String(name)}><dt>{name}</dt><dd>{priceText(value)}</dd></div>)}</dl>:<p>没有有效数值</p>}</section>;}
 function PriceAxis({candidates,selected,select,unit}:{candidates:PriceCandidate[];selected?:PriceCandidate;select:(candidate:PriceCandidate)=>void;unit:string}){

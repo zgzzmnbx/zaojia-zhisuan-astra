@@ -2,10 +2,10 @@ import {useEffect,useRef,useState} from 'react';
 import {TaskProgress} from './TaskProgress';
 import {api,json} from './api';
 import {Icon} from './ui';
-import {Prose} from './Prose';
+import {PricingAnalysis} from './PricingAnalysis';
 import {PricingDetails,SimilarityBadge} from './PricingDetails';
 import type {Result} from './types';
-import {pricingAnalysisSections,priceText,topPrices,type RowContext,type RowCandidates,type RowPricingState,type PriceCandidate} from './row-pricing';
+import {priceText,topPrices,type RowContext,type RowCandidates,type RowPricingState,type PriceCandidate} from './row-pricing';
 import './row-pricing.css';
 export type {RowContext,RowCandidates} from './row-pricing';
 const question='请辅助当前行 target_header 指定的字段（基价/单价或实物/技术工作费调整系数）。只分析当前目标字段，不把价格当作系数。依据给定的 candidate_recommendations 原始排序，解释前三个不同数值各自的要素一致程度、来源、样本支持、冲突和适用限制，给出首选及备选建议。相似度不是命中概率；没有三个可信数值时按实际数量，不得编造数值或样本。清楚区分计价库规则依据、经验均值和模型推断。只提供分析，由用户点击候选按钮确认写入，仅修改目标字段。输出要求：正文尽量控制在240字以内，保留系统要求的Markdown二级标题。结论只用一句话给首选数值、单位和最关键理由；依据与解释最多两条短句，说明备选数值的关键差异，不重复卡片已有的要素数量与来源行号；适用条件与复核只用一句话说明影响采用的冲突或缺项，重要风险不能为凑字数省略；使用边界仅一句。只在确实引用项目记忆时输出该节。不要复述问题、讲工作流程、列长表、重复推荐或输出candidate id、knowledge_similar等内部英文标识。';
@@ -52,9 +52,3 @@ export function RowAssist({state,job,context,active,blocked,headers,change,saved
  </section>;
 }
 
-function PricingAnalysis({text}:{text:string}){
- const parts=pricingAnalysisSections(text),hasHeadings=parts.some(p=>p.title);
- const preface=hasHeadings&&parts[0]?.title===''&&parts[0].body.startsWith('**结构化排序首选：')?parts[0]:undefined;
- const labels:Record<string,{label:string;icon:string}>={结论:{label:'首选建议',icon:'spark'},依据与解释:{label:'备选与依据',icon:'book'},适用条件与复核:{label:'采用前核对',icon:'shield'},项目记忆:{label:'项目经验',icon:'database'}};
- return <div className="pricing-analysis-sections">{parts.filter(p=>p!==preface).map((part,i)=>part.title==='使用边界'?<div className="pricing-analysis-boundary" key={i}><Icon name="info"/><Prose text={part.body}/></div>:<section className="pricing-analysis-section" key={i}><h4><Icon name={labels[part.title]?.icon||'book'}/>{labels[part.title]?.label||part.title||'分析说明'}</h4><Prose text={part.body}/></section>)}{preface&&<details className="pricing-analysis-source"><summary>规则排序说明</summary><Prose text={preface.body}/></details>}</div>;
-}

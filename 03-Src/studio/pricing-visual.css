@@ -21,3 +21,6 @@
 .studio .pricing-map svg.pricing-map-connections{width:100%;height:100%;max-width:none;flex-shrink:0}
 
 .studio .pricing-map-groups{line-height:1.2}.studio .pricing-map-choices button{line-height:1.2}@media(max-height:800px){.studio .pricing-map-groups{max-height:172px}}
+
+/* Share the chat analysis cards without inheriting generic report heading spacing. */
+.pricing-map-answer{margin-top:14px}.pricing-map-answer .pricing-analysis-section h4{margin:0 0 6px;font-size:var(--dws-font-size-13)}.pricing-map-answer .pricing-analysis-section .astra-prose{font-size:var(--dws-font-size-13)}
