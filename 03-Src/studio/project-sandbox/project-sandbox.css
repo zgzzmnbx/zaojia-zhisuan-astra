@@ -205,6 +205,9 @@
 .sandbox-fps{display:inline-block;min-width:96px;margin-right:12px;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none}
 
 .sandbox-switch .btn[aria-pressed="true"]{background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue)}
+.sandbox-lighting-settings{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 4px;border-top:1px solid var(--border)}
+.sandbox-lighting-settings label{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer}
+.sandbox-lighting-settings small{flex-basis:100%;font-size:12px;color:var(--muted)}
 .summary-heading .sandbox-switch{--glass:var(--canvas);backdrop-filter:none;box-shadow:none;flex-shrink:0}
 
 .studio #shell.live-shell .four-surface .summary-heading .sandbox-switch .btn{width:auto;min-width:48px;height:32px;min-height:32px;padding:0 10px;font-size:13px}

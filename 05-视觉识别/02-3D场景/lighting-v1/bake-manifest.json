@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "engine": "Blender Cycles",
+  "blender": "5.2.2 LTS",
+  "source": "05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox.glb",
+  "sourceSha256": "bf9a428cbcaaa8ef061b5eff358ad697943a16effe677ca8fa588ec653475e26",
+  "samples": 96,
+  "diffuseBounces": 4,
+  "lighting": "neutral sky diffuse direct + indirect; no sun, no albedo",
+  "colorSpace": "sRGB PNG, runtime linear decode",
+  "zones": [
+    {
+      "zone": "import",
+      "object": "zone_import",
+      "size": 1024,
+      "triangles": 6240,
+      "linearMax": 1.0311510562896729,
+      "litFraction": 0.2611846923828125,
+      "sha256": "dfea18e376322aa6a28f285b37a4cfc7f0eecb6b24cc43b835d5e3b17f1f4d3a",
+      "bytes": 510091
+    },
+    {
+      "zone": "knowledge",
+      "object": "zone_knowledge",
+      "size": 1024,
+      "triangles": 9592,
+      "linearMax": 1.0017956495285034,
+      "litFraction": 0.18604087829589844,
+      "sha256": "a902cc8df3ba5c19bcd6c688a5894d8796e1e827a3118397e5f9f178b7fc9363",
+      "bytes": 379846
+    },
+    {
+      "zone": "ground",
+      "object": "zone_land",
+      "size": 2048,
+      "triangles": 61216,
+      "linearMax": 1.023295283317566,
+      "litFraction": 0.10042929649353027,
+      "sha256": "27c975f47505f59b1b72d858dea9c1bede70bb5cae42d0b6bef17ce13ea09354",
+      "bytes": 800029
+    },
+    {
+      "zone": "price",
+      "object": "zone_price",
+      "size": 1024,
+      "triangles": 40864,
+      "linearMax": 1.0092946290969849,
+      "litFraction": 0.15260696411132812,
+      "sha256": "70bd85b8c68fae2a21cca611c7bb62110152b663980c4656618fc6c47718f314",
+      "bytes": 364733
+    },
+    {
+      "zone": "report",
+      "object": "zone_report",
+      "size": 1024,
+      "triangles": 9164,
+      "linearMax": 1.010878562927246,
+      "litFraction": 0.20923519134521484,
+      "sha256": "47e2468ed0df6d850391241e30a6438d346ff8ef6fb4111a27a33cc82f218ef6",
+      "bytes": 443913
+    },
+    {
+      "zone": "review",
+      "object": "zone_review",
+      "size": 1024,
+      "triangles": 10968,
+      "linearMax": 1.0204054117202759,
+      "litFraction": 0.24825000762939453,
+      "sha256": "fcd63a8b5bd56835deaaa4454b51c4bce9318009f14ba183e6b031e8acbb4292",
+      "bytes": 508120
+    },
+    {
+      "zone": "risk",
+      "object": "zone_risk",
+      "size": 1024,
+      "triangles": 27360,
+      "linearMax": 1.0158809423446655,
+      "litFraction": 0.23649215698242188,
+      "sha256": "650b85f13768b5efbdbb11a3748b55a3d5e93a0f332d3a8bd36da8a831c53109",
+      "bytes": 535392
+    },
+    {
+      "zone": "table",
+      "object": "zone_table",
+      "size": 1024,
+      "triangles": 18344,
+      "linearMax": 1.0241767168045044,
+      "litFraction": 0.15697288513183594,
+      "sha256": "727c3bf2c34fc7d673f2a18d6fab7299b2122b3deb2c56f212e63376ffafc5b5",
+      "bytes": 332783
+    }
+  ],
+  "seconds": 36.74
+}
