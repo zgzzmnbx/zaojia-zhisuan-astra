@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_CONTRACT_REQUIRES_CURRENT_GLTFLOADER_ROUNDTRIP",
+  "baseline_commit": "79e1418b2be169537a8cca643af61063b4350521",
+  "material_extras": {
+    "astraBaseMaterial": "Original semantic material name, e.g. Porcelain white",
+    "astraSurfaceRole": "base | coated-tank | coated-pipe"
+  },
+  "fallback": {
+    "base_name": "material.userData.astraBaseMaterial ?? material.name",
+    "role": "base",
+    "meaning": "Original semantic behavior, not a blanket architecture classification"
+  },
+  "name_policy": "Preserve original material.name where possible; all semantic classification must still use the base-name bridge",
+  "zone_source": "mesh then parent chain userData.zone; never infer from shared material",
+  "extras_destination": "glTF.materials[].extras -> material.userData; do not assume primitive.extras populates material",
+  "source_primitive_identity": [
+    "original_node_instance",
+    "original_gltf_mesh_index",
+    "original_primitive_index"
+  ],
+  "batch_key": [
+    "zone",
+    "sourcePrimitiveId",
+    "role"
+  ],
+  "component_definition": "Production assemblyComponents() on the pinned/current GLTFLoader-loaded v1 geometry, including all POSITION vertices and local-coordinate rounding at 1e-4",
+  "smallest_assignable_unit": "whole_original_connected_component",
+  "allowlist": [
+    {
+      "source_object_base_names": [
+        "White pressure vessel",
+        "Vessel dome"
+      ],
+      "expected_zone": "price",
+      "role": "coated-tank"
+    },
+    {
+      "source_object_base_names": [
+        "Plant connection",
+        "Plant connection flange"
+      ],
+      "expected_zone": "price",
+      "role": "coated-pipe"
+    },
+    {
+      "source_object_base_names": [
+        "Cross-river pipeline",
+        "Cross-river pipeline flange"
+      ],
+      "expected_zone": "risk",
+      "role": "coated-pipe"
+    }
+  ],
+  "mixed_or_ambiguous_component_policy": "Keep original material and record unresolved visual scope; never expand selection to adjacent architecture",
+  "prohibitions": [
+    "split_one_original_component_across_primitives",
+    "merge_components_across_original_primitive_or_node_instances",
+    "infer_role_from_all_Porcelain_white",
+    "weld_or_requantize_positions",
+    "recompute_normals",
+    "rebake_node_transforms",
+    "drop_unused_source_vertices_without_analysis",
+    "share_entire_building_POSITION_accessor_with_only_subset_indices",
+    "fake_geometry_bounds_to_pass_checks"
+  ],
+  "attribute_policy": "Copy all actual vertex attributes via explicit source-to-output mapping, retain original local float values and triangle winding/multiplicity",
+  "invariants": [
+    "zones_and_node_transforms",
+    "local_positions_and_original_rounding_component_partition",
+    "oriented_world_triangle_multiset",
+    "normal_inverse_transpose_transform_and_corner_association",
+    "UV0_UV1_tangents_colors_and_other_original_attributes",
+    "one_to_one_original_components",
+    "production_Box3_zone_bounds",
+    "actual_production_aAssemblyMotion_world_displacement_and_start",
+    "grounded_vertex_set_and_zone_parts_end_total",
+    "raycast_roof_labels_focus_and_paint_behavior"
+  ],
+  "verification_notes": [
+    "World comparison tolerance only covers explained transform rounding; 1e-4 local welding grid is not permitted geometry movement.",
+    "Run createBuildingEntrance() on actual GLTFLoader results and inspect temporary attributes before finish().",
+    "tick(delta) caps each delta at 50ms; do not assume a single multi-second tick advances all the way.",
+    "Rotated node AABBs may change when primitives split; preserve unsplittable primitives if production bounds differ.",
+    "Original unused vertices require explicit analysis; skip split if equivalent behavior cannot be preserved.",
+    "Record actual primitive, draw-call and assembly shadow-draw deltas; no hard promise of +3."
+  ],
+  "output_directory_proposal": "05-视觉识别/02-3D场景/lighting-v2/",
+  "output_files_proposal": [
+    "sandbox-surface.glb",
+    "surface-manifest.json",
+    "verification-report.json"
+  ],
+  "lightmap_dependency": "Reuse lighting-v1 maps only with verified unchanged UV1; otherwise publish and validate complete paired model/map set",
+  "required_manifest_fields": [
+    "schema_version",
+    "source_model_sha256",
+    "source_blend_sha256",
+    "tool_versions",
+    "component_definition",
+    "source_primitive_ids",
+    "role_allowlist",
+    "component_matches",
+    "unmatched_and_ambiguous",
+    "attribute_max_errors",
+    "production_bounds_comparison",
+    "production_motion_comparison",
+    "primitive_draw_call_counts",
+    "uv_lightmap_dependency",
+    "output_sha256"
+  ],
+  "zone_normalization": "Known original land has no raw zone and normalizes to ground; seven building zones must retain mesh/ancestor identity.",
+  "applicability": "Role semantics and evidence required; derivative asset pipeline only if current assets do not already contain equivalent verified roles."
+}

@@ -6,6 +6,10 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import modelUrl from '../../../05-视觉识别/02-3D场景/white-sandbox-v0.1.0/white-sandbox.glb?url';
 import lightmappedModelUrl from '../../../05-视觉识别/02-3D场景/lighting-v1/sandbox-lightmapped.glb?url';
+import surfaceModelUrl from '../../../05-视觉识别/02-3D场景/lighting-v2/sandbox-surface.glb?url';
+import {dayProfile} from './render-profile.mjs';
+import {loadSandboxModel} from './model-loader.mjs';
+import {assemblyShadowEnvelope,fitSandboxShadow} from './shadow-frustum.mjs';
 import {loadSandboxLighting} from './lighting.mjs';
 import {createLightingMaterials} from './lighting-materials.mjs';
 import {createInformationFlow} from './information-flow.js';
@@ -54,6 +58,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  let frame=sandboxFrame(1,1),focusFrame=null,viewFlight=null;
  const zoneBounds=new Map(),spatialVisibility=new Map();
  let entrance=null,entranceChecked=false,entranceSkipped=false;
+ let assetState=null,shadowEnvelope=null,shadowSignature='';
  let lighting=null,lightingMaterials=null,lightingStatus='idle',lightingMessage='',loadingLighting=false;
  let options={enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false};
  function ensureLighting(){
@@ -77,20 +82,26 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  }
  function theme(){
   setMonumentNight(options.dark);
+  sun.position.set(-16,32,20);sun.target.position.set(0,0,0);sun.shadow.mapSize.set(1024,1024);
+  Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});
   const dark=options.dark,cool=options.cool;const ground=sandboxGroundTone(options.groundTone);scene.background=new THREE.Color(dark?'#08131f':ground.color);dayFloor.color.set(ground.color);floor.material=dark?nightFloor:dayFloor;floorShadow.visible=!dark&&options.shadows;scene.environmentIntensity=dark?.19:.22;renderer.toneMappingExposure=dark?.79:.8;
   sun.color.set(dark?0xb5d9ff:cool?0xf3f8ff:0xfffbf5);sun.intensity=dark?.85:3.2;sun.shadow.bias=dark?-.00025:-.0002;sun.shadow.normalBias=dark?.025:.065;sun.shadow.radius=dark?4:2;sun.shadow.intensity=dark?1:.85;
   fill.color.set(dark?0x4394cf:0xe2edff);fill.intensity=dark?.45:cool?.32:.22;hemi.color.set(dark?0xa5d4fa:0xf5faff);hemi.groundColor.set(dark?0x172c42:0x93abc6);hemi.intensity=dark?.32:cool?.45:.35;
   const enhanced=options.enhanced&&!!lighting;
   scene.environment=enhanced?lighting.environment:env.texture;
   if(enhanced&&!dark){
-   scene.environmentIntensity=.18;hemi.intensity=.08;fill.intensity=.20;
-   sun.intensity=3.0;renderer.toneMappingExposure=.84;
-   sun.shadow.intensity=.72;
+   scene.background.lerp(new THREE.Color(0xffffff),dayProfile.backgroundWhiteMix);dayFloor.color.copy(scene.background);
+   scene.environmentIntensity=dayProfile.environment;hemi.intensity=dayProfile.hemisphere;fill.intensity=dayProfile.fill;
+   sun.position.fromArray(dayProfile.sunPosition);sun.intensity=dayProfile.sun;renderer.toneMappingExposure=dayProfile.exposure;
+   sun.shadow.intensity=dayProfile.shadowIntensity;sun.shadow.normalBias=dayProfile.normalBias;sun.shadow.bias=dayProfile.shadowBias;sun.shadow.radius=dayProfile.shadowRadius;sun.shadow.mapSize.setScalar(dayProfile.shadowSize);
+   if(shadowEnvelope)Object.assign(sun.shadow.camera,fitSandboxShadow(sun,shadowEnvelope));
   }
   materials?.apply({dark,cool,selected});
   lightingMaterials?.apply(lighting,{enabled:enhanced,dark,assembling:!!entrance?.active});
   focusGlow.configure({enabled:options.bloom,night:dark,focus:selected||taskTarget,color:getComputedStyle(host).getPropertyValue('--astra-primary').trim()||'#258fe1'});
-  contacts.setNight(dark);flow.setNight(dark);renderer.shadowMap.needsUpdate=true;
+  const nextShadowSignature=JSON.stringify([sun.position.toArray(),sun.target.position.toArray(),sun.shadow.mapSize.toArray(),...['left','right','top','bottom','near','far'].map(k=>sun.shadow.camera[k])]);
+  if(nextShadowSignature!==shadowSignature){shadowSignature=nextShadowSignature;sun.shadow.camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;}
+  contacts.setNight(dark);flow.setNight(dark);
  }
  function project(time,moving){
   if(selected||taskTarget){
@@ -203,7 +214,8 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  for(const event of ['pointerover','pointerout','focusin','focusout'])host.parentElement.addEventListener(event,request,{signal:events.signal});
  renderer.domElement.style.cursor='grab';renderer.domElement.addEventListener('pointermove',e=>{renderer.domElement.style.cursor=down?'grabbing':hit(e)?'pointer':'grab'},{signal:events.signal});
  const loader=new GLTFLoader();
- fetch(lightmappedModelUrl,{signal:abort.signal}).then(r=>{if(!r.ok)throw Error('模型文件读取失败');return r.arrayBuffer()}).catch(error=>{if(error.name==='AbortError')throw error;return fetch(modelUrl,{signal:abort.signal}).then(r=>{if(!r.ok)throw Error('模型文件读取失败');return r.arrayBuffer()})}).then(buffer=>loader.parseAsync(buffer,'')).then(gltf=>{
+ loadSandboxModel([{url:surfaceModelUrl,version:'lighting-v2',roles:true,uv:true},{url:lightmappedModelUrl,version:'lighting-v1',uv:true},{url:modelUrl,version:'original'}],{signal:abort.signal,parse:buffer=>loader.parseAsync(buffer,''),release:releaseObject,disposed:()=>disposed}).then(({gltf,asset})=>{
+  assetState=asset;shadowEnvelope=assemblyShadowEnvelope(gltf.scene,zones.map(z=>z.id),monument);
   if(disposed){releaseObject(gltf.scene);return}model=gltf.scene;model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);materials=createSandboxMaterials(model);lightingMaterials=createLightingMaterials(model);ensureLighting();roofAnchors.attach(model);model.updateMatrixWorld(true);model.traverse(o=>{if(!o.isMesh)return;let owner=o;while(owner&&!owner.userData.zone)owner=owner.parent;const id=owner?.userData.zone;if(!id)return;const box=new THREE.Box3().setFromObject(o);if(!zoneBounds.has(id))zoneBounds.set(id,box);else zoneBounds.get(id).union(box)});theme();onReady();request();
  }).catch(error=>{if(!disposed&&error.name!=='AbortError')onError('沙盘加载失败，可以重试或使用经典界面。')});
  theme();request();
@@ -217,7 +229,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   home(){finishEntrance();selected=null;markerLayout.reset();spatialVisibility.clear();reframe();theme();home()},
   zoom(factor){finishEntrance();const delta=camera.position.clone().sub(controls.target).multiplyScalar(factor).clampLength(17,110);fly(controls.target.clone().add(delta),controls.target)},
   refresh:request,
-  state:()=>({lighting:{enabled:options.enhanced,status:lightingStatus,message:lightingMessage,...lightingMaterials?.getState()},bloom:focusGlow.getState(),textures:renderer.info.memory.textures,triangles:renderer.info.render.triangles,entrance:entrance?.state()??{active:false,skipped:entranceChecked},paint:paintProgress.state(),paintStrength:options.paintStrength,monumentPosition:monument.position.toArray(),monumentHeight:1.82,groupLogo:options.groupLogo,groupLogoVisible:groupLogo.visible,groupLogoColor:groupLogo.children[0].material.color.getHexString(),groupLogoParts:groupLogo.children.length,roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,focusFrame,selected,taskTarget,layoutMode:selected||taskTarget?'focused':'overview',markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,groundTone:options.groundTone,elevation:options.elevation,zoom:options.zoom,overviewDistance:options.distance,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
+  state:()=>({asset:assetState,renderProfile:{sun:sun.position.toArray(),sunIntensity:sun.intensity,fill:fill.intensity,hemisphere:hemi.intensity,environment:scene.environmentIntensity,exposure:renderer.toneMappingExposure,shadowSize:sun.shadow.mapSize.toArray(),normalBias:sun.shadow.normalBias,frustum:Object.fromEntries(['left','right','top','bottom','near','far'].map(k=>[k,sun.shadow.camera[k]]))},lighting:{enabled:options.enhanced,status:lightingStatus,message:lightingMessage,...lightingMaterials?.getState()},bloom:focusGlow.getState(),textures:renderer.info.memory.textures,triangles:renderer.info.render.triangles,entrance:entrance?.state()??{active:false,skipped:entranceChecked},paint:paintProgress.state(),paintStrength:options.paintStrength,monumentPosition:monument.position.toArray(),monumentHeight:1.82,groupLogo:options.groupLogo,groupLogoVisible:groupLogo.visible,groupLogoColor:groupLogo.children[0].material.color.getHexString(),groupLogoParts:groupLogo.children.length,roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,focusFrame,selected,taskTarget,layoutMode:selected||taskTarget?'focused':'overview',markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,groundTone:options.groundTone,elevation:options.elevation,zoom:options.zoom,overviewDistance:options.distance,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
   dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;finishEntrance();abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();focusGlow.dispose();lightingMaterials?.apply(null);lighting?.dispose();if(!loadingLighting)pmrem.dispose();releaseObject(scene);(floor.material===dayFloor?nightFloor:dayFloor).dispose();sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
  };
 }

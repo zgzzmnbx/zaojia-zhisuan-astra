@@ -7,6 +7,7 @@ import {createLightingMaterials} from '../03-Src/studio/project-sandbox/lighting
 import {createSandboxMaterials} from '../03-Src/studio/project-sandbox/materials.mjs';
 import {createBuildingEntrance} from '../03-Src/studio/project-sandbox/building-entrance.mjs';
 import {createFocusGlow} from '../03-Src/studio/project-sandbox/focus-glow.mjs';
+import {dayProfile} from '../03-Src/studio/project-sandbox/render-profile.mjs';
 
 test('local ground glow crossfades only focused buildings and stops at rest without render targets',()=>{
  const scene=new Group(),glow=createFocusGlow(scene);
@@ -50,7 +51,7 @@ test('baked GI respects zone identity and toggles restore materials without rebu
  lighting.apply(resources,{enabled:true});
  assert.equal(root.children[0].material.lightMap,resources.maps.get('import'));
  assert.notEqual(root.children[0].material.lightMap,root.children[1].material.lightMap);
- assert.equal(root.children[0].material.normalScale.x,.055);
+ assert.equal(root.children[0].material.normalScale.x,dayProfile.surfaces['Warm plaster'].normal);
  lighting.apply(resources,{enabled:false});
  for(const [i,mesh] of root.children.entries()){
   assert.equal(mesh.geometry,geometry[i]);assert.equal(mesh.material.lightMap,null);
@@ -71,9 +72,9 @@ test('static day GI does not illuminate moving parts or leak into night; paint a
  lighting.setAssembly(true,true,false);entrance.finish();lighting.setAssembly(false,true,false);
  assert.equal(root.children[0].material.lightMapIntensity,0);
  lighting.tick(50,false,true,false);assert.ok(root.children[0].material.lightMapIntensity>0);
- assert.ok(root.children[0].material.lightMapIntensity<.85);
+ assert.ok(root.children[0].material.lightMapIntensity<dayProfile.gi);
  for(let i=0;i<10;i++)lighting.tick(50,false,true,false);
- assert.equal(root.children[0].material.lightMapIntensity,.85);
+ assert.equal(root.children[0].material.lightMapIntensity,dayProfile.gi);
 });
 test('enhancement gracefully skips models without baked UVs',()=>{
  const root=new Group(),mesh=new Mesh(new BoxGeometry(),new MeshStandardMaterial());root.add(mesh);

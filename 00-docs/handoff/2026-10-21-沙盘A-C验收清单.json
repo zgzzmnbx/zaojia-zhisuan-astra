@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "status": "TECHNICAL_BASELINE_VISUAL_REVIEW_PENDING",
+  "baseline_commit": "79e1418b2be169537a8cca643af61063b4350521",
+  "visual": [
+    {
+      "id": "V01",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V02",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V03",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V04",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V05",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V06",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V07",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V08",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V09",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V10",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V11",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "V12",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    }
+  ],
+  "functional": [
+    {
+      "id": "F01",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F02",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F03",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F04",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F05",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F06",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F07",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F08",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F09",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F10",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F11",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "F12",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    }
+  ],
+  "assets": [
+    {
+      "id": "A01",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "A02",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "A03",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "A04",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "A05",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "A06",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "A07",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    },
+    {
+      "id": "A08",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "pass",
+      "evidence": "2026-10-21-沙盘A-C质感验收.md#4-逐项验收矩阵"
+    }
+  ],
+  "required_reports": [
+    "06-ACCEPTANCE-REPORT-TEMPLATE.md"
+  ],
+  "policy": "Each result must be pass/fail/unmeasured/not_applicable with real evidence or reason. Generated references never count as runtime evidence.",
+  "version": "0.10.57",
+  "completed": "2026-10-21",
+  "report": "2026-10-21-沙盘A-C质感验收.md",
+  "user_visual_acceptance": "not_accepted",
+  "user_feedback": "与参考图差距明显，需进一步分析光照、阴影与材质。保留原助手自检作为历史结果。"
+}
