@@ -63,6 +63,7 @@ import {CapabilityHub} from './CapabilityHub';
 import {ProfessionalPanel,isProfessional,professionalTitles,type ProfessionalReceipt,type KnowledgeSeed} from './ProfessionalPanel';
 import {Prose} from './Prose';
 import type {KnowledgeTab} from './KnowledgeWorkspace';
+import ModelSettings from './ModelSettings';
 import {KnowledgeSettings} from './KnowledgeSettings';
 import {readWeKnora} from './weknora-stream';
 import {useWeKnora} from './useWeKnora';
@@ -611,6 +612,7 @@ function App(){
  if(section==='runtime-console')return <RuntimeConsole model={runtimeConsole} active={active}/>;
  if(section==='logo')return active?<Suspense fallback={<p role="status">正在载入 Logo…</p>}><LogoSettings active={active}/></Suspense>:null;
  if(section==='appearance')return <AppearanceControls sandboxAutoOrbit={sandboxAutoOrbit} sandboxOrbitDelay={sandboxOrbitDelay} setSandboxAutoOrbit={setSandboxAutoOrbit} setSandboxOrbitDelay={setSandboxOrbitDelay} palette={palette} dark={dark} setPalette={setPalette} setDark={setDark} reset={resetAppearance} error={appearanceError} sandboxChatBackground={sandboxChatBackground} sandboxChatTransparency={sandboxChatTransparency} setSandboxChatBackground={setSandboxChatBackground} setSandboxChatTransparency={setSandboxChatTransparency}/>;
+ if(section==='model-settings')return <ModelSettings active={active} changed={()=>setBusinessRevision(n=>n+1)} onBusy={setSettingsWorking}/>;
  if(section==='knowledge-settings')return <KnowledgeSettings weknora={weknora.status} refresh={weknora.refresh} changed={()=>setKnowledgeRevision(n=>n+1)}/>;
  if(section==='business')return <BusinessSettings revision={businessRevision} changed={()=>setBusinessRevision(n=>n+1)}/>;
  if(section==='quick-settings')return <QuickSettings value={quickPreferences} change={setQuickPreferences}/>;

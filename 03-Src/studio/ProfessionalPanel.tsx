@@ -24,7 +24,7 @@ export function ProfessionalPanel({view,context,jobId,inputFile,sheets,knowledge
       if(message.type==='settings-changed')latest.current.onSettingsChanged?.();
       if(message.type==='preview-preferences'&&message.preferences&&latest.current.active)latest.current.onPreferences?.(message.preferences);
       if(message.type==='close-settings'&&latest.current.active)latest.current.onCloseSettings?.();
-      if(message.type==='navigate'&&(message.view==='tools'||isProfessional(message.view)))latest.current.onNavigate(message.view);
+      if(message.type==='navigate'&&(message.view==='tools'||message.view==='model-settings'||isProfessional(message.view)))latest.current.onNavigate(message.view);
       if(message.type==='open-run'&&typeof message.project==='string'&&typeof message.run==='string'&&['preview','report'].includes(message.target))void latest.current.onOpenRun(message.project,message.run,message.target).catch(e=>setError(String(e)));
       if(message.type==='error')setError(String(message.message||'专业模块未能打开'));
       if(message.type==='busy')latest.current.onBusy(String(message.label||''));

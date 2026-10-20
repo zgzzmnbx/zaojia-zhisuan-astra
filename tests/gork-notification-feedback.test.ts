@@ -46,5 +46,6 @@ test('local durable enqueue differs from confirmed queue and final output',()=>{
  assert.equal(debugSubmission({status:'cancelled',remote_confirmed:true,delivery:{}}).label,'本地已取消');
 });
 test('human delivery labels preserve an untranslated value only in diagnostic payload',()=>{
+ assert.equal(deliveryLabel('device_acknowledged'),'设备已确认');
  assert.equal(deliveryLabel('not_requested'),'未请求输出');assert.equal(deliveryLabel('completed_by_os'),'系统播放完成');assert.equal(deliveryLabel('device_playback_completed'),'设备播放完成');assert.equal(deliveryLabel('future_unknown'),'待核对');
 });

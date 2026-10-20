@@ -205,6 +205,7 @@ async def cancel_notification(payload: Cancel):
 class DebugSend(Strict):
     stage: str
     include_amount: bool = False
+    watch_card: bool = False
     amount: str = Field(default='9447173.00', max_length=24)
     @model_validator(mode='after')
     def known_stage(self):
@@ -228,7 +229,7 @@ async def debug_call(method, *args):
 
 @router.post('/debug/send')
 async def debug_send(payload: DebugSend):
-    return await debug_call('debug_send', payload.stage, payload.include_amount, payload.amount)
+    return await debug_call('debug_send', payload.stage, payload.include_amount, payload.amount, payload.watch_card)
 
 
 @router.get('/debug/{event_id}')

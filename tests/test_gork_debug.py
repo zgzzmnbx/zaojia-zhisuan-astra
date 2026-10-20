@@ -199,3 +199,90 @@ def test_debug_and_business_amount_speech_use_wan_with_exact_yuan_snapshot(fixtu
         assert '26728500元' in payload['text']
         assert payload['amount_summary']['value']=='26728500.00'
         assert payload['amount_summary']['unit']=='yuan'
+
+
+def project_support(remote):
+    remote.capabilities=lambda:{'protocol_version':'1.1','protocol_versions':['1.0','1.1'],
+        'transport':'loopback_http','project_card':{'template':'cost_result'}}
+
+
+def test_watch_card_is_opt_in_and_preserves_ordinary_amount_speech(fixture):
+    obj,remote,clock=fixture;project_support(remote)
+    settings=obj.settings.model_copy(deep=True);settings.sound=True
+    obj._configure(settings);clock[0]+=1
+    ordinary=obj.debug_send('match_completed',True,'9474173.00');obj.step()
+    first=remote.sent[-1]
+    clock[0]+=1
+    card=obj.debug_send('match_completed',True,'9474173.00',watch_card=True);obj.step()
+    payload=remote.sent[-1]
+    assert 'project_card' not in first and first['amount_summary']['calculation_status']=='unconfirmed'
+    assert payload['protocol_version']=='1.1' and '调试示例' in payload['project_card']['project_name']
+    assert payload['project_card']['risk_status']=='not_checked' and payload['project_card']['risk_count'] is None
+    assert payload['amount_summary']['value']=='9474173.00' and payload['amount_summary']['calculation_status']=='recalculated'
+    assert payload['text']==first['text'] and payload['speech']==first['speech']
+    assert '公式重算未确认' in payload['speech']['text']
+    assert card['event_id']!=ordinary['event_id']
+
+
+@pytest.mark.parametrize('reason',['unsupported','desktop','permission','state','failed'])
+def test_watch_card_cannot_bypass_capability_display_or_stage_gate(fixture,reason):
+    obj,remote,clock=fixture;project_support(remote)
+    stage='match_completed'
+    settings=obj.settings.model_copy(deep=True)
+    if reason=='unsupported':remote.capabilities=lambda:{'protocol_version':'1.0','transport':'loopback_http'}
+    if reason=='desktop':settings.display_target='desktop'
+    if reason=='permission':settings.display_target='desktop';remote.policy['display_targets']=['desktop']
+    if reason=='state':settings.stages[stage].kind='state'
+    if reason=='failed':stage='match_failed'
+    obj._configure(settings);clock[0]+=1
+    before=bridge_settings_bytes(obj)
+    with pytest.raises(HTTPException):obj.debug_send(stage,True,'9474173.00',watch_card=True)
+    assert not remote.sent and obj.db().execute('SELECT count(*) FROM events').fetchone()[0]==0
+    assert bridge_settings_bytes(obj)==before
+
+
+def bridge_settings_bytes(obj):
+    import gork_config
+    return gork_config.CONFIG.read_bytes()
+
+
+@pytest.mark.parametrize('stage,status,count',[('warning_completed','checked',0),('warning_found','checked',2)])
+def test_watch_risk_debug_keeps_zero_distinct_and_amount_out_of_voice(fixture,stage,status,count):
+    obj,remote,clock=fixture;project_support(remote)
+    obj.debug_send(stage,True,'9474173.00',watch_card=True);obj.step();payload=remote.sent[-1]
+    assert payload['project_card']['risk_status']==status and payload['project_card']['risk_count']==count
+    assert payload['amount_summary']['value']=='9474173.00'
+    assert '9474173' not in payload['text'] and payload['speech'] is None
+
+
+def test_watch_card_without_amount_is_not_invented_zero(fixture):
+    obj,remote,clock=fixture;project_support(remote)
+    obj.debug_send('match_completed',watch_card=True);obj.step();payload=remote.sent[-1]
+    assert 'amount_summary' not in payload and payload['project_card']['risk_status']=='not_checked'
+
+
+def test_watch_debug_api_routes_opt_in_without_changing_saved_policy(fixture,monkeypatch):
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    import gork_config
+    obj,remote,clock=fixture;project_support(remote)
+    monkeypatch.setattr(gork_config,'bridge',obj)
+    app=FastAPI();app.include_router(gork_config.router)
+    before=bridge_settings_bytes(obj)
+    with TestClient(app) as client:
+        r=client.post('/api/astra/gork/notifications/debug/send',json={
+            'stage':'match_completed','include_amount':True,'amount':'9474173.00','watch_card':True})
+        assert r.status_code==200
+        payload=r.json()['request']
+        assert payload['project_card']['project_name'].startswith('调试示例')
+        assert payload['amount_summary']['value']=='9474173.00'
+        assert payload['task_id'].startswith('debug-') and payload['speech'] is None
+    assert bridge_settings_bytes(obj)==before
+
+
+def test_read_only_status_exposes_screen_capability_without_sending(fixture):
+    obj,remote,clock=fixture
+    assert obj._status(obj.settings)['project_card_supported'] is False
+    project_support(remote)
+    assert obj._status(obj.settings)['project_card_supported'] is True
+    assert not remote.sent

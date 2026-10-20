@@ -51,6 +51,17 @@ def error_code(exc):
     return code if isinstance(code, str) and re.fullmatch(r'[A-Z_]{1,80}', code) else 'CONNECTION_UNAVAILABLE'
 
 
+def validate_contract(caps, state):
+    # New controllers advertise all accepted request versions; keep emitting 1.0
+    # so retries retain their original payload and idempotency fingerprint.
+    versions = caps.get('protocol_versions') if isinstance(caps, dict) else None
+    compatible = '1.0' in versions if isinstance(versions, list) else isinstance(caps, dict) and caps.get('protocol_version') == '1.0'
+    if not compatible:
+        raise HTTPException(409, 'Gork 通知协议不兼容：控制台未声明支持 1.0 请求，请核对控制台版本')
+    if caps.get('transport') != 'loopback_http' or not isinstance(state, dict) or state.get('source') != 'astra':
+        raise HTTPException(409, 'Gork 本机通知接口或 Astra 来源身份不匹配')
+
+
 def review_delivery_event(event, job_id, database, requested_at=None):
     """Read verified delivery identity; approval updates are not new deliveries."""
     identifier = str(event.get('event_id') or '')
@@ -91,6 +102,7 @@ class Notifications:
         self.worker = None
         self.cached_status = {'state': 'disabled', 'message': '阶段通知已关闭'}
         self.client = None
+        self.output_capabilities = {}
         self.settings = config.Settings()
         self.cutoff = clock()
         self.next_feed = 0
@@ -168,9 +180,9 @@ class Notifications:
         try:
             health = read_console_health()
             if (not isinstance(health, dict) or health.get('app') != 'stopwatch-voice-companion'
-                    or health.get('external_protocol') != '1.0' or not isinstance(health.get('instance'), str)
+                    or not isinstance(health.get('instance'), str) or not health['instance']
                     or not isinstance(health.get('robot'), dict)):
-                raise ValueError('identity')
+                raise HTTPException(409, 'Gork 控制台身份校验失败，请检查本机 8766 服务')
             client = self.client_factory(self.settings)
             state = self.validate_remote(client, self.settings)
             self.client = client  # Reload the already authorized token after console restart/rotation.
@@ -182,6 +194,8 @@ class Notifications:
                                       'message': '等待新阶段，历史事件不补播' if self.settings.enabled else '阶段通知已关闭'}
         except httpx.ConnectError:
             result.update(state='offline', message='Gork 未打开，启动后将自动连接')
+        except (httpx.TimeoutException, TimeoutError):
+            result['message'] = 'Gork 连接检测超时，10秒后自动重试'
         except HTTPException as exc:
             result['message'] = str(exc.detail)
         except sdk.GorkError as exc:
@@ -229,9 +243,7 @@ class Notifications:
 
     def validate_remote(self, client, settings):
         caps, state = client.capabilities(), client.status()
-        if (caps.get('protocol_version') != '1.0' or caps.get('transport') != 'loopback_http'
-                or state.get('source') != 'astra'):
-            raise HTTPException(409, 'Gork 控制台通用通知接口尚未就绪，请使用支持协议 1.0 的版本')
+        validate_contract(caps, state)
         if not state.get('enabled'):
             raise HTTPException(409, '请先在 Gork 控制台启用 Astra 程序权限')
         if state.get('paused'):
@@ -249,6 +261,7 @@ class Notifications:
                 target = state.get('current_sound_target')
             if settings.sound and stage.speech and target not in (policy.get('speech_targets') or []):
                 raise HTTPException(409, '阶段声音位置未获 Gork 授权')
+        self.output_capabilities = caps
         return state
 
     async def configure(self, settings):
@@ -366,6 +379,9 @@ class Notifications:
         from gork_stages import amount_text
         if amount_text(event):
             payload['amount_summary'] = event['amount_summary']
+        if payload['kind'] == 'notice':
+            from gork_project import project_output
+            payload.update(project_output(event, self.output_capabilities))
         # Skip obsolete unsent states; accepted states are superseded by the server
         # with the new sequence, without stopping speech already in progress.
         db.execute("UPDATE events SET status='superseded' WHERE json_extract(payload,'$.task_id')=? AND status='pending'", (job,))
@@ -376,13 +392,23 @@ class Notifications:
             db.execute('INSERT OR REPLACE INTO review_notices(scope,event_id) VALUES(?,?)', (review_scope, payload['event_id']))
         db.commit()
 
-    def debug_send(self, stage_id, include_amount=False, amount='9447173.00'):
+    def debug_send(self, stage_id, include_amount=False, amount='9447173.00', watch_card=False):
         with self.lock:
             settings = config.load()
             # Explicit manual output can be tested while automatic notifications are off.
             client = self.client_factory(settings)
-            self.validate_remote(client, settings)
+            remote = self.validate_remote(client, settings)
             self.settings, self.client = settings, client
+            if watch_card:
+                from gork_project import supports_project_card, DEBUG_CARD_STAGES
+                if not supports_project_card(self.output_capabilities):
+                    raise HTTPException(409, '控制台不支持 Watch 项目卡：ASTRA_GORK_WATCH_CARD_UNSUPPORTED')
+                stage = settings.stages[stage_id]
+                if stage_id not in DEBUG_CARD_STAGES or stage.kind != 'notice':
+                    raise HTTPException(409, '请选择匹配完成、检查完成或发现风险的短提醒：ASTRA_GORK_WATCH_CARD_STAGE')
+                display = settings.display_target if stage.display_target == 'inherit' else stage.display_target
+                if display not in {'both', 'watch'} or 'watch' not in (remote.get('policy') or {}).get('display_targets', []):
+                    raise HTTPException(409, '当前显示位置或来源权限不包含 Watch：ASTRA_GORK_WATCH_DISPLAY_REQUIRED')
             if self.db().execute('SELECT 1 FROM cancellations WHERE task=? AND attempt=? AND expires>?',
                                  (self.debug_task, self.debug_attempt, self.clock())).fetchone():
                 self.debug_attempt = 'debug-' + uuid4().hex
@@ -400,6 +426,12 @@ class Notifications:
                                           'attempt':self.debug_attempt,'calculation_status':'unconfirmed'}
                 if not amount_text(event):
                     raise HTTPException(422, '请输入有效的模拟金额（元），不使用真实任务数据')
+            if watch_card:
+                from gork_project import debug_project
+                try:
+                    event = debug_project(event, include_amount, amount)
+                except ValueError:
+                    raise HTTPException(422, '请输入有效的模拟金额（元），不使用真实任务数据') from None
             rejection = self.enqueue(event)
             if rejection:
                 reasons = {'ASTRA_GORK_STAGE_DISABLED': '此阶段未启用，请在阶段设置中开启并保存',
@@ -524,9 +556,10 @@ class Notifications:
                     state = self.validate_remote(client, settings)
                 else:
                     caps, state = client.capabilities(), client.status()
-                    if caps.get('protocol_version') != '1.0' or state.get('source') != 'astra':
-                        raise ValueError()
-                result.update(policy=state.get('policy'), current_sound_target=state.get('current_sound_target'), paused=state.get('paused'))
+                    validate_contract(caps, state)
+                from gork_project import supports_project_card
+                result.update(policy=state.get('policy'), current_sound_target=state.get('current_sound_target'), paused=state.get('paused'),
+                              project_card_supported=supports_project_card(caps if not settings.enabled else self.output_capabilities))
                 if not settings.enabled:
                     result.update(state='disabled', message='阶段通知已关闭，可配置后保存')
                 elif not result['worker_running']:
@@ -553,6 +586,8 @@ def install(app, engine, runtime, *, manage_lifecycle=True):
     config.bridge = instance
     original_write = sentinel_events.atomic_json
     def observe_write(path, event):
+        from gork_project import freeze_project
+        event = freeze_project(event, Path(path).parent.parent, request_round.get())
         result = original_write(path, event)
         try:
             committed = json.loads(Path(path).read_text(encoding='utf-8'))

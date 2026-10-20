@@ -2501,6 +2501,7 @@ function DaweibaApp() {
       applyAppearance({palette:next.palette||"astra",dark:next.dark});
       setContext(next);if(next.previewPreferences&&JSON.stringify(next.previewPreferences)!==JSON.stringify(previewPreferencesRef.current)){setPreviewColumnPreferences(normalizePreviewColumnPreferences(next.previewPreferences));}
       if(routeChanged){setAstraRow(null);openedAstraRow.current="";}
+      if(businessChanged||routeChanged)window.dispatchEvent(new Event('astra-model-changed'));
       if(businessChanged||routeChanged)await loadAstraBusiness().catch(error=>notifyParent("error",{message:String(error)}));
       if(currentContext.context!==next.context||currentContext.jobId!==next.jobId||currentContext.view!==next.view)return;
       setAstraActive(next.active);setAstraView(next.view);setColorMode(next.dark?"dark":"light");
@@ -2727,9 +2728,7 @@ function DaweibaApp() {
   const [activeUiTextKey, setActiveUiTextKey] = useState<UiTextTargetId>("hero.title");
   const [isUiPickMode, setIsUiPickMode] = useState(false);
   const [llmSettings, setLlmSettings] = useState(DEFAULT_LLM_SETTINGS);
-  const [astraModelReady,setAstraModelReady]=useState(false);
-  useEffect(()=>{fetch('/api/astra/connections/model').then(r=>r.json()).then(value=>{setLlmSettings(previous=>({...previous,...value}));setAstraModelReady(true);}).catch(()=>setError('读取独立模型设置失败'));},[]);
-  useEffect(()=>{if(!astraModelReady)return;const timer=setTimeout(()=>{void fetch('/api/astra/connections/model',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(llmSettings)}).then(async r=>{if(!r.ok){const d=await r.json();setError(d.detail||'模型设置未保存');}});},600);return()=>clearTimeout(timer);},[astraModelReady,llmSettings]);
+  useEffect(()=>{let live=true;let controller:AbortController|undefined;const load=()=>{controller?.abort();controller=new AbortController();const signal=controller.signal;void fetch('/api/astra/connections/model',{signal}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(value=>{if(live&&!signal.aborted)setLlmSettings(previous=>({...previous,...value}));}).catch(()=>{if(live&&!signal.aborted)setError('读取独立模型设置失败');});};load();window.addEventListener('astra-model-changed',load);return()=>{live=false;controller?.abort();window.removeEventListener('astra-model-changed',load);};},[]);
 
   const [activeLlmSettingsTab, setActiveLlmSettingsTab] = useState<"model" | "window" | "commands">("model");
   const [riskReport, setRiskReport] = useState("");
@@ -9100,16 +9099,6 @@ function DaweibaApp() {
     ].slice(0, 10));
   }
 
-  function applyLlmPreset(presetId: string) {
-    const preset = LLM_PRESETS.find((item) => item.id === presetId);
-    if (!preset) return;
-    setLlmSettings({
-      provider: preset.provider,
-      model: preset.model,
-      baseUrl: preset.baseUrl,
-    });
-  }
-
   function updateActiveMapping(field: MappingField, value: string) {
     if (sheetConfigs.length > 0) {
       setSheetConfigs((configs) =>
@@ -11169,37 +11158,7 @@ function DaweibaApp() {
           <button type="button" role="tab" aria-selected={activeLlmSettingsTab === "commands"} className={activeLlmSettingsTab === "commands" ? "is-active" : ""} onClick={() => setActiveLlmSettingsTab("commands")}>快捷指令</button>
         </nav>
         <div className="zhisuan-settings-content">
-          {activeLlmSettingsTab === "model" && <section className="daweiba-settings-pane" aria-label="模型接入">
-            <label className="field-preference-item">
-              <span>模型选择</span>
-              <select
-                value={LLM_PRESETS.find((preset) => (
-                  preset.provider === llmSettings.provider
-                  && preset.model === llmSettings.model
-                  && preset.baseUrl === llmSettings.baseUrl
-                ))?.id ?? "custom"}
-                onChange={(event) => applyLlmPreset(event.target.value)}
-              >
-                {LLM_PRESETS.map((preset) => (
-                  <option key={preset.id} value={preset.id}>{preset.name} - {preset.description}</option>
-                ))}
-                <option value="custom">自定义</option>
-              </select>
-            </label>
-            <label className="field-preference-item">
-              <span>接入标识</span>
-              <input value={llmSettings.provider} onChange={(event) => setLlmSettings((current) => ({ ...current, provider: event.target.value }))} />
-            </label>
-            <label className="field-preference-item">
-              <span>模型</span>
-              <input value={llmSettings.model} onChange={(event) => setLlmSettings((current) => ({ ...current, model: event.target.value }))} />
-            </label>
-            <label className="field-preference-item">
-              <span>接口地址</span>
-              <input value={llmSettings.baseUrl} onChange={(event) => setLlmSettings((current) => ({ ...current, baseUrl: event.target.value }))} />
-            </label>
-            <p className="settings-hint"><ShieldCheck size={15} />API Key 由 Astra 独立连接配置读取，前端不接收密钥。</p>
-          </section>}
+          {activeLlmSettingsTab === "model" && <section className="daweiba-settings-pane" aria-label="模型接入"><p>模型参数与独立凭证已集中到大模型设置。</p><button type="button" onClick={()=>notifyParent('navigate',{view:'model-settings'})}>打开大模型设置</button></section>}
 
           {activeLlmSettingsTab === "window" && <div className="settings-subsection zhisuan-window-settings daweiba-settings-pane">
             <span className="settings-subsection-title">智算窗口</span>

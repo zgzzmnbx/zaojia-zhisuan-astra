@@ -1,6 +1,9 @@
 export type DebugOperation='send'|'cancel'|'heartbeat'|'receipt'|'delivery';
 export type NotificationFeedback={title:string;message:string;code:string;console:boolean};
 const reasons:Record<string,[string,string]>={
+ ASTRA_GORK_WATCH_CARD_UNSUPPORTED:['控制台不支持 Watch 项目卡','请更新 Gork 控制台并重新检测，普通调试仍可使用。'],
+ ASTRA_GORK_WATCH_CARD_STAGE:['此阶段不支持项目卡','请选择匹配完成、检查完成或发现风险，并使用短提醒。'],
+ ASTRA_GORK_WATCH_DISPLAY_REQUIRED:['尚未启用 Watch 显示','请显式选择包含 Watch 的显示位置，并核对来源的 Watch 显示权限。'],
  ASTRA_GORK_STAGE_DISABLED:['此阶段未启用','请在阶段设置中开启“发送此阶段”，保存后再调试。'],
  ASTRA_GORK_QUEUE_FULL:['本地通知队列已满','请等待现有通知处理后重试；过期的排队信号会自动清理。'],
  ASTRA_GORK_TASK_CANCELLED:['该轮调试已取消','请重新发送，系统会使用新的调试轮次。'],
@@ -44,4 +47,4 @@ export function debugSubmission(record:{status:string;remote_confirmed?:boolean;
  if(!remote)return {label:'本地已提交 · 控制台尚未确认',message:'本地提交不代表小人已显示或语音已播放。'};
  return {label:'控制台已确认接收',message:'各端结果见下方回执；声音回执仍需实际听测。'};
 }
-export function deliveryLabel(value:string){return ({displayed:'已显示',accepted:'设备已接收',completed:'已完成',completed_by_os:'系统播放完成',device_playback_completed:'设备播放完成',not_requested:'未请求输出',queued:'已入队',playing:'播放中',failed:'输出失败',cancelled:'已取消',pending:'等待确认'} as Record<string,string>)[value]||'待核对';}
+export function deliveryLabel(value:string){return ({displayed:'已显示',accepted:'设备已接收',device_acknowledged:'设备已确认',completed:'已完成',completed_by_os:'系统播放完成',device_playback_completed:'设备播放完成',not_requested:'未请求输出',queued:'已入队',playing:'播放中',failed:'输出失败',cancelled:'已取消',pending:'等待确认'} as Record<string,string>)[value]||'待核对';}
