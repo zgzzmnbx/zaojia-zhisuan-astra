@@ -1,0 +1,69 @@
+{
+  "sameCameraViews": [
+    "overview",
+    "tank",
+    "glow",
+    "pipe",
+    "compact"
+  ],
+  "instancePreservation": true,
+  "stableTextures": 17,
+  "idleHiddenOffscreen": true,
+  "assemblySamples": 37,
+  "threeMountCycles": true,
+  "controlledResourceRecovery": true,
+  "backgroundRGB": {
+    "01-before-overview.png": [
+      237,
+      239,
+      242
+    ],
+    "02-after-overview.png": [
+      247,
+      248,
+      249
+    ]
+  },
+  "before-performance": {
+    "fps": 60,
+    "p95": 16.80000000000291,
+    "longFrames": 0,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "dpr": 1.0000000447034836
+  },
+  "after-performance": {
+    "fps": 60,
+    "p95": 16.80000000000291,
+    "longFrames": 0,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "dpr": 1.0000000447034836
+  },
+  "version": "0.10.58",
+  "baseline": "204733a / v0.10.57",
+  "status": "IMPLEMENTED_TESTED_BROWSER_VERIFIED",
+  "userVisualApproval": "pending",
+  "tests": {
+    "main": 355,
+    "active": 353,
+    "failures": 0
+  },
+  "build": {
+    "main": "passed",
+    "active": "passed"
+  },
+  "fullAssembly": {
+    "milliseconds": 4000,
+    "samples": 80,
+    "shadowDrawsPerFrame": 63,
+    "movingGI": 0,
+    "settledGI": 0.42
+  },
+  "evidence": "Codex-Temp/sandbox-studio-v01058",
+  "scope": "local renderer only; no business calculation or external send"
+}

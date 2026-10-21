@@ -3,7 +3,7 @@ import {dayProfile} from './render-profile.mjs';
 const plasterNames=new Set(['Warm plaster','Porcelain white','Limestone foundation']);
 /** Theme owns color/emissive; this layer restores all surface properties from zone clones. */
 export function createLightingMaterials(root){
- const entries=[],seen=new Map();let settle=1;
+ const entries=[],seen=new Map();let settle=1,giStrength=dayProfile.gi;
  root.traverse(object=>{
   if(!object.isMesh)return;
   let owner=object;while(owner&&!owner.userData.zone)owner=owner.parent;
@@ -17,21 +17,22 @@ export function createLightingMaterials(root){
    seen.set(material,entry);entries.push(entry);
   }
  });
- return {apply(resources,{enabled=false,dark=false,assembling=false}={}){
-  const active=enabled&&!!resources;
+ return {apply(resources,{enabled=false,baked=enabled,dark=false,assembling=false,profile=dayProfile}={}){
+  const active=enabled&&!!resources,gi=baked&&!!resources;giStrength=profile.gi;
   for(const entry of entries){
    const m=entry.material,oldMap=m.lightMap,oldNormal=m.normalMap;
    const {baseName,role}=entry,plaster=plasterNames.has(baseName);
-   m.lightMap=active&&entry.uv?(resources.maps.get(entry.zone)??entry.lightMap):entry.lightMap;
-   m.lightMapIntensity=active?(dark||assembling?0:dayProfile.gi*settle):entry.lightMapIntensity;
+   m.lightMap=gi&&entry.uv?(resources.maps.get(entry.zone)??entry.lightMap):entry.lightMap;
+   m.lightMapIntensity=gi?(dark||assembling?0:giStrength*settle):entry.lightMapIntensity;
    m.normalMap=active&&plaster?resources.maps.get('normal'):entry.normalMap;
    m.normalScale.copy(entry.normalScale);if(active&&plaster)m.normalScale.set(.055,.055);
    m.roughness=active?(baseName==='Frosted blue glazing'?.24:baseName==='Ceramic trim'?.32:entry.roughness):entry.roughness;
    m.metalness=entry.metalness;m.envMapIntensity=entry.envMapIntensity;
    if(active&&!dark){
-    const surface=dayProfile.surfaces[role]??dayProfile.surfaces[baseName];
+    const surface=profile.surfaces[role]??profile.surfaces[baseName];
     if(surface){
      m.roughness=surface.roughness??m.roughness;m.metalness=surface.metalness??m.metalness;
+     m.envMapIntensity=surface.environment??m.envMapIntensity;
      if(surface.normal===0){m.normalMap=null;m.normalScale.set(0,0);}
      else if(surface.normal!==undefined)m.normalScale.setScalar(surface.normal);
     }
@@ -40,11 +41,11 @@ export function createLightingMaterials(root){
   }
  },setAssembly(active,enabled,dark){
   if(active)settle=0;
-  for(const {material} of entries)if(enabled&&material.lightMap)material.lightMapIntensity=dark||active?0:dayProfile.gi*settle;
+  for(const {material} of entries)if(enabled&&material.lightMap)material.lightMapIntensity=dark||active?0:giStrength*settle;
  },tick(delta,assembling,enabled,dark,reduced=false){
   if(assembling||settle===1)return false;
   settle=reduced?1:Math.min(1,settle+Math.min(50,delta)/450);
-  for(const {material} of entries)if(enabled&&material.lightMap)material.lightMapIntensity=dark?0:dayProfile.gi*settle;
+  for(const {material} of entries)if(enabled&&material.lightMap)material.lightMapIntensity=dark?0:giStrength*settle;
   return settle<1;
  },getState:()=>({materials:entries.length,lightmapped:entries.filter(e=>!!e.material.lightMap).length,
   activeLightmapped:entries.filter(e=>e.material.lightMap&&e.material.lightMapIntensity>0).length,

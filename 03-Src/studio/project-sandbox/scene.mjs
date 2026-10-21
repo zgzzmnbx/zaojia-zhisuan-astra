@@ -1,3 +1,6 @@
+import {trialProfile,normalizeTrial,approvedLighting} from './lighting-trial.ts';
+import {bindSolidMaterials} from './solid-materials.mjs';
+import {createStudioEnvironmentSlot} from './studio-environment.mjs';
 import {createFrameRateMeter} from './frame-rate.ts';
 import {sandboxDefaults} from './defaults.ts';
 import * as THREE from 'three';
@@ -12,8 +15,10 @@ import {loadSandboxModel} from './model-loader.mjs';
 import {assemblyShadowEnvelope,fitSandboxShadow} from './shadow-frustum.mjs';
 import {loadSandboxLighting} from './lighting.mjs';
 import {createLightingMaterials} from './lighting-materials.mjs';
+import {createSoftShadows} from './soft-shadows.mjs';
 import {createInformationFlow} from './information-flow.js';
 import {createContactShadows} from './contact-shadows.js';
+import {createNightRenderer} from './night-renderer.js';
 import {createFocusGlow} from './focus-glow.mjs';
 import {zones} from './zones.js';
 import {sandboxFrame,sandboxFocusFrame,spatialMarkerLayout} from './scene-layout.ts';
@@ -40,12 +45,14 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,250),controls=new OrbitControls(camera,renderer.domElement);
  controls.enableDamping=true;controls.dampingFactor=.085;controls.minDistance=14;controls.maxDistance=110;controls.minPolarAngle=.26;controls.maxPolarAngle=Math.PI*.46;controls.autoRotateSpeed=.22;
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment(),env=pmrem.fromScene(room,.04);scene.environment=env.texture;room.dispose();
+ const trialEnvironment=createStudioEnvironmentSlot(pmrem);
  const hemi=new THREE.HemisphereLight(0xf5faff,0x93abc6,.35),sun=new THREE.DirectionalLight(0xfffbf5,3.2),fill=new THREE.DirectionalLight(0xe2edff,.22);
  sun.position.set(-16,32,20);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});sun.shadow.camera.updateProjectionMatrix();fill.position.set(20,18,-25);scene.add(hemi,sun,fill);
  const dayFloor=new THREE.MeshBasicMaterial({color:sandboxGroundTone(null).color,toneMapped:false}),nightFloor=new THREE.MeshStandardMaterial({color:0x101f2c,roughness:1});
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(300,300),dayFloor);floor.rotation.x=-Math.PI/2;floor.position.y=-.71;floor.receiveShadow=true;scene.add(floor);
  const floorShadow=new THREE.Mesh(floor.geometry,new THREE.ShadowMaterial({opacity:.14,depthWrite:false}));floorShadow.rotation.copy(floor.rotation);floorShadow.position.y=-.705;floorShadow.receiveShadow=true;scene.add(floorShadow);
- const flow=createInformationFlow(scene),contacts=createContactShadows(scene),focusGlow=createFocusGlow(scene);
+ const softShadows=createSoftShadows();softShadows.attach(scene);
+ const flow=createInformationFlow(scene),contacts=createContactShadows(scene),focusGlow=createFocusGlow(scene),night=createNightRenderer(renderer,scene,camera);
  const beacon=new THREE.Group();beacon.name='Live task beacon';beacon.visible=false;
  for(const radius of [3.2,3.7]){const ring=new THREE.Mesh(new THREE.RingGeometry(radius,radius+.07,80),new THREE.MeshBasicMaterial({color:0x228be6,transparent:true,opacity:.6,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;beacon.add(ring)}
  scene.add(beacon);
@@ -60,9 +67,22 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  let entrance=null,entranceChecked=false,entranceSkipped=false;
  let assetState=null,shadowEnvelope=null,shadowSignature='';
  let lighting=null,lightingMaterials=null,lightingStatus='idle',lightingMessage='',loadingLighting=false;
- let options={enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false};
+ let solid=null,solidMaterials=null,solidStatus='idle',solidActive=false,solidError='';
+ async function ensureSolid(){
+  if(!options.solidVersion||options.dark||!model||disposed||solidStatus!=='idle')return;
+  if(assetState?.version!=='lighting-v2'){solidStatus='fallback';onLightingStatus('纯色版资源不匹配，已保留当前画面');return;}
+  solidStatus='loading';solidError='';onLightingStatus('正在载入纯色版…');
+  try{
+   const {loadSolidLighting}=await import('./solid-lighting.mjs');
+   if(disposed)return;
+   const resources=await loadSolidLighting(renderer,pmrem,abort.signal);
+   if(disposed){resources.dispose();return;}
+   solid=resources;solidStatus='ready';scene.add(solid.floor);onLightingStatus('');theme();request();
+  }catch(error){if(!disposed){solidError=String(error);solidStatus='fallback';onLightingStatus('纯色版加载失败，已保留当前画面；可重新开启重试');request();}}
+ }
+ let options={solidVersion:sandboxDefaults.solidVersion,trial:approvedLighting(),studioLighting:sandboxDefaults.studioLighting,softShadows:sandboxDefaults.softShadows,bakedLighting:sandboxDefaults.bakedLighting,brightBackground:sandboxDefaults.brightBackground,nightBloom:sandboxDefaults.nightBloom,enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false};
  function ensureLighting(){
-  if(!options.enhanced||lighting||loadingLighting||lightingStatus==='fallback'||disposed)return;
+  if(!(options.enhanced||options.studioLighting||options.bakedLighting)||lighting||loadingLighting||lightingStatus==='fallback'||disposed)return;
   loadingLighting=true;lightingStatus='loading';lightingMessage='';onLightingStatus('正在载入增强光照…');
   loadSandboxLighting(renderer,pmrem,()=>disposed).then(resources=>{
    if(disposed){resources.dispose();return;}
@@ -76,32 +96,58 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  function finishEntrance(){
   entranceSkipped=true;
   if(!entrance?.active)return;
-  entrance.finish();lightingMaterials?.setAssembly(false,options.enhanced,options.dark);renderer.shadowMap.needsUpdate=true;flow.setPlaying(options.flow);
+  entrance.finish();lightingMaterials?.setAssembly(false,options.bakedLighting,options.dark);renderer.shadowMap.needsUpdate=true;flow.setPlaying(options.flow);
   for(const marker of markers.values())marker.style.removeProperty('opacity');
-  request();
+  theme();request();
  }
  function theme(){
+  const trial=options.trial&&!options.dark?normalizeTrial(options.trial):null;
+  const profile=trial?{...dayProfile,...trialProfile(trial)}:dayProfile;
   setMonumentNight(options.dark);
   sun.position.set(-16,32,20);sun.target.position.set(0,0,0);sun.shadow.mapSize.set(1024,1024);
   Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});
-  const dark=options.dark,cool=options.cool;const ground=sandboxGroundTone(options.groundTone);scene.background=new THREE.Color(dark?'#08131f':ground.color);dayFloor.color.set(ground.color);floor.material=dark?nightFloor:dayFloor;floorShadow.visible=!dark&&options.shadows;scene.environmentIntensity=dark?.19:.22;renderer.toneMappingExposure=dark?.79:.8;
+  const dark=options.dark,cool=options.cool;const ground=sandboxGroundTone(options.groundTone);scene.background=new THREE.Color(dark?'#08131f':ground.color);dayFloor.color.set(ground.color);floor.material=dark?nightFloor:dayFloor;floorShadow.visible=!dark&&options.shadows;scene.environmentIntensity=dark?.19:.22;renderer.toneMappingExposure=dark?.79:.8;renderer.toneMapping=THREE.ACESFilmicToneMapping;
   sun.color.set(dark?0xb5d9ff:cool?0xf3f8ff:0xfffbf5);sun.intensity=dark?.85:3.2;sun.shadow.bias=dark?-.00025:-.0002;sun.shadow.normalBias=dark?.025:.065;sun.shadow.radius=dark?4:2;sun.shadow.intensity=dark?1:.85;
   fill.color.set(dark?0x4394cf:0xe2edff);fill.intensity=dark?.45:cool?.32:.22;hemi.color.set(dark?0xa5d4fa:0xf5faff);hemi.groundColor.set(dark?0x172c42:0x93abc6);hemi.intensity=dark?.32:cool?.45:.35;
   const enhanced=options.enhanced&&!!lighting;
-  scene.environment=enhanced?lighting.environment:env.texture;
-  if(enhanced&&!dark){
-   scene.background.lerp(new THREE.Color(0xffffff),dayProfile.backgroundWhiteMix);dayFloor.color.copy(scene.background);
-   scene.environmentIntensity=dayProfile.environment;hemi.intensity=dayProfile.hemisphere;fill.intensity=dayProfile.fill;
-   sun.position.fromArray(dayProfile.sunPosition);sun.intensity=dayProfile.sun;renderer.toneMappingExposure=dayProfile.exposure;
-   sun.shadow.intensity=dayProfile.shadowIntensity;sun.shadow.normalBias=dayProfile.normalBias;sun.shadow.bias=dayProfile.shadowBias;sun.shadow.radius=dayProfile.shadowRadius;sun.shadow.mapSize.setScalar(dayProfile.shadowSize);
-   if(shadowEnvelope)Object.assign(sun.shadow.camera,fitSandboxShadow(sun,shadowEnvelope));
+  const studioDay=options.studioLighting&&!!lighting&&!dark;
+  const softDay=options.softShadows&&!dark;
+  scene.environment=studioDay?lighting.studio:enhanced?lighting.environment:env.texture;
+  if(trial&&studioDay){try{scene.environment=trialEnvironment.update(trial.cards);}catch{onLightingStatus('试调灯板生成失败，已保留基础环境');}}
+  else trialEnvironment.dispose();
+  const shadowType=softDay?THREE.BasicShadowMap:THREE.PCFShadowMap;
+  if(renderer.shadowMap.type!==shadowType){renderer.shadowMap.type=shadowType;renderer.shadowMap.needsUpdate=true;}
+  if(options.brightBackground&&!dark){
+   scene.background.lerp(new THREE.Color(0xffffff),profile.backgroundWhiteMix);dayFloor.color.copy(scene.background);
   }
-  materials?.apply({dark,cool,selected});
-  lightingMaterials?.apply(lighting,{enabled:enhanced,dark,assembling:!!entrance?.active});
+  if(studioDay){
+   scene.environmentIntensity=profile.environment;hemi.intensity=profile.hemisphere;fill.intensity=profile.fill;
+   sun.position.fromArray(profile.sunPosition);sun.intensity=profile.sun;renderer.toneMappingExposure=profile.exposure;
+  }
+  if(softDay){
+   sun.shadow.intensity=profile.shadowIntensity;sun.shadow.normalBias=profile.normalBias;sun.shadow.bias=profile.shadowBias;sun.shadow.radius=profile.shadowRadius;sun.shadow.mapSize.setScalar(profile.shadowSize);
+   if(shadowEnvelope)Object.assign(sun.shadow.camera,fitSandboxShadow(sun,shadowEnvelope));
+   softShadows.update(sun.shadow.camera,profile.shadowAngularRadius);
+  }
+  materials?.apply({dark,cool,selected,trial:!!trial,blueDepth:trial?.blueDepth??0});
+  lightingMaterials?.apply(lighting,{enabled:enhanced,baked:options.bakedLighting,dark,profile,assembling:!!entrance?.active});
+  if(solid&&!solidMaterials&&!entrance?.active){
+   try{solidMaterials=bindSolidMaterials(model,solid.manifest,solid.uv,solid);}
+   catch(error){solidError=String(error);solid.dispose();solid=null;solidStatus='fallback';onLightingStatus('纯色版模型校验失败，已保留当前画面');}
+  }
+  solidActive=!!(options.solidVersion&&!dark&&solidMaterials&&!entrance?.active);
+  solidMaterials?.setEnabled(solidActive);if(solid)solid.floor.visible=solidActive;
+  floor.visible=!solidActive;floorShadow.visible=!solidActive&&!dark&&options.shadows;contacts.setEnabled(!solidActive&&options.shadows);
+  if(solidActive){
+   scene.background.set('#cbd0d5');scene.environment=solid.environment;scene.environmentIntensity=1;
+   renderer.toneMapping=THREE.AgXToneMapping;renderer.toneMappingExposure=1;
+   sun.position.set(-12,22,10);sun.color.set(0xfff8ed);sun.intensity=2.6;
+   fill.intensity=0;hemi.color.set(0xe6f0ff);hemi.groundColor.set(0x9ba2a9);hemi.intensity=.7;
+  }
   focusGlow.configure({enabled:options.bloom,night:dark,focus:selected||taskTarget,color:getComputedStyle(host).getPropertyValue('--astra-primary').trim()||'#258fe1'});
   const nextShadowSignature=JSON.stringify([sun.position.toArray(),sun.target.position.toArray(),sun.shadow.mapSize.toArray(),...['left','right','top','bottom','near','far'].map(k=>sun.shadow.camera[k])]);
   if(nextShadowSignature!==shadowSignature){shadowSignature=nextShadowSignature;sun.shadow.camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;}
-  contacts.setNight(dark);flow.setNight(dark);
+  night.setEnabled(dark&&options.nightBloom);night.resize(width,height);contacts.setNight(dark);flow.setNight(dark);
  }
  function project(time,moving){
   if(selected||taskTarget){
@@ -159,7 +205,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   if(model&&!entranceChecked){
    entranceChecked=true;
    if(sandboxEntranceGate.claim()&&!entranceSkipped&&!reduced.matches&&!options.running&&!selected&&!taskTarget){
-    entrance=createBuildingEntrance(model,zones.map(zone=>zone.id));lightingMaterials?.setAssembly(true,options.enhanced,options.dark);flow.setPlaying(false);
+    entrance=createBuildingEntrance(model,zones.map(zone=>zone.id));lightingMaterials?.setAssembly(true,options.bakedLighting,options.dark);flow.setPlaying(false);theme();
    }
   }
   const wasBuilding=!!entrance?.active,building=entrance?.tick(delta*1000,reduced.matches)||false;
@@ -167,8 +213,8 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   // lag behind the assembly shader and sweep stale self-shadows across walls.
   // autoUpdate remains false, so normal static scenes stop redrawing shadows.
   if(wasBuilding)renderer.shadowMap.needsUpdate=true;
-  if(wasBuilding&&!building){lightingMaterials?.setAssembly(false,options.enhanced,options.dark);flow.setPlaying(options.flow);}
-  const lightingPending=lightingMaterials?.tick(delta*1000,building,options.enhanced,options.dark,reduced.matches);
+  if(wasBuilding&&!building){lightingMaterials?.setAssembly(false,options.bakedLighting,options.dark);flow.setPlaying(options.flow);theme();}
+  const lightingPending=lightingMaterials?.tick(delta*1000,building,options.bakedLighting,options.dark,reduced.matches);
   if(flight){const t=Math.min(1,(time-flight.start)/950),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);if(t===1)flight=null;}
   if(viewFlight){const t=reduced.matches?1:Math.min(1,(time-viewFlight.start)/950),e=1-(1-t)**3;camera.setViewOffset(width,height,viewFlight.x0+(viewFlight.x1-viewFlight.x0)*e,viewFlight.y0+(viewFlight.y1-viewFlight.y0)*e,width,height);if(t===1)viewFlight=null;}
   if(beacon.visible){beacon.children.forEach((ring,i)=>{const pulse=reduced.matches?.5:(Math.sin(time/650-i*1.5)+1)/2;ring.scale.setScalar(1+pulse*.08);ring.material.opacity=.3+pulse*.4})}
@@ -178,7 +224,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   controls.autoRotate=options.orbit&&!flight&&!building;const moving=controls.update(delta);camera.updateMatrixWorld();flow.tick(time);const markerPending=project(time,!!flight||moving||controls.autoRotate||!!down||!!host.closest('.is-resizing'));
   if(wasBuilding)for(const [id,marker] of markers){if(building){const alpha=entrance.label(id);marker.style.setProperty('opacity',String(alpha),'important');if(alpha<1)marker.inert=true;}else marker.style.removeProperty('opacity');}
   const glowPending=focusGlow.tick(delta*1000,reduced.matches,building);
-  renderer.info.autoReset=false;renderer.info.reset();renderer.render(scene,camera);frames++;fps.frame(time);
+  renderer.info.autoReset=false;renderer.info.reset();night.render(delta);frames++;fps.frame(time);
   if(building||glowPending||lightingPending||paintPending||flight||viewFlight||moving||controls.autoRotate||flow.getState().playing||markerPending||(beacon.visible&&!reduced.matches))request();
   if(!raf)fps.idle();
  }
@@ -198,7 +244,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   if(!camera.view||!frames||reduced.matches){viewFlight=null;camera.setViewOffset(width,height,x,y,width,height)}
   else if(Math.abs(x-(viewFlight?.x1??camera.view.offsetX))>.1||Math.abs(y-(viewFlight?.y1??camera.view.offsetY))>.1)viewFlight={x0:camera.view.offsetX,y0:camera.view.offsetY,x1:x,y1:y,start:performance.now()};
  }
- function resize(){const rect=host.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldHeight=height,oldUsable=frame.width,changed=width!==rect.width||height!==rect.height;width=rect.width;height=rect.height;camera.aspect=width/height;reframe();if(oldHeight>1&&!flight){const scale=height/oldHeight*oldUsable/frame.width;camera.position.sub(controls.target).multiplyScalar(scale).clampLength(17,110).add(controls.target);controls.update()}if(changed){renderer.setSize(width,height)}request()}
+ function resize(){const rect=host.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldHeight=height,oldUsable=frame.width,changed=width!==rect.width||height!==rect.height;width=rect.width;height=rect.height;camera.aspect=width/height;reframe();if(oldHeight>1&&!flight){const scale=height/oldHeight*oldUsable/frame.width;camera.position.sub(controls.target).multiplyScalar(scale).clampLength(17,110).add(controls.target);controls.update()}if(changed){renderer.setSize(width,height);night.resize(width,height)}request()}
  const observer=new ResizeObserver(resize);observer.observe(host);const chat=host.closest('.workbench')?.querySelector('#astra-conversation');if(chat)observer.observe(chat);const infoRail=host.parentElement.querySelector('.sandbox-info-rail');if(infoRail)observer.observe(infoRail);resize();const pose=poses.get(context);if(pose){camera.position.fromArray(pose.position);controls.target.fromArray(pose.target);controls.update()}else home(false);
  const visibility=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;if(inView)request();else stop()});visibility.observe(host);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else request()},{signal:events.signal});
@@ -216,12 +262,12 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  const loader=new GLTFLoader();
  loadSandboxModel([{url:surfaceModelUrl,version:'lighting-v2',roles:true,uv:true},{url:lightmappedModelUrl,version:'lighting-v1',uv:true},{url:modelUrl,version:'original'}],{signal:abort.signal,parse:buffer=>loader.parseAsync(buffer,''),release:releaseObject,disposed:()=>disposed}).then(({gltf,asset})=>{
   assetState=asset;shadowEnvelope=assemblyShadowEnvelope(gltf.scene,zones.map(z=>z.id),monument);
-  if(disposed){releaseObject(gltf.scene);return}model=gltf.scene;model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);materials=createSandboxMaterials(model);lightingMaterials=createLightingMaterials(model);ensureLighting();roofAnchors.attach(model);model.updateMatrixWorld(true);model.traverse(o=>{if(!o.isMesh)return;let owner=o;while(owner&&!owner.userData.zone)owner=owner.parent;const id=owner?.userData.zone;if(!id)return;const box=new THREE.Box3().setFromObject(o);if(!zoneBounds.has(id))zoneBounds.set(id,box);else zoneBounds.get(id).union(box)});theme();onReady();request();
+  if(disposed){releaseObject(gltf.scene);return}model=gltf.scene;model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);materials=createSandboxMaterials(model);lightingMaterials=createLightingMaterials(model);softShadows.attach(model);softShadows.attach(monument);ensureLighting();ensureSolid();roofAnchors.attach(model);model.updateMatrixWorld(true);model.traverse(o=>{if(!o.isMesh)return;let owner=o;while(owner&&!owner.userData.zone)owner=owner.parent;const id=owner?.userData.zone;if(!id)return;const box=new THREE.Box3().setFromObject(o);if(!zoneBounds.has(id))zoneBounds.set(id,box);else zoneBounds.get(id).union(box)});theme();onReady();request();
  }).catch(error=>{if(!disposed&&error.name!=='AbortError')onError('沙盘加载失败，可以重试或使用经典界面。')});
  theme();request();
  return {
   // Task completion updates activity only; retain the camera focus and spatial label layout until navigation.
-  setOptions(next){const previous=options;options={...options,...next};if(!previous.enhanced&&options.enhanced&&lightingStatus==='fallback')lightingStatus='idle';if(options.running)finishEntrance();if(previous.groupLogo!==options.groupLogo){setMonumentMode(options.groupLogo);renderer.shadowMap.needsUpdate=true;}if(previous.roofLabels!==options.roofLabels){markerLayout.reset();spatialVisibility.clear();}if(previous.compact!==options.compact){markerLayout.reset();spatialVisibility.clear();selected=null;theme();resize();home(false)}else reframe();if(previous.dark!==options.dark||previous.cool!==options.cool||previous.groundTone!==options.groundTone||previous.enhanced!==options.enhanced||previous.bloom!==options.bloom)theme();ensureLighting();if((previous.elevation!==options.elevation||previous.distance!==options.distance)&&!selected&&!taskTarget)home();if(previous.zoom!==options.zoom){if(selected){const id=selected;selected=null;this.select(id)}else if(taskTarget)this.focusTask(taskTarget)}if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;floorShadow.visible=!options.dark&&options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow&&!entrance?.active);if(allowed())request();else stop();},
+  setOptions(next){const previous=options;options={...options,...next};if(['enhanced','studioLighting','bakedLighting'].some(key=>!previous[key]&&options[key])&&lightingStatus==='fallback')lightingStatus='idle';if(!previous.solidVersion&&options.solidVersion&&solidStatus==='fallback')solidStatus='idle';if(options.running)finishEntrance();if(previous.groupLogo!==options.groupLogo){setMonumentMode(options.groupLogo);renderer.shadowMap.needsUpdate=true;}if(previous.roofLabels!==options.roofLabels){markerLayout.reset();spatialVisibility.clear();}if(previous.compact!==options.compact){markerLayout.reset();spatialVisibility.clear();selected=null;theme();resize();home(false)}else reframe();if(previous.dark!==options.dark||previous.cool!==options.cool||previous.groundTone!==options.groundTone||previous.enhanced!==options.enhanced||previous.bloom!==options.bloom||previous.trial!==options.trial||['solidVersion','studioLighting','softShadows','bakedLighting','brightBackground','nightBloom'].some(key=>previous[key]!==options[key]))theme();ensureLighting();ensureSolid();if((previous.elevation!==options.elevation||previous.distance!==options.distance)&&!selected&&!taskTarget)home();if(previous.zoom!==options.zoom){if(selected){const id=selected;selected=null;this.select(id)}else if(taskTarget)this.focusTask(taskTarget)}if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;floorShadow.visible=!solidActive&&!options.dark&&options.shadows;contacts.setEnabled(!solidActive&&options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow&&!entrance?.active);if(allowed())request();else stop();},
   setPaint(input){paintProgress.update(input);request();},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},
   focusTask(id){finishEntrance();spatialVisibility.clear();taskTarget=id;const zone=zones.find(z=>z.id===id);if(!zone)return;selected=null;theme();options.orbit=false;controls.autoRotate=false;onOrbitStop?.();reframe();const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(direction.y,.5);direction.normalize();fly(target.clone().addScaledVector(direction,sandboxCameraDistances(options.zoom).task*Math.max(1,.8/(frame.width/frame.height))),target);request()},
@@ -229,7 +275,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   home(){finishEntrance();selected=null;markerLayout.reset();spatialVisibility.clear();reframe();theme();home()},
   zoom(factor){finishEntrance();const delta=camera.position.clone().sub(controls.target).multiplyScalar(factor).clampLength(17,110);fly(controls.target.clone().add(delta),controls.target)},
   refresh:request,
-  state:()=>({asset:assetState,renderProfile:{sun:sun.position.toArray(),sunIntensity:sun.intensity,fill:fill.intensity,hemisphere:hemi.intensity,environment:scene.environmentIntensity,exposure:renderer.toneMappingExposure,shadowSize:sun.shadow.mapSize.toArray(),normalBias:sun.shadow.normalBias,frustum:Object.fromEntries(['left','right','top','bottom','near','far'].map(k=>[k,sun.shadow.camera[k]]))},lighting:{enabled:options.enhanced,status:lightingStatus,message:lightingMessage,...lightingMaterials?.getState()},bloom:focusGlow.getState(),textures:renderer.info.memory.textures,triangles:renderer.info.render.triangles,entrance:entrance?.state()??{active:false,skipped:entranceChecked},paint:paintProgress.state(),paintStrength:options.paintStrength,monumentPosition:monument.position.toArray(),monumentHeight:1.82,groupLogo:options.groupLogo,groupLogoVisible:groupLogo.visible,groupLogoColor:groupLogo.children[0].material.color.getHexString(),groupLogoParts:groupLogo.children.length,roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,focusFrame,selected,taskTarget,layoutMode:selected||taskTarget?'focused':'overview',markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,groundTone:options.groundTone,elevation:options.elevation,zoom:options.zoom,overviewDistance:options.distance,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
-  dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;finishEntrance();abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();focusGlow.dispose();lightingMaterials?.apply(null);lighting?.dispose();if(!loadingLighting)pmrem.dispose();releaseObject(scene);(floor.material===dayFloor?nightFloor:dayFloor).dispose();sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
+  state:()=>({solid:{status:solidStatus,error:solidError,active:solidActive,...solidMaterials?.state()},trial:{enabled:!!options.trial&&!options.dark,config:options.trial,environment:trialEnvironment.state()},effects:Object.fromEntries(['solidVersion','enhanced','studioLighting','softShadows','bakedLighting','brightBackground','nightBloom','bloom'].map(key=>[key,options[key]])),asset:assetState,renderProfile:{environmentSource:options.studioLighting&&!options.dark&&lighting?'studio-softboxes':'baseline',softShadows:options.softShadows&&options.shadows&&!options.dark?softShadows.state():null,sun:sun.position.toArray(),sunIntensity:sun.intensity,fill:fill.intensity,hemisphere:hemi.intensity,environment:scene.environmentIntensity,exposure:renderer.toneMappingExposure,shadowSize:sun.shadow.mapSize.toArray(),normalBias:sun.shadow.normalBias,frustum:Object.fromEntries(['left','right','top','bottom','near','far'].map(k=>[k,sun.shadow.camera[k]]))},lighting:{enabled:options.enhanced,status:lightingStatus,message:lightingMessage,...lightingMaterials?.getState()},bloom:focusGlow.getState(),nightBloom:night.getState(),textures:renderer.info.memory.textures,triangles:renderer.info.render.triangles,entrance:entrance?.state()??{active:false,skipped:entranceChecked},paint:paintProgress.state(),paintStrength:options.paintStrength,monumentPosition:monument.position.toArray(),monumentHeight:1.82,groupLogo:options.groupLogo,groupLogoVisible:groupLogo.visible,groupLogoColor:groupLogo.children[0].material.color.getHexString(),groupLogoParts:groupLogo.children.length,roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,focusFrame,selected,taskTarget,layoutMode:selected||taskTarget?'focused':'overview',markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,groundTone:options.groundTone,elevation:options.elevation,zoom:options.zoom,overviewDistance:options.distance,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
+  dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;finishEntrance();abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();focusGlow.dispose();night.dispose();trialEnvironment.dispose();softShadows.dispose();solidMaterials?.dispose();solid?.dispose();lightingMaterials?.apply(null);lighting?.dispose();if(!loadingLighting)pmrem.dispose();releaseObject(scene);(floor.material===dayFloor?nightFloor:dayFloor).dispose();sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
  };
 }

@@ -1,5 +1,6 @@
 import {RepeatWrapping,SRGBColorSpace,TextureLoader} from 'three';
 import {HDRLoader} from 'three/addons/loaders/HDRLoader.js';
+import {createStudioEnvironment} from './studio-environment.mjs';
 
 const files=import.meta.glob('../../../05-视觉识别/02-3D场景/lighting-v1/*.{png,jpg,hdr}',{eager:true,query:'?url',import:'default'});
 const url=name=>Object.entries(files).find(([path])=>path.endsWith('/'+name))?.[1];
@@ -8,7 +9,7 @@ const url=name=>Object.entries(files).find(([path])=>path.endsWith('/'+name))?.[
 /** One set of shared textures per scene; no remote access or per-frame baking. */
 export async function loadSandboxLighting(renderer,pmrem,cancelled=()=>false){
  const loader=new TextureLoader(),textures=[];
- let environment;
+ let environment,studio;
  try{
   const jobs=['ground','import','price','risk','knowledge','report','review','table'].map(async zone=>{
    const texture=await loader.loadAsync(url(zone+'.png'));textures.push(texture);
@@ -31,7 +32,9 @@ export async function loadSandboxLighting(renderer,pmrem,cancelled=()=>false){
   const failed=results.find(result=>result.status==='rejected');
   if(failed)throw failed.reason;
   const maps=new Map(results.map(result=>result.value));
-  return {maps,environment:environment.texture,dispose(){textures.forEach(t=>t.dispose());environment.dispose();}};
- }catch(error){textures.forEach(t=>t.dispose());environment?.dispose();throw error;}
+  if(cancelled())throw Error('Lighting load cancelled');
+  studio=createStudioEnvironment(pmrem);
+  return {maps,environment:environment.texture,studio:studio.texture,dispose(){textures.forEach(t=>t.dispose());environment.dispose();studio.dispose();}};
+ }catch(error){textures.forEach(t=>t.dispose());environment?.dispose();studio?.dispose();throw error;}
 }
 

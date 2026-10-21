@@ -46,6 +46,18 @@ function fixture(){
  const maps=new Map(['import','price','normal'].map(id=>[id,new Texture()]));
  return {root,originalMaterials,lighting,resources:{maps}};
 }
+
+test('surface detail and baked GI can be compared independently, including assembly settling',()=>{
+ const {root,lighting,resources}=fixture(),m=root.children[0].material;
+ lighting.apply(resources,{enabled:false,baked:true});
+ assert.ok(m.lightMap);assert.equal(m.normalMap,null);assert.equal(m.lightMapIntensity,dayProfile.gi);
+ lighting.setAssembly(true,true,false);assert.equal(m.lightMapIntensity,0);
+ lighting.apply(resources,{enabled:true,baked:false,assembling:true});
+ assert.equal(m.lightMap,null);assert.ok(m.normalMap);
+ lighting.setAssembly(false,false,false);lighting.tick(450,false,false,false,true);assert.equal(m.lightMap,null);
+ lighting.apply(resources,{enabled:true,baked:true,dark:true});assert.equal(m.lightMapIntensity,0);
+ lighting.apply(resources,{enabled:false,baked:false});assert.equal(m.lightMap,null);assert.equal(m.normalMap,null);
+});
 test('baked GI respects zone identity and toggles restore materials without rebuilding geometry',()=>{
  const {root,lighting,resources}=fixture(),geometry=root.children.map(m=>m.geometry);
  lighting.apply(resources,{enabled:true});

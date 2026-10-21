@@ -1,0 +1,680 @@
+{
+  "version": 1,
+  "sourceSha256": "b96216c89edcb285b90c15aeb787b82c151e6bf4c6e2ad7418322cbb80ef5df2",
+  "studySha256": "a00a6825450fb144b4f32fe930fdcbc29faa1fa12d8a0cd3822d38c7004575eb",
+  "total": 183748,
+  "matched": 183748,
+  "maxError": 0.0000012128666487410446,
+  "meshes": [
+    {
+      "name": "Cube065",
+      "zone": "import",
+      "role": "base",
+      "vertices": 3384,
+      "offset": 0,
+      "matched": 1128,
+      "triangles": 1128,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube065_1",
+      "zone": "import",
+      "role": "base",
+      "vertices": 564,
+      "offset": 10152,
+      "matched": 188,
+      "triangles": 188,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube065_2",
+      "zone": "import",
+      "role": "base",
+      "vertices": 1692,
+      "offset": 11844,
+      "matched": 564,
+      "triangles": 564,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube065_3",
+      "zone": "import",
+      "role": "base",
+      "vertices": 5076,
+      "offset": 16920,
+      "matched": 1692,
+      "triangles": 1692,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube065_4",
+      "zone": "import",
+      "role": "base",
+      "vertices": 1128,
+      "offset": 32148,
+      "matched": 376,
+      "triangles": 376,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube065_5",
+      "zone": "import",
+      "role": "base",
+      "vertices": 4512,
+      "offset": 35532,
+      "matched": 1504,
+      "triangles": 1504,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube065_6",
+      "zone": "import",
+      "role": "base",
+      "vertices": 1236,
+      "offset": 49068,
+      "matched": 412,
+      "triangles": 412,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube065_7",
+      "zone": "import",
+      "role": "base",
+      "vertices": 1128,
+      "offset": 52776,
+      "matched": 376,
+      "triangles": 376,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube123",
+      "zone": "knowledge",
+      "role": "base",
+      "vertices": 8460,
+      "offset": 56160,
+      "matched": 2820,
+      "triangles": 2820,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube123_1",
+      "zone": "knowledge",
+      "role": "base",
+      "vertices": 564,
+      "offset": 81540,
+      "matched": 188,
+      "triangles": 188,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube123_2",
+      "zone": "knowledge",
+      "role": "base",
+      "vertices": 3948,
+      "offset": 83232,
+      "matched": 1316,
+      "triangles": 1316,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube123_3",
+      "zone": "knowledge",
+      "role": "base",
+      "vertices": 9588,
+      "offset": 95076,
+      "matched": 3196,
+      "triangles": 3196,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube123_4",
+      "zone": "knowledge",
+      "role": "base",
+      "vertices": 1140,
+      "offset": 123840,
+      "matched": 380,
+      "triangles": 380,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube123_5",
+      "zone": "knowledge",
+      "role": "base",
+      "vertices": 5076,
+      "offset": 127260,
+      "matched": 1692,
+      "triangles": 1692,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001",
+      "zone": "land",
+      "role": "base",
+      "vertices": 90948,
+      "offset": 142488,
+      "matched": 30316,
+      "triangles": 30316,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_1",
+      "zone": "land",
+      "role": "base",
+      "vertices": 7836,
+      "offset": 415332,
+      "matched": 2612,
+      "triangles": 2612,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_2",
+      "zone": "land",
+      "role": "base",
+      "vertices": 480,
+      "offset": 438840,
+      "matched": 160,
+      "triangles": 160,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_3",
+      "zone": "land",
+      "role": "base",
+      "vertices": 10080,
+      "offset": 440280,
+      "matched": 3360,
+      "triangles": 3360,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_4",
+      "zone": "land",
+      "role": "base",
+      "vertices": 40464,
+      "offset": 470520,
+      "matched": 13488,
+      "triangles": 13488,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_5",
+      "zone": "land",
+      "role": "base",
+      "vertices": 5472,
+      "offset": 591912,
+      "matched": 1824,
+      "triangles": 1824,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_6",
+      "zone": "land",
+      "role": "base",
+      "vertices": 564,
+      "offset": 608328,
+      "matched": 188,
+      "triangles": 188,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_7",
+      "zone": "land",
+      "role": "base",
+      "vertices": 16524,
+      "offset": 610020,
+      "matched": 5508,
+      "triangles": 5508,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube001_8",
+      "zone": "land",
+      "role": "base",
+      "vertices": 11280,
+      "offset": 659592,
+      "matched": 3760,
+      "triangles": 3760,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube082",
+      "zone": "price",
+      "role": "base",
+      "vertices": 26592,
+      "offset": 693432,
+      "matched": 8864,
+      "triangles": 8864,
+      "metalTriangles": 3816
+    },
+    {
+      "name": "Cube082_1",
+      "zone": "price",
+      "role": "base",
+      "vertices": 3984,
+      "offset": 773208,
+      "matched": 1328,
+      "triangles": 1328,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube082_2",
+      "zone": "price",
+      "role": "base",
+      "vertices": 11928,
+      "offset": 785160,
+      "matched": 3976,
+      "triangles": 3976,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube082_3",
+      "zone": "price",
+      "role": "coated-tank",
+      "vertices": 10476,
+      "offset": 820944,
+      "matched": 3492,
+      "triangles": 3492,
+      "metalTriangles": 3492
+    },
+    {
+      "name": "Cube082_4",
+      "zone": "price",
+      "role": "coated-pipe",
+      "vertices": 14220,
+      "offset": 852372,
+      "matched": 4740,
+      "triangles": 4740,
+      "metalTriangles": 4740
+    },
+    {
+      "name": "Cube082_5",
+      "zone": "price",
+      "role": "base",
+      "vertices": 3384,
+      "offset": 895032,
+      "matched": 1128,
+      "triangles": 1128,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube082_6",
+      "zone": "price",
+      "role": "base",
+      "vertices": 8892,
+      "offset": 905184,
+      "matched": 2964,
+      "triangles": 2964,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube082_7",
+      "zone": "price",
+      "role": "base",
+      "vertices": 13704,
+      "offset": 931860,
+      "matched": 4568,
+      "triangles": 4568,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube082_8",
+      "zone": "price",
+      "role": "base",
+      "vertices": 26028,
+      "offset": 972972,
+      "matched": 8676,
+      "triangles": 8676,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube082_9",
+      "zone": "price",
+      "role": "base",
+      "vertices": 3384,
+      "offset": 1051056,
+      "matched": 1128,
+      "triangles": 1128,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163",
+      "zone": "report",
+      "role": "base",
+      "vertices": 9588,
+      "offset": 1061208,
+      "matched": 3196,
+      "triangles": 3196,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163_1",
+      "zone": "report",
+      "role": "base",
+      "vertices": 564,
+      "offset": 1089972,
+      "matched": 188,
+      "triangles": 188,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163_2",
+      "zone": "report",
+      "role": "base",
+      "vertices": 1692,
+      "offset": 1091664,
+      "matched": 564,
+      "triangles": 564,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163_3",
+      "zone": "report",
+      "role": "base",
+      "vertices": 2256,
+      "offset": 1096740,
+      "matched": 752,
+      "triangles": 752,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163_4",
+      "zone": "report",
+      "role": "base",
+      "vertices": 1548,
+      "offset": 1103508,
+      "matched": 516,
+      "triangles": 516,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163_5",
+      "zone": "report",
+      "role": "base",
+      "vertices": 3384,
+      "offset": 1108152,
+      "matched": 1128,
+      "triangles": 1128,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163_6",
+      "zone": "report",
+      "role": "base",
+      "vertices": 7332,
+      "offset": 1118304,
+      "matched": 2444,
+      "triangles": 2444,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube163_7",
+      "zone": "report",
+      "role": "base",
+      "vertices": 1128,
+      "offset": 1140300,
+      "matched": 376,
+      "triangles": 376,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube188",
+      "zone": "review",
+      "role": "base",
+      "vertices": 1128,
+      "offset": 1143684,
+      "matched": 376,
+      "triangles": 376,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube188_1",
+      "zone": "review",
+      "role": "base",
+      "vertices": 564,
+      "offset": 1147068,
+      "matched": 188,
+      "triangles": 188,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube188_2",
+      "zone": "review",
+      "role": "base",
+      "vertices": 11280,
+      "offset": 1148760,
+      "matched": 3760,
+      "triangles": 3760,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube188_3",
+      "zone": "review",
+      "role": "base",
+      "vertices": 8136,
+      "offset": 1182600,
+      "matched": 2712,
+      "triangles": 2712,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube188_4",
+      "zone": "review",
+      "role": "base",
+      "vertices": 1644,
+      "offset": 1207008,
+      "matched": 548,
+      "triangles": 548,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube188_5",
+      "zone": "review",
+      "role": "base",
+      "vertices": 9024,
+      "offset": 1211940,
+      "matched": 3008,
+      "triangles": 3008,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube188_6",
+      "zone": "review",
+      "role": "base",
+      "vertices": 1128,
+      "offset": 1239012,
+      "matched": 376,
+      "triangles": 376,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube104",
+      "zone": "risk",
+      "role": "base",
+      "vertices": 12504,
+      "offset": 1242396,
+      "matched": 4168,
+      "triangles": 4168,
+      "metalTriangles": 3040
+    },
+    {
+      "name": "Cube104_1",
+      "zone": "risk",
+      "role": "base",
+      "vertices": 564,
+      "offset": 1279908,
+      "matched": 188,
+      "triangles": 188,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube104_2",
+      "zone": "risk",
+      "role": "base",
+      "vertices": 33252,
+      "offset": 1281600,
+      "matched": 11084,
+      "triangles": 11084,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube104_3",
+      "zone": "risk",
+      "role": "coated-pipe",
+      "vertices": 14040,
+      "offset": 1381356,
+      "matched": 4680,
+      "triangles": 4680,
+      "metalTriangles": 4680
+    },
+    {
+      "name": "Cube104_4",
+      "zone": "risk",
+      "role": "base",
+      "vertices": 564,
+      "offset": 1423476,
+      "matched": 188,
+      "triangles": 188,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube104_5",
+      "zone": "risk",
+      "role": "base",
+      "vertices": 660,
+      "offset": 1425168,
+      "matched": 220,
+      "triangles": 220,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube104_6",
+      "zone": "risk",
+      "role": "base",
+      "vertices": 2256,
+      "offset": 1427148,
+      "matched": 752,
+      "triangles": 752,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube104_7",
+      "zone": "risk",
+      "role": "base",
+      "vertices": 18240,
+      "offset": 1433916,
+      "matched": 6080,
+      "triangles": 6080,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube203",
+      "zone": "table",
+      "role": "base",
+      "vertices": 2256,
+      "offset": 1488636,
+      "matched": 752,
+      "triangles": 752,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube203_1",
+      "zone": "table",
+      "role": "base",
+      "vertices": 24720,
+      "offset": 1495404,
+      "matched": 8240,
+      "triangles": 8240,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube203_2",
+      "zone": "table",
+      "role": "base",
+      "vertices": 13320,
+      "offset": 1569564,
+      "matched": 4440,
+      "triangles": 4440,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube203_3",
+      "zone": "table",
+      "role": "base",
+      "vertices": 4512,
+      "offset": 1609524,
+      "matched": 1504,
+      "triangles": 1504,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube203_4",
+      "zone": "table",
+      "role": "base",
+      "vertices": 1764,
+      "offset": 1623060,
+      "matched": 588,
+      "triangles": 588,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube203_5",
+      "zone": "table",
+      "role": "base",
+      "vertices": 3948,
+      "offset": 1628352,
+      "matched": 1316,
+      "triangles": 1316,
+      "metalTriangles": 0
+    },
+    {
+      "name": "Cube203_6",
+      "zone": "table",
+      "role": "base",
+      "vertices": 4512,
+      "offset": 1640196,
+      "matched": 1504,
+      "triangles": 1504,
+      "metalTriangles": 0
+    }
+  ],
+  "missing": [],
+  "floor": {
+    "position": [
+      62.5,
+      -0.7850000113248825,
+      -62.5,
+      -62.5,
+      -0.7850000113248825,
+      -62.5,
+      -62.5,
+      -0.7850000113248825,
+      62.5,
+      62.5,
+      -0.7850000113248825,
+      62.5
+    ],
+    "uv": [
+      0.4991475045681,
+      0.4991474747657776,
+      0.4991474449634552,
+      0.0008525252342224121,
+      0.000852506491355598,
+      0.0008525848388671875,
+      0.0008525440935045481,
+      0.49914753437042236
+    ],
+    "index": [
+      0,
+      1,
+      2,
+      0,
+      2,
+      3
+    ],
+    "color": [
+      0.8799999952316284,
+      0.9100000262260437,
+      0.949999988079071
+    ]
+  }
+}

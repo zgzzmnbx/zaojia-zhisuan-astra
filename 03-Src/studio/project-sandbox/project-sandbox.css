@@ -34,7 +34,7 @@
 .sandbox-pin::after{content:'';position:absolute;bottom:-5px;left:-3px;width:7px;height:7px;background:var(--blue);border:2px solid var(--paper);border-radius:50%;box-shadow:0 0 0 3px #ffffff38}
 .sandbox-view-controls{position:static;display:flex;align-items:center;flex-shrink:0}
 .sandbox-view-controls .btn{height:30px;min-height:30px;font-size:12px;gap:5px;padding-inline:8px}.sandbox-view-controls .btn-square{width:30px;padding:0}.sandbox-view-controls .astra-icon{width:16px;height:16px}
-.sandbox-view-controls label{display:flex;align-items:center;gap:5px;padding:0 7px;font-size:12px;white-space:nowrap;color:var(--muted);cursor:pointer}.sandbox-view-controls .toggle{color:var(--blue)}
+.sandbox-view-controls label{display:flex;align-items:center;gap:5px;padding:0 7px;font-size:12px;white-space:nowrap;color:var(--muted);cursor:pointer}.sandbox-view-controls .toggle{color:#87919c}.sandbox-view-controls .toggle:checked{color:var(--blue)}.sandbox-view-controls .toggle:disabled{color:#87919c}
 .sandbox-scene-caption{position:absolute;bottom:7px;left:20px;font-size:12px;color:var(--muted);pointer-events:none}
 .sandbox-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;font-size:14px;color:var(--muted);pointer-events:none}
 .project-sandbox[data-ready=false]:not(.scene-fallback) .sandbox-markers{visibility:hidden}
@@ -109,7 +109,7 @@
 
 /* Live task feedback: fixed track, no fabricated percentage. */
 .sandbox-marker[data-tone=running]{z-index:6!important;opacity:1!important}
-.project-sandbox .sandbox-marker[data-tone=running]>.sandbox-result-trigger,
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-result-trigger,
 .project-sandbox .sandbox-marker[data-tone=running]>.sandbox-node-progress{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff);border-color:color-mix(in srgb,var(--astra-primary) 75%,white);box-shadow:0 5px 20px color-mix(in srgb,var(--astra-primary) 24%,transparent)}
 .project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-status,
 .project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-summary,
@@ -131,7 +131,7 @@
 .sandbox-node-progress[data-phase=error] .sandbox-progress-content>span{color:var(--error,#bc4343)}
 .sandbox-node-progress[data-phase=error] .sandbox-stage-progress>span{background:var(--error,#bc4343)}
 .sandbox-node-progress[data-phase=cancelled] .sandbox-stage-progress>span{background:var(--muted)}
-.sandbox-marker[data-progress-open=true]>.sandbox-result-trigger{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.sandbox-marker[data-progress-open=true] .sandbox-result-trigger{border-bottom-left-radius:0;border-bottom-right-radius:0}
 .sandbox-card-mode .sandbox-marker[data-progress-open=true]{width:140px}
 .sandbox-card-mode .sandbox-marker[data-progress-open=true] .sandbox-marker-title{width:100%}
 .sandbox-card-mode .sandbox-marker[data-progress-open=true] .sandbox-result-trigger{display:flex}
@@ -172,12 +172,12 @@
 .sandbox-ground-tones{border:0;padding:0;margin:0;min-width:0}.sandbox-ground-tones legend{font-size:13px;color:var(--ink);margin-bottom:8px}.sandbox-ground-tones>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.sandbox-ground-tones .btn{border:1px solid var(--line);border-radius:8px;height:34px;gap:6px}.sandbox-ground-tones .btn[aria-pressed=true]{border-color:var(--astra-primary);background:color-mix(in srgb,var(--astra-primary) 10%,var(--paper));color:var(--astra-primary-ink)}.sandbox-ground-tones i{width:14px;height:14px;border-radius:50%;border:1px solid #8896a844;flex-shrink:0}.sandbox-ground-tones:disabled{opacity:.5}
 
 .sandbox-group-logo>div{grid-template-columns:repeat(3,minmax(0,1fr))}
-.sandbox-view-options{max-height:calc(100cqh - 96px);overflow-y:auto;overscroll-behavior:contain}
+.sandbox-view-options{max-height:min(calc(100dvh - 152px),calc(100cqh - 96px));overflow-y:auto;overscroll-behavior:contain}
 
 /* Focused buildings reveal their own information, directly below the status. */
 .project-sandbox .sandbox-marker.selected{width:var(--sandbox-focus-card-width,280px);max-width:calc(100cqw - 40px);z-index:8!important;opacity:1!important}
 .project-sandbox .sandbox-marker.selected>.sandbox-marker-title{width:100%}
-.project-sandbox .sandbox-marker.selected>.sandbox-result-trigger{display:flex;position:relative;top:auto;visibility:visible;opacity:1;pointer-events:auto;border-bottom-left-radius:0;border-bottom-right-radius:0;box-shadow:none;padding:10px 13px;background:color-mix(in srgb,var(--paper) 88%,transparent)}
+.project-sandbox .sandbox-marker.selected .sandbox-result-trigger{display:flex;position:relative;top:auto;visibility:visible;opacity:1;pointer-events:auto;border-bottom-left-radius:0;border-bottom-right-radius:0;box-shadow:none;padding:10px 13px;background:color-mix(in srgb,var(--paper) 88%,transparent)}
 .project-sandbox .sandbox-marker.selected .sandbox-node-summary{white-space:normal}
 .sandbox-node-info{pointer-events:auto;margin-top:-5px;cursor:default;border:1px solid color-mix(in srgb,var(--blue) 26%,var(--paper));border-top:0;border-radius:0 0 12px 12px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(20px) saturate(115%);box-shadow:0 12px 28px #16365120;animation:sandbox-info-reveal .65s ease-in-out both;overflow:hidden;transform-origin:top}
 .sandbox-node-facts{max-height:min(220px,25vh,var(--sandbox-detail-facts-height,220px));overflow:auto;overscroll-behavior:contain;padding:2px 13px 8px;scrollbar-width:thin}
@@ -192,7 +192,7 @@
 .sandbox-node-facts dl>div{grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:baseline;padding-block:9px}
 .sandbox-node-facts dt{line-height:1.55}
 
-.project-sandbox .sandbox-marker.selected[data-tone=running]>.sandbox-result-trigger{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff)}
+.project-sandbox .sandbox-marker.selected[data-tone=running] .sandbox-result-trigger{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff)}
 
 /* The building shader and its card share one visible-time animation clock. */
 .project-sandbox .sandbox-stage-progress>span{width:100%;transform:scaleX(var(--sandbox-task-fill,0));transform-origin:left center;animation:none!important;transition:none}
@@ -218,3 +218,46 @@
  .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation>:is(.conversation-heading,.context-line,.messages,.composer-wrap){padding-inline:24px}
  .studio #shell.live-shell .adjustable-workbench.four-surface.surface-floating>.conversation>:is(.conversation-heading,.context-line,.composer-wrap){padding-inline:48px}
 }
+
+.sandbox-lighting-settings{display:grid;grid-template-columns:1fr 1fr;gap:12px 8px;border-top:0;border-bottom:1px solid var(--line)}
+.sandbox-lighting-settings label{padding:0;min-width:0}.sandbox-lighting-settings label span{display:flex;align-items:center;gap:6px}.sandbox-lighting-settings label small{font-size:12px;color:var(--muted);flex-basis:auto}.sandbox-lighting-settings>small{grid-column:1/-1}
+.sandbox-trial-entry{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);gap:12px}.sandbox-trial-entry>span{font-size:12px;color:var(--muted)}
+.sandbox-lighting-trial{position:absolute;z-index:25;top:68px;right:20px;width:350px;max-width:calc(100% - 40px);max-height:calc(100% - 90px);display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--paper) 96%,transparent);backdrop-filter:blur(18px);box-shadow:0 16px 40px #16324b24;color:var(--ink);pointer-events:auto;overflow:hidden}
+.sandbox-lighting-trial header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}.sandbox-lighting-trial header strong{font-size:16px}.sandbox-lighting-trial header>span{font-size:12px;color:var(--muted)}.sandbox-lighting-trial header .btn{margin-left:auto}
+.trial-comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px 0}.trial-comparison .btn{border:1px solid var(--line)}.trial-comparison .btn[aria-pressed=true]{color:var(--astra-primary-ink);border-color:var(--astra-primary);background:color-mix(in srgb,var(--astra-primary) 10%,var(--paper))}
+.trial-note{font-size:12px;line-height:1.6;color:var(--muted);margin:10px 14px}.trial-body{overflow:auto;overscroll-behavior:contain;min-height:0;padding:0 14px;scrollbar-width:thin}.trial-body details{border-top:1px solid var(--line);padding:12px 0}.trial-body summary{font-size:14px;cursor:pointer;font-weight:600;margin-bottom:6px}.trial-body .trial-note{margin:8px 0}.trial-slider{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;font-size:13px}.trial-slider output{font-variant-numeric:tabular-nums;color:var(--muted)}.trial-slider .range{grid-column:1/-1;width:100%;color:var(--astra-primary)}
+.sandbox-lighting-trial footer{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}.sandbox-lighting-trial footer small{flex-basis:100%;font-size:12px;color:var(--muted)}.sandbox-lighting-trial footer small:empty{display:none}.trial-body .select{width:100%;margin:8px 0}.trial-switch{display:flex;align-items:center;gap:8px;font-size:13px;padding:8px 0}.trial-switch .toggle{color:#87919c}.trial-switch .toggle:checked{color:var(--blue)}
+.trial-map{display:block;width:100%;height:150px;border:1px solid var(--line);border-radius:10px;background:var(--canvas)}.trial-map path{stroke:var(--line);fill:none}.trial-map rect{stroke:var(--muted);fill:var(--paper)}.trial-map circle{fill:var(--blue)}.trial-map text{font-size:12px;fill:var(--muted)}
+.sandbox-lighting-trial>.trial-note{padding:0 14px;margin:8px 0;line-height:1.5}
+.trial-comparison .btn[aria-pressed=false]{background:var(--canvas);color:var(--muted);border-color:var(--line)}
+.trial-light-count{display:flex;gap:6px;flex-wrap:wrap}
+.studio #shell.live-shell .project-sandbox .sandbox-lighting-trial svg.trial-map{display:block;width:100%;height:150px;min-height:150px;max-width:none;flex:none;border-radius:10px}
+
+.sandbox-lighting-trial>.trial-body[hidden]{display:none}
+.sandbox-lighting-trial>header,.sandbox-lighting-trial>footer,.trial-comparison{flex-shrink:0}
+
+/* Task and detail panels unfold from the same fixed title edge. The hidden
+   menu reserves its natural height, keeping the title anchored during handoff. */
+.sandbox-node-slot{position:relative;width:100%;min-width:0}
+.sandbox-node-menu{display:flex;flex-direction:column;gap:5px;width:100%}
+.sandbox-node-slot[data-disclosure=progress]>.sandbox-node-menu,.sandbox-node-slot[data-disclosure=closing]>.sandbox-node-menu{visibility:hidden;pointer-events:none}
+.sandbox-node-slot>.sandbox-node-progress{top:0;border-radius:12px;overflow:hidden;transform-origin:top;transform:translateY(-8px);transition:grid-template-rows .24s ease,opacity .2s ease,transform .24s ease;background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff)}
+.sandbox-node-slot>.sandbox-node-progress[data-open=true]{transform:translateY(0);animation:sandbox-task-reveal .28s ease-out both}
+.project-sandbox .sandbox-node-slot .sandbox-node-progress .sandbox-progress-content{height:auto;min-height:88px;padding:12px 13px;gap:8px;border:1px solid color-mix(in srgb,var(--astra-primary) 70%,white);border-radius:12px;color:inherit}
+.project-sandbox .sandbox-node-slot .sandbox-node-progress .sandbox-progress-content>span{position:static;width:auto;height:auto;padding:0;clip-path:none;overflow:visible;font-size:13px;line-height:18px;color:inherit;font-weight:650}
+.sandbox-node-slot .sandbox-progress-label{font-size:13px;line-height:1.5;margin:0;color:inherit;overflow-wrap:anywhere}
+.sandbox-node-slot .sandbox-stage-progress{background:#ffffff38}
+.sandbox-node-slot .sandbox-stage-progress>span{background:linear-gradient(90deg,#ffffff70,#fff)}
+.sandbox-node-slot .sandbox-node-progress[data-phase=error],.sandbox-node-slot .sandbox-node-progress[data-phase=cancelled]{background:var(--paper);color:var(--ink)}
+.sandbox-node-slot .sandbox-node-progress[data-phase=error] .sandbox-progress-content{border-color:var(--error,#bc4343)}
+.sandbox-node-slot[data-disclosure=details]>.sandbox-node-menu{animation:sandbox-task-reveal .36s ease-out backwards}
+.sandbox-node-slot[data-disclosure=details] .sandbox-node-info{animation:none}
+@keyframes sandbox-task-reveal{from{clip-path:inset(0 0 100%);transform:translateY(-8px);opacity:0}to{clip-path:inset(0);transform:translateY(0);opacity:1}}
+.project-sandbox[data-motion-paused=true] .sandbox-node-menu,.project-sandbox[data-motion-paused=true] .sandbox-node-progress{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.sandbox-node-slot>.sandbox-node-progress,.sandbox-node-slot[data-disclosure=details]>.sandbox-node-menu{animation:none;transition:none;transform:none}}
+
+/* Keep navigation reachable beside the wider default chat. */
+.sandbox-workbench .sandbox-toolbar{flex-wrap:wrap;row-gap:8px}
+.sandbox-workbench .sandbox-project{flex-shrink:0;max-width:100%}
+.sandbox-workbench .sandbox-toolbar-actions{flex-wrap:wrap;max-width:100%;row-gap:8px}
+.sandbox-workbench .sandbox-info-rail{top:var(--sandbox-info-top,88px)}

@@ -9,6 +9,7 @@ import {createSandboxMaterials} from '../03-Src/studio/project-sandbox/materials
 import {createBuildingEntrance,assemblyComponents} from '../03-Src/studio/project-sandbox/building-entrance.mjs';
 import {loadSandboxModel,validateSandboxModel} from '../03-Src/studio/project-sandbox/model-loader.mjs';
 import {assemblyShadowEnvelope,fitSandboxShadow} from '../03-Src/studio/project-sandbox/shadow-frustum.mjs';
+import {dayProfile} from '../03-Src/studio/project-sandbox/render-profile.mjs';
 const zones=['import','price','risk','knowledge','report','review','table'];
 function fixture(){
  const root=new Group();
@@ -29,7 +30,8 @@ test('role surfaces are isolated, keep base-name paint/assembly, and fully resto
   themes.apply({cool:true});lighting.apply(resources,{enabled:true});
   assert.equal(materials[1].normalMap,null);assert.equal(materials[2].normalMap,null);
   assert.ok(materials[1].roughness<materials[0].roughness);
-  assert.equal(materials[1].metalness,0);assert.notEqual(materials[1],materials[2]);
+  assert.equal(materials[1].metalness,dayProfile.surfaces['coated-tank'].metalness);assert.notEqual(materials[1],materials[2]);
+  assert.equal(materials[1].envMapIntensity,dayProfile.surfaces['coated-tank'].environment);
   assert.deepEqual(materials[1].color.toArray(),materials[0].color.toArray());
   const paintKey=materials[1].customProgramCacheKey(),entrance=createBuildingEntrance(root,zones);
   const shader={uniforms:{},vertexShader:'#include <common>\n#include <begin_vertex>',fragmentShader:'#include <common>\n#include <color_fragment>'};

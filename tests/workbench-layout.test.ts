@@ -2,6 +2,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {automaticLayout,chooseLayout,normalizeLayout,layoutForContent,ratioBounds,clampRatio,pointerRatio,keyboardRatio,createResizeSession} from '../03-Src/studio/workbench/layout-state.ts';
+import {sandboxChatBounds,sandboxChatRatio} from '../03-Src/studio/workbench/layout-state.ts';
+import {sandboxDefaults} from '../03-Src/studio/project-sandbox/defaults.ts';
+test('sandbox defaults reserve two chart columns across desktop widths without growing on large screens',()=>{
+ for(const width of [973,1228,1437,1868,2508]){
+  const size=(width-12)*sandboxChatRatio(width,sandboxDefaults.chatWidth)-16;
+  assert.ok(size>=520&&size<=600+1e-8,`chat ${size} at ${width}`);
+  assert.ok(size-116>=360,'card padding still leaves the two-column chart breakpoint');
+  assert.ok(width-size-16>=420,'scene navigation retains space');
+ }
+});
+test('sandbox manual widths remain authoritative and recover after a temporarily narrow viewport',()=>{
+ const saved=.3;assert.equal(sandboxChatRatio(1437,600,saved),saved);
+ const narrow=sandboxChatRatio(973,600,.6);assert.equal(narrow,sandboxChatBounds(973).max);
+ assert.equal(sandboxChatRatio(1868,600,.6),.6);
+ assert.equal(sandboxChatRatio(1437,600,null)*1425-16,600);
+});
 test('automatic modes favor wide Excel/dashboard and compact project cards',()=>{for(const view of ['table','mapping','projects','universe'])assert.equal(automaticLayout(view).ratio,.32);for(const view of ['insights','project','knowledge','sources'])assert.equal(automaticLayout(view).ratio,.65)});
 test('manual modes and custom ratios survive new content, result updates and storage restore',()=>{for(const layout of [chooseLayout('chat'),chooseLayout('preview'),{policy:'manual' as const,mode:'custom' as const,ratio:.47}]){assert.equal(layoutForContent(layout,'table'),layout);assert.equal(layoutForContent(layout,'insights'),layout);assert.deepEqual(normalizeLayout(JSON.parse(JSON.stringify(layout))),layout)}assert.equal(normalizeLayout({policy:'manual',ratio:NaN}).policy,'auto');assert.equal(layoutForContent(automaticLayout('insights'),'table').ratio,.32)});
 test('all wide layouts clamp to usable minimum pane widths while narrow widths remain bounded',()=>{for(const width of [700,950,1200,1800]){const b=ratioBounds(width);for(const value of [-1,.32,.65,2]){const r=clampRatio(value,width);assert.ok(r>=b.min&&r<=b.max);assert.ok((width-12)*r>=300-1e-8);assert.ok((width-12)*(1-r)>=320-1e-8)}}for(const w of [0,320,500])assert.ok(clampRatio(.95,w)<1)});
