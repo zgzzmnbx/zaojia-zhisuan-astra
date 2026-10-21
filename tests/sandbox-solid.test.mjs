@@ -33,6 +33,9 @@ test('solid study maps every triangle and preserves geometry, zones, paint and a
  assert.ok(shader.fragmentShader.indexOf('solidUnpainted=')<shader.fragmentShader.indexOf('float painted='),'paint tint applies after the saved unpainted base');
  for(let i=0;i<90;i++){entrance.tick(50);originalEntrance.tick(50);assert.deepEqual(entrance.state(),originalEntrance.state());}
  controller.setEnabled(false);assert.equal(shader.uniforms.uSolidWeight.value,0);
+ controller.setEnabled(true,{bakeStrength:.35,bakeBrightness:1.2,lighting:{tankRoughness:.5,tankMetalness:.4,pipeRoughness:.6,pipeMetalness:.2,reflection:2}});
+ assert.equal(shader.uniforms.uSolidBakeWeight.value,.35);assert.equal(shader.uniforms.uSolidBrightness.value,1.2);assert.deepEqual(shader.uniforms.uSolidTank.value,[.5,.4]);assert.deepEqual(shader.uniforms.uSolidPipe.value,[.6,.2]);
+ controller.setEnabled(true,{bakeStrength:0});assert.equal(shader.uniforms.uSolidBakeWeight.value,0);assert.equal(shader.uniforms.uSolidWeight.value,1);
  controller.dispose();meshes.forEach((m,i)=>assert.equal(m.geometry,originals[i]));
 });
 test('invalid optional asset fails before touching production geometry or materials',async()=>{
