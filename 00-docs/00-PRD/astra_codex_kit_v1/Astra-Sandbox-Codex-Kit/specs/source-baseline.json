@@ -1,0 +1,740 @@
+{
+  "schema_version": 1,
+  "document_type": "reviewed_source_baseline_not_runtime_benchmark",
+  "created_date": "2026-10-20",
+  "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+  "branch": "main",
+  "commit_sha": "79e1418b2be169537a8cca643af61063b4350521",
+  "commit_url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/commit/79e1418b2be169537a8cca643af61063b4350521",
+  "commit_time_utc": "2026-10-20T08:52:30Z",
+  "commit_message": "backup: preserve Astra v0.10.56 sandbox lighting and focus glow",
+  "head_recheck_same": true,
+  "package_version": "0.10.56",
+  "three_version": "0.186.1",
+  "react_version": "19.2.7",
+  "review_scope": {
+    "text_files_indexed": 57,
+    "root_AGENTS_read_additionally": true,
+    "repo_modified": false,
+    "application_run": false,
+    "tests_run": false,
+    "glb_decoded_this_turn": false,
+    "performance_measured": false
+  },
+  "source_files": [
+    {
+      "path": "00-docs/00-PRD/02-当前版本计划.md",
+      "sha": "67a9388a00a948c609cb55e2c2cb9ae2d7bae13a",
+      "lines": 1136,
+      "size": 100136,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/00-docs/00-PRD/02-当前版本计划.md"
+    },
+    {
+      "path": "00-docs/handoff/2026-10-20-沙盘光影增强验收.md",
+      "sha": "438035c5e93a21ad9166a7dd46c87a55f6c335c8",
+      "lines": 27,
+      "size": 3188,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/00-docs/handoff/2026-10-20-沙盘光影增强验收.md"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/ProjectSandbox.tsx",
+      "sha": "a74c7f97d3593b08c55b36212443a39b38e596ab",
+      "lines": 129,
+      "size": 25741,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/ProjectSandbox.tsx"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/README.md",
+      "sha": "aad98c9a6f00ce91860cb644a3e887ba6b394d1e",
+      "lines": 81,
+      "size": 8397,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/README.md"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/SOURCE.md",
+      "sha": "83de56aadab6c76dfd2bef2dd0823e20b39e788c",
+      "lines": 9,
+      "size": 901,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/SOURCE.md"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/SandboxFloatingCards.tsx",
+      "sha": "58c4d563aa1b4ecfda7aea93706a45ff74315c84",
+      "lines": 25,
+      "size": 3976,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/SandboxFloatingCards.tsx"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/SandboxProjectOverview.tsx",
+      "sha": "953534936f30bb2b4982299fdf9ef5a2ccc8222a",
+      "lines": 25,
+      "size": 4180,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/SandboxProjectOverview.tsx"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/WorkbenchModeSwitch.tsx",
+      "sha": "c1cade0da6eb61714d2392bf1951c2d2f6f6ea15",
+      "lines": 6,
+      "size": 565,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/WorkbenchModeSwitch.tsx"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/building-entrance.mjs",
+      "sha": "f8a5d1d3e74c837ef463a1118b8bb74e5142d441",
+      "lines": 109,
+      "size": 6508,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/building-entrance.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/building-paint.mjs",
+      "sha": "839f68bf5375454a68c94234a0496201bea11553",
+      "lines": 46,
+      "size": 3500,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/building-paint.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/card-glass.ts",
+      "sha": "058b06ba14127599044067b8f7ceb2a896765fc7",
+      "lines": 8,
+      "size": 356,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/card-glass.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/contact-shadows.js",
+      "sha": "3df5de6670afb1e3043b31bc25ba812d6034a968",
+      "lines": 37,
+      "size": 2425,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/contact-shadows.js"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/defaults.ts",
+      "sha": "eda07c99eff47cd277be32c28bbea4cd6e112450",
+      "lines": 12,
+      "size": 831,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/defaults.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/focus-glow.mjs",
+      "sha": "b1c43275c275128f638dc783505eb720505ec9ce",
+      "lines": 70,
+      "size": 2951,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/focus-glow.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/frame-rate.ts",
+      "sha": "71ae1ea0dc4b0e6e962270316ca1216b922cc93e",
+      "lines": 15,
+      "size": 594,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/frame-rate.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/ground-tones.ts",
+      "sha": "bcfb9940b3493f8f62238777c8e37c8b338dfa84",
+      "lines": 10,
+      "size": 469,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/ground-tones.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/group-logo.ts",
+      "sha": "d5ccf2f0dc8f094ade446527eb4deced06b6a50a",
+      "lines": 5,
+      "size": 356,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/group-logo.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/idle-orbit.ts",
+      "sha": "4d1669d0f02aae513af0612537518e7f0e9b76ed",
+      "lines": 10,
+      "size": 950,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/idle-orbit.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/information-flow.js",
+      "sha": "8274058b4aca3888860c83cce01d388f47c70d56",
+      "lines": 60,
+      "size": 4284,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/information-flow.js"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/lighting-materials.mjs",
+      "sha": "260e0d3ba60758d4c670f2ba7f449af78f03ce0d",
+      "lines": 39,
+      "size": 2294,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/lighting-materials.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/lighting.mjs",
+      "sha": "31deab814a54cd91a78afcad6a84d51acfda677f",
+      "lines": 38,
+      "size": 1984,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/lighting.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/logo-monument.mjs",
+      "sha": "c231a7be3d11c8fc359ce68e7011b20c9b1e4b81",
+      "lines": 42,
+      "size": 2453,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/logo-monument.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/marker-layout.ts",
+      "sha": "0dc7cc24b4131938b6e4c74f3701805276c753ce",
+      "lines": 89,
+      "size": 5831,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/marker-layout.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/marker-motion.ts",
+      "sha": "77a28d204aac3fc6e44735a59b835cd11f8cfb83",
+      "lines": 34,
+      "size": 1853,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/marker-motion.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/materials.mjs",
+      "sha": "580e3fb50cc3b5b350539dcffe5775ab26847722",
+      "lines": 38,
+      "size": 2152,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/materials.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/node-state.ts",
+      "sha": "981973d3e40e4e95e677f610cf7030f65512d98d",
+      "lines": 52,
+      "size": 8778,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/node-state.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/paint-progress.mjs",
+      "sha": "a477a673dc830ca8f72bd3006b33349972bc7328",
+      "lines": 51,
+      "size": 2537,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/paint-progress.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/paint-settings.ts",
+      "sha": "50e4b4808654b422cc13fd2c5d82117aa923a419",
+      "lines": 7,
+      "size": 334,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/paint-settings.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/pipeline-route.json",
+      "sha": "a2bb759c8cce76405bca535fe13ad26ab0c64086",
+      "lines": 24,
+      "size": 1174,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/pipeline-route.json"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/project-sandbox.css",
+      "sha": "d51a8467f44bcf1e7735e3dca430f7d351c192e2",
+      "lines": 221,
+      "size": 28169,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/project-sandbox.css"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/roof-labels.mjs",
+      "sha": "9002cc7fa29aeaba745c9db0b692939a8692c0a9",
+      "lines": 20,
+      "size": 909,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/roof-labels.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/sandbox-floating-cards.css",
+      "sha": "d1c47f944c0f26ec571a7e5f9e9dced7da141c5f",
+      "lines": 23,
+      "size": 5338,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/sandbox-floating-cards.css"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/sandbox-project-overview.css",
+      "sha": "3209c1407ac9deb7767175614cfc60f0cdd16ec2",
+      "lines": 20,
+      "size": 6873,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/sandbox-project-overview.css"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/scene-layout.ts",
+      "sha": "1288da5f472783523adfee1ef894370490ee7ee7",
+      "lines": 49,
+      "size": 3492,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/scene-layout.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/scene.mjs",
+      "sha": "030f066da7630b6418213b7ce50b984c72f40164",
+      "lines": 224,
+      "size": 28197,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/scene.mjs"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/task-activity.ts",
+      "sha": "a689a0ffad87f33bd3605b72e2c1c42b9d7ad224",
+      "lines": 21,
+      "size": 1368,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/task-activity.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/useIdleOrbit.ts",
+      "sha": "64b831ba7bebd3316ee934e9ce07a1c6f58a155a",
+      "lines": 26,
+      "size": 1993,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/useIdleOrbit.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/view-settings.ts",
+      "sha": "2f706cfe7f8732eb93d4899864d1642282781ec6",
+      "lines": 11,
+      "size": 1100,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/view-settings.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/workbench-preference.ts",
+      "sha": "b1be5018ad0d713f3d07568b624100cf85193d30",
+      "lines": 12,
+      "size": 1364,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/workbench-preference.ts"
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/zones.js",
+      "sha": "c207c00d6f55f6931ca75f3470f4dfc3bfadfc80",
+      "lines": 10,
+      "size": 1863,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/03-Src/studio/project-sandbox/zones.js"
+    },
+    {
+      "path": "05-视觉识别/02-3D场景/lighting-v1/README.md",
+      "sha": "015f44c089feb2239600f87e383b39bfc63a63d1",
+      "lines": 43,
+      "size": 3998,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/05-视觉识别/02-3D场景/lighting-v1/README.md"
+    },
+    {
+      "path": "05-视觉识别/02-3D场景/lighting-v1/bake-manifest.json",
+      "sha": "c5e6d8fb203da99aaf18943e8aa47ad0d65d2903",
+      "lines": 94,
+      "size": 2845,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/05-视觉识别/02-3D场景/lighting-v1/bake-manifest.json"
+    },
+    {
+      "path": "05-视觉识别/02-3D场景/lighting-v1/sources.json",
+      "sha": "679ee43428e46b81c514e26289de083102b63aad",
+      "lines": 16,
+      "size": 572,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/05-视觉识别/02-3D场景/lighting-v1/sources.json"
+    },
+    {
+      "path": "05-视觉识别/02-3D场景/white-sandbox-v0.1.0/build_scene.py",
+      "sha": "c72cc0c0ac52ebb77610e0861bd86a09dd365a68",
+      "lines": 324,
+      "size": 20113,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/05-视觉识别/02-3D场景/white-sandbox-v0.1.0/build_scene.py"
+    },
+    {
+      "path": "05-视觉识别/02-3D场景/white-sandbox-v0.1.0/day_details.py",
+      "sha": "dc737b3651ab02ea5883e42266f59f93266a0156",
+      "lines": 123,
+      "size": 6689,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/05-视觉识别/02-3D场景/white-sandbox-v0.1.0/day_details.py"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha": "436b96d8d061e78298fda9001b5986334580c4bc",
+      "lines": 42,
+      "size": 5970,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/CHANGELOG.md"
+    },
+    {
+      "path": "DESIGN-UI规范文件-智算Astra+daisyui-可复用设计规范.md",
+      "sha": "442b613394aedbca3462875b70524a8a4d5a2bce",
+      "lines": 638,
+      "size": 61706,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/DESIGN-UI规范文件-智算Astra+daisyui-可复用设计规范.md"
+    },
+    {
+      "path": "DESIGN.md",
+      "sha": "442b613394aedbca3462875b70524a8a4d5a2bce",
+      "lines": 638,
+      "size": 61706,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/DESIGN.md"
+    },
+    {
+      "path": "README.md",
+      "sha": "ff176b429e3a6e96f7b0a4dfb5b7c0c67a8e0449",
+      "lines": 257,
+      "size": 20094,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/README.md"
+    },
+    {
+      "path": "package.json",
+      "sha": "fb9828b316f5e8d6f6354628437439ae155f5f3d",
+      "lines": 47,
+      "size": 2835,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/package.json"
+    },
+    {
+      "path": "tests/project-sandbox.test.ts",
+      "sha": "1f7962da28ed84e80779ae6799cfedc03dcb6c5b",
+      "lines": 358,
+      "size": 32609,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/tests/project-sandbox.test.ts"
+    },
+    {
+      "path": "tests/sandbox-lighting.test.mjs",
+      "sha": "728d44243e7ce80dc6292bce19fb2c82e1d6967a",
+      "lines": 106,
+      "size": 6234,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/tests/sandbox-lighting.test.mjs"
+    },
+    {
+      "path": "tests/sandbox-materials.test.mjs",
+      "sha": "38bfd998f36f6a682b2875d19f9bf11a05b5eb94",
+      "lines": 135,
+      "size": 11121,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/tests/sandbox-materials.test.mjs"
+    },
+    {
+      "path": "tests/sandbox-view.test.ts",
+      "sha": "020d7530cae7ce09dc8faf50a16d955758d158d8",
+      "lines": 60,
+      "size": 4393,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/tests/sandbox-view.test.ts"
+    },
+    {
+      "path": "tools/build-astra.mjs",
+      "sha": "17461f1082e8c533b0867a11525b50de5397c9b4",
+      "lines": 25,
+      "size": 5282,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/tools/build-astra.mjs"
+    },
+    {
+      "path": "tools/sandbox/bake-lighting.py",
+      "sha": "f04e0dc82dabb8d79708325e8f4dc3f26fd2ab84",
+      "lines": 130,
+      "size": 6068,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/tools/sandbox/bake-lighting.py"
+    },
+    {
+      "path": "tools/sandbox/fetch-lighting-assets.py",
+      "sha": "bc42a77e0e035b71f93d91e4044809944b0c0e82",
+      "lines": 26,
+      "size": 1320,
+      "sha_kind": "git_blob_sha1",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/79e1418b2be169537a8cca643af61063b4350521/tools/sandbox/fetch-lighting-assets.py"
+    }
+  ],
+  "renderer": {
+    "type": "WebGLRenderer",
+    "antialias": true,
+    "powerPreference": "low-power",
+    "pixel_ratio_cap": 1.5,
+    "tone_mapping": "ACESFilmicToneMapping",
+    "output_color_space": "SRGBColorSpace",
+    "render_scene_passes": 1,
+    "fullscreen_postprocessing": false
+  },
+  "enhanced_day": {
+    "sun_position": [
+      -16,
+      32,
+      20
+    ],
+    "sun_intensity": 3,
+    "sun_color_cool_srgb_hex": "#f3f8ff",
+    "fill_intensity": 0.2,
+    "hemisphere_intensity": 0.08,
+    "environment_intensity": 0.18,
+    "exposure": 0.84,
+    "lightmap_intensity": 0.85,
+    "lightmap_settle_ms": 450,
+    "shadow_intensity": 0.72,
+    "normal_scale": 0.055,
+    "glass_roughness": 0.24,
+    "ceramic_roughness": 0.32
+  },
+  "shadows": {
+    "type": "PCFShadowMap",
+    "map_size": [
+      1024,
+      1024
+    ],
+    "camera": {
+      "left": -28,
+      "right": 28,
+      "top": 28,
+      "bottom": -28,
+      "near": 0.5,
+      "far": 100
+    },
+    "auto_update": false,
+    "day_bias": -0.0002,
+    "day_normal_bias": 0.065,
+    "day_radius": 2,
+    "assembly_updates_every_rendered_frame": true
+  },
+  "materials": {
+    "porcelain_cool_color_linear_rgb": [
+      0.83,
+      0.89,
+      0.97
+    ],
+    "plaster_cool_color_linear_rgb": [
+      0.86,
+      0.91,
+      0.98
+    ],
+    "normal_map_material_names": [
+      "Warm plaster",
+      "Porcelain white",
+      "Limestone foundation"
+    ],
+    "local_paint_base_material_whitelist": [
+      "Warm plaster",
+      "Porcelain white",
+      "Cool shadow",
+      "Frosted blue glazing"
+    ]
+  },
+  "preferences": {
+    "enhanced_key": "astra.sandbox.enhanced",
+    "local_focus_glow_key": "astra.sandbox.bloom",
+    "bloom_means": "local-ground-glow; not fullscreen Bloom",
+    "default_enhanced": true,
+    "default_bloom": true,
+    "ground_tone_default": "gray",
+    "ground_gray_srgb_hex": "#dfe3e8",
+    "saved_false_must_win": true
+  },
+  "glow": {
+    "transition_ms": 420,
+    "scene_passes": 1,
+    "postprocessing_render_targets": 0,
+    "hidden_during_assembly": true,
+    "stable_visible_planes_max": 1,
+    "transition_visible_planes_max": 2
+  },
+  "lightmap_contract": {
+    "zones": [
+      "ground",
+      "import",
+      "knowledge",
+      "price",
+      "report",
+      "review",
+      "risk",
+      "table"
+    ],
+    "flipY": false,
+    "channel": 1,
+    "colorSpace": "SRGBColorSpace",
+    "encoding_reason": "Repository bake script encodes linear irradiance into sRGB PNG",
+    "normal_color_space": "NoColorSpace",
+    "assembly_intensity": 0,
+    "night_intensity": 0,
+    "lightmapped_diagnostic_is_attachment_count": true,
+    "zone_normalization": "Seven building zones come from mesh/ancestor extras.zone. Known original land has no raw zone and normalizes to ground; missing building zones are not valid ground."
+  },
+  "known_fallbacks": {
+    "lightmapped_glb_download_or_http": "base GLB",
+    "lightmapped_glb_parse_error": "whole-scene error; no base parse retry in baseline",
+    "lighting_texture_failure": "basic environment/material fallback; off-on retry",
+    "missing_uv1": "skip lightMap"
+  },
+  "source_assets": [
+    {
+      "file": "studio_small_09_1k.hdr",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr",
+      "license": "CC0-1.0",
+      "sha256": "e7cfda5f4e98e623db12b8bfd0184e048488e4855d9c83e2751fb44a32e80c45",
+      "bytes": 1615248
+    },
+    {
+      "file": "plastered_wall_04_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/plastered_wall_04/plastered_wall_04_nor_gl_1k.jpg",
+      "license": "CC0-1.0",
+      "sha256": "c0a41dc06e33072ec1156d89f3bd4b481a479616791d4e9df6c5ee7b3283db82",
+      "bytes": 427268
+    }
+  ],
+  "bake_manifest_as_reviewed": {
+    "version": 1,
+    "engine": "Blender Cycles",
+    "blender": "5.2.2 LTS",
+    "source": "05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox.glb",
+    "sourceSha256": "bf9a428cbcaaa8ef061b5eff358ad697943a16effe677ca8fa588ec653475e26",
+    "samples": 96,
+    "diffuseBounces": 4,
+    "lighting": "neutral sky diffuse direct + indirect; no sun, no albedo",
+    "colorSpace": "sRGB PNG, runtime linear decode",
+    "zones": [
+      {
+        "zone": "import",
+        "object": "zone_import",
+        "size": 1024,
+        "triangles": 6240,
+        "linearMax": 1.0311510562896729,
+        "litFraction": 0.2611846923828125,
+        "sha256": "dfea18e376322aa6a28f285b37a4cfc7f0eecb6b24cc43b835d5e3b17f1f4d3a",
+        "bytes": 510091
+      },
+      {
+        "zone": "knowledge",
+        "object": "zone_knowledge",
+        "size": 1024,
+        "triangles": 9592,
+        "linearMax": 1.0017956495285034,
+        "litFraction": 0.18604087829589844,
+        "sha256": "a902cc8df3ba5c19bcd6c688a5894d8796e1e827a3118397e5f9f178b7fc9363",
+        "bytes": 379846
+      },
+      {
+        "zone": "ground",
+        "object": "zone_land",
+        "size": 2048,
+        "triangles": 61216,
+        "linearMax": 1.023295283317566,
+        "litFraction": 0.10042929649353027,
+        "sha256": "27c975f47505f59b1b72d858dea9c1bede70bb5cae42d0b6bef17ce13ea09354",
+        "bytes": 800029
+      },
+      {
+        "zone": "price",
+        "object": "zone_price",
+        "size": 1024,
+        "triangles": 40864,
+        "linearMax": 1.0092946290969849,
+        "litFraction": 0.15260696411132812,
+        "sha256": "70bd85b8c68fae2a21cca611c7bb62110152b663980c4656618fc6c47718f314",
+        "bytes": 364733
+      },
+      {
+        "zone": "report",
+        "object": "zone_report",
+        "size": 1024,
+        "triangles": 9164,
+        "linearMax": 1.010878562927246,
+        "litFraction": 0.20923519134521484,
+        "sha256": "47e2468ed0df6d850391241e30a6438d346ff8ef6fb4111a27a33cc82f218ef6",
+        "bytes": 443913
+      },
+      {
+        "zone": "review",
+        "object": "zone_review",
+        "size": 1024,
+        "triangles": 10968,
+        "linearMax": 1.0204054117202759,
+        "litFraction": 0.24825000762939453,
+        "sha256": "fcd63a8b5bd56835deaaa4454b51c4bce9318009f14ba183e6b031e8acbb4292",
+        "bytes": 508120
+      },
+      {
+        "zone": "risk",
+        "object": "zone_risk",
+        "size": 1024,
+        "triangles": 27360,
+        "linearMax": 1.0158809423446655,
+        "litFraction": 0.23649215698242188,
+        "sha256": "650b85f13768b5efbdbb11a3748b55a3d5e93a0f332d3a8bd36da8a831c53109",
+        "bytes": 535392
+      },
+      {
+        "zone": "table",
+        "object": "zone_table",
+        "size": 1024,
+        "triangles": 18344,
+        "linearMax": 1.0241767168045044,
+        "litFraction": 0.15697288513183594,
+        "sha256": "727c3bf2c34fc7d673f2a18d6fab7299b2122b3deb2c56f212e63376ffafc5b5",
+        "bytes": 332783
+      }
+    ],
+    "seconds": 36.74
+  },
+  "geometry_asset_tree_metadata": [
+    {
+      "path": "05-视觉识别/02-3D场景/lighting-v1/sandbox-lightmapped.glb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cdc86db3d7e3d76184ab62807d5ab22c81c5bba8",
+      "size": 9847828,
+      "url": "https://api.github.com/repos/zgzzmnbx/zaojia-zhisuan-astra/git/blobs/cdc86db3d7e3d76184ab62807d5ab22c81c5bba8"
+    },
+    {
+      "path": "05-视觉识别/02-3D场景/white-sandbox-v0.1.0/white-sandbox.blend",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "064dc28e2c36f16ad669efd772d8008d35fa1ca0",
+      "size": 547404,
+      "url": "https://api.github.com/repos/zgzzmnbx/zaojia-zhisuan-astra/git/blobs/064dc28e2c36f16ad669efd772d8008d35fa1ca0"
+    },
+    {
+      "path": "05-视觉识别/02-3D场景/white-sandbox-v0.1.0/white-sandbox.glb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3cb492426143840facc3593aefde731800537b7",
+      "size": 6917092,
+      "url": "https://api.github.com/repos/zgzzmnbx/zaojia-zhisuan-astra/git/blobs/f3cb492426143840facc3593aefde731800537b7"
+    }
+  ],
+  "notes": [
+    "No asset binary or source repository is included in this handoff kit.",
+    "Asset counts and historical measurements come from source documents, not a new browser run.",
+    "Read current checkout instructions and changes before implementing."
+  ]
+}

@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "status": "UNTESTED_CANDIDATE_NOT_DROP_IN_CONFIG",
+  "baseline_commit": "79e1418b2be169537a8cca643af61063b4350521",
+  "scope": "Only enhanced daytime refinements; preserve baseline enhanced-night behavior",
+  "rendering_route": [
+    "existing_Cycles_lightmaps",
+    "local_HDR_PMREM",
+    "MeshStandardMaterial",
+    "cached_PCF_shadow",
+    "existing_local_focus_glow",
+    "one_scene_render"
+  ],
+  "not_in_scope": [
+    "fullscreen_Bloom",
+    "SSAO_GTAO_N8AO",
+    "real_time_path_tracing",
+    "R3F_drei_migration",
+    "WebGPU_migration",
+    "new_camera_or_geometry_layout"
+  ],
+  "lighting": {
+    "sun_position": {
+      "baseline": [
+        -16,
+        32,
+        20
+      ],
+      "candidate": [
+        -18,
+        28,
+        20
+      ]
+    },
+    "sun_intensity": {
+      "baseline": 3,
+      "candidate": 2.8,
+      "trial_range": [
+        2.6,
+        3
+      ]
+    },
+    "fill_intensity": {
+      "baseline": 0.2,
+      "candidate": 0.14,
+      "trial_range": [
+        0.1,
+        0.18
+      ]
+    },
+    "hemisphere_intensity": {
+      "baseline": 0.08,
+      "candidate": 0.06,
+      "trial_range": [
+        0.04,
+        0.08
+      ]
+    },
+    "environment_intensity": {
+      "baseline": 0.18,
+      "candidate": 0.2,
+      "trial_range": [
+        0.16,
+        0.24
+      ]
+    },
+    "exposure": {
+      "baseline": 0.84,
+      "candidate": 0.84,
+      "policy": "Hold initially; change only after single-factor comparison"
+    },
+    "lightmap_intensity": {
+      "baseline": 0.85,
+      "candidate": 0.8,
+      "trial_range": [
+        0.72,
+        0.85
+      ],
+      "settle_ms": 450,
+      "night_or_assembly": 0
+    },
+    "sun_cool_color": {
+      "candidate": "#f3f8ff",
+      "color_space": "sRGB hex",
+      "policy": "Preserve existing cool/original switch"
+    },
+    "base_colors": {
+      "policy": "Hold current linear RGB values in first iteration"
+    }
+  },
+  "shadow": {
+    "map_size_candidate": [
+      1024,
+      1024
+    ],
+    "normal_bias_candidate": 0.035,
+    "bias_candidate": -0.0002,
+    "radius_candidate": 2,
+    "intensity_candidate": 0.78,
+    "bounds_policy": "Single fixed light-space envelope for casters, receiver projections and actual assembly max displacement including hover",
+    "optional_2048": "Only after visible defect and measured performance justification",
+    "camera_follow": false
+  },
+  "surface_profiles": [
+    {
+      "base_name": "Warm plaster",
+      "role": "base",
+      "roughness": 0.76,
+      "metalness_policy": "preserve_baseline",
+      "normal_scale": [
+        0.03,
+        0.03
+      ]
+    },
+    {
+      "base_name": "Porcelain white",
+      "role": "base",
+      "roughness": 0.66,
+      "metalness": 0,
+      "normal_scale": [
+        0.025,
+        0.025
+      ]
+    },
+    {
+      "base_name": "Porcelain white",
+      "role": "coated-tank",
+      "roughness": 0.34,
+      "metalness": 0,
+      "normal_map": null,
+      "normal_scale": [
+        0,
+        0
+      ]
+    },
+    {
+      "base_name": "Porcelain white",
+      "role": "coated-pipe",
+      "roughness": 0.42,
+      "metalness": 0,
+      "normal_map": null,
+      "normal_scale": [
+        0,
+        0
+      ]
+    },
+    {
+      "base_name": "Limestone foundation",
+      "role": "base",
+      "roughness_policy": "preserve_asset_value",
+      "metalness_policy": "preserve_baseline",
+      "normal_scale": [
+        0.025,
+        0.025
+      ]
+    },
+    {
+      "base_name": "Ceramic trim",
+      "role": "base",
+      "roughness": 0.32,
+      "other_fields": "preserve_existing_enhanced_behavior"
+    },
+    {
+      "base_name": "Frosted blue glazing",
+      "role": "base",
+      "roughness": 0.24,
+      "other_fields": "preserve_existing_enhanced_behavior"
+    }
+  ],
+  "preserve_other_materials": true,
+  "bare_metal": {
+    "required": false,
+    "policy": "Optional only for proven independent original components after coated surfaces pass; no blanket metalness change"
+  },
+  "background": {
+    "policy": "Preserve selected ground tone and existing MeshBasic exterior + ShadowMaterial division initially",
+    "mirror_floor": false,
+    "cloud_light_pools": false
+  },
+  "glow": {
+    "policy": "Keep existing effect first; tune only if selected building loses readable shape",
+    "new_fullscreen_effect": false
+  },
+  "frame_policy": {
+    "new_continuous_raf": false,
+    "new_react_per_frame_state": false,
+    "pmrem_per_frame": false,
+    "shadow_update_each_assembly_frame": true,
+    "static_shadow_cache": true
+  },
+  "performance_targets": {
+    "status": "proposed_not_measured",
+    "viewport_css": [
+      1920,
+      1080
+    ],
+    "secondary_viewport_css": [
+      1440,
+      900
+    ],
+    "browser_zoom_percent": 100,
+    "interactive_avg_fps_min": 50,
+    "interactive_frame_interval_p95_ms_max": 33.3,
+    "p95_regression_percent_diagnostic_trigger": 15,
+    "sampling_seconds_about": 20,
+    "static_check_seconds": 1,
+    "unmeasured_fields_must_remain_unmeasured": true,
+    "primary_visual_state": "Recoverable test: day, enhanced on, cool white, no focus, existing overview, normal business entries. Restore saved user preferences after checks."
+  },
+  "scene_restoration": {
+    "owner": "scene.theme",
+    "sun_position_baseline": [
+      -16,
+      32,
+      20
+    ],
+    "restore_on": [
+      "enhanced_off",
+      "night",
+      "resource_fallback"
+    ],
+    "other_fields": "Restore every changed target/environmentRotation/shadow-frustum/map-size field to corresponding baseline before applying enhanced-day overrides."
+  }
+}

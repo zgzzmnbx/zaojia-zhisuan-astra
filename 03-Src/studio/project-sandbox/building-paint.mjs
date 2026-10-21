@@ -1,12 +1,14 @@
 import {Color} from 'three';
+import {surfaceIdentity} from './surface-identity.mjs';
 export const paintZones=['import','price','risk','knowledge','report','review','table'];
 /** The accepted local-blue study, scoped to the current GLB; no geometry or textures copied. */
 export function createBuildingPaint(){
  const uniforms=new Map(paintZones.map(id=>[id,{uProgress:{value:0},uStrength:{value:.7},uNight:{value:0},uSweep:{value:0},uPaintTint:{value:new Color('#5797b9')}}]));
  return {
  attach(material,zone){
-  const u=uniforms.get(zone);if(!u||!['Warm plaster','Porcelain white','Cool shadow','Frosted blue glazing'].includes(material.name))return;
-  const isGlass=material.name==='Frosted blue glazing';
+  const {baseName}=surfaceIdentity(material);
+  const u=uniforms.get(zone);if(!u||!['Warm plaster','Porcelain white','Cool shadow','Frosted blue glazing'].includes(baseName))return;
+  const isGlass=baseName==='Frosted blue glazing';
   material.onBeforeCompile=shader=>{
    Object.assign(shader.uniforms,u,{uGlass:{value:isGlass?1:0},uZone:{value:paintZones.indexOf(zone)}});
    shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>

@@ -1,0 +1,10 @@
+{
+  "version": "0.1.0",
+  "source": "D:\\Codex-Temp\\260613-【智算Astra】\\05-视觉识别\\02-3D场景\\white-sandbox-v0.1.0\\white-sandbox-flow.blend",
+  "source_sha256": "83e5e6c731bbf590c28de19dc95a364307f7353ab5afb6c7bd7ffb49051c76cd",
+  "study_sha256": "3ae6a1b7371344a98e65622c90195ef9d6d1abba806a89e56a2211b5d039e2df",
+  "geometry_objects_unchanged": 733,
+  "overview_camera_identical": true,
+  "renderer": "Cycles ONEAPI Intel Arc B390; 64 samples; denoising; 1440x1000",
+  "web_updated": false
+}

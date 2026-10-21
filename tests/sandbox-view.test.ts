@@ -53,7 +53,7 @@ test('saved scene choices including false and hidden win over defaults',()=>{
 });
 
 import {readPaintStrength} from '../03-Src/studio/project-sandbox/paint-settings.ts';
-test('paint strength defaults to seventy and respects explicit zero and saved choices',()=>{
- assert.equal(readPaintStrength(null),70);assert.equal(readPaintStrength(''),70);assert.equal(readPaintStrength('bad'),70);
+test('paint strength defaults to approved sixty-five and respects explicit zero and saved choices',()=>{
+ assert.equal(readPaintStrength(null),65);assert.equal(readPaintStrength(''),65);assert.equal(readPaintStrength('bad'),65);
  assert.equal(readPaintStrength('0'),0);assert.equal(readPaintStrength('85'),85);assert.equal(readPaintStrength('150'),100);assert.equal(readPaintStrength('-5'),0);
 });

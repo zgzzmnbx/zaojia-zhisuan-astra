@@ -1,0 +1,17 @@
+{
+  "name": "astra-blender-web-study",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build --outDir 04-output",
+    "test": "node --test study.test.mjs"
+  },
+  "dependencies": {
+    "three": "0.186.1",
+    "daisyui": "5.7.47"
+  },
+  "devDependencies": {
+    "vite": "8.3.2"
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "status": "ALL_UNEXECUTED_TEMPLATE",
+  "baseline_commit": "79e1418b2be169537a8cca643af61063b4350521",
+  "visual": [
+    {
+      "id": "V01",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V02",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V03",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V04",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V05",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V06",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V07",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V08",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V09",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V10",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V11",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "V12",
+      "specification": "03-VISUAL-SPEC.md",
+      "result": "unmeasured",
+      "evidence": null
+    }
+  ],
+  "functional": [
+    {
+      "id": "F01",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F02",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F03",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F04",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F05",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F06",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F07",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F08",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F09",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F10",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F11",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "F12",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    }
+  ],
+  "assets": [
+    {
+      "id": "A01",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "A02",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "A03",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "A04",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "A05",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "A06",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "A07",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    },
+    {
+      "id": "A08",
+      "specification": "05-TASKS-AND-ACCEPTANCE.md",
+      "result": "unmeasured",
+      "evidence": null
+    }
+  ],
+  "required_reports": [
+    "06-ACCEPTANCE-REPORT-TEMPLATE.md"
+  ],
+  "policy": "Each result must be pass/fail/unmeasured/not_applicable with real evidence or reason. Generated references never count as runtime evidence."
+}
+

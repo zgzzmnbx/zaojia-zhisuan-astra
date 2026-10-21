@@ -1,0 +1,96 @@
+{
+  "kit_version": "1.0",
+  "created_date": "2026-10-20",
+  "title": "Astra 沙盘质感提升 · Codex 指导包",
+  "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+  "baseline_commit": "79e1418b2be169537a8cca643af61063b4350521",
+  "baseline_ui_version": "0.10.56",
+  "purpose": "Implementation handoff: A cool white architecture overall + C local tank/pipe response",
+  "entrypoint": "01-CODEX-TASK.md",
+  "reading_order": [
+    "00-START-HERE.md",
+    "01-CODEX-TASK.md",
+    "02-CODE-AUDIT.md",
+    "03-VISUAL-SPEC.md",
+    "04-IMPLEMENTATION-GUIDE.md",
+    "05-TASKS-AND-ACCEPTANCE.md",
+    "06-ACCEPTANCE-REPORT-TEMPLATE.md",
+    "07-REFERENCES.md"
+  ],
+  "images": [
+    {
+      "path": "assets/00-original-context.png",
+      "bytes": 1570712,
+      "pixels": [
+        2048,
+        1118
+      ],
+      "sha256": "b2c78f67cff1cbc9ef7ca1d606248b19612e0834d35fab6933d0d1460d196896",
+      "role": "historical_user_screenshot",
+      "runtime_evidence": false
+    },
+    {
+      "path": "assets/A-primary-cool-white.png",
+      "bytes": 1873365,
+      "pixels": [
+        1697,
+        927
+      ],
+      "sha256": "08d7dc698a4c5d5a42d0994393938ccf5b379d889bd51f1dda099ad2492f0e27",
+      "role": "primary_generated_style_reference",
+      "runtime_evidence": false
+    },
+    {
+      "path": "assets/C-local-silver-white.png",
+      "bytes": 1946655,
+      "pixels": [
+        1697,
+        927
+      ],
+      "sha256": "fede83a00cf3e91f6d2a7ae531325d305bca2da30d74783a782bee5b584ff8a1",
+      "role": "generated_local_material_reference",
+      "runtime_evidence": false
+    }
+  ],
+  "content_counts": {
+    "markdown_documents": 8,
+    "json_specifications_including_this_manifest": 5,
+    "images": 3,
+    "checksum_lists": 1,
+    "total_files": 17
+  },
+  "files_excluding_this_manifest_and_checksums": [
+    "00-START-HERE.md",
+    "01-CODEX-TASK.md",
+    "02-CODE-AUDIT.md",
+    "03-VISUAL-SPEC.md",
+    "04-IMPLEMENTATION-GUIDE.md",
+    "05-TASKS-AND-ACCEPTANCE.md",
+    "06-ACCEPTANCE-REPORT-TEMPLATE.md",
+    "07-REFERENCES.md",
+    "assets/00-original-context.png",
+    "assets/A-primary-cool-white.png",
+    "assets/C-local-silver-white.png",
+    "specs/acceptance-cases.json",
+    "specs/look-proposal.json",
+    "specs/material-role-contract.json",
+    "specs/source-baseline.json"
+  ],
+  "validation_scope": [
+    "document consistency peer review",
+    "JSON syntax",
+    "relative link existence",
+    "image format and byte identity",
+    "ZIP CRC and inventory",
+    "checksum inventory"
+  ],
+  "not_performed": [
+    "repository modifications",
+    "application runtime verification",
+    "npm tests or builds",
+    "GLB binary decoding",
+    "target device benchmarks"
+  ],
+  "copyright_note": "Images are exact copies of the user screenshot and requested generated reference images for inclusion in this handoff. Public references are linked, not redistributed as code.",
+  "checksum_policy": "CHECKSUMS.sha256 covers every file except itself."
+}

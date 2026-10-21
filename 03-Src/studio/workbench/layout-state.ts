@@ -2,6 +2,9 @@ export type LayoutMode='preview'|'chat'|'custom';
 export type LayoutPreference={policy:'auto'|'manual';mode:LayoutMode;ratio:number};
 export const LAYOUT_KEY='astra.workbench-layout.v1';
 export const PREVIEW_RATIO=.32,CHAT_RATIO=.65,SEPARATOR_SIZE=12;
+/** Floating chat includes a 16px outer inset; reserve enough scene for navigation. */
+export function sandboxChatBounds(width:number){const usable=Math.max(1,width-SEPARATOR_SIZE),min=Math.min(320/usable,.45);return {min,max:Math.max(min,Math.min(.65,(width-420)/usable))};}
+export function sandboxChatRatio(width:number,defaultWidth:number,savedRatio:number|null=null){const {min,max}=sandboxChatBounds(width);return Math.max(min,Math.min(max,savedRatio??(defaultWidth+16)/Math.max(1,width-SEPARATOR_SIZE)));}
 export const largeViews=new Set(['architecture','example','universe','table','mapping','projects','map','aerial','settlement','analysis','word','advanced']);
 export function preferredMode(view:string):'preview'|'chat'{return largeViews.has(view)?'preview':'chat';}
 export function automaticLayout(view:string):LayoutPreference{const mode=preferredMode(view);return {policy:'auto',mode,ratio:mode==='preview'?PREVIEW_RATIO:CHAT_RATIO};}

@@ -1,0 +1,91 @@
+{
+  "version": "0.1.0",
+  "sourceSha256": "3ae6a1b7371344a98e65622c90195ef9d6d1abba806a89e56a2211b5d039e2df",
+  "bake": "Cycles diffuse direct + indirect + albedo; static geometry",
+  "samples": 96,
+  "textures": [
+    {
+      "zone": "land",
+      "object": "web_land",
+      "size": 2048,
+      "maxRadiance": 2.976677656173706,
+      "litFraction": 0.3573465347290039,
+      "scale": 2.976677656173706
+    },
+    {
+      "zone": "import",
+      "object": "web_import",
+      "size": 2048,
+      "maxRadiance": 3.1386923789978027,
+      "litFraction": 0.5247843265533447,
+      "scale": 3.1386923789978027
+    },
+    {
+      "zone": "price",
+      "object": "web_price",
+      "size": 2048,
+      "maxRadiance": 2.791191816329956,
+      "litFraction": 0.5660920143127441,
+      "scale": 2.791191816329956
+    },
+    {
+      "zone": "risk",
+      "object": "web_risk",
+      "size": 2048,
+      "maxRadiance": 2.355093002319336,
+      "litFraction": 0.6594071388244629,
+      "scale": 2.355093002319336
+    },
+    {
+      "zone": "knowledge",
+      "object": "web_knowledge",
+      "size": 2048,
+      "maxRadiance": 3.1618456840515137,
+      "litFraction": 0.5184354782104492,
+      "scale": 3.1618456840515137
+    },
+    {
+      "zone": "report",
+      "object": "web_report",
+      "size": 2048,
+      "maxRadiance": 2.212216377258301,
+      "litFraction": 0.5284428596496582,
+      "scale": 2.212216377258301
+    },
+    {
+      "zone": "review",
+      "object": "web_review",
+      "size": 2048,
+      "maxRadiance": 2.422166347503662,
+      "litFraction": 0.5165812969207764,
+      "scale": 2.422166347503662
+    },
+    {
+      "zone": "table",
+      "object": "web_table",
+      "size": 2048,
+      "maxRadiance": 2.8644845485687256,
+      "litFraction": 0.6814248561859131,
+      "scale": 2.8644845485687256
+    },
+    {
+      "zone": "studio",
+      "object": "web_studio",
+      "size": 2048,
+      "maxRadiance": 1.9730700254440308,
+      "litFraction": 0.5000979900360107,
+      "scale": 1.9730700254440308
+    },
+    {
+      "zone": "Information transfer - illustrative",
+      "object": "web_Information transfer - illustrative",
+      "size": 2048,
+      "maxRadiance": 1.6005867719650269,
+      "litFraction": 0.2503020763397217,
+      "scale": 1.6005867719650269
+    }
+  ],
+  "seconds": 151.1,
+  "denoiser": "Intel Open Image Denoise 2.5.1 RTLightmap; linear HDR",
+  "denoiseSeconds": 37.1
+}

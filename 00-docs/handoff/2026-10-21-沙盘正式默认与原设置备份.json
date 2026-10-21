@@ -1,0 +1,225 @@
+{
+  "version": "0.10.62",
+  "confirmedBy": "用户 2026-10-21 明确要求使用当前保存参数作为正式默认",
+  "source": "用户现有 Codex 内置浏览器 127.0.0.1:5189；已核对 localStorage 与场景实际参数",
+  "approved": {
+    "lighting": {
+      "sunAzimuth": -41,
+      "sunElevation": 54,
+      "sun": 6.9,
+      "fill": 0.08,
+      "hemisphere": 0.14,
+      "environment": 0.55,
+      "exposure": 0.98,
+      "gi": 0.22,
+      "shadowSoftness": 0.1,
+      "background": 0.75,
+      "wallRoughness": 0.62,
+      "normal": 0.008,
+      "tankRoughness": 0.18,
+      "tankMetalness": 0.18,
+      "pipeRoughness": 0.23,
+      "pipeMetalness": 0.18,
+      "reflection": 2.5,
+      "blueDepth": 0.7,
+      "cards": [
+        {
+          "name": "主反射灯板",
+          "enabled": true,
+          "x": -10,
+          "y": 6,
+          "z": 12,
+          "width": 6,
+          "height": 18,
+          "power": 10
+        },
+        {
+          "name": "侧后轮廓灯板",
+          "enabled": true,
+          "x": 12,
+          "y": 7,
+          "z": -7,
+          "width": 3,
+          "height": 14,
+          "power": 5
+        },
+        {
+          "name": "顶部柔光灯板",
+          "enabled": true,
+          "x": 0,
+          "y": 15,
+          "z": -2,
+          "width": 10,
+          "height": 7,
+          "power": 1.4
+        },
+        {
+          "name": "正面补光灯板",
+          "enabled": true,
+          "x": 2,
+          "y": 3,
+          "z": 12,
+          "width": 7,
+          "height": 5,
+          "power": 0.4
+        }
+      ]
+    },
+    "defaults": {
+      "roofLabels": true,
+      "autoOrbit": true,
+      "orbitDelay": 2,
+      "cool": true,
+      "infoVisible": true,
+      "shadows": true,
+      "flow": true,
+      "paintStrength": 65,
+      "groupLogo": "white",
+      "groundTone": "gray",
+      "enhanced": true,
+      "bloom": true,
+      "studioLighting": true,
+      "softShadows": false,
+      "bakedLighting": false,
+      "brightBackground": true,
+      "nightBloom": true,
+      "camera": {
+        "elevation": 34,
+        "zoom": 135,
+        "distance": 85
+      }
+    }
+  },
+  "legacy": {
+    "label": "原默认备份",
+    "mode": "trial:null; original material tint and environment path",
+    "profile": {
+      "sunPosition": [
+        -18,
+        28,
+        20
+      ],
+      "sun": 3.8,
+      "fill": 0.12,
+      "hemisphere": 0.04,
+      "environment": 1.05,
+      "exposure": 1.08,
+      "gi": 0.42,
+      "backgroundWhiteMix": 0.72,
+      "shadowIntensity": 0.85,
+      "normalBias": 0.025,
+      "shadowBias": -0.0003,
+      "shadowRadius": 1.2,
+      "shadowSize": 2048,
+      "shadowAngularRadius": 0.1,
+      "surfaces": {
+        "Warm plaster": {
+          "roughness": 0.76,
+          "normal": 0.03
+        },
+        "Porcelain white": {
+          "roughness": 0.66,
+          "normal": 0.025
+        },
+        "Limestone foundation": {
+          "normal": 0.025
+        },
+        "coated-tank": {
+          "roughness": 0.26,
+          "metalness": 0.12,
+          "normal": 0,
+          "environment": 1.5
+        },
+        "coated-pipe": {
+          "roughness": 0.3,
+          "metalness": 0.08,
+          "normal": 0,
+          "environment": 1.35
+        }
+      }
+    },
+    "effects": {
+      "enhanced": true,
+      "bloom": true,
+      "studioLighting": true,
+      "softShadows": true,
+      "bakedLighting": true,
+      "brightBackground": true,
+      "nightBloom": true,
+      "shadows": true,
+      "cool": true
+    },
+    "environment": [
+      {
+        "name": "key",
+        "position": [
+          -9,
+          12,
+          9
+        ],
+        "size": [
+          12,
+          9
+        ],
+        "linearEmission": [
+          5.5,
+          5.5,
+          5.5
+        ]
+      },
+      {
+        "name": "strip",
+        "position": [
+          8,
+          5,
+          -7
+        ],
+        "size": [
+          3,
+          12
+        ],
+        "linearEmission": [
+          2.9620287158127763,
+          3.226569672139044,
+          3.6
+        ]
+      },
+      {
+        "name": "ceiling",
+        "position": [
+          0,
+          15,
+          -2
+        ],
+        "size": [
+          10,
+          7
+        ],
+        "linearEmission": [
+          2.8,
+          2.8,
+          2.8
+        ]
+      },
+      {
+        "name": "front-fill",
+        "position": [
+          2,
+          3,
+          12
+        ],
+        "size": [
+          7,
+          5
+        ],
+        "linearEmission": [
+          0.8,
+          0.8,
+          0.8
+        ]
+      }
+    ],
+    "defaultsSource": "/** Approved browser preset, 2026-10-16. Only missing/invalid fields fall back here. */\r\nexport const sandboxDefaults=Object.freeze({\r\n roofLabels:true,autoOrbit:true,orbitDelay:2,cool:true,infoVisible:true,shadows:true,flow:true,paintStrength:70,\r\n groupLogo:'white' as const,groundTone:'gray' as const,enhanced:true,bloom:true,studioLighting:true,softShadows:true,bakedLighting:true,brightBackground:true,nightBloom:true,\r\n camera:Object.freeze({elevation:34,zoom:135,distance:85}),\r\n});\r\nexport function savedSwitch(raw:unknown,on:string,off:string,fallback:boolean){return raw===on?true:raw===off?false:fallback}\r\nexport function readSandboxSwitch(key:string,fallback:boolean|null):boolean|null{\r\n try{const raw=localStorage.getItem(key);return raw==='on'?true:raw==='off'?false:fallback}catch{return fallback}\r\n}\r\nexport function saveSandboxSwitch(key:string,value:boolean){try{localStorage.setItem(key,value?'on':'off')}catch{}}\r\n"
+  },
+  "scope": "旧候选预览恢复旧光照、材质及光影开关；相机、业务染色进度与用户其他偏好保持。原完整缺省设置同时归档于 defaultsSource。"
+}
