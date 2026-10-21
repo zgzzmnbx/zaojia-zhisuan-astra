@@ -22,6 +22,17 @@ function Test-AstraOwner([string]$CommandLine, [string]$PythonPath) {
         $CommandLine.Contains('tools/run_server.py')
 }
 
+function Test-AstraOwnerProcess([int]$ProcessId, [string]$PythonPath) {
+    # Windows venv interpreters redirect to the base Python, so the listener may be a child.
+    $process = Get-CimInstance Win32_Process -Filter "ProcessId=$ProcessId" -ErrorAction SilentlyContinue
+    for ($depth = 0; $depth -lt 4 -and $process; $depth++) {
+        if (Test-AstraOwner ([string]$process.CommandLine) $PythonPath) { return $true }
+        if (-not $process.ParentProcessId) { break }
+        $process = Get-CimInstance Win32_Process -Filter "ProcessId=$($process.ParentProcessId)" -ErrorAction SilentlyContinue
+    }
+    return $false
+}
+
 function Get-AstraListener {
     return Get-NetTCPConnection -LocalPort 5189 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
 }
@@ -70,8 +81,7 @@ function Invoke-AstraPreview {
     Write-Host "Workspace: $root"
     $listener = Get-AstraListener
     if ($listener) {
-        $owner = Get-CimInstance Win32_Process -Filter "ProcessId=$($listener.OwningProcess)"
-        if (-not (Test-AstraOwner $owner.CommandLine $pythonPath)) {
+        if (-not (Test-AstraOwnerProcess $listener.OwningProcess $pythonPath)) {
             throw 'Port 5189 belongs to a different workspace or service. Nothing was stopped. Check config/astra-launch.local.json.'
         }
         if (-not (Test-AstraReady $root)) { throw 'Astra service or frontend is outdated or not ready. Build this workspace and normally restart its service. No process was restarted.' }
@@ -95,8 +105,7 @@ function Invoke-AstraPreview {
         if (-not $ready) { throw "Astra has not become ready yet. Log: $errorLog. Do not repeatedly relaunch." }
         $listener = Get-AstraListener
         if (-not $listener) { throw 'Astra listener disappeared during startup.' }
-        $owner = Get-CimInstance Win32_Process -Filter "ProcessId=$($listener.OwningProcess)"
-        if (-not (Test-AstraOwner $owner.CommandLine $pythonPath)) { throw 'Port ownership changed during startup; browser was not opened.' }
+        if (-not (Test-AstraOwnerProcess $listener.OwningProcess $pythonPath)) { throw 'Port ownership changed during startup; browser was not opened.' }
     }
     Write-Host 'Ready: http://127.0.0.1:5189/'
     if (-not $NoBrowser -and -not $CheckOnly) { Start-Process 'http://127.0.0.1:5189/' }
