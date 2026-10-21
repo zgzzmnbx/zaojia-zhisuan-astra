@@ -1,4 +1,14 @@
-import {Float32BufferAttribute} from 'three';
+import {Float32BufferAttribute,ShaderChunk} from 'three';
+
+// Capture the existing SpotLight loop, including its shadow and material response.
+// Baked daylight replaces the sun/environment; selected facade uplights remain live.
+const spotStart='#if ( NUM_SPOT_LIGHTS > 0 ) && defined( RE_Direct )';
+const spotEnd='#if ( NUM_SUN_LIGHTS > 0 ) && defined( RE_Direct )';
+export function solidSpotLightingChunk(chunk=ShaderChunk.lights_fragment_begin){
+ if(!chunk.includes(spotStart)||!chunk.includes(spotEnd))throw Error('Unsupported Three.js spotlight chunk');
+ return chunk.replace(spotStart,'vec3 solidBeforeSpot=reflectedLight.directDiffuse+reflectedLight.directSpecular;\n'+spotStart)
+  .replace(spotEnd,'vec3 solidSpotRadiance=reflectedLight.directDiffuse+reflectedLight.directSpecular-solidBeforeSpot;\n'+spotEnd);
+}
 
 /** Compose with paint / PCSS / assembly; never replace the production materials. */
 export function bindSolidMaterials(root,manifest,uv,resources){
@@ -32,12 +42,13 @@ diffuseColor.rgb=mix(diffuseColor.rgb,solidSilver,uSolidWeight*solidMetal);
 vec3 solidUnpainted=max(diffuseColor.rgb,vec3(.001));`)
      .replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,mix(uSolidTank.x,uSolidPipe.x,solidPipe),uSolidWeight*solidMetal);')
      .replace('#include <metalnessmap_fragment>','#include <metalnessmap_fragment>\nmetalnessFactor=mix(metalnessFactor,mix(uSolidTank.y,uSolidPipe.y,solidPipe),uSolidWeight*solidMetal);')
+     .replace('#include <lights_fragment_begin>',solidSpotLightingChunk())
      .replace('#include <opaque_fragment>',`if(uSolidWeight>0.0&&solidMetal<0.5){
 vec3 solidRadiance=max(texture2D(uSolidMap,vSolidSurface.xy).rgb*uSolidScale,uSolidFloor);
-outgoingLight=mix(outgoingLight,solidRadiance*uSolidBrightness*diffuseColor.rgb/max(uSolidBaseColor,vec3(.001))+totalEmissiveRadiance,uSolidWeight*uSolidBakeWeight);}
+outgoingLight=mix(outgoingLight,solidRadiance*uSolidBrightness*diffuseColor.rgb/max(uSolidBaseColor,vec3(.001))+totalEmissiveRadiance+solidSpotRadiance,uSolidWeight*uSolidBakeWeight);}
 #include <opaque_fragment>`);
    };
-   m.customProgramCacheKey=()=>oldKey+'|astra-solid-v1';m.needsUpdate=true;
+   m.customProgramCacheKey=()=>oldKey+'|astra-solid-v2-uplights';m.needsUpdate=true;
   }
  });
  return {setEnabled(value,settings={}){weight.value=value?1:0;bakeWeight.value=settings.bakeStrength??1;brightness.value=settings.bakeBrightness??1;

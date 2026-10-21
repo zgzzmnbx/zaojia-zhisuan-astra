@@ -11,6 +11,8 @@ const reasons:Record<string,[string,string]>={
  ASTRA_GORK_INVALID_EVENT:['调试信号校验未通过','请重新检测连接后重试，并检查本机时间。'],
  ASTRA_GORK_DUPLICATE_EVENT:['信号已提交','请查看最近通知回执，避免重复发送。'],
  ASTRA_GORK_OLD_EVENT:['信号早于当前设置','历史信号不会补播，请重新发送调试信号。'],
+ EXTERNAL_DISPATCH_FAILED:['Gork 输出异常','控制台在输出前发生异常，语音未完成。请更新并正常重开 Gork 后再测试。'],
+ EXTERNAL_OUTPUT_FAILED:['Gork 输出失败','控制台已接收通知，但未完成输出。请查看各端回执；系统不会自动重播。'],
  EXTERNAL_CLIENT_DISABLED:['Astra 来源未启用','先在 Gork 通知哨兵关闭旧 Astra 兼容轮询，再启用 Astra 来源。'],
  EXTERNAL_AUTH_REQUIRED:['Astra 凭据无效','请在 Gork 核对 Astra 登记，并在连接设置中选择对应凭据文件。'],
  EXTERNAL_SOURCE_MISMATCH:['Astra 凭据不匹配','请使用 Gork 为 Astra 单独登记的凭据文件。'],

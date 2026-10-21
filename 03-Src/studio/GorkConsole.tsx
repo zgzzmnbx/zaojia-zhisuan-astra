@@ -109,7 +109,7 @@ export function GorkConsole({active=true,onBusy=()=>{}}:{active?:boolean;onBusy?
     <div className="notification-stage-footer"><p className="notification-help">{selected==='review_sent'?'同轮飞书、WeAct 送达只自动提醒一次。':stage.kind==='state'?'操作执行期间续期；报活不重复播语音。':'新阶段替换旧显示；不打断已开始的语音。'}</p><button className="text-button" type="button" onClick={()=>update(response.defaults[selected])}>恢复此阶段默认</button></div>
    </fieldset>}
   </div>
-  {!!response.status.history?.length&&<details className="notification-history"><summary>最近通知回执</summary><ol>{response.status.history.map(item=><li key={item.event_id}><strong>{response.stages.find(s=>s.id===item.stage)?.label||item.stage}</strong><span>{receipts[item.status]||item.status}</span><small>{Object.entries(item.delivery).map(([k,v])=>`${k==='speech'?'声音':k==='watch'?'Watch':'桌面'}：${v}`).join(' · ')}{item.error}</small></li>)}</ol></details>}
+  {!!response.status.history?.length&&<details className="notification-history"><summary>最近通知回执</summary><ol>{response.status.history.map(item=><li key={item.event_id}><strong>{response.stages.find(s=>s.id===item.stage)?.label||item.stage}</strong><span>{receipts[item.status]||item.status}</span><small title={item.error||undefined}>{Object.entries(item.delivery).map(([k,v])=>`${k==='speech'?'声音':k==='watch'?'Watch':'桌面'}：${deliveryLabel(v)}`).join(' · ')}{item.error?` · ${notificationFailure(item.error,'delivery').title}`:''}</small></li>)}</ol></details>}
   <footer className="notification-save"><p role={error?'alert':'status'}>{error|| (dirty?'有尚未保存的更改':saved?'设置已保存，等待新阶段':'保存设置不会发送测试通知')}</p><button type="button" className="btn btn-primary" disabled={!dirty||saving} onClick={()=>void save()}>{saving?'保存中…':'保存设置'}</button></footer>
  </div>;
 }

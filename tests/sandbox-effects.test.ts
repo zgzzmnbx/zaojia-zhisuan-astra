@@ -7,14 +7,14 @@ test('effect preferences preserve explicit off and migrate legacy enhancement wi
  const values=new Map<string,string>([['astra.sandbox.enhanced','off']]);
  Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:(key:string)=>values.get(key)??null}});
  try{
-  assert.deepEqual(readSandboxEffects(),{studioLighting:false,softShadows:false,bakedLighting:false,brightBackground:false,nightBloom:true,localSurface:false});
+  assert.deepEqual(readSandboxEffects(),{focusBeam:true,studioLighting:false,softShadows:false,bakedLighting:false,brightBackground:false,nightBloom:true,localSurface:false});
   values.set('astra.sandbox.studio-lighting','on');values.set('astra.sandbox.night-bloom','off');
   assert.equal(readSandboxEffects().studioLighting,true);assert.equal(readSandboxEffects().nightBloom,false);
   assert.equal(values.size,3);
   values.clear();for(const c of sandboxEffectControls)values.set('astra.sandbox.'+c.key,'off');
   assert.ok(Object.values(readSandboxEffects()).every(v=>v===false));
   values.clear();values.set('astra.sandbox.surface-detail','off');
-  assert.deepEqual(readSandboxEffects(),{studioLighting:true,softShadows:false,bakedLighting:false,brightBackground:true,nightBloom:true,localSurface:false});
+  assert.deepEqual(readSandboxEffects(),{focusBeam:true,studioLighting:true,softShadows:false,bakedLighting:false,brightBackground:true,nightBloom:true,localSurface:false});
   values.set('astra.sandbox.soft-shadows','on');assert.equal(readSandboxEffects().softShadows,true);
  }finally{if(descriptor)Object.defineProperty(globalThis,'localStorage',descriptor);else delete (globalThis as any).localStorage;}
 });

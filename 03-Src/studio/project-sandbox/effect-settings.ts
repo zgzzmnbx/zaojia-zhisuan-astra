@@ -1,6 +1,7 @@
 import {readSandboxSwitch,sandboxDefaults} from './defaults.ts';
 
 export const sandboxEffectControls=[
+ {id:'focusBeam',key:'focus-beam',label:'地面射灯',scope:'聚焦',hint:'选中建筑周围的嵌地射灯，向上照亮立面'},
  {id:'studioLighting',key:'studio-lighting',label:'棚灯环境',scope:'日间',hint:'柔和棚灯与环境反射'},
  {id:'softShadows',key:'soft-shadows',label:'柔和阴影',scope:'日间',hint:'开启阴影后，柔化建筑投影边缘'},
  {id:'bakedLighting',key:'baked-lighting',label:'烘焙光照',scope:'日间',hint:'增加接触层次与间接光照'},
@@ -11,7 +12,7 @@ export const sandboxEffectControls=[
 export type SandboxEffects=Record<typeof sandboxEffectControls[number]['id'],boolean>;
 export function readSandboxEffects():SandboxEffects{
  const legacy=readSandboxSwitch('astra.sandbox.enhanced',sandboxDefaults.enhanced)!;
- return Object.fromEntries(sandboxEffectControls.map(c=>[c.id,readSandboxSwitch('astra.sandbox.'+c.key,c.id==='nightBloom'?sandboxDefaults.nightBloom:legacy&&sandboxDefaults[c.id])])) as SandboxEffects;
+ return Object.fromEntries(sandboxEffectControls.map(c=>[c.id,readSandboxSwitch('astra.sandbox.'+c.key,(c.id==='nightBloom'||c.scope==='聚焦')?sandboxDefaults[c.id]:legacy&&sandboxDefaults[c.id])])) as SandboxEffects;
 }
 export function sandboxEffectDisabled(id:typeof sandboxEffectControls[number]['id'],solidTheme:boolean,dark:boolean,legacy=false){
  return legacy||(id==='localSurface'&&solidTheme&&!dark);

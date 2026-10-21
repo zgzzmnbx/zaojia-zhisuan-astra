@@ -1,69 +1,59 @@
-import {Color,Mesh,PlaneGeometry,ShaderMaterial,Vector2} from 'three';
+import {Color,DoubleSide,Group,Mesh,PlaneGeometry,Scene,ShaderMaterial,Vector2} from 'three';
 
-// Ground-level footprints, excluding roof sculptures and long pipework.
-// The feather is generated locally in this plane: no screen-sized blur target.
-const footprints={
- import:[-10,8.3,.155,5.55,5.0],
- knowledge:[-10.2,-4.1,.155,5.85,5.5],
- price:[-.7,-1.5,.155,8.4,6.7],
- report:[9.7,-2.5,.155,6.5,6.0],
- review:[2.3,-9.25,.155,8.6,4.6],
- risk:[6.5,8.6,.155,4.1,3.1],
- table:[-7.7,-9.1,.155,9.4,3.05],
-};
-
-export function createFocusGlow(scene){
- const geometry=new PlaneGeometry(1,1),entries=new Map();
+// Ground footprints and building heights shared with the recessed uplight rig.
+export const focusFootprints={import:[-10,8.3,.16,5.55,5,6],knowledge:[-10.2,-4.1,.16,5.85,5.5,11],price:[-.7,-1.5,.16,8.4,6.7,8],report:[9.7,-2.5,.16,6.5,6,9],review:[2.3,-9.25,.16,8.6,4.6,7],risk:[6.5,8.6,.16,4.1,3.1,5],table:[-7.7,-9.1,.16,9.4,3.05,13]};
+const vertex='varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}';
+const header=`varying vec2 vUv;uniform sampler2D sceneDepth;uniform vec2 resolution,size,halfFootprint;uniform vec3 tint;uniform float alpha;
+// GLSL pow is undefined for negative bases, even for exponent 2.
+float square(float x){return x*x;}
+void main(){
+ float depth=texture2D(sceneDepth,gl_FragCoord.xy/resolution).x;
+ if(gl_FragCoord.z>depth+.000015)discard;
+`;
+const ground=`
+ vec2 p=(vUv-.5)*size,q=abs(p)-halfFootprint+vec2(.3);
+ float d=length(max(q,0.))+min(max(q.x,q.y),0.)-.3;
+ float haze=exp(-abs(d)*2.1)*.38,core=exp(-d*d/.008);
+ float light=(haze+core*1.8)*alpha;
+ if(light<.002)discard;
+ gl_FragColor=vec4(mix(tint,vec3(.65,.9,1.),core*.7)*light*2.,1.);
+}`;
+export function createFocusGlow(){
+ const scene=new Scene(),entries=new Map(),plane=new PlaneGeometry(1,1);
+ const depth={value:null},resolution={value:new Vector2(1,1)};
  let target=null,enabled=true,dark=false;
- for(const [id,[x,z,y,w,h]] of Object.entries(footprints)){
-  const size=new Vector2(w+2.4,h+2.4);
-  const material=new ShaderMaterial({
-   transparent:true,depthWrite:false,toneMapped:false,
-   uniforms:{size:{value:size},halfFootprint:{value:new Vector2(w/2,h/2)},tint:{value:new Color('#258fe1')},alpha:{value:0}},
-   vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-   fragmentShader:`
-    varying vec2 vUv;
-    uniform vec2 size,halfFootprint;
-    uniform vec3 tint;
-    uniform float alpha;
-    void main(){
-     vec2 q=abs((vUv-.5)*size)-halfFootprint+vec2(.22);
-     float d=length(max(q,0.))+min(max(q.x,q.y),0.)-.22;
-     float haze=exp(-abs(d)*4.2)*.44;
-     float core=exp(-d*d/ .005)*.56;
-     float a=(haze+core)*alpha;
-     if(a<.003)discard;
-     gl_FragColor=vec4(mix(tint,vec3(.8,.94,1.),core*.6),a);
-     #include <colorspace_fragment>
-    }`,
-  });
-  const mesh=new Mesh(geometry,material);
-  mesh.name=`Focus ground glow: ${id}`;
-  mesh.rotation.x=-Math.PI/2;mesh.position.set(x,y,z);mesh.scale.set(size.x,size.y,1);
-  mesh.visible=false;mesh.renderOrder=1;
-  scene.add(mesh);entries.set(id,{mesh,value:0});
+ const materials=[];
+ function material(fragment,w,h){
+  const m=new ShaderMaterial({depthTest:false,depthWrite:false,side:DoubleSide,toneMapped:false,
+   uniforms:{sceneDepth:depth,resolution,size:{value:new Vector2(w,h)},halfFootprint:{value:new Vector2()},tint:{value:new Color('#36baff')},alpha:{value:0}},vertexShader:vertex,fragmentShader:header+fragment});
+  materials.push(m);return m;
  }
- return {
+ for(const [id,[x,z,y,w,h]] of Object.entries(focusFootprints)){
+  const group=new Group();group.name=`Focus light installation: ${id}`;group.position.set(x,y,z);group.visible=false;
+  const groundMaterial=material(ground,w+5,h+5);groundMaterial.uniforms.halfFootprint.value.set(w/2,h/2);
+  const base=new Mesh(plane,groundMaterial);base.rotation.x=-Math.PI/2;base.scale.set(w+5,h+5,1);
+  group.add(base);scene.add(group);entries.set(id,{group,base,value:0});
+ }
+ return {scene,
   configure({focus=null,enabled:show=true,night=false,color='#258fe1'}={}){
    target=entries.has(focus)?focus:null;enabled=show;dark=night;
-   for(const {mesh} of entries.values())mesh.material.uniforms.tint.value.set(color);
+   for(const m of materials)m.uniforms.tint.value.set(color).lerp(new Color('#36c7ff'),.65);
   },
+  setDepth(texture,width,height){depth.value=texture;resolution.value.set(width,height)},
   tick(deltaMs,reduced=false,assembling=false){
    let pending=false;
-   for(const [id,entry] of entries){
-    const goal=enabled&&!assembling&&id===target?1:0;
-    const step=Math.max(0,deltaMs)/420;
-    entry.value=reduced?goal:entry.value+Math.sign(goal-entry.value)*Math.min(Math.abs(goal-entry.value),step);
-    if(Math.abs(goal-entry.value)<.0001)entry.value=goal;
-    entry.mesh.material.uniforms.alpha.value=entry.value*(dark?.70:.64);
-    entry.mesh.visible=entry.value>0&&!assembling;
-    pending ||= entry.value!==goal;
+   for(const [id,e] of entries){
+    const goal=enabled&&!assembling&&id===target?1:0,step=Math.max(0,deltaMs)/420;
+    e.value=reduced?goal:e.value+Math.sign(goal-e.value)*Math.min(Math.abs(goal-e.value),step);
+    if(Math.abs(goal-e.value)<.0001)e.value=goal;
+    e.group.visible=e.value>0&&!assembling;
+    e.base.material.uniforms.alpha.value=e.value*(dark?.85:1.);
+    pending ||= e.value!==goal;
    }
    return pending;
   },
-  getState:()=>({enabled,target,mode:'local-ground-glow',scenePasses:1,
-   visible:[...entries].filter(([,e])=>e.mesh.visible).map(([id,e])=>({id,opacity:e.value})),
-   renderTargets:0}),
-  dispose(){for(const {mesh} of entries.values()){scene.remove(mesh);mesh.material.dispose()}geometry.dispose();entries.clear();},
+  getState:()=>({enabled,target,mode:'selective-bloom-ground',rings:false,moving:false,
+   visible:[...entries].filter(([,e])=>e.group.visible).map(([id,e])=>({id,opacity:e.value}))}),
+  dispose(){materials.forEach(m=>m.dispose());plane.dispose();scene.clear();entries.clear();},
  };
 }
