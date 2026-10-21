@@ -30,8 +30,9 @@ test('local water and AO overlay is reversible and never replaces the A-C materi
  const uv=waterMesh.geometry.attributes.uv;
  assert.ok(Math.abs(uv.getX(0))<=.176&&Math.abs(uv.getY(0))<=.176,'river UV0 is rewritten to world scale 0.35·(x,z)');
  assert.equal(water.color.getHexString(),'2f86ad');
- assert.equal(water.roughness,.12);assert.equal(water.metalness,.18);assert.equal(water.envMapIntensity,.45);
- assert.equal(water.normalMap,local.water.normal);assert.equal(water.normalScale.x,1.4);
+ assert.equal(water.roughness,.055);assert.equal(water.metalness,.5);assert.equal(water.envMapIntensity,1.3);
+ assert.equal(water.normalMap,local.water.normal);assert.equal(water.normalScale.x,1.9);
+ assert.deepEqual(lighting.waterMeshes(),[waterMesh],'glints must sample the same river meshes');
  assert.equal(water.envMap,local.water.sky);
  assert.equal(water.aoMap,null);assert.equal(water.lightMap,null);
  assert.equal(plaster.aoMap,local.aoMaps.get('price'));assert.equal(plaster.aoMapIntensity,.9);
@@ -61,7 +62,7 @@ test('water drifts only while the local overlay is visible and motion is allowed
 test('night keeps the local AO and switches the water to its night palette',()=>{
  const {lighting,resources,local,water,plaster}=fixture();
  lighting.apply(resources,{enabled:true,baked:true,dark:true,local:{resources:local}});
- assert.ok(Math.abs(water.color.r-.012)<1e-6&&Math.abs(water.color.g-.06)<1e-6&&Math.abs(water.color.b-.13)<1e-6);
- assert.equal(water.envMapIntensity,.35);assert.equal(water.roughness,.12);
+ assert.ok(Math.abs(water.color.r-.018)<1e-6&&Math.abs(water.color.g-.075)<1e-6&&Math.abs(water.color.b-.15)<1e-6);
+ assert.equal(water.envMapIntensity,.9);assert.equal(water.roughness,.07);assert.equal(water.metalness,.58);assert.equal(water.normalScale.x,1.7);
  assert.equal(plaster.aoMapIntensity,.55);
 });

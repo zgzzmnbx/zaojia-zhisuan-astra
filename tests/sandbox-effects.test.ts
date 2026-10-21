@@ -14,8 +14,17 @@ test('effect preferences preserve explicit off and migrate legacy enhancement wi
   values.clear();for(const c of sandboxEffectControls)values.set('astra.sandbox.'+c.key,'off');
   assert.ok(Object.values(readSandboxEffects()).every(v=>v===false));
   values.clear();values.set('astra.sandbox.surface-detail','off');
-  assert.deepEqual(readSandboxEffects(),{studioLighting:true,softShadows:false,bakedLighting:false,brightBackground:true,nightBloom:true,localSurface:false});
+  assert.deepEqual(readSandboxEffects(),{studioLighting:true,softShadows:false,bakedLighting:false,brightBackground:true,nightBloom:true,localSurface:true});
   values.set('astra.sandbox.soft-shadows','on');assert.equal(readSandboxEffects().softShadows,true);
+ }finally{if(descriptor)Object.defineProperty(globalThis,'localStorage',descriptor);else delete (globalThis as any).localStorage;}
+});
+
+test('new installations enable the local water effect by default',()=>{
+ const descriptor=Object.getOwnPropertyDescriptor(globalThis,'localStorage');
+ Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:()=>null}});
+ try{
+  assert.equal(readSandboxEffects().localSurface,true);
+  assert.equal(readSandboxEffects().nightBloom,true);
  }finally{if(descriptor)Object.defineProperty(globalThis,'localStorage',descriptor);else delete (globalThis as any).localStorage;}
 });
 

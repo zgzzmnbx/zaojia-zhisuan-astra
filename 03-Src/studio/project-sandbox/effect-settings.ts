@@ -5,7 +5,7 @@ export const sandboxEffectControls=[
  {id:'softShadows',key:'soft-shadows',label:'柔和阴影',scope:'日间',hint:'开启阴影后，柔化建筑投影边缘'},
  {id:'bakedLighting',key:'baked-lighting',label:'烘焙光照',scope:'日间',hint:'增加接触层次与间接光照'},
  {id:'brightBackground',key:'bright-background',label:'明亮背景',scope:'日间',hint:'提亮外围背景与地面'},
- {id:'localSurface',key:'local-surface',label:'水景质感',scope:'日夜',hint:'水面缓慢流动并增加建筑环境遮蔽'},
+ {id:'localSurface',key:'local-surface',label:'水景质感',scope:'日夜',hint:'水面高光反射、缓慢波纹与漂浮光点，并增加建筑环境遮蔽'},
  {id:'nightBloom',key:'night-bloom',label:'夜航泛光',scope:'夜航',hint:'让夜航灯带与光点向周围扩散'},
 ] as const;
 export type SandboxEffects=Record<typeof sandboxEffectControls[number]['id'],boolean>;

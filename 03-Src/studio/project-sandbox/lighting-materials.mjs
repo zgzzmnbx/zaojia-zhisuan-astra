@@ -3,7 +3,7 @@ import {surfaceIdentity} from './surface-identity.mjs';
 import {dayProfile} from './render-profile.mjs';
 const plasterNames=new Set(['Warm plaster','Porcelain white','Limestone foundation']);
 const WATER='Blue river';
-const WATER_DAY=new Color(0x2f86ad),WATER_NIGHT=new Color().setRGB(.012,.06,.13);
+const WATER_DAY=new Color(0x2f86ad),WATER_NIGHT=new Color().setRGB(.018,.075,.15);
 /** Theme owns color/emissive; this layer restores all surface properties from zone clones. */
 export function createLightingMaterials(root){
  const entries=[],seen=new Map();let settle=1,giStrength=dayProfile.gi;
@@ -60,8 +60,8 @@ export function createLightingMaterials(root){
     const localResources=local.resources;
     if(water){
      m.color.copy(dark?WATER_NIGHT:WATER_DAY);
-     m.roughness=.12;m.metalness=.18;m.envMapIntensity=dark?.35:.45;
-     m.normalMap=localResources.water.normal;m.normalScale.setScalar(1.4);
+     m.roughness=dark?.07:.055;m.metalness=dark?.58:.5;m.envMapIntensity=dark?.9:1.3;
+     m.normalMap=localResources.water.normal;m.normalScale.setScalar(dark?1.7:1.9);
      m.envMap=localResources.water.sky;
      m.aoMap=null;m.aoMapIntensity=0;
      m.lightMap=null;m.lightMapIntensity=0;
@@ -75,7 +75,8 @@ export function createLightingMaterials(root){
    }
    if(oldMap!==m.lightMap||oldNormal!==m.normalMap||oldAo!==m.aoMap||oldEnv!==m.envMap)m.needsUpdate=true;
   }
- },setAssembly(active,enabled,dark){
+ },waterMeshes:()=>waterEntries.flatMap(entry=>entry.meshes),
+ setAssembly(active,enabled,dark){
   if(active)settle=0;
   for(const {material} of entries)if(enabled&&material.lightMap)material.lightMapIntensity=dark||active?0:giStrength*settle;
  },tick(delta,assembling,enabled,dark,reduced=false,local=false,now=0){
