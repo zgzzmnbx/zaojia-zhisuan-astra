@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>造价智算 · 沙盘质感预览</title>
+</head>
+<body>
+<main id="app">
+  <div id="scene" aria-label="可旋转的沙盘光影预览"></div>
+
+  <header class="head glass">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3 21 8l-9 5-9-5 9-5Z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 16.5l9 5 9-5"/></svg>
+      </span>
+      <div class="brand-text">
+        <div class="brand-line"><strong>造价智算</strong><span class="divider">/</span><span class="product">沙盘质感预览</span></div>
+        <p class="sub">sandbox-detail.glb · 质感增强 v2.2.0 · 全本地资源</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="panel glass" aria-label="光影设置">
+    <header class="panel-head"><strong>光影</strong><span class="tag">运行时参数</span></header>
+    <div class="rows" role="group" aria-label="显示开关">
+      <button class="row" data-key="baked" aria-pressed="true">
+        <span class="row-text"><span class="row-title">烘焙光照</span><span class="row-note">Cycles 照度图 × 8</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+      <button class="row" data-key="environment" aria-pressed="true">
+        <span class="row-text"><span class="row-title">环境反射</span><span class="row-note">Studio Small 09 HDR</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+      <button class="row" data-key="normal" aria-pressed="true">
+        <span class="row-text"><span class="row-title">石膏法线</span><span class="row-note">强度 0.055 · 3×3</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+      <button class="row" data-key="detail" aria-pressed="true">
+        <span class="row-text"><span class="row-title">表面细节</span><span class="row-note">64 采样 AO × 8 · 掠射反射</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+      <button class="row" data-key="water" aria-pressed="true">
+        <span class="row-text"><span class="row-title">水面微光</span><span class="row-note">法线流动 · 天空反射</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+      <button class="row" data-key="shadows" aria-pressed="true">
+        <span class="row-text"><span class="row-title">实时阴影</span><span class="row-note">PCF · 1024</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+      <button class="row" data-key="night" aria-pressed="false">
+        <span class="row-text"><span class="row-title">夜航</span><span class="row-note">夜间配色 · 发光导轨</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+      <button class="row" data-key="orbit" aria-pressed="false">
+        <span class="row-text"><span class="row-title">自动环游</span><span class="row-note">缓慢环绕沙盘</span></span>
+        <span class="switch" aria-hidden="true"></span>
+      </button>
+    </div>
+    <button class="reset" id="reset" type="button">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      <span>重置视角</span><kbd>R</kbd>
+    </button>
+  </section>
+
+  <div class="foot glass" role="status" aria-live="polite">
+    <span class="dot" aria-hidden="true"></span><span id="scene-state">正在载入…</span><span class="sep">·</span><span id="stats">—</span>
+  </div>
+
+  <div class="hint glass">拖动旋转 · 滚轮缩放 · 右键平移</div>
+  <p class="sources glass">光照：Cycles 烘焙 · AO：本地射线烘焙 · 水面：程序法线 + 天空反射 · HDR / 法线：Poly Haven CC0</p>
+
+  <div id="loading" class="loading">
+    <span class="spinner" aria-hidden="true"></span>
+    <div><strong>正在载入光影沙盘</strong><p id="loading-note">读取模型、8 张照度图、AO、HDR 与天空反射…</p></div>
+  </div>
+
+  <div id="error" class="error glass" role="alert" hidden>
+    <strong>预览未能载入</strong>
+    <p id="error-note">请重新打开此文件；若仍失败，请核对同目录模型资源。</p>
+  </div>
+</main>
+<script type="module" src="./main.js"></script>
+</body>
+</html>

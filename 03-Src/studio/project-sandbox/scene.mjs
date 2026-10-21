@@ -5,7 +5,7 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import modelUrl from '../../../05-视觉识别/02-3D场景/white-sandbox-v0.1.0/white-sandbox.glb?url';
-import lightmappedModelUrl from '../../../05-视觉识别/02-3D场景/lighting-v1/sandbox-lightmapped.glb?url';
+import detailedModelUrl from '../../../05-视觉识别/02-3D场景/lighting-v2/sandbox-detail.glb?url';
 import {loadSandboxLighting} from './lighting.mjs';
 import {createLightingMaterials} from './lighting-materials.mjs';
 import {createInformationFlow} from './information-flow.js';
@@ -58,11 +58,11 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  let options={enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false};
  function ensureLighting(){
   if(!options.enhanced||lighting||loadingLighting||lightingStatus==='fallback'||disposed)return;
-  loadingLighting=true;lightingStatus='loading';lightingMessage='';onLightingStatus('正在载入增强光照…');
+  loadingLighting=true;lightingStatus='loading';lightingMessage='';onLightingStatus('正在载入增强质感…');
   loadSandboxLighting(renderer,pmrem,()=>disposed).then(resources=>{
    if(disposed){resources.dispose();return;}
    lighting=resources;lightingStatus='ready';onLightingStatus('');theme();request();
-  }).catch(()=>{if(!disposed){lightingStatus='fallback';lightingMessage='增强光照加载失败，已使用基础画面';onLightingStatus(lightingMessage);request();}})
+  }).catch(()=>{if(!disposed){lightingStatus='fallback';lightingMessage='增强质感加载失败，已使用基础画面';onLightingStatus(lightingMessage);request();}})
    .finally(()=>{loadingLighting=false;if(disposed)pmrem.dispose();});
  }
  function allowed(){return !disposed&&options.active&&inView&&!document.hidden}
@@ -157,7 +157,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   // autoUpdate remains false, so normal static scenes stop redrawing shadows.
   if(wasBuilding)renderer.shadowMap.needsUpdate=true;
   if(wasBuilding&&!building){lightingMaterials?.setAssembly(false,options.enhanced,options.dark);flow.setPlaying(options.flow);}
-  const lightingPending=lightingMaterials?.tick(delta*1000,building,options.enhanced,options.dark,reduced.matches);
+  const lightingPending=lightingMaterials?.tick(delta*1000,building,options.enhanced,options.dark,reduced.matches,time);
   if(flight){const t=Math.min(1,(time-flight.start)/950),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);if(t===1)flight=null;}
   if(viewFlight){const t=reduced.matches?1:Math.min(1,(time-viewFlight.start)/950),e=1-(1-t)**3;camera.setViewOffset(width,height,viewFlight.x0+(viewFlight.x1-viewFlight.x0)*e,viewFlight.y0+(viewFlight.y1-viewFlight.y0)*e,width,height);if(t===1)viewFlight=null;}
   if(beacon.visible){beacon.children.forEach((ring,i)=>{const pulse=reduced.matches?.5:(Math.sin(time/650-i*1.5)+1)/2;ring.scale.setScalar(1+pulse*.08);ring.material.opacity=.3+pulse*.4})}
@@ -203,7 +203,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  for(const event of ['pointerover','pointerout','focusin','focusout'])host.parentElement.addEventListener(event,request,{signal:events.signal});
  renderer.domElement.style.cursor='grab';renderer.domElement.addEventListener('pointermove',e=>{renderer.domElement.style.cursor=down?'grabbing':hit(e)?'pointer':'grab'},{signal:events.signal});
  const loader=new GLTFLoader();
- fetch(lightmappedModelUrl,{signal:abort.signal}).then(r=>{if(!r.ok)throw Error('模型文件读取失败');return r.arrayBuffer()}).catch(error=>{if(error.name==='AbortError')throw error;return fetch(modelUrl,{signal:abort.signal}).then(r=>{if(!r.ok)throw Error('模型文件读取失败');return r.arrayBuffer()})}).then(buffer=>loader.parseAsync(buffer,'')).then(gltf=>{
+ fetch(detailedModelUrl,{signal:abort.signal}).then(r=>{if(!r.ok)throw Error('模型文件读取失败');return r.arrayBuffer()}).catch(error=>{if(error.name==='AbortError')throw error;return fetch(modelUrl,{signal:abort.signal}).then(r=>{if(!r.ok)throw Error('模型文件读取失败');return r.arrayBuffer()})}).then(buffer=>loader.parseAsync(buffer,'')).then(gltf=>{
   if(disposed){releaseObject(gltf.scene);return}model=gltf.scene;model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);materials=createSandboxMaterials(model);lightingMaterials=createLightingMaterials(model);ensureLighting();roofAnchors.attach(model);model.updateMatrixWorld(true);model.traverse(o=>{if(!o.isMesh)return;let owner=o;while(owner&&!owner.userData.zone)owner=owner.parent;const id=owner?.userData.zone;if(!id)return;const box=new THREE.Box3().setFromObject(o);if(!zoneBounds.has(id))zoneBounds.set(id,box);else zoneBounds.get(id).union(box)});theme();onReady();request();
  }).catch(error=>{if(!disposed&&error.name!=='AbortError')onError('沙盘加载失败，可以重试或使用经典界面。')});
  theme();request();

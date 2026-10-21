@@ -16,6 +16,8 @@ runtime/astra-gork-notifications/
 .openai/
 .sites-runtime/
 dist/
+05-视觉识别/02-3D场景/lighting-v1/preview-build/
+05-视觉识别/02-3D场景/lighting-v2/preview-build/
 03-Src/frontend-debug/uploaded-example/sample.json
 03-Src/frontend-debug/uploaded-example/private/
 
