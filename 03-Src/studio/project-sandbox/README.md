@@ -1,3 +1,16 @@
+# 项目沙盘 water 候选 v0.10.74-water.1
+
+`river-water.mjs` 以原河面网格的共享几何增加独立水体层，不替换建筑材质。`water-settings.ts` / `WaterControls.tsx` 提供独立持久化与调节；现有水景/AO偏好保留，启用新水体时只暂停旧水纹动画。
+
+- 视觉：冷青浅水、缓慢细流、银白波光、隐约桥影。法线沿源曲线 `z=5.1-1.25 sin(0.24x)` 变换，两相交叉过渡，叠加细纹；岸边颜色过渡为视觉浅水近似，无流体/水深求解。
+- 普通：PBR环境反射；高质量：Three Reflector平面倒影768×768，缓存相机/场景静止的画面，没有折射额外pass。
+- 水面高光阈值提取加入现有独立Bloom层，深度遮挡与选中建筑Bloom共用。没有给整条河增加发光底色。
+- 原始模型/建筑/主光/夜航/装配/业务均保留；停用、离开释放，动画遵守可见性与减少动效。
+- 来源：Three.js（MIT）Water2双相流动、Water.js平面反射与分层法线；实际复用当前项目安装的Three Reflector，未复制上游dev版覆盖依赖。本地水纹仍采用原lighting-v2资产。
+- https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Water2.js
+- https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Water.js
+- 实测与视觉待确认边界见 `00-docs/handoff/2026-10-22-water候选分支验收.md`。
+
 # 项目沙盘工作台 v0.10.67
 
 当前日间外观：雾白背景、冷白建筑与局部白色涂层管罐。表面参数集中在 `render-profile.mjs`，通过 `surface-identity.mjs` 保留旧基底语义，原染色/装配继续组合。优先加载 lighting-v2，失败依次回退 v1 和原 GLB；原模型与贴图保留。增强日间的固定阴影视锥覆盖装配峰值、使用 2048，关闭增强/夜航恢复 1024。详见 [资产来源与复现](../../../05-视觉识别/02-3D场景/lighting-v2/README.md)。

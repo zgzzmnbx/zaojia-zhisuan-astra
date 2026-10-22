@@ -268,3 +268,8 @@
 .sandbox-uplight-settings fieldset{min-width:0}.sandbox-uplight-settings legend{font-size:13px;font-weight:600;color:var(--ink)}
 .sandbox-uplight-settings .trial-slider{padding:8px 0}.sandbox-uplight-settings .trial-slider .range{color:var(--astra-primary)}
 .sandbox-uplight-color{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink)}.sandbox-uplight-color output{margin-left:auto;font-size:12px;color:var(--muted)}.sandbox-uplight-color input{width:40px;height:28px;padding:2px;border:1px solid var(--line);border-radius:6px;background:var(--paper);cursor:pointer}
+
+.sandbox-water-settings{border:0;border-top:1px solid var(--line);padding:14px 4px;margin-top:12px;min-width:0}.sandbox-water-settings legend{font-size:13px;font-weight:600;color:var(--ink)}.sandbox-water-toggle{display:flex;align-items:center;gap:8px;font-size:13px}.sandbox-water-quality{display:flex;gap:6px;margin-top:10px}.sandbox-water-quality .btn{flex:1;font-size:13px}.sandbox-water-quality [aria-pressed=true]{color:var(--astra-primary);background:var(--astra-primary-soft,#eaf4ff);border-color:var(--astra-primary)}.sandbox-water-settings p{font-size:12px;color:var(--muted);margin:6px 0}.sandbox-water-settings .trial-slider{padding:6px 0}
+.sandbox-water-quality .btn[aria-pressed=false]{background:var(--paper);color:var(--muted);border-color:var(--line)}
+.sandbox-view-options .sandbox-water-settings .trial-slider{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:13px;padding:8px 0}
+.sandbox-view-options .sandbox-water-settings .trial-slider .range{grid-column:1/-1;width:100%}

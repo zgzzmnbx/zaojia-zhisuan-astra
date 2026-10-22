@@ -2,9 +2,9 @@ import {Color,DepthTexture,HalfFloatType,MeshDepthMaterial,ShaderMaterial,Vector
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {FullScreenQuad} from 'three/addons/postprocessing/Pass.js';
 
-// Keep beauty / night rendering intact. Only the focus installation enters Bloom.
+// Keep beauty / night rendering intact. Only focus lighting and the brightest water highlights enter Bloom.
 // Cache opaque depth between camera / geometry changes for proper occlusion.
-export function createFocusBloomRenderer(renderer,scene,camera,glow){
+export function createFocusBloomRenderer(renderer,scene,camera,glow,water=null){
  let depth=null,effects=null,bloom=null,quad=null,signature='',dirty=true,depthDraws=0;
  const depthMaterial=new MeshDepthMaterial();depthMaterial.colorWrite=false;
  function release(){depth?.dispose();effects?.dispose();bloom?.dispose();quad?.material.dispose();quad?.dispose();depth=effects=bloom=quad=null;signature='';dirty=true;}
@@ -28,7 +28,7 @@ export function createFocusBloomRenderer(renderer,scene,camera,glow){
  }
  return {invalidate(){dirty=true},
   render(){
-   if(!glow.getState().visible.length){if(depth)release();return;}
+   if(!glow.getState().visible.length&&!water?.bloomActive()){if(depth)release();return;}
    ensure();
    const key=[...camera.matrixWorld.elements,...camera.projectionMatrix.elements].join(',');
    const target=renderer.getRenderTarget(),auto=renderer.autoClear,clear=renderer.getClearColor(new Color()),alpha=renderer.getClearAlpha(),override=scene.overrideMaterial,background=scene.background,shadows=renderer.shadowMap.enabled;
@@ -37,7 +37,7 @@ export function createFocusBloomRenderer(renderer,scene,camera,glow){
      renderer.setRenderTarget(depth);renderer.autoClear=true;renderer.shadowMap.enabled=false;scene.overrideMaterial=depthMaterial;scene.background=null;renderer.render(scene,camera);
      scene.overrideMaterial=override;scene.background=background;renderer.shadowMap.enabled=shadows;depthDraws++;signature=key;dirty=false;
     }
-    glow.setDepth(depth.depthTexture,effects.width,effects.height);
+    glow.setDepth(depth.depthTexture,effects.width,effects.height);water?.setDepth(depth.depthTexture,effects.width,effects.height);
     renderer.setClearColor(0,0);renderer.setRenderTarget(effects);renderer.autoClear=true;renderer.render(glow.scene,camera);
     bloom.render(renderer,null,effects,0,false);
     renderer.setRenderTarget(target);renderer.autoClear=false;quad.render(renderer);
