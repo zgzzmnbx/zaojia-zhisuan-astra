@@ -18,3 +18,7 @@ body.baked-mode{--extra-controls-height:48px}.miniature-controls{height:48px;dis
 
 /* Isolated branch preview: no business styles or preference writes. */
 :root{--dws-font-size-body:14px;--dws-font-size-control:13px;--dws-font-size-meta:12px}header{height:58px}.brand h1 span{margin-left:8px}.preview-note{font-size:var(--dws-font-size-meta);color:#536670;line-height:1.65;padding:12px 28px;background:white;margin:0}#viewport{height:calc(100dvh - 58px - 59px - 46px);min-height:470px}.corner-label p{display:none}.zoom .btn{font-size:13px;min-width:48px;width:auto}.gallery-title h2{font-size:16px}.return-link{font-size:13px;color:#215d70}input{font:inherit}
+
+/* Isolated dual-mode controls; existing daisyUI buttons remain the primitive. */
+.mode-switch{display:flex;align-items:center;gap:8px;padding:12px 0;flex-wrap:wrap}.mode-switch>span{font-size:var(--dws-font-size-xs,12px);color:var(--muted,#627176);line-height:1.5;margin-left:8px}.mode-switch .btn[aria-pressed="true"]{background:var(--astra-primary,#228be6);border-color:var(--astra-primary,#228be6);color:white}.mode-host{position:absolute;inset:0;overflow:hidden}.mode-host[hidden]{display:none!important}.mode-host canvas{display:block;width:100%;height:100%}.corner-label,.zoom,.viewer-footer{z-index:2}#loading{z-index:5}.corner-label,.viewer-footer{pointer-events:none}.btn:disabled{opacity:.45;cursor:not-allowed}
+.app [hidden]{display:none!important}

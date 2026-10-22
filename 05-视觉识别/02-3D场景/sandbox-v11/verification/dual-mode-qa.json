@@ -1,0 +1,54 @@
+{
+  "verifiedAtUTC": "2026-10-22T22:51:35Z",
+  "baselineMainCommit": "d91b2297d9e962db4cfc3bf0469a8475f07ea7eb",
+  "priorAssetCommit": "01e9c92d04a78f19ed692c36ac0660398d07d6f3",
+  "previewEntry": "/sandbox-v11.html",
+  "sourceTests": {
+    "total": 445,
+    "passed": 445,
+    "failed": 0,
+    "previewTotal": 58,
+    "previewPassed": 58,
+    "newOriginalAdapterTests": 11,
+    "newModeAndPersistenceTests": 27
+  },
+  "builds": {
+    "typescriptAndProduction": "passed via npm run build",
+    "standalone": "passed via npm run build:sandbox-v11"
+  },
+  "v11AssetIdentity": {
+    "committedModelFiles": 15,
+    "allUnchangedFromPriorAssetCommit": true,
+    "originalGLBSHA256": "9e3805133c5ebe77c15389ed416460ac7f2b923e0eb3f4f1067a5a8ce33bc45f",
+    "geometryBufferViews": 98,
+    "pngTextures": 11,
+    "actualGLTFLoader": "passed with bitmap upload mocked; not a GPU test"
+  },
+  "originalMode": {
+    "renderer": "actual 03-Src/studio/project-sandbox/scene.mjs mountSandbox",
+    "model": "actual lighting-v2/sandbox-surface.glb plus its existing fallback chain",
+    "settings": "pinned source factory defaults; not the user device persisted settings",
+    "productionEntry": "unchanged call sites; optional neutral scene extension hooks added",
+    "notIncluded": "full React workbench business UI, idle auto-orbit scheduling, production task-state dual-mode integration"
+  },
+  "isolation": {
+    "renderers": "separate, lazy, one active; cached inactive owners retain GPU resources until disposal",
+    "preferences": "astra.sandbox-v11.preview.v1 only; no preview writes to production keys",
+    "camera": "first-visit approximate projection alignment; per-mode in-memory poses restored",
+    "context": "V11 hides city, street and baked ground; original uses clean cloned city/street geometry and private realtime materials, never baked maps/colors/ground",
+    "dof": "V11 only; independent enabled and strength persistence; disabled/zero/failure uses sharp output"
+  },
+  "browserGPU": "NOT VERIFIED. Cloud browser cannot reach executor localhost; standalone Chromium is restricted. No bypass attempted.",
+  "performance": "NOT MEASURED on target desktop GPU; two visited renderer owners remain allocated while inactive is paused",
+  "mainMergedOrChanged": false,
+  "productionBusinessIntegration": "not implemented; use MAINLINE-INTEGRATION-PROMPT.md and perform desktop GPU/business acceptance",
+  "deployableStaticSubset": {
+    "files": 60,
+    "totalBytes": 100269346,
+    "includes": "sandbox-v11.html, assets/*, sandbox-v11/*",
+    "unrelatedPublicPagesExcluded": true,
+    "rootAbsolutePathsRequired": false,
+    "allThreeOriginalModelFilesByteIdentical": true,
+    "v11ModelPackageByteIdentical": true
+  }
+}
