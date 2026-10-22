@@ -1,0 +1,13 @@
+{
+  "glb_sha256": "9e3805133c5ebe77c15389ed416460ac7f2b923e0eb3f4f1067a5a8ce33bc45f",
+  "bytes": 38455656,
+  "mesh_count": 11,
+  "material_count": 20,
+  "fine_surface_material_count": 9,
+  "color_contract": "All unlit. Large faces use sRGB display-encoded AgX+0.30 diffuse baked textures. Fine faces use linear COLOR_0 encoding of same display-transformed physical surface radiance. Base factor white, no texture on fine material. Three output sRGB, NoToneMapping, exposure 1, no additional lighting/AO.",
+  "hero_geometry": "Same original 7 meshes/positions/triangles; material splits and per-face corner color only.",
+  "context_buildings": 139,
+  "context_nodes": 3,
+  "cause": "UV islands narrower than texel centers, not widespread reversed normals or runtime AO.",
+  "fix": "Multi-point Cycles diffuse surface baking on tiny faces, rejecting inside-solid samples; no image blur or forced white floor."
+}

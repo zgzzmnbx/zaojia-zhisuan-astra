@@ -1,0 +1,15 @@
+{
+  "baseMainCommit": "d91b2297d9e962db4cfc3bf0469a8475f07ea7eb",
+  "baseVersion": "0.10.74-water.4",
+  "previewEntry": "/sandbox-v11.html",
+  "modelSHA256": "9e3805133c5ebe77c15389ed416460ac7f2b923e0eb3f4f1067a5a8ce33bc45f",
+  "sourceTests": {"total": 407, "passed": 407, "failed": 0, "addedV11Tests": 20},
+  "typescript": "passed via npm run build",
+  "productionBuild": "passed; includes original entries and isolated sandbox-v11.html",
+  "productionCodeAndAssets": "unchanged; only build entry, package scripts and documentation added alongside isolated V11 files",
+  "assetVerification": {"geometryBufferViews": 98, "pngTextures": 11, "allSourceBytesPreserved": true, "realGLTFLoader": "passed; bitmap upload mocked"},
+  "browserGPU": "NOT VERIFIED: cloud browser cannot reach executor localhost and standalone Chromium is restricted in this environment",
+  "performance": "NOT MEASURED on a target desktop GPU",
+  "fullRebake": "Not self-contained; intermediate Blender scenes and sampling caches intentionally not committed",
+  "mainMergeOrDeployment": "not requested and not performed"
+}

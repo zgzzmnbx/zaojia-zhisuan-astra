@@ -1,0 +1,40 @@
+{
+  "identical_to_v09": true,
+  "meshes": {
+    "zone_import": {
+      "hash": "e121ee69abe096dc200bc3c79395f11552422b38bc1743048271497233dd1016",
+      "vertices": 11707,
+      "polygons": 6240
+    },
+    "zone_knowledge": {
+      "hash": "4fb88f7dd5652e218d3ba233fc4e69943f2942e4a9693a039d0b7c53a5a26223",
+      "vertices": 17378,
+      "polygons": 9592
+    },
+    "zone_price": {
+      "hash": "56b0d440b8b3542e030d7080c50591ca5fffddc2688c7d7fb6dfadd1061d80d0",
+      "vertices": 44505,
+      "polygons": 40864
+    },
+    "zone_report": {
+      "hash": "fa213f4218589d5abfbcdd58934fc5fe70ba389a3186478bfb4e1471cbd30c1e",
+      "vertices": 16394,
+      "polygons": 9164
+    },
+    "zone_review": {
+      "hash": "e986cdf6f6b0bcb8ee24246225233276ac47904054b1aa878a42527361632afe",
+      "vertices": 15976,
+      "polygons": 10968
+    },
+    "zone_risk": {
+      "hash": "d727eea8c6c72e4b9492850fc4740a19d166bfa7926f0523aac5226d21a5944c",
+      "vertices": 26464,
+      "polygons": 27360
+    },
+    "zone_table": {
+      "hash": "b7402efbd9889fd71c39b1148555e7583224f110ab58e9b83fd5d25502ddefee",
+      "vertices": 30525,
+      "polygons": 18344
+    }
+  }
+}
