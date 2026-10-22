@@ -15,7 +15,7 @@ export const contactFootprints=[
  [-.4,10.1,.503,2.1,1.35],[2.2,10.1,.503,2.1,1.35],[4.8,10.1,.503,2.1,1.35],
 ];
 
-export function createContactShadows(scene){
+export function createContactShadows(scene,floorY=-.704){
  const canvas=document.createElement('canvas');canvas.width=canvas.height=128;
  const context=canvas.getContext('2d'),pixels=context.createImageData(128,128);
  for(let y=0;y<128;y++)for(let x=0;x<128;x++){
@@ -28,7 +28,7 @@ export function createContactShadows(scene){
  const geometry=new PlaneGeometry(1,1),material=new MeshBasicMaterial({map:texture,transparent:true,opacity:.18,depthWrite:false,toneMapped:false});
  const mesh=new InstancedMesh(geometry,material,contactFootprints.length);
  const matrix=new Matrix4(),rotation=new Quaternion().setFromAxisAngle(new Vector3(1,0,0),-Math.PI/2);
- contactFootprints.forEach(([x,y,z,w,h],i)=>{matrix.compose(new Vector3(x,z,-y),rotation,new Vector3(w,h,1));mesh.setMatrixAt(i,matrix)});
+ contactFootprints.forEach(([x,y,z,w,h],i)=>{matrix.compose(new Vector3(x,i===0?floorY:z,-y),rotation,new Vector3(w,h,1));mesh.setMatrixAt(i,matrix)});
  mesh.name='Static contact shadows';mesh.frustumCulled=false;mesh.renderOrder=-1;scene.add(mesh);
  let enabled=true,night=false;
  const sync=()=>{mesh.visible=enabled&&!night};

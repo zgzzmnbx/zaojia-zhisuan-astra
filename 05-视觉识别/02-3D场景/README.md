@@ -1,5 +1,9 @@
 # 造价智算 · 白模沙盘
 
+## water 候选河道 · v0.10.74-water.4
+
+当前 codex/water 在运行时通过 `03-Src/studio/project-sandbox/river-channel.mjs` 派生真实两岸实体、河床与加厚底座。岸面 0.13、水面 -0.23、河床 -0.98、底座下沿 -1.18（场景单位）。原 GLB/Blender 工程保持不变；建筑与桥梁高度不变。`channelProfile` 是本候选河道几何参数入口，原样机不代表此候选更新。验收见 `00-docs/handoff/2026-10-22-water候选分支验收.md`。
+
 ## 正式沙盘 · 纯色版
 
 UI v0.10.66 新增「视图 → 纯色版」，默认关闭，复用已确认 Blender 样板光影，保留主沙盘交互与动画。[资产与映射说明](solid-lighting-v1/README.md)；[正式浏览器验收](../../00-docs/handoff/2026-10-21-纯色版沙盘光影验收.md)。

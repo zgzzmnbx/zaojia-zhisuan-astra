@@ -20,13 +20,13 @@ export function assemblyShadowEnvelope(root,order,monument){
  if(monument)envelope.union(new Box3().setFromObject(monument));
  return envelope;
 }
-export function fitSandboxShadow(sun,envelope){
+export function fitSandboxShadow(sun,envelope,floorY=-.71){
  const camera=sun.shadow.camera;
  camera.position.copy(sun.position);camera.lookAt(sun.target.position);camera.updateMatrixWorld(true);
  const bounds=new Box3(),direction=sun.target.position.clone().sub(sun.position).normalize();
  for(const x of [envelope.min.x,envelope.max.x])for(const y of [envelope.min.y,envelope.max.y])for(const z of [envelope.min.z,envelope.max.z]){
   const p=new Vector3(x,y,z);bounds.expandByPoint(p.clone().applyMatrix4(camera.matrixWorldInverse));
-  if(direction.y<0){p.addScaledVector(direction,Math.max(0,(-.71-p.y)/direction.y));bounds.expandByPoint(p.applyMatrix4(camera.matrixWorldInverse));}
+  if(direction.y<0){p.addScaledVector(direction,Math.max(0,(floorY-p.y)/direction.y));bounds.expandByPoint(p.applyMatrix4(camera.matrixWorldInverse));}
  }
  const margin=.45;
  return {left:bounds.min.x-margin,right:bounds.max.x+margin,bottom:bounds.min.y-margin,top:bounds.max.y+margin,near:Math.max(.1,-bounds.max.z-margin),far:-bounds.min.z+margin};

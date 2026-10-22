@@ -38,7 +38,7 @@ export function createRiverWater(renderer,scene,camera,effectsScene,normalUrl,on
  const entries=[],bounds=new Box3(),frustum=new Frustum(),projection=new Matrix4();
  const uniforms={riverNormal:{value:null},riverTime:{value:0},riverRipple:{value:.35},riverReflect:{value:.35},riverHigh:{value:0},riverBloom:{value:.15},riverDark:{value:0},riverReflection:{value:null},riverMatrix:{value:new Matrix4()},riverDepth:{value:null},riverResolution:{value:new Vector2(1,1)}};
  let settings=normalizeWaterSettings(null),ready=false,disposed=false,inFrame=false,reflection=null,reflectionDirty=true,reflectionKey='',captures=0,enabled=false,texture=null;
- const material=new MeshPhysicalMaterial({name:'Cold cyan shallow water',color:'#3e8c96',metalness:0,roughness:.19,ior:1.333,envMapIntensity:.8,side:DoubleSide});
+ const material=new MeshPhysicalMaterial({name:'Cold cyan shallow water',color:'#3e8c96',metalness:0,roughness:.19,ior:1.333,envMapIntensity:.8,side:DoubleSide,transparent:true,opacity:.65,depthWrite:false});
  material.onBeforeCompile=shader=>{
   Object.assign(shader.uniforms,uniforms);
   shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vRiverWorld;').replace('#include <begin_vertex>','#include <begin_vertex>\nvRiverWorld=(modelMatrix*vec4(position,1.)).xyz;');
@@ -80,7 +80,7 @@ void main(){
    if(!object.isMesh||Array.isArray(object.material)||surfaceIdentity(object.material).baseName!=='Blue river')return;
    const water=new Mesh(object.geometry,material),highlight=new Mesh(object.geometry,bloomMaterial);
    for(const mesh of [water,highlight]){mesh.matrixAutoUpdate=false;mesh.matrix.copy(object.matrixWorld);mesh.frustumCulled=true;}
-   water.receiveShadow=true;group.add(water);mask.add(highlight);entries.push({original:object,visible:object.visible});bounds.union(new Box3().setFromObject(water));
+   water.receiveShadow=true;water.renderOrder=2;group.add(water);mask.add(highlight);entries.push({original:object,visible:object.visible});bounds.union(new Box3().setFromObject(water));
   });
  }
  function configure(value,{dark=false,environment=null}={}){
