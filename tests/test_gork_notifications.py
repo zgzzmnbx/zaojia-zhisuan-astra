@@ -325,3 +325,56 @@ def test_cancel_retry_is_durable_and_does_not_replay_output(fixture):
     assert remote.cancelled==[('a'*32,'attempt-1')]
     assert len(remote.sent)==1
     assert obj.db().execute('SELECT confirmed FROM cancellations').fetchone()[0]==1
+
+
+@pytest.mark.parametrize('remote_error,expected',[
+    ('EXTERNAL_DISPATCH_FAILED','EXTERNAL_DISPATCH_FAILED'),
+    ('','EXTERNAL_OUTPUT_FAILED'),
+    ('Bearer private credential, traceback details','EXTERNAL_OUTPUT_FAILED'),
+    ('X'*81,'EXTERNAL_OUTPUT_FAILED'),
+])
+def test_failed_receipt_keeps_only_safe_diagnostic_without_replaying(fixture,remote_error,expected):
+    obj,remote,clock=fixture
+    obj.enqueue(event(clock,stage='match_result',status='completed'))
+    obj.step()
+    payload=remote.sent[-1]
+    remote.records[payload['event_id']]={'status':'failed','delivery':{
+        'desktop':'displayed','watch':'not_requested','speech':'not_requested'},'error':remote_error}
+    clock[0]+=3;obj.step()
+    row=obj.db().execute('SELECT status,error,receipt FROM events').fetchone()
+    assert row['status']=='completed'  # A terminal successful reply is not retroactively replayed.
+    # A second fresh producer receives the controller's failed response on dispatch.
+    clock[0]+=1
+    raw=event(clock,stage='match_result',status='completed');obj.enqueue(raw)
+    key=obj.db().execute("SELECT id FROM events WHERE status='pending'").fetchone()[0]
+    remote.records[key]={'status':'failed','delivery':{
+        'desktop':'displayed','watch':'not_requested','speech':'not_requested'},'error':remote_error}
+    obj.step()
+    row=obj.db().execute('SELECT status,error,receipt FROM events WHERE id=?',(key,)).fetchone()
+    assert row['status']=='failed' and row['error']==expected
+    assert 'private credential' not in row['receipt'] and 'private credential' not in row['error']
+    sent=len(remote.sent);clock[0]+=10;obj.step()
+    assert len(remote.sent)==sent
+
+
+def test_polled_failure_retains_diagnostic(fixture):
+    obj,remote,clock=fixture
+    obj.enqueue(event(clock,stage='match_result',status='completed'))
+    key=obj.db().execute('SELECT id FROM events').fetchone()[0]
+    remote.records[key]={'status':'queued','delivery':{}}
+    obj.step();clock[0]+=3
+    remote.records[key]={'status':'failed','delivery':{'desktop':'displayed'},'error':'EXTERNAL_OUTPUT_FAILED'}
+    obj.step()
+    row=obj.db().execute('SELECT status,error FROM events').fetchone()
+    assert dict(row)=={'status':'failed','error':'EXTERNAL_OUTPUT_FAILED'}
+
+
+def test_confirmed_success_clears_prior_transport_error(fixture):
+    obj,remote,clock=fixture
+    obj.enqueue(event(clock,stage='match_result',status='completed'))
+    remote.fail=bridge.sdk.GorkError(503,'CONNECTION_UNAVAILABLE')
+    obj.step()
+    assert obj.db().execute('SELECT error FROM events').fetchone()[0]=='CONNECTION_UNAVAILABLE'
+    remote.fail=None;clock[0]+=4;obj.step()
+    row=obj.db().execute('SELECT status,error FROM events').fetchone()
+    assert dict(row)=={'status':'completed','error':''}

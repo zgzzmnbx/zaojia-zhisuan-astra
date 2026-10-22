@@ -35,7 +35,9 @@ export function createSandboxMaterials(root){
    if(dark&&['Astra blue','Frosted blue glazing'].includes(baseName)){m.emissive.set(0x168fff);m.emissiveIntensity=baseName==='Astra blue'?3.2:1.05;}
    if(trial&&!dark&&cool&&['Porcelain white','Warm plaster'].includes(baseName))m.color.setRGB(.90,.91,.93);
    if(trial&&!dark&&trialBlues[baseName])m.color.lerp(trialBlues[baseName],blueDepth);
-   if(selected&&zone===selected){m.emissive.lerp(highlight,.45);m.emissiveIntensity=trial&&!dark?.07:m.emissiveIntensity+.045;}
+   // Night selection is expressed by the external light installation. Preserve
+   // wall material and authored light strips instead of making every wall emit blue.
+   if(!dark&&selected&&zone===selected){m.emissive.lerp(highlight,.45);m.emissiveIntensity=trial?.07:m.emissiveIntensity+.045;}
   }
  }};
 }

@@ -49,3 +49,12 @@ test('human delivery labels preserve an untranslated value only in diagnostic pa
  assert.equal(deliveryLabel('device_acknowledged'),'设备已确认');
  assert.equal(deliveryLabel('not_requested'),'未请求输出');assert.equal(deliveryLabel('completed_by_os'),'系统播放完成');assert.equal(deliveryLabel('device_playback_completed'),'设备播放完成');assert.equal(deliveryLabel('future_unknown'),'待核对');
 });
+
+
+test('controller dispatch failures stay visible with a safe Chinese reason',()=>{
+ const dispatch=notificationFailure('EXTERNAL_DISPATCH_FAILED','delivery');
+ assert.match(dispatch.title,/Gork 输出异常/);assert.match(dispatch.message,/语音未完成/);
+ assert.equal(dispatch.code,'EXTERNAL_DISPATCH_FAILED');
+ const failed=notificationFailure('EXTERNAL_OUTPUT_FAILED','delivery');
+ assert.match(failed.title,/Gork 输出失败/);assert.match(failed.message,/不会自动重播/);
+});

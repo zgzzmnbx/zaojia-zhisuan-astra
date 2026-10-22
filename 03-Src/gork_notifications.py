@@ -521,8 +521,14 @@ class Notifications:
                         self.client.heartbeat(row['id'], payload['task_id'], payload['attempt'])
                         db.execute('UPDATE events SET heartbeat=? WHERE id=?', (now + self.settings.heartbeat_ms / 1000, row['id']))
                     safe_receipt = {'status': status, 'delivery': {k: str(v)[:80] for k, v in (receipt.get('delivery') or {}).items() if k in {'desktop', 'watch', 'speech'}}}
+                    # Controller failures are final output results, not transport errors.
+                    # Keep only a bounded diagnostic code; never expose raw exceptions.
+                    code = receipt.get('error', '')
+                    code = code if isinstance(code, str) and re.fullmatch(r'[A-Z_]{1,80}', code) else ''
+                    if status == 'failed' and not code:
+                        code = 'EXTERNAL_OUTPUT_FAILED'
                     db.execute('UPDATE events SET status=?,receipt=?,next_try=?,error=? WHERE id=?',
-                               (status, json.dumps(safe_receipt), now + 2, '', row['id']))
+                               (status, json.dumps(safe_receipt), now + 2, code, row['id']))
                     self.cached_status = {'state': 'ready', 'message': '通知接口可用，回执按输出端记录'}
                 except Exception as exc:
                     code = error_code(exc)

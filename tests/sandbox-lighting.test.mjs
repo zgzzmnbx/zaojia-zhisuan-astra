@@ -9,21 +9,22 @@ import {createBuildingEntrance} from '../03-Src/studio/project-sandbox/building-
 import {createFocusGlow} from '../03-Src/studio/project-sandbox/focus-glow.mjs';
 import {dayProfile} from '../03-Src/studio/project-sandbox/render-profile.mjs';
 
-test('local ground glow crossfades only focused buildings and stops at rest without render targets',()=>{
+test('ground bloom crossfades targets, stops at rest and clears on assembly / deselection',()=>{
  const scene=new Group(),glow=createFocusGlow(scene);
  glow.configure({focus:'import'});
  assert.equal(glow.tick(100),true);
  const before=glow.getState().visible[0].opacity;
  assert.ok(before>0&&before<1);
- glow.configure({focus:'price'});
+ glow.configure({focus:'price',animate:false});
  glow.tick(50);
  assert.deepEqual(glow.getState().visible.map(e=>e.id),['import','price']);
  assert.ok(glow.getState().visible[0].opacity<before);
  assert.equal(glow.tick(420),false);
  assert.deepEqual(glow.getState().visible,[{id:'price',opacity:1}]);
  assert.equal(glow.tick(16),false,'Settled light must not keep RAF alive');
- assert.equal(glow.getState().scenePasses,1);
- assert.equal(glow.getState().renderTargets,0);
+ assert.equal(glow.getState().moving,false);
+ glow.configure({focus:'price'});assert.equal(glow.tick(16),false);assert.equal(glow.getState().rings,false);
+ assert.equal(glow.tick(16,true),false,'reduced motion retains a static installation');
  glow.configure({focus:'price',enabled:false});glow.tick(420);
  assert.deepEqual(glow.getState().visible,[]);
  glow.configure({focus:'risk'});glow.tick(16,true);
@@ -32,7 +33,7 @@ test('local ground glow crossfades only focused buildings and stops at rest with
  assert.deepEqual(glow.getState().visible,[],'No floating ground glow during assembly');
  glow.configure({focus:null});glow.tick(420);
  assert.deepEqual(glow.getState().visible,[]);
- glow.dispose();assert.equal(scene.children.length,0);
+ glow.dispose();assert.equal(glow.scene.children.length,0);
 });
 
 function fixture(){

@@ -2,7 +2,8 @@
 export const sandboxDefaults=Object.freeze({
  chatWidth:600,
  roofLabels:true,autoOrbit:true,orbitDelay:2,cool:true,infoVisible:true,shadows:true,flow:true,paintStrength:65,
- groupLogo:'white' as const,groundTone:'gray' as const,enhanced:true,bloom:true,studioLighting:true,softShadows:false,bakedLighting:false,brightBackground:true,nightBloom:true,solidVersion:false,localSurface:true,
+ groupLogo:'white' as const,groundTone:'gray' as const,enhanced:true,bloom:true,focusBeam:true,studioLighting:true,softShadows:false,bakedLighting:false,brightBackground:true,nightBloom:true,solidVersion:false,localSurface:true,
+ uplights:Object.freeze({day:Object.freeze({brightness:100,color:'#b9e4ff'}),night:Object.freeze({brightness:100,color:'#ffffff'})}),
  camera:Object.freeze({elevation:34,zoom:135,distance:85}),
 });
 export function savedSwitch(raw:unknown,on:string,off:string,fallback:boolean){return raw===on?true:raw===off?false:fallback}

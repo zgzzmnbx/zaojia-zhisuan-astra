@@ -83,6 +83,20 @@ test('repeated selection does not accumulate tint or intensity',()=>{
  for(let i=0;i<30;i++)materials.apply({selected:'table'});
  assert.deepEqual(meshes.table.material.emissive.toArray(),expected);assert.equal(meshes.table.material.emissiveIntensity,intensity);
 });
+test('night selection preserves wall colors and authored light strips without blue body emission',()=>{
+ const root=new Group();root.userData.zone='report';
+ for(const name of ['Warm plaster','Porcelain white','Astra blue','Frosted blue glazing']){
+  const m=new MeshStandardMaterial({color:0xeeeeee});m.name=name;root.add(new Mesh(new BoxGeometry(),m));
+ }
+ const materials=createSandboxMaterials(root),snapshot=()=>root.children.map(o=>({color:o.material.color.toArray(),emissive:o.material.emissive.toArray(),intensity:o.material.emissiveIntensity}));
+ materials.apply({dark:true});const baseline=snapshot();
+ materials.apply({dark:true,selected:'report'});assert.deepEqual(snapshot(),baseline);
+ assert.equal(root.children[0].material.emissive.getHex(),0);
+ assert.equal(root.children[2].material.emissiveIntensity,3.2);
+ assert.equal(root.children[3].material.emissiveIntensity,1.05);
+ materials.apply({dark:false,selected:'report'});assert.notEqual(root.children[0].material.emissive.getHex(),0);
+ materials.apply({dark:true,selected:'report'});assert.deepEqual(snapshot(),baseline,'day/night toggles do not leak the daytime selection tint');
+});
 test('cool daylight is reversible and cannot change night materials',()=>{
  const {meshes,materials}=fixture();materials.apply();const original=meshes.base.material.color.toArray();
  materials.apply({cool:true});const cool=meshes.base.material.color.toArray();assert.ok(cool[2]>cool[0]);assert.notDeepEqual(cool,original);
