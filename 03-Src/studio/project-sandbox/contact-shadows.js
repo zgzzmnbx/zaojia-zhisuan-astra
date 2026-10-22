@@ -25,7 +25,9 @@ export function createContactShadows(scene){
  }
  context.putImageData(pixels,0,0);
  const texture=new CanvasTexture(canvas);texture.minFilter=LinearFilter;texture.generateMipmaps=false;
- const geometry=new PlaneGeometry(1,1),material=new MeshBasicMaterial({map:texture,transparent:true,opacity:.18,depthWrite:false,toneMapped:false});
+ // Same depth-precision guard as the cast-shadow plane; footprints also sit just
+ // above the floor and raised platforms, so bias them instead of lifting further.
+ const geometry=new PlaneGeometry(1,1),material=new MeshBasicMaterial({map:texture,transparent:true,opacity:.18,depthWrite:false,toneMapped:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4});
  const mesh=new InstancedMesh(geometry,material,contactFootprints.length);
  const matrix=new Matrix4(),rotation=new Quaternion().setFromAxisAngle(new Vector3(1,0,0),-Math.PI/2);
  contactFootprints.forEach(([x,y,z,w,h],i)=>{matrix.compose(new Vector3(x,z,-y),rotation,new Vector3(w,h,1));mesh.setMatrixAt(i,matrix)});

@@ -55,7 +55,9 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  sun.position.set(-16,32,20);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});sun.shadow.camera.updateProjectionMatrix();fill.position.set(20,18,-25);scene.add(hemi,sun,fill);
  const dayFloor=new THREE.MeshBasicMaterial({color:sandboxGroundTone(null).color,toneMapped:false}),nightFloor=new THREE.MeshStandardMaterial({color:0x101f2c,roughness:1});
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(300,300),dayFloor);floor.rotation.x=-Math.PI/2;floor.position.y=-.71;floor.receiveShadow=true;scene.add(floor);
- const floorShadow=new THREE.Mesh(floor.geometry,new THREE.ShadowMaterial({opacity:.14,depthWrite:false}));floorShadow.rotation.copy(floor.rotation);floorShadow.position.y=-.705;floorShadow.receiveShadow=true;scene.add(floorShadow);
+ // A 5 mm lift is below one depth-buffer step at the sandbox's 80-110 unit camera
+ // distance (near .1), so the overlay lost the depth test and cast shadow flickered.
+ const floorShadow=new THREE.Mesh(floor.geometry,new THREE.ShadowMaterial({opacity:.14,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4}));floorShadow.rotation.copy(floor.rotation);floorShadow.position.y=-.69;floorShadow.receiveShadow=true;scene.add(floorShadow);
  const softShadows=createSoftShadows();softShadows.attach(scene);
  const flow=createInformationFlow(scene),contacts=createContactShadows(scene),focusGlow=createFocusGlow(),night=createNightRenderer(renderer,scene,camera),waterSparkles=createWaterSparkles(renderer.getPixelRatio());
  scene.add(waterSparkles.group);
@@ -130,7 +132,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   const trial=solidDay?solidSettings.lighting:options.trial&&!options.dark?normalizeTrial(options.trial):null;
   const profile=trial?{...dayProfile,...trialProfile(trial,solidDay?solidLighting():undefined)}:dayProfile;
   setMonumentNight(options.dark);
-  sun.position.set(-16,32,20);sun.target.position.set(0,0,0);sun.shadow.mapSize.set(1024,1024);
+  sun.position.set(18,27,23);sun.target.position.set(0,0,0);sun.shadow.mapSize.set(1024,1024);
   Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});
   const dark=options.dark,cool=options.cool;const ground=sandboxGroundTone(options.groundTone);scene.background=new THREE.Color(dark?'#08131f':ground.color);dayFloor.color.set(ground.color);floor.material=dark?nightFloor:dayFloor;floorShadow.visible=!dark&&options.shadows;scene.environmentIntensity=dark?.19:.22;renderer.toneMappingExposure=dark?.79:.8;renderer.toneMapping=THREE.ACESFilmicToneMapping;
   sun.color.set(dark?0xb5d9ff:cool?0xf3f8ff:0xfffbf5);sun.intensity=dark?.85:3.2;sun.shadow.bias=dark?-.00025:-.0002;sun.shadow.normalBias=dark?.025:.065;sun.shadow.radius=dark?4:2;sun.shadow.intensity=dark?1:.85;

@@ -58,6 +58,9 @@ export function createLightingMaterials(root){
    }
    if(localActive){
     const localResources=local.resources;
+    // The architectural AO atlas is baked around walls and ground; on smooth tanks and pipes it
+    // reads as broad black bands on indirectly lit backs. Keep the overlay for buildings only.
+    const equipment=role==='coated-tank'||role==='coated-pipe';
     if(water){
      m.color.copy(dark?WATER_NIGHT:WATER_DAY);
      m.roughness=dark?.07:.055;m.metalness=dark?.58:.5;m.envMapIntensity=dark?.9:1.3;
@@ -66,7 +69,7 @@ export function createLightingMaterials(root){
      m.aoMap=null;m.aoMapIntensity=0;
      m.lightMap=null;m.lightMapIntensity=0;
     }else{
-     if(entry.uv&&localResources.aoMaps.get(entry.zone)){m.aoMap=localResources.aoMaps.get(entry.zone);m.aoMapIntensity=dark?.55:.9;}
+     if(!equipment&&entry.uv&&localResources.aoMaps.get(entry.zone)){m.aoMap=localResources.aoMaps.get(entry.zone);m.aoMapIntensity=dark?.55:.9;}
      if(baseName==='Frosted blue glazing'){m.roughness=.16;m.metalness=.14;}
      else if(baseName==='Astra blue'){m.roughness=.24;m.metalness=.22;m.envMapIntensity=1.15;}
      else if(baseName==='Ceramic trim'){m.roughness=.32;}

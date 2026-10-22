@@ -11,7 +11,8 @@ test('approved lighting is independent of saved drafts; reload never promotes a 
  const descriptor=Object.getOwnPropertyDescriptor(globalThis,'localStorage');
  const values=new Map<string,string>();Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:(k:string)=>values.get(k)??null}});
  try{
-  const approved=approvedLighting();assert.equal(approved.sun,6.9);assert.equal(approved.sunAzimuth,-41);assert.equal(approved.sunElevation,54);assert.equal(approved.exposure,.98);assert.equal(approved.background,.75);assert.equal(approved.tankMetalness,.18);
+  const approved=approvedLighting();assert.equal(approved.sun,6.9);assert.equal(approved.sunAzimuth,38);assert.equal(approved.sunElevation,42);assert.equal(approved.exposure,.98);assert.equal(approved.background,.75);assert.equal(approved.tankMetalness,.18);
+  assert.ok(Math.abs(approved.sunAzimuth-Math.atan2(30,38)*180/Math.PI)<1,'key light follows the initial camera azimuth');
   assert.deepEqual(readTrial(),approved);values.set(lightingTrialKey,JSON.stringify({...approved,sun:2,cards:[]}));assert.equal(readTrial().sun,2);assert.deepEqual(approvedLighting(),approved);
   approved.cards[0].power=0;assert.equal(approvedLighting().cards[0].power,10);
   values.set(lightingTrialKey,'broken');assert.equal(readTrial().sun,6.9);

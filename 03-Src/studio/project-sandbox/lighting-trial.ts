@@ -28,9 +28,9 @@ export function normalizeTrial(value:unknown,base:LightingTrial=referenceTrial()
   for(const [key,,min,max] of cardControls)card[key]=number(v[key],card[key],min,max);
   card.enabled=typeof v.enabled==='boolean'?v.enabled:card.enabled;return card;});return defaults;
 }
-/** User-confirmed saved browser configuration, 2026-10-21. Draft edits never mutate this preset. */
+/** User-confirmed saved browser configuration, 2026-10-21; key light re-aimed along the initial camera azimuth on 2026-10-22. */
 export function approvedLighting():LightingTrial{return {
- sunAzimuth:-41,sunElevation:54,sun:6.9,fill:.08,hemisphere:.14,environment:.55,exposure:.98,gi:.22,shadowSoftness:.10,background:.75,
+ sunAzimuth:38,sunElevation:42,sun:6.9,fill:.08,hemisphere:.14,environment:.55,exposure:.98,gi:.22,shadowSoftness:.10,background:.75,
  wallRoughness:.62,normal:.008,tankRoughness:.18,tankMetalness:.18,pipeRoughness:.23,pipeMetalness:.18,reflection:2.5,blueDepth:.7,
  cards:[
   {name:'主反射灯板',enabled:true,x:-10,y:6,z:12,width:6,height:18,power:10},
