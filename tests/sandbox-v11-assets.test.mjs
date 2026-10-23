@@ -4,6 +4,8 @@ import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {NoToneMapping, SRGBColorSpace} from 'three';
+import {createBakedSurfaces} from '../03-Src/studio/project-sandbox/baked-surfaces.mjs';
+import {normalizeBakedSettings} from '../03-Src/studio/project-sandbox/baked-settings.ts';
 const root=new URL('../',import.meta.url);
 const base=new URL('public/sandbox-v11/model/',root);
 const json=JSON.parse(await fs.readFile(new URL('model.gltf',base),'utf8'));
@@ -59,6 +61,12 @@ test('Actual GLTFLoader loads the portable bundle with unlit maps and vertex col
     const gltf=await new GLTFLoader().loadAsync(new URL('model.gltf',base).href);let meshes=0,maps=0,colors=0;
     gltf.scene.traverse(o=>{if(!o.isMesh)return;meshes++;assert(o.material.isMeshBasicMaterial);if(o.material.map){maps++;assert.equal(o.material.map.colorSpace,SRGBColorSpace);}else {colors++;assert(o.material.vertexColors);assert(o.geometry.attributes.color);}});
     assert.equal(meshes,20);assert.equal(maps,11);assert.equal(colors,9);
+    const clone=gltf.scene.clone(true),originals=[];gltf.scene.traverse(o=>{if(o.isMesh)originals.push({mesh:o,material:o.material,geometry:o.geometry})});
+    const surfaces=createBakedSurfaces(clone);assert.equal(surfaces.state().materials,20);assert.equal(surfaces.state().waterTriangles,160);
+    surfaces.configure(normalizeBakedSettings({backgroundColor:'#ffffff'}));surfaces.setWater(true);
+    for(const e of originals){assert.equal(e.mesh.material,e.material);assert.equal(e.mesh.geometry,e.geometry);assert(e.material.isMeshBasicMaterial)}
+    surfaces.setWater(false);surfaces.dispose();const restored=[];clone.traverse(o=>{if(o.isMesh)restored.push(o)});
+    restored.forEach((o,i)=>{assert.equal(o.material,originals[i].material);assert.equal(o.geometry,originals[i].geometry)});
     // This verifies the real loader, not GPU upload or a screenshot.
   } finally {globalThis.fetch=originalFetch;globalThis.createImageBitmap=originalBitmap;}
 });

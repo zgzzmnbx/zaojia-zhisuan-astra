@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {normalizeVisualMode,visualPresentation,visualModeKey} from '../03-Src/studio/project-sandbox/visual-mode-settings.ts';
 import {createModeController} from '../03-Src/studies/sandbox-v11/mode-controller.js';
 
-test('production defaults retain original mode; false and zero survive independently',()=>{
- assert.equal(normalizeVisualMode(null).mode,'original');
+test('production defaults prefer baked mode; false and zero survive independently',()=>{
+ assert.equal(normalizeVisualMode(null).mode,'baked');
  assert.notEqual(visualModeKey,'astra.sandbox-v11.preview.v1');
  assert.deepEqual(normalizeVisualMode({mode:'baked',city:{original:false,baked:false},dof:false,strength:0}),{mode:'baked',city:{original:false,baked:false},dof:false,strength:0});
  assert.equal(normalizeVisualMode({strength:NaN}).strength,.4);

@@ -48,46 +48,13 @@ function fixture(){
  return {root,originalMaterials,lighting,resources:{maps}};
 }
 
-test('surface detail and baked GI can be compared independently, including assembly settling',()=>{
- const {root,lighting,resources}=fixture(),m=root.children[0].material;
- lighting.apply(resources,{enabled:false,baked:true});
- assert.ok(m.lightMap);assert.equal(m.normalMap,null);assert.equal(m.lightMapIntensity,dayProfile.gi);
- lighting.setAssembly(true,true,false);assert.equal(m.lightMapIntensity,0);
- lighting.apply(resources,{enabled:true,baked:false,assembling:true});
- assert.equal(m.lightMap,null);assert.ok(m.normalMap);
- lighting.setAssembly(false,false,false);lighting.tick(450,false,false,false,true);assert.equal(m.lightMap,null);
- lighting.apply(resources,{enabled:true,baked:true,dark:true});assert.equal(m.lightMapIntensity,0);
- lighting.apply(resources,{enabled:false,baked:false});assert.equal(m.lightMap,null);assert.equal(m.normalMap,null);
-});
-test('baked GI respects zone identity and toggles restore materials without rebuilding geometry',()=>{
- const {root,lighting,resources}=fixture(),geometry=root.children.map(m=>m.geometry);
- lighting.apply(resources,{enabled:true});
- assert.equal(root.children[0].material.lightMap,resources.maps.get('import'));
- assert.notEqual(root.children[0].material.lightMap,root.children[1].material.lightMap);
- assert.equal(root.children[0].material.normalScale.x,dayProfile.surfaces['Warm plaster'].normal);
- lighting.apply(resources,{enabled:false});
- for(const [i,mesh] of root.children.entries()){
-  assert.equal(mesh.geometry,geometry[i]);assert.equal(mesh.material.lightMap,null);
-  assert.equal(mesh.material.normalMap,null);assert.equal(mesh.material.roughness,.72);
- }
-});
-test('static day GI does not illuminate moving parts or leak into night; paint and assembly stay composed',()=>{
- const {root,lighting,resources,originalMaterials}=fixture();
- lighting.apply(resources,{enabled:true,dark:true});
- assert.equal(root.children[0].material.lightMapIntensity,0);
- lighting.apply(resources,{enabled:true,assembling:true});
- assert.equal(root.children[0].material.lightMapIntensity,0);
- const entrance=createBuildingEntrance(root,['import','price']);
- originalMaterials.paint({import:{value:.5,phase:'running'}});
+test('surface changes restore materials and preserve paint with moving assembly',()=>{
+ const {root,lighting,resources,originalMaterials}=fixture(),mesh=root.children[0],geometry=mesh.geometry;
+ lighting.apply(resources,{enabled:true});assert.ok(mesh.material.normalMap);assert.equal(mesh.material.lightMap,null);
+ const entrance=createBuildingEntrance(root,['import','price']);originalMaterials.paint({import:{value:.5,phase:'running'}});
  const shader={uniforms:{},vertexShader:'#include <common>\n#include <begin_vertex>',fragmentShader:'#include <common>\n#include <color_fragment>'};
- root.children[0].material.onBeforeCompile(shader);
- assert.ok(shader.uniforms.uProgress);assert.ok(shader.uniforms.uAssemblyTime);
- lighting.setAssembly(true,true,false);entrance.finish();lighting.setAssembly(false,true,false);
- assert.equal(root.children[0].material.lightMapIntensity,0);
- lighting.tick(50,false,true,false);assert.ok(root.children[0].material.lightMapIntensity>0);
- assert.ok(root.children[0].material.lightMapIntensity<dayProfile.gi);
- for(let i=0;i<10;i++)lighting.tick(50,false,true,false);
- assert.equal(root.children[0].material.lightMapIntensity,dayProfile.gi);
+ mesh.material.onBeforeCompile(shader);assert.ok(shader.uniforms.uProgress);assert.ok(shader.uniforms.uAssemblyTime);
+ entrance.finish();lighting.apply(resources,{enabled:false});assert.equal(mesh.geometry,geometry);assert.equal(mesh.material.normalMap,null);assert.equal(mesh.material.roughness,.72);assert.equal(mesh.material.lightMap,null);
 });
 test('enhancement gracefully skips models without baked UVs',()=>{
  const root=new Group(),mesh=new Mesh(new BoxGeometry(),new MeshStandardMaterial());root.add(mesh);

@@ -17,6 +17,11 @@ export function mountVisualSandbox(host,markers,context,onSelect,onReady,onError
   if(p.mode===controller.requested){report(controller.current!==controller.requested);return}
   failed='';void controller.switchMode(p.mode);
  }
+ function applyOriginalOptions(){
+  const night=settings.mode==='baked'&&options.dark?options.bakedSettings:null;
+  const copy=night?Object.fromEntries(['uplightSettings','bloom','focusBeam','shadows','waterSettings','flow','groupLogo','paintStrength'].map(k=>[k,night[k]])):{};
+  original.setOptions({...options,...copy,active:options.active&&controller.current==='original'&&controller.requested==='original'});
+ }
  async function setOriginalCity(visible){
   cityRequested=visible;cityHandle?.setVisible(visible);if(!visible||disposed)return;
   if(city)return;if(cityPending)return cityPending;
@@ -51,9 +56,9 @@ export function mountVisualSandbox(host,markers,context,onSelect,onReady,onError
  });
  void controller.switchMode('original');
  const api={
-  setVisualSettings(value){settings=normalizeVisualMode(value);setOriginalCity(settings.city.original);controller.getInstance('baked')?.setSettings({city:settings.city.baked,dof:settings.dof,strength:settings.strength});refreshMode()},
+  setVisualSettings(value){settings=normalizeVisualMode(value);applyOriginalOptions();setOriginalCity(settings.city.original);controller.getInstance('baked')?.setSettings({city:settings.city.baked,dof:settings.dof,strength:settings.strength});refreshMode()},
   retryVisual(){failed='';void controller.switchMode(visualPresentation(settings.mode,{dark:options.dark,assembly}).mode)},
-  setOptions(next){options={...options,...next};original.setOptions({...next,active:options.active&&controller.current==='original'&&controller.requested==='original'});controller.getInstance('baked')?.setOptions(options);controller.setActive(options.active);refreshMode()},
+  setOptions(next){options={...options,...next};applyOriginalOptions();controller.getInstance('baked')?.setOptions(options);controller.setActive(options.active);refreshMode()},
   setPaint(input){paint=input;original.setPaint(input);controller.getInstance('baked')?.setPaint(input)},
   select(id){selected=id;if(controller.current==='baked')controller.instance.select(id);else original.select(id)},
   home(){selected=null;if(controller.current==='baked')controller.instance.home();else original.home()},
@@ -64,6 +69,6 @@ export function mountVisualSandbox(host,markers,context,onSelect,onReady,onError
   state(){return {...(controller.current==='baked'?controller.instance.state():original.state()),visual:{...controller.state(),desired:settings.mode,reason:visualPresentation(settings.mode,{dark:options.dark,assembly}).reason,error:failed,settings,original:original.state(),baked:controller.getInstance('baked')?.state()??null,city:{requested:cityRequested,visible:!!city?.root.visible}}}},
   getViewPose(){return controller.instance?.getViewPose()},setViewPose(p){return controller.instance?.setViewPose({...p,selected})},
   capture(){return controller.current==='baked'?controller.instance.capture():original.capture()},
-  dispose(){if(disposed)return;disposed=true;controller.dispose();cityHandle?.detach();city?.dispose();original.dispose();owner.dispose()},
+  dispose(){if(disposed)return;disposed=true;owner.dispose();controller.dispose();cityHandle?.detach();city?.dispose();original.dispose()},
  };return api;
 }

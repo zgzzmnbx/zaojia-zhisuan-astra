@@ -26,7 +26,7 @@ export function createFocusBloomRenderer(renderer,scene,camera,glow,water=null){
     #include <colorspace_fragment>
    }`}));
  }
- return {invalidate(){dirty=true},
+ return {setCamera(value){camera=value;dirty=true},invalidate(){dirty=true},
   render(){
    if(!glow.getState().visible.length&&!water?.bloomActive()){if(depth)release();return;}
    ensure();

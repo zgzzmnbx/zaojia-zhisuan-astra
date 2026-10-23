@@ -7,7 +7,7 @@ import {normalizeWaterSettings} from './water-settings.ts';
 // Water.js-style planar reflection uses Three's maintained Reflector. No refraction pass.
 export const riverShader=`
 uniform sampler2D riverNormal,riverReflection,riverDepth;
-uniform float riverTime,riverRipple,riverReflect,riverHigh,riverBloom,riverDark;
+uniform float riverTime,riverRipple,riverReflect,riverHigh,riverBloom,riverDark,riverGain;
 uniform mat4 riverMatrix;
 uniform vec2 riverResolution;
 varying vec3 vRiverWorld;
@@ -28,7 +28,7 @@ float riverGlint(vec3 n,vec3 view){
  vec3 reflected=reflect(-view,n);
  float softbox=pow(max(dot(reflected,normalize(vec3(-.50,.60,-.62))),0.),240.);
  float second=pow(max(dot(reflected,normalize(vec3(-.35,.82,-.45))),0.),260.);
- return (softbox+second*.5)*10.*riverReflect*(1.-riverDark*.7);
+ return (softbox+second*.5)*10.*riverReflect*(1.-riverDark*.7)*riverGain;
 }
 `;
 const riverVertex=`varying vec3 vRiverWorld;void main(){vec4 world=modelMatrix*vec4(position,1.);vRiverWorld=world.xyz;gl_Position=projectionMatrix*viewMatrix*world;}`;
@@ -36,7 +36,7 @@ const riverVertex=`varying vec3 vRiverWorld;void main(){vec4 world=modelMatrix*v
 export function createRiverWater(renderer,scene,camera,effectsScene,normalUrl,onReady=()=>{}){
  const group=new Group(),mask=new Group();group.name='River water candidate';mask.name='River highlight bloom';scene.add(group);effectsScene.add(mask);
  const entries=[],bounds=new Box3(),frustum=new Frustum(),projection=new Matrix4();
- const uniforms={riverNormal:{value:null},riverTime:{value:0},riverRipple:{value:.35},riverReflect:{value:.35},riverHigh:{value:0},riverBloom:{value:.15},riverDark:{value:0},riverReflection:{value:null},riverMatrix:{value:new Matrix4()},riverDepth:{value:null},riverResolution:{value:new Vector2(1,1)}};
+ const uniforms={riverNormal:{value:null},riverTime:{value:0},riverRipple:{value:.35},riverReflect:{value:.35},riverHigh:{value:0},riverBloom:{value:.15},riverDark:{value:0},riverGain:{value:1},riverReflection:{value:null},riverMatrix:{value:new Matrix4()},riverDepth:{value:null},riverResolution:{value:new Vector2(1,1)}};
  let settings=normalizeWaterSettings(null),ready=false,disposed=false,inFrame=false,reflection=null,reflectionDirty=true,reflectionKey='',captures=0,enabled=false,texture=null;
  const material=new MeshPhysicalMaterial({name:'Cold cyan shallow water',color:'#3e8c96',metalness:0,roughness:.19,ior:1.333,envMapIntensity:.8,side:DoubleSide,transparent:true,opacity:.65,depthWrite:false});
  material.onBeforeCompile=shader=>{
@@ -83,11 +83,12 @@ void main(){
    water.receiveShadow=true;water.renderOrder=2;group.add(water);mask.add(highlight);entries.push({original:object,visible:object.visible});bounds.union(new Box3().setFromObject(water));
   });
  }
- function configure(value,{dark=false,environment=null}={}){
+ function configure(value,{dark=false,environment=null,highlightGain=1}={}){
   settings=normalizeWaterSettings(value);enabled=ready&&settings.enabled&&entries.length>0;
   for(const e of entries)e.original.visible=enabled?false:e.visible;
   group.visible=enabled;mask.visible=enabled&&settings.bloom>0;
   uniforms.riverRipple.value=settings.ripple/100;uniforms.riverReflect.value=settings.reflection/100;uniforms.riverBloom.value=settings.bloom/100;uniforms.riverDark.value=dark?1:0;
+  uniforms.riverGain.value=highlightGain;
   material.color.set(dark?'#164a5c':'#3e8c96');material.envMap=environment;material.envMapIntensity=(dark?.45:1.1)*settings.reflection/35;material.needsUpdate=true;reflectionDirty=true;
   if(!enabled||settings.quality!=='high')releaseReflection();
  }
@@ -110,7 +111,7 @@ void main(){
    uniforms.riverHigh.value=1;reflectionKey=key;reflectionDirty=false;captures++;
   }finally{group.visible=enabled;renderer.shadowMap.needsUpdate=needs;renderer.shadowMap.autoUpdate=auto;renderer.setRenderTarget(target);renderer.autoClear=clear;renderer.xr.enabled=xr;}
  }
- return {attach,configure,tick,capture,invalidate(){reflectionDirty=true},bloomActive:()=>mask.visible,
+ return {attach,configure,tick,capture,setCamera(value){camera=value;reflectionDirty=true},invalidate(){reflectionDirty=true},bloomActive:()=>mask.visible,
   setDepth(t,w,h){uniforms.riverDepth.value=t;uniforms.riverResolution.value.set(w,h)},
   state:()=>({ready,enabled,inFrame,quality:settings.quality,time:uniforms.riverTime.value,captures,reflectionSize:reflection?768:0,bloom:mask.visible,settings,meshes:entries.length}),
   dispose(){disposed=true;for(const e of entries)e.original.visible=e.visible;group.removeFromParent();mask.removeFromParent();releaseReflection();material.dispose();bloomMaterial.dispose();texture?.dispose();},

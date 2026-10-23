@@ -4,9 +4,8 @@ import {createRiverWater} from './river-water.mjs';
 import {waterDefaults} from './water-settings.ts';
 import {createFocusUplights} from './focus-uplights.mjs';
 import {createFocusBloomRenderer} from './focus-bloom-renderer.mjs';
-import {normalizeSolidSettings,solidLighting,validBackground} from './scene-theme.ts';
+import {validBackground} from './scene-theme.ts';
 import {trialProfile,normalizeTrial,approvedLighting} from './lighting-trial.ts';
-import {bindSolidMaterials} from './solid-materials.mjs';
 import {createStudioEnvironmentSlot} from './studio-environment.mjs';
 import {createFrameRateMeter} from './frame-rate.ts';
 import {sandboxDefaults} from './defaults.ts';
@@ -22,7 +21,6 @@ import {loadSandboxModel} from './model-loader.mjs';
 import {assemblyShadowEnvelope,fitSandboxShadow} from './shadow-frustum.mjs';
 import {loadSandboxLighting} from './lighting.mjs';
 import {createLightingMaterials} from './lighting-materials.mjs';
-import {loadLocalSurface} from './local-surface.mjs';
 import {createSoftShadows} from './soft-shadows.mjs';
 import {createInformationFlow} from './information-flow.js';
 import {createContactShadows} from './contact-shadows.js';
@@ -56,7 +54,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,250),controls=new OrbitControls(camera,renderer.domElement);
  controls.enableDamping=true;controls.dampingFactor=.085;controls.minDistance=14;controls.maxDistance=110;controls.minPolarAngle=.26;controls.maxPolarAngle=Math.PI*.46;controls.autoRotateSpeed=.22;
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment(),env=pmrem.fromScene(room,.04);scene.environment=env.texture;room.dispose();
- const trialEnvironment=createStudioEnvironmentSlot(pmrem),solidEnvironment=createStudioEnvironmentSlot(pmrem);
+ const trialEnvironment=createStudioEnvironmentSlot(pmrem);
  const hemi=new THREE.HemisphereLight(0xf5faff,0x93abc6,.35),sun=new THREE.DirectionalLight(0xfffbf5,3.2),fill=new THREE.DirectionalLight(0xe2edff,.22);
  sun.position.set(-16,32,20);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});sun.shadow.camera.updateProjectionMatrix();fill.position.set(20,18,-25);scene.add(hemi,sun,fill);
  const dayFloor=new THREE.MeshBasicMaterial({color:sandboxGroundTone(null).color,toneMapped:false}),nightFloor=new THREE.MeshStandardMaterial({color:0x101f2c,roughness:1});
@@ -87,55 +85,30 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  let channel=null;
  let assetState=null,shadowEnvelope=null,shadowSignature='';
  let lighting=null,lightingMaterials=null,lightingStatus='idle',lightingMessage='',loadingLighting=false;
- let localSurface=null,localSurfaceStatus='idle',localSurfaceMessage='',loadingLocalSurface=false;
- let solid=null,solidMaterials=null,solidStatus='idle',solidActive=false,solidError='';
- async function ensureSolid(){
-  if(!options.solidVersion||options.dark||!model||disposed||solidStatus!=='idle')return;
-  if(assetState?.version!=='lighting-v2'){solidStatus='fallback';onLightingStatus('纯色版资源不匹配，已保留当前画面');return;}
-  solidStatus='loading';solidError='';onLightingStatus('正在载入纯色版…');
-  try{
-   const {loadSolidLighting}=await import('./solid-lighting.mjs');
-   if(disposed)return;
-   const resources=await loadSolidLighting(renderer,pmrem,abort.signal);
-   if(disposed){resources.dispose();return;}
-   solid=resources;solidStatus='ready';solid.floor.position.y=channelProfile.floor+.71;scene.add(solid.floor);onLightingStatus('');theme();request();
-  }catch(error){if(!disposed){solidError=String(error);solidStatus='fallback';onLightingStatus('纯色版加载失败，已保留当前画面；可重新开启重试');request();}}
- }
- let options={waterSettings:waterDefaults,focusBeam:true,uplightSettings:sandboxDefaults.uplights,localSurface:sandboxDefaults.localSurface,backgroundColor:null,solidSettings:extensions.initialOptions?.solidSettings??normalizeSolidSettings(null),solidVersion:sandboxDefaults.solidVersion,trial:approvedLighting(),studioLighting:sandboxDefaults.studioLighting,softShadows:sandboxDefaults.softShadows,bakedLighting:sandboxDefaults.bakedLighting,brightBackground:sandboxDefaults.brightBackground,nightBloom:sandboxDefaults.nightBloom,enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false,...extensions.initialOptions};
+ let options={waterSettings:waterDefaults,focusBeam:true,uplightSettings:sandboxDefaults.uplights,backgroundColor:null,trial:approvedLighting(),studioLighting:sandboxDefaults.studioLighting,softShadows:sandboxDefaults.softShadows,brightBackground:sandboxDefaults.brightBackground,nightBloom:sandboxDefaults.nightBloom,enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false,...extensions.initialOptions};
  function ensureLighting(){
-  if(!(options.enhanced||options.studioLighting||options.bakedLighting)||lighting||loadingLighting||lightingStatus==='fallback'||disposed)return;
+  if(!(options.enhanced||options.studioLighting)||lighting||loadingLighting||lightingStatus==='fallback'||disposed)return;
   loadingLighting=true;lightingStatus='loading';lightingMessage='';onLightingStatus('正在载入增强光照…');
   loadSandboxLighting(renderer,pmrem,()=>disposed).then(resources=>{
    if(disposed){resources.dispose();return;}
    lighting=resources;lightingStatus='ready';onLightingStatus('');theme();request();
   }).catch(()=>{if(!disposed){lightingStatus='fallback';lightingMessage='增强光照加载失败，已使用基础画面';onLightingStatus(lightingMessage);request();}})
-   .finally(()=>{loadingLighting=false;if(disposed&&!loadingLocalSurface)pmrem.dispose();});
+   .finally(()=>{loadingLighting=false;if(disposed)pmrem.dispose();});
  }
- function ensureLocalSurface(){
-  if(!options.localSurface||localSurface||loadingLocalSurface||localSurfaceStatus==='fallback'||disposed)return;
-  loadingLocalSurface=true;localSurfaceStatus='loading';localSurfaceMessage='';onLightingStatus('正在载入水景质感…');
-  loadLocalSurface(renderer,pmrem,()=>disposed||abort.signal.aborted).then(resources=>{
-   if(disposed){resources.dispose();return;}
-   localSurface=resources;localSurfaceStatus='ready';onLightingStatus('');theme();request();
-  }).catch(()=>{if(!disposed){localSurfaceStatus='fallback';localSurfaceMessage='水景质感加载失败，已保留当前画面';onLightingStatus(localSurfaceMessage);request();}})
-   .finally(()=>{loadingLocalSurface=false;if(disposed&&!loadingLighting)pmrem.dispose();});
- }
- function localActive(){return !!(options.localSurface&&localSurface&&!(options.solidVersion&&!options.dark));}
  function allowed(){return !disposed&&options.active&&inView&&!document.hidden}
  function request(){if(!raf&&allowed())raf=requestAnimationFrame(render)}
  function stop(){fps.idle();cancelAnimationFrame(raf);raf=0;flight=null;flow.suspend();lastRenderTime=0;}
  function finishEntrance(){
   entranceSkipped=true;
   if(!entrance?.active)return;
-  entrance.finish();lightingMaterials?.setAssembly(false,options.bakedLighting,options.dark);renderer.shadowMap.needsUpdate=true;flow.setPlaying(options.flow);
+  entrance.finish();renderer.shadowMap.needsUpdate=true;flow.setPlaying(options.flow);
   for(const marker of markers.values())marker.style.removeProperty('opacity');
   theme();request();
  }
  function theme(){
   focusBloom.invalidate();river.invalidate();
-  const solidSettings=normalizeSolidSettings(options.solidSettings),solidDay=options.solidVersion&&!options.dark;
-  const trial=solidDay?solidSettings.lighting:options.trial&&!options.dark?normalizeTrial(options.trial):null;
-  const profile=trial?{...dayProfile,...trialProfile(trial,solidDay?solidLighting():undefined)}:dayProfile;
+  const trial=options.trial&&!options.dark?normalizeTrial(options.trial):null;
+  const profile=trial?{...dayProfile,...trialProfile(trial)}:dayProfile;
   setMonumentNight(options.dark);
   sun.position.set(-16,32,20);sun.target.position.set(0,0,0);sun.shadow.mapSize.set(1024,1024);
   Object.assign(sun.shadow.camera,{left:-28,right:28,top:28,bottom:-28,near:.5,far:100});
@@ -146,7 +119,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   const studioDay=options.studioLighting&&!!lighting&&!dark;
   const softDay=options.softShadows&&!dark;
   scene.environment=studioDay?lighting.studio:enhanced?lighting.environment:env.texture;
-  if(trial&&studioDay&&!solidDay){try{scene.environment=trialEnvironment.update(trial.cards);}catch{onLightingStatus('试调灯板生成失败，已保留基础环境');}}
+  if(trial&&studioDay){try{scene.environment=trialEnvironment.update(trial.cards);}catch{onLightingStatus('试调灯板生成失败，已保留基础环境');}}
   else trialEnvironment.dispose();
   const shadowType=softDay?THREE.BasicShadowMap:THREE.PCFShadowMap;
   if(renderer.shadowMap.type!==shadowType){renderer.shadowMap.type=shadowType;renderer.shadowMap.needsUpdate=true;}
@@ -163,26 +136,10 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
    softShadows.update(sun.shadow.camera,profile.shadowAngularRadius);
   }
   materials?.apply({dark,cool,selected,trial:!!trial,blueDepth:trial?.blueDepth??0});
-  lightingMaterials?.apply(lighting,{enabled:enhanced,baked:options.bakedLighting,dark,profile,assembling:!!entrance?.active,local:localActive()?{resources:localSurface}:null});
-  if(solid&&!solidMaterials&&!entrance?.active){
-   try{solidMaterials=bindSolidMaterials(model,solid.manifest,solid.uv,solid);}
-   catch(error){solidError=String(error);solid.dispose();solid=null;solidStatus='fallback';onLightingStatus('纯色版模型校验失败，已保留当前画面');}
-  }
-  solidActive=!!(options.solidVersion&&!dark&&solidMaterials&&!entrance?.active);
-  const bakeStrength=options.bakedLighting?solidSettings.bakeStrength:0;
-  solidMaterials?.setEnabled(solidActive,{...solidSettings,bakeStrength});if(solid)solid.floor.visible=solidActive&&bakeStrength>0;
-  floor.visible=!solidActive||bakeStrength===0;floorShadow.visible=(!solidActive||bakeStrength===0)&&!dark&&options.shadows;contacts.setEnabled((!solidActive||bakeStrength===0)&&options.shadows);
-  if(solidActive){
-   scene.background.set('#cbd0d5');dayFloor.color.copy(scene.background);scene.environment=env.texture;
-   if(options.studioLighting){try{scene.environment=solidEnvironment.update(trial.cards,{background:[.62,.67,.73],target:[0,1.2,0],far:150});}catch{onLightingStatus('棚拍灯板生成失败，已保留基础环境');}}
-   scene.environmentIntensity=trial.environment;renderer.toneMapping=THREE.AgXToneMapping;renderer.toneMappingExposure=trial.exposure;
-   sun.position.fromArray(profile.sunPosition);sun.color.set(0xfff8ed);sun.intensity=trial.sun;
-   fill.intensity=trial.fill;hemi.color.set(0xe6f0ff);hemi.groundColor.set(0x9ba2a9);hemi.intensity=trial.hemisphere;
-  }
-  if(!solidDay||!options.studioLighting)solidEnvironment.dispose();
+  lightingMaterials?.apply(lighting,{enabled:enhanced,dark,profile});
+  contacts.setEnabled(options.shadows);
   const background=!dark?validBackground(options.backgroundColor):null;
   if(background){scene.background.set(background);dayFloor.color.set(background);}
-  solid?.setBackground(background,options.shadows?bakeStrength:0);
   focusGlow.configure({enabled:options.bloom,night:dark,focus:selected||taskTarget,color:getComputedStyle(host).getPropertyValue('--astra-primary').trim()||'#258fe1'});
   uplights.configure({focus:selected||taskTarget,enabled:options.bloom&&options.focusBeam,night:dark,shadows:options.shadows,settings:options.uplightSettings});
   const nextShadowSignature=JSON.stringify([sun.position.toArray(),sun.target.position.toArray(),sun.shadow.mapSize.toArray(),...['left','right','top','bottom','near','far'].map(k=>sun.shadow.camera[k])]);
@@ -247,7 +204,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   if(model&&!entranceChecked){
    entranceChecked=true;
    if((extensions.entranceGate??sandboxEntranceGate).claim()&&!entranceSkipped&&!reduced.matches&&!options.running&&!selected&&!taskTarget){
-    entrance=createBuildingEntrance(model,zones.map(zone=>zone.id));lightingMaterials?.setAssembly(true,options.bakedLighting,options.dark);flow.setPlaying(false);theme();
+    entrance=createBuildingEntrance(model,zones.map(zone=>zone.id));flow.setPlaying(false);theme();
    }
   }
   const wasBuilding=!!entrance?.active,building=entrance?.tick(delta*1000,reduced.matches)||false;
@@ -255,8 +212,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   // lag behind the assembly shader and sweep stale self-shadows across walls.
   // autoUpdate remains false, so normal static scenes stop redrawing shadows.
   if(wasBuilding){renderer.shadowMap.needsUpdate=true;focusBloom.invalidate();}
-  if(wasBuilding&&!building){lightingMaterials?.setAssembly(false,options.bakedLighting,options.dark);flow.setPlaying(options.flow);theme();}
-  const lightingPending=lightingMaterials?.tick(delta*1000,building,options.bakedLighting,options.dark,reduced.matches,localActive()&&!options.waterSettings.enabled,time);
+  if(wasBuilding&&!building){flow.setPlaying(options.flow);theme();}
   if(flight){const t=Math.min(1,(time-flight.start)/950),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);if(t===1)flight=null;}
   if(viewFlight){const t=reduced.matches?1:Math.min(1,(time-viewFlight.start)/950),e=1-(1-t)**3;camera.setViewOffset(width,height,viewFlight.x0+(viewFlight.x1-viewFlight.x0)*e,viewFlight.y0+(viewFlight.y1-viewFlight.y0)*e,width,height);if(t===1)viewFlight=null;}
   if(beacon.visible){beacon.children.forEach((ring,i)=>{const pulse=reduced.matches?.5:(Math.sin(time/650-i*1.5)+1)/2;ring.scale.setScalar(1+pulse*.08);ring.material.opacity=.3+pulse*.4})}
@@ -269,7 +225,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   const uplightPending=uplights.tick(delta*1000,reduced.matches,building);
   const waterPending=river.tick(delta,reduced.matches);channel?.tick(delta,waterPending);
   renderer.info.autoReset=false;renderer.info.reset();river.capture(building||uplightPending||paintPending||flow.getState().playing||(beacon.visible&&!reduced.matches));night.render(delta);focusBloom.render();frames++;fps.frame(time);extensions.onFrame?.({assembling:!!entrance?.active,entranceChecked});
-  if(waterPending||building||glowPending||uplightPending||lightingPending||paintPending||flight||viewFlight||moving||controls.autoRotate||flow.getState().playing||markerPending||(beacon.visible&&!reduced.matches))request();
+  if(waterPending||building||glowPending||uplightPending||paintPending||flight||viewFlight||moving||controls.autoRotate||flow.getState().playing||markerPending||(beacon.visible&&!reduced.matches))request();
   if(!raf)fps.idle();
  }
  function fly(position,target){if(reduced.matches){camera.position.copy(position);controls.target.copy(target);controls.update()}else flight={p0:camera.position.clone(),p1:position.clone(),t0:controls.target.clone(),t1:target.clone(),start:performance.now()};request()}
@@ -314,12 +270,12 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
    let owner=o;while(owner&&owner.name!=='zone_land')owner=owner.parent;
    if(owner)o.visible=false;
   });
-  model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);channel=createRiverChannel(model,scene);shadowEnvelope.union(new THREE.Box3().setFromObject(channel.group));materials=createSandboxMaterials(model);lightingMaterials=createLightingMaterials(model);river.attach(model);softShadows.attach(model);softShadows.attach(channel.group);softShadows.attach(monument);ensureLighting();ensureSolid();ensureLocalSurface();roofAnchors.attach(model);model.updateMatrixWorld(true);model.traverse(o=>{if(!o.isMesh)return;let owner=o;while(owner&&!owner.userData.zone)owner=owner.parent;const id=owner?.userData.zone;if(!id)return;const box=new THREE.Box3().setFromObject(o);if(!zoneBounds.has(id))zoneBounds.set(id,box);else zoneBounds.get(id).union(box)});theme();onReady();request();
+  model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.onBeforeShadow=()=>shadowDraws++;}});scene.add(model);channel=createRiverChannel(model,scene);shadowEnvelope.union(new THREE.Box3().setFromObject(channel.group));materials=createSandboxMaterials(model);lightingMaterials=createLightingMaterials(model);river.attach(model);softShadows.attach(model);softShadows.attach(channel.group);softShadows.attach(monument);ensureLighting();roofAnchors.attach(model);model.updateMatrixWorld(true);model.traverse(o=>{if(!o.isMesh)return;let owner=o;while(owner&&!owner.userData.zone)owner=owner.parent;const id=owner?.userData.zone;if(!id)return;const box=new THREE.Box3().setFromObject(o);if(!zoneBounds.has(id))zoneBounds.set(id,box);else zoneBounds.get(id).union(box)});theme();onReady();request();
  }).catch(error=>{if(!disposed&&error.name!=='AbortError')onError('沙盘加载失败，可以重试或使用经典界面。')});
  theme();request();
  return {
   // Task completion updates activity only; retain the camera focus and spatial label layout until navigation.
-  setOptions(next){const previous=options;options={...options,...next};if(['enhanced','studioLighting','bakedLighting'].some(key=>!previous[key]&&options[key])&&lightingStatus==='fallback')lightingStatus='idle';if(!previous.solidVersion&&options.solidVersion&&solidStatus==='fallback')solidStatus='idle';if(!previous.localSurface&&options.localSurface&&localSurfaceStatus==='fallback'){localSurfaceStatus='idle';localSurfaceMessage='';}if(options.running)finishEntrance();if(previous.paintStrength!==options.paintStrength)river.invalidate();if(previous.groupLogo!==options.groupLogo){river.invalidate();setMonumentMode(options.groupLogo);renderer.shadowMap.needsUpdate=true;}if(previous.roofLabels!==options.roofLabels){markerLayout.reset();spatialVisibility.clear();}if(previous.compact!==options.compact){markerLayout.reset();spatialVisibility.clear();selected=null;theme();resize();home(false)}else reframe();if(previous.dark!==options.dark||previous.cool!==options.cool||previous.groundTone!==options.groundTone||previous.enhanced!==options.enhanced||previous.bloom!==options.bloom||previous.trial!==options.trial||previous.solidSettings!==options.solidSettings||previous.backgroundColor!==options.backgroundColor||previous.shadows!==options.shadows||['solidVersion','studioLighting','softShadows','bakedLighting','brightBackground','nightBloom','localSurface','focusBeam','uplightSettings','waterSettings'].some(key=>previous[key]!==options[key]))theme();ensureLighting();ensureSolid();ensureLocalSurface();if((previous.elevation!==options.elevation||previous.distance!==options.distance)&&!selected&&!taskTarget)home();if(previous.zoom!==options.zoom){if(selected){const id=selected;selected=null;this.select(id)}else if(taskTarget)this.focusTask(taskTarget)}if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;floorShadow.visible=(!solidActive||!options.bakedLighting||options.solidSettings?.bakeStrength===0)&&!options.dark&&options.shadows;contacts.setEnabled((!solidActive||!options.bakedLighting||options.solidSettings?.bakeStrength===0)&&options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow&&!entrance?.active);if(allowed())request();else stop();},
+  setOptions(next){const previous=options;options={...options,...next};if(['enhanced','studioLighting'].some(key=>!previous[key]&&options[key])&&lightingStatus==='fallback')lightingStatus='idle';if(options.running)finishEntrance();if(previous.paintStrength!==options.paintStrength)river.invalidate();if(previous.groupLogo!==options.groupLogo){river.invalidate();setMonumentMode(options.groupLogo);renderer.shadowMap.needsUpdate=true;}if(previous.roofLabels!==options.roofLabels){markerLayout.reset();spatialVisibility.clear();}if(previous.compact!==options.compact){markerLayout.reset();spatialVisibility.clear();selected=null;theme();resize();home(false)}else reframe();if(previous.dark!==options.dark||previous.cool!==options.cool||previous.groundTone!==options.groundTone||previous.enhanced!==options.enhanced||previous.bloom!==options.bloom||previous.trial!==options.trial||previous.backgroundColor!==options.backgroundColor||previous.shadows!==options.shadows||['studioLighting','softShadows','brightBackground','nightBloom','focusBeam','uplightSettings','waterSettings'].some(key=>previous[key]!==options[key]))theme();ensureLighting();if((previous.elevation!==options.elevation||previous.distance!==options.distance)&&!selected&&!taskTarget)home();if(previous.zoom!==options.zoom){if(selected){const id=selected;selected=null;this.select(id)}else if(taskTarget)this.focusTask(taskTarget)}if(previous.shadows!==options.shadows){renderer.shadowMap.enabled=options.shadows;sun.castShadow=options.shadows;floorShadow.visible=!options.dark&&options.shadows;contacts.setEnabled(options.shadows);renderer.shadowMap.needsUpdate=true;scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])m.needsUpdate=true})}const working=zones.find(z=>z.id===options.running);beacon.visible=!!working;if(working)beacon.position.set(working.target[0],.38,working.target[2]);flow.setStage(null);flow.setPlaying(options.flow&&!entrance?.active);if(allowed())request();else stop();},
   setPaint(input){paintProgress.update(input);river.invalidate();request();},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},
   focusTask(id){finishEntrance();spatialVisibility.clear();taskTarget=id;const zone=zones.find(z=>z.id===id);if(!zone)return;selected=null;theme();options.orbit=false;controls.autoRotate=false;onOrbitStop?.();reframe();const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(direction.y,.5);direction.normalize();fly(target.clone().addScaledVector(direction,sandboxCameraDistances(options.zoom).task*Math.max(1,.8/(frame.width/frame.height))),target);request()},
@@ -357,7 +313,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   },
   refreshViewport:resize,
   refresh:request,
-  state:()=>({channel:channel?.state(),water:river.state(),localSurface:{enabled:localActive(),status:localSurfaceStatus,message:localSurfaceMessage},solid:{status:solidStatus,error:solidError,active:solidActive,environment:solidEnvironment.state(),...solidMaterials?.state()},background:{color:scene.background.getHexString(),custom:options.backgroundColor},trial:{enabled:!!options.trial&&!options.dark,config:options.trial,environment:trialEnvironment.state()},effects:Object.fromEntries(['solidVersion','enhanced','studioLighting','softShadows','bakedLighting','brightBackground','nightBloom','bloom','localSurface'].map(key=>[key,options[key]])),asset:assetState,renderProfile:{environmentSource:options.studioLighting&&!options.dark&&lighting?'studio-softboxes':'baseline',softShadows:options.softShadows&&options.shadows&&!options.dark?softShadows.state():null,sun:sun.position.toArray(),sunIntensity:sun.intensity,fill:fill.intensity,hemisphere:hemi.intensity,environment:scene.environmentIntensity,exposure:renderer.toneMappingExposure,shadowSize:sun.shadow.mapSize.toArray(),normalBias:sun.shadow.normalBias,frustum:Object.fromEntries(['left','right','top','bottom','near','far'].map(k=>[k,sun.shadow.camera[k]]))},lighting:{enabled:options.enhanced,status:lightingStatus,message:lightingMessage,...lightingMaterials?.getState()},uplights:uplights.state(),bloom:{...focusGlow.getState(),postprocessing:focusBloom.state()},nightBloom:night.getState(),textures:renderer.info.memory.textures,triangles:renderer.info.render.triangles,entrance:entrance?.state()??{active:false,skipped:entranceChecked},paint:paintProgress.state(),paintStrength:options.paintStrength,monumentPosition:monument.position.toArray(),monumentHeight:1.82,groupLogo:options.groupLogo,groupLogoVisible:groupLogo.visible,groupLogoColor:groupLogo.children[0].material.color.getHexString(),groupLogoParts:groupLogo.children.length,roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,focusFrame,selected,taskTarget,layoutMode:selected||taskTarget?'focused':'overview',markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,groundTone:options.groundTone,elevation:options.elevation,zoom:options.zoom,overviewDistance:options.distance,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
-  dispose(){if(disposed)return;if(extensions.rememberPose!==false){poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);}disposed=true;finishEntrance();abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();uplights.dispose();river.dispose();focusBloom.dispose();focusGlow.dispose();night.dispose();trialEnvironment.dispose();solidEnvironment.dispose();softShadows.dispose();solidMaterials?.dispose();channel?.dispose();solid?.dispose();lightingMaterials?.apply(null);lighting?.dispose();localSurface?.dispose();if(!loadingLighting&&!loadingLocalSurface)pmrem.dispose();for(const root of visualContexts)root.removeFromParent();visualContexts.clear();releaseObject(scene);(floor.material===dayFloor?nightFloor:dayFloor).dispose();sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
+  state:()=>({channel:channel?.state(),water:river.state(),background:{color:scene.background.getHexString(),custom:options.backgroundColor},trial:{enabled:!!options.trial&&!options.dark,config:options.trial,environment:trialEnvironment.state()},effects:Object.fromEntries(['enhanced','studioLighting','softShadows','brightBackground','nightBloom','bloom'].map(key=>[key,options[key]])),asset:assetState,renderProfile:{environmentSource:options.studioLighting&&!options.dark&&lighting?'studio-softboxes':'baseline',softShadows:options.softShadows&&options.shadows&&!options.dark?softShadows.state():null,sun:sun.position.toArray(),sunIntensity:sun.intensity,fill:fill.intensity,hemisphere:hemi.intensity,environment:scene.environmentIntensity,exposure:renderer.toneMappingExposure,shadowSize:sun.shadow.mapSize.toArray(),normalBias:sun.shadow.normalBias,frustum:Object.fromEntries(['left','right','top','bottom','near','far'].map(k=>[k,sun.shadow.camera[k]]))},lighting:{enabled:options.enhanced,status:lightingStatus,message:lightingMessage,...lightingMaterials?.getState()},uplights:uplights.state(),bloom:{...focusGlow.getState(),postprocessing:focusBloom.state()},nightBloom:night.getState(),textures:renderer.info.memory.textures,triangles:renderer.info.render.triangles,entrance:entrance?.state()??{active:false,skipped:entranceChecked},paint:paintProgress.state(),paintStrength:options.paintStrength,monumentPosition:monument.position.toArray(),monumentHeight:1.82,groupLogo:options.groupLogo,groupLogoVisible:groupLogo.visible,groupLogoColor:groupLogo.children[0].material.color.getHexString(),groupLogoParts:groupLogo.children.length,roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,focusFrame,selected,taskTarget,layoutMode:selected||taskTarget?'focused':'overview',markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,groundTone:options.groundTone,elevation:options.elevation,zoom:options.zoom,overviewDistance:options.distance,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
+  dispose(){if(disposed)return;if(extensions.rememberPose!==false){poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);}disposed=true;finishEntrance();abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();uplights.dispose();river.dispose();focusBloom.dispose();focusGlow.dispose();night.dispose();trialEnvironment.dispose();softShadows.dispose();channel?.dispose();lightingMaterials?.apply(null);lighting?.dispose();if(!loadingLighting)pmrem.dispose();for(const root of visualContexts)root.removeFromParent();visualContexts.clear();releaseObject(scene);(floor.material===dayFloor?nightFloor:dayFloor).dispose();sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
  };
 }

@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import {sandboxDefaults} from '../../studio/project-sandbox/defaults.ts';
 import {waterDefaults} from '../../studio/project-sandbox/water-settings.ts';
 import {approvedLighting} from '../../studio/project-sandbox/lighting-trial.ts';
-import {solidLighting} from '../../studio/project-sandbox/scene-theme.ts';
 import {zones} from '../../studio/project-sandbox/zones.js';
 
 export const ORIGINAL_BASELINE = Object.freeze({
@@ -19,14 +18,12 @@ export const ORIGINAL_BASELINE = Object.freeze({
  * enhanced surface materials, water, shadows and focus effects stay enabled.
  */
 export function originalFactoryOptions({active=false,reducedMotion=false}={}) {
-  const effects=Object.fromEntries(['focusBeam','studioLighting','softShadows','bakedLighting','brightBackground','localSurface','nightBloom'].map(key=>[key,sandboxDefaults[key]]));
+  const effects=Object.fromEntries(['focusBeam','studioLighting','softShadows','brightBackground','nightBloom'].map(key=>[key,sandboxDefaults[key]]));
   return {
     ...effects,
     waterSettings:{...waterDefaults},
     uplightSettings:structuredClone(sandboxDefaults.uplights),
     trial:approvedLighting(),
-    solidVersion:sandboxDefaults.solidVersion,
-    solidSettings:{lighting:solidLighting(),bakeStrength:1,bakeBrightness:1,effects:{...effects,studioLighting:true,softShadows:false,bakedLighting:true,brightBackground:true},enhanced:true},
     backgroundColor:null,
     enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,
     roofLabels:sandboxDefaults.roofLabels,compact:false,active:!!active,dark:false,
@@ -111,7 +108,6 @@ export function createOriginalMode(host,options={},dependencies={}) {
     if(!sceneApi||!modelLoaded||disposed)return;
     const state=sceneApi.state();
     if(['loading','idle'].includes(state.lighting?.status))return;
-    if(state.solid?.status==='loading'||state.localSurface?.status==='loading')return;
     settleResolve();
   }
   function failed(message){

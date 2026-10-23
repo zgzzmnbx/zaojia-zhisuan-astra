@@ -26,13 +26,6 @@ test('trial preferences clamp invalid input and preserve disabled cards without 
  assert.equal(n.cards.length,4);assert.equal(n.cards[0].enabled,false);assert.equal(n.cards[0].x,-25);assert.equal(n.cards[0].power,12);
  const p=trialProfile({...b,sunAzimuth:90,sunElevation:30});assert.ok(Math.abs(p.sunPosition[0]-Math.sqrt(1200))<.001);assert.ok(Math.abs(p.sunPosition[1]-20)<.001);
 });
-test('candidate GI settles after assembly with the chosen strength and restores official profile',()=>{
- const root=new Group(),geo=new BoxGeometry(),mat=new MeshStandardMaterial();geo.setAttribute('uv1',geo.attributes.uv.clone());root.add(new Mesh(geo,mat));
- const layer=createLightingMaterials(root),resources={maps:new Map([['ground',new Texture()]])};
- layer.setAssembly(true,true,false);layer.apply(resources,{baked:true,assembling:true,profile:{...dayProfile,gi:.18}});assert.equal(mat.lightMapIntensity,0);
- for(let i=0;i<10;i++)layer.tick(50,false,true,false);assert.equal(mat.lightMapIntensity,.18);
- layer.apply(resources,{baked:true});assert.equal(mat.lightMapIntensity,dayProfile.gi);
-});
 test('environment edits reuse capture, replace resources once, and survive capture failure',()=>{
  let allocations=0,releases=0,fail=false;
  const slot=createStudioEnvironmentSlot({fromScene(){if(fail)throw Error('GPU');allocations++;return {texture:allocations,dispose(){releases++}}}});

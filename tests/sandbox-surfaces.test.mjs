@@ -39,7 +39,7 @@ test('role surfaces are isolated, keep base-name paint/assembly, and fully resto
   entrance.finish();assert.equal(materials[1].customProgramCacheKey(),paintKey);
   themes.apply({dark:true});lighting.apply(resources,{enabled:true,dark:true});
   assert.equal(materials[1].normalMap,resources.maps.get('normal'));assert.equal(materials[1].normalScale.x,.055);
-  assert.equal(materials[1].lightMapIntensity,0);assert.equal(materials[1].roughness,originals[1].roughness);
+  assert.equal(materials[1].lightMap,null);assert.equal(materials[1].roughness,originals[1].roughness);
   lighting.apply(resources,{enabled:false});
   materials.forEach((m,i)=>assert.deepEqual({roughness:m.roughness,metalness:m.metalness,envMapIntensity:m.envMapIntensity,normal:m.normalMap,scale:m.normalScale.toArray()},originals[i]));
  }

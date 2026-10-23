@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import {createOriginalMode,createOriginalContext,originalFactoryOptions,ORIGINAL_BASELINE} from '../03-Src/studies/sandbox-v11/original-mode.js';
 import {sandboxDefaults} from '../03-Src/studio/project-sandbox/defaults.ts';
 import {approvedLighting} from '../03-Src/studio/project-sandbox/lighting-trial.ts';
-import {normalizeSolidSettings} from '../03-Src/studio/project-sandbox/scene-theme.ts';
 
 function contextSource(){
   const root=new THREE.Group(),parent=new THREE.Group();parent.position.set(4,-2,7);parent.rotation.y=.3;root.add(parent);
@@ -41,10 +40,9 @@ test('Original baseline is the pinned factory path, not the legacy/V09 or saved-
     const options=originalFactoryOptions();
     assert.equal(ORIGINAL_BASELINE.revision,'d91b2297d9e962db4cfc3bf0469a8475f07ea7eb');
     assert.equal(ORIGINAL_BASELINE.settings,'pinned-main-factory-defaults');
-    for(const key of ['enhanced','bloom','cool','studioLighting','softShadows','bakedLighting','brightBackground','solidVersion','localSurface','paintStrength','groupLogo','shadows'])assert.equal(options[key],sandboxDefaults[key],key);
+    for(const key of ['enhanced','bloom','cool','studioLighting','softShadows','brightBackground','paintStrength','groupLogo','shadows'])assert.equal(options[key],sandboxDefaults[key],key);
     assert.deepEqual(options.trial,approvedLighting());
-    assert.deepEqual(options.solidSettings,normalizeSolidSettings(null));
-    assert.equal(options.studioLighting,true);assert.equal(options.solidVersion,false);assert.equal(options.bakedLighting,false);
+    assert.equal(options.studioLighting,true);
     assert.equal(options.waterSettings.enabled,true);assert.equal(options.flow,true);assert.equal(options.active,false);assert.equal(options.running,null);
     assert.equal(originalFactoryOptions({reducedMotion:true}).flow,false);
     options.trial.cards[0].power=0;assert.equal(originalFactoryOptions().trial.cards[0].power,10);
