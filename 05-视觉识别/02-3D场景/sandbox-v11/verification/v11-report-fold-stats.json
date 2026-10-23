@@ -1,0 +1,9 @@
+{
+  "zone_report": {
+    "faces": 118,
+    "probes": 354,
+    "rejected_samples": 0,
+    "all_inside_faces": 0,
+    "seconds": 0.55
+  }
+}

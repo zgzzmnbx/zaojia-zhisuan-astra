@@ -1,0 +1,887 @@
+{
+  "source": {
+    "file": "Astra-Context-v11-baked-clean.glb",
+    "bytes": 38455656,
+    "sha256": "9e3805133c5ebe77c15389ed416460ac7f2b923e0eb3f4f1067a5a8ce33bc45f"
+  },
+  "maxChunkBytes": 12582912,
+  "buffers": [
+    {
+      "index": 0,
+      "uri": "geometry-0.bin",
+      "bytes": 12369840,
+      "sha256": "4654563933e9a2108ceb17b082980131dbe2fa994485a5aacc17e7d214e27cd2"
+    },
+    {
+      "index": 1,
+      "uri": "geometry-1.bin",
+      "bytes": 10148112,
+      "sha256": "b55059ab0391e1ad1a1f266d7fef2482c24c0b298d2217d1de2d01f8ea71da60"
+    }
+  ],
+  "images": [
+    {
+      "index": 0,
+      "uri": "texture-00.png",
+      "sourceBufferView": 5,
+      "bytes": 627593,
+      "sha256": "f3be081ace5b53457bbf5b6aed573b728299e21d1100bbe69a6658504922fc60"
+    },
+    {
+      "index": 1,
+      "uri": "texture-01.png",
+      "sourceBufferView": 16,
+      "bytes": 616895,
+      "sha256": "540374340b162c829b29cef84a7f5a2dc4246d2706f8674c44b755b435af2a52"
+    },
+    {
+      "index": 2,
+      "uri": "texture-02.png",
+      "sourceBufferView": 27,
+      "bytes": 2737512,
+      "sha256": "011effb01024c7306bb8c85c8d819a4cb2a5adc16e3d764ffdb616d24161447d"
+    },
+    {
+      "index": 3,
+      "uri": "texture-03.png",
+      "sourceBufferView": 38,
+      "bytes": 662641,
+      "sha256": "38990f4bb36ce8d546fdee2131e7f9d03d0345134d939bb0b84f8bfa71420660"
+    },
+    {
+      "index": 4,
+      "uri": "texture-04.png",
+      "sourceBufferView": 49,
+      "bytes": 742095,
+      "sha256": "93b5dcb1f036020ec577579cc2a17cb208e4a7bdabd514284862cb1ad1b86ce3"
+    },
+    {
+      "index": 5,
+      "uri": "texture-05.png",
+      "sourceBufferView": 60,
+      "bytes": 2675380,
+      "sha256": "8a808dee8573a732edbe617b7703efcdf6c2c68a9e4d05eabcaf0a35e92fe930"
+    },
+    {
+      "index": 6,
+      "uri": "texture-06.png",
+      "sourceBufferView": 71,
+      "bytes": 2515246,
+      "sha256": "922e34f19491bb31b47ef9024460169995477369a07a293fc65053848c0facb9"
+    },
+    {
+      "index": 7,
+      "uri": "texture-07.png",
+      "sourceBufferView": 82,
+      "bytes": 2077002,
+      "sha256": "33ff10b9bdda6e26471d23e65dff22b000b00f963ae0f0cf9dfde564eaac9f67"
+    },
+    {
+      "index": 8,
+      "uri": "texture-08.png",
+      "sourceBufferView": 92,
+      "bytes": 832120,
+      "sha256": "979af6cdd759afe39fca15df963069deac7287ddcc1a8a6119f7dda0c44dcd29"
+    },
+    {
+      "index": 9,
+      "uri": "texture-09.png",
+      "sourceBufferView": 98,
+      "bytes": 1429859,
+      "sha256": "37fc9ac24c4c36ae7952d2a8e1ddd317abcfca8d31a8a8a84a1e3a61693df962"
+    },
+    {
+      "index": 10,
+      "uri": "texture-10.png",
+      "sourceBufferView": 108,
+      "bytes": 994203,
+      "sha256": "73a7b80a7729607e6192b267c0edd264473ad016721c68abd57d720ec75a0a40"
+    }
+  ],
+  "bufferViews": [
+    {
+      "sourceIndex": 0,
+      "index": 0,
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 14760,
+      "sha256": "7c72e29b2bf8e849e7f78439af78e5165be2e9f085b485ae0ac5a97463673222"
+    },
+    {
+      "sourceIndex": 1,
+      "index": 1,
+      "buffer": 0,
+      "byteOffset": 14760,
+      "byteLength": 14760,
+      "sha256": "db83d7d0fd69459084a77c87eafcf280f0d90ceaffb2de502b6f717d78c48eb0"
+    },
+    {
+      "sourceIndex": 2,
+      "index": 2,
+      "buffer": 0,
+      "byteOffset": 29520,
+      "byteLength": 9840,
+      "sha256": "3a288960f73700b23deb917742c6176244314299a4a8b2c84eaa93c0234eec50"
+    },
+    {
+      "sourceIndex": 3,
+      "index": 3,
+      "buffer": 0,
+      "byteOffset": 39360,
+      "byteLength": 14760,
+      "sha256": "8b1ef4a6f7a2bfb1f773aabbb9bd49b3e0fe974106bb70a88310171e0e20f73d"
+    },
+    {
+      "sourceIndex": 4,
+      "index": 4,
+      "buffer": 0,
+      "byteOffset": 54120,
+      "byteLength": 3744,
+      "sha256": "e8cf7c31ca181468697feee339eda62962ec0c38f4457fcb739741b602f9e49f"
+    },
+    {
+      "sourceIndex": 6,
+      "index": 5,
+      "buffer": 0,
+      "byteOffset": 57864,
+      "byteLength": 183624,
+      "sha256": "c5d51011c5087a50959049917b6fc683718e1c0e2accb52053f2f9ab7b03a8ab"
+    },
+    {
+      "sourceIndex": 7,
+      "index": 6,
+      "buffer": 0,
+      "byteOffset": 241488,
+      "byteLength": 183624,
+      "sha256": "9ef0c11fde9219516a21ee95f50c83aa23da7c84fb6674feeb064ee4940f88bb"
+    },
+    {
+      "sourceIndex": 8,
+      "index": 7,
+      "buffer": 0,
+      "byteOffset": 425112,
+      "byteLength": 122416,
+      "sha256": "44f12ff5eb9aa1f534b7ab36fe88b26e8483258cae28e2181a37770966a96fd7"
+    },
+    {
+      "sourceIndex": 9,
+      "index": 8,
+      "buffer": 0,
+      "byteOffset": 547528,
+      "byteLength": 183624,
+      "sha256": "10be022f1d32610291e16222477831ff60112a5d1025b468f0c3f83b85f499bd"
+    },
+    {
+      "sourceIndex": 10,
+      "index": 9,
+      "buffer": 0,
+      "byteOffset": 731152,
+      "byteLength": 33696,
+      "sha256": "aa303ecddf155da332ca23b8f6079832a612568eef728b198787a17eb77d8a5e"
+    },
+    {
+      "sourceIndex": 11,
+      "index": 10,
+      "buffer": 0,
+      "byteOffset": 764848,
+      "byteLength": 6048,
+      "sha256": "3db3502deb93607e0c15b44264688bf545c6fa9176ddb73a4d8d91b6aaec5c77"
+    },
+    {
+      "sourceIndex": 12,
+      "index": 11,
+      "buffer": 0,
+      "byteOffset": 770896,
+      "byteLength": 6048,
+      "sha256": "9d5ef5214e4be32e1a3c3c94f872cbc69333b0c471a4536453c8c060ff86d15c"
+    },
+    {
+      "sourceIndex": 13,
+      "index": 12,
+      "buffer": 0,
+      "byteOffset": 776944,
+      "byteLength": 4032,
+      "sha256": "38bf83ca8f4794b216077efe47be97b401e0ec78e6c283665c660a34ef0e880b"
+    },
+    {
+      "sourceIndex": 14,
+      "index": 13,
+      "buffer": 0,
+      "byteOffset": 780976,
+      "byteLength": 6048,
+      "sha256": "78e27aa844259e9405987466339c68c2cc1d76642bbcac9342d85e0085956575"
+    },
+    {
+      "sourceIndex": 15,
+      "index": 14,
+      "buffer": 0,
+      "byteOffset": 787024,
+      "byteLength": 1512,
+      "sha256": "abd55291f33f8e108a3581f1d49dde98a217204ec1504cf660c1e34948047059"
+    },
+    {
+      "sourceIndex": 17,
+      "index": 15,
+      "buffer": 0,
+      "byteOffset": 788536,
+      "byteLength": 308244,
+      "sha256": "964a87677c083485a64010f28f3c957467e6e88339c29c252fa21d2823ca40f9"
+    },
+    {
+      "sourceIndex": 18,
+      "index": 16,
+      "buffer": 0,
+      "byteOffset": 1096780,
+      "byteLength": 308244,
+      "sha256": "2b591707c90885b8aa8eecdae7e7f2c49b275034b63244977731b123e5679867"
+    },
+    {
+      "sourceIndex": 19,
+      "index": 17,
+      "buffer": 0,
+      "byteOffset": 1405024,
+      "byteLength": 205496,
+      "sha256": "65e27c217d5d11ea501e3d2a657e16d4133dd26aba466b7ab695de4d98f1dfae"
+    },
+    {
+      "sourceIndex": 20,
+      "index": 18,
+      "buffer": 0,
+      "byteOffset": 1610520,
+      "byteLength": 308244,
+      "sha256": "8be0cc7072a0583788b9424551c9356e88ee4559eca31d5012843ab90899d735"
+    },
+    {
+      "sourceIndex": 21,
+      "index": 19,
+      "buffer": 0,
+      "byteOffset": 1918764,
+      "byteLength": 56040,
+      "sha256": "0f8bcf16aa198b05abfc40eddf99cb1b8714c55bde8a6c9813441eb12afa5c99"
+    },
+    {
+      "sourceIndex": 22,
+      "index": 20,
+      "buffer": 0,
+      "byteOffset": 1974804,
+      "byteLength": 53412,
+      "sha256": "b9702db1ab57c56cb399ac7d30f75160fb06939e7d18e94a7669f6e8e4d7c446"
+    },
+    {
+      "sourceIndex": 23,
+      "index": 21,
+      "buffer": 0,
+      "byteOffset": 2028216,
+      "byteLength": 53412,
+      "sha256": "ed52df1585e7d1f5a3a8f527b159176a629b78997951b71abeec3ef2946f0cb8"
+    },
+    {
+      "sourceIndex": 24,
+      "index": 22,
+      "buffer": 0,
+      "byteOffset": 2081628,
+      "byteLength": 35608,
+      "sha256": "7ca48083b0b72daca2e11296ee9bc1d1dab78bb0490f00f0d28745210521aed0"
+    },
+    {
+      "sourceIndex": 25,
+      "index": 23,
+      "buffer": 0,
+      "byteOffset": 2117236,
+      "byteLength": 53412,
+      "sha256": "b7a7f18a03e5e15bbbabd877aa31eeb8650626a70e28eff4b216702838b6b40e"
+    },
+    {
+      "sourceIndex": 26,
+      "index": 24,
+      "buffer": 0,
+      "byteOffset": 2170648,
+      "byteLength": 21738,
+      "sha256": "0fa4fdf51586c5401a4459f885da782d3d3412e2576101ba1579a4040a6d6ed3"
+    },
+    {
+      "sourceIndex": 28,
+      "index": 25,
+      "buffer": 0,
+      "byteOffset": 2192388,
+      "byteLength": 1061256,
+      "sha256": "3bbfd35a0718123d5ab830a803aaefbdbf099f6a0f9ad32d5b29687c6692a23a"
+    },
+    {
+      "sourceIndex": 29,
+      "index": 26,
+      "buffer": 0,
+      "byteOffset": 3253644,
+      "byteLength": 1061256,
+      "sha256": "b0382fb8539f8d3705ea6fcb950a454d5856d4aa72f89ef0f7f8ddc974c3f635"
+    },
+    {
+      "sourceIndex": 30,
+      "index": 27,
+      "buffer": 0,
+      "byteOffset": 4314900,
+      "byteLength": 707504,
+      "sha256": "77f74b5c27d0e38986e2e44f6dd243abd3db315eaa9a17a6538edd0ba957e12c"
+    },
+    {
+      "sourceIndex": 31,
+      "index": 28,
+      "buffer": 0,
+      "byteOffset": 5022404,
+      "byteLength": 1061256,
+      "sha256": "3216d296ecc6b72c303780a7c0f0fef94f1e78aa15ab6050d5bb9ec0971735f6"
+    },
+    {
+      "sourceIndex": 32,
+      "index": 29,
+      "buffer": 0,
+      "byteOffset": 6083660,
+      "byteLength": 446892,
+      "sha256": "2e9129c5bed3900ada6a89c03343dd824e47c6332c65de1cd39707c4a4e051d1"
+    },
+    {
+      "sourceIndex": 33,
+      "index": 30,
+      "buffer": 0,
+      "byteOffset": 6530552,
+      "byteLength": 10608,
+      "sha256": "e399d8513b201d941ec6c7f9506a6ed6d1fc6887bb4012d5e25ca660fb437714"
+    },
+    {
+      "sourceIndex": 34,
+      "index": 31,
+      "buffer": 0,
+      "byteOffset": 6541160,
+      "byteLength": 10608,
+      "sha256": "471e914abd74c8dd85208523305bed61b871da2717a13ac67cc216ec72fb065a"
+    },
+    {
+      "sourceIndex": 35,
+      "index": 32,
+      "buffer": 0,
+      "byteOffset": 6551768,
+      "byteLength": 7072,
+      "sha256": "726d66a74f41285068309412ae11d4832a86b935c34a77ae9d50f90d574cd55e"
+    },
+    {
+      "sourceIndex": 36,
+      "index": 33,
+      "buffer": 0,
+      "byteOffset": 6558840,
+      "byteLength": 10608,
+      "sha256": "4293189249c86858cb0a336874c74ffe5ab17b4fe5dbbb206ea3eb61047f34bf"
+    },
+    {
+      "sourceIndex": 37,
+      "index": 34,
+      "buffer": 0,
+      "byteOffset": 6569448,
+      "byteLength": 2592,
+      "sha256": "7a877c80c5cf296fffa89610d8211396a3033bdd3c2b7a8b6bebe134dc9497dc"
+    },
+    {
+      "sourceIndex": 39,
+      "index": 35,
+      "buffer": 0,
+      "byteOffset": 6572040,
+      "byteLength": 292248,
+      "sha256": "a3e818d4886ebb19c82d9a1be1bb3aa0f4c87a1c7c2f7cfaec9cbfc6b2d553a6"
+    },
+    {
+      "sourceIndex": 40,
+      "index": 36,
+      "buffer": 0,
+      "byteOffset": 6864288,
+      "byteLength": 292248,
+      "sha256": "5f88729bb74aa5368843c0afa9e8ea098e967a82a92101900710ec587aeb5bff"
+    },
+    {
+      "sourceIndex": 41,
+      "index": 37,
+      "buffer": 0,
+      "byteOffset": 7156536,
+      "byteLength": 194832,
+      "sha256": "6b10b0ad86efaabed96e97a4a5875e907dfb5827d0d1c2923ce54470fe6a8029"
+    },
+    {
+      "sourceIndex": 42,
+      "index": 38,
+      "buffer": 0,
+      "byteOffset": 7351368,
+      "byteLength": 292248,
+      "sha256": "00ed062e26b304d36819f532de8429ea117de706bb5fd5a352486cc4ff06a4f1"
+    },
+    {
+      "sourceIndex": 43,
+      "index": 39,
+      "buffer": 0,
+      "byteOffset": 7643616,
+      "byteLength": 52392,
+      "sha256": "a0a3c556a4451c39ee7eefb4bb2b6aff959abfd8e0e05a73a927308c847c245a"
+    },
+    {
+      "sourceIndex": 44,
+      "index": 40,
+      "buffer": 0,
+      "byteOffset": 7696008,
+      "byteLength": 20088,
+      "sha256": "1ca28b507e275ba050a69a531292bcc17fd03bf3555710914364defd2e531c39"
+    },
+    {
+      "sourceIndex": 45,
+      "index": 41,
+      "buffer": 0,
+      "byteOffset": 7716096,
+      "byteLength": 20088,
+      "sha256": "cbef1a6d9c6cb51864c7e6fa052ea5abe18aa86262961f10b2d36e8ecaf217e9"
+    },
+    {
+      "sourceIndex": 46,
+      "index": 42,
+      "buffer": 0,
+      "byteOffset": 7736184,
+      "byteLength": 13392,
+      "sha256": "88b3b432fa9e0003ad132738680ed8484d9ddcc3c49659d1ed0464d5c723230d"
+    },
+    {
+      "sourceIndex": 47,
+      "index": 43,
+      "buffer": 0,
+      "byteOffset": 7749576,
+      "byteLength": 20088,
+      "sha256": "f14eadae6f03d12a8591fb14fb44afd4a7741b4900a157e507d330101f9fd3e2"
+    },
+    {
+      "sourceIndex": 48,
+      "index": 44,
+      "buffer": 0,
+      "byteOffset": 7769664,
+      "byteLength": 5004,
+      "sha256": "a391909fccd846573045815fdd2c0ddf7aa5889975ac1226fb1b13ada9a169e7"
+    },
+    {
+      "sourceIndex": 50,
+      "index": 45,
+      "buffer": 0,
+      "byteOffset": 7774668,
+      "byteLength": 294924,
+      "sha256": "8fa8b4ba859dcf6caba918b04258d5e41304343878267c02391e2e7a66bb5f45"
+    },
+    {
+      "sourceIndex": 51,
+      "index": 46,
+      "buffer": 0,
+      "byteOffset": 8069592,
+      "byteLength": 294924,
+      "sha256": "f462c36e9a4c8c855060aee47a55c81892c8f952b2e799bb869368a5036202a0"
+    },
+    {
+      "sourceIndex": 52,
+      "index": 47,
+      "buffer": 0,
+      "byteOffset": 8364516,
+      "byteLength": 196616,
+      "sha256": "0d3653e1c3c8383d4772e6c21c6ec0131b750dc75e5bd73e286e741017988550"
+    },
+    {
+      "sourceIndex": 53,
+      "index": 48,
+      "buffer": 0,
+      "byteOffset": 8561132,
+      "byteLength": 294924,
+      "sha256": "75239a45a7a84758b9907b6ee6dcee51b2e44a54765d2ef5eb1c270c5a3d927b"
+    },
+    {
+      "sourceIndex": 54,
+      "index": 49,
+      "buffer": 0,
+      "byteOffset": 8856056,
+      "byteLength": 60804,
+      "sha256": "c9e09dce00c87b400e892aa3d40246ed0231c1a1bb7159706a5fbefd72bf748d"
+    },
+    {
+      "sourceIndex": 55,
+      "index": 50,
+      "buffer": 0,
+      "byteOffset": 8916860,
+      "byteLength": 19320,
+      "sha256": "d00f8319da84becef6903dd60c040c5b945328ff38d3c92d2be630a3e159bb54"
+    },
+    {
+      "sourceIndex": 56,
+      "index": 51,
+      "buffer": 0,
+      "byteOffset": 8936180,
+      "byteLength": 19320,
+      "sha256": "710cbfc03941426b1a1196141807990ce0079b5b8483e69b8a72ea4c037792bb"
+    },
+    {
+      "sourceIndex": 57,
+      "index": 52,
+      "buffer": 0,
+      "byteOffset": 8955500,
+      "byteLength": 12880,
+      "sha256": "e14f4c6005411a3ba6e423fb15a73803a8f8ee526684a8f368d5ed8ab87923b2"
+    },
+    {
+      "sourceIndex": 58,
+      "index": 53,
+      "buffer": 0,
+      "byteOffset": 8968380,
+      "byteLength": 19320,
+      "sha256": "a7a22b61616d44b6a957820533628d307abc3c51f3634224ef6b27d29e63ed58"
+    },
+    {
+      "sourceIndex": 59,
+      "index": 54,
+      "buffer": 0,
+      "byteOffset": 8987700,
+      "byteLength": 5478,
+      "sha256": "06ee86d93bb1170caf71fe70184492507aa2f206aa407ddccee2c78860712769"
+    },
+    {
+      "sourceIndex": 61,
+      "index": 55,
+      "buffer": 0,
+      "byteOffset": 8993180,
+      "byteLength": 697728,
+      "sha256": "35398e809e9f188c541d195d955c6429822629b8885323d4852ebeb1b8fcf97b"
+    },
+    {
+      "sourceIndex": 62,
+      "index": 56,
+      "buffer": 0,
+      "byteOffset": 9690908,
+      "byteLength": 697728,
+      "sha256": "a44aab267458acad3eac700e03343942929b12b0e1dfab071f267b9675b8e579"
+    },
+    {
+      "sourceIndex": 63,
+      "index": 57,
+      "buffer": 0,
+      "byteOffset": 10388636,
+      "byteLength": 465152,
+      "sha256": "eaee723e7a6307624d8a293a86877e9523ef67fec20133aac0f91b8eedbc2498"
+    },
+    {
+      "sourceIndex": 64,
+      "index": 58,
+      "buffer": 0,
+      "byteOffset": 10853788,
+      "byteLength": 697728,
+      "sha256": "2e1a69f1e8fcf56313e62847725a883aed1cd24afeee25f24828b5edc20f73f5"
+    },
+    {
+      "sourceIndex": 65,
+      "index": 59,
+      "buffer": 0,
+      "byteOffset": 11551516,
+      "byteLength": 158682,
+      "sha256": "3375e533dd8983c738ff763d2d11ab72fc321038b6c69832d682b9a94121eace"
+    },
+    {
+      "sourceIndex": 66,
+      "index": 60,
+      "buffer": 0,
+      "byteOffset": 11710200,
+      "byteLength": 16596,
+      "sha256": "f304c986ed4214293b4ce5d7719dc5fbf9ee68a3e61e4bdc7071a9cded820240"
+    },
+    {
+      "sourceIndex": 67,
+      "index": 61,
+      "buffer": 0,
+      "byteOffset": 11726796,
+      "byteLength": 16596,
+      "sha256": "fe0f57948bb473519df1bb533b48f17d000a9139cf0aa5c9626989908d8aaf25"
+    },
+    {
+      "sourceIndex": 68,
+      "index": 62,
+      "buffer": 0,
+      "byteOffset": 11743392,
+      "byteLength": 11064,
+      "sha256": "09aa2ea426ccd0e6d7abd8847a92b6ba8fdae12e2e9760c31db675b91ab764e0"
+    },
+    {
+      "sourceIndex": 69,
+      "index": 63,
+      "buffer": 0,
+      "byteOffset": 11754456,
+      "byteLength": 16596,
+      "sha256": "ba20bc42c4f06bdc9ac24b0d19520843df995379cd99801c23bce25ee8163655"
+    },
+    {
+      "sourceIndex": 70,
+      "index": 64,
+      "buffer": 0,
+      "byteOffset": 11771052,
+      "byteLength": 4368,
+      "sha256": "3aed5bbed37705a5ec6ed254f3cf60314ec9051e21bda3ff0f7773aac2818721"
+    },
+    {
+      "sourceIndex": 72,
+      "index": 65,
+      "buffer": 0,
+      "byteOffset": 11775420,
+      "byteLength": 594420,
+      "sha256": "d9bc9410e66432ca45c617babac8308ad61b313d77a0079c5d5c700518679912"
+    },
+    {
+      "sourceIndex": 73,
+      "index": 66,
+      "buffer": 1,
+      "byteOffset": 0,
+      "byteLength": 594420,
+      "sha256": "fcd34d11eee121fbb03ed45d344d304f39ae6bb4ab14c9020cfea367adb7b49c"
+    },
+    {
+      "sourceIndex": 74,
+      "index": 67,
+      "buffer": 1,
+      "byteOffset": 594420,
+      "byteLength": 396280,
+      "sha256": "c3dbff7bd1c62eb377ad49e2e61aa5c4ac2c4686d6f0220be9dcca464c1b85d2"
+    },
+    {
+      "sourceIndex": 75,
+      "index": 68,
+      "buffer": 1,
+      "byteOffset": 990700,
+      "byteLength": 594420,
+      "sha256": "cf9f9ef6fd3cfd311f703582eb27e99db3928ed6cc1f2a57cd7922a421b83308"
+    },
+    {
+      "sourceIndex": 76,
+      "index": 69,
+      "buffer": 1,
+      "byteOffset": 1585120,
+      "byteLength": 105696,
+      "sha256": "8e60a8537ffa62246db8c736c1043b4d4be438b70492298ccf273e2268b8b288"
+    },
+    {
+      "sourceIndex": 77,
+      "index": 70,
+      "buffer": 1,
+      "byteOffset": 1690816,
+      "byteLength": 30096,
+      "sha256": "e59bcb8a75e056b2d6bf7ed3a0b0698c799ecf09004af3ff4b8f776b18befdec"
+    },
+    {
+      "sourceIndex": 78,
+      "index": 71,
+      "buffer": 1,
+      "byteOffset": 1720912,
+      "byteLength": 30096,
+      "sha256": "8dd7a4338be51895af6972b6ab0d6cc40ea7be4e7de86c22edca891dfa0ef053"
+    },
+    {
+      "sourceIndex": 79,
+      "index": 72,
+      "buffer": 1,
+      "byteOffset": 1751008,
+      "byteLength": 20064,
+      "sha256": "7a52ce375d5f469fa0999ffea9f61bb8b9df598b5ae3a7522d62cc5c5ca4ba06"
+    },
+    {
+      "sourceIndex": 80,
+      "index": 73,
+      "buffer": 1,
+      "byteOffset": 1771072,
+      "byteLength": 30096,
+      "sha256": "7d33d2c645e78c3fded798de4c05118a22ce8fc5f180be8434f7db9062ef2404"
+    },
+    {
+      "sourceIndex": 81,
+      "index": 74,
+      "buffer": 1,
+      "byteOffset": 1801168,
+      "byteLength": 11160,
+      "sha256": "4e04e1facda09644904044af8e43c482783bf9d15b286cbc477e497bfa7d20e3"
+    },
+    {
+      "sourceIndex": 83,
+      "index": 75,
+      "buffer": 1,
+      "byteOffset": 1812328,
+      "byteLength": 1629612,
+      "sha256": "a383b9331231fc90a015a8bfbab4d8f763fddc126b6404144a2e382ff2984013"
+    },
+    {
+      "sourceIndex": 84,
+      "index": 76,
+      "buffer": 1,
+      "byteOffset": 3441940,
+      "byteLength": 1629612,
+      "sha256": "ea8c489fd41181a710335559a29262deb58bdcdae91c5e5aee14ea81eff18df4"
+    },
+    {
+      "sourceIndex": 85,
+      "index": 77,
+      "buffer": 1,
+      "byteOffset": 5071552,
+      "byteLength": 1086408,
+      "sha256": "6202f68ed7cacc32ac011933658f00fdb214b44e1456ddcec340a604abc527d5"
+    },
+    {
+      "sourceIndex": 86,
+      "index": 78,
+      "buffer": 1,
+      "byteOffset": 6157960,
+      "byteLength": 1629612,
+      "sha256": "7583341eb4cffcf3757434b2851033858b7e00254e259764075ed06f75fc3e31"
+    },
+    {
+      "sourceIndex": 87,
+      "index": 79,
+      "buffer": 1,
+      "byteOffset": 7787572,
+      "byteLength": 795264,
+      "sha256": "09b866b347526f7ac67eea6214704fd700c8b015dfa5726e0ae1296ed834ee30"
+    },
+    {
+      "sourceIndex": 88,
+      "index": 80,
+      "buffer": 1,
+      "byteOffset": 8582836,
+      "byteLength": 273840,
+      "sha256": "e21d5741529a6cb5751805c4b5dceb233cb023582249469887b9f603889a68f9"
+    },
+    {
+      "sourceIndex": 89,
+      "index": 81,
+      "buffer": 1,
+      "byteOffset": 8856676,
+      "byteLength": 273840,
+      "sha256": "650aa9405dcb5da5dc4a0ea4fb2909e0d3b37d189afbd6f9f325190388b34b19"
+    },
+    {
+      "sourceIndex": 90,
+      "index": 82,
+      "buffer": 1,
+      "byteOffset": 9130516,
+      "byteLength": 182560,
+      "sha256": "77d51e1b4045038fcba3381b565df4b1b1555b818b653c71a152674827d08203"
+    },
+    {
+      "sourceIndex": 91,
+      "index": 83,
+      "buffer": 1,
+      "byteOffset": 9313076,
+      "byteLength": 90072,
+      "sha256": "07447fe166c1b565eb593ff187275a8386d7fe29e794bda7f431997d24519cbe"
+    },
+    {
+      "sourceIndex": 93,
+      "index": 84,
+      "buffer": 1,
+      "byteOffset": 9403148,
+      "byteLength": 46248,
+      "sha256": "ff0eb63f21d7a1012ab9b16be7c77ae30d8e2d50f5c892651b28c9b2bf9097d1"
+    },
+    {
+      "sourceIndex": 94,
+      "index": 85,
+      "buffer": 1,
+      "byteOffset": 9449396,
+      "byteLength": 46248,
+      "sha256": "da01fce542ac80c100150a7cbd6685417565c926d78ff1d4fe284f547e85fa38"
+    },
+    {
+      "sourceIndex": 95,
+      "index": 86,
+      "buffer": 1,
+      "byteOffset": 9495644,
+      "byteLength": 30832,
+      "sha256": "cb2a999423f0cafc3bac376f3bf565119d2ba204df699e43dfaf2473b82f8b24"
+    },
+    {
+      "sourceIndex": 96,
+      "index": 87,
+      "buffer": 1,
+      "byteOffset": 9526476,
+      "byteLength": 46248,
+      "sha256": "c5eb563e86e63c9303fd6deaa66c5f822633eccadbcbdbcd91f9ad0d49507688"
+    },
+    {
+      "sourceIndex": 97,
+      "index": 88,
+      "buffer": 1,
+      "byteOffset": 9572724,
+      "byteLength": 18408,
+      "sha256": "17724a481c74201b25caaff7f05b116dbfc5324f97456cdb3181aac3a1856991"
+    },
+    {
+      "sourceIndex": 99,
+      "index": 89,
+      "buffer": 1,
+      "byteOffset": 9591132,
+      "byteLength": 141684,
+      "sha256": "bdd1b7e3952d4a597a644b8d39e855cd0b7c78fec8ee3868b6342195cc4350fa"
+    },
+    {
+      "sourceIndex": 100,
+      "index": 90,
+      "buffer": 1,
+      "byteOffset": 9732816,
+      "byteLength": 141684,
+      "sha256": "9e524890edc474f11c6e738d46bcb6b719206445250bf599fb1c1ef753fe4b13"
+    },
+    {
+      "sourceIndex": 101,
+      "index": 91,
+      "buffer": 1,
+      "byteOffset": 9874500,
+      "byteLength": 94456,
+      "sha256": "2af72c02994686b32f4829002f7cc33eb4e78ce89c95cdc6c4cddd2c2e037d47"
+    },
+    {
+      "sourceIndex": 102,
+      "index": 92,
+      "buffer": 1,
+      "byteOffset": 9968956,
+      "byteLength": 141684,
+      "sha256": "fcddeacbc966609ad0748d3f609145553712d357eadf9532c2402211e6622c7d"
+    },
+    {
+      "sourceIndex": 103,
+      "index": 93,
+      "buffer": 1,
+      "byteOffset": 10110640,
+      "byteLength": 37332,
+      "sha256": "5813ff41fe6114d1a2ae995130192a046a0867b2e14cc8ea45b64076d7051bd6"
+    },
+    {
+      "sourceIndex": 104,
+      "index": 94,
+      "buffer": 1,
+      "byteOffset": 10147972,
+      "byteLength": 48,
+      "sha256": "c99a41bfa8712f9fb1d1d442b108b21094848408cf63e5d673c106baa1b6c92a"
+    },
+    {
+      "sourceIndex": 105,
+      "index": 95,
+      "buffer": 1,
+      "byteOffset": 10148020,
+      "byteLength": 48,
+      "sha256": "e1812a32d71ab746aa25aee896a1790138ef313625fb873f2be3ec50e9191e2d"
+    },
+    {
+      "sourceIndex": 106,
+      "index": 96,
+      "buffer": 1,
+      "byteOffset": 10148068,
+      "byteLength": 32,
+      "sha256": "7d9aa77275da714e976afc98875da78a01ea263e7da02e2d71daf25c7d049bd8"
+    },
+    {
+      "sourceIndex": 107,
+      "index": 97,
+      "buffer": 1,
+      "byteOffset": 10148100,
+      "byteLength": 12,
+      "sha256": "741019adca80931e9ca8b824d385599c01a33b875934772c2082485dc2362cd6"
+    }
+  ]
+}

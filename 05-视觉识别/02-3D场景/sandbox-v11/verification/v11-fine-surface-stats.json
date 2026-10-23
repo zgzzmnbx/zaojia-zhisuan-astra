@@ -1,0 +1,59 @@
+{
+  "zone_import": {
+    "faces": 5616,
+    "probes": 16848,
+    "rejected_samples": 1798,
+    "all_inside_faces": 447,
+    "seconds": 4.42
+  },
+  "zone_knowledge": {
+    "faces": 9340,
+    "probes": 28020,
+    "rejected_samples": 2425,
+    "all_inside_faces": 622,
+    "seconds": 7.56
+  },
+  "zone_price": {
+    "faces": 37241,
+    "probes": 111723,
+    "rejected_samples": 11931,
+    "all_inside_faces": 2740,
+    "seconds": 29.44
+  },
+  "zone_report": {
+    "faces": 8731,
+    "probes": 26193,
+    "rejected_samples": 2097,
+    "all_inside_faces": 533,
+    "seconds": 6.52
+  },
+  "zone_review": {
+    "faces": 10134,
+    "probes": 30402,
+    "rejected_samples": 5277,
+    "all_inside_faces": 1404,
+    "seconds": 7.28
+  },
+  "zone_risk": {
+    "faces": 26447,
+    "source": "validated representative multi-probe bake"
+  },
+  "zone_table": {
+    "faces": 17616,
+    "source": "validated representative multi-probe bake"
+  },
+  "V10 \u00b7 Baked original site and inlays": {
+    "faces": 61418,
+    "probes": 189108,
+    "rejected_samples": 29892,
+    "all_inside_faces": 8245,
+    "seconds": 45.28
+  },
+  "Context V10 \u00b7 Baked connected streets and curbs": {
+    "faces": 3111,
+    "probes": 12444,
+    "rejected_samples": 0,
+    "all_inside_faces": 0,
+    "seconds": 2.29
+  }
+}

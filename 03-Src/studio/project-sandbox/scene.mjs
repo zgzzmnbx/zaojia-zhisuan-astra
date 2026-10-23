@@ -44,12 +44,15 @@ const poses=new Map();
 function releaseObject(root){const geometries=new Set(),materials=new Set(),textures=new Set();root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v)}});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
 
 /** Scene owns rendering only. Business actions remain in the existing React workspace. */
-export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrbitStop,fpsElement,onLightingStatus=(message)=>{}){
+export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrbitStop,fpsElement,onLightingStatus=(message)=>{},extensions={}){
  const fps=createFrameRateMeter(text=>{if(fpsElement)fpsElement.textContent=text});
  const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;
  renderer.domElement.setAttribute('aria-hidden','true');host.append(renderer.domElement);
+ // Optional experiment hooks are inert for existing production callers. Context
+ // objects are borrowed, never passed to the building/material/business pipeline.
+ const visualContexts=new Set();
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,250),controls=new OrbitControls(camera,renderer.domElement);
  controls.enableDamping=true;controls.dampingFactor=.085;controls.minDistance=14;controls.maxDistance=110;controls.minPolarAngle=.26;controls.maxPolarAngle=Math.PI*.46;controls.autoRotateSpeed=.22;
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment(),env=pmrem.fromScene(room,.04);scene.environment=env.texture;room.dispose();
@@ -98,7 +101,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
    solid=resources;solidStatus='ready';solid.floor.position.y=channelProfile.floor+.71;scene.add(solid.floor);onLightingStatus('');theme();request();
   }catch(error){if(!disposed){solidError=String(error);solidStatus='fallback';onLightingStatus('纯色版加载失败，已保留当前画面；可重新开启重试');request();}}
  }
- let options={waterSettings:waterDefaults,focusBeam:true,uplightSettings:sandboxDefaults.uplights,localSurface:sandboxDefaults.localSurface,backgroundColor:null,solidSettings:normalizeSolidSettings(null),solidVersion:sandboxDefaults.solidVersion,trial:approvedLighting(),studioLighting:sandboxDefaults.studioLighting,softShadows:sandboxDefaults.softShadows,bakedLighting:sandboxDefaults.bakedLighting,brightBackground:sandboxDefaults.brightBackground,nightBloom:sandboxDefaults.nightBloom,enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false};
+ let options={waterSettings:waterDefaults,focusBeam:true,uplightSettings:sandboxDefaults.uplights,localSurface:sandboxDefaults.localSurface,backgroundColor:null,solidSettings:extensions.initialOptions?.solidSettings??normalizeSolidSettings(null),solidVersion:sandboxDefaults.solidVersion,trial:approvedLighting(),studioLighting:sandboxDefaults.studioLighting,softShadows:sandboxDefaults.softShadows,bakedLighting:sandboxDefaults.bakedLighting,brightBackground:sandboxDefaults.brightBackground,nightBloom:sandboxDefaults.nightBloom,enhanced:sandboxDefaults.enhanced,bloom:sandboxDefaults.bloom,paintStrength:sandboxDefaults.paintStrength,groupLogo:sandboxDefaults.groupLogo,roofLabels:sandboxDefaults.roofLabels,compact:host.parentElement.classList.contains('sandbox-card-mode'),active:true,dark:false,cool:sandboxDefaults.cool,groundTone:sandboxDefaults.groundTone,...sandboxDefaults.camera,shadows:true,flow:true,running:null,orbit:false,...extensions.initialOptions};
  function ensureLighting(){
   if(!(options.enhanced||options.studioLighting||options.bakedLighting)||lighting||loadingLighting||lightingStatus==='fallback'||disposed)return;
   loadingLighting=true;lightingStatus='loading';lightingMessage='';onLightingStatus('正在载入增强光照…');
@@ -243,7 +246,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
  function render(time){const delta=lastRenderTime?Math.min(.05,Math.max(0,(time-lastRenderTime)/1000)):1/60;lastRenderTime=time;raf=0;if(!allowed()){fps.idle();return;}
   if(model&&!entranceChecked){
    entranceChecked=true;
-   if(sandboxEntranceGate.claim()&&!entranceSkipped&&!reduced.matches&&!options.running&&!selected&&!taskTarget){
+   if((extensions.entranceGate??sandboxEntranceGate).claim()&&!entranceSkipped&&!reduced.matches&&!options.running&&!selected&&!taskTarget){
     entrance=createBuildingEntrance(model,zones.map(zone=>zone.id));lightingMaterials?.setAssembly(true,options.bakedLighting,options.dark);flow.setPlaying(false);theme();
    }
   }
@@ -265,7 +268,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   const glowPending=focusGlow.tick(delta*1000,reduced.matches,building);
   const uplightPending=uplights.tick(delta*1000,reduced.matches,building);
   const waterPending=river.tick(delta,reduced.matches);channel?.tick(delta,waterPending);
-  renderer.info.autoReset=false;renderer.info.reset();river.capture(building||uplightPending||paintPending||flow.getState().playing||(beacon.visible&&!reduced.matches));night.render(delta);focusBloom.render();frames++;fps.frame(time);
+  renderer.info.autoReset=false;renderer.info.reset();river.capture(building||uplightPending||paintPending||flow.getState().playing||(beacon.visible&&!reduced.matches));night.render(delta);focusBloom.render();frames++;fps.frame(time);extensions.onFrame?.({assembling:!!entrance?.active,entranceChecked});
   if(waterPending||building||glowPending||uplightPending||lightingPending||paintPending||flight||viewFlight||moving||controls.autoRotate||flow.getState().playing||markerPending||(beacon.visible&&!reduced.matches))request();
   if(!raf)fps.idle();
  }
@@ -286,7 +289,7 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   else if(Math.abs(x-(viewFlight?.x1??camera.view.offsetX))>.1||Math.abs(y-(viewFlight?.y1??camera.view.offsetY))>.1)viewFlight={x0:camera.view.offsetX,y0:camera.view.offsetY,x1:x,y1:y,start:performance.now()};
  }
  function resize(){const rect=host.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldHeight=height,oldUsable=frame.width,changed=width!==rect.width||height!==rect.height;width=rect.width;height=rect.height;camera.aspect=width/height;reframe();if(oldHeight>1&&!flight){const scale=height/oldHeight*oldUsable/frame.width;camera.position.sub(controls.target).multiplyScalar(scale).clampLength(17,110).add(controls.target);controls.update()}if(changed){renderer.setSize(width,height);night.resize(width,height)}request()}
- const observer=new ResizeObserver(resize);observer.observe(host);const chat=host.closest('.workbench')?.querySelector('#astra-conversation');if(chat)observer.observe(chat);const infoRail=host.parentElement.querySelector('.sandbox-info-rail');if(infoRail)observer.observe(infoRail);resize();const pose=poses.get(context);if(pose){camera.position.fromArray(pose.position);controls.target.fromArray(pose.target);controls.update()}else home(false);
+ const observer=new ResizeObserver(resize);observer.observe(host);const chat=host.closest('.workbench')?.querySelector('#astra-conversation');if(chat)observer.observe(chat);const infoRail=host.parentElement.querySelector('.sandbox-info-rail');if(infoRail)observer.observe(infoRail);resize();const pose=extensions.rememberPose===false?null:poses.get(context);if(pose){camera.position.fromArray(pose.position);controls.target.fromArray(pose.target);controls.update()}else home(false);
  const visibility=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;if(inView)request();else stop()});visibility.observe(host);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else request()},{signal:events.signal});
  const rays=new THREE.Raycaster(),pointer=new THREE.Vector2();
@@ -323,8 +326,38 @@ export function mountSandbox(host,markers,context,onSelect,onReady,onError,onOrb
   select(id){if(id===selected)return;finishEntrance();taskTarget=null;selected=id;markerLayout.reset();spatialVisibility.clear();reframe();if(id){const zone=zones.find(z=>z.id===id);if(zone){const target=new THREE.Vector3(...zone.target),direction=camera.position.clone().sub(controls.target).normalize();if(direction.y<.38)direction.y=.65;direction.normalize();fly(target.clone().addScaledVector(direction,sandboxCameraDistances(options.zoom).building*Math.max(1,.8/(frame.width/frame.height))),target)}}theme();request()},
   home(){finishEntrance();selected=null;markerLayout.reset();spatialVisibility.clear();reframe();theme();home()},
   zoom(factor){finishEntrance();const delta=camera.position.clone().sub(controls.target).multiplyScalar(factor).clampLength(17,110);fly(controls.target.clone().add(delta),controls.target)},
+  setPresentationActive(value){controls.enabled=!!value;this.setOptions({active:!!value});},
+  /** A borrowed context has its own resource owner and is excluded from model traversal. */
+  attachVisualContext(root){
+   if(disposed)throw new Error('Sandbox is disposed');
+   if(!root?.isObject3D||root.parent)throw new Error('Visual context must be an unattached Object3D');
+   visualContexts.add(root);scene.add(root);
+   const invalidate=()=>{renderer.shadowMap.needsUpdate=true;river.invalidate();focusBloom.invalidate();request()};
+   invalidate();let detached=false;
+   return {setVisible(value){if(detached||disposed)return;root.visible=!!value;invalidate()},detach(){if(detached)return;detached=true;visualContexts.delete(root);root.removeFromParent();if(!disposed)invalidate()}};
+  },
+  getViewPose(){return {position:camera.position.toArray(),target:controls.target.toArray(),fov:camera.fov,viewHeight:2*camera.position.distanceTo(controls.target)*Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)/camera.zoom}},
+  setViewPose(pose){
+   const vector=value=>Array.isArray(value)&&value.length===3&&value.every(Number.isFinite);
+   if(disposed)return false;
+   if(!vector(pose?.position)||!vector(pose?.target)||pose.position.some(n=>Math.abs(n)>500)||pose.target.some(n=>Math.abs(n)>160)){home(false);return false;}
+   const position=new THREE.Vector3(...pose.position),target=new THREE.Vector3(...pose.target),direction=position.clone().sub(target);
+   if(direction.lengthSq()<.000001){home(false);return false;}
+   const fov=Number.isFinite(pose.fov)&&pose.fov>1&&pose.fov<150?pose.fov:camera.fov;
+   if(Number.isFinite(pose.viewHeight)&&pose.viewHeight>0)position.copy(target).addScaledVector(direction.normalize(),pose.viewHeight/(2*Math.tan(THREE.MathUtils.degToRad(fov)/2)));
+   finishEntrance();flight=null;viewFlight=null;camera.fov=fov;camera.zoom=1;camera.position.copy(position);controls.target.copy(target);camera.updateProjectionMatrix();
+   // Flush OrbitControls damping before restoring a saved pose, without changing selection.
+   const damping=controls.enableDamping;controls.enableDamping=false;controls.update();camera.position.copy(position);controls.target.copy(target);controls.update();controls.enableDamping=damping;camera.updateMatrixWorld();request();return true;
+  },
+  capture(){
+   if(!allowed()||!model)return Promise.reject(new Error('Sandbox must be ready and visible to capture'));
+   // Capture in the same task as rendering; no preserveDrawingBuffer cost for production.
+   cancelAnimationFrame(raf);raf=0;render(performance.now());
+   return new Promise((resolve,reject)=>{try{renderer.domElement.toBlob(blob=>blob?resolve(blob):reject(new Error('Sandbox capture failed')),'image/png')}catch(error){reject(error)}});
+  },
+  refreshViewport:resize,
   refresh:request,
   state:()=>({channel:channel?.state(),water:river.state(),localSurface:{enabled:localActive(),status:localSurfaceStatus,message:localSurfaceMessage},solid:{status:solidStatus,error:solidError,active:solidActive,environment:solidEnvironment.state(),...solidMaterials?.state()},background:{color:scene.background.getHexString(),custom:options.backgroundColor},trial:{enabled:!!options.trial&&!options.dark,config:options.trial,environment:trialEnvironment.state()},effects:Object.fromEntries(['solidVersion','enhanced','studioLighting','softShadows','bakedLighting','brightBackground','nightBloom','bloom','localSurface'].map(key=>[key,options[key]])),asset:assetState,renderProfile:{environmentSource:options.studioLighting&&!options.dark&&lighting?'studio-softboxes':'baseline',softShadows:options.softShadows&&options.shadows&&!options.dark?softShadows.state():null,sun:sun.position.toArray(),sunIntensity:sun.intensity,fill:fill.intensity,hemisphere:hemi.intensity,environment:scene.environmentIntensity,exposure:renderer.toneMappingExposure,shadowSize:sun.shadow.mapSize.toArray(),normalBias:sun.shadow.normalBias,frustum:Object.fromEntries(['left','right','top','bottom','near','far'].map(k=>[k,sun.shadow.camera[k]]))},lighting:{enabled:options.enhanced,status:lightingStatus,message:lightingMessage,...lightingMaterials?.getState()},uplights:uplights.state(),bloom:{...focusGlow.getState(),postprocessing:focusBloom.state()},nightBloom:night.getState(),textures:renderer.info.memory.textures,triangles:renderer.info.render.triangles,entrance:entrance?.state()??{active:false,skipped:entranceChecked},paint:paintProgress.state(),paintStrength:options.paintStrength,monumentPosition:monument.position.toArray(),monumentHeight:1.82,groupLogo:options.groupLogo,groupLogoVisible:groupLogo.visible,groupLogoColor:groupLogo.children[0].material.color.getHexString(),groupLogoParts:groupLogo.children.length,roofLabels:options.roofLabels,roofAnchors:roofAnchors.state(),cameraQuaternion:camera.quaternion.toArray(),zones:zones.map(z=>{const v=new THREE.Vector3(...z.target).project(camera),r=host.getBoundingClientRect();return {id:z.id,x:(v.x+1)*r.width/2+r.left,y:(1-v.y)*r.height/2+r.top}}),camera:camera.position.toArray(),target:controls.target.toArray(),size:[width,height],aspect:camera.aspect,distance:camera.position.distanceTo(controls.target),frame,focusFrame,selected,taskTarget,layoutMode:selected||taskTarget?'focused':'overview',markerLayout:markerSnapshot,ready:!!model,frames,shadowDraws,pending:!!raf,active:allowed(),running:options.running,beacon:beacon.visible,flow:flow.getState().playing,flowDistance:flow.getState().distance,orbit:options.orbit,dark:options.dark,cool:options.cool,groundTone:options.groundTone,elevation:options.elevation,zoom:options.zoom,overviewDistance:options.distance,shadows:renderer.shadowMap.enabled,drawCalls:renderer.info.render.calls}),
-  dispose(){if(disposed)return;poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);disposed=true;finishEntrance();abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();uplights.dispose();river.dispose();focusBloom.dispose();focusGlow.dispose();night.dispose();trialEnvironment.dispose();solidEnvironment.dispose();softShadows.dispose();solidMaterials?.dispose();channel?.dispose();solid?.dispose();lightingMaterials?.apply(null);lighting?.dispose();localSurface?.dispose();if(!loadingLighting&&!loadingLocalSurface)pmrem.dispose();releaseObject(scene);(floor.material===dayFloor?nightFloor:dayFloor).dispose();sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
+  dispose(){if(disposed)return;if(extensions.rememberPose!==false){poses.set(context,{position:camera.position.toArray(),target:controls.target.toArray()});if(poses.size>30)poses.delete(poses.keys().next().value);}disposed=true;finishEntrance();abort.abort();stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();contacts.dispose();uplights.dispose();river.dispose();focusBloom.dispose();focusGlow.dispose();night.dispose();trialEnvironment.dispose();solidEnvironment.dispose();softShadows.dispose();solidMaterials?.dispose();channel?.dispose();solid?.dispose();lightingMaterials?.apply(null);lighting?.dispose();localSurface?.dispose();if(!loadingLighting&&!loadingLocalSurface)pmrem.dispose();for(const root of visualContexts)root.removeFromParent();visualContexts.clear();releaseObject(scene);(floor.material===dayFloor?nightFloor:dayFloor).dispose();sun.shadow.dispose();env.dispose();renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
  };
 }
