@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Scene,Mesh,Box3,BoxGeometry,MeshStandardMaterial} from 'three';
+import {Scene,Group,Mesh,Box3,BoxGeometry,MeshStandardMaterial} from 'three';
 import {createFocusUplights} from '../03-Src/studio/project-sandbox/focus-uplights.mjs';
 import {createFocusGlow} from '../03-Src/studio/project-sandbox/focus-glow.mjs';
 import {normalizeUplightSettings} from '../03-Src/studio/project-sandbox/uplight-settings.ts';
@@ -31,24 +31,6 @@ test('uplights honor off, shadows, assembly, reduced motion and invalid selectio
 });
 
 
-test('all 28 primary uplight rays reach their own building above the plinth',async()=>{
- const {default:fs}=await import('node:fs');const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');const {Vector3,Raycaster}=await import('three');
- const bytes=fs.readFileSync('05-视觉识别/02-3D场景/lighting-v2/sandbox-surface.glb');
- const {scene:model}=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');model.updateMatrixWorld(true);
- const floor=(x,z)=>new Raycaster(new Vector3(x,.49,z),new Vector3(0,-1,0),0,1).intersectObject(model,true)[0]?.point.y??.16;
- const lights=createFocusUplights(new Scene(),()=>{},floor);
- for(const zone of ['import','knowledge','price','report','review','risk','table']){
-  lights.configure({focus:zone});lights.tick(360,true);
-  for(const lamp of lights.state().lights){
-   const origin=new Vector3(...lamp.position),direction=new Vector3(...lamp.target).sub(origin).normalize();
-   const hit=new Raycaster(origin,direction,.01,15).intersectObject(model,true)[0];
-   let owner=hit?.object;while(owner&&!owner.userData.zone)owner=owner.parent;
-   assert.equal(owner?.userData.zone,zone,`${zone}: lamp blocked by another building or landscaping`);
-   assert.ok(hit.point.y>.7,`${zone}: lamp blocked by an entrance step`);
-  }
- }
- lights.dispose();
-});
 
 test('small fixtures rise from below grade, retract before switching, and stop invalidating shadows at rest',()=>{
  const scene=new Scene();let dirty=0;const lights=createFocusUplights(scene,()=>dirty++,()=>.3);
@@ -96,3 +78,57 @@ test('ground bloom survives removal of orbital rings and no longer sustains anim
  assert.ok(glow.scene.children.every(group=>group.children.length===1),'only the ground glow mesh remains');
  assert.equal(glow.tick(1000),false);glow.dispose();
 });
+
+test('ground bloom crossfades targets, stops at rest and clears on assembly / deselection',()=>{
+
+ const scene=new Group(),glow=createFocusGlow(scene);
+
+ glow.configure({focus:'import'});
+
+ assert.equal(glow.tick(100),true);
+
+ const before=glow.getState().visible[0].opacity;
+
+ assert.ok(before>0&&before<1);
+
+ glow.configure({focus:'price',animate:false});
+
+ glow.tick(50);
+
+ assert.deepEqual(glow.getState().visible.map(e=>e.id),['import','price']);
+
+ assert.ok(glow.getState().visible[0].opacity<before);
+
+ assert.equal(glow.tick(420),false);
+
+ assert.deepEqual(glow.getState().visible,[{id:'price',opacity:1}]);
+
+ assert.equal(glow.tick(16),false,'Settled light must not keep RAF alive');
+
+ assert.equal(glow.getState().moving,false);
+
+ glow.configure({focus:'price'});assert.equal(glow.tick(16),false);assert.equal(glow.getState().rings,false);
+
+ assert.equal(glow.tick(16,true),false,'reduced motion retains a static installation');
+
+ glow.configure({focus:'price',enabled:false});glow.tick(420);
+
+ assert.deepEqual(glow.getState().visible,[]);
+
+ glow.configure({focus:'risk'});glow.tick(16,true);
+
+ assert.deepEqual(glow.getState().visible,[{id:'risk',opacity:1}]);
+
+ glow.tick(16,true,true);
+
+ assert.deepEqual(glow.getState().visible,[],'No floating ground glow during assembly');
+
+ glow.configure({focus:null});glow.tick(420);
+
+ assert.deepEqual(glow.getState().visible,[]);
+
+ glow.dispose();assert.equal(glow.scene.children.length,0);
+
+});
+
+

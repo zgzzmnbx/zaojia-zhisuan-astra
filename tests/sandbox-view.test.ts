@@ -27,7 +27,7 @@ test('generated report is published to chat without automatic navigation',()=>{
 
 test('overview distance is bounded and independent of building zoom and elevation',()=>{
  assert.equal(readSandboxView('{"distance":999}').distance,140);
- assert.equal(readSandboxView('{"distance":-1}').distance,70);
+ assert.equal(readSandboxView('{"distance":-1}').distance,35);
  assert.equal(readSandboxView('{"distance":"120"}').distance,85);
  const near=sandboxCameraDistances(135,70),far=sandboxCameraDistances(135,140);
  assert.equal(near.overview,33.6);assert.equal(far.overview,67.2);

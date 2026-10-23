@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
-import normalUrl from '../../../05-视觉识别/02-3D场景/lighting-v2/water-normal.png?url';
+import normalUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/shared-water/water-normal.png?url';
 import {createRiverWater} from './river-water.mjs';
 import {createRiverLife} from './river-life.mjs';
 import {channelProfile} from './river-channel.mjs';
@@ -13,9 +13,9 @@ import {createBakedSurfaces} from './baked-surfaces.mjs';
 import {normalizeBakedSettings} from './baked-settings.ts';
 
 /** Reuse main's effect implementations; own every runtime resource independently. */
-export function createBakedEffects(renderer,scene,camera,model,request){
+export function createBakedEffects(renderer,scene,camera,model,request,cityTexture=null,streetBake=null){
  let disposed=false,selected=null,options=normalizeBakedSettings(null);
- const surfaces=createBakedSurfaces(model),glow=createFocusGlow();
+ const surfaces=createBakedSurfaces(model,cityTexture,streetBake),glow=createFocusGlow();
  const room=new RoomEnvironment(),pmrem=new THREE.PMREMGenerator(renderer),environment=pmrem.fromScene(room,.04);room.dispose();pmrem.dispose();
  // Only live fixtures/water use IBL; baked materials discard indirect lighting.
  scene.environment=environment.texture;scene.environmentIntensity=.6;
@@ -43,6 +43,7 @@ export function createBakedEffects(renderer,scene,camera,model,request){
  }
  function releaseOwned(root){const geometry=new Set(),materials=new Set();root.traverse(o=>{if(o.geometry)geometry.add(o.geometry);for(const m of o.material?[].concat(o.material):[])materials.add(m)});geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());root.removeFromParent()}
  return {configure,
+  invalidateDepth(){renderer.shadowMap.needsUpdate=true;bloom.invalidate();river.invalidate()},
   setCamera(value){camera=value;river.setCamera(camera);bloom.setCamera(camera)},
   tick(time,delta,reduced,paint){
    if(options.preset==='original')return false;

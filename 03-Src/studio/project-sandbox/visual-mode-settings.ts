@@ -1,14 +1,8 @@
-export type VisualMode='original'|'baked';
-export type VisualModeSettings={mode:VisualMode;city:Record<VisualMode,boolean>;dof:boolean;strength:number};
-// v0.11.1 explicitly promotes baked as the first choice. Keep v1 intact as backup.
+export type VisualMode='baked';
+export type VisualModeSettings={mode:VisualMode;city:{baked:boolean};dof:boolean;strength:number};
 export const visualModeKey='astra.sandbox.visual-modes.v2';
 export function normalizeVisualMode(value:unknown):VisualModeSettings{
  const v=value&&typeof value==='object'?value as Partial<VisualModeSettings>:{};
- return {mode:v.mode==='original'?'original':'baked',city:{original:v.city?.original===true,baked:v.city?.baked!==false},dof:v.dof!==false,strength:typeof v.strength==='number'&&Number.isFinite(v.strength)?Math.max(0,Math.min(1,v.strength)):.4};
+ return {mode:'baked',city:{baked:v.city?.baked!==false},dof:v.dof!==false,strength:typeof v.strength==='number'&&Number.isFinite(v.strength)?Math.max(0,Math.min(1,v.strength)):.4};
 }
-export function readVisualMode():VisualModeSettings{try{const current=localStorage.getItem(visualModeKey);if(current)return normalizeVisualMode(JSON.parse(current));const previous=JSON.parse(localStorage.getItem('astra.sandbox.visual-modes.v1')||'null');return normalizeVisualMode({...previous,mode:'baked'})}catch{return normalizeVisualMode(null)}}
-export function visualPresentation(requested:VisualMode,{dark,assembly}:{dark:boolean;assembly:boolean}){
- if(requested==='baked'&&dark)return {mode:'original' as VisualMode,reason:'夜航使用主线原光影；返回日间后恢复白色版。'};
- if(requested==='baked'&&assembly)return {mode:'original' as VisualMode,reason:'装配使用主线原画面；构件归位后恢复白色版。'};
- return {mode:requested,reason:''};
-}
+export function readVisualMode():VisualModeSettings{try{const current=localStorage.getItem(visualModeKey);return normalizeVisualMode(JSON.parse(current||localStorage.getItem('astra.sandbox.visual-modes.v1')||'null'))}catch{return normalizeVisualMode(null)}}

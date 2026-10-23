@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Group,Mesh,MeshStandardMaterial,BoxGeometry} from 'three';
-import {createSandboxMaterials} from '../03-Src/studio/project-sandbox/materials.mjs';
 import {createBuildingEntrance,createEntranceGate,assemblyComponents} from '../03-Src/studio/project-sandbox/building-entrance.mjs';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
@@ -13,7 +12,7 @@ function assemblyFixture(){
   new BoxGeometry(2,.2,2).translate(0,2,0),
  ]),new MeshStandardMaterial());mesh.material.name='Warm plaster';mesh.userData.zone='import';root.add(mesh);
  const ground=new Mesh(new BoxGeometry(30,1,30),new MeshStandardMaterial());root.add(ground);
- createSandboxMaterials(root);root.updateMatrixWorld(true);return {root,mesh,ground};
+ const painter=createBuildingPaint();painter.attach(mesh.material,'import');root.updateMatrixWorld(true);return {root,mesh,ground};
 }
 
 test('assembly identifies rigid components across face seams without splitting draw calls',()=>{
@@ -55,54 +54,6 @@ test('assembly finishes immediately on reduced motion or navigation; gate is onc
   if(reduced)entrance.tick(16,true);else entrance.finish();
   assert.equal(entrance.active,false);assert.equal(mesh.geometry,original);assert.equal(entrance.label('import'),1);
  }
-});
-
-function fixture(){
- const root=new Group(),source=new MeshStandardMaterial({color:0xeeeeee}),geometry=new BoxGeometry();source.name='Warm plaster';
- const meshes={};
- for(const zone of ['base','import','price','risk','table']){
-  const owner=new Group();if(zone!=='base')owner.userData.zone=zone;root.add(owner);
-  meshes[zone]=new Mesh(geometry,source);owner.add(meshes[zone]);
- }
- const sibling=meshes.table.clone();meshes.table.parent.add(sibling);
- return {meshes,sibling,materials:createSandboxMaterials(root)};
-}
-test('shared GLB materials isolate selection by building, retaining reuse within a building',()=>{
- const {meshes,sibling,materials}=fixture();
- assert.equal(sibling.material,meshes.table.material);
- assert.equal(new Set(Object.values(meshes).map(m=>m.material)).size,5);
- assert.equal(meshes.table.geometry,meshes.base.geometry);
- for(const selected of ['table','price','import','risk',null]){
-  materials.apply({selected});
-  for(const [zone,mesh] of Object.entries(meshes))assert.equal(mesh.material.emissive.getHex()!==0,zone===selected,zone);
- }
-});
-test('repeated selection does not accumulate tint or intensity',()=>{
- const {meshes,materials}=fixture();materials.apply({selected:'table'});
- const expected=meshes.table.material.emissive.toArray(),intensity=meshes.table.material.emissiveIntensity;
- for(let i=0;i<30;i++)materials.apply({selected:'table'});
- assert.deepEqual(meshes.table.material.emissive.toArray(),expected);assert.equal(meshes.table.material.emissiveIntensity,intensity);
-});
-test('night selection preserves wall colors and authored light strips without blue body emission',()=>{
- const root=new Group();root.userData.zone='report';
- for(const name of ['Warm plaster','Porcelain white','Astra blue','Frosted blue glazing']){
-  const m=new MeshStandardMaterial({color:0xeeeeee});m.name=name;root.add(new Mesh(new BoxGeometry(),m));
- }
- const materials=createSandboxMaterials(root),snapshot=()=>root.children.map(o=>({color:o.material.color.toArray(),emissive:o.material.emissive.toArray(),intensity:o.material.emissiveIntensity}));
- materials.apply({dark:true});const baseline=snapshot();
- materials.apply({dark:true,selected:'report'});assert.deepEqual(snapshot(),baseline);
- assert.equal(root.children[0].material.emissive.getHex(),0);
- assert.equal(root.children[2].material.emissiveIntensity,3.2);
- assert.equal(root.children[3].material.emissiveIntensity,1.05);
- materials.apply({dark:false,selected:'report'});assert.notEqual(root.children[0].material.emissive.getHex(),0);
- materials.apply({dark:true,selected:'report'});assert.deepEqual(snapshot(),baseline,'day/night toggles do not leak the daytime selection tint');
-});
-test('cool daylight is reversible and cannot change night materials',()=>{
- const {meshes,materials}=fixture();materials.apply();const original=meshes.base.material.color.toArray();
- materials.apply({cool:true});const cool=meshes.base.material.color.toArray();assert.ok(cool[2]>cool[0]);assert.notDeepEqual(cool,original);
- materials.apply({dark:true});const night=meshes.base.material.color.toArray();materials.apply({dark:true,cool:true});assert.deepEqual(meshes.base.material.color.toArray(),night);
- materials.apply({cool:true});assert.deepEqual(meshes.base.material.color.toArray(),cool);
- materials.apply();assert.deepEqual(meshes.base.material.color.toArray(),original);
 });
 
 import {createPaintProgress} from '../03-Src/studio/project-sandbox/paint-progress.mjs';

@@ -1,0 +1,32 @@
+{
+  "blender": "5.2.2 LTS",
+  "engine": "Cycles CPU",
+  "samples": 2048,
+  "adaptive_sampling": false,
+  "size": [
+    2048,
+    2048
+  ],
+  "world": 0.7,
+  "sun": 1.3,
+  "sun_angle_degrees": 18,
+  "material_linear_white": 0.82,
+  "role": "background_street",
+  "geometry_positions_unchanged": true,
+  "triangles": 9290,
+  "seconds": 192.34435987472534,
+  "texture_sha256": "4d8013d2a8f919fba701df6e6d5dd9f5673628449dea1b0fe74ba93151a3cabe",
+  "uv_sha256": "dd81301bfe1be80568c643768d30393ebdd2892c9c87f5634200ae875bd005e5",
+  "ground": {
+    "role": "background_ground",
+    "samples": 256,
+    "adaptive_sampling": false,
+    "size": [
+      1024,
+      1024
+    ],
+    "material_linear_white": 0.9,
+    "seconds": 91.5095682144165,
+    "texture_sha256": "c1b687c822f724a87790133892067ba81af8cfce11b2322a13feadcd0360764d"
+  }
+}

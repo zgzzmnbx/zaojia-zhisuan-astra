@@ -1,3 +1,8 @@
+import {createBuildingEntrance,sandboxEntranceGate} from './building-entrance.mjs';
+import cityWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/city-white-v1/city-white.png?url';
+import streetWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/street-white.png?url';
+import groundWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/ground-white.png?url';
+import streetUV from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/street-uv.json';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {MiniatureDOF} from '../../studies/sandbox-v11/miniature-dof.js';
@@ -15,7 +20,7 @@ import {sandboxGroundTone} from './ground-tones.ts';
 /** Authored V11 bake plus independently owned runtime effects. The immutable
  * source remains available to the exact reference viewer and original city.
  */
-export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbitStop,onStatus,onError,fpsElement}){
+export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbitStop,onStatus,onError,fpsElement,entranceGate=sandboxEntranceGate}){
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1;renderer.shadowMap.enabled=false;
  renderer.shadowMap.type=THREE.PCFShadowMap;renderer.shadowMap.autoUpdate=false;
@@ -34,6 +39,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  let markerSnapshot={placements:[],pending:false,reflows:0},frame=sandboxFrame(1,1),focusFrame=null;
  let active=false,inView=true,disposed=false,model=null,raf=0,width=1,height=1,frames=0,selected=null,taskTarget=null,down=null,lastTime=0,flight=null;
  let options={active:true,compact:false,roofLabels:true,orbit:false,running:null},settings={city:true,dof:true,strength:.4};
+ let entrance=null,entranceChecked=false;
  let miniature=null,dofFailed=false,effects=null,effectOptions=normalizeBakedSettings(null);
  renderer.debug.onShaderError=()=>{throw Error('V11 shader compilation failed')};
  try{miniature=new MiniatureDOF(renderer,{mobile:false})}catch{dofFailed=true;onStatus('V11 景深不可用，当前使用清晰烘焙画面。')}
@@ -57,19 +63,24 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   if(camera.isOrthographicCamera){const span=Math.max(48,60/aspect);camera.left=-span*aspect/2;camera.right=span*aspect/2;camera.top=span/2;camera.bottom=-span/2}else camera.aspect=aspect;
   reframe();camera.updateProjectionMatrix();request();
  }
+ function finishEntrance(){if(entrance?.active){entrance.finish();effects?.invalidateDepth();for(const marker of markers.values())marker.style.removeProperty('opacity')}}
  function draw(){
   if(miniature&&settings.dof&&settings.strength>0&&!dofFailed){try{miniature.render(scene,camera,zoneBounds.get(selected)||heroBox,settings.strength);return}catch{dofFailed=true;renderer.setRenderTarget(null);onStatus('V11 景深不可用，当前使用清晰烘焙画面。')}}
   renderer.render(scene,camera);
  }
  function render(time){
   raf=0;if(!allowed())return;const delta=lastTime?Math.min(.05,(time-lastTime)/1000):1/60;lastTime=time;
+  if(!entranceChecked){entranceChecked=true;if(entranceGate.claim()&&!reduced.matches&&!options.running&&!selected&&!taskTarget)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true})}
+  const wasBuilding=!!entrance?.active,building=entrance?.tick(delta*1000,reduced.matches)||false;
+  if(wasBuilding)effects?.invalidateDepth();
   if(flight){const t=reduced.matches?1:Math.min(1,(time-flight.start)/750),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);camera.zoom=THREE.MathUtils.lerp(flight.z0,flight.z1,e);camera.updateProjectionMatrix();if(t===1)flight=null}
-  controls.autoRotate=options.orbit&&!reduced.matches&&!flight;const moving=controls.update(delta);camera.updateMatrixWorld();
+  controls.autoRotate=options.orbit&&!reduced.matches&&!flight&&!building;const moving=controls.update(delta);camera.updateMatrixWorld();
   const painting=paintProgress.tick(delta*1000,reduced.matches);
   const effectPending=effects?.tick(time,delta,reduced.matches,paintProgress.state());
   for(const [id,state] of Object.entries(paintProgress.state())){const marker=markers.get(id);if(marker){marker.style.setProperty('--sandbox-task-fill',String(state.value));marker.dataset.paintPhase=state.phase}}
   const pending=project(time,moving||!!flight||controls.autoRotate||!!down);
-  try{draw();effects?.render()}catch{active=false;stop();onError('V11 画面渲染失败，请重试或切换主线原效果。');return}frames++;fps.frame(time);if(effectPending||painting||pending||moving||flight||controls.autoRotate)request();if(!raf)fps.idle();
+  if(wasBuilding)for(const [id,marker] of markers){if(building){const alpha=entrance.label(id);marker.style.setProperty('opacity',String(alpha),'important');if(alpha<1)marker.inert=true}else marker.style.removeProperty('opacity')}
+  try{draw();effects?.render()}catch{active=false;stop();onError('V11 画面渲染失败，请重试或使用经典界面。');return}frames++;fps.frame(time);if(building||effectPending||painting||pending||moving||flight||controls.autoRotate)request();if(!raf)fps.idle();
  }
  // Projection below uses the same marker layout/motion algorithms as main.
  function project(time,moving){
@@ -126,6 +137,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
 
  function fly(position,target,zoom){flight={p0:camera.position.clone(),p1:position,t0:controls.target.clone(),t1:target,z0:camera.zoom,z1:zoom,start:performance.now()};request()}
  function home(animate=true){
+  finishEntrance();
   selected=null;taskTarget=null;markerLayout.reset();spatialVisibility.clear();
   if(!camera.isOrthographicCamera){camera=new THREE.OrthographicCamera(-30,30,24,-24,.1,600);controls.object=camera;effects?.setCamera(camera)}
   resize();const direction=new THREE.Vector3(43,Math.hypot(43,54)*Math.tan(effectOptions.elevation*Math.PI/180),54).normalize(),position=viewTarget.clone().addScaledVector(direction,100),zoom=85/effectOptions.distance;
@@ -133,15 +145,16 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   effects?.configure(effectOptions,null);
  }
  function select(id,animate=true){
+  finishEntrance();
   if(id===selected)return;selected=zones.some(z=>z.id===id)?id:null;taskTarget=null;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,selected);
   const box=zoneBounds.get(selected);if(box){const target=box.getCenter(new THREE.Vector3()),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(.38,direction.y);direction.normalize();const distance=camera.isOrthographicCamera?100:22*135/effectOptions.zoom;const zoom=camera.isOrthographicCamera?2.5*effectOptions.zoom/135:1;if(animate)fly(target.clone().addScaledVector(direction,distance),target,zoom);else{controls.target.copy(target);camera.position.copy(target).addScaledVector(direction,distance);camera.zoom=zoom;camera.updateProjectionMatrix();controls.update()}}request();
  }
  function updateContext(){for(const object of contextObjects)object.visible=settings.city;ground.visible=!settings.city;const color=new THREE.Color(effectOptions.backgroundColor||sandboxGroundTone(effectOptions.groundTone).color).multiplyScalar(effectOptions.backgroundBrightness/100);scene.background=effectOptions.preset==='original'?new THREE.Color(settings.city?'#858c8d':'#c0c2c1'):color;ground.material.color.copy(effectOptions.preset==='original'?new THREE.Color(0xc0c2c1):color);request()}
  const rays=new THREE.Raycaster(),pointer=new THREE.Vector2();
- canvas.addEventListener('pointerdown',event=>{down={x:event.clientX,y:event.clientY};flight=null;onOrbitStop?.()},{signal:events.signal});
+ canvas.addEventListener('pointerdown',event=>{finishEntrance();down={x:event.clientX,y:event.clientY};flight=null;onOrbitStop?.()},{signal:events.signal});
  canvas.addEventListener('pointerup',event=>{if(active&&down&&Math.hypot(event.clientX-down.x,event.clientY-down.y)<5){const r=canvas.getBoundingClientRect();pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);rays.setFromCamera(pointer,camera);let o=rays.intersectObjects([...objects.values()],true)[0]?.object;while(o&&!objects.has(o.name.replace(/^zone_/,'')))o=o.parent;onSelect(o?o.name.replace(/^zone_/,''):null,'focus')}down=null},{signal:events.signal});
  canvas.addEventListener('pointercancel',()=>down=null,{signal:events.signal});
- canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();stop();active=false;onError('V11 图形上下文中断，请重试或切换主线原效果。')},{signal:events.signal});
+ canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();stop();active=false;onError('V11 图形上下文中断，请重试或使用经典界面。')},{signal:events.signal});
  controls.addEventListener('change',request);controls.addEventListener('start',()=>{flight=null;options.orbit=false;onOrbitStop?.()});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else request()},{signal:events.signal});
  reduced.addEventListener('change',()=>{controls.enableDamping=!reduced.matches;request()},{signal:events.signal});
@@ -149,14 +162,18 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  const observer=new ResizeObserver(resize);observer.observe(host);const chat=host.closest('.workbench')?.querySelector('#astra-conversation');if(chat)observer.observe(chat);const rail=host.parentElement.querySelector('.sandbox-info-rail');if(rail)observer.observe(rail);
  const visibility=new IntersectionObserver(([e])=>{inView=e.isIntersecting;if(inView)request();else stop()});visibility.observe(host);
  resize();home(false);
- const ready=loadModel().then(gltf=>{
+ let cityTexture=null,streetTexture=null,groundTexture=null,loadFailed=false;
+ const textures=[];
+ const loadBake=url=>new THREE.TextureLoader().loadAsync(url).then(texture=>{if(disposed||loadFailed){texture.dispose();throw Error('Baked mode disposed')}texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;textures.push(texture);return texture});
+ const ready=Promise.all([loadModel(),loadBake(cityWhiteUrl),loadBake(streetWhiteUrl),loadBake(groundWhiteUrl)]).then(([gltf,city,street,ground])=>{
+  cityTexture=city;streetTexture=street;groundTexture=ground;
   if(disposed)throw Error('Baked mode disposed');model=gltf.scene.clone(true);
   model.traverse(o=>{if(o.isLight)o.visible=false;const id=o.name.replace(/^zone_/,'');if(zones.some(z=>z.id===id)){objects.set(id,o);zoneBounds.set(id,new THREE.Box3().setFromObject(o))}if(['background_city','background_street','background_ground','baked_ground'].includes(o.userData.role))contextObjects.push(o)});
-  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request);effects.configure(effectOptions,selected);roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();return api;
- });ready.catch(()=>{});
+  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV});effects.configure(effectOptions,selected);roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();return api;
+ });ready.catch(()=>{loadFailed=true;for(const t of textures)t.dispose();textures.length=0});
  const api={ready,
   setActive(value){active=!!value;canvas.hidden=!active;controls.enabled=active;if(active){for(const marker of markers.values())marker.style.removeProperty('opacity');resize();request()}else stop()},
-  setOptions(next){const previous=effectOptions;options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);if(JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
+  setOptions(next){const previous=effectOptions;if(entrance?.active&&(next.running||next.bakedSettings&&JSON.stringify(previous)!==JSON.stringify(normalizeBakedSettings(next.bakedSettings))))finishEntrance();options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);if(JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
   setSettings(next){settings={...settings,...next};updateContext()},
   setPaint(input){paintProgress.update(input);request()},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},select,focusZone(name){if(name)select(name.replace(/^zone_/,''));else home()},focusTask:select,home,reset:home,
@@ -164,17 +181,20 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   refresh(){if(active)reframe();request()},
   getViewPose(){return {position:camera.position.toArray(),target:controls.target.toArray(),selected,projection:camera.isOrthographicCamera?'orthographic':'perspective',fov:camera.fov??38,zoom:camera.zoom,viewHeight:camera.isOrthographicCamera?(camera.top-camera.bottom)/camera.zoom:2*camera.position.distanceTo(controls.target)*Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)/camera.zoom}},
   setViewPose(pose){
+   finishEntrance();
    const vector=v=>Array.isArray(v)&&v.length===3&&v.every(n=>Number.isFinite(n)&&Math.abs(n)<1000);
    if(!vector(pose?.position)||!vector(pose?.target)||pose.position.some(n=>Math.abs(n)>500)||pose.target.some(n=>Math.abs(n)>160)||new THREE.Vector3(...pose.position).distanceToSquared(new THREE.Vector3(...pose.target))<1e-6){const keep=selected;home(false);selected=keep;reframe();return false}
    flight=null;const damping=controls.enableDamping;controls.enableDamping=false;controls.update();
-   if(pose.projection==='perspective'&&!camera.isPerspectiveCamera){camera=new THREE.PerspectiveCamera(38,width/height,.1,1000);controls.object=camera;effects?.setCamera(camera);resize()}
+   // Roads sit only 0.006 units above the ground. A 0.1 near plane loses
+   // their separation in the 24-bit perspective depth buffer at overview distance.
+   if(pose.projection==='perspective'&&!camera.isPerspectiveCamera){camera=new THREE.PerspectiveCamera(38,width/height,1,1000);controls.object=camera;effects?.setCamera(camera);resize()}
    if(pose.projection==='orthographic'&&!camera.isOrthographicCamera){camera=new THREE.OrthographicCamera(-30,30,24,-24,.1,600);controls.object=camera;effects?.setCamera(camera);resize()}
    camera.position.fromArray(pose.position);controls.target.fromArray(pose.target);
    if(camera.isOrthographicCamera)camera.zoom=THREE.MathUtils.clamp((camera.top-camera.bottom)/Math.max(.1,pose.viewHeight||48),.55,8);else{camera.fov=Number.isFinite(pose.fov)&&pose.fov>1&&pose.fov<150?pose.fov:38;camera.zoom=Number.isFinite(pose.zoom)?THREE.MathUtils.clamp(pose.zoom,.55,8):1}
    camera.updateProjectionMatrix();controls.update();controls.enableDamping=damping;request();return true;
   },
   capture(){if(!allowed())return Promise.reject(Error('Baked scene must be visible'));draw();effects?.render();return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Capture failed')),'image/png'))},
-  state(){return {mode:'baked',active:allowed(),pending:!!raf,frames,ready:!!model,selected,taskTarget,paint:paintProgress.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
-  dispose(){if(disposed)return;disposed=true;active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();effects?.dispose();model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
+  state(){return {entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:!!model,selected,taskTarget,paint:paintProgress.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
+  dispose(){if(disposed)return;finishEntrance();disposed=true;active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();effects?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
  };return api;
 }

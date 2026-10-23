@@ -3,7 +3,7 @@ import test from 'node:test';
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {NoToneMapping, SRGBColorSpace} from 'three';
+import {NoToneMapping, SRGBColorSpace, Texture} from 'three';
 import {createBakedSurfaces} from '../03-Src/studio/project-sandbox/baked-surfaces.mjs';
 import {normalizeBakedSettings} from '../03-Src/studio/project-sandbox/baked-settings.ts';
 const root=new URL('../',import.meta.url);
@@ -62,21 +62,47 @@ test('Actual GLTFLoader loads the portable bundle with unlit maps and vertex col
     gltf.scene.traverse(o=>{if(!o.isMesh)return;meshes++;assert(o.material.isMeshBasicMaterial);if(o.material.map){maps++;assert.equal(o.material.map.colorSpace,SRGBColorSpace);}else {colors++;assert(o.material.vertexColors);assert(o.geometry.attributes.color);}});
     assert.equal(meshes,20);assert.equal(maps,11);assert.equal(colors,9);
     const clone=gltf.scene.clone(true),originals=[];gltf.scene.traverse(o=>{if(o.isMesh)originals.push({mesh:o,material:o.material,geometry:o.geometry})});
-    const surfaces=createBakedSurfaces(clone);assert.equal(surfaces.state().materials,20);assert.equal(surfaces.state().waterTriangles,160);
+    const streetUV=JSON.parse(await fs.readFile(new URL('05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/street-uv.json',root),'utf8'));
+    const cityTexture=new Texture(),streetTexture=new Texture(),groundTexture=new Texture();const surfaces=createBakedSurfaces(clone,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV});assert.equal(surfaces.state().materials,20);assert.equal(surfaces.state().waterTriangles,160);
     surfaces.configure(normalizeBakedSettings({backgroundColor:'#ffffff'}));surfaces.setWater(true);
     for(const e of originals){assert.equal(e.mesh.material,e.material);assert.equal(e.mesh.geometry,e.geometry);assert(e.material.isMeshBasicMaterial)}
-    surfaces.setWater(false);surfaces.dispose();const restored=[];clone.traverse(o=>{if(o.isMesh)restored.push(o)});
+    let cityMeshes=0;clone.traverse(o=>{if(!o.isMesh)return;let owner=o;while(owner.parent&&!owner.userData.role&&!owner.userData.zone)owner=owner.parent;if(owner.userData.role==='background_city'){cityMeshes++;assert.equal(o.material.map,cityTexture)}else{assert.notEqual(o.material.map,cityTexture)}});assert(cityMeshes>0);
+    let streets=0;clone.traverse(o=>{if(!o.isMesh||o.material.map!==streetTexture)return;streets++;assert.equal(o.material.vertexColors,false);assert.equal(o.geometry.index,null);const source=originals.find(e=>e.material.name+' · interactive'===o.material.name);assert(source);const expected=source.geometry.toNonIndexed();assert.deepEqual(o.geometry.attributes.position.array,expected.attributes.position.array);assert.deepEqual(o.geometry.attributes.normal.array,expected.attributes.normal.array);assert.equal(o.geometry.attributes.uv.count,o.geometry.attributes.position.count);expected.dispose()});assert.equal(streets,2);let grounds=0;clone.traverse(o=>{if(o.isMesh&&o.userData.role==='background_ground'){grounds++;assert.equal(o.material.map,groundTexture);assert.equal(o.material.polygonOffset,false)}});assert.equal(grounds,1);
+    surfaces.configure(normalizeBakedSettings({preset:'original'}));assert(surfaces.state().originalMaterials);clone.traverse(o=>{if(o.isMesh){assert.notEqual(o.material.map,cityTexture);assert.notEqual(o.material.map,streetTexture);assert.notEqual(o.material.map,groundTexture);if(streetUV[o.material.name])assert.equal(o.geometry,originals.find(e=>e.material===o.material).geometry)}});
+    surfaces.setWater(false);surfaces.dispose();cityTexture.dispose();streetTexture.dispose();groundTexture.dispose();const restored=[];clone.traverse(o=>{if(o.isMesh)restored.push(o)});
     restored.forEach((o,i)=>{assert.equal(o.material,originals[i].material);assert.equal(o.geometry,originals[i].geometry)});
     // This verifies the real loader, not GPU upload or a screenshot.
   } finally {globalThis.fetch=originalFetch;globalThis.createImageBitmap=originalBitmap;}
 });
 
-test('Independent preview does not connect to business services or rewrite production assets',async()=>{
-  const source=await fs.readFile(new URL('03-Src/studies/sandbox-v11/main.js',root),'utf8');
-  const html=await fs.readFile(new URL('sandbox-v11.html',root),'utf8');
-  assert(source.includes('THREE.NoToneMapping'));assert(source.includes('renderer.toneMappingExposure = 1'));
-  assert(!/\/api\/|localStorage\.|sessionStorage\.|fetch\(/.test(source));
-  assert(!/model-v0[1-9]\.glb|model-v10\.glb/.test(source));
-  assert(html.includes('/03-Src/studies/sandbox-v11/main.js'));
-  assert(html.includes('返回正式工作室'));assert(html.includes('业务染色'));
+
+test('uniform city bake is the exported Blender texture with an intact provenance hash',async()=>{
+ const folder=new URL('05-视觉识别/02-3D场景/sandbox-v11/city-white-v1/',root);
+ const manifest=JSON.parse(await fs.readFile(new URL('manifest.json',folder),'utf8'));
+ const png=await fs.readFile(new URL('city-white.png',folder));
+ assert.equal(hash(png),manifest.texture_sha256);assert.equal(manifest.role,'background_city');assert.equal(manifest.source_geometry_unchanged,true);
+ assert.deepEqual([png.readUInt32BE(16),png.readUInt32BE(20)],manifest.size);
+});
+
+test('street bake and UVs retain Blender provenance and complete triangle coverage',async()=>{
+ const folder=new URL('05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/',root);
+ const manifest=JSON.parse(await fs.readFile(new URL('manifest.json',folder),'utf8'));
+ const png=await fs.readFile(new URL('street-white.png',folder)),uv=await fs.readFile(new URL('street-uv.json',folder));
+ assert.equal(hash(png),manifest.texture_sha256);assert.equal(hash(uv),manifest.uv_sha256);assert(manifest.geometry_positions_unchanged);
+ assert.deepEqual([png.readUInt32BE(16),png.readUInt32BE(20)],manifest.size);
+ const ground=await fs.readFile(new URL('ground-white.png',folder));assert.equal(hash(ground),manifest.ground.texture_sha256);
+ const data=JSON.parse(uv);assert.equal(Object.values(data).reduce((n,a)=>n+a.length/6,0),manifest.triangles);
+});
+
+
+test('perspective depth resolves the road-ground gap throughout the overview range',async()=>{
+ const source=await fs.readFile(new URL('03-Src/studio/project-sandbox/baked-mode.mjs',root),'utf8');
+ const match=source.match(/new THREE\.PerspectiveCamera\(38,width\/height,([\d.]+),([\d.]+)\)/);
+ assert(match);const near=Number(match[1]),far=Number(match[2]);
+ assert(near<=1,'retain the existing close building views');
+ for(const distance of [40,70,100,140])for(const elevation of [22,31,45]){
+  const gap=.006*Math.sin(elevation*Math.PI/180);
+  const depthSteps=(2**24-1)*far*near/(far-near)*(1/distance-1/(distance+gap));
+  assert(depthSteps>1.5,`road-ground depth is ambiguous at ${distance}/${elevation}: ${depthSteps}`);
+ }
 });

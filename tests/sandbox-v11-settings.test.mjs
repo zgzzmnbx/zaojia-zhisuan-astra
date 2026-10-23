@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import {normalizeBakedSettings,readBakedSettings,bakedSettingsKey} from '../03-Src/studio/project-sandbox/baked-settings.ts';
 import {readVisualMode,visualModeKey} from '../03-Src/studio/project-sandbox/visual-mode-settings.ts';
 
-test('v0.11.1 prefers baked once, while retaining the old choice and explicit later original selection',()=>{
+test('retired original selections migrate to baked without changing V11 preferences',()=>{
  const data=new Map([['astra.sandbox.visual-modes.v1',JSON.stringify({mode:'original',city:{baked:false},dof:false,strength:0})]]);
  const before=data.get('astra.sandbox.visual-modes.v1');globalThis.localStorage={getItem:k=>data.get(k)??null};
- try{assert.deepEqual(readVisualMode(),{mode:'baked',city:{baked:false,original:false},dof:false,strength:0});assert.equal(data.get('astra.sandbox.visual-modes.v1'),before);
- data.set(visualModeKey,JSON.stringify({mode:'original'}));assert.equal(readVisualMode().mode,'original');}finally{delete globalThis.localStorage}
+ try{assert.deepEqual(readVisualMode(),{mode:'baked',city:{baked:false},dof:false,strength:0});assert.equal(data.get('astra.sandbox.visual-modes.v1'),before);
+ data.set(visualModeKey,JSON.stringify({mode:'original'}));assert.equal(readVisualMode().mode,'baked');}finally{delete globalThis.localStorage}
 });
 test('baked controls copy original once; subsequent changes cannot rewrite original settings',()=>{
  const data=new Map([['astra.sandbox.water.v1',JSON.stringify({enabled:false,speed:0,bloom:0})],['astra.sandbox.uplights.v1',JSON.stringify({day:{brightness:0,color:'#abcdef'}})],['astra.sandbox.flow','off'],['astra.sandbox.group-logo','hidden']]);

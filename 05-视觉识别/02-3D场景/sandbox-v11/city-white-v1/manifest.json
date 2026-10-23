@@ -1,0 +1,20 @@
+{
+  "blender": "5.2.2 LTS",
+  "engine": "Cycles CPU",
+  "samples": 2048,
+  "adaptive_sampling": false,
+  "size": [
+    2048,
+    2048
+  ],
+  "world": 0.7,
+  "sun": 1.3,
+  "sun_angle_degrees": 18,
+  "material_linear_white": 0.9,
+  "view_transform": "Standard",
+  "role": "background_city",
+  "city_triangles": 15012,
+  "source_geometry_unchanged": true,
+  "seconds": 531.7560443878174,
+  "texture_sha256": "3f1d72adf598f23039da952a8e63fac541bafc989c203f84778955ae08115526"
+}

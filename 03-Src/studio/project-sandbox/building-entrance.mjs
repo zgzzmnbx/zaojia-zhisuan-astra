@@ -42,9 +42,9 @@ function injectAssembly(shader,time){
 }
 
 /** Exploded assembly in the existing draw calls, with finite temporary GPU data. */
-export function createBuildingEntrance(root,order){
+export function createBuildingEntrance(root,order,{privateMaterials=false}={}){
  root.updateMatrixWorld(true);
- const groups=new Map(),meshes=[],savedMaterials=new Map(),time={value:0};
+ const groups=new Map(),meshes=[],savedMaterials=new Map(),privateCopies=new Map(),time={value:0};
  root.traverse(mesh=>{
   if(!mesh.isMesh)return;
   let owner=mesh;while(owner&&!owner.userData.zone)owner=owner.parent;
@@ -76,6 +76,11 @@ export function createBuildingEntrance(root,order){
   depth.onBeforeCompile=shader=>injectAssembly(shader,time);depth.customProgramCacheKey=()=> 'astra-assembly-depth-v2';
   item.original=original;item.geometry=geometry;item.depth=depth;item.originalDepth=originalDepth;item.frustumCulled=mesh.frustumCulled;
   mesh.geometry=geometry;mesh.customDepthMaterial=depth;mesh.frustumCulled=false;
+  if(privateMaterials){
+   item.originalMaterial=mesh.material;
+   const clone=source=>{if(!privateCopies.has(source)){const material=source.clone();material.onBeforeCompile=source.onBeforeCompile;material.customProgramCacheKey=source.customProgramCacheKey;privateCopies.set(source,material)}return privateCopies.get(source)};
+   item.animatedMaterial=Array.isArray(mesh.material)?mesh.material.map(clone):clone(mesh.material);mesh.material=item.animatedMaterial;
+  }
   for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){
    if(savedMaterials.has(material))continue;
    const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
@@ -91,6 +96,8 @@ export function createBuildingEntrance(root,order){
   if(finished)return;finished=true;
   for(const entry of entries)entry.value=entry.label=1;
   for(const {mesh,original,geometry,originalDepth,depth,frustumCulled} of meshes){mesh.geometry=original;mesh.customDepthMaterial=originalDepth;mesh.frustumCulled=frustumCulled;geometry.dispose();depth.dispose();}
+  for(const {mesh,originalMaterial,animatedMaterial} of meshes)if(animatedMaterial&&mesh.material===animatedMaterial)mesh.material=originalMaterial;
+  for(const material of privateCopies.values())material.dispose();
   for(const [material,{compile,key}] of savedMaterials){material.onBeforeCompile=compile;material.customProgramCacheKey=key;material.needsUpdate=true;}
  }
  return {
