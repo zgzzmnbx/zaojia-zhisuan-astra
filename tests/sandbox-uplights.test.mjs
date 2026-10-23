@@ -130,5 +130,3 @@ test('ground bloom crossfades targets, stops at rest and clears on assembly / de
  glow.dispose();assert.equal(glow.scene.children.length,0);
 
 });
-
-
