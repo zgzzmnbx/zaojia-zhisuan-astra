@@ -1,3 +1,5 @@
+import {readDisplayParameters,sandboxParametersKey} from './project-sandbox/parameter-storage.ts';
+import {sandboxParameterDefaults} from './project-sandbox/defaults.ts';
 import {sandboxDefaults} from './project-sandbox/defaults.ts';
 import {useLayoutEffect,useState} from 'react';
 
@@ -14,13 +16,14 @@ export type Palette=typeof palettes[number]['id'];
 export type SandboxChatBackground='glass'|'solid';
 export type Appearance={palette:Palette;dark:boolean;sandboxChatBackground:SandboxChatBackground;sandboxChatTransparency:number;sandboxRoofLabels:boolean;sandboxAutoOrbit:boolean;sandboxOrbitDelay:number};
 export const appearanceKey='astra.appearance.v1';
-export const defaultAppearance:Appearance={palette:'astra',dark:false,sandboxChatBackground:'glass',sandboxChatTransparency:42,sandboxRoofLabels:sandboxDefaults.roofLabels,sandboxAutoOrbit:sandboxDefaults.autoOrbit,sandboxOrbitDelay:sandboxDefaults.orbitDelay};
+export const defaultAppearance:Appearance={palette:'astra',dark:false,sandboxChatBackground:'glass',sandboxChatTransparency:sandboxParameterDefaults.display.chatTransparency,sandboxRoofLabels:sandboxDefaults.roofLabels,sandboxAutoOrbit:sandboxDefaults.autoOrbit,sandboxOrbitDelay:sandboxDefaults.orbitDelay};
 export function normalizeAppearance(value:unknown):Appearance{
  const v=value as Partial<Appearance>|null;
- return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true,sandboxChatBackground:v?.sandboxChatBackground==='solid'?'solid':'glass',sandboxChatTransparency:typeof v?.sandboxChatTransparency==='number'&&Number.isFinite(v.sandboxChatTransparency)?Math.round(Math.max(0,Math.min(80,v.sandboxChatTransparency))):42,sandboxRoofLabels:typeof v?.sandboxRoofLabels==='boolean'?v.sandboxRoofLabels:sandboxDefaults.roofLabels,sandboxAutoOrbit:v?.sandboxAutoOrbit!==false,sandboxOrbitDelay:[2,5,10,15,30,60].includes(v?.sandboxOrbitDelay as number)?v!.sandboxOrbitDelay!:sandboxDefaults.orbitDelay};
+ return {palette:palettes.some(p=>p.id===v?.palette)?v!.palette!:'astra',dark:v?.dark===true,sandboxChatBackground:v?.sandboxChatBackground==='solid'?'solid':'glass',sandboxChatTransparency:typeof v?.sandboxChatTransparency==='number'&&Number.isFinite(v.sandboxChatTransparency)?Math.round(Math.max(0,Math.min(80,v.sandboxChatTransparency))):sandboxParameterDefaults.display.chatTransparency,sandboxRoofLabels:typeof v?.sandboxRoofLabels==='boolean'?v.sandboxRoofLabels:sandboxDefaults.roofLabels,sandboxAutoOrbit:v?.sandboxAutoOrbit!==false,sandboxOrbitDelay:[2,5,10,15,30,60].includes(v?.sandboxOrbitDelay as number)?v!.sandboxOrbitDelay!:sandboxDefaults.orbitDelay};
 }
+function sandboxAppearance(){const v=readDisplayParameters();return {sandboxChatBackground:'glass' as const,sandboxChatTransparency:v.chatTransparency,sandboxRoofLabels:v.roofLabels,sandboxAutoOrbit:v.autoOrbit,sandboxOrbitDelay:v.orbitDelay}}
 export function readAppearance():Appearance{
- try{return normalizeAppearance(JSON.parse(localStorage.getItem(appearanceKey)||'null'));}catch{return {...defaultAppearance};}
+ try{return {...normalizeAppearance(JSON.parse(localStorage.getItem(appearanceKey)||'null')),...sandboxAppearance()}}catch{return {...defaultAppearance,...sandboxAppearance()}}
 }
 export function applyAppearance(value:Pick<Appearance,'palette'|'dark'>&Partial<Appearance>){
  const v=normalizeAppearance(value),root=document.documentElement;
@@ -32,6 +35,7 @@ export function applyAppearance(value:Pick<Appearance,'palette'|'dark'>&Partial<
 }
 export function useAppearance(darkOverride?:boolean){
  const [appearance,setAppearance]=useState(readAppearance),[error,setError]=useState('');
+ useLayoutEffect(()=>{const update=(e:StorageEvent)=>{if(e.key===sandboxParametersKey||e.key===null)setAppearance(current=>({...current,...sandboxAppearance()}))};window.addEventListener('storage',update);return()=>window.removeEventListener('storage',update)},[]);
  useLayoutEffect(()=>{
   applyAppearance({...appearance,dark:darkOverride??appearance.dark});
   try{localStorage.setItem(appearanceKey,JSON.stringify(appearance));setError('');}

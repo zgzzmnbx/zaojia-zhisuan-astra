@@ -3,22 +3,15 @@ import assert from 'node:assert/strict';
 import {normalizeBakedSettings,readBakedSettings,bakedSettingsKey} from '../03-Src/studio/project-sandbox/baked-settings.ts';
 import {readVisualMode,visualModeKey} from '../03-Src/studio/project-sandbox/visual-mode-settings.ts';
 
-test('retired original selections migrate to baked without changing V11 preferences',()=>{
- const data=new Map([['astra.sandbox.visual-modes.v1',JSON.stringify({mode:'original',city:{baked:false},dof:false,strength:0})]]);
- const before=data.get('astra.sandbox.visual-modes.v1');globalThis.localStorage={getItem:k=>data.get(k)??null};
- try{assert.deepEqual(readVisualMode(),{mode:'baked',city:{baked:false},dof:false,strength:0});assert.equal(data.get('astra.sandbox.visual-modes.v1'),before);
- data.set(visualModeKey,JSON.stringify({mode:'original'}));assert.equal(readVisualMode().mode,'baked');}finally{delete globalThis.localStorage}
+test('legacy automatic mode and material keys do not override the approved defaults',()=>{
+ const data=new Map([['astra.sandbox.visual-modes.v1',JSON.stringify({mode:'original',city:{baked:false},dof:true,strength:0})],[bakedSettingsKey,JSON.stringify({modelBrightness:70})]]);
+ const before=JSON.stringify([...data]);globalThis.localStorage={getItem:k=>data.get(k)??null};
+ try{assert.deepEqual(readVisualMode(),{mode:'baked',city:{baked:true},dof:false,strength:.4});assert.equal(readBakedSettings().modelBrightness,145);assert.equal(readBakedSettings().backgroundBrightness,105);assert.equal(JSON.stringify([...data]),before)}finally{delete globalThis.localStorage}
 });
-test('baked controls copy original once; subsequent changes cannot rewrite original settings',()=>{
- const data=new Map([['astra.sandbox.water.v1',JSON.stringify({enabled:false,speed:0,bloom:0})],['astra.sandbox.uplights.v1',JSON.stringify({day:{brightness:0,color:'#abcdef'}})],['astra.sandbox.flow','off'],['astra.sandbox.group-logo','hidden']]);
- const old=JSON.stringify([...data]);globalThis.localStorage={getItem:k=>data.get(k)??null};
- try{const copied=readBakedSettings();assert.equal(copied.waterSettings.enabled,false);assert.equal(copied.waterSettings.speed,0);assert.equal(copied.uplightSettings.day.brightness,0);assert.equal(copied.flow,false);assert.equal(copied.groupLogo,'hidden');assert.equal(copied.backgroundColor,'#f5f7fa');assert.equal(JSON.stringify([...data]),old);
- data.set(bakedSettingsKey,JSON.stringify({...copied,backgroundColor:'#ffffff',waterSettings:{...copied.waterSettings,enabled:true}}));assert.equal(readBakedSettings().backgroundColor,'#ffffff');assert(readBakedSettings().waterSettings.enabled);assert.equal(JSON.parse(data.get('astra.sandbox.water.v1')).enabled,false);
- }finally{delete globalThis.localStorage}
-});
+
 test('invalid sliders are bounded; zero paint and lamp power stay valid',()=>{
  const s=normalizeBakedSettings({paintStrength:0,backgroundBrightness:Infinity,modelBrightness:10000,backgroundColor:'javascript:bad',uplightSettings:{day:{brightness:0}},waterSettings:{speed:0}});
- assert.equal(s.paintStrength,0);assert.equal(s.backgroundBrightness,100);assert.equal(s.modelBrightness,150);assert.equal(s.backgroundColor,null);assert.equal(s.uplightSettings.day.brightness,0);assert.equal(s.waterSettings.speed,0);
+ assert.equal(s.paintStrength,0);assert.equal(s.backgroundBrightness,105);assert.equal(s.modelBrightness,150);assert.equal(s.backgroundColor,null);assert.equal(s.uplightSettings.day.brightness,0);assert.equal(s.waterSettings.speed,0);
 });
 
 test('original bake preset preserves custom parameters across switching and reload',()=>{

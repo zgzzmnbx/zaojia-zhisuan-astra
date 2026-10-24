@@ -38,11 +38,11 @@ export function createInformationFlow(scene){
     }`
  });
  const signal=new THREE.Mesh(new THREE.TubeGeometry(curve,1400,.095,8,false),signalMaterial);signal.renderOrder=2;group.add(signal);
- const ports=[];
+ const ports=[],sockets=[];
  route.stops.forEach((stop,i)=>{
   const p=new THREE.Vector3(...stop.point);
   const socket=new THREE.Mesh(new THREE.CylinderGeometry(.31,.34,.20,24),new THREE.MeshStandardMaterial({color:0xf9fcff,roughness:.45}));
-  socket.position.copy(p).y-=.17;socket.castShadow=true;socket.receiveShadow=true;group.add(socket);
+  socket.position.copy(p).y-=.17;socket.castShadow=true;socket.receiveShadow=true;group.add(socket);sockets.push(socket);
   const material=new THREE.MeshStandardMaterial({color:0x228be6,emissive:0x167ad1,emissiveIntensity:.15,roughness:.22});
   const lamp=new THREE.Mesh(new THREE.SphereGeometry(.19,16,10),material);lamp.position.copy(p);group.add(lamp);ports.push({material,distance:stopDistances[i]});
  });
@@ -55,5 +55,5 @@ export function createInformationFlow(scene){
   for(const port of ports){const behind=((distance-port.distance)%route.pulseSpacing+route.pulseSpacing)%route.pulseSpacing;port.material.emissiveIntensity=(night?1.0:.1)+(night?2.8:.8)*Math.max(0,1-behind/2.2);}
  }
  tick(0);
- return {setStage:id=>{const i=route.stops.findIndex(s=>s.id===id);uniforms.uStart.value=i>0?stopDistances[i-1]:0;uniforms.uEnd.value=i>=0?stopDistances[Math.max(1,i)]:length},setPlaying,tick,setNight:value=>{night=value;uniforms.uGlow.value=night?3:0;shell.material.opacity=night?.14:.33},suspend:()=>{lastFrame=null},getState:()=>({playing,distance,shaderDistance:uniforms.uDistance.value,glow:uniforms.uGlow.value,length,order:route.stops.map(s=>s.id),stopDistances,ports:route.stops.map(s=>s.point),segments:route.legs.length})};
+ return {setStage:id=>{const i=route.stops.findIndex(s=>s.id===id);uniforms.uStart.value=i>0?stopDistances[i-1]:0;uniforms.uEnd.value=i>=0?stopDistances[Math.max(1,i)]:length},setPlaying,tick,setNight:value=>{night=value;uniforms.uGlow.value=night?3:0;shell.material.opacity=night?.14:.33;shell.material.color.set(night?'#0e6380':0xd5e9f5);for(const socket of sockets)socket.material.color.set(night?'#0b1c2c':0xf9fcff)},suspend:()=>{lastFrame=null},getState:()=>({playing,distance,shaderDistance:uniforms.uDistance.value,glow:uniforms.uGlow.value,length,order:route.stops.map(s=>s.id),stopDistances,ports:route.stops.map(s=>s.point),segments:route.legs.length})};
 }

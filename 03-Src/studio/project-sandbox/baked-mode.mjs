@@ -1,3 +1,11 @@
+import plaqueLightUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v1/plaque-light.png?url';
+import plaqueGroundUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v1/plaque-ground.png?url';
+import plaqueUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v1/project-plaque.glb?url';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {releaseFrozenModel} from './frozen-model.mjs';
+import {createProjectPlaque} from './project-plaque.mjs';
+import logoUrl from '../../../05-视觉识别/03-Logo-管网logo/soft-white-v1/group-logo.glb?url';
+import logoLightUrl from '../../../05-视觉识别/03-Logo-管网logo/soft-white-v1/logo-light.png?url';
 import {createBuildingEntrance,sandboxEntranceGate} from './building-entrance.mjs';
 import cityWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/city-white-v1/city-white.png?url';
 import streetWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/street-white.png?url';
@@ -39,7 +47,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  let markerSnapshot={placements:[],pending:false,reflows:0},frame=sandboxFrame(1,1),focusFrame=null;
  let active=false,inView=true,disposed=false,model=null,raf=0,width=1,height=1,frames=0,selected=null,taskTarget=null,down=null,lastTime=0,flight=null;
  let options={active:true,compact:false,roofLabels:true,orbit:false,running:null},settings={city:true,dof:true,strength:.4};
- let entrance=null,entranceChecked=false;
+ let entrance=null,entranceChecked=false,plaque=null,plaqueAsset=null,logoAsset=null,projectInfo=null;
  let miniature=null,dofFailed=false,effects=null,effectOptions=normalizeBakedSettings(null);
  renderer.debug.onShaderError=()=>{throw Error('V11 shader compilation failed')};
  try{miniature=new MiniatureDOF(renderer,{mobile:false})}catch{dofFailed=true;onStatus('V11 景深不可用，当前使用清晰烘焙画面。')}
@@ -142,14 +150,14 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   if(!camera.isOrthographicCamera){camera=new THREE.OrthographicCamera(-30,30,24,-24,.1,600);controls.object=camera;effects?.setCamera(camera)}
   resize();const direction=new THREE.Vector3(43,Math.hypot(43,54)*Math.tan(effectOptions.elevation*Math.PI/180),54).normalize(),position=viewTarget.clone().addScaledVector(direction,100),zoom=85/effectOptions.distance;
   if(animate)fly(position,viewTarget.clone(),zoom);else{camera.position.copy(position);controls.target.copy(viewTarget);camera.zoom=zoom;camera.updateProjectionMatrix();controls.update();request()}
-  effects?.configure(effectOptions,null);
+  effects?.configure(effectOptions,null,options.night);
  }
  function select(id,animate=true){
   finishEntrance();
-  if(id===selected)return;selected=zones.some(z=>z.id===id)?id:null;taskTarget=null;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,selected);
+  if(id===selected)return;selected=zones.some(z=>z.id===id)?id:null;taskTarget=null;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,selected,options.night);
   const box=zoneBounds.get(selected);if(box){const target=box.getCenter(new THREE.Vector3()),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(.38,direction.y);direction.normalize();const distance=camera.isOrthographicCamera?100:22*135/effectOptions.zoom;const zoom=camera.isOrthographicCamera?2.5*effectOptions.zoom/135:1;if(animate)fly(target.clone().addScaledVector(direction,distance),target,zoom);else{controls.target.copy(target);camera.position.copy(target).addScaledVector(direction,distance);camera.zoom=zoom;camera.updateProjectionMatrix();controls.update()}}request();
  }
- function updateContext(){for(const object of contextObjects)object.visible=settings.city;ground.visible=!settings.city;const color=new THREE.Color(effectOptions.backgroundColor||sandboxGroundTone(effectOptions.groundTone).color).multiplyScalar(effectOptions.backgroundBrightness/100);scene.background=effectOptions.preset==='original'?new THREE.Color(settings.city?'#858c8d':'#c0c2c1'):color;ground.material.color.copy(effectOptions.preset==='original'?new THREE.Color(0xc0c2c1):color);request()}
+ function updateContext(){plaque?.configure(effectOptions,options.night);for(const object of contextObjects)object.visible=settings.city;ground.visible=!settings.city;const color=new THREE.Color(effectOptions.backgroundColor||sandboxGroundTone(effectOptions.groundTone).color).multiplyScalar(effectOptions.backgroundBrightness/100);scene.background=options.night?new THREE.Color('#040813'):effectOptions.preset==='original'?new THREE.Color(settings.city?'#858c8d':'#c0c2c1'):color;ground.material.color.copy(options.night?new THREE.Color('#070d17'):effectOptions.preset==='original'?new THREE.Color(0xc0c2c1):color);request()}
  const rays=new THREE.Raycaster(),pointer=new THREE.Vector2();
  canvas.addEventListener('pointerdown',event=>{finishEntrance();down={x:event.clientX,y:event.clientY};flight=null;onOrbitStop?.()},{signal:events.signal});
  canvas.addEventListener('pointerup',event=>{if(active&&down&&Math.hypot(event.clientX-down.x,event.clientY-down.y)<5){const r=canvas.getBoundingClientRect();pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);rays.setFromCamera(pointer,camera);let o=rays.intersectObjects([...objects.values()],true)[0]?.object;while(o&&!objects.has(o.name.replace(/^zone_/,'')))o=o.parent;onSelect(o?o.name.replace(/^zone_/,''):null,'focus')}down=null},{signal:events.signal});
@@ -165,17 +173,23 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  let cityTexture=null,streetTexture=null,groundTexture=null,loadFailed=false;
  const textures=[];
  const loadBake=url=>new THREE.TextureLoader().loadAsync(url).then(texture=>{if(disposed||loadFailed){texture.dispose();throw Error('Baked mode disposed')}texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;textures.push(texture);return texture});
- const ready=Promise.all([loadModel(),loadBake(cityWhiteUrl),loadBake(streetWhiteUrl),loadBake(groundWhiteUrl)]).then(([gltf,city,street,ground])=>{
+ const plaqueManager=new THREE.LoadingManager();plaqueManager.setURLModifier(url=>url.startsWith('blob:')?plaqueLightUrl:url);
+ const loadPlaque=new GLTFLoader(plaqueManager).loadAsync(plaqueUrl).then(value=>{if(disposed||loadFailed){releaseFrozenModel(value.scene);return null}plaqueAsset=value;return value}).catch(()=>{if(!disposed)onStatus('项目信息碑暂时无法加载，可继续使用项目卡片。');return null});
+ const logoManager=new THREE.LoadingManager();logoManager.setURLModifier(url=>url.startsWith('blob:')?logoLightUrl:url);
+ const loadLogo=new GLTFLoader(logoManager).loadAsync(logoUrl).then(value=>{if(disposed||loadFailed){releaseFrozenModel(value.scene);return null}logoAsset=value;return value}).catch(()=>{if(!disposed)onStatus('集团 Logo 暂时无法加载，沙盘其余功能可继续使用。');return null});
+ const ready=Promise.all([loadModel(),loadBake(cityWhiteUrl),loadBake(streetWhiteUrl),loadBake(groundWhiteUrl),loadPlaque,loadBake(plaqueGroundUrl),loadLogo]).then(([gltf,city,street,ground,plaqueGltf,plaqueGround,logoGltf])=>{
   cityTexture=city;streetTexture=street;groundTexture=ground;
   if(disposed)throw Error('Baked mode disposed');model=gltf.scene.clone(true);
   model.traverse(o=>{if(o.isLight)o.visible=false;const id=o.name.replace(/^zone_/,'');if(zones.some(z=>z.id===id)){objects.set(id,o);zoneBounds.set(id,new THREE.Box3().setFromObject(o))}if(['background_city','background_street','background_ground','baked_ground'].includes(o.userData.role))contextObjects.push(o)});
-  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV});effects.configure(effectOptions,selected);roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();return api;
- });ready.catch(()=>{loadFailed=true;for(const t of textures)t.dispose();textures.length=0});
+  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV},logoGltf);logoAsset=null;effects.configure(effectOptions,selected,options.night);if(plaqueGltf){plaque=createProjectPlaque(plaqueGltf,model,scene,request,plaqueGround);effects.attachPlaqueLogo(plaque.root);if(projectInfo)plaque.update(projectInfo)}roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();return api;
+ });ready.catch(()=>{loadFailed=true;if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null;}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null;}for(const t of textures)t.dispose();textures.length=0});
  const api={ready,
   setActive(value){active=!!value;canvas.hidden=!active;controls.enabled=active;if(active){for(const marker of markers.values())marker.style.removeProperty('opacity');resize();request()}else stop()},
-  setOptions(next){const previous=effectOptions;if(entrance?.active&&(next.running||next.bakedSettings&&JSON.stringify(previous)!==JSON.stringify(normalizeBakedSettings(next.bakedSettings))))finishEntrance();options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);if(JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
+  setOptions(next){const previous=effectOptions,nightChanged=next.night!==undefined&&next.night!==options.night;if(entrance?.active&&(nightChanged||next.running||next.bakedSettings&&JSON.stringify(previous)!==JSON.stringify(normalizeBakedSettings(next.bakedSettings))))finishEntrance();options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);if(nightChanged||JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected,options.night);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
   setSettings(next){settings={...settings,...next};updateContext()},
+  setProjectInfo(value){projectInfo=value;plaque?.update(value);request()},
   setPaint(input){paintProgress.update(input);request()},
+  focusProjectInfo(){finishEntrance();selected=null;taskTarget=null;options.orbit=false;controls.autoRotate=false;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,null,options.night);const target=new THREE.Vector3(-2.3,-.6,16.5);const zoom=camera.isOrthographicCamera?Math.min(4,(camera.right-camera.left)*frame.width/width/23):1;fly(target.clone().add(new THREE.Vector3(0,24,12)),target,zoom)},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},select,focusZone(name){if(name)select(name.replace(/^zone_/,''));else home()},focusTask:select,home,reset:home,
   zoom(factor){if(!Number.isFinite(factor)||factor<=0)return;camera.zoom=THREE.MathUtils.clamp(camera.zoom/factor,.55,8);camera.updateProjectionMatrix();request()},
   refresh(){if(active)reframe();request()},
@@ -194,7 +208,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
    camera.updateProjectionMatrix();controls.update();controls.enableDamping=damping;request();return true;
   },
   capture(){if(!allowed())return Promise.reject(Error('Baked scene must be visible'));draw();effects?.render();return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Capture failed')),'image/png'))},
-  state(){return {entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:!!model,selected,taskTarget,paint:paintProgress.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
-  dispose(){if(disposed)return;finishEntrance();disposed=true;active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();effects?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
+  state(){return {plaque:plaque?.state()??null,entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:!!model,selected,taskTarget,paint:paintProgress.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
+  dispose(){if(disposed)return;finishEntrance();disposed=true;active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();plaque?.dispose();if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null}effects?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
  };return api;
 }

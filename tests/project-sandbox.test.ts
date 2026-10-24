@@ -100,11 +100,11 @@ test('priority restores previously condensed details immediately, including duri
 
 test('older appearance preferences retain their theme and get the existing glass background',()=>{
  const p=normalizeAppearance({palette:'emerald',dark:true});
- assert.equal(p.palette,'emerald');assert.equal(p.dark,true);assert.equal(p.sandboxChatBackground,'glass');assert.equal(p.sandboxChatTransparency,42);
+ assert.equal(p.palette,'emerald');assert.equal(p.dark,true);assert.equal(p.sandboxChatBackground,'glass');assert.equal(p.sandboxChatTransparency,15);
 });
 
 test('sandbox transparency validates persisted values and retains glass amount in solid mode',()=>{
- for(const value of [null,{},'broken',{sandboxChatTransparency:'80'},{sandboxChatTransparency:NaN}])assert.equal(normalizeAppearance(value).sandboxChatTransparency,42);
+ for(const value of [null,{},'broken',{sandboxChatTransparency:'80'},{sandboxChatTransparency:NaN}])assert.equal(normalizeAppearance(value).sandboxChatTransparency,15);
  assert.equal(normalizeAppearance({sandboxChatTransparency:99}).sandboxChatTransparency,80);
  assert.equal(normalizeAppearance({sandboxChatTransparency:-5}).sandboxChatTransparency,0);
  const saved=normalizeAppearance(JSON.parse(JSON.stringify({palette:'silk',dark:false,sandboxChatBackground:'solid',sandboxChatTransparency:61})));

@@ -1,6 +1,7 @@
 import {BufferGeometry,Color,Float32BufferAttribute,Group,Mesh,MeshBasicMaterial,MeshStandardMaterial,Vector3} from 'three';
 import {createBuildingPaint} from './building-paint.mjs';
 import {sandboxGroundTone} from './ground-tones.ts';
+import {nightVertexCommon,nightVertexProject,nightFragmentCommon,nightFragment} from './night-city.mjs';
 
 /** Private material instances: retain the authored bake, then add only real direct
  * light from the selection rig. No ambient/IBL light is applied a second time. */
@@ -28,8 +29,11 @@ export function createBakedSurfaces(root,cityTexture=null,streetBake=null){
   const paintCompile=m.onBeforeCompile;
   // Lift unlit road undersides into the soft-white palette; retain brighter baked gradients.
   const u={bakedBrightness:{value:1},bakedGroundFloor:{value:street?.55:0},bakedGroundTint:{value:new Color(1,1,1)},bakedGroundMix:{value:0},bakedGroundReference:{value:ground?.91:role==='background_ground'?.255:street?1:.74}};
+  Object.assign(u,{cityNight:{value:0},nightLevel:{value:1},nightWindows:{value:1},nightContext:{value:role==='background_city'?2:['background_ground','background_street','baked_ground'].includes(role)?1:0},nightHero:{value:zone?1:0}});
   m.onBeforeCompile=(shader,renderer)=>{
    paintCompile(shader,renderer);Object.assign(shader.uniforms,u);
+   shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\n'+nightVertexCommon).replace('#include <project_vertex>','#include <project_vertex>\n'+nightVertexProject);
+   shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\n'+nightFragmentCommon);
    shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform float bakedBrightness,bakedGroundMix,bakedGroundReference,bakedGroundFloor;uniform vec3 bakedGroundTint;')
     .replace('#include <opaque_fragment>',`vec3 bakedBase=diffuseColor.rgb;
      float bakedLuma=dot(bakedBase,vec3(.2126,.7152,.0722));
@@ -37,6 +41,7 @@ export function createBakedSurfaces(root,cityTexture=null,streetBake=null){
      vec3 lampLight=max(vec3(0.),reflectedLight.directDiffuse+reflectedLight.directSpecular*.25);
      if(any(isnan(lampLight))||any(isinf(lampLight)))lampLight=vec3(0.);
      outgoingLight=bakedBase*bakedBrightness+vec3(.34)*(vec3(1.)-exp(-lampLight));
+     ${nightFragment}
      #include <opaque_fragment>`);
   };
   m.customProgramCacheKey=()=>`astra-baked-interactive-v1:${zone??role??'site'}`;
@@ -58,9 +63,10 @@ export function createBakedSurfaces(root,cityTexture=null,streetBake=null){
   waterChanges.push({mesh,original,cut,g,dummy,triangles:water.length/3});
  });
  return {waterRoot,
-  configure(options){for(const e of streetChanges)e.mesh.geometry=options.preset==='original'?e.original:e.geometry;
+  configure(options,night=false){for(const e of streetChanges)e.mesh.geometry=options.preset==='original'?e.original:e.geometry;
    for(const e of entries){e.mesh.material=options.preset==='original'?e.source:e.m;e.mesh.castShadow=e.mesh.receiveShadow=options.preset!=='original';const context=['background_ground','background_street','background_city','baked_ground'].includes(e.role);
    e.u.bakedBrightness.value=(context?options.backgroundBrightness:options.modelBrightness)/100;
+   e.u.cityNight.value=night?1:0;e.u.nightLevel.value=(options.nightSettings?.brightness??100)/100;e.u.nightWindows.value=options.nightSettings?.windows===false?0:1;
    e.u.bakedGroundMix.value=context&&e.role!=='background_city'?1:0;
    // Peripheral platform tint must not recolor the newly uniform white buildings.
    e.u.bakedGroundTint.value.set(e.role==='background_ground'&&options.backgroundColor?options.backgroundColor:sandboxGroundTone(options.groundTone).color);

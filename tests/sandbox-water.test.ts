@@ -5,7 +5,7 @@ import {normalizeWaterSettings,readWaterSettings,waterDefaults} from '../03-Src/
 import {createRiverWater} from '../03-Src/studio/project-sandbox/river-water.mjs';
 
 test('water preferences retain explicit off/zero and recover corrupt values without storage writes',()=>{
- assert.deepEqual(normalizeWaterSettings({enabled:false,quality:'high',speed:0,ripple:0,reflection:0,bloom:0}),{enabled:false,quality:'high',speed:0,ripple:0,reflection:0,bloom:0});
+ assert.deepEqual(normalizeWaterSettings({enabled:false,quality:'high',speed:0,ripple:0,reflection:0,bloom:0}),{enabled:false,motion:true,boats:true,quality:'high',speed:0,ripple:0,reflection:0,bloom:0});
  assert.deepEqual(normalizeWaterSettings({quality:'invalid',speed:NaN,ripple:-5,reflection:120,bloom:'5'}),{...waterDefaults,ripple:0,reflection:100});
  const old=Object.getOwnPropertyDescriptor(globalThis,'localStorage');
  Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:()=>'{broken',setItem:()=>{throw Error('must not write')}}});

@@ -1,0 +1,24 @@
+{
+  "blender": "5.2.2 LTS",
+  "world": 0.7,
+  "sun": 1.3,
+  "sunAngle": 18,
+  "samples": 128,
+  "textureSize": [
+    1024,
+    1024
+  ],
+  "logoRegions": 5,
+  "location": [
+    -4.3,
+    0.13,
+    4.05
+  ],
+  "logoHeight": 1.48,
+  "plinthHeight": 0.34,
+  "sourceSHA256": "3bd2466436564ce23fc921c5f8778ed8aa646ab15727be71b6cdf8108c754e88",
+  "hashes": {
+    "group-logo.glb": "cdd448b6a0b83330fde6d4ca5e6addafcacf31df586a0f4317c88c979ab04c58",
+    "logo-light.png": "2ff52125fd1a85e7a5d86258fd87f7b3d011430e6b9c5eb2227f86bf24f23c19"
+  }
+}

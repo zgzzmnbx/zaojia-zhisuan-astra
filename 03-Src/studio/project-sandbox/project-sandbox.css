@@ -165,7 +165,7 @@
 
 /* Compact project identity and persistent camera controls. */
 .sandbox-project>strong{max-width:18em}.sandbox-card-mode .sandbox-project{max-width:30%}.sandbox-card-mode .sandbox-project>strong{max-width:14em}
-.sandbox-view-options{display:block;width:420px;padding:12px;max-width:calc(100cqw - 40px)}
+.sandbox-view-options{display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;gap:0;width:420px;padding:0;max-width:calc(100cqw - 40px)}
 .sandbox-view-toggles{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
 .sandbox-camera-settings{display:grid;gap:14px;padding:14px 4px 2px}.sandbox-camera-settings>label{display:grid;grid-template-columns:1fr auto;padding:0;gap:10px;font-size:13px;color:var(--ink)}
 .sandbox-camera-settings .range{grid-column:1/-1;width:100%;color:var(--astra-primary)}.sandbox-camera-settings output{font-variant-numeric:tabular-nums;color:var(--muted)}
@@ -174,7 +174,8 @@
 .sandbox-ground-tones{border:0;padding:0;margin:0;min-width:0}.sandbox-ground-tones legend{font-size:13px;color:var(--ink);margin-bottom:8px}.sandbox-ground-tones>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.sandbox-ground-tones .btn{border:1px solid var(--line);border-radius:8px;height:34px;gap:6px}.sandbox-ground-tones .btn[aria-pressed=true]{border-color:var(--astra-primary);background:color-mix(in srgb,var(--astra-primary) 10%,var(--paper));color:var(--astra-primary-ink)}.sandbox-ground-tones i{width:14px;height:14px;border-radius:50%;border:1px solid #8896a844;flex-shrink:0}.sandbox-ground-tones:disabled{opacity:.5}
 
 .sandbox-group-logo>div{grid-template-columns:repeat(3,minmax(0,1fr))}
-.sandbox-view-options{max-height:min(calc(100dvh - 152px),calc(100cqh - 96px));overflow-y:auto;overscroll-behavior:contain}
+.sandbox-view-options{max-height:min(calc(100dvh - 152px),calc(100cqh - 96px));overflow:hidden}
+.sandbox-parameter-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:12px}
 
 /* Focused buildings reveal their own information, directly below the status. */
 .project-sandbox .sandbox-marker.selected{width:var(--sandbox-focus-card-width,280px);max-width:calc(100cqw - 40px);z-index:8!important;opacity:1!important}
@@ -267,3 +268,5 @@
 #sandbox-view-options [hidden]{display:none!important}
 
 .sandbox-baked-adjustments{border:0;padding:0;margin:0;min-width:0}
+
+.sandbox-parameter-actions{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line);background:var(--paper)}.sandbox-parameter-actions>span{font-size:var(--dws-font-size-12);color:var(--muted);line-height:1.5}.sandbox-parameter-actions .btn{flex-shrink:0}
