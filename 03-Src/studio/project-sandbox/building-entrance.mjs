@@ -41,8 +41,25 @@ function injectAssembly(shader,time){
  transformed+=aAssemblyMotion.xyz*assemblyRemaining*assemblyHover;`);
 }
 
+/** The finished bake contains black contact/interior faces that are exposed by
+ * the exploded view. Only that temporary view gets soft neutral fill. */
+function softenAssemblyBake(shader,time,group){
+ shader.uniforms.uAssemblyBakeTime=time;
+ shader.uniforms.uAssemblyBakeEnd={value:group.end};
+ shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vAssemblyBakeNormal;')
+  .replace('#include <begin_vertex>','#include <begin_vertex>\nvAssemblyBakeNormal=normalize(mat3(modelMatrix)*normal);');
+ shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vAssemblyBakeNormal;uniform float uAssemblyBakeTime,uAssemblyBakeEnd;')
+  .replace('#include <color_fragment>',`#include <color_fragment>
+   float assemblyRelief=1.-smoothstep(uAssemblyBakeEnd-100.,uAssemblyBakeEnd,uAssemblyBakeTime);
+   ${shader.uniforms.cityNight?'assemblyRelief*=1.-cityNight;':''}
+   float assemblyDark=1.-smoothstep(.035,.18,max(diffuseColor.r,max(diffuseColor.g,diffuseColor.b)));
+   float assemblyFacing=.60+.18*max(dot(normalize(vAssemblyBakeNormal),normalize(vec3(-.45,.8,.35))),0.);
+   diffuseColor.rgb=mix(diffuseColor.rgb,vec3(assemblyFacing),assemblyDark*assemblyRelief);
+  `);
+}
+
 /** Exploded assembly in the existing draw calls, with finite temporary GPU data. */
-export function createBuildingEntrance(root,order,{privateMaterials=false}={}){
+export function createBuildingEntrance(root,order,{privateMaterials=false,softenBakedOcclusion=false}={}){
  root.updateMatrixWorld(true);
  const groups=new Map(),meshes=[],savedMaterials=new Map(),privateCopies=new Map(),time={value:0};
  root.traverse(mesh=>{
@@ -86,8 +103,8 @@ export function createBuildingEntrance(root,order,{privateMaterials=false}={}){
    const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
    savedMaterials.set(material,{compile,key});
    const originalKey=key.call(material);
-   material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);injectAssembly(shader,time);};
-   material.customProgramCacheKey=()=>`${originalKey}|astra-assembly-v2`;material.needsUpdate=true;
+   material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);injectAssembly(shader,time);if(softenBakedOcclusion)softenAssemblyBake(shader,time,group);};
+   material.customProgramCacheKey=()=>`${originalKey}|astra-assembly-v2${softenBakedOcclusion?'-bake-relief-v1':''}`;material.needsUpdate=true;
   }
  }
  let elapsed=0,finished=false;

@@ -6,7 +6,7 @@ import {normalizeSandboxView} from './view-settings.ts';
 import {sandboxGroundTone} from './ground-tones.ts';
 import {readGroupLogo} from './group-logo.ts';
 import {validBackground} from './scene-theme.ts';
-export type NightSettings={brightness:number;bloom:number;windows:boolean;flow:boolean;logo:boolean;boats:boolean;logoBrightness:number;logoColor:string};
+export type NightSettings={style:'studio'|'classic';shell:number;core:number;halo:number;context:number;flowBrightness:number;flowSoftness:number;brightness:number;bloom:number;windows:boolean;flow:boolean;logo:boolean;boats:boolean;logoBrightness:number;logoColor:string};
 
 export const bakedSettingsKey='astra.sandbox.baked-effects.v1';
 export type BakedSettings={preset:'adjusted'|'original';waterSettings:WaterSettings;uplightSettings:UplightSettings;bloom:boolean;focusBeam:boolean;shadows:boolean;flow:boolean;groupLogo:'hidden'|'original'|'white';logoGlow:{enabled:boolean;brightness:number;color:string};nightSettings:NightSettings;groundTone:string;backgroundColor:string|null;backgroundBrightness:number;modelBrightness:number;paintStrength:number;elevation:number;distance:number;zoom:number};
@@ -14,7 +14,9 @@ export function normalizeBakedSettings(raw:unknown,fallback?:BakedSettings):Bake
  const v=(raw&&typeof raw==='object'?raw:{}) as Partial<BakedSettings>;
  const base:BakedSettings=fallback??sandboxParameterDefaults.baked;
  const nightBase=base.nightSettings,n=v.nightSettings;
+ const nightGain=(key:'shell'|'core'|'halo'|'context'|'flowBrightness'|'flowSoftness',min=0)=>typeof n?.[key]==='number'&&Number.isFinite(n[key])?Math.max(min,Math.min(200,n[key])):nightBase[key]??100;
  const nightSettings:NightSettings={...nightBase,...Object.fromEntries((['windows','flow','logo','boats'] as const).map(k=>[k,typeof n?.[k]==='boolean'?n[k]:nightBase[k]])),brightness:typeof n?.brightness==='number'&&Number.isFinite(n.brightness)?Math.max(40,Math.min(150,n.brightness)):nightBase.brightness,logoBrightness:typeof n?.logoBrightness==='number'&&Number.isFinite(n.logoBrightness)?Math.max(0,Math.min(200,n.logoBrightness)):nightBase.logoBrightness,logoColor:typeof n?.logoColor==='string'&&/^#[0-9a-f]{6}$/i.test(n.logoColor)?n.logoColor:nightBase.logoColor,bloom:typeof n?.bloom==='number'&&Number.isFinite(n.bloom)?Math.max(0,Math.min(150,n.bloom)):nightBase.bloom};
+ Object.assign(nightSettings,{style:n?.style==='classic'?'classic':n?.style==='studio'?'studio':nightBase.style??'studio',shell:nightGain('shell',25),core:nightGain('core'),halo:nightGain('halo'),context:nightGain('context'),flowBrightness:nightGain('flowBrightness'),flowSoftness:nightGain('flowSoftness')});
  const number=(key:'backgroundBrightness'|'modelBrightness'|'paintStrength',min:number,max:number)=>typeof v[key]==='number'&&Number.isFinite(v[key])?Math.max(min,Math.min(max,v[key]!)):base[key];
  return {...base,nightSettings,preset:v.preset==='original'?'original':v.preset==='adjusted'?'adjusted':base.preset,...normalizeSandboxView({...base,...v}),waterSettings:normalizeWaterSettings({...base.waterSettings,...v.waterSettings}),uplightSettings:normalizeUplightSettings({day:{...base.uplightSettings.day,...v.uplightSettings?.day},night:{...base.uplightSettings.night,...v.uplightSettings?.night}}),
   ...Object.fromEntries((['bloom','focusBeam','shadows','flow'] as const).map(k=>[k,typeof v[k]==='boolean'?v[k]:base[k]])),

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import route from './pipeline-route.json';
+import route from './pipeline-route.json' with {type:'json'};
 
 function roundedLeg(points){
  const curve=new THREE.CurvePath(),vectors=points.map(p=>new THREE.Vector3(...p));
@@ -22,18 +22,18 @@ export function createInformationFlow(scene){
  curve.arcLengthDivisions=3000;curve.updateArcLengths();
  const length=curve.getLength();
  const shell=new THREE.Mesh(new THREE.TubeGeometry(curve,1400,.135,10,false),new THREE.MeshPhysicalMaterial({color:0xd5e9f5,roughness:.25,metalness:.05,transparent:true,opacity:.33,depthWrite:false}));
- shell.renderOrder=3;group.add(shell);
- const uniforms={uDistance:{value:3},uLength:{value:length},uSpacing:{value:route.pulseSpacing},uGlow:{value:0},uStart:{value:0},uEnd:{value:0}};
+ shell.renderOrder=3;shell.userData.informationFlowShell=true;group.add(shell);
+ const uniforms={uBrightness:{value:1},uDistance:{value:3},uLength:{value:length},uSpacing:{value:route.pulseSpacing},uGlow:{value:0},uStart:{value:0},uEnd:{value:0}};
  const signalMaterial=new THREE.ShaderMaterial({
   uniforms,transparent:true,depthWrite:false,
   vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-  fragmentShader:`varying vec2 vUv;uniform float uDistance;uniform float uLength;uniform float uSpacing;uniform float uGlow;uniform float uStart;uniform float uEnd;
+  fragmentShader:`varying vec2 vUv;uniform float uBrightness;uniform float uDistance;uniform float uLength;uniform float uSpacing;uniform float uGlow;uniform float uStart;uniform float uEnd;
     void main(){if(vUv.x*uLength<uStart||vUv.x*uLength>uEnd)discard;float behind=mod(uDistance-vUv.x*uLength+uSpacing*1000.0,uSpacing);
       float tail=pow(max(0.0,1.0-behind/3.6),1.2);
       float head=exp(-pow(min(behind,uSpacing-behind)/.17,2.0));
       float pulse=max(tail,head);vec3 color=mix(vec3(.15,.47,.70),vec3(.008,.26,1.0),pulse);
       color=mix(color,vec3(.35,.8,1.0),head*.6);
-      gl_FragColor=vec4(color*(1.0+uGlow*pulse),.23+.77*pulse);
+      gl_FragColor=vec4(color*(1.0+uGlow*pulse)*uBrightness,.23+.77*pulse);
       #include <colorspace_fragment>
     }`
  });
@@ -47,13 +47,13 @@ export function createInformationFlow(scene){
   const lamp=new THREE.Mesh(new THREE.SphereGeometry(.19,16,10),material);lamp.position.copy(p);group.add(lamp);ports.push({material,distance:stopDistances[i]});
  });
  scene.add(group);
- let distance=3,lastFrame=null,playing=false,night=false;
+ let distance=3,lastFrame=null,playing=false,night=false,nightBrightness=1;
  function setPlaying(value){playing=value;lastFrame=null;}
  function tick(time){
   if(playing){if(lastFrame!==null)distance=(distance+Math.min(.05,Math.max(0,(time-lastFrame)/1000))*route.speed)%route.pulseSpacing;lastFrame=time;}
   uniforms.uDistance.value=distance;
-  for(const port of ports){const behind=((distance-port.distance)%route.pulseSpacing+route.pulseSpacing)%route.pulseSpacing;port.material.emissiveIntensity=(night?1.0:.1)+(night?2.8:.8)*Math.max(0,1-behind/2.2);}
+  for(const port of ports){const behind=((distance-port.distance)%route.pulseSpacing+route.pulseSpacing)%route.pulseSpacing;port.material.emissiveIntensity=((night?1.0:.1)+(night?2.8:.8)*Math.max(0,1-behind/2.2))*(night?nightBrightness:1);}
  }
  tick(0);
- return {setStage:id=>{const i=route.stops.findIndex(s=>s.id===id);uniforms.uStart.value=i>0?stopDistances[i-1]:0;uniforms.uEnd.value=i>=0?stopDistances[Math.max(1,i)]:length},setPlaying,tick,setNight:value=>{night=value;uniforms.uGlow.value=night?3:0;shell.material.opacity=night?.14:.33;shell.material.color.set(night?'#0e6380':0xd5e9f5);for(const socket of sockets)socket.material.color.set(night?'#0b1c2c':0xf9fcff)},suspend:()=>{lastFrame=null},getState:()=>({playing,distance,shaderDistance:uniforms.uDistance.value,glow:uniforms.uGlow.value,length,order:route.stops.map(s=>s.id),stopDistances,ports:route.stops.map(s=>s.point),segments:route.legs.length})};
+ return {setStage:id=>{const i=route.stops.findIndex(s=>s.id===id);uniforms.uStart.value=i>0?stopDistances[i-1]:0;uniforms.uEnd.value=i>=0?stopDistances[Math.max(1,i)]:length},setPlaying,tick,setNight:(value,brightness=100)=>{night=value;nightBrightness=Number.isFinite(brightness)?Math.max(0,Math.min(200,brightness))/100:1;uniforms.uBrightness.value=night?nightBrightness:1;group.visible=!night||nightBrightness>0;for(const port of ports)port.material.color.set(0x228be6).multiplyScalar(night?nightBrightness:1);uniforms.uGlow.value=night?3:0;shell.material.opacity=night?.14:.33;shell.material.color.set(night?'#0e6380':0xd5e9f5);for(const socket of sockets)socket.material.color.set(night?'#0b1c2c':0xf9fcff)},suspend:()=>{lastFrame=null},getState:()=>({nightBrightness:uniforms.uBrightness.value,visible:group.visible,playing,distance,shaderDistance:uniforms.uDistance.value,glow:uniforms.uGlow.value,length,order:route.stops.map(s=>s.id),stopDistances,ports:route.stops.map(s=>s.point),segments:route.legs.length})};
 }

@@ -42,7 +42,7 @@ export const sandboxParameterDefaults={
   "flow": true,
   "groupLogo": "hidden",
   "logoGlow": {"enabled": true,"brightness": 60,"color": "#b9e4ff"},
-  "nightSettings": {"brightness":100,"bloom":85,"windows":true,"flow":true,"logo":true,"boats":true,"logoBrightness":80,"logoColor":"#b9e4ff"},
+  "nightSettings": {"style":"studio","shell":100,"core":100,"halo":100,"context":100,"flowBrightness":100,"flowSoftness":100,"brightness":100,"bloom":85,"windows":true,"flow":true,"logo":true,"boats":true,"logoBrightness":80,"logoColor":"#b9e4ff"},
   "groundTone": "mist",
   "backgroundColor": "#ffffff",
   "backgroundBrightness": 105,

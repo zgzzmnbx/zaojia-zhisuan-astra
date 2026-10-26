@@ -78,7 +78,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  }
  function render(time){
   raf=0;if(!allowed())return;const delta=lastTime?Math.min(.05,(time-lastTime)/1000):1/60;lastTime=time;
-  if(!entranceChecked){entranceChecked=true;if(entranceGate.claim()&&!reduced.matches&&!options.running&&!selected&&!taskTarget)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true})}
+  if(!entranceChecked){entranceChecked=true;if(entranceGate.claim()&&!reduced.matches&&!options.running&&!selected&&!taskTarget)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true,softenBakedOcclusion:true})}
   const wasBuilding=!!entrance?.active,building=entrance?.tick(delta*1000,reduced.matches)||false;
   if(wasBuilding)effects?.invalidateDepth();
   if(flight){const t=reduced.matches?1:Math.min(1,(time-flight.start)/750),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);camera.zoom=THREE.MathUtils.lerp(flight.z0,flight.z1,e);camera.updateProjectionMatrix();if(t===1)flight=null}
