@@ -48,6 +48,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  const roofAnchors=createRoofAnchors(zones),markerLayout=createMarkerLayout(),markerMotion=createMarkerMotion(),paintProgress=createPaintProgress();
  let markerSnapshot={placements:[],pending:false,reflows:0},frame=sandboxFrame(1,1),focusFrame=null;
  let active=false,inView=true,disposed=false,model=null,raf=0,width=1,height=1,frames=0,selected=null,taskTarget=null,down=null,lastTime=0,flight=null;
+ let sweepPhase=0,sweepAngle=0;
  let options={active:true,compact:false,roofLabels:true,orbit:false,running:null},settings={city:true,dof:true,strength:.4};
  let entrance=null,entranceChecked=false,plaque=null,plaqueAsset=null,logoAsset=null,projectInfo=null;
  let miniature=null,dofFailed=false,effects=null,effectOptions=normalizeBakedSettings(null);
@@ -87,7 +88,9 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   const wasBuilding=!!entrance?.active,building=entrance?.tick(delta*1000,reduced.matches)||false;
   if(wasBuilding)effects?.invalidateDepth();
   if(flight){const t=reduced.matches?1:Math.min(1,(time-flight.start)/750),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);camera.zoom=THREE.MathUtils.lerp(flight.z0,flight.z1,e);camera.updateProjectionMatrix();if(t===1)flight=null}
-  controls.autoRotate=options.orbit&&!reduced.matches&&!flight&&!building;const moving=controls.update(delta);camera.updateMatrixWorld();
+  const sweep=options.orbit&&options.orbitSweep&&!reduced.matches&&!flight&&!building;
+  if(sweep){sweepPhase+=delta*.12;const angle=(1-Math.cos(sweepPhase))*Math.PI/12;camera.position.sub(controls.target).applyAxisAngle(new THREE.Vector3(0,1,0),-(angle-sweepAngle)).add(controls.target);sweepAngle=angle;}else {sweepPhase=0;sweepAngle=0;}
+  controls.autoRotate=options.orbit&&!options.orbitSweep&&!reduced.matches&&!flight&&!building;const moving=controls.update(delta)||sweep;camera.updateMatrixWorld();
   const painting=paintProgress.tick(delta*1000,reduced.matches);
   const effectPending=effects?.tick(time,delta,reduced.matches,paintProgress.state());
   for(const [id,state] of Object.entries(paintProgress.state())){const marker=markers.get(id);if(marker){marker.style.setProperty('--sandbox-task-fill',String(state.value));marker.dataset.paintPhase=state.phase}}

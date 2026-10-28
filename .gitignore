@@ -26,3 +26,6 @@ dist/
 runtime/
 03-Src/vendor/gongwen-core/gongwen_core/fonts/*.ttf
 .playwright-cli/
+
+# Local competition materials and input/answer workbooks; preserve locally.
+/07-测试和演示例子/

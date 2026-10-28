@@ -2477,6 +2477,7 @@ export function App() {
 
 function DaweibaApp() {
   const [astraView,setAstraView]=useState("workload");
+  const [astraMapPrewarm,setAstraMapPrewarm]=useState(false);
   const [astraActive,setAstraActive]=useState(false);
   const astraRestore=useRef(0);
   const astraLoadedJob=useRef("");
@@ -2499,7 +2500,7 @@ function DaweibaApp() {
       const businessChanged=next.businessRevision!==currentContext.businessRevision;
       const routeChanged=changed||next.view!==currentContext.view||next.active!==currentContext.active;
       applyAppearance({palette:next.palette||"astra",dark:next.dark});
-      setContext(next);if(next.previewPreferences&&JSON.stringify(next.previewPreferences)!==JSON.stringify(previewPreferencesRef.current)){setPreviewColumnPreferences(normalizePreviewColumnPreferences(next.previewPreferences));}
+      setContext(next);if(next.prewarmMap){setAstraMapPrewarm(true);setHasOpenedProjectSpatialMap(true);}if(next.previewPreferences&&JSON.stringify(next.previewPreferences)!==JSON.stringify(previewPreferencesRef.current)){setPreviewColumnPreferences(normalizePreviewColumnPreferences(next.previewPreferences));}
       if(routeChanged){setAstraRow(null);openedAstraRow.current="";}
       if(businessChanged||routeChanged)window.dispatchEvent(new Event('astra-model-changed'));
       if(businessChanged||routeChanged)await loadAstraBusiness().catch(error=>notifyParent("error",{message:String(error)}));
@@ -11899,6 +11900,7 @@ function DaweibaApp() {
           <div className="daweiba-project-spatial-map-host" hidden={activeDaweibaModule !== "fill" || !["spatial", "aerial"].includes(fillWorkspaceView)}>
             <Suspense fallback={<div className="daweiba-project-dashboard-loading"><Loader2 className="spin" size={18} />正在载入全国项目地图……</div>}>
               <ProjectSpatialMap
+                prewarm={astraMapPrewarm}
                 aerial={fillWorkspaceView === "aerial"}
                 active={astraActive && activeDaweibaModule === "fill" && ["spatial", "aerial"].includes(fillWorkspaceView) && (!isAgentPrimary || isWorkspacePreviewOpen)}
                 apiBase={API_BASE}

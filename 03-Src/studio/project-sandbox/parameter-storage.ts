@@ -10,6 +10,6 @@ export function normalizeDisplayParameters(raw:unknown):SandboxDisplayParameters
  const v=object(raw)?raw:{},base=sandboxParameterDefaults.display;
  const level=(key:'cardTransparency'|'chatTransparency',min:number,max:number)=>typeof v[key]==='number'&&Number.isFinite(v[key])?Math.round(Math.max(min,Math.min(max,v[key] as number))):base[key];
  const flag=(key:'infoVisible'|'roofLabels'|'autoOrbit')=>typeof v[key]==='boolean'?v[key] as boolean:base[key];
- return {infoVisible:flag('infoVisible'),cardTransparency:level('cardTransparency',20,85),chatTransparency:level('chatTransparency',0,80),roofLabels:flag('roofLabels'),autoOrbit:flag('autoOrbit'),orbitDelay:[2,5,10,15,30,60].includes(v.orbitDelay as number)?v.orbitDelay as number:base.orbitDelay};
+ return {infoVisible:flag('infoVisible'),cardTransparency:level('cardTransparency',20,85),chatTransparency:level('chatTransparency',0,80),roofLabels:flag('roofLabels'),autoOrbit:flag('autoOrbit'),orbitDelay:[0,2,5,10,15,30,60].includes(v.orbitDelay as number)?v.orbitDelay as number:base.orbitDelay};
 }
 export function readDisplayParameters(){return normalizeDisplayParameters(readSavedParameterRecord()?.display)}

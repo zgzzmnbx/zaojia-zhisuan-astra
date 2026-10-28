@@ -2,16 +2,19 @@ import {useEffect,useRef,useState} from 'react';
 import {createIdleOrbit} from './idle-orbit';
 
 export function useIdleOrbit(enabled:boolean,delay:number,blocked:boolean,stopManual:()=>void){
- const [running,setRunning]=useState(false),controller=useRef<ReturnType<typeof createIdleOrbit>|null>(null),onInput=useRef(stopManual);
+ const [running,setRunning]=useState(false),controller=useRef<ReturnType<typeof createIdleOrbit>|null>(null),onInput=useRef(stopManual),delayRef=useRef(delay);
  onInput.current=stopManual;
+ delayRef.current=delay;
  useEffect(()=>{
   const idle=createIdleOrbit(setRunning,()=>!document.hidden&&!document.querySelector('dialog[open],.sandbox-marker :focus-visible'),{set:(fn,ms)=>setTimeout(fn,ms),clear:id=>clearTimeout(id as ReturnType<typeof setTimeout>)});
   controller.current=idle;
   const stop=(e:Event)=>{if(!(e.target instanceof Element)||!e.target.closest('.sandbox-view-controls'))onInput.current()};
-  const activity=(e:Event)=>{stop(e);idle.activity()};
-  const down=(e:Event)=>{stop(e);idle.hold(true)};
-  const up=()=>{idle.hold(false)};
-  const blur=()=>{onInput.current();idle.hold(true)};
+  const isCameraInput=(e:Event)=>e.target instanceof Element&&!!e.target.closest('.sandbox-canvas');
+  let cameraHeld=false;
+  const activity=(e:Event)=>{if(delayRef.current===0&&!isCameraInput(e))return;stop(e);idle.activity()};
+  const down=(e:Event)=>{if(delayRef.current===0&&!isCameraInput(e))return;cameraHeld=true;stop(e);idle.hold(true)};
+  const up=()=>{if(cameraHeld){cameraHeld=false;idle.hold(false)}};
+  const blur=()=>{cameraHeld=false;onInput.current();idle.hold(true)};
   const focus=()=>idle.hold(false);
   // Hover is not a camera gesture: moving to a label must not cancel manual or idle orbit.
   const events=['wheel','keydown','input','focusin'] as const;

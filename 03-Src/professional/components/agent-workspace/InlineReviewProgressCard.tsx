@@ -133,7 +133,7 @@ export default function InlineReviewProgressCard({ snapshot, refreshing, onRefre
                       return (
                         <div className={`inline-review-progress__reviewer is-${kind}`} key={`${task.task_id}-${reviewer.name}-${index}`}>
                           <span className="inline-review-progress__avatar">{reviewer.name.trim().slice(0, 1) || "人"}</span>
-                          <div><strong>{reviewer.name}</strong><small title={reviewDetail}>{reviewDetail}</small></div>
+                          <div><strong>{reviewer.name}</strong><small className={kind === "pending" ? undefined : "inline-review-progress__conclusion"} title={reviewDetail}>{reviewDetail}</small></div>
                           <b data-review-motion-value={kind}>{kind === "approved" ? <Check size={13} /> : kind === "returned" ? <RotateCcw size={13} /> : <Clock3 size={13} />}{reviewer.status}</b>
                         </div>
                       );

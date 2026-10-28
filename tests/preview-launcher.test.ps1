@@ -17,7 +17,7 @@ Assert (-not (Test-AstraOwner 'python other-app.py' $python)) 'Foreign process a
 New-Item -ItemType Directory -Path "$testRoot/03-Src/studio", "$testRoot/03-Src/vendor/gork-output" -Force | Out-Null
 '{"version":"0.9.21"}' | Set-Content -LiteralPath "$testRoot/package.json"
 $sources=@{}
-foreach ($name in @('server.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py')) {
+foreach ($name in @('server.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py')) {
     Set-Content -LiteralPath "$testRoot/03-Src/$name" -Value 'fixture'
     $sources[$name]=(Get-FileHash -LiteralPath "$testRoot/03-Src/$name").Hash.ToLowerInvariant()
 }
@@ -28,6 +28,8 @@ function Invoke-WebRequest {
     $bytes=[Text.Encoding]::UTF8.GetBytes(($script:health | ConvertTo-Json -Depth 8))
     return @{RawContentStream=[IO.MemoryStream]::new($bytes)}
 }
+# Reproduce Windows PowerShell's missing Get-FileHash module without weakening source verification.
+function Get-FileHash { throw 'Hash cmdlet deliberately unavailable in launcher acceptance' }
 # UTF-8 identity survives Windows PowerShell's missing-charset response behavior.
 $unicodeName='fixture-' + [char]0x667A + [char]0x7B97
 $unicodeBytes=[Text.Encoding]::UTF8.GetBytes(('{"workspace":"'+$unicodeName+'"}'))

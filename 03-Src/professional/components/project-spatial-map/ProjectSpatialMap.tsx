@@ -24,6 +24,7 @@ const ProjectMapCanvas = lazy(() => import("./ProjectMapCanvas"));
 
 type Props = {
   active: boolean;
+  prewarm?: boolean;
   aerial?: boolean;
   apiBase: string;
   colorMode: "light" | "dark";
@@ -66,7 +67,7 @@ function responseError(payload: unknown, fallback: string) {
   return payload && typeof payload === "object" && "detail" in payload ? String(payload.detail) : fallback;
 }
 
-export default function ProjectSpatialMap({ active, aerial = false, apiBase, colorMode, onOpenRun }: Props) {
+export default function ProjectSpatialMap({ active, prewarm = false, aerial = false, apiBase, colorMode, onOpenRun }: Props) {
   const [scope, setScope] = useState<SpatialScope>("demo");
   const [keyword, setKeyword] = useState("");
   const [spatialType, setSpatialType] = useState("");
@@ -139,7 +140,7 @@ export default function ProjectSpatialMap({ active, aerial = false, apiBase, col
   const autoLoadKey = JSON.stringify({ apiBase, dateFrom, dateTo, keyword, riskFilter, scope, spatialType, statusFilter });
 
   useEffect(() => {
-    if (!active || lastAutoLoadKeyRef.current === autoLoadKey) return undefined;
+    if ((!active && !(prewarm && !lastAutoLoadKeyRef.current)) || lastAutoLoadKeyRef.current === autoLoadKey) return undefined;
     const controller = new AbortController();
     const timer = window.setTimeout(() => void load(controller.signal).then(ok=>{if(ok&&!controller.signal.aborted)lastAutoLoadKeyRef.current=autoLoadKey;}), 0);
     return () => {
@@ -147,7 +148,7 @@ export default function ProjectSpatialMap({ active, aerial = false, apiBase, col
       controller.abort();
       loadRequest.current++;
     };
-  }, [active, autoLoadKey, load]);
+  }, [active, prewarm, autoLoadKey, load]);
 
   useEffect(() => {
     if (!isFilterOpen) return undefined;

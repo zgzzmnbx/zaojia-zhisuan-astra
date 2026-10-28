@@ -28,6 +28,7 @@
 .live-shell .cc-item:disabled{cursor:default;opacity:.6}
 .live-shell .cc-item-icon{color:var(--blue);display:flex}.live-shell .cc-item-icon svg{width:20px;height:20px}
 .live-shell .cc-item-copy{flex:1;min-width:0}.live-shell .cc-item-copy strong{font-size:var(--dws-font-size-13);font-weight:500;line-height:1.6;display:block;overflow-wrap:anywhere}
+.live-shell .cc-item-heading{display:flex;align-items:flex-start;flex-wrap:wrap;gap:4px 8px}.live-shell .cc-item-heading>strong{flex:1;min-width:100px}.live-shell .cc-risk-badge{flex:none;min-height:22px;font-size:var(--dws-font-size-12);font-weight:700;color:var(--astra-accent);background:var(--astra-soft);border-color:color-mix(in srgb,var(--astra-accent) 35%,var(--astra-line));white-space:nowrap}
 .live-shell .cc-item-copy small{font-size:var(--dws-font-size-12);line-height:1.6;display:block;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
 .live-shell .cc-item>.astra-icon:last-child{color:var(--muted)}.live-shell .cc-item>.astra-icon:last-child svg{width:15px;height:15px}
 .live-shell .cc-steps{list-style:none;display:flex;justify-content:space-between;gap:8px;margin:0;padding:4px 0;font-size:var(--dws-font-size-12);line-height:1.5;color:var(--muted)}

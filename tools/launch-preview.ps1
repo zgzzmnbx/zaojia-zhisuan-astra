@@ -10,6 +10,9 @@ function Get-AstraLaunchRoot([string]$BaseRoot) {
         if (-not [IO.Path]::IsPathRooted($candidate)) { $candidate = Join-Path $BaseRoot $candidate }
     } else { $candidate = $BaseRoot }
     $root = (Resolve-Path -LiteralPath $candidate).Path
+    if ($root -match '[\\/]\.codex[\\/]worktrees[\\/]') {
+        throw 'Refusing to host the service in a disposable Codex worktree. Use runtime/astra-service inside the project.'
+    }
     foreach ($required in @('tools/run_server.py', 'package.json')) {
         if (-not (Test-Path -LiteralPath (Join-Path $root $required))) { throw "Invalid Astra workspace: $root" }
     }
@@ -37,35 +40,44 @@ function Get-AstraListener {
     return Get-NetTCPConnection -LocalPort 5189 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
 }
 
+function Get-AstraSourceHash([string]$Path) {
+    # .NET hashing also works when PSModulePath was inherited from PowerShell 7.
+    $stream=[IO.File]::OpenRead($Path)
+    $algorithm=[Security.Cryptography.SHA256]::Create()
+    try { return [BitConverter]::ToString($algorithm.ComputeHash($stream)).Replace('-','').ToLowerInvariant() }
+    finally { $stream.Dispose(); $algorithm.Dispose() }
+}
+
 function Test-AstraReady([string]$WorkspaceRoot = '') {
-    try {
+    $script:astraReadyIssue=''; try {
         # Windows PowerShell 5.1 decodes JSON without a charset as Latin-1.
         # Read UTF-8 bytes explicitly so Chinese workspace paths retain identity.
         $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:5189/api/health' -TimeoutSec 2
         $health = ConvertFrom-AstraHealthResponse $response
-        if ($health.status -ne 'ok' -or $health.service -ne 'zhisuan-astra' -or $health.isolated -ne $true) { return $false }
+        if ($health.status -ne 'ok' -or $health.service -ne 'zhisuan-astra' -or $health.isolated -ne $true) { $script:astraReadyIssue='Readiness check 6'; return $false }
         if ($WorkspaceRoot) {
-            if (-not $health.workspace -or [IO.Path]::GetFullPath($health.workspace) -ne [IO.Path]::GetFullPath($WorkspaceRoot)) { return $false }
+            if (-not $health.workspace -or [IO.Path]::GetFullPath($health.workspace) -ne [IO.Path]::GetFullPath($WorkspaceRoot)) { $script:astraReadyIssue='Readiness check 8'; return $false }
             foreach ($name in @('server.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py')) {
                 $file = Join-Path $WorkspaceRoot "03-Src/$name"
-                if (-not (Test-Path -LiteralPath $file)) { return $false }
-                if ($health.host_sources.$name -ne (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()) { return $false }
+                if (-not (Test-Path -LiteralPath $file)) { $script:astraReadyIssue='Missing file: '+$file; return $false }
+                if ($health.host_sources.$name -ne (Get-AstraSourceHash $file)) { $script:astraReadyIssue='Readiness check 12'; return $false }
             }
             foreach ($capability in @('batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1')) {
-                if ($health.capabilities -notcontains $capability) { return $false }
+                if ($health.capabilities -notcontains $capability) { $script:astraReadyIssue='Readiness check 15'; return $false }
             }
             $package = Get-Content -LiteralPath (Join-Path $WorkspaceRoot 'package.json') -Raw | ConvertFrom-Json
-            if ($health.build.version -ne $package.version) { return $false }
-            if (-not $health.build.sources -or -not $health.build.sources.'03-Src/studio/commands.ts') { return $false }
+            if ($health.build.version -ne $package.version) { $script:astraReadyIssue='Readiness check 18'; return $false }
+            if (-not $health.build.sources -or -not $health.build.sources.'03-Src/studio/commands.ts') { $script:astraReadyIssue='Readiness check 19'; return $false }
             foreach ($entry in $health.build.sources.PSObject.Properties) {
                 $file = Join-Path $WorkspaceRoot $entry.Name
-                if (-not (Test-Path -LiteralPath $file)) { return $false }
-                if ($entry.Value -ne (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()) { return $false }
+                if (-not (Test-Path -LiteralPath $file)) { $script:astraReadyIssue='Missing file: '+$file; return $false }
+                if ($entry.Value -ne (Get-AstraSourceHash $file)) { $script:astraReadyIssue='Frontend source differs: '+$entry.Name; return $false }
             }
         }
         return $true
-    } catch { return $false }
+    } catch { $script:astraReadyIssue=$_.Exception.GetType().Name+': '+$_.Exception.Message; return $false }
 }
+
 
 function ConvertFrom-AstraHealthResponse($Response) {
     if (-not $Response.RawContentStream) { throw 'Health response bytes are missing.' }
@@ -84,7 +96,7 @@ function Invoke-AstraPreview {
         if (-not (Test-AstraOwnerProcess $listener.OwningProcess $pythonPath)) {
             throw 'Port 5189 belongs to a different workspace or service. Nothing was stopped. Check config/astra-launch.local.json.'
         }
-        if (-not (Test-AstraReady $root)) { throw 'Astra service or frontend is outdated or not ready. Build this workspace and normally restart its service. No process was restarted.' }
+        if (-not (Test-AstraReady $root)) { throw ('Astra readiness failed: '+$script:astraReadyIssue+'. No process was restarted.') }
         Write-Host 'Astra is already running. Reusing the existing service.'
     } else {
         if ($CheckOnly) { throw 'Astra is not running.' }
@@ -96,13 +108,14 @@ function Invoke-AstraPreview {
         $errorLog = Join-Path $logDir "preview-$stamp-error.log"
         $process = Start-Process -FilePath $pythonPath -ArgumentList 'tools/run_server.py' -WorkingDirectory $root -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $logDir "preview-$stamp.log") -RedirectStandardError $errorLog
         $ready = $false
-        for ($attempt = 0; $attempt -lt 45; $attempt++) {
+        $startupDeadline=[DateTime]::UtcNow.AddSeconds(90)
+        while ([DateTime]::UtcNow -lt $startupDeadline) {
             $process.Refresh()
             if ($process.HasExited) { throw "Astra exited during startup. Log: $errorLog" }
             if (Test-AstraReady $root) { $ready = $true; break }
             Start-Sleep -Milliseconds 500
         }
-        if (-not $ready) { throw "Astra has not become ready yet. Log: $errorLog. Do not repeatedly relaunch." }
+        if (-not $ready) { throw "Astra has not become ready yet. Reason: $script:astraReadyIssue. Log: $errorLog. Do not repeatedly relaunch." }
         $listener = Get-AstraListener
         if (-not $listener) { throw 'Astra listener disappeared during startup.' }
         if (-not (Test-AstraOwnerProcess $listener.OwningProcess $pythonPath)) { throw 'Port ownership changed during startup; browser was not opened.' }
@@ -117,7 +130,7 @@ if ($MyInvocation.InvocationName -ne '.') {
         $mutex = New-Object Threading.Mutex($false, 'Local\ZhisuanAstraPreview5189')
         $locked = $false
         try {
-            try { $locked = $mutex.WaitOne(0) } catch [Threading.AbandonedMutexException] { $locked = $true }
+            try { $locked = $mutex.WaitOne(0); if (-not $locked) { Write-Host 'Astra is starting; waiting for the existing launcher.'; $locked = $mutex.WaitOne(100000) } } catch [Threading.AbandonedMutexException] { $locked = $true }
             if (-not $locked) { throw 'Another Astra launcher is starting. Please wait for it to finish.' }
             Invoke-AstraPreview
         } finally {

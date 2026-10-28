@@ -1,5 +1,5 @@
 export const protocol = 'astra-professional/1';
-export type ProfessionalContext = {context:string;view:string;jobId:string;dark:boolean;palette?:import("../studio/appearance").Palette;active:boolean;rowContext?:import('../studio/RowAssist').RowContext|null;businessRevision?:number;previewPreferences?:import('../studio/table/legacy-preview').PreviewColumnPreferences;knowledgeSeed?:{id:string;title:string;question:string;conclusion:string;sourceReference:string;evidenceSummary:string;sourceType:"knowledge_answer";jobId:string};input?:{file:File;sheets:unknown[]}|null};
+export type ProfessionalContext = {prewarmMap?:boolean;context:string;view:string;jobId:string;dark:boolean;palette?:import("../studio/appearance").Palette;active:boolean;rowContext?:import('../studio/RowAssist').RowContext|null;businessRevision?:number;previewPreferences?:import('../studio/table/legacy-preview').PreviewColumnPreferences;knowledgeSeed?:{id:string;title:string;question:string;conclusion:string;sourceReference:string;evidenceSummary:string;sourceType:"knowledge_answer";jobId:string};input?:{file:File;sheets:unknown[]}|null};
 export let currentContext:ProfessionalContext = {context:'',view:'workload',jobId:'',dark:false,active:false};
 const operations:Record<string,string> = {
   '/api/process':'表格结构已转换','/api/process/batch-match':'批量匹配完成',
