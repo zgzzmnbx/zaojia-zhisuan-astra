@@ -154,8 +154,8 @@ export function mountKnowledgeGalaxy(element, data, callbacks) {
       const active = node.id === hovered || node.id === selected || matches(node);
       const muted = query ? !matches(node) : !related(node);
       object.userData.target = {
-        sphere: selected && node.id !== selected ? (muted ? .045 : .95) : muted ? .18 : 1,
-        halo: muted ? .015 : active ? .18 : .1,
+        sphere: selected && node.id !== selected ? (muted ? settings.unselectedOpacity : .95) : muted ? .18 : 1,
+        halo: muted ? (selected ? .1 * settings.unselectedOpacity : .015) : active ? .18 : .1,
         label: galaxyLabelTarget({id:node.id,selected,hovered,related:related(node),searching:!!query,matching:matches(node)}),
       };
     }

@@ -4,8 +4,8 @@ import { DEFAULT_GALAXY_SETTINGS } from './galaxy-settings.mjs';
 const endpoint = value => typeof value === 'object' ? value.id : value;
 export function linkStyleTarget(link, selected, settings = DEFAULT_GALAXY_SETTINGS) {
   const connected = !!selected && (endpoint(link.source) === selected || endpoint(link.target) === selected);
-  return { focus: connected ? 1 : 0, visibility: !selected || connected ? 1 : .1, flow: !selected ? .32 : connected ? 1 : 0,
-    brightness:connected ? settings.selectedBrightness : settings.overviewBrightness, width:settings.lineWidth };
+  return { focus: connected ? 1 : 0, visibility: 1, flow: !selected ? .32 : connected ? 1 : 0,
+    brightness:connected ? settings.selectedBrightness : selected ? settings.unrelatedLinkBrightness : settings.overviewBrightness, width:settings.lineWidth };
 }
 export function approach(current, target, delta, animate = true) {
   const next = animate ? current + (target-current) * (1-Math.exp(-delta*10)) : target;

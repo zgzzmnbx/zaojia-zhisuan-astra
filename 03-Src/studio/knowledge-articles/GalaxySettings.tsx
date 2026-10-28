@@ -8,10 +8,10 @@ type Key = keyof typeof GALAXY_SETTING_LIMITS;
 const layouts=[['nebula','立体星云','饱满纵深'],['spiral','旋臂银河','舒展流动'],['sphere','球状星团','均衡环绕']] as const;
 const fields: {key:Key;label:string;percent?:boolean}[] = [
   {key:'depth',label:'空间厚度'}, {key:'rotationSpeed',label:'旋转速度'}, {key:'zoom',label:'画面缩放'}, {key:'inspectionZoom',label:'点选放大倍率'}, {key:'nodeSize',label:'节点大小'},
-  {key:'nodeOpacity',label:'节点不透明度',percent:true}, {key:'labelBrightness',label:'名称亮度',percent:true},
+  {key:'nodeOpacity',label:'节点不透明度',percent:true}, {key:'unselectedOpacity',label:'非关联节点亮度',percent:true}, {key:'labelBrightness',label:'名称亮度',percent:true},
   {key:'emissive',label:'自发光强度',percent:true}, {key:'haloStrength',label:'光晕强度',percent:true}, {key:'haloSize',label:'光晕大小'},
   {key:'flowSpeed',label:'光流速度'}, {key:'overviewBrightness',label:'鸟瞰连线亮度',percent:true},
-  {key:'selectedBrightness',label:'关联连线亮度',percent:true}, {key:'lineWidth',label:'连线粗细'},
+  {key:'selectedBrightness',label:'关联连线亮度',percent:true}, {key:'unrelatedLinkBrightness',label:'非关联连线亮度',percent:true}, {key:'lineWidth',label:'连线粗细'},
 ];
 export default function GalaxySettings({ value, onChange, saved, categories }: {value:Values;onChange:(next:Values)=>void;saved:boolean;categories:string[]}) {
   const [open,setOpen]=useState(false), id=useId();

@@ -41,6 +41,15 @@ test('galaxy preferences validate corrupt storage, limits and blocked persistenc
   assert.equal(saveGalaxySettings(value,blocked),false);
 });
 
+test('unrelated node brightness defaults to a visible level and survives old or saved preferences', () => {
+  assert.equal(normalizeGalaxySettings({rotationSpeed:2}).unselectedOpacity,.5);
+  assert.equal(normalizeGalaxySettings({unselectedOpacity:0}).unselectedOpacity,0);
+  assert.equal(normalizeGalaxySettings({unselectedOpacity:4}).unselectedOpacity,1);
+  const storage={value:null,getItem(){return this.value;},setItem(_key,value){this.value=value;}};
+  assert.equal(saveGalaxySettings({...DEFAULT_GALAXY_SETTINGS,unselectedOpacity:.8},storage),true);
+  assert.equal(readGalaxySettings(storage).unselectedOpacity,.8);
+});
+
 test('overview is dimmer by default; brightness and thickness update without replacing flow geometry', () => {
   const link={source:'a',target:'b'};
   assert.equal(linkStyleTarget(link,null).brightness,.5);
@@ -48,7 +57,7 @@ test('overview is dimmer by default; brightness and thickness update without rep
   const options={...DEFAULT_GALAXY_SETTINGS,overviewBrightness:.6,selectedBrightness:0,lineWidth:2};
   const unrelated=linkStyleTarget(link,'c',options);
   assert.equal(unrelated.flow,0);
-  assert.equal(unrelated.brightness,.6);
+  assert.equal(unrelated.brightness,.05);
   const visual=createGalaxyLink({x:0,y:0,z:0},{x:40,y:20,z:3},.7);
   const geometry=visual.object.children[0].geometry;
   visual.update(5,1/60,linkStyleTarget(link,'a',options),false);

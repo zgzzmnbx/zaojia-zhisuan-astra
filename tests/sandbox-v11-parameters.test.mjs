@@ -12,7 +12,7 @@ function storage(run){const values=new Map(),prior=Object.getOwnPropertyDescript
 
 test('built-in defaults match the approved current browser rather than its older saved profile',()=>{
  const captured=JSON.parse(fs.readFileSync(new URL('../00-docs/handoff/2026-10-28-v0.11.21-默认参数快照.json',import.meta.url),'utf8'));
- assert.deepEqual(normalizeSandboxParameters(null),captured.sandbox);assert.deepEqual(DEFAULT_GALAXY_SETTINGS,captured.galaxy);
+ assert.deepEqual(normalizeSandboxParameters(null),captured.sandbox);assert.deepEqual(DEFAULT_GALAXY_SETTINGS,{...captured.galaxy,unselectedOpacity:.5,unrelatedLinkBrightness:.05});
 });
 
 test('restoring defaults is a complete independent preview until the explicit save',()=>storage(values=>{

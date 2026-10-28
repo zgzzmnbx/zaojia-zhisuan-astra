@@ -1,0 +1,15 @@
+import {createRequire} from 'node:module';import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';
+const {chromium}=createRequire(process.argv[2])('./'),out=path.resolve('Codex-Temp/parcel-conveyor-v1/browser-'+(process.env.PARCEL_DEMO_VERSION||'1.0.1'));
+fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({headless:true,executablePath:process.env.PLAQUE_BROWSER});const c=await browser.newContext({viewport:{width:1600,height:1000},deviceScaleFactor:1,reducedMotion:'reduce',recordVideo:{dir:path.join(out,'capture'),size:{width:1600,height:1000}}}),p=await c.newPage(),errors=[];p.on('pageerror',e=>errors.push(String(e)));
+const result={errors};
+try{
+ await p.goto('http://127.0.0.1:5189/parcel-demo/index.html');await p.waitForFunction(()=>__parcelDemo?.ready,null,{timeout:60000});await p.waitForTimeout(1800);
+ await p.getByRole('button',{name:'包裹第一视角',exact:true}).click();await p.waitForTimeout(1900);await p.getByRole('button',{name:'播放演示',exact:true}).click();
+ await p.evaluate(()=>{window.__cameraSamples=[];let run=()=>{const s=__parcelControls;if(s.camera)window.__cameraSamples.push({t:s.time,eye:s.camera.eye,clearance:s.camera.clearance,transition:s.camera.transition});if(!s.paused)requestAnimationFrame(run)};requestAnimationFrame(run)});
+ for(let i=0;i<7;i++){await p.waitForTimeout(6000);await p.screenshot({path:path.join(out,'ride-'+i+'.png')})}
+ result.samples=await p.evaluate(()=>{const s=window.__cameraSamples;let maxStep=0,clearance=0;for(let i=1;i<s.length;i++){maxStep=Math.max(maxStep,Math.hypot(...s[i].eye.map((v,j)=>v-s[i-1].eye[j])));clearance=Math.max(clearance,s[i].clearance)}return {count:s.length,maxStep,clearance,last:s.at(-1)}});
+ assert.equal(await p.evaluate(()=>__parcelControls.paused),true);assert.ok(result.samples.maxStep<1.5,JSON.stringify(result.samples));assert.ok(result.samples.clearance<.001);
+ await p.getByRole('button',{name:'沙盘全景',exact:true}).click();await p.waitForTimeout(1900);await p.getByRole('button',{name:'从第一站重播',exact:true}).click();await p.getByRole('combobox',{name:'天气',exact:true}).selectOption('rain');await p.getByRole('checkbox',{name:'太阳',exact:true}).uncheck();await p.getByRole('button',{name:'播放演示',exact:true}).click();await p.waitForTimeout(3200);assert.ok(await p.evaluate(()=>__parcelControls.time>1&&__parcelControls.time<10));await p.screenshot({path:path.join(out,'rain.png')});
+ await p.getByRole('combobox',{name:'天气',exact:true}).selectOption('snow');await p.waitForTimeout(3200);await p.screenshot({path:path.join(out,'snow.png')});await p.getByRole('checkbox',{name:'太阳',exact:true}).check();await p.getByRole('combobox',{name:'天气',exact:true}).selectOption('clear');await p.waitForTimeout(500);result.passed=true;
+}catch(e){console.error(e);result.failure=String(e);process.exitCode=1}finally{await c.close();await p.video().saveAs(path.join(out,'parcel-weather-first-person.webm'));await browser.close();fs.writeFileSync(path.join(out,'ride.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result))}
