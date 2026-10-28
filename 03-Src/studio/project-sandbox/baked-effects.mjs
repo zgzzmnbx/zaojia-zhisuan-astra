@@ -44,6 +44,11 @@ export function createBakedEffects(renderer,scene,camera,model,request,cityTextu
  }
  function releaseOwned(root){const geometry=new Set(),materials=new Set();root.traverse(o=>{if(o.geometry)geometry.add(o.geometry);for(const m of o.material?[].concat(o.material):[])materials.add(m)});geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());root.removeFromParent()}
  return {configure,
+  prepareFocus(){
+   // Exercise the real four-light shader/shadow/Bloom path once before interaction.
+   configure(options,'import',night);glow.tick(0,true);uplights.tick(0,true);
+  },
+  finishPreparation(focus=null){configure(options,focus,night);glow.tick(0,true);uplights.tick(0,true);bloom.invalidate()},
   attachPlaqueLogo(root){logo?.attachPlaque(root);bloom.invalidate()},
   invalidateDepth(){renderer.shadowMap.needsUpdate=true;bloom.invalidate();river.invalidate()},
   setCamera(value){camera=value;river.setCamera(camera);bloom.setCamera(camera);nightBloom.setCamera(camera)},

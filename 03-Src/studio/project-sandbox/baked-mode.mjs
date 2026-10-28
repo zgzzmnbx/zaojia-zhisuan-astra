@@ -7,6 +7,7 @@ import {createProjectPlaque} from './project-plaque.mjs';
 import logoUrl from '../../../05-视觉识别/03-Logo-管网logo/soft-white-v1/group-logo.glb?url';
 import logoLightUrl from '../../../05-视觉识别/03-Logo-管网logo/soft-white-v1/logo-light.png?url';
 import {createBuildingEntrance,sandboxEntranceGate} from './building-entrance.mjs';
+import {createScenePreparation} from './scene-preparation.mjs';
 import cityWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/city-white-v1/city-white.png?url';
 import streetWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/street-white.png?url';
 import groundWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/ground-white.png?url';
@@ -37,6 +38,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  let camera=new THREE.OrthographicCamera(-30,30,24,-24,.1,600);
  const controls=new OrbitControls(camera,canvas);controls.enabled=false;controls.dampingFactor=.1;controls.minZoom=.55;controls.maxZoom=8;controls.maxPolarAngle=Math.PI*.49;controls.minPolarAngle=.01;controls.screenSpacePanning=true;controls.autoRotateSpeed=.22;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)'),events=new AbortController();
+ const preparation=createScenePreparation();let prepared=false;
  controls.enableDamping=!reduced.matches;
  const fps=createFrameRateMeter(text=>{if(fpsElement)fpsElement.textContent=text});
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(360,360),new THREE.MeshBasicMaterial({color:0xc0c2c1,toneMapped:false,fog:false}));ground.rotation.x=-Math.PI/2;ground.position.y=-1.24;scene.add(ground);
@@ -63,7 +65,10 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   camera.setViewOffset(width,height,focusFrame?width/2-focusFrame.centerX:frame.offsetX,frame.offsetY,width,height);
  }
  function resize(){
-  if(disposed)return;const rect=host.getBoundingClientRect();if(!rect.width||!rect.height)return;
+  if(disposed)return;let rect=host.getBoundingClientRect();
+  // The welcome page hides the workspace. Prepare the same renderer at desktop
+  // size instead of uploading textures/compiling shaders on the first visible frame.
+  if(!rect.width||!rect.height){if(active)return;rect={width:Math.max(1,innerWidth-60),height:Math.max(1,innerHeight-58)}}
   const changed=width!==rect.width||height!==rect.height;width=rect.width;height=rect.height;
   const ratio=Math.min(devicePixelRatio||1,1.75,Math.sqrt(1800000/(width*height)));
   if(changed){renderer.setPixelRatio(ratio);renderer.setSize(width,height);miniature?.setSize(Math.round(width*ratio),Math.round(height*ratio))}
@@ -78,7 +83,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  }
  function render(time){
   raf=0;if(!allowed())return;const delta=lastTime?Math.min(.05,(time-lastTime)/1000):1/60;lastTime=time;
-  if(!entranceChecked){entranceChecked=true;if(entranceGate.claim()&&!reduced.matches&&!options.running&&!selected&&!taskTarget)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true,softenBakedOcclusion:true})}
+  if(!entranceChecked){entranceChecked=true;if(entranceGate.claim()&&!reduced.matches&&!options.running&&!selected&&!taskTarget){if(!entrance?.active)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true,softenBakedOcclusion:true})}else finishEntrance()}
   const wasBuilding=!!entrance?.active,building=entrance?.tick(delta*1000,reduced.matches)||false;
   if(wasBuilding)effects?.invalidateDepth();
   if(flight){const t=reduced.matches?1:Math.min(1,(time-flight.start)/750),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);camera.zoom=THREE.MathUtils.lerp(flight.z0,flight.z1,e);camera.updateProjectionMatrix();if(t===1)flight=null}
@@ -177,11 +182,22 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  const loadPlaque=new GLTFLoader(plaqueManager).loadAsync(plaqueUrl).then(value=>{if(disposed||loadFailed){releaseFrozenModel(value.scene);return null}plaqueAsset=value;return value}).catch(()=>{if(!disposed)onStatus('项目信息碑暂时无法加载，可继续使用项目卡片。');return null});
  const logoManager=new THREE.LoadingManager();logoManager.setURLModifier(url=>url.startsWith('blob:')?logoLightUrl:url);
  const loadLogo=new GLTFLoader(logoManager).loadAsync(logoUrl).then(value=>{if(disposed||loadFailed){releaseFrozenModel(value.scene);return null}logoAsset=value;return value}).catch(()=>{if(!disposed)onStatus('集团 Logo 暂时无法加载，沙盘其余功能可继续使用。');return null});
- const ready=Promise.all([loadModel(),loadBake(cityWhiteUrl),loadBake(streetWhiteUrl),loadBake(groundWhiteUrl),loadPlaque,loadBake(plaqueGroundUrl),loadLogo]).then(([gltf,city,street,ground,plaqueGltf,plaqueGround,logoGltf])=>{
+ const ready=Promise.all([loadModel(),loadBake(cityWhiteUrl),loadBake(streetWhiteUrl),loadBake(groundWhiteUrl),loadPlaque,loadBake(plaqueGroundUrl),loadLogo]).then(async([gltf,city,street,ground,plaqueGltf,plaqueGround,logoGltf])=>{
   cityTexture=city;streetTexture=street;groundTexture=ground;
   if(disposed)throw Error('Baked mode disposed');model=gltf.scene.clone(true);
   model.traverse(o=>{if(o.isLight)o.visible=false;const id=o.name.replace(/^zone_/,'');if(zones.some(z=>z.id===id)){objects.set(id,o);zoneBounds.set(id,new THREE.Box3().setFromObject(o))}if(['background_city','background_street','background_ground','baked_ground'].includes(o.userData.role))contextObjects.push(o)});
-  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV},logoGltf);logoAsset=null;effects.configure(effectOptions,selected,options.night);if(plaqueGltf){plaque=createProjectPlaque(plaqueGltf,model,scene,request,plaqueGround);effects.attachPlaqueLogo(plaque.root);if(projectInfo)plaque.update(projectInfo)}roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();return api;
+  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV},logoGltf);logoAsset=null;effects.configure(effectOptions,selected,options.night);if(plaqueGltf){plaque=createProjectPlaque(plaqueGltf,model,scene,request,plaqueGround);effects.attachPlaqueLogo(plaque.root);if(projectInfo)plaque.update(projectInfo)}roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();
+  // Warm assembled, selected and assembly variants on this context. Do not claim
+  // the entrance gate or tick any animation clock until the canvas is visible.
+  const completed=await preparation.run([
+   ()=>renderer.compileAsync(scene,camera),
+   ()=>{draw();effects.render()},
+   ()=>{effects.prepareFocus();return renderer.compileAsync(scene,camera)},
+   ()=>{try{draw();effects.render()}finally{effects.finishPreparation(selected)}},
+   ()=>{if(!reduced.matches&&!selected&&!options.running)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true,softenBakedOcclusion:true});return renderer.compileAsync(scene,camera)},
+   ()=>{draw();effects.render()},
+  ]);
+  if(!completed||disposed)throw Error('Baked mode disposed');prepared=true;return api;
  });ready.catch(()=>{loadFailed=true;if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null;}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null;}for(const t of textures)t.dispose();textures.length=0});
  const api={ready,
   setActive(value){active=!!value;canvas.hidden=!active;controls.enabled=active;if(active){for(const marker of markers.values())marker.style.removeProperty('opacity');resize();request()}else stop()},
@@ -208,7 +224,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
    camera.updateProjectionMatrix();controls.update();controls.enableDamping=damping;request();return true;
   },
   capture(){if(!allowed())return Promise.reject(Error('Baked scene must be visible'));draw();effects?.render();return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Capture failed')),'image/png'))},
-  state(){return {plaque:plaque?.state()??null,entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:!!model,selected,taskTarget,paint:paintProgress.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
-  dispose(){if(disposed)return;finishEntrance();disposed=true;active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();plaque?.dispose();if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null}effects?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
+  state(){return {prepared,plaque:plaque?.state()??null,entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:prepared,selected,taskTarget,paint:paintProgress.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
+  dispose(){if(disposed)return;finishEntrance();disposed=true;preparation.dispose();active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();plaque?.dispose();if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null}effects?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
  };return api;
 }
