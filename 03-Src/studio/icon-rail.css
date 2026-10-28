@@ -35,3 +35,5 @@
 @media(max-width:650px){.icon-rail .rail-panel-tools .btn,.icon-rail .rail-panel .project-overview{min-height:44px}}
 
 @media(max-height:720px){.icon-rail .rail-actions.menu{min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;overscroll-behavior:contain}.icon-rail .rail-actions.menu::-webkit-scrollbar{display:none}.icon-rail .rail-bottom{flex-shrink:0}}
+
+.icon-rail .rail-divider{width:28px;height:1px;flex:none;align-self:center;background:var(--line);margin:4px 0}
