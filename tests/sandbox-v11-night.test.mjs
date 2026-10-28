@@ -13,7 +13,7 @@ test('night options cannot overwrite daytime model, logo, water or background se
  const night=normalizeBakedSettings({...day,nightSettings:{brightness:45,bloom:0,windows:false,logo:true,logoColor:'#c000ff',logoBrightness:0,boats:false}});
  assert.deepEqual({...night,nightSettings:day.nightSettings},day);assert.equal(night.nightSettings.bloom,0);assert.equal(night.nightSettings.logoBrightness,0);assert.equal(night.nightSettings.windows,false);
  const restored=normalizeBakedSettings(JSON.parse(JSON.stringify(night)));assert.deepEqual(restored,night);
- const invalid=normalizeBakedSettings({nightSettings:{brightness:Infinity,bloom:900,logoColor:'bad',logoBrightness:-3}});assert.equal(invalid.nightSettings.brightness,100);assert.equal(invalid.nightSettings.bloom,150);assert.equal(invalid.nightSettings.logoColor,'#b9e4ff');assert.equal(invalid.nightSettings.logoBrightness,0);
+ const invalid=normalizeBakedSettings({nightSettings:{brightness:Infinity,bloom:900,logoColor:'bad',logoBrightness:-3}});assert.equal(invalid.nightSettings.brightness,45);assert.equal(invalid.nightSettings.bloom,150);assert.equal(invalid.nightSettings.logoColor,'#85d0ff');assert.equal(invalid.nightSettings.logoBrightness,0);
 });
 
 test('night shader uniforms are private and switch back without replacing source geometry or texture',()=>{
@@ -37,10 +37,10 @@ test('approved night controls preserve explicit zero, classic parameters and com
  const all=normalizeSandboxParameters({baked:{nightSettings:n}});for(const [key,value] of Object.entries(n))assert.equal(all.baked.nightSettings[key],value);
  assert.deepEqual(normalizeSandboxParameters(JSON.parse(JSON.stringify(all))),all);
  const old=normalizeBakedSettings({nightSettings:{brightness:45,bloom:0,flow:false}}).nightSettings;
- assert.equal(old.style,'studio');assert.equal(old.shell,100);assert.equal(old.flowSoftness,100);assert.equal(old.brightness,45);assert.equal(old.bloom,0);assert.equal(old.flow,false);
+ assert.equal(old.style,'studio');assert.equal(old.shell,25);assert.equal(old.flowSoftness,150);assert.equal(old.brightness,45);assert.equal(old.bloom,0);assert.equal(old.flow,false);
  assert.equal(normalizeBakedSettings({nightSettings:{style:'classic'}}).nightSettings.style,'classic');
  const bad=normalizeBakedSettings({nightSettings:{shell:0,core:Infinity,halo:-5,context:900,flowBrightness:NaN}}).nightSettings;
- assert.equal(bad.shell,25);assert.equal(bad.core,100);assert.equal(bad.halo,0);assert.equal(bad.context,200);assert.equal(bad.flowBrightness,100);
+ assert.equal(bad.shell,25);assert.equal(bad.core,120);assert.equal(bad.halo,0);assert.equal(bad.context,200);assert.equal(bad.flowBrightness,185);
 });
 
 test('flow brightness changes only night emission and restores the daytime material state',()=>{

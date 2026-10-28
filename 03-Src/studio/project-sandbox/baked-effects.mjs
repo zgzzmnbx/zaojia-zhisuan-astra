@@ -34,11 +34,12 @@ export function createBakedEffects(renderer,scene,camera,model,request,cityTextu
  const flow=createInformationFlow(flowRoot);flow.setStage(null);
  function configure(next,focus,dark=night){
   night=!!dark;options=normalizeBakedSettings(next);if(night)options={...options,preset:'adjusted'};selected=focus;surfaces.configure(options,night);const n=options.nightSettings;nightBloom.configure(night,n.style==='studio'?110*n.halo/100:n.bloom,{studio:n.style==='studio',flowAmount:n.flow&&n.flowBrightness>0?(n.style==='studio'?110:n.bloom)*n.flowSoftness/100:0});const original=options.preset==='original';
-  renderer.shadowMap.enabled=!original&&options.shadows;renderer.shadowMap.needsUpdate=true;
+  renderer.shadowMap.enabled=night&&!original&&options.shadows;renderer.shadowMap.needsUpdate=true;
   river.configure({...options.waterSettings,enabled:!original&&options.waterSettings.enabled},{dark:night,environment:environment.texture,highlightGain:night?.14:.28});surfaces.setWater(river.state().enabled);
   boats.configure({enabled:river.state().enabled?options.waterSettings.boats:night&&options.nightSettings.boats,night,water:river.state().enabled?river:null,stars:night&&options.nightSettings.boats});
   life.group.visible=river.state().enabled;life.setEnabled(river.state().enabled);life.setNight(night);
-  glow.configure({focus,night,enabled:!original&&options.bloom});uplights.configure({focus,night,enabled:!original&&options.bloom&&options.focusBeam,shadows:options.shadows,settings:options.uplightSettings});
+  glow.configure({focus,night,enabled:!original&&options.bloom});uplights.configure({focus,night,enabled:night&&!original&&options.bloom&&options.focusBeam,shadows:options.shadows,settings:options.uplightSettings});
+  if(!night)uplights.tick(0,true);
   if(original){glow.tick(0,true);uplights.tick(0,true)}
   logo?.configure(night?{...options,groupLogo:options.nightSettings.logo?'white':'hidden',modelBrightness:8*options.nightSettings.brightness/100,logoGlow:{enabled:true,brightness:options.nightSettings.logoBrightness,color:options.nightSettings.logoColor}}:options);flowRoot.visible=!original&&(night?options.nightSettings.flow&&options.nightSettings.flowBrightness>0:options.flow);flow.setNight(night,options.nightSettings.flowBrightness);flow.setPlaying(flowRoot.visible);bloom.invalidate();river.invalidate();
  }
@@ -46,7 +47,11 @@ export function createBakedEffects(renderer,scene,camera,model,request,cityTextu
  return {configure,
   prepareFocus(){
    // Exercise the real four-light shader/shadow/Bloom path once before interaction.
-   configure(options,'import',night);glow.tick(0,true);uplights.tick(0,true);
+   configure(options,'import',night);
+   // Hidden preparation still warms the four-light variant for first night focus.
+   uplights.configure({focus:'import',night,enabled:options.preset!=='original'&&options.bloom&&options.focusBeam,shadows:options.shadows,settings:options.uplightSettings});
+   renderer.shadowMap.enabled=options.preset!=='original'&&options.shadows;
+   glow.tick(0,true);uplights.tick(0,true);
   },
   finishPreparation(focus=null){configure(options,focus,night);glow.tick(0,true);uplights.tick(0,true);bloom.invalidate()},
   attachPlaqueLogo(root){logo?.attachPlaque(root);bloom.invalidate()},

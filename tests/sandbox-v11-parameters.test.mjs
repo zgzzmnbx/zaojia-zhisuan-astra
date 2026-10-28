@@ -6,7 +6,22 @@ import {readVisualMode} from '../03-Src/studio/project-sandbox/visual-mode-setti
 import {readDisplayParameters,sandboxParametersKey} from '../03-Src/studio/project-sandbox/parameter-storage.ts';
 import {normalizeSandboxParameters,saveCurrentParameters,readPersonalParameters} from '../03-Src/studio/project-sandbox/parameter-settings.ts';
 import {readAppearance,appearanceKey} from '../03-Src/studio/appearance.ts';
+import fs from 'node:fs';
+import {DEFAULT_GALAXY_SETTINGS} from '../03-Src/studio/knowledge-articles/galaxy-settings.mjs';
 function storage(run){const values=new Map(),prior=Object.getOwnPropertyDescriptor(globalThis,'localStorage');Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)}});try{run(values)}finally{if(prior)Object.defineProperty(globalThis,'localStorage',prior);else delete globalThis.localStorage}}
+
+test('built-in defaults match the approved current browser rather than its older saved profile',()=>{
+ const captured=JSON.parse(fs.readFileSync(new URL('../00-docs/handoff/2026-10-28-v0.11.21-默认参数快照.json',import.meta.url),'utf8'));
+ assert.deepEqual(normalizeSandboxParameters(null),captured.sandbox);assert.deepEqual(DEFAULT_GALAXY_SETTINGS,captured.galaxy);
+});
+
+test('restoring defaults is a complete independent preview until the explicit save',()=>storage(values=>{
+ const personal=normalizeSandboxParameters({baked:{nightSettings:{shell:90},waterSettings:{enabled:false},zoom:150},visual:{city:{baked:false}},display:{roofLabels:false,autoOrbit:false,infoVisible:false,chatTransparency:0,cardTransparency:20,orbitDelay:60}});
+ assert(saveCurrentParameters(personal));const original=values.get(sandboxParametersKey),restored=normalizeSandboxParameters(null);
+ assert.deepEqual(restored,{version:1,...sandboxParameterDefaults});assert.equal(values.get(sandboxParametersKey),original);
+ restored.baked.waterSettings.enabled=false;assert.equal(normalizeSandboxParameters(null).baked.waterSettings.enabled,true);
+ assert(saveCurrentParameters(normalizeSandboxParameters(null)));assert.deepEqual(readPersonalParameters(),{version:1,...sandboxParameterDefaults});
+}));
 
 test('no personal save loads the exact approved full snapshot without creating a saved record',()=>storage(values=>{
  const all=normalizeSandboxParameters(null);assert.deepEqual(all,{version:1,...sandboxParameterDefaults});

@@ -1,0 +1,20 @@
+{
+  "source": "用户指定的当前内置浏览器，http://127.0.0.1:5189/，2026-10-28；含未保存的当前预览值",
+  "updatePolicy": "固定内置默认值，仅在用户明确要求更新时变更；普通调节不改写此基线",
+  "sandbox": {
+    "version": 1,
+    "baked": {
+      "preset": "adjusted",
+      "waterSettings": {"motion": true,"boats": true,"enabled": true,"quality": "normal","speed": 50,"ripple": 100,"reflection": 30,"bloom": 75},
+      "uplightSettings": {"day": {"brightness": 85,"color": "#f3b344"},"night": {"brightness": 60,"color": "#ffffff"}},
+      "bloom": true,"focusBeam": true,"shadows": false,"flow": true,"groupLogo": "hidden",
+      "logoGlow": {"enabled": true,"brightness": 60,"color": "#b9e4ff"},
+      "nightSettings": {"style": "studio","shell": 25,"core": 120,"halo": 120,"context": 110,"flowBrightness": 185,"flowSoftness": 150,"brightness": 45,"bloom": 110,"windows": true,"flow": true,"logo": true,"boats": true,"logoBrightness": 110,"logoColor": "#85d0ff"},
+      "groundTone": "mist","backgroundColor": "#ffffff","backgroundBrightness": 105,"modelBrightness": 145,"paintStrength": 0,"elevation": 30,"zoom": 110,"distance": 60
+    },
+    "visual": {"mode": "baked","city": {"baked": true},"dof": false,"strength": 0.4},
+    "display": {"infoVisible": true,"cardTransparency": 55,"chatTransparency": 15,"roofLabels": true,"autoOrbit": true,"orbitDelay": 2}
+  },
+  "galaxy": {"layout": "nebula","depth": 1,"rotationSpeed": 1,"zoom": 1.4,"inspectionZoom": 1.1,"nodeSize": 0.8,"nodeOpacity": 1,"labelBrightness": 0.6,"emissive": 0.73,"haloStrength": 1.37,"haloSize": 1.9,"flowSpeed": 1.9,"overviewBrightness": 0.5,"selectedBrightness": 0.85,"lineWidth": 1},
+  "galaxyMotion": "enabled；仍遵循系统减少动效和用户明确选择的原有规则"
+}

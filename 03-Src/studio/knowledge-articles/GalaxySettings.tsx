@@ -29,14 +29,14 @@ export default function GalaxySettings({ value, onChange, saved, categories }: {
     {open && <div ref={panel} id={id} role="dialog" aria-label="星图设置" aria-modal="false" className="galaxy-settings card" onKeyDown={event=>{
       if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close();}
     }}>
-      <header><strong>星图设置</strong><button className="btn btn-ghost btn-square btn-sm" aria-label="关闭星图设置" onClick={close}><X size={16}/></button></header>
+      <header><strong>星图设置</strong><div className="galaxy-settings__actions"><button type="button" className="btn btn-ghost btn-sm" aria-label="恢复星图默认参数" onClick={()=>onChange({...DEFAULT_GALAXY_SETTINGS})}><RotateCcw size={14}/>恢复默认</button><button className="btn btn-ghost btn-square btn-sm" aria-label="关闭星图设置" onClick={close}><X size={16}/></button></div></header>
       <fieldset className="galaxy-settings__layouts"><legend>空间形态</legend><div>{layouts.map(([key,label,hint])=><button key={key} type="button" aria-pressed={value.layout===key} className={`galaxy-layout-option ${value.layout===key?'is-active':''}`} onClick={()=>onChange({...value,layout:key})}><span className={`galaxy-layout-preview is-${key}`} aria-hidden="true">{Array.from({length:18},(_,i)=><i key={i} style={{'--star':i} as React.CSSProperties}/>)}</span><strong>{label}</strong><small>{hint}</small></button>)}</div></fieldset>
       <div className="galaxy-settings__fields">{fields.map(({key,label,percent})=><label key={key} className={key==='flowSpeed'?'galaxy-settings__field is-section':'galaxy-settings__field'}>
         <span>{label}<output>{percent?`${Math.round(value[key]*100)}%`:`${value[key].toFixed(1)}×`}</output></span>
         <input className="range range-xs" type="range" aria-label={label} aria-valuetext={percent?`${Math.round(value[key]*100)}%`:`${value[key].toFixed(1)} 倍`} min={GALAXY_SETTING_LIMITS[key][0]} max={GALAXY_SETTING_LIMITS[key][1]} step={percent ? .01 : .1} value={value[key]} onChange={event=>onChange({...value,[key]:Number(event.target.value)})}/>
       </label>)}</div>
       <details className="galaxy-settings__legend"><summary>分组配色 · {categories.length} 类</summary><ul>{categories.map(category=><li key={category}><span aria-hidden="true" style={{background:galaxyCategoryColor(category)}}/>{category}</li>)}</ul></details>
-      <footer><span role="status">{saved?'自动记住设置':'仅本次生效'}</span><button className="btn btn-ghost btn-sm" onClick={()=>onChange({...DEFAULT_GALAXY_SETTINGS})}><RotateCcw size={14}/>恢复默认</button></footer>
+      <footer><span role="status">{saved?'自动记住设置':'仅本次生效'}</span></footer>
     </div>}
   </>;
 }

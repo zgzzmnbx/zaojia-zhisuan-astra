@@ -270,3 +270,4 @@
 .sandbox-baked-adjustments{border:0;padding:0;margin:0;min-width:0}
 
 .sandbox-parameter-actions{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line);background:var(--paper)}.sandbox-parameter-actions>span{font-size:var(--dws-font-size-12);color:var(--muted);line-height:1.5}.sandbox-parameter-actions .btn{flex-shrink:0}
+.sandbox-parameter-buttons{display:flex;align-items:center;gap:8px;flex-shrink:0}

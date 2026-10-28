@@ -43,8 +43,8 @@ test('galaxy preferences validate corrupt storage, limits and blocked persistenc
 
 test('overview is dimmer by default; brightness and thickness update without replacing flow geometry', () => {
   const link={source:'a',target:'b'};
-  assert.equal(linkStyleTarget(link,null).brightness,.25);
-  assert.equal(linkStyleTarget(link,'a').brightness,1);
+  assert.equal(linkStyleTarget(link,null).brightness,.5);
+  assert.equal(linkStyleTarget(link,'a').brightness,.85);
   const options={...DEFAULT_GALAXY_SETTINGS,overviewBrightness:.6,selectedBrightness:0,lineWidth:2};
   const unrelated=linkStyleTarget(link,'c',options);
   assert.equal(unrelated.flow,0);

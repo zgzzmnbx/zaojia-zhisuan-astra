@@ -570,6 +570,7 @@
 .galaxy-settings header, .galaxy-settings footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; }
 .galaxy-settings header { border-bottom:1px solid #7097c826; }
 .galaxy-settings header strong { font-size:14px; }
+.galaxy-settings__actions { display:flex; align-items:center; gap:4px; }
 .galaxy-settings__fields { padding:14px 18px 4px; }
 .galaxy-settings__field { display:block; margin-bottom:16px; }
 .galaxy-settings__field.is-section { border-top:1px solid #7097c826; padding-top:16px; }
