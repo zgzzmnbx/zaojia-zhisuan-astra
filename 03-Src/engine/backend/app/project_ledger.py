@@ -6,7 +6,7 @@ import re
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 from uuid import uuid4
 
 
@@ -118,23 +118,36 @@ def _run_status(summary: dict[str, Any], fallback: str = "processing") -> str:
     return fallback if fallback in PROJECT_STATUSES else "processing"
 
 
-def _has_existing_artifact(item: dict[str, Any], artifact_type: str) -> bool:
+def _has_existing_artifact(
+    item: dict[str, Any], artifact_type: str,
+    artifact_exists: Callable[[dict[str, Any]], bool] | None = None,
+) -> bool:
     return any(
-        artifact.get("type") == artifact_type and bool(artifact.get("exists"))
+        artifact.get("type", artifact.get("artifact_type")) == artifact_type
+        and (artifact_exists(artifact) if artifact_exists else bool(artifact.get("exists")))
         for artifact in item.get("artifacts", [])
     )
 
 
-def _lifecycle_stage_completed(item: dict[str, Any], stage: str) -> bool:
+def _lifecycle_stage_completed(
+    item: dict[str, Any], stage: str,
+    artifact_exists: Callable[[dict[str, Any]], bool] | None = None,
+) -> bool:
     if item.get("record_type") != "project":
         return False
+    if stage == "entered":
+        return True
     matched = (
         _int(item.get("input_rows")) > 0
         and _int(item.get("matched_rows")) + _int(item.get("review_rows")) > 0
         and str(item.get("status")) in {"pending_review", "completed", "returned"}
     )
+    if stage == "matched":
+        return matched
     warned = matched and str(item.get("warning_status")) == "completed"
-    reported = warned and _has_existing_artifact(item, "word")
+    if stage == "warned":
+        return warned
+    reported = warned and _has_existing_artifact(item, "word", artifact_exists)
     reviewed = (
         reported
         and str(item.get("status")) == "completed"
@@ -760,9 +773,23 @@ class ProjectLedger:
             raise ProjectArtifactNotFoundError("成果文件已失效")
         return path
 
-    def _public_artifact(self, row: sqlite3.Row | dict[str, Any]) -> dict[str, Any]:
-        reference = str(row["relative_runtime_reference"])
-        exists = self._artifact_path(reference).is_file()
+    def _artifact_checker(self) -> Callable[[dict[str, Any]], bool]:
+        # Cache only within one read: deletion must be visible on the next request.
+        checked: dict[str, bool] = {}
+
+        def exists(row: dict[str, Any]) -> bool:
+            reference = str(row["relative_runtime_reference"])
+            if reference not in checked:
+                checked[reference] = self._artifact_path(reference).is_file()
+            return checked[reference]
+
+        return exists
+
+    def _public_artifact(
+        self, row: sqlite3.Row | dict[str, Any], *, exists: bool | None = None,
+    ) -> dict[str, Any]:
+        if exists is None:
+            exists = self._artifact_path(str(row["relative_runtime_reference"])).is_file()
         project_id = str(row["project_id"] or "")
         artifact_id = str(row["artifact_id"])
         return {
@@ -891,7 +918,7 @@ class ProjectLedger:
             },
         }
 
-    def _raw_entries(self) -> list[dict[str, Any]]:
+    def _raw_entries(self, *, check_artifacts: bool = True) -> list[dict[str, Any]]:
         with self._connect() as connection:
             projects = connection.execute(
                 """
@@ -912,12 +939,18 @@ class ProjectLedger:
                 """
             ).fetchall()
             artifact_rows = connection.execute(
-                "SELECT * FROM project_artifacts ORDER BY updated_at DESC"
+                """
+                SELECT a.* FROM project_artifacts a
+                LEFT JOIN projects p ON p.project_id=a.project_id
+                LEFT JOIN project_runs r ON r.run_id=a.run_id
+                WHERE p.archived=0 OR (r.run_id IS NOT NULL AND r.project_id IS NULL)
+                ORDER BY a.updated_at DESC
+                """
             ).fetchall()
         artifacts_by_project: dict[str, list[dict[str, Any]]] = {}
         artifacts_by_run: dict[str, list[dict[str, Any]]] = {}
         for row in artifact_rows:
-            public = self._public_artifact(row)
+            public = self._public_artifact(row) if check_artifacts else dict(row)
             project_key = str(row["project_id"] or "")
             artifacts_by_project.setdefault(project_key, []).append(public)
             artifacts_by_run.setdefault(str(row["run_id"]), []).append(public)
@@ -1010,6 +1043,8 @@ class ProjectLedger:
     def filtered_entries(
         self,
         *,
+        entries: list[dict[str, Any]] | None = None,
+        artifact_exists: Callable[[dict[str, Any]], bool] | None = None,
         date_from: str = "",
         date_to: str = "",
         skill_id: str = "",
@@ -1023,8 +1058,8 @@ class ProjectLedger:
         start = self._date_value(f"{date_from}T00:00:00") if date_from else None
         end = self._date_value(f"{date_to}T23:59:59.999999") if date_to else None
         query = keyword.strip().casefold()
-        entries: list[dict[str, Any]] = []
-        for item in self._raw_entries():
+        filtered: list[dict[str, Any]] = []
+        for item in self._raw_entries() if entries is None else entries:
             created_at = self._date_value(str(item["created_at"]))
             if start and (not created_at or created_at.replace(tzinfo=None) < start):
                 continue
@@ -1052,10 +1087,10 @@ class ProjectLedger:
                 continue
             if quality == "review" and int(item["review_rows"]) <= 0:
                 continue
-            if lifecycle_stage and not _lifecycle_stage_completed(item, lifecycle_stage):
+            if lifecycle_stage and not _lifecycle_stage_completed(item, lifecycle_stage, artifact_exists):
                 continue
-            entries.append(item)
-        return entries
+            filtered.append(item)
+        return filtered
 
     def list_projects(
         self,
@@ -1066,7 +1101,11 @@ class ProjectLedger:
         sort_order: str = "desc",
         **filters: str,
     ) -> dict[str, Any]:
-        entries = self.filtered_entries(**filters)
+        artifact_exists = self._artifact_checker()
+        entries = self.filtered_entries(
+            entries=self._raw_entries(check_artifacts=False),
+            artifact_exists=artifact_exists, **filters,
+        )
         allowed_sort = {
             "updated_at",
             "created_at",
@@ -1089,8 +1128,14 @@ class ProjectLedger:
         current_page = max(1, int(page))
         total = len(entries)
         start = (current_page - 1) * size
+        page_items = entries[start : start + size]
+        for item in page_items:
+            item["artifacts"] = [
+                self._public_artifact(row, exists=artifact_exists(row))
+                for row in item["artifacts"]
+            ]
         return {
-            "items": entries[start : start + size],
+            "items": page_items,
             "total": total,
             "page": current_page,
             "page_size": size,
@@ -1098,7 +1143,11 @@ class ProjectLedger:
         }
 
     def dashboard(self, **filters: str) -> dict[str, Any]:
-        entries = self.filtered_entries(**filters)
+        all_entries = self._raw_entries(check_artifacts=False)
+        artifact_exists = self._artifact_checker()
+        entries = self.filtered_entries(
+            entries=all_entries, artifact_exists=artifact_exists, **filters,
+        )
         projects = [item for item in entries if item["record_type"] == "project"]
         now = datetime.now().astimezone()
         month_key = now.strftime("%Y-%m")
@@ -1173,7 +1222,7 @@ class ProjectLedger:
         previous_count = len(projects)
         for index, (stage, label) in enumerate(LIFECYCLE_STAGES):
             count = sum(
-                1 for item in projects if _lifecycle_stage_completed(item, stage)
+                1 for item in projects if _lifecycle_stage_completed(item, stage, artifact_exists)
             )
             lifecycle_funnel.append(
                 {
@@ -1222,7 +1271,7 @@ class ProjectLedger:
                 "skills": sorted(
                     {
                         (item["skill"]["id"], item["skill"]["version"])
-                        for item in self._raw_entries()
+                        for item in all_entries
                         if item["skill"]["id"]
                     }
                 ),

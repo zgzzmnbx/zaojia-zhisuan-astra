@@ -15,6 +15,7 @@ export function mountVisualSandbox(host,markers,context,onSelect,onReady,onError
   setOptions(next){options={...options,...next};apply()},
   setProjectInfo:value=>baked.setProjectInfo(value),
   setPaint:input=>baked.setPaint(input),select:id=>baked.select(id),home:()=>baked.home(),focusTask:id=>baked.focusTask(id),
+  setTask:input=>baked.setTask(input),
   focusProjectInfo:()=>baked.focusProjectInfo(),pauseOrbit:()=>baked.pauseOrbit(),zoom:factor=>baked.zoom(factor),refresh:()=>baked.refresh(),
   state:()=>({...baked.state(),visual:{current:'baked',desired:'baked',error:failed,settings}}),
   getViewPose:()=>baked.getViewPose(),setViewPose:p=>baked.setViewPose(p),capture:()=>baked.capture(),

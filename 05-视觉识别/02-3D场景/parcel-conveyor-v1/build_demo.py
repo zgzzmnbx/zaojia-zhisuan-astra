@@ -3,6 +3,7 @@ import bpy, math, json, pathlib, bisect, sys
 from mathutils import Vector
 ROOT=pathlib.Path(__file__).resolve().parents[3]
 OUT=pathlib.Path(__file__).resolve().parent
+FORMAL='--formal-asset' in sys.argv
 TEMP=ROOT/'Codex-Temp'/'parcel-conveyor-v1'; TEMP.mkdir(parents=True,exist_ok=True)
 route=json.loads((ROOT/'03-Src/studio/project-sandbox/pipeline-route.json').read_text(encoding='utf-8'))
 # User-approved order; routes are private to this demo.
@@ -83,8 +84,9 @@ for n,(points,ds) in enumerate(zip(paths,distances)):
  ribbon(f'Conveyor {n+1} deck',points,.65,0,-.045,belt)
  for k in range(math.ceil(ds[-1]/.36)):
   p,t=sample(points,ds,min(k*.36,ds[-1]));o=box('Belt slat',p,(.59,.009,.009),silver,0);o.rotation_euler[2]=math.atan2(t.y,t.x)-math.pi/2
- for k in range(math.ceil(ds[-1]/2.3)):
-  p,t=sample(points,ds,min(k*2.3+.45,ds[-1]));base=.2
+ support_spacing=6.5 if FORMAL else 2.3
+ for k in range(math.ceil(ds[-1]/support_spacing)):
+  p,t=sample(points,ds,min(k*support_spacing+.45,ds[-1]));base=.2
   cyl('Conveyor support',(*p[:2],(p.z-.12+base)/2),.045,p.z-.12-base,silver)
   box('Support foot',(*p[:2],base),(.27,.27,.065),white,.018)
 # A small scan portal serves as the building receiving dock.
@@ -141,8 +143,10 @@ for mat in [white,blue,belt,silver,ink,light,paper]:
  bpy.context.view_layer.objects.active=group[0];bpy.ops.object.join();group[0].name='Conveyor_'+mat.name.split(' |')[0]
 scene.frame_set(1)
 manifest={'version':'1.0.4','companionOffset':layout['companionOffset'],'fps':fps,'duration':clock,'stations':stations,'paths':[[[p.x,p.z,-p.y] for p in points] for points in paths],'timeline':timeline,'asset':'conveyor-parcel.glb','meaning':'Illustrative demonstration only; not real business progress'}
-(OUT/'timeline.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
-bpy.ops.export_scene.gltf(filepath=str(OUT/'conveyor-parcel.glb'),export_format='GLB',export_animations=True,export_force_sampling=True,export_frame_range=True)
+if not FORMAL:(OUT/'timeline.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
+bpy.ops.export_scene.gltf(filepath=str(OUT/('conveyor-parcel-formal.glb' if FORMAL else 'conveyor-parcel.glb')),export_format='GLB',export_animations=True,export_force_sampling=True,export_frame_range=True)
+if FORMAL:
+ print('PARCEL_FORMAL_COMPLETE',json.dumps({'support_spacing':6.5,'meshes':len([o for o in scene.objects if o.type=='MESH'])}));sys.exit(0)
 # Editable animation project and studio render. Only this new file is written.
 world_bg=bpy.data.worlds.new('Soft white studio');scene.world=world_bg;world_bg.use_nodes=True
 bg=next(n for n in world_bg.node_tree.nodes if n.type=='BACKGROUND');bg.inputs['Color'].default_value=(.8,.87,1,1);bg.inputs['Strength'].default_value=.55

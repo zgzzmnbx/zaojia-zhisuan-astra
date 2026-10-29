@@ -8,7 +8,7 @@ const overview={position:[32,31,40],target:[0,0,-2],projection:'perspective',fov
 const detail={position:[-3.6,4.8,13.3],target:[-6.8,1.3,7.1],projection:'perspective',fov:38,zoom:1};
 const state=window.__parcelControls={ready:false,error:null,paused:media.matches,allowMotion:false,time:0,seek:0,seekRevision:0,speed:1,show:true,solo:false,follow:false,frames:0,cameraMode:'overview',cameraRevision:0,cameraPose:overview,weather:'clear',weatherStrength:1,sun:true,sunStrength:.8};
 const owner=createFrozenModelOwner();let ready=false;
-const settings=normalizeBakedSettings({flow:false,groupLogo:'hidden',waterSettings:{enabled:true,motion:false,boats:false},bloom:false,focusBeam:false});
+const settings=normalizeBakedSettings({flow:false,groupLogo:'hidden',waterSettings:{enabled:true,motion:false,boats:false},bloom:false,focusBeam:false,conveyor:{visible:false,continuous:false,weather:'clear',weatherStrength:1}});
 const api=createBakedWorkspaceMode($('scene'),new Map(),{loadModel:owner.load,onSelect:()=>{},onOrbitStop:()=>{},onStatus:s=>$('status').textContent=s,onError:s=>$('status').textContent=s,fpsElement:$('fps'),entranceGate:{claim:()=>false}});
 function view(mode,pose){state.cameraMode=mode;state.cameraRevision++;if(pose)state.cameraPose=pose;state.follow=mode==='follow';$('follow').checked=state.follow;$('first').classList.toggle('btn-primary',mode==='first');$('first').setAttribute('aria-pressed',String(mode==='first'));api.refresh()}
 function seekTo(t){state.seek=t;state.seekRevision++;state.cameraRevision++}

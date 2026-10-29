@@ -406,6 +406,62 @@ def test_artifact_existence_is_refreshed_and_missing_download_fails_closed(tmp_p
         ledger.get_artifact_path(project_id, word["artifact_id"])
 
 
+def test_overview_checks_only_current_page_and_required_reports(tmp_path, monkeypatch):
+    ledger = make_ledger(tmp_path)
+    for index in range(12):
+        relation = record_project(
+            ledger, job_id=f"job-{index}", project_name=f"项目{index:02}",
+            state=make_state(warning_executed=True),
+        )
+        if index >= 10:
+            with ledger._connect() as connection:
+                connection.execute(
+                    "UPDATE projects SET archived=1 WHERE project_id=?",
+                    (relation["project_id"],),
+                )
+    checked = []
+    original = ledger._artifact_path
+
+    def track(reference):
+        checked.append(reference)
+        return original(reference)
+
+    monkeypatch.setattr(ledger, "_artifact_path", track)
+    history = ledger.list_projects(page=2, page_size=3, sort_by="project_name", sort_order="asc")
+    assert history["total"] == 10
+    assert [item["project_name"] for item in history["items"]] == ["项目03", "项目04", "项目05"]
+    assert len(checked) == 6
+    assert all(reference.startswith(("job-3/", "job-4/", "job-5/")) for reference in checked)
+    assert all(artifact["exists"] for item in history["items"] for artifact in item["artifacts"])
+    assert all("relative_runtime_reference" not in artifact for item in history["items"] for artifact in item["artifacts"])
+
+    checked.clear()
+    dashboard = ledger.dashboard(lifecycle_stage="reported")
+    assert dashboard["kpis"]["total_projects"] == 10
+    assert [item["count"] for item in dashboard["lifecycle_funnel"]] == [10] * 5
+    assert len(checked) == 10  # Filter and funnel share this request's report checks.
+    assert all(reference.endswith("report.docx") for reference in checked)
+    assert not any(reference.startswith(("job-10/", "job-11/")) for reference in checked)
+
+
+def test_overview_refreshes_missing_reports_without_changing_counts_or_links(tmp_path):
+    ledger = make_ledger(tmp_path)
+    relation = record_project(ledger, job_id="job-1", state=make_state(warning_executed=True))
+    record_project(ledger, job_id="job-2", state=make_state(warning_executed=True))
+    assert ledger.dashboard()["lifecycle_funnel"][-1]["count"] == 2
+    first = ledger.list_projects(keyword=str(relation["project_id"]))["items"][0]
+    report = next(item for item in first["artifacts"] if item["type"] == "word")
+    assert report["exists"] and report["download_url"]
+    (ledger.runtime_root / "job-1" / "report.docx").unlink()
+    assert ledger.dashboard()["lifecycle_funnel"][-1]["count"] == 1
+    assert ledger.list_projects(lifecycle_stage="reported")["total"] == 1
+    refreshed = ledger.list_projects(keyword=str(relation["project_id"]))["items"][0]
+    report = next(item for item in refreshed["artifacts"] if item["type"] == "word")
+    assert report["exists"] is False and report["download_url"] == ""
+    with pytest.raises(ProjectArtifactNotFoundError):
+        ledger.get_artifact_path(str(relation["project_id"]), report["artifact_id"])
+
+
 def test_malicious_project_and_artifact_identifiers_fail_closed(tmp_path, monkeypatch):
     runtime = tmp_path / "runtime"
     monkeypatch.setattr(main_module, "RUNTIME_DIR", runtime)

@@ -55,8 +55,10 @@ export default function ProjectSandbox(props:Props){
  const [ready,setReady]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[selected,setSelected]=useState<ZoneId|null>(null),[orbit,setOrbit]=useState(false);
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [review,setReview]=useState<{job:string;tasks:ReviewProgressTask[]|null;error:string}>({job:'',tasks:null,error:''});
- const [activityRecord,setActivityRecord]=useState<{scope:string;value:TaskActivity|null}>({scope:props.context,value:null});
- const activity=activityRecord.scope===props.context?activityRecord.value:null;
+ const job=props.input.project?.jobId===props.input.result?.job_id?props.input.result?.job_id||'':'';
+ const activityScope=props.context+':'+job;
+ const [activityRecord,setActivityRecord]=useState<{scope:string;value:TaskActivity|null}>({scope:activityScope,value:null});
+ const activity=activityRecord.scope===activityScope?activityRecord.value:null;
  const [taskFocus,setTaskFocus]=useState<ZoneId|null>(null),focusedActivity=useRef('');
  const controlsRef=useRef<HTMLDivElement>(null),controlsButton=useRef<HTMLButtonElement>(null);
  const [controlsOpen,setControlsOpen]=useState(false);
@@ -66,8 +68,7 @@ export default function ProjectSandbox(props:Props){
  const idleOrbit=useIdleOrbit(props.autoOrbit,props.orbitDelay,!ready||!props.active||!pageVisible||reduced||!!props.input.busy||props.input.qaRunning||!!selected||!!taskFocus||menu||controlsOpen||plaqueFocused,()=>{setOrbit(false);scene.current?.pauseOrbit()});
  const orbiting=orbit||idleOrbit;
  useEffect(()=>{const update=()=>setPageVisible(!document.hidden);document.addEventListener('visibilitychange',update);return()=>document.removeEventListener('visibilitychange',update)},[]);
- useEffect(()=>{setActivityRecord(previous=>({scope:props.context,value:nextTaskActivity(previous.scope===props.context?previous.value:null,{ready:props.input.ready,busy:props.input.busy,qaRunning:props.input.qaRunning,error:props.input.operationError,cancelVersion:props.input.cancelVersion})}))},[props.context,props.input.ready,props.input.busy,props.input.qaRunning,props.input.operationError,props.input.cancelVersion]);
- const job=props.input.project?.jobId===props.input.result?.job_id?props.input.result?.job_id||'':'';
+ useEffect(()=>{setActivityRecord(previous=>({scope:activityScope,value:nextTaskActivity(previous.scope===activityScope?previous.value:null,{ready:props.input.ready,busy:props.input.busy,qaRunning:props.input.qaRunning,error:props.input.operationError,cancelVersion:props.input.cancelVersion})}))},[activityScope,props.input.ready,props.input.busy,props.input.qaRunning,props.input.operationError,props.input.cancelVersion]);
  useEffect(()=>{const m=matchMedia('(prefers-reduced-motion: reduce)'),update=()=>setReduced(m.matches);m.addEventListener('change',update);update();return()=>m.removeEventListener('change',update)},[]);
  useEffect(()=>{
   const el=host.current!;setReady(false);setError('');let api:ReturnType<typeof mountSandbox>|null=null;
@@ -76,6 +77,7 @@ export default function ProjectSandbox(props:Props){
  },[props.context,retry]);
  useEffect(()=>{scene.current?.setVisualSettings(visualSettings)},[visualSettings,props.context,retry]);
  useEffect(()=>{scene.current?.setOptions({bakedSettings,night:props.dark,roofLabels:props.roofLabels,compact:props.variant==='card',active:props.active,orbit:orbiting&&!reduced,orbitSweep:idleOrbit&&props.orbitDelay===0&&!orbit,running:runningZone(props.input.busy,props.input.qaRunning)})},[bakedSettings,props.dark,props.roofLabels,props.context,props.variant,props.chatCollapsed,props.active,orbiting,props.orbitDelay,idleOrbit,orbit,reduced,props.input.busy,props.input.qaRunning,retry]);
+ useEffect(()=>{const running=props.input.ready?runningZone(props.input.busy,props.input.qaRunning):null;scene.current?.setTask({scope:props.context,job,ready:props.input.ready,activity,running})},[props.context,job,activity,props.input.ready,props.input.busy,props.input.qaRunning,retry]);
  useEffect(()=>{setSelected(null);setTaskFocus(null);setMenu(false);setPlaqueFocused(false);},[props.variant,props.context]);
  useEffect(()=>{scene.current?.select(selected)},[selected,retry]);
  useEffect(()=>{

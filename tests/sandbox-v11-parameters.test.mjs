@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {sandboxParameterDefaults} from '../03-Src/studio/project-sandbox/defaults.ts';
-import {readBakedSettings} from '../03-Src/studio/project-sandbox/baked-settings.ts';
+import {normalizeBakedSettings,readBakedSettings} from '../03-Src/studio/project-sandbox/baked-settings.ts';
 import {readVisualMode} from '../03-Src/studio/project-sandbox/visual-mode-settings.ts';
 import {readDisplayParameters,sandboxParametersKey} from '../03-Src/studio/project-sandbox/parameter-storage.ts';
 import {normalizeSandboxParameters,saveCurrentParameters,readPersonalParameters} from '../03-Src/studio/project-sandbox/parameter-settings.ts';
@@ -12,7 +12,19 @@ function storage(run){const values=new Map(),prior=Object.getOwnPropertyDescript
 
 test('built-in defaults match the approved current browser rather than its older saved profile',()=>{
  const captured=JSON.parse(fs.readFileSync(new URL('../00-docs/handoff/2026-10-28-v0.11.21-默认参数快照.json',import.meta.url),'utf8'));
- assert.deepEqual(normalizeSandboxParameters(null),captured.sandbox);assert.deepEqual(DEFAULT_GALAXY_SETTINGS,{...captured.galaxy,unselectedOpacity:.5,unrelatedLinkBrightness:.05});
+ const current=normalizeSandboxParameters(null),{conveyor,...priorBaked}=current.baked;
+ assert.deepEqual({...current,baked:priorBaked},captured.sandbox);
+ assert.deepEqual(conveyor,{visible:true,continuous:true,style:'pale-blue',nightBrightness:100,weather:'clear',weatherStrength:1});
+ assert.deepEqual(DEFAULT_GALAXY_SETTINGS,{...captured.galaxy,unselectedOpacity:.5,unrelatedLinkBrightness:.05});
+});
+
+test('conveyor looks and night brightness extend older saved settings without overwriting them',()=>{
+ const old=normalizeBakedSettings({conveyor:{visible:false,continuous:false,weather:'snow',weatherStrength:.5}});
+ assert.equal(old.conveyor.visible,false);assert.equal(old.conveyor.continuous,false);
+ assert.equal(old.conveyor.style,'pale-blue');assert.equal(old.conveyor.nightBrightness,100);
+ assert.equal(normalizeBakedSettings({conveyor:{style:'building-white',nightBrightness:0}}).conveyor.nightBrightness,0);
+ assert.equal(normalizeBakedSettings({conveyor:{style:'building-blue-edge',nightBrightness:250}}).conveyor.nightBrightness,200);
+ assert.equal(normalizeBakedSettings({conveyor:{style:'invalid',nightBrightness:-2}}).conveyor.style,'pale-blue');
 });
 
 test('restoring defaults is a complete independent preview until the explicit save',()=>storage(values=>{

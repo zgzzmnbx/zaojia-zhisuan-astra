@@ -1,8 +1,9 @@
 import * as THREE from 'three';
-import route from './pipeline-route.json' with {type:'json'};
+import defaultRoute from './pipeline-route.json' with {type:'json'};
 
-function roundedLeg(points){
+function roundedLeg(points,preRounded=false){
  const curve=new THREE.CurvePath(),vectors=points.map(p=>new THREE.Vector3(...p));
+ if(preRounded){for(let i=1;i<vectors.length;i++)curve.add(new THREE.LineCurve3(vectors[i-1],vectors[i]));return curve;}
  let previous=vectors[0];
  for(let i=1;i<vectors.length-1;i++){
   const p=vectors[i],before=vectors[i-1],after=vectors[i+1];
@@ -15,10 +16,10 @@ function roundedLeg(points){
  curve.add(new THREE.LineCurve3(previous,vectors.at(-1)));return curve;
 }
 
-export function createInformationFlow(scene){
+export function createInformationFlow(scene,route=defaultRoute){
  const group=new THREE.Group();group.name='Illustrative information pipeline';
  const curve=new THREE.CurvePath(),stopDistances=[0];
- for(const points of route.legs){const leg=roundedLeg(points);curve.add(leg);stopDistances.push(curve.getLength());}
+ for(const points of route.legs){const leg=roundedLeg(points,!!route.preRounded);curve.add(leg);stopDistances.push(curve.getLength());}
  curve.arcLengthDivisions=3000;curve.updateArcLengths();
  const length=curve.getLength();
  const shell=new THREE.Mesh(new THREE.TubeGeometry(curve,1400,.135,10,false),new THREE.MeshPhysicalMaterial({color:0xd5e9f5,roughness:.25,metalness:.05,transparent:true,opacity:.33,depthWrite:false}));

@@ -4,7 +4,7 @@ import {FullScreenQuad} from 'three/addons/postprocessing/Pass.js';
 import {createNightBloomMask} from './night-bloom-mask.mjs';
 
 /** Luminous night materials only. Off releases all targets; daylight never enters this pass. */
-export function createNightBloom(renderer,scene,initialCamera,flowRoot){
+export function createNightBloom(renderer,scene,initialCamera,flowRoot,excluded=[]){
  let camera=initialCamera,target=null,bloom=null,quad=null,enabled=false,strength=0,flowStrength=0,studio=false,draws=0,extractions=0;
  const mask=flowRoot?createNightBloomMask(scene,flowRoot):null;
  function release(){target?.dispose();bloom?.dispose();quad?.material.dispose();quad?.dispose();target=bloom=quad=null}
@@ -17,12 +17,13 @@ export function createNightBloom(renderer,scene,initialCamera,flowRoot){
    }
    const previous=renderer.getRenderTarget(),auto=renderer.autoClear,color=renderer.getClearColor(new Color()),alpha=renderer.getClearAlpha(),shadow=renderer.shadowMap.autoUpdate;
    const pass=(gain,draw)=>{if(gain<=0)return;renderer.autoClear=true;renderer.setRenderTarget(target);draw();bloom.strength=.65*gain;bloom.render(renderer,null,target,0,false);renderer.setRenderTarget(previous);renderer.autoClear=false;quad.render(renderer);extractions++};
-   try{renderer.shadowMap.autoUpdate=false;quad.material.uniforms.studio.value=studio?1:0;quad.material.blending=studio?CustomBlending:NormalBlending;quad.material.blendSrc=OneFactor;quad.material.blendDst=OneMinusSrcColorFactor;
+   const visibility=excluded.map(object=>[object,object.visible]);
+   try{for(const [object] of visibility)object.visible=false;renderer.shadowMap.autoUpdate=false;quad.material.uniforms.studio.value=studio?1:0;quad.material.blending=studio?CustomBlending:NormalBlending;quad.material.blendSrc=OneFactor;quad.material.blendDst=OneMinusSrcColorFactor;
     if(!mask||!flowRoot.visible||Math.abs(strength-flowStrength)<1e-6)pass(strength,()=>renderer.render(scene,camera));
     else{pass(strength,()=>mask.withoutFlow(()=>renderer.render(scene,camera)));pass(flowStrength,()=>mask.flowOnly(()=>renderer.render(scene,camera)))}
     draws++;
    }
-   finally{renderer.setRenderTarget(previous);renderer.autoClear=auto;renderer.setClearColor(color,alpha);renderer.shadowMap.autoUpdate=shadow}
+   finally{for(const [object,visible] of visibility)object.visible=visible;renderer.setRenderTarget(previous);renderer.autoClear=auto;renderer.setClearColor(color,alpha);renderer.shadowMap.autoUpdate=shadow}
   },
   state:()=>({enabled,allocated:!!target,draws,extractions,studio,strength,flowStrength,resolution:target?[target.width,target.height]:null}),dispose(){release();mask?.dispose()},
  };

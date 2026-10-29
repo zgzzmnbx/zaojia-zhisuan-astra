@@ -13,6 +13,8 @@ import streetWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/str
 import groundWhiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/ground-white.png?url';
 import streetUV from '../../../05-视觉识别/02-3D场景/sandbox-v11/street-white-v1/street-uv.json';
 import * as THREE from 'three';
+import {createConveyorScene} from './conveyor-scene.mjs';
+import {createConveyorWeather} from './conveyor-weather.mjs';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {MiniatureDOF} from '../../studies/sandbox-v11/miniature-dof.js';
 import {zones} from './zones.js';
@@ -52,6 +54,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  let options={active:true,compact:false,roofLabels:true,orbit:false,running:null},settings={city:true,dof:true,strength:.4};
  let entrance=null,entranceChecked=false,plaque=null,plaqueAsset=null,logoAsset=null,projectInfo=null;
  let miniature=null,dofFailed=false,effects=null,effectOptions=normalizeBakedSettings(null);
+ const conveyor=createConveyorScene(scene,request,onStatus),weather=createConveyorWeather(scene);
  renderer.debug.onShaderError=()=>{throw Error('V11 shader compilation failed')};
  try{miniature=new MiniatureDOF(renderer,{mobile:false})}catch{dofFailed=true;onStatus('V11 景深不可用，当前使用清晰烘焙画面。')}
  const allowed=()=>active&&inView&&!document.hidden&&!disposed&&!!model;
@@ -92,11 +95,12 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   if(sweep){sweepPhase+=delta*.12;const angle=(1-Math.cos(sweepPhase))*Math.PI/12;camera.position.sub(controls.target).applyAxisAngle(new THREE.Vector3(0,1,0),-(angle-sweepAngle)).add(controls.target);sweepAngle=angle;}else {sweepPhase=0;sweepAngle=0;}
   controls.autoRotate=options.orbit&&!options.orbitSweep&&!reduced.matches&&!flight&&!building;const moving=controls.update(delta)||sweep;camera.updateMatrixWorld();
   const painting=paintProgress.tick(delta*1000,reduced.matches);
+  const conveyorMoving=conveyor.tick(delta,reduced.matches),weatherMoving=weather.tick(delta,reduced.matches);
   const effectPending=effects?.tick(time,delta,reduced.matches,paintProgress.state());
   for(const [id,state] of Object.entries(paintProgress.state())){const marker=markers.get(id);if(marker){marker.style.setProperty('--sandbox-task-fill',String(state.value));marker.dataset.paintPhase=state.phase}}
   const pending=project(time,moving||!!flight||controls.autoRotate||!!down);
   if(wasBuilding)for(const [id,marker] of markers){if(building){const alpha=entrance.label(id);marker.style.setProperty('opacity',String(alpha),'important');if(alpha<1)marker.inert=true}else marker.style.removeProperty('opacity')}
-  try{draw();effects?.render()}catch{active=false;stop();onError('V11 画面渲染失败，请重试或使用经典界面。');return}frames++;fps.frame(time);if(building||effectPending||painting||pending||moving||flight||controls.autoRotate)request();if(!raf)fps.idle();
+  try{draw();effects?.render()}catch{active=false;stop();onError('V11 画面渲染失败，请重试或使用经典界面。');return}frames++;fps.frame(time);if(building||effectPending||conveyorMoving||weatherMoving||painting||pending||moving||flight||controls.autoRotate)request();if(!raf)fps.idle();
  }
  // Projection below uses the same marker layout/motion algorithms as main.
  function project(time,moving){
@@ -185,11 +189,11 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  const loadPlaque=new GLTFLoader(plaqueManager).loadAsync(plaqueUrl).then(value=>{if(disposed||loadFailed){releaseFrozenModel(value.scene);return null}plaqueAsset=value;return value}).catch(()=>{if(!disposed)onStatus('项目信息碑暂时无法加载，可继续使用项目卡片。');return null});
  const logoManager=new THREE.LoadingManager();logoManager.setURLModifier(url=>url.startsWith('blob:')?logoLightUrl:url);
  const loadLogo=new GLTFLoader(logoManager).loadAsync(logoUrl).then(value=>{if(disposed||loadFailed){releaseFrozenModel(value.scene);return null}logoAsset=value;return value}).catch(()=>{if(!disposed)onStatus('集团 Logo 暂时无法加载，沙盘其余功能可继续使用。');return null});
- const ready=Promise.all([loadModel(),loadBake(cityWhiteUrl),loadBake(streetWhiteUrl),loadBake(groundWhiteUrl),loadPlaque,loadBake(plaqueGroundUrl),loadLogo]).then(async([gltf,city,street,ground,plaqueGltf,plaqueGround,logoGltf])=>{
+ const ready=Promise.all([loadModel(),loadBake(cityWhiteUrl),loadBake(streetWhiteUrl),loadBake(groundWhiteUrl),loadPlaque,loadBake(plaqueGroundUrl),loadLogo,conveyor.ready]).then(async([gltf,city,street,ground,plaqueGltf,plaqueGround,logoGltf])=>{
   cityTexture=city;streetTexture=street;groundTexture=ground;
   if(disposed)throw Error('Baked mode disposed');model=gltf.scene.clone(true);
   model.traverse(o=>{if(o.isLight)o.visible=false;const id=o.name.replace(/^zone_/,'');if(zones.some(z=>z.id===id)){objects.set(id,o);zoneBounds.set(id,new THREE.Box3().setFromObject(o))}if(['background_city','background_street','background_ground','baked_ground'].includes(o.userData.role))contextObjects.push(o)});
-  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV},logoGltf);logoAsset=null;effects.configure(effectOptions,selected,options.night);if(plaqueGltf){plaque=createProjectPlaque(plaqueGltf,model,scene,request,plaqueGround);effects.attachPlaqueLogo(plaque.root);if(projectInfo)plaque.update(projectInfo)}roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();
+  scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV},logoGltf,[weather.group]);logoAsset=null;effects.configure(effectOptions,selected,options.night);if(plaqueGltf){plaque=createProjectPlaque(plaqueGltf,model,scene,request,plaqueGround);effects.attachPlaqueLogo(plaque.root);if(projectInfo)plaque.update(projectInfo)}roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();
   // Warm assembled, selected and assembly variants on this context. Do not claim
   // the entrance gate or tick any animation clock until the canvas is visible.
   const completed=await preparation.run([
@@ -204,10 +208,11 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  });ready.catch(()=>{loadFailed=true;if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null;}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null;}for(const t of textures)t.dispose();textures.length=0});
  const api={ready,
   setActive(value){active=!!value;canvas.hidden=!active;controls.enabled=active;if(active){for(const marker of markers.values())marker.style.removeProperty('opacity');resize();request()}else stop()},
-  setOptions(next){const previous=effectOptions,nightChanged=next.night!==undefined&&next.night!==options.night;if(entrance?.active&&(nightChanged||next.running||next.bakedSettings&&JSON.stringify(previous)!==JSON.stringify(normalizeBakedSettings(next.bakedSettings))))finishEntrance();options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);if(nightChanged||JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected,options.night);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
+  setOptions(next){const previous=effectOptions,nightChanged=next.night!==undefined&&next.night!==options.night;if(entrance?.active&&(nightChanged||next.running||next.bakedSettings&&JSON.stringify(previous)!==JSON.stringify(normalizeBakedSettings(next.bakedSettings))))finishEntrance();options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);conveyor.setOptions({...effectOptions.conveyor,visible:effectOptions.preset!=='original'&&effectOptions.conveyor.visible,night:options.night});weather.configure(effectOptions.preset==='original'?{weather:'clear'}:effectOptions.conveyor);if(nightChanged||JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected,options.night);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
   setSettings(next){settings={...settings,...next};updateContext()},
   setProjectInfo(value){projectInfo=value;plaque?.update(value);request()},
   setPaint(input){paintProgress.update(input);request()},
+  setTask(input){conveyor.setTask(input);request()},
   focusProjectInfo(){finishEntrance();selected=null;taskTarget=null;options.orbit=false;controls.autoRotate=false;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,null,options.night);const target=new THREE.Vector3(-2.3,-.6,16.5);const zoom=camera.isOrthographicCamera?Math.min(4,(camera.right-camera.left)*frame.width/width/23):1;fly(target.clone().add(new THREE.Vector3(0,24,12)),target,zoom)},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},select,focusZone(name){if(name)select(name.replace(/^zone_/,''));else home()},focusTask:select,home,reset:home,
   zoom(factor){if(!Number.isFinite(factor)||factor<=0)return;camera.zoom=THREE.MathUtils.clamp(camera.zoom/factor,.55,8);camera.updateProjectionMatrix();request()},
@@ -227,7 +232,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
    camera.updateProjectionMatrix();controls.update();controls.enableDamping=damping;request();return true;
   },
   capture(){if(!allowed())return Promise.reject(Error('Baked scene must be visible'));draw();effects?.render();return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Capture failed')),'image/png'))},
-  state(){return {prepared,plaque:plaque?.state()??null,entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:prepared,selected,taskTarget,paint:paintProgress.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
-  dispose(){if(disposed)return;finishEntrance();disposed=true;preparation.dispose();active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();plaque?.dispose();if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null}effects?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
+  state(){return {prepared,plaque:plaque?.state()??null,entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:prepared,selected,taskTarget,paint:paintProgress.state(),conveyor:conveyor.state(),weather:weather.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
+  dispose(){if(disposed)return;finishEntrance();disposed=true;preparation.dispose();active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();plaque?.dispose();if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null}conveyor.dispose();weather.dispose();effects?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
  };return api;
 }
