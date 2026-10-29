@@ -6,6 +6,7 @@
 .sandbox-workbench>.workbench-separator::before{background:transparent}
 .sandbox-workbench>.workbench-separator>span:first-child{opacity:.6}
 .sandbox-surface{grid-column:3;grid-row:1;position:relative;min-width:0;min-height:0;overflow:hidden}
+.sandbox-surface[hidden]{display:none!important}
 .project-sandbox{--glass:color-mix(in srgb,var(--paper) 65%,transparent);position:relative;width:100%;height:100%;min-height:0;overflow:hidden;isolation:isolate;color:var(--ink);container-type:inline-size}
 .sandbox-canvas,.sandbox-canvas>canvas,.sandbox-markers{position:absolute;inset:0;width:100%;height:100%}
 .sandbox-canvas>canvas{display:block;touch-action:none}

@@ -45,3 +45,15 @@ test('task parcel follows live nodes, freezes failures, permits jumps and resets
  const restored=createTaskParcelMotion();restored.update({scope:'a',job:'job-2',ready:false,running:null});
  restored.update({scope:'a',job:'job-2',ready:true,running:'report'});assert.equal(restored.state().distance,stationDistances[3]);assert.equal(restored.tick(1,false),false);
 });
+
+test('a paused task parcel resumes from its held distance without replaying the route',()=>{
+ const motion=createTaskParcelMotion();
+ motion.update({scope:'conversation',job:'job-1',ready:true,running:null});
+ const activity={zone:'risk',phase:'running',run:1};
+ motion.update({scope:'conversation',job:'job-1',ready:true,running:'risk',activity});
+ motion.tick(1,false);const held=motion.state().distance;
+ motion.update({scope:'conversation',job:'job-1',ready:true,running:'risk',activity});
+ assert.equal(motion.state().distance,held);
+ assert.equal(motion.tick(0,false),false);assert.equal(motion.state().distance,held);
+ assert(motion.tick(1,false));assert(motion.state().distance>held);
+});
