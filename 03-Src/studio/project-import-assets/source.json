@@ -1,0 +1,22 @@
+{
+  "mode": "external-integration-demo",
+  "source": "03-Src\\engine\\08-测试与演示\\测试-V3.1-260802\\【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v3.1【演示】 .xlsx",
+  "sourceSha256": "58736e3bce4670fda6d5408acc189d51ed2902e0ffddeb531750cf8da8a0a667",
+  "files": [
+    {
+      "file": "general.xlsx",
+      "sheet": "表4-通用工程勘察费用",
+      "sha256": "6206eb5309e3470e0704db8c13e6a55df1cf085730cfc870981334cd261536cf"
+    },
+    {
+      "file": "geology.xlsx",
+      "sheet": "表3-地质测绘",
+      "sha256": "f060cb849e09238acfa7f8582d2f541a68649c59ffda71d793286bf3e97885b9"
+    },
+    {
+      "file": "survey.xlsx",
+      "sheet": "表2-通用工程测量费用",
+      "sha256": "8ae58a31f5e207d1abf46048c13fb5b2aa856ad0dba2420b87a9a3840dcc7d7a"
+    }
+  ]
+}
