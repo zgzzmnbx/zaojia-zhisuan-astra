@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sampleLoadingWave,LOADING_DURATION,MOTION_DURATION} from './loading-wave.mjs';
+import {sampleLoadingWave,LOADING_DURATION,MOTION_DURATION,LOADING_TIMING} from './loading-wave.mjs';
 import {basePose} from './model.mjs';
 
 test('phase transitions and loop wrap remain continuous, with rigid blocks',()=>{
- for(const boundary of [0,.2,2.475,MOTION_DURATION,LOADING_DURATION]){
+ for(const boundary of [0,LOADING_TIMING.open,LOADING_TIMING.open+LOADING_TIMING.wave,MOTION_DURATION,LOADING_DURATION]){
   const a=sampleLoadingWave(boundary-1e-6),b=sampleLoadingWave(boundary+1e-6);
   a.parts.forEach((p,i)=>{assert.ok(p.position.distanceTo(b.parts[i].position)<.00001);assert.deepEqual(p.scale.toArray(),[1,1,1]);});
  }
