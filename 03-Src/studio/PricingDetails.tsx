@@ -20,19 +20,28 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
  const coefficient=/系数/.test(data.row_context.target_header),unit=coefficient?'':`元/${String(data.context.row['单位']||'单位')}`;
  const conditions=pricingConditions(data.context.row),uid=useId();
  const [details,setDetails]=useState<Details>(),[error,setError]=useState(''),[requestVersion,setRequestVersion]=useState(0);
- const [selectedId,setSelectedId]=useState(''),[tab,setTab]=useState<'basis'|'analysis'>('analysis'),[expanded,setExpanded]=useState(false),[step,setStep]=useState(-1);
+ const [selectedId,setSelectedId]=useState(''),[tab,setTab]=useState<'basis'|'analysis'>('analysis'),[expanded,setExpanded]=useState(false),[step,setStep]=useState(0);
+ const [foreground,setForeground]=useState(()=>!document.hidden),[onscreen,setOnscreen]=useState(true);
+ const playbackPath=useRef<HTMLElement>(null);
  const scroll=useRef<HTMLDivElement>(null),panel=useRef<HTMLElement>(null),expandButton=useRef<HTMLButtonElement>(null);
  useEffect(()=>{const controller=new AbortController();setError('');setDetails(undefined);
   void api<Details>('/api/astra/row-assist/details',{...json({row_context:data.row_context,token:data.token}),signal:controller.signal}).then(value=>{if(!controller.signal.aborted)setDetails(value);}).catch(e=>{if(!controller.signal.aborted)setError(e.message);});
   return()=>controller.abort();
  },[data.token,requestVersion]);
  useEffect(()=>{
-  if(step<0)return;
-  if(expanded){setStep(-1);return;}
-  const timer=window.setTimeout(()=>setStep(value=>value>=3?-1:value+1),1100);
-  const hide=()=>{if(document.hidden)setStep(-1);};document.addEventListener('visibilitychange',hide);
-  return()=>{clearTimeout(timer);document.removeEventListener('visibilitychange',hide);};
- },[step,expanded]);
+  const change=()=>setForeground(!document.hidden);document.addEventListener('visibilitychange',change);
+  return()=>document.removeEventListener('visibilitychange',change);
+ },[]);
+ useEffect(()=>{
+  if(!details||!playbackPath.current)return;
+  const observer=new IntersectionObserver(([entry])=>setOnscreen(entry.isIntersecting));observer.observe(playbackPath.current);
+  return()=>observer.disconnect();
+ },[details]);
+ useEffect(()=>{
+  if(!details||step<0||expanded||!foreground||!onscreen)return;
+  const timer=window.setTimeout(()=>setStep(value=>(value+1)%4),1100);
+  return()=>clearTimeout(timer);
+ },[details,step,expanded,foreground,onscreen]);
  const candidates=details?.rules.items||[];
  const selected=candidates.find(c=>c.id===selectedId)||candidates[0];
  const running=active&&['loading','analyzing'].includes(state.phase);
@@ -40,11 +49,11 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
  function showBasis(){setTab('basis');panel.current?.focus({preventScroll:true});}
  function collapse(){setExpanded(false);expandButton.current?.focus({preventScroll:true});}
  const title=`${coefficient?'系数':'价格'}匹配依据`;
- const heading=<div className="pricing-map-heading"><div className="pricing-map-identity"><h2>{title} <span>第 {data.row_context.row_number} 行</span></h2><small title={data.row_context.sheet_name}>{data.row_context.sheet_name} · {data.row_context.target_header}{unit&&` · ${unit}`}</small></div><div className="pricing-map-conditions" aria-label="当前清单条件">{conditions.map(([key,value])=><span key={key} title={`${key}：${String(value)}`}><small>{key}</small>{String(value)}</span>)}</div><button className="btn btn-ghost btn-sm" disabled={!details} onClick={()=>setStep(step>=0?-1:0)}><Icon name={step>=0?'stop':'play'}/>{step>=0?'停止说明':'播放匹配说明'}</button></div>;
+ const heading=<div className="pricing-map-heading"><div className="pricing-map-identity"><h2>{title} <span>第 {data.row_context.row_number} 行</span></h2><small title={data.row_context.sheet_name}>{data.row_context.sheet_name} · {data.row_context.target_header}{unit&&` · ${unit}`}</small></div><div className="pricing-map-conditions" aria-label="当前清单条件">{conditions.map(([key,value])=><span key={key} title={`${key}：${String(value)}`}><small>{key}</small>{String(value)}</span>)}</div><button className="btn btn-ghost btn-sm" disabled={!details} onClick={()=>setStep(step>=0?-1:0)}><Icon name={step>=0?'stop':'play'}/>{step>=0?'暂停说明':'播放匹配说明'}</button></div>;
  return <Modal title={`${title} · 第 ${data.row_context.row_number} 行`} heading={heading} close={close}><div className={`pricing-map${expanded?' report-expanded':''}`} onKeyDown={event=>{if(event.key==='Escape'&&expanded){event.preventDefault();event.stopPropagation();collapse();}}}>
   <div className="pricing-map-scroll" ref={scroll}>
    {error?<div className="pricing-map-empty" role="alert"><p>{error}</p><Button onClick={()=>setRequestVersion(v=>v+1)}>重新读取依据</Button></div>:!details?<div className="pricing-map-empty" role="status"><span className="loading loading-spinner"/>正在读取具体样本与规则</div>:<>
-    <section className="pricing-map-path" aria-label="匹配路径">
+    <section className="pricing-map-path" ref={playbackPath} aria-label="匹配路径">
      <div className="pricing-map-caption"><h3>这个{coefficient?'系数':'价格'}，从哪里来？</h3><small>规则匹配 → 候选比较 → 人工确认</small></div>
      <Suspense fallback={<div className="pricing-flow-loading" role="status">正在载入交互路径，下方仍可查看完整依据。</div>}><PricingFlow conditions={conditions} candidates={candidates} selected={selected} select={select} unit={unit} current={data.row_context.current_value} saved={state.phase==='saved'} savedValue={state.savedValue} step={step} showBasis={showBasis} returnToChat={close} experienceCount={details.experience.total} experienceMean={details.experience.distribution.count>0?details.experience.distribution.mean:undefined} visible={!expanded}/></Suspense>
      <div className="pricing-map-playback" role="status">{step>=0?['读取本行要素与计价单位。','按规则返回的要素一致程度比较候选。','查看所选候选来源、差异和经验样本。','由你核对条件，返回聊天确认填写。'][step]:'点击候选数值，查看与本行的关系。'}</div>

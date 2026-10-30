@@ -38,7 +38,6 @@ function PricingFlowView(props:Props){
  },[ids,setNodes,candidates]);
  useEffect(()=>{reset();},[reset]);
  useEffect(()=>{if(!initialized||!visible)return;const frame=requestAnimationFrame(()=>{void fitView({padding:.08,minZoom:.8,maxZoom:1,duration:0});});return()=>cancelAnimationFrame(frame);},[initialized,ids,visible,fitView]);
- useEffect(()=>{if(step===0){const index=candidates.findIndex(c=>c.id===selected?.id);if(index>=0)setPage(Math.floor(index/FLOW_PAGE_SIZE));}},[step,selected?.id,candidates]);
  const focusField=useCallback((key:string)=>setField(old=>old===key?null:key),[]);
  const displayed=nodes.map(n=>({...n,data:{...n.data,...props,field,focusField,candidate:n.id.startsWith('candidate:')?candidates.find(c=>`candidate:${c.id}`===n.id):selected,active:n.id===`candidate:${selected?.id}`}}));
  const animated=visible&&onscreen&&foreground&&!reduced;
