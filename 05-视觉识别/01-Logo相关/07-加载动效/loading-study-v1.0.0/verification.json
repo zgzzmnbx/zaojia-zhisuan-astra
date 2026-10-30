@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "geometrySource": "03-Src/studio/brand/model.mjs v1.2.2",
+  "modelSHA256": "8be793282dff46500ab30009a49822ea9eb4b525bce9d95b0d7e0f3b31158242",
+  "animationTests": 3,
+  "systemTests": 389,
+  "build": "passed; self-contained HTML",
+  "render": "Blender 5.2.2 Workbench, rigid cube projection, 18fps; same pose sampler as HTML",
+  "browserAcceptance": "not performed: local server execution and file protocol denied by policy",
+  "artifacts": {
+    "两种加载动效对比.gif": "d0f31b55ce8872cf16a1965935d522423add77565d6a16ada07c86b6e695cd1d",
+    "流光接力.gif": "f9b0f0fb62f381778486fa2c29014b07322481eff04fabccf423415c28781420",
+    "环形运算.gif": "fa36a3f1059193af0ff398c769d1ac47887b68ee5597a2e32b2081677c2be8b5"
+  }
+}

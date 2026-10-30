@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {build} from 'vite';
+const root=path.dirname(fileURLToPath(import.meta.url));
+const output=await build({configFile:false,root,publicDir:false,logLevel:'warn',build:{write:false,minify:true,lib:{entry:path.join(root,'preview.mjs'),formats:['iife'],name:'ZSuanLoadingStudy'}}});
+const javascript=[output].flat().flatMap(o=>o.output).find(f=>f.type==='chunk').code;
+const daisy=await fs.readFile(path.resolve(root,'../../../../public/assets/daisyui-5.7.47.css'),'utf8');
+const css=daisy+'\n'+await fs.readFile(path.join(root,'style.css'),'utf8');
+const html=(await fs.readFile(path.join(root,'index.html'),'utf8')).replace('/*STYLE*/',css).replace('/*SCRIPT*/',javascript.replaceAll('</script','<\\/script'));
+const target=path.join(root,'造价智算-两种加载动效.html');await fs.writeFile(target,html);console.log(target);

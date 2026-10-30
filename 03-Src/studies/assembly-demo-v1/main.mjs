@@ -1,0 +1,10 @@
+import '../parcel-demo-v1/style.css';
+import {createBakedWorkspaceMode} from '../../studio/project-sandbox/baked-mode.mjs';
+import {createFrozenModelOwner} from '../../studio/project-sandbox/frozen-model.mjs';
+document.querySelector('main').style.gridTemplateColumns='minmax(0,1fr)';
+let api,owner,paused=false;
+async function mount(){document.querySelector('#replay').disabled=true;document.querySelector('#pause').disabled=true;document.querySelector('#finish').disabled=true;window.__assemblyDemo=undefined;api?.dispose();owner?.dispose();document.querySelector('#scene').replaceChildren();owner=createFrozenModelOwner();let claimed=false;api=createBakedWorkspaceMode(document.querySelector('#scene'),new Map(),{loadModel:owner.load,onSelect:()=>{},onOrbitStop:()=>{},onStatus:()=>{},onError:console.error,entranceGate:{claim(){if(claimed)return false;claimed=true;return true}}});
+ api.setOptions({night:false,orbit:false,bakedSettings:{flow:false,conveyor:{visible:false,weather:'clear'},groupLogo:'hidden',waterSettings:{enabled:false},focusBeam:false,bloom:false}});await api.ready;api.setSettings({city:true,dof:false});api.setViewPose({position:[33,32,42],target:[0,2,-2],projection:'perspective',fov:38,zoom:1});paused=false;document.querySelector('#pause').textContent='暂停';api.setActive(!document.hidden);window.__assemblyDemo=api;for(const id of ['replay','pause','finish'])document.querySelector('#'+id).disabled=false;
+}
+document.querySelector('#replay').onclick=mount;document.querySelector('#pause').onclick=()=>{paused=!paused;api.setActive(!paused&&!document.hidden);if(paused&&!document.hidden)document.querySelector('#scene canvas').hidden=false;document.querySelector('#pause').textContent=paused?'继续':'暂停'};document.querySelector('#finish').onclick=()=>{paused=false;document.querySelector('#pause').textContent='暂停';api.setActive(!document.hidden);api.setOptions({running:'price'})};
+document.addEventListener('visibilitychange',()=>api?.setActive(!paused&&!document.hidden));window.addEventListener('pagehide',()=>{api?.dispose();owner?.dispose()},{once:true});mount();

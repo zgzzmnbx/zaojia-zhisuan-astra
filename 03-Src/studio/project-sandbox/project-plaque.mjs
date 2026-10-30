@@ -1,6 +1,8 @@
 import {CanvasTexture,SRGBColorSpace,MeshBasicMaterial,Mesh,PlaneGeometry,Vector3} from 'three';
 import {releaseFrozenModel} from './frozen-model.mjs';
-import manifest from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v1/manifest.json' with {type:'json'};
+import manifest from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v2/manifest.json' with {type:'json'};
+
+export const plaqueFocusTarget=Object.freeze([...manifest.center]);
 
 /** Select the authored raised outline, above the enamel insert, in plaque coordinates. */
 export function plaqueLogoGeometries(root){
@@ -59,7 +61,7 @@ export function createProjectPlaque(gltf,model,scene,request,groundTexture){
  return {root,
   update(next){const key=JSON.stringify(next);if(key===last)return;last=key;value=next;draw()},
   configure(options,dark=false){if(night!==!!dark){night=!!dark;draw()}const enabled=options.preset!=='original';root.visible=enabled;cut.setEnabled(enabled);for(const g of grounds)g.material.map=enabled?groundTexture:g.map;for(const m of materials)m.color.setScalar(night?.065*options.nightSettings.brightness/100:options.backgroundBrightness/100)},
-  state:()=>({...value,visible:root.visible,updates,removedCityBuildings:manifest.removedCityBounds.length,removedTriangles:cut.removedTriangles,angle:20,top:manifest.top}),
+  state:()=>({...value,visible:root.visible,updates,removedCityBuildings:manifest.removedCityBounds.length,removedTriangles:cut.removedTriangles,angle:20,top:manifest.top,center:[...manifest.center],width:manifest.width,depth:manifest.depth}),
   dispose(){disposed=true;cut.dispose();for(const g of grounds)g.material.map=g.map;root.removeFromParent();releaseFrozenModel(root)},
  };
 }

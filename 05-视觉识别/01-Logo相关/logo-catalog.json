@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "1.0.7",
+  "catalogVersion": "1.0.8",
   "modelVersion": "1.2.2",
   "name": "造价智算 · 阶梯 Z",
   "currentDirectory": "02-三维模型/logo-3d-v1.2.2",
@@ -48,5 +48,12 @@
         "idle"
       ]
     }
+  },
+  "loadingStudy": {
+    "version": "1.0.0",
+    "directory": "07-加载动效/loading-study-v1.0.0",
+    "preview": "07-加载动效/loading-study-v1.0.0/造价智算-两种加载动效.html",
+    "gif": "07-加载动效/loading-study-v1.0.0/两种加载动效对比.gif",
+    "integrated": false
   }
 }

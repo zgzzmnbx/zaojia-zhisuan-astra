@@ -1,0 +1,20 @@
+<!doctype html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>造价智算 · 两种加载动效</title><meta name="color-scheme" content="light dark"><style>/*STYLE*/</style></head>
+<body><main>
+ <header class="page-header"><div><p class="brand">造价智算</p><h1>Logo 加载动效</h1><p class="intro">页面在准备，任务在推进。两种等待状态，点击「模拟完成」查看收尾。</p></div><div class="tools"><span class="preview-label">独立设计预览</span><button id="theme" class="btn btn-outline btn-sm">切换深色</button></div></header>
+ <div class="comparison">
+  <section class="study" data-kind="pulse"><header><div><h2>流光接力</h2><p>适合页面加载、读取资料</p></div><span class="badge badge-outline">安静 · 连贯</span></header>
+   <div class="stage" role="img" aria-label="流光接力：亮光沿阶梯 Z 的方块依次流动"><div class="canvas-host"></div><span class="fallback" hidden>Z</span></div>
+   <div class="status"><span class="status-dot"></span><span class="status-text" role="status">正在加载页面…</span></div><p class="description">保留完整 Z 形，让亮光沿顶梁、台阶和底梁循环传递。</p>
+   <div class="actions"><button class="btn btn-primary finish">模拟完成</button><button class="btn btn-ghost pause">暂停</button><button class="btn btn-ghost replay">重播</button></div>
+   <div class="usage"><div class="mini-symbol" aria-hidden="true"></div><div><strong>正在读取项目资料</strong><p>适合嵌入按钮、文件卡片或局部区域</p></div></div>
+  </section>
+  <section class="study" data-kind="orbit"><header><div><h2>环形运算</h2><p>适合分析、匹配、生成成果</p></div><span class="badge badge-outline">活跃 · 清晰</span></header>
+   <div class="stage" role="img" aria-label="环形运算：十三个方块围成圆环，旋转等待，完成后恢复 Z"><div class="canvas-host"></div><span class="fallback" hidden>Z</span></div>
+   <div class="status"><span class="status-dot"></span><span class="status-text" role="status">正在分析，请稍候…</span></div><p class="description">13 个方块展开为圆环持续转动，完成时有序组合回 Z。</p>
+   <div class="actions"><button class="btn btn-primary finish">模拟完成</button><button class="btn btn-ghost pause">暂停</button><button class="btn btn-ghost replay">重播</button></div>
+   <div class="usage"><div class="mini-symbol" aria-hidden="true"></div><div><strong>正在整理依据与计算结果</strong><p>适合任务卡片、成果生成或等待窗口</p></div></div>
+  </section>
+ </div>
+ <footer><p>建议：短等待用「流光接力」，持续处理用「环形运算」。未知进度只表达忙碌，不显示虚构百分比。</p><span>加载动效样板 v1.0.0</span></footer>
+ <p id="motion-note" hidden>系统已开启减少动效。点击「播放」可主动查看样板。</p>
+</main><script>/*SCRIPT*/</script></body></html>

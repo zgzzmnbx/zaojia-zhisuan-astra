@@ -1,9 +1,9 @@
-import plaqueLightUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v1/plaque-light.png?url';
-import plaqueGroundUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v1/plaque-ground.png?url';
-import plaqueUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v1/project-plaque.glb?url';
+import plaqueLightUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v2/plaque-light.png?url';
+import plaqueGroundUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v2/plaque-ground.png?url';
+import plaqueUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/project-plaque-v2/project-plaque.glb?url';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {releaseFrozenModel} from './frozen-model.mjs';
-import {createProjectPlaque} from './project-plaque.mjs';
+import {createProjectPlaque,plaqueFocusTarget} from './project-plaque.mjs';
 import logoUrl from '../../../05-视觉识别/03-Logo-管网logo/soft-white-v1/group-logo.glb?url';
 import logoLightUrl from '../../../05-视觉识别/03-Logo-管网logo/soft-white-v1/logo-light.png?url';
 import {createBuildingEntrance,sandboxEntranceGate} from './building-entrance.mjs';
@@ -31,7 +31,7 @@ import {sandboxGroundTone} from './ground-tones.ts';
 /** Authored V11 bake plus independently owned runtime effects. The immutable
  * source remains available to the exact reference viewer and original city.
  */
-export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbitStop,onStatus,onError,fpsElement,entranceGate=sandboxEntranceGate}){
+export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbitStop,onStatus,onError,fpsElement,entranceGate=sandboxEntranceGate,onAssemblyChange=()=>{}}){
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1;renderer.shadowMap.enabled=false;
  renderer.shadowMap.type=THREE.PCFShadowMap;renderer.shadowMap.autoUpdate=false;
@@ -80,7 +80,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   if(camera.isOrthographicCamera){const span=Math.max(48,60/aspect);camera.left=-span*aspect/2;camera.right=span*aspect/2;camera.top=span/2;camera.bottom=-span/2}else camera.aspect=aspect;
   reframe();camera.updateProjectionMatrix();request();
  }
- function finishEntrance(){if(entrance?.active){entrance.finish();effects?.invalidateDepth();for(const marker of markers.values())marker.style.removeProperty('opacity')}}
+ function finishEntrance(){if(entrance?.active){entrance.finish();effects?.invalidateDepth();for(const marker of markers.values())marker.style.removeProperty('opacity')}onAssemblyChange(false)}
  function draw(){
   if(miniature&&settings.dof&&settings.strength>0&&!dofFailed){try{miniature.render(scene,camera,zoneBounds.get(selected)||heroBox,settings.strength);return}catch{dofFailed=true;renderer.setRenderTarget(null);onStatus('V11 景深不可用，当前使用清晰烘焙画面。')}}
   renderer.render(scene,camera);
@@ -88,12 +88,12 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  function render(time){
   raf=0;if(!allowed())return;const delta=lastTime?Math.min(.05,(time-lastTime)/1000):1/60;lastTime=time;
   if(!entranceChecked){entranceChecked=true;if(entranceGate.claim()&&!reduced.matches&&!options.running&&!selected&&!taskTarget){if(!entrance?.active)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true,softenBakedOcclusion:true})}else finishEntrance()}
-  const wasBuilding=!!entrance?.active,building=entrance?.tick(delta*1000,reduced.matches)||false;
-  if(wasBuilding)effects?.invalidateDepth();
+  const wasBuilding=!!entrance?.active,wasMoving=!!entrance?.state().moving,building=entrance?.tick(delta*1000,reduced.matches)||false;
+  if(wasMoving)effects?.invalidateDepth();
   if(flight){const t=reduced.matches?1:Math.min(1,(time-flight.start)/750),e=1-(1-t)**3;camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);camera.zoom=THREE.MathUtils.lerp(flight.z0,flight.z1,e);camera.updateProjectionMatrix();if(t===1)flight=null}
-  const sweep=options.orbit&&options.orbitSweep&&!reduced.matches&&!flight&&!building;
-  if(sweep){sweepPhase+=delta*.12;const angle=(1-Math.cos(sweepPhase))*Math.PI/12;camera.position.sub(controls.target).applyAxisAngle(new THREE.Vector3(0,1,0),-(angle-sweepAngle)).add(controls.target);sweepAngle=angle;}else {sweepPhase=0;sweepAngle=0;}
-  controls.autoRotate=options.orbit&&!options.orbitSweep&&!reduced.matches&&!flight&&!building;const moving=controls.update(delta)||sweep;camera.updateMatrixWorld();
+  const sweep=options.orbit&&options.orbitSweep&&!reduced.matches&&!flight&&!entrance?.active;
+  if(sweep){sweepPhase+=delta*.182;const angle=(1-Math.cos(sweepPhase))*Math.PI/12;camera.position.sub(controls.target).applyAxisAngle(new THREE.Vector3(0,1,0),-(angle-sweepAngle)).add(controls.target);sweepAngle=angle;}else {sweepPhase=0;sweepAngle=0;}
+  controls.autoRotate=options.orbit&&!options.orbitSweep&&!reduced.matches&&!flight&&!entrance?.active;const moving=controls.update(delta)||sweep;camera.updateMatrixWorld();
   const painting=paintProgress.tick(delta*1000,reduced.matches);
   const conveyorMoving=conveyor.tick(delta,reduced.matches),weatherMoving=weather.tick(delta,reduced.matches);
   const effectPending=effects?.tick(time,delta,reduced.matches,paintProgress.state());
@@ -171,8 +171,8 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  }
  function updateContext(){plaque?.configure(effectOptions,options.night);for(const object of contextObjects)object.visible=settings.city;ground.visible=!settings.city;const color=new THREE.Color(effectOptions.backgroundColor||sandboxGroundTone(effectOptions.groundTone).color).multiplyScalar(effectOptions.backgroundBrightness/100);scene.background=options.night?new THREE.Color('#040813'):effectOptions.preset==='original'?new THREE.Color(settings.city?'#858c8d':'#c0c2c1'):color;ground.material.color.copy(options.night?new THREE.Color('#070d17'):effectOptions.preset==='original'?new THREE.Color(0xc0c2c1):color);request()}
  const rays=new THREE.Raycaster(),pointer=new THREE.Vector2();
- canvas.addEventListener('pointerdown',event=>{finishEntrance();down={x:event.clientX,y:event.clientY};flight=null;onOrbitStop?.()},{signal:events.signal});
- canvas.addEventListener('pointerup',event=>{if(active&&down&&Math.hypot(event.clientX-down.x,event.clientY-down.y)<5){const r=canvas.getBoundingClientRect();pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);rays.setFromCamera(pointer,camera);let o=rays.intersectObjects([...objects.values()],true)[0]?.object;while(o&&!objects.has(o.name.replace(/^zone_/,'')))o=o.parent;onSelect(o?o.name.replace(/^zone_/,''):null,'focus')}down=null},{signal:events.signal});
+ canvas.addEventListener('pointerdown',event=>{if(!entrance?.state().manual)finishEntrance();down={x:event.clientX,y:event.clientY};flight=null;onOrbitStop?.()},{signal:events.signal});
+ canvas.addEventListener('pointerup',event=>{if(active&&!entrance?.state().expanded&&down&&Math.hypot(event.clientX-down.x,event.clientY-down.y)<5){const r=canvas.getBoundingClientRect();pointer.set((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1);rays.setFromCamera(pointer,camera);let o=rays.intersectObjects([...objects.values()],true)[0]?.object;while(o&&!objects.has(o.name.replace(/^zone_/,'')))o=o.parent;onSelect(o?o.name.replace(/^zone_/,''):null,'focus')}down=null},{signal:events.signal});
  canvas.addEventListener('pointercancel',()=>down=null,{signal:events.signal});
  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();stop();active=false;onError('V11 图形上下文中断，请重试或使用经典界面。')},{signal:events.signal});
  controls.addEventListener('change',request);controls.addEventListener('start',()=>{flight=null;options.orbit=false;onOrbitStop?.()});
@@ -207,13 +207,23 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   if(!completed||disposed)throw Error('Baked mode disposed');prepared=true;return api;
  });ready.catch(()=>{loadFailed=true;if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null;}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null;}for(const t of textures)t.dispose();textures.length=0});
  const api={ready,
+  setAssemblyExpanded(value){
+   if(!prepared||!model||options.running)return false;
+   entranceChecked=true;
+   if(!entrance?.active){
+    if(!value)return true;
+    entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true,softenBakedOcclusion:true,manual:true});
+   }
+   flight=null;options.orbit=false;controls.autoRotate=false;
+   entrance.setExpanded(value);entrance.tick(0,reduced.matches);effects?.invalidateDepth();onAssemblyChange(!!value);request();return true;
+  },
   setActive(value){active=!!value;canvas.hidden=!active;controls.enabled=active;if(active){for(const marker of markers.values())marker.style.removeProperty('opacity');resize();request()}else stop()},
   setOptions(next){const previous=effectOptions,nightChanged=next.night!==undefined&&next.night!==options.night;if(entrance?.active&&(nightChanged||next.running||next.bakedSettings&&JSON.stringify(previous)!==JSON.stringify(normalizeBakedSettings(next.bakedSettings))))finishEntrance();options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);conveyor.setOptions({...effectOptions.conveyor,visible:effectOptions.preset!=='original'&&effectOptions.conveyor.visible,night:options.night});weather.configure(effectOptions.preset==='original'?{weather:'clear'}:effectOptions.conveyor);if(nightChanged||JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected,options.night);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
   setSettings(next){settings={...settings,...next};updateContext()},
   setProjectInfo(value){projectInfo=value;plaque?.update(value);request()},
   setPaint(input){paintProgress.update(input);request()},
   setTask(input){conveyor.setTask(input);request()},
-  focusProjectInfo(){finishEntrance();selected=null;taskTarget=null;options.orbit=false;controls.autoRotate=false;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,null,options.night);const target=new THREE.Vector3(-2.3,-.6,16.5);const zoom=camera.isOrthographicCamera?Math.min(4,(camera.right-camera.left)*frame.width/width/23):1;fly(target.clone().add(new THREE.Vector3(0,24,12)),target,zoom)},
+  focusProjectInfo(){finishEntrance();selected=null;taskTarget=null;options.orbit=false;controls.autoRotate=false;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,null,options.night);const target=new THREE.Vector3(...plaqueFocusTarget);const zoom=camera.isOrthographicCamera?Math.min(4,(camera.right-camera.left)*frame.width/width/23):1;fly(target.clone().add(new THREE.Vector3(0,24,12)),target,zoom)},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},select,focusZone(name){if(name)select(name.replace(/^zone_/,''));else home()},focusTask:select,home,reset:home,
   zoom(factor){if(!Number.isFinite(factor)||factor<=0)return;camera.zoom=THREE.MathUtils.clamp(camera.zoom/factor,.55,8);camera.updateProjectionMatrix();request()},
   refresh(){if(active)reframe();request()},

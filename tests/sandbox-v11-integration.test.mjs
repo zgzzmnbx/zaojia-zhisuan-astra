@@ -80,3 +80,31 @@ test('import tread repair removes only two buried cap triangles and restores the
  surfaces.configure(normalizeBakedSettings({preset:'adjusted'}));assert.equal(e.mesh.geometry,repaired);
  surfaces.dispose();assert.equal(disposed,1);for(const v of saved){assert.equal(v.mesh.geometry,v.geometry);assert.deepEqual(v.geometry.index?.array,v.index)}
 });
+
+
+test('manual assembly holds without ticking, reverses continuously, and restores original resources',async()=>{
+ const {scene}=await loadV11Model();
+ for(const preset of ['original','adjusted']){
+  const root=scene.clone(true),surfaces=createBakedSurfaces(root);surfaces.configure(normalizeBakedSettings({preset}));
+  const saved=[];root.traverse(mesh=>{if(mesh.isMesh)saved.push({mesh,g:mesh.geometry,m:mesh.material,depth:mesh.customDepthMaterial})});
+  const animation=createBuildingEntrance(root,['import','knowledge','price','report','review','risk','table'],{privateMaterials:true,softenBakedOcclusion:true,manual:true});
+  animation.setExpanded(true);for(let i=0;i<8;i++)animation.tick(50);
+  const mid=animation.state().elapsed;animation.setExpanded(false);assert.equal(animation.state().elapsed,mid);
+  animation.tick(50);assert(animation.state().elapsed>mid);
+  animation.setExpanded(true);for(let i=0;i<24;i++)animation.tick(50);
+  assert.equal(animation.state().expanded,true);assert.equal(animation.state().moving,false);assert.equal(animation.state().elapsed,450);
+  assert.equal(animation.tick(50),false);assert.equal(animation.state().elapsed,450);assert.equal(animation.label('import'),1);
+  animation.setExpanded(false);for(let i=0;i<40;i++)animation.tick(50);
+  assert.equal(animation.active,false);
+  for(const e of saved){assert.equal(e.mesh.geometry,e.g);assert.equal(e.mesh.material,e.m);assert.equal(e.mesh.customDepthMaterial,e.depth)}
+  surfaces.dispose();
+ }
+});
+
+test('manual reduced motion displays a static exploded view and merges immediately',async()=>{
+ const {scene}=await loadV11Model();const saved=[];scene.traverse(mesh=>{if(mesh.isMesh)saved.push([mesh,mesh.geometry,mesh.material])});
+ const animation=createBuildingEntrance(scene,['import','knowledge','price','report','review','risk','table'],{privateMaterials:true,softenBakedOcclusion:true,manual:true});
+ animation.setExpanded(true);assert.equal(animation.tick(0,true),false);assert.equal(animation.state().elapsed,450);assert.equal(animation.active,true);
+ animation.setExpanded(false);animation.tick(0,true);assert.equal(animation.active,false);
+ for(const [mesh,g,m] of saved){assert.equal(mesh.geometry,g);assert.equal(mesh.material,m)}
+});

@@ -1,0 +1,3 @@
+import {defineConfig} from 'vite';import tailwindcss from '@tailwindcss/vite';import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('.',import.meta.url));
+export default defineConfig({root,base:process.env.ASSEMBLY_BASELINE?'/assembly-before/':'/assembly-demo/',publicDir:false,plugins:[tailwindcss(),{name:'assembly-candidate',enforce:'pre',transform(code,id){if(!process.env.ASSEMBLY_BASELINE&&id.replaceAll('\\','/').endsWith('/project-sandbox/baked-mode.mjs'))return code.replace("'./building-entrance.mjs'",JSON.stringify(root.replaceAll('\\','/')+'building-entrance.mjs'));}}],build:{outDir:fileURLToPath(new URL('../../../Codex-Temp/assembly-demo-v1/'+(process.env.ASSEMBLY_BASELINE?'before':'dist'),import.meta.url)),emptyOutDir:true}});
