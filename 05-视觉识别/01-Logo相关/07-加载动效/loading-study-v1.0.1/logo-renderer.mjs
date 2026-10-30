@@ -5,6 +5,7 @@ import {sampleMotion,normalizeMotion} from './motions.mjs';
 import {applyPalette} from './palettes.mjs';
 import {sampleSequence} from './sequences.mjs';
 import {sampleLoadingWave} from './loading-wave.mjs';
+import {sampleLoadingRing} from './loading-ring.mjs';
 
 /** @typedef {{mode:string,paused:boolean,seed:string,dark:boolean,palette?:string,speed?:number,active?:boolean,sequence?:string}} Options */
 /** Each preview owns its renderer; no business reads or shared mutable scenes. */
@@ -35,7 +36,7 @@ export function mountLogo(host,onError){
   scene.environmentIntensity=options.dark?1.05:.75;
  };
  function paint(){
-  const step=sequence();let pose=options.loading&&options.mode==='wave'?sampleLoadingWave(time):sampleMotion(step?.mode??options.mode,step?.sampleTime??time);
+  const step=sequence();let pose=options.loading&&options.mode==='wave'?sampleLoadingWave(time):options.loading&&options.mode==='ring'?sampleLoadingRing(time):sampleMotion(step?.mode??options.mode,step?.sampleTime??time);
   if(manual){
    const parts=manual.kind==='spin'?soloPose(manual.from,manual.index,manual.time):transitionPose(manual.from,manual.kind==='explode',manual.time);
    pose={parts,rotation:[0,0,0]};

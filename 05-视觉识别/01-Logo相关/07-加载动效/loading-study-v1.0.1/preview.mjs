@@ -8,7 +8,8 @@ palette.value='original';
 let dark=false;
 const items=[...document.querySelectorAll('.study')].map(section=>{
  const speed=Number(section.dataset.speed);
- const options={mode:'wave',speed:1,loading:speed===2,paused:mq.matches,seed:'#228be6',palette:'original',dark:false,active:true};
+ const mode=section.dataset.motion||'wave';
+ const options={mode,speed:1,loading:speed===2,paused:mq.matches,seed:'#228be6',palette:'original',dark:false,active:true};
  const logo=mountLogo(section.querySelector('.canvas-host'),()=>{section.querySelector('.fallback').hidden=false;});
  const pause=section.querySelector('.pause'),status=section.querySelector('.status-text');
  function sync(){
@@ -18,7 +19,7 @@ const items=[...document.querySelectorAll('.study')].map(section=>{
   logo.update({...options,dark,palette:palette.value});
  }
  pause.addEventListener('click',()=>{options.paused=!options.paused;sync();});
- section.querySelector('.replay').addEventListener('click',()=>{options.mode='wave';options.paused=false;sync();logo.restart();});
+ section.querySelector('.replay').addEventListener('click',()=>{options.mode=mode;options.paused=false;sync();logo.restart();});
  section.querySelector('.finish')?.addEventListener('click',()=>{options.mode='static';sync();});
  sync();return {logo,options,sync};
 });

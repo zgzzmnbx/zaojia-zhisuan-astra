@@ -1,10 +1,10 @@
 {
   "name": "zsuan-wave-loading-study",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node --test loading-wave.test.mjs artifact.test.mjs"
+    "test": "node --test loading-wave.test.mjs loading-ring.test.mjs artifact.test.mjs"
   }
 }
