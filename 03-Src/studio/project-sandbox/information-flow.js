@@ -16,13 +16,14 @@ function roundedLeg(points,preRounded=false){
  curve.add(new THREE.LineCurve3(previous,vectors.at(-1)));return curve;
 }
 
-export function createInformationFlow(scene,route=defaultRoute){
+export function createInformationFlow(scene,route=defaultRoute,{embedded=false}={}){
  const group=new THREE.Group();group.name='Illustrative information pipeline';
  const curve=new THREE.CurvePath(),stopDistances=[0];
  for(const points of route.legs){const leg=roundedLeg(points,!!route.preRounded);curve.add(leg);stopDistances.push(curve.getLength());}
  curve.arcLengthDivisions=3000;curve.updateArcLengths();
  const length=curve.getLength();
- const shell=new THREE.Mesh(new THREE.TubeGeometry(curve,1400,.135,10,false),new THREE.MeshPhysicalMaterial({color:0xd5e9f5,roughness:.25,metalness:.05,transparent:true,opacity:.33,depthWrite:false}));
+ const shell=new THREE.Mesh(new THREE.TubeGeometry(curve,1400,embedded?.020:.135,10,false),new THREE.MeshPhysicalMaterial({color:0xd5e9f5,roughness:.25,metalness:.05,transparent:true,opacity:.33,depthWrite:false}));
+ shell.visible=!embedded;
  shell.renderOrder=3;shell.userData.informationFlowShell=true;group.add(shell);
  const uniforms={uBrightness:{value:1},uDistance:{value:3},uLength:{value:length},uSpacing:{value:route.pulseSpacing},uGlow:{value:0},uStart:{value:0},uEnd:{value:0}};
  const signalMaterial=new THREE.ShaderMaterial({
@@ -38,14 +39,15 @@ export function createInformationFlow(scene,route=defaultRoute){
       #include <colorspace_fragment>
     }`
  });
- const signal=new THREE.Mesh(new THREE.TubeGeometry(curve,1400,.095,8,false),signalMaterial);signal.renderOrder=2;group.add(signal);
+ const signal=new THREE.Mesh(new THREE.TubeGeometry(curve,1400,embedded?.017:.095,8,false),signalMaterial);signal.renderOrder=2;group.add(signal);
  const ports=[],sockets=[];
  route.stops.forEach((stop,i)=>{
   const p=new THREE.Vector3(...stop.point);
   const socket=new THREE.Mesh(new THREE.CylinderGeometry(.31,.34,.20,24),new THREE.MeshStandardMaterial({color:0xf9fcff,roughness:.45}));
   socket.position.copy(p).y-=.17;socket.castShadow=true;socket.receiveShadow=true;group.add(socket);sockets.push(socket);
+  socket.visible=!embedded;
   const material=new THREE.MeshStandardMaterial({color:0x228be6,emissive:0x167ad1,emissiveIntensity:.15,roughness:.22});
-  const lamp=new THREE.Mesh(new THREE.SphereGeometry(.19,16,10),material);lamp.position.copy(p);group.add(lamp);ports.push({material,distance:stopDistances[i]});
+  const lamp=new THREE.Mesh(new THREE.SphereGeometry(embedded?.024:.19,16,10),material);lamp.position.copy(p);group.add(lamp);ports.push({material,distance:stopDistances[i]});
  });
  scene.add(group);
  let distance=3,lastFrame=null,playing=false,night=false,nightBrightness=1;

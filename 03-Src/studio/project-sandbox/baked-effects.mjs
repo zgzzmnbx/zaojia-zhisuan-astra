@@ -9,7 +9,7 @@ import {createFocusGlow} from './focus-glow.mjs';
 import {createFocusUplights} from './focus-uplights.mjs';
 import {createFocusBloomRenderer} from './focus-bloom-renderer.mjs';
 import {createInformationFlow} from './information-flow.js';
-import {companionRoute} from './conveyor-route.mjs';
+import {fasciaRoute} from './conveyor-profile.mjs';
 import {createBakedLogo} from './baked-logo.mjs';
 import {createBakedSurfaces} from './baked-surfaces.mjs';
 import {normalizeBakedSettings} from './baked-settings.ts';
@@ -32,7 +32,7 @@ export function createBakedEffects(renderer,scene,camera,model,request,cityTextu
   ray.set(new THREE.Vector3(x,.49,z),new THREE.Vector3(0,-1,0));ray.far=1;return ray.intersectObject(model,true)[0]?.point.y??.13;
  });
  const life=createRiverLife(channelProfile);scene.add(life.group);
- const flow=createInformationFlow(flowRoot,companionRoute());flow.setStage(null);
+ const flow=createInformationFlow(flowRoot,fasciaRoute(),{embedded:true});flow.setStage(null);
  function configure(next,focus,dark=night){
   night=!!dark;options=normalizeBakedSettings(next);if(night)options={...options,preset:'adjusted'};selected=focus;surfaces.configure(options,night);const n=options.nightSettings;nightBloom.configure(night,n.style==='studio'?110*n.halo/100:n.bloom,{studio:n.style==='studio',flowAmount:n.flow&&n.flowBrightness>0?(n.style==='studio'?110:n.bloom)*n.flowSoftness/100:0});const original=options.preset==='original';
   renderer.shadowMap.enabled=night&&!original&&options.shadows;renderer.shadowMap.needsUpdate=true;

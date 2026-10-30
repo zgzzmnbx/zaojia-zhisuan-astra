@@ -4,6 +4,39 @@ import {Group} from 'three';
 import {companionRoute,conveyorStations,conveyorTimeline,routePose,stationDistances,whiteParcelDistance} from '../03-Src/studio/project-sandbox/conveyor-route.mjs';
 import {createInformationFlow} from '../03-Src/studio/project-sandbox/information-flow.js';
 import {createTaskParcelMotion} from '../03-Src/studio/project-sandbox/conveyor-task.mjs';
+import {fasciaRoute} from '../03-Src/studio/project-sandbox/conveyor-profile.mjs';
+import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+
+test('architectural model keeps the approved route, buildings, roof identifiers and original assets byte-identical',async()=>{
+ const folder=new URL('../05-视觉识别/02-3D场景/conveyor-integrated-v1/',import.meta.url);
+ const manifest=JSON.parse(await fs.readFile(new URL('manifest.json',folder),'utf8'));
+ const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+ for(const [file,expected] of Object.entries(manifest.source_hashes))assert.equal(hash(await fs.readFile(new URL('../'+file,import.meta.url))),expected,file);
+ assert.equal(manifest.source_hashes['05-视觉识别/02-3D场景/parcel-conveyor-v1/timeline.json'],'c9fa16157d438ebf20a78839d488df252d655462275e1aa31868043853c10ff9');
+ assert.deepEqual(manifest.route,conveyorTimeline.paths);assert.deepEqual(manifest.stations,conveyorTimeline.stations);
+ const bytes=await fs.readFile(new URL(manifest.asset,folder));assert.equal(hash(bytes),manifest.sha256);
+ const gltf=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length),'');
+ assert(gltf.scene.getObjectByName('DATA_PARCEL'));assert.equal(gltf.animations.length,0,'Runtime owns the original transport clock');
+ assert.equal(manifest.support_count,14);
+ for(const name of manifest.static_meshes){const mesh=gltf.scene.getObjectByName(name);assert(mesh?.isMesh,name);assert(mesh.geometry.attributes.color,name+' baked vertex shading');assert(!mesh.material.transmission,name+' must be opaque');}
+ gltf.scene.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});
+});
+
+test('recessed information flow stays within the fascia while retaining seven stops and original parcel paths',()=>{
+ const before=JSON.stringify(conveyorTimeline),route=fasciaRoute(),root=new Group();
+ assert.deepEqual(route.stops.map(s=>s.id),conveyorStations);
+ route.legs.forEach((leg,i)=>leg.forEach((p,j)=>{const c=conveyorTimeline.paths[i][j];assert(Math.abs(Math.hypot(p[0]-c[0],p[2]-c[2])-.310)<1e-6);assert(Math.abs(p[1]-c[1]+.105)<1e-6)}));
+ const flow=createInformationFlow(root,route,{embedded:true});flow.setStage(null);
+ let visibleShell=false,signal;
+ root.traverse(o=>{if(o.userData.informationFlowShell)visibleShell=o.visible;if(o.material?.isShaderMaterial)signal=o});
+ assert.equal(visibleShell,false);assert.equal(signal.geometry.parameters.radius,.017);
+ flow.setNight(true,0);assert.equal(flow.getState().visible,false);flow.setNight(false);assert.equal(flow.getState().visible,true);
+ flow.setPlaying(true);flow.tick(100);flow.tick(140);const held=flow.getState().distance;flow.suspend();flow.tick(60000);assert.equal(flow.getState().distance,held);
+ assert.equal(JSON.stringify(conveyorTimeline),before);
+ root.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});
+});
 
 test('formal tube follows all seven demo docks with the approved offset and unchanged material and shader',()=>{
  const route=companionRoute();assert.deepEqual(route.stops.map(stop=>stop.id),conveyorStations);
