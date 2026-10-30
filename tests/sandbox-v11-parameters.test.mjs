@@ -10,10 +10,24 @@ import fs from 'node:fs';
 import {DEFAULT_GALAXY_SETTINGS} from '../03-Src/studio/knowledge-articles/galaxy-settings.mjs';
 function storage(run){const values=new Map(),prior=Object.getOwnPropertyDescriptor(globalThis,'localStorage');Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)}});try{run(values)}finally{if(prior)Object.defineProperty(globalThis,'localStorage',prior);else delete globalThis.localStorage}}
 
+test('label transparency extends old profiles and persists both endpoints independently',()=>storage(values=>{
+ const old=normalizeSandboxParameters({display:{cardTransparency:75,chatTransparency:0}});
+ assert.equal(old.display.labelTransparency,38);assert.equal(old.display.cardTransparency,75);
+ for(const value of [0,100]){
+  const next=normalizeSandboxParameters({...old,display:{...old.display,labelTransparency:value}});
+  assert(saveCurrentParameters(next));assert.equal(readDisplayParameters().labelTransparency,value);
+  assert.equal(readDisplayParameters().cardTransparency,75);assert.equal(readDisplayParameters().chatTransparency,0);
+ }
+ assert.equal(normalizeSandboxParameters({display:{labelTransparency:150}}).display.labelTransparency,100);
+ assert.equal(normalizeSandboxParameters({display:{labelTransparency:NaN}}).display.labelTransparency,38);
+}));
+
 test('built-in defaults match the approved current browser rather than its older saved profile',()=>{
  const captured=JSON.parse(fs.readFileSync(new URL('../00-docs/handoff/2026-10-28-v0.11.21-默认参数快照.json',import.meta.url),'utf8'));
  const current=normalizeSandboxParameters(null),{conveyor,...priorBaked}=current.baked;
- assert.deepEqual({...current,baked:priorBaked},captured.sandbox);
+ const {labelTransparency,...priorDisplay}=current.display;
+ assert.equal(labelTransparency,38);
+ assert.deepEqual({...current,baked:priorBaked,display:priorDisplay},captured.sandbox);
  assert.deepEqual(conveyor,{visible:true,continuous:true,style:'building-blue-edge',nightBrightness:100,weather:'clear',weatherStrength:1});
  assert.deepEqual(DEFAULT_GALAXY_SETTINGS,{...captured.galaxy,unselectedOpacity:.5,unrelatedLinkBrightness:.05});
 });

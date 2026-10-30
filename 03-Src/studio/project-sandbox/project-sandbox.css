@@ -276,3 +276,6 @@
 /* Global retained conversation collapse. */
 .studio #shell.live-shell .four-surface.conversation-collapsed>.content-artifact{grid-column:1;grid-row:1}
 .studio #shell.live-shell .four-surface.sandbox-classic.conversation-collapsed>.sandbox-surface{left:18px;right:18px;width:auto}
+
+/* Title background only: text, status cards and progress remain independent. */
+.project-sandbox .sandbox-marker>.sandbox-marker-title{background:color-mix(in srgb,var(--paper) var(--sandbox-label-opacity,62%),transparent)}

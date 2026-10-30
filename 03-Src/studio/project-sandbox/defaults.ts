@@ -64,6 +64,7 @@ export const sandboxParameterDefaults={
  "display": {
   "infoVisible": true,
   "cardTransparency": 55,
+  "labelTransparency": 38,
   "chatTransparency": 15,
   "roofLabels": true,
   "autoOrbit": true,
