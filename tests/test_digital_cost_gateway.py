@@ -21,6 +21,8 @@ def upstream(handler):
 
 def test_allowlist():
     assert g.allowed_path('demo/settlement-review.docx', 'GET')
+    assert g.allowed_path('demo/customer-management.md', 'GET')
+    assert not g.allowed_path('demo/customer-management.md', 'POST')
     assert not g.allowed_path('demo/model.key', 'GET')
     assert not g.allowed_path('demo/settlement-review.docx', 'POST')
     assert g.allowed_path('api/digital-cost/v1/pricing/catalog', 'GET')

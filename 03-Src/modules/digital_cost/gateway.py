@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[3]
 PREFIX = '/modules/digital-cost'
 API = '/api/digital-cost/v1'
 UPSTREAM = 'http://127.0.0.1:18768'
-VERSION = '0.9.0'
+VERSION = '0.10.0'
 MAX_REQUEST = 12 * 1024 * 1024
 MAX_RESPONSE = 64 * 1024 * 1024
 router = APIRouter()
@@ -117,7 +117,7 @@ def allowed_path(path, method):
     if path.startswith('api/digital-cost/v1/'):
         tail = path[len('api/digital-cost/v1/'):]
         return bool(re.fullmatch(r'(session|health|rule-sets|pricing/catalog|ai/config|tasks(?:/[A-Za-z0-9_/-]+)?|snapshots/[A-Za-z0-9_/-]+|artifacts/[A-Za-z0-9_/-]+)', tail))
-    return method in {'GET', 'HEAD'} and (path in {'', 'index.html', 'favicon.svg', 'demo/settlement-review.docx'} or path.startswith(('assets/', 'pdfjs/', 'fonts/')))
+    return method in {'GET', 'HEAD'} and (path in {'', 'index.html', 'favicon.svg', 'demo/settlement-review.docx', 'demo/customer-management.md'} or path.startswith(('assets/', 'pdfjs/', 'fonts/')))
 
 
 @router.api_route(PREFIX + '/{path:path}', methods=['GET', 'HEAD', 'POST', 'PUT', 'DELETE'])
