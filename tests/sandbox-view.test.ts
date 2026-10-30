@@ -7,7 +7,9 @@ import {readFileSync} from 'node:fs';
 import {readSandboxView,sandboxCameraDistances,compactSandboxTitle} from '../03-Src/studio/project-sandbox/view-settings.ts';
 test('camera preferences reject corrupt persistence and constrain safe camera distances',()=>{
  assert.deepEqual(readSandboxView('invalid'),{elevation:34,zoom:135,distance:85});
- assert.deepEqual(readSandboxView('{"elevation":90,"zoom":0}'),{elevation:45,zoom:100,distance:85});
+ assert.deepEqual(readSandboxView('{"elevation":90,"zoom":0}'),{elevation:45,zoom:50,distance:85});
+ assert.equal(readSandboxView('{"zoom":75}').zoom,75);
+ assert.equal(sandboxCameraDistances(50).building,50);
  assert.deepEqual(readSandboxView('{"elevation":22,"zoom":160}'),{elevation:22,zoom:160,distance:85});
  assert.ok(sandboxCameraDistances(160).building>=14);
  assert.ok(sandboxCameraDistances(125).building<sandboxCameraDistances(100).building);
