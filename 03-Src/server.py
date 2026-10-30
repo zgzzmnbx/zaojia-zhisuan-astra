@@ -407,14 +407,8 @@ def report(job_id:str):
             'tables':[[[cell.text for cell in row.cells] for row in table.rows] for table in document.tables],
             'note':'读取当前实际 DOCX 的正文与表格；此视图不模拟 Word 分页。完整排版请打开下载文件。'}
 
-@app.get('/api/astra/digital/status')
-async def digital_status():
-    import httpx
-    try:
-        async with httpx.AsyncClient(timeout=2,trust_env=False) as client:
-            reply=await client.get('http://127.0.0.1:5175/')
-        return {'available':reply.status_code==200}
-    except httpx.HTTPError:return {'available':False}
+from modules.digital_cost.gateway import router as digital_cost_router
+app.include_router(digital_cost_router)
 
 gork_output = gork_notifications.install(app, engine, paths.RUNTIME_DIR, manage_lifecycle=False)
 import runtime_console

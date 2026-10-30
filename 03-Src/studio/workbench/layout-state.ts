@@ -5,7 +5,7 @@ export const PREVIEW_RATIO=.32,CHAT_RATIO=.65,SEPARATOR_SIZE=12;
 /** Floating chat includes a 16px outer inset; reserve enough scene for navigation. */
 export function sandboxChatBounds(width:number){const usable=Math.max(1,width-SEPARATOR_SIZE),min=Math.min(320/usable,.45);return {min,max:Math.max(min,Math.min(.65,(width-420)/usable))};}
 export function sandboxChatRatio(width:number,defaultWidth:number,savedRatio:number|null=null){const {min,max}=sandboxChatBounds(width);return Math.max(min,Math.min(max,savedRatio??(defaultWidth+16)/Math.max(1,width-SEPARATOR_SIZE)));}
-export const largeViews=new Set(['architecture','example','universe','table','mapping','projects','map','aerial','settlement','analysis','word','advanced']);
+export const largeViews=new Set(['architecture','example','universe','table','mapping','projects','map','aerial','settlement','analysis','word','advanced','digital']);
 export function preferredMode(view:string):'preview'|'chat'{return largeViews.has(view)?'preview':'chat';}
 export function automaticLayout(view:string):LayoutPreference{const mode=preferredMode(view);return {policy:'auto',mode,ratio:mode==='preview'?PREVIEW_RATIO:CHAT_RATIO};}
 export function normalizeLayout(value:unknown,view='table'):LayoutPreference{const v=value as Partial<LayoutPreference>|null;if(v?.policy==='manual'&&Number.isFinite(v.ratio))return {policy:'manual',mode:['preview','chat','custom'].includes(v.mode||'')?v.mode!:'custom',ratio:Math.max(.15,Math.min(.85,v.ratio!))};return automaticLayout(view);}

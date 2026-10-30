@@ -1,0 +1,9 @@
+import {Icon} from '../../studio/ui';
+import type {ToolbarState} from './toolbar';
+export function DigitalToolbar({state:s,send,disabled=false}:{state:ToolbarState;send:(action:string,value?:string)=>void;disabled?:boolean}){
+ return <div className="digital-cost-toolbar" aria-label="数字化造价操作栏">
+  <div className="digital-cost-project"><select className="select" aria-label="当前测算项目" title={s.tasks.find(t=>t.id===s.taskId)?.label} value={s.taskId} disabled={disabled||s.busy} onChange={e=>send('task',e.target.value)}>{s.tasks.map(t=><option key={t.id} value={t.id}>{t.label}</option>)}</select><button className="btn btn-ghost btn-square" title="新建测算" aria-label="新建业务项目" disabled={disabled||s.busy} onClick={()=>send('create')}><Icon name="plus"/></button></div>
+  <div className="tabs tabs-box digital-cost-tabs" role="tablist" aria-label="数字化业务视图">{s.tabs.map((tab,i)=><button key={tab} role="tab" className={`tab ${s.selected===tab?'tab-active':''}`} aria-selected={s.selected===tab} tabIndex={s.selected===tab?0:-1} disabled={disabled} onClick={()=>send('tab',tab)} onKeyDown={e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?s.tabs.length-1:(i+(e.key==='ArrowRight'?1:s.tabs.length-1))%s.tabs.length;send('tab',s.tabs[n]);(e.currentTarget.parentElement?.children[n] as HTMLElement)?.focus();}}>{tab}</button>)}</div>
+  <div className="digital-cost-tools">{s.primary&&<button className="btn btn-primary" disabled={disabled||s.primary.disabled} onClick={()=>send('primary')}>{s.primary.label}</button>}{[['help','操作流程','info'],['rules','计价依据','book'],['settings','边界与参数','settings']].map(([action,label,icon])=><button key={action} className="btn btn-ghost btn-square" title={label} aria-label={label} disabled={disabled} onClick={()=>send(action)}><Icon name={icon}/></button>)}</div>
+ </div>;
+}

@@ -3,7 +3,7 @@ export const quickCommands=[
  ['match','route','批量匹配'],['analysis','chart','费用分析'],['warning','shield','经验池预警'],['risk-report','file','生成报告'],
  ['table','sheet','Excel 表格'],['report','file','Word 报告'],['document','file','公文转换'],['collaboration','users','同事复核'],['review-progress','clock','复核进度'],
 ] as const;
-export const quickDestinations=[['projects','folder','项目看板'],['map','globe','项目地图'],['knowledge','book','知识问答'],['library','database','资料库'],['trace','route','任务轨迹'],['settings','settings','设置']] as const;
+export const quickDestinations=[['projects','folder','项目看板'],['map','globe','项目地图'],['knowledge','book','知识问答'],['library','database','资料库'],['digital','monitor','数字化项目造价'],['trace','route','任务轨迹'],['settings','settings','设置']] as const;
 // Shared by menu clicks and exact chat commands. Navigation only opens the
 // existing surface; review, conversion and editing retain their own confirmation.
 export const quickPrompts={
@@ -12,7 +12,7 @@ export const quickPrompts={
  projects:'打开项目看板',map:'打开项目地图',knowledge:'打开知识问答',library:'打开资料库',trace:'查看任务轨迹',settings:'打开设置',
  mapping:'打开列映射与转换',advanced:'打开 AI 增强编制',workload:'打开工作量抓取',risk:'查看风险详情',experience:'打开经验池导入',settlement:'打开结算审核',word:'打开 Word 分页预览',
  knowledgebase:'打开知识库管理',articles:'打开文章与知识网络',memory:'打开知识记忆','collaboration-settings':'打开协同设置',dispatch:'打开协同派发',
- aerial:'打开项目鸟瞰',tracefull:'查看任务血缘与轨迹',digital:'打开数字化项目助手',universe:'打开能力星图',gork:'打开 Gork 机器人联动',skills:'打开专业能力治理',configuration:'打开专业设置',architecture:'打开系统架构',
+ aerial:'打开项目鸟瞰',tracefull:'查看任务血缘与轨迹',digital:'打开数字化项目造价',universe:'打开能力星图',gork:'打开 Gork 机器人联动',skills:'打开专业能力治理',configuration:'打开专业设置',architecture:'打开系统架构',
 } as const;
 export type QuickActionId=keyof typeof quickPrompts;
 export function quickPrompt(id:string):string|undefined{return Object.hasOwn(quickPrompts,id)?quickPrompts[id as QuickActionId]:undefined;}
@@ -26,7 +26,7 @@ export function resolveQuickCommand(message:string):QuickActionId|undefined{
   if(/^(打开|查看)/.test(prompt)&&subject===normalize(prompt).replace(/^(打开|查看)/,''))return id as QuickActionId;
  }
  const aliases:Partial<Record<QuickActionId,readonly string[]>>={
-  match:['批量匹配'],analysis:['费用分析','费用分析与辅助填价'],warning:['经验池预警'],
+  digital:['数字化项目助手','数字化项目造价','数字化造价'],match:['批量匹配'],analysis:['费用分析','费用分析与辅助填价'],warning:['经验池预警'],
   table:['Excel表格','控制价计算表'],report:['Word报告'],document:['公文转换'],collaboration:['同事复核'],
   'review-progress':['复核进度','审核进度'],projects:['项目看板'],map:['项目地图'],knowledge:['知识问答'],library:['资料库'],trace:['任务轨迹'],settings:['设置'],
  };

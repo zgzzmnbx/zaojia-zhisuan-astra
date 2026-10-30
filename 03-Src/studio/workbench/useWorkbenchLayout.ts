@@ -2,7 +2,7 @@ import {useEffect,useRef,useState,type CSSProperties,type KeyboardEvent,type Poi
 import {clampRatio,createResizeSession,floatingPreviewBounds,floatingConversationSpace,keyboardRatio,ratioBounds,sandboxChatBounds,sandboxChatRatio} from './layout-state';
 import {sandboxDefaults} from '../project-sandbox/defaults';
 import type {usePresentation} from './usePresentation';
-export function useWorkbenchLayout(presentation:ReturnType<typeof usePresentation>,sandboxHome=false,sandboxChatCollapsed=false,classicHome=false,simpleHome=false){
+export function useWorkbenchLayout(presentation:ReturnType<typeof usePresentation>,sandboxHome=false,conversationCollapsed=false,classicHome=false,simpleHome=false){
  const [sandboxRatio,setSandboxRatio]=useState<number|null>(()=>{try{const saved=Number(localStorage.getItem('astra.sandbox.chat-ratio.v1'));if(Number.isFinite(saved)&&saved>=.15&&saved<=.65)return saved}catch{}return null});
  const commitRatio=(value:number)=>{if(!sandboxHome){presentation.resize(value);return}setSandboxRatio(value);try{localStorage.setItem('astra.sandbox.chat-ratio.v1',String(value))}catch{}};
  const resetSandboxWidth=()=>{if(!sandboxHome)return;finish(true);setSandboxRatio(null);try{localStorage.removeItem('astra.sandbox.chat-ratio.v1')}catch{}};
@@ -11,8 +11,8 @@ export function useWorkbenchLayout(presentation:ReturnType<typeof usePresentatio
  const [floatBounds,setFloatBounds]=useState(()=>floatingPreviewBounds(1200,720,100,510));
  const ref=useRef<HTMLDivElement>(null),latest=useRef(state);latest.current=state;
  const summary=mode==='summary',content=mode==='content'||mode==='fullscreen',expanded=mode==='fullscreen';
- const fitsFloat=wide&&floatBounds.available&&!floatBounds.compact,floating=summary&&fitsFloat,split=mode==='content'&&wide&&!(sandboxHome&&sandboxChatCollapsed);
- const summaryFallback=summary&&!fitsFloat,chatActive=!(sandboxHome&&sandboxChatCollapsed)&&(mode==='chat'||(wide&&!expanded&&!summaryFallback));
+ const fitsFloat=wide&&floatBounds.available&&!floatBounds.compact,floating=summary&&fitsFloat&&!conversationCollapsed,split=mode==='content'&&wide&&!conversationCollapsed;
+ const summaryFallback=summary&&(!fitsFloat||conversationCollapsed),chatActive=!conversationCollapsed&&(mode==='chat'||(wide&&!expanded&&!summaryFallback));
  const chatSpace=floatingConversationSpace(width,floatBounds.width,floating,false,true);
  const drag=useRef<{pointerId:number;node:HTMLElement;session:ReturnType<typeof createResizeSession>;cursor:string;select:string}|null>(null);
  function finish(cancel=false){const d=drag.current;if(!d)return;drag.current=null;document.body.style.cursor=d.cursor;document.body.style.userSelect=d.select;setDragRatio(null);if(!cancel)commitRatio(constrain(d.session.finish().ratio));if(d.node.hasPointerCapture?.(d.pointerId))d.node.releasePointerCapture(d.pointerId);}
@@ -22,7 +22,7 @@ export function useWorkbenchLayout(presentation:ReturnType<typeof usePresentatio
   const observer=node?new ResizeObserver(measure):null;for(const item of [node,composer,messages,heading,toolbar])if(item)observer?.observe(item);measure();window.addEventListener('resize',measure);
   return()=>{media.removeEventListener('change',update);window.removeEventListener('resize',measure);observer?.disconnect();finish(true)};
  },[]);
- useEffect(()=>{finish(true)},[state.context,state.conversationId,mode,sandboxHome]);
+ useEffect(()=>{finish(true)},[state.context,state.conversationId,mode,sandboxHome,conversationCollapsed]);
  const bounds=sandboxHome?sandboxChatBounds(width):ratioBounds(width);
  const constrain=(n:number)=>Math.max(bounds.min,Math.min(bounds.max,n));
  const ratio=constrain(clampRatio(dragRatio??(sandboxHome?sandboxChatRatio(width,sandboxDefaults.chatWidth,sandboxRatio):state.ratio),width));

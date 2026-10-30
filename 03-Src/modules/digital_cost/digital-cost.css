@@ -1,0 +1,33 @@
+.digital-cost-module{height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.digital-cost-module>iframe{width:100%;flex:1;min-height:0;border:0;background:var(--color-base-100)}
+.digital-cost-status{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;font-size:14px;background:var(--color-base-200)}
+
+/* One scoped host header; no rules affect other professional modules. */
+.studio #shell.live-shell #astra-preview>.artifact-heading:has(.digital-cost-header-slot){gap:12px;flex-wrap:nowrap}
+.studio #shell.live-shell #astra-preview>.artifact-heading:has(.digital-cost-toolbar)>.artifact-title{flex:0 0 auto;min-width:0}
+.studio #shell.live-shell #astra-preview>.artifact-heading:has(.digital-cost-toolbar)>.artifact-title small{display:none}
+.digital-cost-header-slot{flex:1;min-width:0;overflow-x:auto;scrollbar-width:thin}
+.digital-cost-toolbar{display:flex;align-items:center;gap:12px;width:100%;min-width:640px;font-size:13px}
+.digital-cost-project{display:flex;align-items:center;flex:1 1 180px;min-width:80px;max-width:320px}
+.digital-cost-project>.select{min-width:0;width:100%;height:32px;min-height:32px;border:0;background-color:transparent;text-overflow:ellipsis;font-size:13px}
+.digital-cost-toolbar .btn{height:32px;min-height:32px;white-space:nowrap;font-size:13px;padding-inline:10px}
+.digital-cost-toolbar .btn-square{width:30px;padding:0;flex-shrink:0}
+.digital-cost-tabs{flex:none;padding:3px;gap:2px;min-height:32px;background:var(--color-base-200)}
+.digital-cost-tabs .tab{height:28px;min-height:28px;font-size:13px;padding-inline:10px;white-space:nowrap}
+.digital-cost-tools{display:flex;align-items:center;justify-content:flex-end;gap:4px;flex:1 0 auto}
+@media(max-width:1200px){
+ .studio #shell.live-shell #astra-preview>.artifact-heading:has(.digital-cost-toolbar)>.artifact-title h2{max-width:90px}
+ .digital-cost-toolbar{gap:6px}.digital-cost-tabs .tab{padding-inline:6px}
+ .digital-cost-project{max-width:170px}
+}
+
+/* Center the business tabs on the entire title bar, independent of side actions. */
+.studio #shell.live-shell #astra-preview>.artifact-heading:has(.digital-cost-toolbar){position:relative;container-type:inline-size}
+@container (min-width:1000px){
+ .digital-cost-tabs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+ .digital-cost-project{max-width:clamp(80px,calc(50cqw - 340px),320px)}
+}
+
+.digital-file-picker{display:grid;gap:12px}.digital-file-option{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--color-base-300);border-radius:12px;cursor:pointer}.digital-file-option.selected{border-color:var(--color-primary);background:var(--color-base-200)}.digital-file-option>span{display:grid;gap:5px;min-width:0}.digital-file-option strong{font-size:14px;overflow-wrap:anywhere}.digital-file-option small{font-size:12px;color:var(--color-base-content);opacity:.7}
+
+.digital-cost-project{flex:0 1 160px;max-width:160px!important}.digital-cost-project>.select{max-width:130px}.digital-cost-toolbar{min-width:560px}

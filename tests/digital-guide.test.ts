@@ -1,0 +1,11 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {guideReply,readDigitalState,type DigitalState} from '../03-Src/modules/digital_cost/guide.ts';
+const state:DigitalState={taskId:'task_demo',revision:1,files:['演示.docx'],count:0,pending:0,action:'identify',scale:null,scaleReady:false,run:'',runId:'',purpose:'',busy:false,error:'',complete:false};
+test('upload never claims recognized functions or launches paid analysis',()=>{const r=guideReply(state);assert.match(r.text,/请选择/);assert.equal(r.actions[0].action,'digital-identify');assert.doesNotMatch(r.text,/已识别|已确认/);});
+test('real boundary and failure states lead to review, not fabricated completion',()=>{assert.match(guideReply({...state,run:'running',purpose:'boundary'}).text,/系统边界/);assert.match(guideReply({...state,run:'failed'}).text,/尚未完成/);assert.equal(guideReply({...state,run:'succeeded',purpose:'boundary'}).actions[0].action,'digital-ai');});
+test('scale confirmation does not claim coefficients were inferred from missing conditions',()=>{const r=guideReply({...state,scaleReady:true,scale:'100'});assert.match(r.text,/100 FP/);assert.match(r.text,/没有说明的条件请你确认/);assert.equal(r.actions[0].action,'digital-prices');});
+test('incomplete and error packets cannot declare completed costs',()=>{assert.match(guideReply({...state,complete:false}).text,/发起 AI/);assert.match(guideReply({...state,error:'连接中断',complete:true}).text,/没有完成/);assert.equal(guideReply({...state,complete:true}).actions[0].action,'digital-fees');});
+test('invalid session payload is rejected and distinct tasks never share guide keys',()=>{for(const invalid of [null,{}, {...state,taskId:'job_1'}, {...state,revision:-1}, {...state,files:[42]}])assert.equal(readDigitalState(invalid),null);assert.notEqual(guideReply(state).key,guideReply({...state,taskId:'task_2'}).key);});
+
+test("confirmed stages survive history loading without duplicate chat entries",()=>{const a={...state,scaleReady:true,scale:"100"};assert.equal(guideReply(a).key,guideReply({...a,run:"succeeded",runId:"later-loaded",action:"fees"}).key);assert.equal(guideReply({...a,complete:true}).key,guideReply({...a,complete:true,revision:4}).key);});

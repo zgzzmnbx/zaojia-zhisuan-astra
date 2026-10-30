@@ -62,9 +62,9 @@
 [data-astra-scheme=dark] .sandbox-marker-title,[data-astra-scheme=dark] .sandbox-result-trigger{border-color:color-mix(in srgb,var(--blue) 25%,transparent)}
 @container(max-width:650px){.sandbox-all{font-size:12px;padding-inline:7px}.sandbox-toolbar-actions{gap:4px}.sandbox-switch{gap:0;padding:3px}.sandbox-mode-current{padding-inline:6px}.sandbox-project{max-width:42%}}
 
-.studio #shell.live-shell .adjustable-workbench.sandbox-chat-collapsed{grid-template-columns:minmax(0,1fr)}
-.studio #shell.live-shell .sandbox-chat-collapsed>.conversation,.studio #shell.live-shell .sandbox-chat-collapsed>.workbench-separator{display:none!important}
-.sandbox-chat-collapsed>.sandbox-surface{grid-column:1}
+.studio #shell.live-shell .adjustable-workbench.conversation-collapsed{grid-template-columns:minmax(0,1fr)}
+.studio #shell.live-shell .conversation-collapsed>.conversation,.studio #shell.live-shell .conversation-collapsed>.workbench-separator{display:none!important}
+.conversation-collapsed>.sandbox-surface{grid-column:1}
 
 /* Immersive workspace: one continuous 3D canvas beneath the retained chat. */
 .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{display:block;isolation:isolate}
@@ -272,3 +272,7 @@
 
 .sandbox-parameter-actions{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line);background:var(--paper)}.sandbox-parameter-actions>span{font-size:var(--dws-font-size-12);color:var(--muted);line-height:1.5}.sandbox-parameter-actions .btn{flex-shrink:0}
 .sandbox-parameter-buttons{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* Global retained conversation collapse. */
+.studio #shell.live-shell .four-surface.conversation-collapsed>.content-artifact{grid-column:1;grid-row:1}
+.studio #shell.live-shell .four-surface.sandbox-classic.conversation-collapsed>.sandbox-surface{left:18px;right:18px;width:auto}
