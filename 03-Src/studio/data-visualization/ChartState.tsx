@@ -1,4 +1,5 @@
-import { AlertTriangle, Database, Loader2 } from "../../PhosphorIcons";
+import {LoadingLogo} from '../brand/LoadingLogo';
+import { AlertTriangle, Database } from "../../PhosphorIcons";
 import type { ReactNode } from "react";
 
 export type ChartStateKind = "initial" | "loading" | "insufficient" | "partial" | "error" | "empty" | "ready";
@@ -14,7 +15,7 @@ export default function ChartState({ state, message, children }: Props) {
     return <>{state === "partial" && message ? <p className="dv-chart-state-note">{message}</p> : null}{children}</>;
   }
   if (state === "loading") {
-    return <div className="dv-chart-state is-loading" aria-live="polite"><Loader2 className="spin" size={18} /><span>{message || "正在读取真实数据…"}</span><i /><i /><i /></div>;
+    return <div className="dv-chart-state is-loading" aria-live="polite"><LoadingLogo size={28}/><span>{message || "正在读取真实数据…"}</span><i /><i /><i /></div>;
   }
   const isError = state === "error";
   return (

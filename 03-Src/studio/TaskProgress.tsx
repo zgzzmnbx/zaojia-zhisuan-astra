@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState,type ReactNode} from 'react';
-import {Icon} from './ui';
+import {LoadingLogo} from './brand/LoadingLogo';
 import './task-progress.css';
 
 /** Only mount while the owning request is pending. Unknown duration stays indeterminate. */
@@ -16,7 +16,7 @@ export function TaskProgress({label,detail,compact=false,leading}:{label:string;
  return <div ref={ref} className={`task-progress ${compact?'task-progress--compact':''}`} data-animate={animate} aria-busy="true">
   <div className="task-progress__heading">
    {leading}
-   <span className="task-progress__spinner"><Icon name="spinner-gap"/></span>
+   <span className="task-progress__spinner"><LoadingLogo size={40}/></span>
    <div className="task-progress__copy" role="status" aria-live="polite"><strong>{label}</strong>{detail&&<small>{detail}</small>}</div>
    <span className="task-progress__activity" aria-hidden="true"><i/><i/><i/></span>
   </div>

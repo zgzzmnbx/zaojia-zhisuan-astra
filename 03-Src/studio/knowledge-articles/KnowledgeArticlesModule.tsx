@@ -1,10 +1,10 @@
+import {LoadingLogo} from '../brand/LoadingLogo';
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   ChevronLeft,
   ChevronRight,
   FileText,
-  Loader2,
   PanelRightClose,
   PanelRightOpen,
   Search,
@@ -95,7 +95,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 function LoadingState({ label }: { label: string }) {
   return (
     <div className="knowledge-articles-empty" aria-live="polite">
-      <Loader2 className="knowledge-articles-spinner" size={20} />
+      <LoadingLogo/>
       <span>{label}</span>
     </div>
   );

@@ -1,3 +1,4 @@
+import {LoadingLogo} from '../brand/LoadingLogo';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronRight, FileText, X } from '../../PhosphorIcons';
 import { Prose } from '../Prose';
@@ -41,7 +42,7 @@ export default function KnowledgeNodeDetail({ node, related, apiBase, onClose, o
       {node.summary && <p className="knowledge-node-detail__summary">{node.summary}</p>}
       {current?.error ? <div className="knowledge-node-detail__state" role="alert"><p>{current.error}</p><button className="btn btn-outline btn-sm" onClick={() => setRetry(value => value + 1)}>重试加载</button></div>
         : current?.article ? <Prose text={current.article.body.replace(/^# [^\n]+\n/, '')} />
-          : <div className="knowledge-node-detail__state" role="status"><span className="loading loading-spinner loading-sm" />正在读取正文…</div>}
+          : <div className="knowledge-node-detail__state" role="status"><LoadingLogo/>正在读取正文…</div>}
       {!!current?.article?.source_basis?.length && <details className="knowledge-node-detail__sources"><summary>来源依据</summary><ul>{current.article.source_basis.map((source, index) => <li key={index}>{source}</li>)}</ul></details>}
       {!!related.length && <section className="knowledge-node-detail__related" aria-label="关联节点"><h3>关联节点</h3>{related.map(item => <button key={item.id} onClick={() => onSelect(item)}><span>{item.title}</span><ChevronRight size={16} /></button>)}</section>}
     </div>

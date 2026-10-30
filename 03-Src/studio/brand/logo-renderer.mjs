@@ -4,8 +4,10 @@ import {createLogo,basePose,soloPose,transitionPose} from './model.mjs';
 import {sampleMotion,normalizeMotion} from './motions.mjs';
 import {applyPalette} from './palettes.mjs';
 import {sampleSequence} from './sequences.mjs';
+import {sampleLoadingWave,LOADING_DURATION,MOTION_DURATION} from './loading-wave.mjs';
+import {sampleLoadingRing,RING_LOADING_DURATION} from './loading-ring.mjs';
 
-/** @typedef {{mode:string,paused:boolean,seed:string,dark:boolean,palette?:string,speed?:number,active?:boolean,sequence?:string}} Options */
+/** @typedef {{mode:string,paused:boolean,seed:string,dark:boolean,palette?:string,speed?:number,active?:boolean,sequence?:string,loading?:boolean}} Options */
 /** Each preview owns its renderer; no business reads or shared mutable scenes. */
 export function mountLogo(host,onError){
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
@@ -20,10 +22,17 @@ export function mountLogo(host,onError){
  const key=new THREE.DirectionalLight(0xffffff,2);key.position.set(-3,5,7);scene.add(key);
  const fill=new THREE.DirectionalLight(0xffffff,.8);fill.position.set(4,-1,5);scene.add(fill);
  scene.add(new THREE.HemisphereLight(0xffffff,0x4c5668,.55));
- let options={mode:'tail',paused:false,seed:'#284bd4',dark:false,palette:'theme',speed:1,active:true};
+ let options={mode:'tail',paused:false,seed:'#284bd4',dark:false,palette:'theme',speed:1,active:true,loading:false};
  let time=0,last=0,frame=0,timer=0,waitingSince=0,visible=false,disposed=false,draws=0,manual=null,spread=false;
  const currentTime=()=>time+(waitingSince?(performance.now()-waitingSince)/1000:0);
  const sequence=()=>manual?null:sampleSequence(options.sequence,currentTime(),options.speed);
+ const loadingRest=()=>{
+  if(!options.loading||manual||!['wave','ring'].includes(options.mode))return null;
+  const duration=options.mode==='wave'?LOADING_DURATION:RING_LOADING_DURATION;
+  const end=options.mode==='wave'?MOTION_DURATION:RING_LOADING_DURATION-.4;
+  const elapsed=currentTime()%duration;
+  return elapsed>=end?{phase:'rest',remaining:duration-elapsed}:null;
+ };
  const setColor=()=>{
   // Consume the actual theme primary, including its dark variant.
   const base=new THREE.Color(options.seed);
@@ -34,7 +43,7 @@ export function mountLogo(host,onError){
   scene.environmentIntensity=options.dark?1.05:.75;
  };
  function paint(){
-  const step=sequence();let pose=sampleMotion(step?.mode??options.mode,step?.sampleTime??time);
+  const step=sequence();let pose=options.loading&&options.mode==='wave'?sampleLoadingWave(time):options.loading&&options.mode==='ring'?sampleLoadingRing(time):sampleMotion(step?.mode??options.mode,step?.sampleTime??time);
   if(manual){
    const parts=manual.kind==='spin'?soloPose(manual.from,manual.index,manual.time):transitionPose(manual.from,manual.kind==='explode',manual.time);
    pose={parts,rotation:[0,0,0]};
@@ -50,7 +59,7 @@ export function mountLogo(host,onError){
  function tick(now){frame=0;if(disposed||!visible||document.hidden)return;
   const dt=last?(now-last)/1000:0;last=now;
   if(moving()){if(manual)manual.time=Math.min(manual.duration,manual.time+Math.min(dt,.05)*options.speed);else time+=options.sequence?dt:Math.min(dt,.05)*options.speed;}
-  paint();const step=sequence();
+  paint();const step=sequence()??loadingRest();
   if(moving()&&step?.phase==='rest'){
    // A static interval consumes one timer, not a continuous WebGL render loop.
    last=0;waitingSince=performance.now();timer=setTimeout(()=>{time=currentTime();waitingSince=0;timer=0;schedule();},step.remaining*1000);

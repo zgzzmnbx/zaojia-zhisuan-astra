@@ -4,6 +4,7 @@ import {LogoPreview,type LogoController} from './brand/LogoPreview';
 import {LOGO_MOTIONS} from './brand/motion-options.mjs';
 import {LOGO_SEQUENCES,sequenceSteps} from './brand/sequences.mjs';
 import {usePageCycles} from './brand/usePageCycles';
+import {LoadingLogoSettings} from './brand/LoadingLogoSettings';
 import {DEFAULT_LOGO_CONFIG,LOGO_PALETTES,normalizeLogoConfig,parseLogoConfig,serializeLogoConfig,welcomeLogoKey,welcomeLogoEvent} from './brand/logo-config.mjs';
 import './logo-settings.css';
 
@@ -61,6 +62,7 @@ export default function LogoSettings({active=true,standalone=false}:{active?:boo
    <div className="logo-library-feedback" aria-live="polite">{error?<p role="alert">{error}</p>:<p>{working||status}</p>}</div>
   </div>
   <div className="logo-library-options">
+   <LoadingLogoSettings active={active}/>
    <fieldset className="logo-page-cycles"><legend>页面循环</legend>{LOGO_SEQUENCES.map(s=><section key={s.id} className="logo-cycle" aria-label={`${s.name}循环流程`}>
     <header><strong>{s.name}</strong><span>{cycles[s.id as 'welcome'|'studio']==='loop'?'已启用循环':cycles[s.id as 'welcome'|'studio']==='paused'?'已暂停':'自选动作'}</span></header>
     <ol>{sequenceSteps(s.id).map((step,i)=><li key={i} data-current={sequence===s.id&&phase?.index===i&&!resting} aria-current={sequence===s.id&&phase?.index===i&&!resting?'step':undefined}>{step.phase==='rest'?`静止 ${s.rest} 秒`:LOGO_MOTIONS.find(m=>m.id===step.mode)?.name}</li>)}</ol>
