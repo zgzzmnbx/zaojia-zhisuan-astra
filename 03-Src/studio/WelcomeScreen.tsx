@@ -9,9 +9,9 @@ import './welcome-screen.css';
 
 const preferenceKey='astra.skip-welcome.v1';
 export function readSkipWelcome(){try{return localStorage.getItem(preferenceKey)==='true';}catch{return false;}}
-type Props={openLogo?:()=>void;logoActive?:boolean;runtimeStatus?:ReactNode;ready:boolean;busy:boolean;dark:boolean;toggleTheme:()=>void;openAppearance:()=>void;currentTitle?:string;hasWork:boolean;error?:string;enter:()=>void;newChat:()=>Promise<void>;open:(view:string)=>void};
+type Props={openArchitecture:()=>void;openLogo?:()=>void;logoActive?:boolean;runtimeStatus?:ReactNode;ready:boolean;busy:boolean;dark:boolean;toggleTheme:()=>void;openAppearance:()=>void;currentTitle?:string;hasWork:boolean;error?:string;enter:()=>void;newChat:()=>Promise<void>;open:(view:string)=>void};
 /** Welcome surface follows DESIGN.md; the lower preview remains a synthetic example. */
-export function WelcomeScreen({runtimeStatus,ready,busy,dark,toggleTheme,openAppearance,error,enter,newChat,openLogo,logoActive}:Props){
+export function WelcomeScreen({runtimeStatus,ready,busy,dark,toggleTheme,openAppearance,error,enter,newChat,openLogo,logoActive,openArchitecture}:Props){
  const [skip,setSkip]=useState(readSkipWelcome),[preferenceError,setPreferenceError]=useState('');
  const [entering,setEntering]=useState(false),[creating,setCreating]=useState(false),[creationError,setCreationError]=useState('');
  const actionLock=useRef(false);
@@ -21,7 +21,7 @@ export function WelcomeScreen({runtimeStatus,ready,busy,dark,toggleTheme,openApp
  async function enterStudio(){if(actionLock.current||busy||(!ready&&!error))return;actionLock.current=true;setEntering(true);if(bot.current){const a=bot.current.animate([{transform:'translateY(0)'},{transform:'translateY(-9%)',offset:.45},{transform:'translateY(65%)'}],{duration:340,fill:'forwards'});try{await a.finished}catch{/* Navigation remains available when animation is interrupted. */}}enter();}
  async function createTask(){if(actionLock.current||busy||!ready)return;actionLock.current=true;setCreating(true);setCreationError('');try{await newChat();}catch(e){setCreationError(e instanceof Error?e.message:'新建任务失败，请重试。');}finally{actionLock.current=false;setCreating(false);}}
  return <main className="astra-welcome-v2" aria-label="造价智算 欢迎页">
-  <div className="aw2-appearance">{runtimeStatus}<ThemeButton open={openAppearance}/><ThemeModeButton dark={dark} toggle={toggleTheme}/></div>
+  <div className="aw2-appearance">{runtimeStatus}<div className="tooltip tooltip-bottom" data-tip="系统架构图"><button type="button" className="btn btn-ghost btn-square header-icon-action" aria-label="系统架构图" title="系统架构图" onClick={openArchitecture}><Icon name="architecture"/></button></div><ThemeButton open={openAppearance}/><ThemeModeButton dark={dark} toggle={toggleTheme}/></div>
   <div className="aw2-shell">
    <section className="aw2-copy" aria-labelledby="aw2-title">
     <div className="aw2-engraving" aria-hidden="true"><i/><i/><span/><span/></div>
