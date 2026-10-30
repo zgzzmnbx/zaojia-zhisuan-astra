@@ -10,7 +10,7 @@ export function fasciaRoute(source=conveyorTimeline){
  }
  const offset=points.map((point,index)=>{
   const tangent=points[Math.min(points.length-1,index+1)].clone().sub(points[Math.max(0,index-1)]);tangent.y=0;tangent.normalize();
-  return point.clone().addScaledVector(new Vector3(tangent.z,0,-tangent.x),-.310).add(new Vector3(0,-.105,0)).toArray();
+  return point.clone().addScaledVector(new Vector3(tangent.z,0,-tangent.x),-.416).add(new Vector3(0,-.150,0)).toArray();
  });
  return {preRounded:true,speed:4.5,pulseSpacing:14,legs:cuts.slice(0,-1).map((start,index)=>offset.slice(start,cuts[index+1]+1)),stops:source.stations.map((station,index)=>({...station,point:offset[cuts[index]]}))};
 }

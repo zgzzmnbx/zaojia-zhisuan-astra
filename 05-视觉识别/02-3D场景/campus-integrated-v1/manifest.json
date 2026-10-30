@@ -1,0 +1,32 @@
+{
+  "version": "1.1.0",
+  "zones": [
+    "import",
+    "knowledge",
+    "price",
+    "report",
+    "review",
+    "risk",
+    "table"
+  ],
+  "asset_sha256": "4eab669992da0903c05c9315bef51c7414f9ee10dd3c8ff07393f6c47f9d70e4",
+  "source_hashes": {
+    "public/sandbox-v11/model/geometry-0.bin": "4654563933e9a2108ceb17b082980131dbe2fa994485a5aacc17e7d214e27cd2",
+    "public/sandbox-v11/model/geometry-1.bin": "b55059ab0391e1ad1a1f266d7fef2482c24c0b298d2217d1de2d01f8ea71da60",
+    "public/sandbox-v11/model/model.gltf": "59ec5c3fe6dcd4e6a07e44df54f92e3cc1e2eb85a5a5d72b57cf887066b49062",
+    "public/sandbox-v11/model/packing-manifest.json": "2ff6de590efcbe01cae4ff13e787b09ddfef8804b0649ec90174503dce72bdbd",
+    "public/sandbox-v11/model/texture-00.png": "f3be081ace5b53457bbf5b6aed573b728299e21d1100bbe69a6658504922fc60",
+    "public/sandbox-v11/model/texture-01.png": "540374340b162c829b29cef84a7f5a2dc4246d2706f8674c44b755b435af2a52",
+    "public/sandbox-v11/model/texture-02.png": "011effb01024c7306bb8c85c8d819a4cb2a5adc16e3d764ffdb616d24161447d",
+    "public/sandbox-v11/model/texture-03.png": "38990f4bb36ce8d546fdee2131e7f9d03d0345134d939bb0b84f8bfa71420660",
+    "public/sandbox-v11/model/texture-04.png": "93b5dcb1f036020ec577579cc2a17cb208e4a7bdabd514284862cb1ad1b86ce3",
+    "public/sandbox-v11/model/texture-05.png": "8a808dee8573a732edbe617b7703efcdf6c2c68a9e4d05eabcaf0a35e92fe930",
+    "public/sandbox-v11/model/texture-06.png": "922e34f19491bb31b47ef9024460169995477369a07a293fc65053848c0facb9",
+    "public/sandbox-v11/model/texture-07.png": "33ff10b9bdda6e26471d23e65dff22b000b00f963ae0f0cf9dfde564eaac9f67",
+    "public/sandbox-v11/model/texture-08.png": "979af6cdd759afe39fca15df963069deac7287ddcc1a8a6119f7dda0c44dcd29",
+    "public/sandbox-v11/model/texture-09.png": "37fc9ac24c4c36ae7952d2a8e1ddd317abcfca8d31a8a8a84a1e3a61693df962",
+    "public/sandbox-v11/model/texture-10.png": "73a7b80a7729607e6192b267c0edd264473ad016721c68abd57d720ec75a0a40"
+  },
+  "symbols": "Original indexed triangles, UVs and materials retained at original world positions by architectural-campus.mjs",
+  "body_design": "Seven rebuilt bodies; continuous rounded cornices, recessed blue glazing, two-level podiums, consolidated equipment; source routes unchanged"
+}

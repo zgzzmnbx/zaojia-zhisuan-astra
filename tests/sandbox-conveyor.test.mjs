@@ -27,7 +27,7 @@ test('architectural model keeps the approved route, buildings, roof identifiers 
 test('recessed information flow stays within the fascia while retaining seven stops and original parcel paths',()=>{
  const before=JSON.stringify(conveyorTimeline),route=fasciaRoute(),root=new Group();
  assert.deepEqual(route.stops.map(s=>s.id),conveyorStations);
- route.legs.forEach((leg,i)=>leg.forEach((p,j)=>{const c=conveyorTimeline.paths[i][j];assert(Math.abs(Math.hypot(p[0]-c[0],p[2]-c[2])-.310)<1e-6);assert(Math.abs(p[1]-c[1]+.105)<1e-6)}));
+ route.legs.forEach((leg,i)=>leg.forEach((p,j)=>{const c=conveyorTimeline.paths[i][j];assert(Math.abs(Math.hypot(p[0]-c[0],p[2]-c[2])-.416)<1e-6);assert(Math.abs(p[1]-c[1]+.150)<1e-6)}));
  const flow=createInformationFlow(root,route,{embedded:true});flow.setStage(null);
  let visibleShell=false,signal;
  root.traverse(o=>{if(o.userData.informationFlowShell)visibleShell=o.visible;if(o.material?.isShaderMaterial)signal=o});

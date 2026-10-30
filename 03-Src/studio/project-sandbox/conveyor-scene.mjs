@@ -6,7 +6,7 @@ import {createTaskParcelMotion} from './conveyor-task.mjs';
 
 /** One Blender belt, two illustrative parcels, one task parcel; no camera or renderer ownership. */
 export function createConveyorScene(scene,request,onStatus){
- const root=new Group();root.name='Astra architectural conveyor v1.0.0';scene.add(root);
+ const root=new Group();root.name='Astra architectural conveyor v1.1.0';scene.add(root);
  let disposed=false,staticModel=null,beltMaterial=null,edgeLines=null,white=[],taskParcel=null,clock=0,error='',settings={visible:true,continuous:true,style:'building-blue-edge',night:false,nightBrightness:100};
  const sourceMaterials=new Set(),staticTints=[],task=createTaskParcelMotion();
  const ready=new GLTFLoader().loadAsync(assetUrl).then(gltf=>{
@@ -53,7 +53,7 @@ export function createConveyorScene(scene,request,onStatus){
   if(task.state().visible&&taskParcel){moving=task.tick(delta,reduced)||moving;place(taskParcel,task.state().distance)}
   return moving;
  }
- function state(){return {ready:!!staticModel,error,visible:root.visible,continuous:settings.continuous,style:settings.style,nightBrightness:settings.nightBrightness,edgeLines:!!edgeLines?.visible,parcelCount:staticModel?3:0,whiteDistances:white.map((_,index)=>whiteParcelDistance(clock+index*conveyorTimeline.duration/2)),task:task.state(),routeLength,asset:'conveyor-integrated.glb',designVersion:'1.0.0',version:conveyorTimeline.version}}
+ function state(){return {ready:!!staticModel,error,visible:root.visible,continuous:settings.continuous,style:settings.style,nightBrightness:settings.nightBrightness,edgeLines:!!edgeLines?.visible,parcelCount:staticModel?3:0,whiteDistances:white.map((_,index)=>whiteParcelDistance(clock+index*conveyorTimeline.duration/2)),task:task.state(),routeLength,asset:'conveyor-integrated.glb',designVersion:'1.1.0',version:conveyorTimeline.version}}
  function dispose(){if(disposed)return;disposed=true;const resources=new Set(sourceMaterials);for(const object of [staticModel,...white,taskParcel,edgeLines])object?.traverse(child=>{if(child.geometry)resources.add(child.geometry);for(const material of child.material?[].concat(child.material):[])resources.add(material)});for(const resource of resources)resource.dispose();root.removeFromParent()}
  return {ready,setOptions,setTask,tick,state,dispose};
 }

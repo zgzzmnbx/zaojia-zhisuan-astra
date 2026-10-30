@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "asset": "conveyor-integrated.glb",
-  "sha256": "a33d3c34034c5d3193a1c631dffa32de4458977c5128c9d1418e263a643c9d1e",
+  "sha256": "38c84cb7bfe60a40685e4e6686f82fa7c7366178781d2b91a7ac664b22bcc5fd",
   "source_hashes": {
     "05-视觉识别/02-3D场景/parcel-conveyor-v1/conveyor-route.json": "633a4e84b4925bd1ba4efe7002a3788a31c371fc4c0f7b0a2479105c125dbc20",
     "05-视觉识别/02-3D场景/parcel-conveyor-v1/timeline.json": "c9fa16157d438ebf20a78839d488df252d655462275e1aa31868043853c10ff9",
@@ -2903,16 +2903,18 @@
     }
   ],
   "support_count": 14,
-  "deck_width": 0.65,
+  "deck_width": 0.86,
+  "running_surface_width": 0.64,
   "deck_top_offset": -0.045,
-  "deck_bottom_offset": -0.165,
-  "information_offset": -0.31,
-  "information_height": -0.105,
+  "deck_bottom_offset": -0.315,
+  "rim_top_offset": 0.095,
+  "information_offset": -0.416,
+  "information_height": -0.15,
   "static_meshes": [
     "Conveyor_Belt",
     "Conveyor_Inlay",
     "Conveyor_Frame",
     "Conveyor_Receivers"
   ],
-  "scope": "Conveyor only; buildings, roof identifiers, route and task motion unchanged"
+  "scope": "Conveyor asset only; source buildings and symbols unchanged; companion campus asset replaces building bodies; route and task motion unchanged"
 }

@@ -1,4 +1,4 @@
-"""Architectural conveyor v1.0.0. Read-only source route/buildings/parcel.
+"""Architectural conveyor v1.1.0. Read-only source route/buildings/parcel.
 
 Run in a separate Blender background process. Only this directory is written.
 """
@@ -72,14 +72,17 @@ def sweep(name, profile, mat):
     scene.collection.objects.link(obj)
     return obj
 
-# Original top and width: y = route - .045, half-width .325. No centerline edits.
+# Original running top stays at route - .045. New outer half-width .430; centerline unchanged.
 # A shallow rebate houses the data channel within the white fascia envelope.
-profile = [(-.310,-.045),(.310,-.045),(.325,-.060),(.325,-.078),
-           (.309,-.085),(.309,-.125),(.325,-.132),(.325,-.150),
-           (.310,-.165),(-.310,-.165),(-.325,-.150),(-.325,-.060)]
+profile = [(-.320,-.045),(.320,-.045),(.340,-.025),(.340,.075),(.395,.095),
+           (.430,.060),(.430,-.080),(.414,-.095),(.414,-.205),(.430,-.220),
+           (.430,-.285),(.395,-.315),(-.395,-.315),(-.430,-.285),(-.430,.060),
+           (-.395,.095),(-.340,.075),(-.340,-.025)]
 profile = [(-x,z) for x,z in reversed(profile)]
 deck = sweep('Conveyor_Belt', profile, white)
-inlay = sweep('Conveyor_Inlay', [(-.278,-.044),(-.310,-.044),(-.326,-.059),(-.326,-.077),(-.311,-.085),(-.311,-.124),(-.310,-.124),(-.310,-.084),(-.325,-.076),(-.325,-.060),(-.309,-.045),(-.278,-.045)], blue)
+inlay = sweep('Conveyor_Inlay', [(-.415,-.096),(-.415,-.204),(-.416,-.204),(-.416,-.096)], blue)
+# A narrow upper guide edge makes the recessed trough legible from bird's-eye.
+sweep('Upper guide inlay', [(-.359,.077),(-.389,.087),(-.389,.088),(-.359,.078)], blue)
 
 def box(name, pos, size, mat=white, bevel=.018, angle=0):
     bpy.ops.mesh.primitive_cube_add(size=1, location=pos)
@@ -107,10 +110,11 @@ for leg in timeline['paths']:
         j = max(1, min(len(ds)-1, bisect.bisect_left(ds, d)))
         t = (ps[j]-ps[j-1]).normalized()
         p = ps[j-1].lerp(ps[j], (d-ds[j-1])/max(1e-8, ds[j]-ds[j-1]))
-        bottom, top = .20, p.z-.165
+        bottom, top = .20, p.z-.315
         angle = math.atan2(t.y, t.x)-math.pi/2
-        box('Architectural pier', (p.x,p.y,(top+bottom)/2), (.13,.13,top-bottom), angle=angle)
-        box('Pier foot', (p.x,p.y,bottom), (.27,.27,.065), angle=angle)
+        box('Architectural pier', (p.x,p.y,(top+bottom)/2), (.22,.24,top-bottom), bevel=.03, angle=angle)
+        box('Pier foot', (p.x,p.y,bottom), (.38,.42,.085), bevel=.035, angle=angle)
+        box('Pier crosshead', (p.x,p.y,top-.045), (.80,.26,.13), bevel=.03, angle=angle)
         support_count += 1
 
 for i, station in enumerate(timeline['stations']):
@@ -121,11 +125,11 @@ for i, station in enumerate(timeline['stations']):
     side = Vector((-t.y,t.x,0))
     angle = math.atan2(t.y,t.x)-math.pi/2
     # The exact old stop position remains clear. Side fins replace overhead hoops.
-    box(f'Dock_{i+1:02d}_plinth', p+Vector((0,0,-.20)), (1.02,.70,.10), angle=angle)
+    box(f'Dock_{i+1:02d}_plinth', p+Vector((0,0,-.32)), (1.24,.82,.13), angle=angle)
     for sign in [-1,1]:
-        q = p+side*(sign*.43)
-        box(f'Dock_{i+1:02d}_fin', q+Vector((0,0,.11)), (.12,.34,.50), bevel=.035, angle=angle)
-        box(f'Dock_{i+1:02d}_status', q-t*.176+Vector((0,0,.14)), (.045,.009,.21), blue, .006, angle)
+        q = p+side*(sign*.53)
+        box(f'Dock_{i+1:02d}_fin', q+Vector((0,0,.10)), (.18,.46,.68), bevel=.05, angle=angle)
+        box(f'Dock_{i+1:02d}_status', q-t*.236+Vector((0,0,.18)), (.065,.009,.28), blue, .008, angle)
 
 # Private vertex shading avoids relighting the frozen baked campus or using textures.
 key = Vector((-.5,-.65,1)).normalized()
@@ -137,7 +141,7 @@ for o in list(scene.objects):
     o.data.color_attributes.active_color = colors
     for face in o.data.polygons:
         n = o.matrix_world.to_3x3() @ face.normal
-        shade = .78+.22*max(0,n.dot(key))
+        shade = .64+.32*max(0,n.dot(key))
         if n.z < -.5:
             shade = .63
         for index in face.loop_indices:
@@ -154,13 +158,13 @@ for mat, name in [(white,'Conveyor_Frame'),(blue,'Conveyor_Receivers')]:
     objects[0].name = name
 
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'conveyor-integrated.blend'))
-bpy.ops.export_scene.gltf(filepath=str(OUT/'conveyor-integrated.glb'), export_format='GLB', export_animations=False, export_all_vertex_colors=True)
+bpy.ops.export_scene.gltf(filepath=str(OUT/'conveyor-integrated.glb'), export_format='GLB', export_animations=False, export_vertex_color='ACTIVE', export_all_vertex_colors=False)
 assert all(sha(ROOT / name)==value for name,value in before.items()), 'A protected source changed'
-manifest = {'version':'1.0.0','asset':'conveyor-integrated.glb','sha256':sha(OUT/'conveyor-integrated.glb'),
+manifest = {'version':'1.1.0','asset':'conveyor-integrated.glb','sha256':sha(OUT/'conveyor-integrated.glb'),
             'source_hashes':before,'route':timeline['paths'],'stations':timeline['stations'],
-            'support_count':support_count,'deck_width':.65,'deck_top_offset':-.045,
-            'deck_bottom_offset':-.165,'information_offset':-.310,'information_height':-.105,
+            'support_count':support_count,'deck_width':.86,'running_surface_width':.64,'deck_top_offset':-.045,
+            'deck_bottom_offset':-.315,'rim_top_offset':.095,'information_offset':-.416,'information_height':-.150,
             'static_meshes':['Conveyor_Belt','Conveyor_Inlay','Conveyor_Frame','Conveyor_Receivers'],
-            'scope':'Conveyor only; buildings, roof identifiers, route and task motion unchanged'}
+            'scope':'Conveyor asset only; source buildings and symbols unchanged; companion campus asset replaces building bodies; route and task motion unchanged'}
 (OUT/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
 print('INTEGRATED_CONVEYOR_COMPLETE', json.dumps({'supports':support_count,'samples':len(points),'protected_files':len(before),'asset':str(OUT/'conveyor-integrated.glb')}))
