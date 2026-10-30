@@ -82,6 +82,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  }
  function finishEntrance(){if(entrance?.active){entrance.finish();effects?.invalidateDepth();for(const marker of markers.values())marker.style.removeProperty('opacity')}}
  function draw(){
+  conveyor.updatePresentation(camera,height);
   if(miniature&&settings.dof&&settings.strength>0&&!dofFailed){try{miniature.render(scene,camera,zoneBounds.get(selected)||heroBox,settings.strength);return}catch{dofFailed=true;renderer.setRenderTarget(null);onStatus('V11 景深不可用，当前使用清晰烘焙画面。')}}
   renderer.render(scene,camera);
  }

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Group} from 'three';
+import {Group,Mesh,BoxGeometry,MeshStandardMaterial,OrthographicCamera} from 'three';
+import {createTaskParcelLook} from '../03-Src/studio/project-sandbox/task-parcel-look.mjs';
 import {companionRoute,conveyorStations,conveyorTimeline,routePose,stationDistances,whiteParcelDistance} from '../03-Src/studio/project-sandbox/conveyor-route.mjs';
 import {createInformationFlow} from '../03-Src/studio/project-sandbox/information-flow.js';
 import {createTaskParcelMotion} from '../03-Src/studio/project-sandbox/conveyor-task.mjs';
@@ -8,6 +9,19 @@ import {fasciaRoute} from '../03-Src/studio/project-sandbox/conveyor-profile.mjs
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+
+test('task highlight isolates materials, labels interrupted tasks and keeps the route geometry',()=>{
+ const old=Object.getOwnPropertyDescriptor(globalThis,'document');
+ const ctx={clearRect(){},fillText(){},beginPath(){},roundRect(){},fill(){},stroke(){}};
+ Object.defineProperty(globalThis,'document',{configurable:true,value:{createElement:()=>({getContext:()=>ctx})}});
+ const root=new Group(),source=new MeshStandardMaterial({name:'Porcelain | soft white',color:'#e8edf1'}),body=new Mesh(new BoxGeometry(.64,.48,.58),source);body.name='Parcel_body';root.add(body);root.position.set(2,1,3);
+ try{
+  const before=root.position.clone(),look=createTaskParcelLook(root);assert.notEqual(body.material,source);assert.equal(source.color.getHexString(),'e8edf1');assert.equal(look.state().body,'168bd2');
+  look.setNight(true);look.update(new OrthographicCamera(-24,24,24,-24),960,'error');assert.equal(look.state().label,'任务中断');assert.deepEqual(root.position,before);assert(body.material.emissiveIntensity>0);
+  look.setNight(false);look.update(new OrthographicCamera(-24,24,24,-24),960,'running');assert.equal(look.state().body,'168bd2');assert.equal(look.state().label,'当前任务');assert.equal(root.getObjectByName('Current task label').material.depthTest,true);
+  let released=0;root.traverse(o=>o.material?.map?.addEventListener('dispose',()=>released++));look.dispose();assert.equal(released,2);
+ }finally{root.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});source.dispose();if(old)Object.defineProperty(globalThis,'document',old);else delete globalThis.document;}
+});
 
 test('architectural model keeps the approved route, buildings, roof identifiers and original assets byte-identical',async()=>{
  const folder=new URL('../05-视觉识别/02-3D场景/conveyor-integrated-v1/',import.meta.url);
