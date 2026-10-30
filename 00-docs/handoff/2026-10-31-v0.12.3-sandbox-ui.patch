@@ -1,0 +1,63 @@
+--- a/03-Src/studio/project-sandbox/ProjectSandbox.tsx
++++ b/03-Src/studio/project-sandbox/ProjectSandbox.tsx
+@@ -41,7 +41,7 @@
+  function changePaintStrength(value:number){changeBaked({...bakedSettings,paintStrength:value})}
+  const [lightingMessage,setLightingMessage]=useState('');
+  const [assemblyExpanded,setAssemblyExpanded]=useState(false);
+- const [menu,setMenu]=useState(false),[plaqueFocused,setPlaqueFocused]=useState(false);
++ const [menu,setMenu]=useState(false);
+  const [cardTransparency,setCardTransparency]=useState(()=>readDisplayParameters().cardTransparency);
+  function changeCardTransparency(value:number){setCardTransparency(value);setSaveError('')}
+  const [infoVisible,setInfoVisible]=useState(()=>readDisplayParameters().infoVisible);
+@@ -67,7 +67,7 @@
+  const [pageVisible,setPageVisible]=useState(()=>!document.hidden);
+  const disclosure=useTaskDisclosure(activity,props.context,props.active&&pageVisible,reduced);
+  const progressOpen=!!activity&&disclosure==='progress';
+- const idleOrbit=useIdleOrbit(props.autoOrbit,props.orbitDelay,!ready||!props.active||!pageVisible||reduced||!!props.input.busy||props.input.qaRunning||!!selected||!!taskFocus||menu||controlsOpen||plaqueFocused||assemblyExpanded,()=>{setOrbit(false);scene.current?.pauseOrbit()});
++ const idleOrbit=useIdleOrbit(props.autoOrbit,props.orbitDelay,!ready||!props.active||!pageVisible||reduced||!!props.input.busy||props.input.qaRunning||!!selected||!!taskFocus||menu||controlsOpen||assemblyExpanded,()=>{setOrbit(false);scene.current?.pauseOrbit()});
+  const orbiting=orbit||idleOrbit;
+  useEffect(()=>{const update=()=>setPageVisible(!document.hidden);document.addEventListener('visibilitychange',update);return()=>document.removeEventListener('visibilitychange',update)},[]);
+  useEffect(()=>{setActivityRecord(previous=>({scope:activityScope,value:nextTaskActivity(previous.scope===activityScope?previous.value:null,{ready:props.input.ready,busy:props.input.busy,qaRunning:props.input.qaRunning,error:props.input.operationError,cancelVersion:props.input.cancelVersion})}))},[activityScope,props.input.ready,props.input.busy,props.input.qaRunning,props.input.operationError,props.input.cancelVersion]);
+@@ -80,7 +80,7 @@
+  useEffect(()=>{scene.current?.setVisualSettings(visualSettings)},[visualSettings,props.context,retry]);
+  useEffect(()=>{scene.current?.setOptions({bakedSettings,night:props.dark,roofLabels:props.roofLabels,compact:props.variant==='card',active:props.active,orbit:orbiting&&!reduced,orbitSweep:idleOrbit&&props.orbitDelay===0&&!orbit,running:runningZone(props.input.busy,props.input.qaRunning)})},[bakedSettings,props.dark,props.roofLabels,props.context,props.variant,props.chatCollapsed,props.active,orbiting,props.orbitDelay,idleOrbit,orbit,reduced,props.input.busy,props.input.qaRunning,retry]);
+  useEffect(()=>{const running=props.input.ready?runningZone(props.input.busy,props.input.qaRunning):null;scene.current?.setTask({scope:props.context,job,ready:props.input.ready,activity,running})},[props.context,job,activity,props.input.ready,props.input.busy,props.input.qaRunning,retry]);
+- useEffect(()=>{setSelected(null);setTaskFocus(null);setMenu(false);setPlaqueFocused(false);},[props.variant,props.context]);
++ useEffect(()=>{setSelected(null);setTaskFocus(null);setMenu(false);},[props.variant,props.context]);
+  useEffect(()=>{scene.current?.select(selected)},[selected,retry]);
+  useEffect(()=>{
+   if(!activity){focusedActivity.current='';return;}
+@@ -100,27 +100,27 @@
+  const paintScope=props.context+':'+(job||props.input.filename||'empty');
+  useEffect(()=>{scene.current?.setPaint({scope:paintScope,conversation:props.context,job,completed:paintCompleted?paintCompleted.split(','):[],activity:props.input.ready?activity:null})},[paintScope,paintCompleted,activity,ready,retry,props.input.ready]);
+  selectRef.current=(id,action)=>{if(!id){resetView();return}focusZone(id)};
+- function focusZone(id:ZoneId){setPlaqueFocused(false);setTaskFocus(null);setMenu(false);setOrbit(false);setSelected(id);if(id===selected)scene.current?.select(id)}
++ function focusZone(id:ZoneId){setTaskFocus(null);setMenu(false);setOrbit(false);setSelected(id);if(id===selected)scene.current?.select(id)}
+  function enterNode(action:string){setMenu(false);setOrbit(false);props.enter(action)}
+  useEffect(()=>{if(!controlsOpen)return;const outside=(e:PointerEvent)=>{if(!controlsRef.current?.contains(e.target as Node))setControlsOpen(false)};document.addEventListener('pointerdown',outside);return()=>document.removeEventListener('pointerdown',outside)},[controlsOpen]);
+  function toggleAssembly(){
+-  setMenu(false);setControlsOpen(false);setOrbit(false);
++  setMenu(false);setOrbit(false);
+   scene.current?.setAssemblyExpanded(!assemblyExpanded);
+  }
+- function focusProjectInfo(){setPlaqueFocused(true);setSelected(null);setTaskFocus(null);setMenu(false);setControlsOpen(false);setOrbit(false);scene.current?.focusProjectInfo()}
+- function resetView(restoreFocus=false){setPlaqueFocused(false);const id=selected;setTaskFocus(null);setSelected(null);setOrbit(false);setMenu(false);scene.current?.home();if(restoreFocus&&id)markers.current.get(id)?.querySelector<HTMLButtonElement>('.sandbox-marker-title')?.focus({preventScroll:true})}
+- useEffect(()=>{if(!props.active)return;const escape=(e:KeyboardEvent)=>{if(e.key!=='Escape'||(!controlsOpen&&!selected&&!taskFocus&&!menu&&!orbit&&!plaqueFocused&&!assemblyExpanded))return;e.preventDefault();e.stopImmediatePropagation();if(controlsOpen){setControlsOpen(false);controlsButton.current?.focus({preventScroll:true})}else if(menu)setMenu(false);else if(assemblyExpanded)scene.current?.setAssemblyExpanded(false);else if(selected||taskFocus||plaqueFocused)resetView(true);else setOrbit(false)};document.addEventListener('keydown',escape,true);return()=>document.removeEventListener('keydown',escape,true)},[props.active,selected,taskFocus,menu,orbit,controlsOpen,plaqueFocused,assemblyExpanded]);
++ function resetView(restoreFocus=false){const id=selected;setTaskFocus(null);setSelected(null);setOrbit(false);setMenu(false);scene.current?.home();if(restoreFocus&&id)markers.current.get(id)?.querySelector<HTMLButtonElement>('.sandbox-marker-title')?.focus({preventScroll:true})}
++ useEffect(()=>{if(!props.active)return;const escape=(e:KeyboardEvent)=>{if(e.key!=='Escape'||(!controlsOpen&&!selected&&!taskFocus&&!menu&&!orbit&&!assemblyExpanded))return;e.preventDefault();e.stopImmediatePropagation();if(controlsOpen){setControlsOpen(false);controlsButton.current?.focus({preventScroll:true})}else if(menu)setMenu(false);else if(assemblyExpanded)scene.current?.setAssemblyExpanded(false);else if(selected||taskFocus)resetView(true);else setOrbit(false)};document.addEventListener('keydown',escape,true);return()=>document.removeEventListener('keydown',escape,true)},[props.active,selected,taskFocus,menu,orbit,controlsOpen,assemblyExpanded]);
+  useEffect(()=>{scene.current?.refresh()},[JSON.stringify(nodes),ready,progressOpen,disclosure,retry,selected]);
+  return <section className={`project-sandbox ${props.variant==='card'?'sandbox-card-mode':''} ${error?'scene-fallback':''}`} aria-label="项目沙盘工作台" data-roof-labels={props.roofLabels} data-auto-orbit={idleOrbit} data-ready={ready} data-focused={!!selected} data-motion-paused={!props.active||!pageVisible} data-focused-stage={activity?.phase==='running'?activity.zone:undefined} data-running={runningZone(props.input.busy,props.input.qaRunning)||'idle'}>
+   <div className="sandbox-canvas" ref={host}/>
+   <p className="sr-only" aria-label="地面项目信息碑">{plaqueInfo.filename}；{plaqueInfo.status}；已完成 {plaqueInfo.completed} / 4 个主流程阶段。</p>
+   <header className="sandbox-toolbar">
+    <div className="sandbox-project"><strong>项目工作台</strong></div>
+-   <div className="sandbox-toolbar-actions"><button className="btn btn-ghost btn-sm sandbox-all" aria-label="恢复默认视角" title="恢复默认视角" onClick={()=>resetView()}><Icon name="home"/>全景</button><button className="btn btn-ghost btn-sm sandbox-all" aria-label={assemblyExpanded?'合并建筑':'拆开建筑'} aria-pressed={assemblyExpanded} disabled={!ready||!!props.input.busy||props.input.qaRunning} title={assemblyExpanded?'合并并恢复原有外观':'展开建筑构件，保持拆分展示'} onClick={toggleAssembly}>{assemblyExpanded?'合并':'拆开'}</button><button className="btn btn-ghost btn-sm sandbox-all" aria-label="查看地面项目信息碑" aria-pressed={plaqueFocused} disabled={!ready||bakedSettings.preset==='original'} onClick={focusProjectInfo}>信息碑</button><button className="btn btn-ghost btn-sm sandbox-all" aria-expanded={menu} aria-controls="sandbox-all-menu" onClick={()=>{setControlsOpen(false);setMenu(v=>!v)}}><Icon name="grid"/>全部模块</button><div ref={controlsRef} className="sandbox-view-controls" aria-label="沙盘视图控制" data-expanded={controlsOpen}>
++   <div className="sandbox-toolbar-actions"><button className="btn btn-ghost btn-sm sandbox-all" aria-label="恢复默认视角" title="恢复默认视角" onClick={()=>resetView()}><Icon name="home"/>全景</button><button className="btn btn-ghost btn-sm sandbox-all" aria-expanded={menu} aria-controls="sandbox-all-menu" onClick={()=>{setControlsOpen(false);setMenu(v=>!v)}}><Icon name="grid"/>全部模块</button><div ref={controlsRef} className="sandbox-view-controls" aria-label="沙盘视图控制" data-expanded={controlsOpen}>
+    <button ref={controlsButton} type="button" className="btn btn-ghost btn-sm sandbox-all sandbox-controls-toggle" aria-label={controlsOpen?'收起沙盘视图控制':'展开沙盘视图控制'} aria-expanded={controlsOpen} aria-controls="sandbox-view-options" onClick={()=>{setMenu(false);setControlsOpen(v=>!v)}} title={controlsOpen?'收起视图控制':'沙盘视图控制'}><Icon name="sliders"/><span>视图</span><Icon name="chevron"/></button>
+    {controlsOpen&&<div id="sandbox-view-options" className="sandbox-view-options">
+    <div className="sandbox-parameter-actions"><span role="status">{saveError||(parametersChanged?'未保存':savedParameters?'已保存':'默认参数')}</span><div className="sandbox-parameter-buttons"><button type="button" className="btn btn-ghost btn-sm" aria-label="恢复沙盘默认参数" title="恢复已确认的默认参数，保存后长期生效" onClick={restoreParameters}>恢复默认</button><button type="button" className="btn btn-primary btn-sm" title="保存为当前浏览器的个人参数" onClick={saveParameters}>保存当前参数</button></div></div>
+    <div className="sandbox-parameter-body"><VisualModeControls value={visualSettings} change={changeVisual} status={visualStatus} retry={()=>setRetry(n=>n+1)}/><div className="sandbox-view-toggles">{props.variant!=='card'&&props.overview&&<label><input type="checkbox" className="toggle toggle-xs" checked={infoVisible} onChange={e=>toggleInfo(e.target.checked)}/>项目信息卡片</label>}<label className="sandbox-label-setting" title="平面磨砂标签固定在建筑顶部"><input type="checkbox" className="toggle toggle-xs" checked={props.roofLabels} onChange={e=>props.setRoofLabels(e.target.checked)}/>楼顶标牌</label>
++   <button className="btn btn-ghost btn-sm sandbox-all" aria-label={assemblyExpanded?'合并建筑':'拆开建筑'} aria-pressed={assemblyExpanded} disabled={!ready||!!props.input.busy||props.input.qaRunning} title={assemblyExpanded?'合并并恢复原有外观':'展开建筑构件，保持拆分展示'} onClick={toggleAssembly}>{assemblyExpanded?'合并建筑':'拆开建筑'}</button>
+    <button className="btn btn-ghost btn-sm" aria-pressed={orbiting} disabled={reduced} title={reduced?'已遵循减少动效':'自动环游'} onClick={()=>{if(selected||taskFocus)resetView();setOrbit(!orbiting)}}><Icon name={orbiting?'pause':'play'}/>{orbiting?'暂停':'环游'}</button>
+    <button className="btn btn-ghost btn-square btn-sm" aria-label="放大沙盘" onClick={()=>scene.current?.zoom(.85)}><Icon name="magnifying-glass-plus"/></button><button className="btn btn-ghost btn-square btn-sm" aria-label="缩小沙盘" onClick={()=>scene.current?.zoom(1.18)}><Icon name="magnifying-glass-minus"/></button>
+ 

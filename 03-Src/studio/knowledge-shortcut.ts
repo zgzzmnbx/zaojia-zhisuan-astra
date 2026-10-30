@@ -29,7 +29,7 @@ export function knowledgeAnswerEngine(question:string,engine:'local'|'weknora'|'
 export function recommendedKnowledgeScope(current:string[]|null,available:string[]){return current??available;}
 
 export const isPresetKnowledgeQuestion=isDemoKnowledgeQuestion;
-export const PRESET_KNOWLEDGE_LOADING='正在展示预设答案';
+export const PRESET_KNOWLEDGE_LOADING='正在检索答案';
 /** User-requested presentation animation; never represents model/retrieval progress. */
 export function waitForKnowledgePresentation(question:string,signal:AbortSignal):Promise<void>{
  if(!isDemoKnowledgeQuestion(question))return Promise.resolve();
