@@ -1,0 +1,93 @@
+{
+  "sourceSha256": "59ec5c3fe6dcd4e6a07e44df54f92e3cc1e2eb85a5a5d72b57cf887066b49062",
+  "meshes": {
+    "V10 \u00b7 Baked unlit zone_price": {
+      "triangles": 3623,
+      "remove": [
+        [
+          612,
+          624
+        ],
+        [
+          648,
+          672
+        ],
+        [
+          696,
+          708
+        ],
+        [
+          760,
+          766
+        ],
+        [
+          3535,
+          3559
+        ]
+      ]
+    },
+    "V11 \u00b7 Fine surface unlit zone_price": {
+      "triangles": 37241,
+      "remove": [
+        [
+          3392,
+          3568
+        ],
+        [
+          3920,
+          4272
+        ],
+        [
+          4624,
+          4800
+        ],
+        [
+          9620,
+          10754
+        ],
+        [
+          12388,
+          13148
+        ],
+        [
+          29433,
+          30185
+        ],
+        [
+          31689,
+          33193
+        ],
+        [
+          34697,
+          35801
+        ]
+      ]
+    },
+    "V10 \u00b7 Baked unlit site": {
+      "triangles": 1860,
+      "remove": [
+        [
+          452,
+          464
+        ]
+      ]
+    },
+    "V11 \u00b7 Fine surface unlit V10 \u00b7 Baked original site and inlays": {
+      "triangles": 66272,
+      "remove": [
+        [
+          32260,
+          32716
+        ],
+        [
+          45508,
+          46000
+        ],
+        [
+          53560,
+          54876
+        ]
+      ]
+    }
+  }
+}
