@@ -13,6 +13,10 @@
 .task-progress__activity i{display:block;width:3px;height:9px;border-radius:3px;background:currentColor;animation:task-wave 1.2s ease-in-out infinite}
 .task-progress__activity i:nth-child(2){animation-delay:.16s}.task-progress__activity i:nth-child(3){animation-delay:.32s}
 .task-progress--compact{padding:12px;border-radius:9px}.task-progress--compact .task-progress__track{margin-top:10px;height:4px}
+.task-progress.task-progress--logo{display:grid;grid-template-columns:80px minmax(0,1fr);grid-template-rows:1fr auto;column-gap:12px;row-gap:8px;min-height:94px;padding:6px 12px 6px 6px}
+.task-progress--logo>.task-progress__spinner{grid-column:1;grid-row:1/3;width:80px;height:100%;min-height:80px;background:transparent}
+.task-progress--logo>.task-progress__heading{grid-column:2;grid-row:1;align-self:center;min-width:0}
+.task-progress.task-progress--logo>.task-progress__track{grid-column:2;grid-row:2;margin:0 0 6px}
 .task-progress[data-animate="false"] *{animation-play-state:paused!important}
 .live-shell .cc-working.task-working{display:block;padding:0;border:0;background:none}
 .row-pricing-card>.task-progress{width:calc(100% - 24px);margin:12px}

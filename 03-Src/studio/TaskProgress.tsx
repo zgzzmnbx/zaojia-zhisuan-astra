@@ -14,10 +14,11 @@ export function TaskProgress({label,detail,compact=false,leading,indicator='logo
   observer.observe(host);document.addEventListener('visibilitychange',update);reduced.addEventListener('change',update);
   return()=>{observer.disconnect();document.removeEventListener('visibilitychange',update);reduced.removeEventListener('change',update);};
  },[]);
- return <div ref={ref} className={`task-progress ${compact?'task-progress--compact':''}`} data-animate={animate} aria-busy="true">
+ return <div ref={ref} className={`task-progress ${compact?'task-progress--compact':''} ${indicator==='logo'?'task-progress--logo':''}`} data-animate={animate} aria-busy="true">
+  {indicator==='logo'&&<span className="task-progress__spinner"><LoadingLogo size={80}/></span>}
   <div className="task-progress__heading">
    {leading}
-   <span className="task-progress__spinner">{indicator==='spinner'?<Icon name="spinner-gap"/>:<LoadingLogo size={40}/>}</span>
+   {indicator==='spinner'&&<span className="task-progress__spinner"><Icon name="spinner-gap"/></span>}
    <div className="task-progress__copy" role="status" aria-live="polite"><strong>{label}</strong>{detail&&<small>{detail}</small>}</div>
    <span className="task-progress__activity" aria-hidden="true"><i/><i/><i/></span>
   </div>
