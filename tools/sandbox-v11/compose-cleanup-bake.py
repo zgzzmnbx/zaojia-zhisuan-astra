@@ -1,9 +1,10 @@
-"""Place Blender's cleaned lighting only in the old object contact footprints.
+"""Repair roof contacts with Blender lighting and ground with original shading.
 Rasterize original UV triangles, preserving original atlas bytes outside repair masks.
 """
 from pathlib import Path
 import json,struct,hashlib
 import numpy as np
+import cv2
 from PIL import Image
 r=Path.cwd();base=r/'public/sandbox-v11/model';out=r/'05-视觉识别/02-3D场景/sandbox-v11/site-cleanup-v1';tmp=r/'Codex-Temp/sandbox-cleanup-v01321'
 g=json.loads((base/'model.gltf').read_text(encoding='utf-8'));buffers=[(base/b['uri']).read_bytes() for b in g['buffers']]
@@ -40,8 +41,29 @@ for ni,name,imnum in [(2,'price',2),(7,'site',7)]:
  ratios=old.astype(float)/np.maximum(clean,1)
  ratio=np.median(ratios[good],axis=0) if good.any() else np.ones(3)
  replacement=np.clip(clean.astype(float)*ratio,0,255)
+ if name=='site':
+  # The old roads covered the original ground bake. Continue its surrounding
+  # shading into that footprint; a new neutral Cycles bake changes its finish.
+  # Dirichlet boundaries remain the original atlas, including nearby building AO.
+  domain=calibrate|(mask>0)
+  # Pixels under the old roads/buildings are occlusion black, not usable ground
+  # color. Atlas gutters are not neighboring world surfaces either.
+  region=(domain&((mask>0)|(old.min(axis=2)<180))).astype(np.uint8)
+  seed=old.astype(np.float32);seed[region>0]=np.median(old[domain&(old.min(axis=2)>=180)],axis=0)
+  _,labels,stats,_=cv2.connectedComponentsWithStats(region,8)
+  for label in range(1,len(stats)):
+   x0,y0,ww,hh,_=stats[label];x0=max(0,x0-1);y0=max(0,y0-1);x1=min(w,x0+ww+3);y1=min(h,y0+hh+3)
+   active=labels[y0:y1,x0:x1]==label;values=seed[y0:y1,x0:x1].copy();valid=domain[y0:y1,x0:x1].astype(np.float32)
+   kernel=np.array([[0,.25,0],[.25,0,.25],[0,.25,0]],np.float32)
+   weight=cv2.filter2D(valid,-1,kernel,borderType=cv2.BORDER_CONSTANT)[...,None]
+   for iteration in range(1800):
+    average=cv2.filter2D(values*valid[...,None],-1,kernel,borderType=cv2.BORDER_CONSTANT)/np.maximum(weight,.001)
+    delta=float(np.max(np.abs(average[active]-values[active])));values[active]=average[active]
+    if delta<.002:break
+   seed[y0:y1,x0:x1][active]=values[active]
+  replacement=seed
  final=np.rint(old*(1-mask[...,None])+replacement*mask[...,None]).astype(np.uint8)
  assert np.array_equal(final[mask==0],old[mask==0])
  Image.fromarray(final).save(out/(name+'-clean.png'));Image.fromarray((mask*255).astype(np.uint8)).save(tmp/(name+'-repair-mask.png'))
- records.append(dict(name=name,patchedPixels=int((mask>0).sum()),unchangedOutsideMask=True,calibration=ratio.tolist(),sha256=hashlib.sha256((out/(name+'-clean.png')).read_bytes()).hexdigest()))
-(out/'bake-manifest.json').write_text(json.dumps({'method':'Blender Cycles diffuse, 64 samples; original UV atlas with local contact-footprint masks','textures':records},indent=2),encoding='utf-8');print(records)
+ records.append(dict(name=name,patchedPixels=int((mask>0).sum()),unchangedOutsideMask=True,method='original-ground harmonic continuation' if name=='site' else 'Blender Cycles diffuse, 64 samples',calibration=None if name=='site' else ratio.tolist(),sha256=hashlib.sha256((out/(name+'-clean.png')).read_bytes()).hexdigest()))
+(out/'bake-manifest.json').write_text(json.dumps({'method':'Original ground shading continued over removed road footprints; roof and gantry local Cycles repair retained','textures':records},indent=2),encoding='utf-8');print(records)

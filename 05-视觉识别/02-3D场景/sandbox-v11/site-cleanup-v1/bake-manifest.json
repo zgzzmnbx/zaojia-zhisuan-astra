@@ -1,10 +1,11 @@
 {
-  "method": "Blender Cycles diffuse, 64 samples; original UV atlas with local contact-footprint masks",
+  "method": "Original ground shading continued over removed road footprints; roof and gantry local Cycles repair retained",
   "textures": [
     {
       "name": "price",
       "patchedPixels": 21699,
       "unchangedOutsideMask": true,
+      "method": "Blender Cycles diffuse, 64 samples",
       "calibration": [
         0.9518716577540107,
         0.9669811320754716,
@@ -16,12 +17,9 @@
       "name": "site",
       "patchedPixels": 57264,
       "unchangedOutsideMask": true,
-      "calibration": [
-        0.9184549356223176,
-        0.927038626609442,
-        0.9267241379310345
-      ],
-      "sha256": "496455d9cd4b3d4fe42e919178c986a3871d2f5bbe60827d72a1653d52c7276f"
+      "method": "original-ground harmonic continuation",
+      "calibration": null,
+      "sha256": "5e3bf364c0d8c7195d07e6607c825024349ad8aebe9f700efcaa46c5aff97da1"
     }
   ]
 }
