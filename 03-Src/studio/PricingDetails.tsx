@@ -39,18 +39,18 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
   return()=>observer.disconnect();
  },[details]);
  useEffect(()=>{
-  if(!details||step<0||expanded||!foreground||!onscreen)return;
+  if(!details||expanded||!foreground||!onscreen)return;
   const timer=window.setTimeout(()=>setStep(value=>(value+1)%4),1100);
   return()=>clearTimeout(timer);
  },[details,step,expanded,foreground,onscreen]);
  const candidates=details?.rules.items||[];
  const selected=candidates.find(c=>c.id===selectedId)||candidates[0];
  const running=active&&['loading','analyzing'].includes(state.phase);
- function select(candidate:PriceCandidate){setSelectedId(candidate.id);setStep(-1);}
+ function select(candidate:PriceCandidate){setSelectedId(candidate.id);}
  function showBasis(){setTab('basis');panel.current?.focus({preventScroll:true});}
  function collapse(){setExpanded(false);expandButton.current?.focus({preventScroll:true});}
  const title=`${coefficient?'系数':'价格'}匹配依据`;
- const heading=<div className="pricing-map-heading"><div className="pricing-map-identity"><h2>{title} <span>第 {data.row_context.row_number} 行</span></h2><small title={data.row_context.sheet_name}>{data.row_context.sheet_name} · {data.row_context.target_header}{unit&&` · ${unit}`}</small></div><div className="pricing-map-conditions" aria-label="当前清单条件">{conditions.map(([key,value])=><span key={key} title={`${key}：${String(value)}`}><small>{key}</small>{String(value)}</span>)}</div><button className="btn btn-ghost btn-sm" disabled={!details} onClick={()=>setStep(step>=0?-1:0)}><Icon name={step>=0?'stop':'play'}/>{step>=0?'暂停说明':'播放匹配说明'}</button></div>;
+ const heading=<div className="pricing-map-heading"><div className="pricing-map-identity"><h2>{title} <span>第 {data.row_context.row_number} 行</span></h2><small title={data.row_context.sheet_name}>{data.row_context.sheet_name} · {data.row_context.target_header}{unit&&` · ${unit}`}</small></div><div className="pricing-map-conditions" aria-label="当前清单条件">{conditions.map(([key,value])=><span key={key} title={`${key}：${String(value)}`}><small>{key}</small>{String(value)}</span>)}</div></div>;
  return <Modal title={`${title} · 第 ${data.row_context.row_number} 行`} heading={heading} close={close}><div className={`pricing-map${expanded?' report-expanded':''}`} onKeyDown={event=>{if(event.key==='Escape'&&expanded){event.preventDefault();event.stopPropagation();collapse();}}}>
   <div className={`pricing-map-scroll${!details&&!error?' pricing-map-scroll--loading':''}`} ref={scroll}>
    {error?<div className="pricing-map-empty" role="alert"><p>{error}</p><Button onClick={()=>setRequestVersion(v=>v+1)}>重新读取依据</Button></div>:!details?<div className="pricing-map-loading" role="status"><LoadingLogo size={200}/><span>正在读取具体样本与规则</span></div>:<>

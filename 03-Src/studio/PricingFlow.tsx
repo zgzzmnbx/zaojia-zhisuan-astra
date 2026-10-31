@@ -47,9 +47,9 @@ function PricingFlowView(props:Props){
    if(!active&&onlyPath)continue;
    if(active&&conditions.length){for(const [i,[key,value]] of conditions.slice(0,4).entries()){
     const relation=pricingFieldRelation(value,c.candidate_key?.[key]);
-    result.push({id:`input:${i}:${c.id}`,source:'conditions',sourceHandle:`f${i}`,target,animated:animated&&step===1,className:`pf-edge pf-${relation}`,style:{opacity:field&&field!==key? .18:1},zIndex:2});
-   }}else result.push({id:`input:${c.id}`,source:'conditions',sourceHandle:'all',target,animated:active&&animated&&step===1,className:`pf-edge ${active?'pf-same':'pf-muted'}`});
-   result.push({id:`result:${c.id}`,source:target,target:'result',animated:active&&animated&&step===2,className:`pf-edge ${active?'pf-same':'pf-muted'}`,zIndex:active?2:0});
+    result.push({id:`input:${i}:${c.id}`,source:'conditions',sourceHandle:`f${i}`,target,animated:animated,className:`pf-edge pf-${relation}`,style:{opacity:field&&field!==key? .18:1},zIndex:2});
+   }}else result.push({id:`input:${c.id}`,source:'conditions',sourceHandle:'all',target,animated:active&&animated,className:`pf-edge ${active?'pf-same':'pf-muted'}`});
+   result.push({id:`result:${c.id}`,source:target,target:'result',animated:active&&animated,className:`pf-edge ${active?'pf-same':'pf-muted'}`,zIndex:active?2:0});
   }return result;
  },[ids,candidates,selected?.id,conditions,onlyPath,field,step,animated]);
  const selectNode=(id:string)=>{const c=candidates.find(c=>`candidate:${c.id}`===id);if(c){props.select(c);props.showBasis();}};
