@@ -45,16 +45,16 @@ export function createBakedEffects(renderer,scene,camera,model,request,cityTextu
   logo?.configure(night?{...options,groupLogo:options.nightSettings.logo?'white':'hidden',modelBrightness:8*options.nightSettings.brightness/100,logoGlow:{enabled:true,brightness:options.nightSettings.logoBrightness,color:options.nightSettings.logoColor}}:options);flowRoot.visible=!original&&(night?options.nightSettings.flow&&options.nightSettings.flowBrightness>0:options.flow);flow.setNight(night,options.nightSettings.flowBrightness);flow.setPlaying(flowRoot.visible);bloom.invalidate();river.invalidate();
  }
  function releaseOwned(root){const geometry=new Set(),materials=new Set();root.traverse(o=>{if(o.geometry)geometry.add(o.geometry);for(const m of o.material?[].concat(o.material):[])materials.add(m)});geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());root.removeFromParent()}
- return {configure,
-  prepareFocus(){
+ return {configure,prepareGround:id=>uplights.prepareGround(id),
+  prepareFocus(dark=night){
    // Exercise the real four-light shader/shadow/Bloom path once before interaction.
-   configure(options,'import',night);
-   // Hidden preparation still warms the four-light variant for first night focus.
+   configure(options,'import',dark);
+   // Exercise both the daylight and actual night extraction materials, including shadows.
    uplights.configure({focus:'import',night,enabled:options.preset!=='original'&&options.bloom&&options.focusBeam,shadows:options.shadows,settings:options.uplightSettings});
    renderer.shadowMap.enabled=options.preset!=='original'&&options.shadows;
    glow.tick(0,true);uplights.tick(0,true);
   },
-  finishPreparation(focus=null){configure(options,focus,night);glow.tick(0,true);uplights.tick(0,true);bloom.invalidate()},
+  finishPreparation(focus=null,next=options,dark=night){configure(next,focus,dark);glow.tick(0,true);uplights.tick(0,true);bloom.invalidate()},
   attachPlaqueLogo(root){logo?.attachPlaque(root);bloom.invalidate()},
   invalidateDepth(){renderer.shadowMap.needsUpdate=true;bloom.invalidate();river.invalidate()},
   setCamera(value){camera=value;river.setCamera(camera);bloom.setCamera(camera);nightBloom.setCamera(camera)},

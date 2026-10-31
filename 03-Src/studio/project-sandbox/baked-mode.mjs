@@ -164,14 +164,22 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   scene.add(model);effects=createBakedEffects(renderer,scene,camera,model,request,cityTexture,{texture:streetTexture,groundTexture,uv:streetUV},logoGltf,[weather.group]);logoAsset=null;effects.configure(effectOptions,selected,options.night);if(plaqueGltf){plaque=createProjectPlaque(plaqueGltf,model,scene,request,plaqueGround);effects.attachPlaqueLogo(plaque.root);if(projectInfo)plaque.update(projectInfo)}roofAnchors.attach(model);updateContext();const id=selected;selected=null;if(id)select(id,false);resize();
   // Warm assembled, selected and assembly variants on this context. Do not claim
   // the entrance gate or tick any animation clock until the canvas is visible.
-  const completed=await preparation.run([
+  let completed=false,preparingEffects=false;
+  try{completed=await preparation.run([
+   ...zones.map(zone=>()=>effects.prepareGround(zone.id)),
    ()=>renderer.compileAsync(scene,camera),
    ()=>{draw();effects.render()},
-   ()=>{effects.prepareFocus();return renderer.compileAsync(scene,camera)},
-   ()=>{try{draw();effects.render()}finally{effects.finishPreparation(selected)}},
+   ()=>{preparingEffects=true;effects.prepareFocus();return renderer.compileAsync(scene,camera)},
+   ()=>{try{draw();effects.render()}finally{effects.finishPreparation(selected,effectOptions,options.night);preparingEffects=false}},
+   // Night flow masks have their own four-light programs; daytime preparation
+   // alone cannot compile them. Warm on this same hidden context before entry.
+   ()=>{preparingEffects=true;effects.finishPreparation(null,effectOptions,true);return renderer.compileAsync(scene,camera)},
+   ()=>{draw();effects.render()},
+   ()=>{effects.prepareFocus(true);return renderer.compileAsync(scene,camera)},
+   ()=>{try{draw();effects.render()}finally{effects.finishPreparation(selected,effectOptions,options.night);preparingEffects=false}},
    ()=>{if(!reduced.matches&&!selected&&!options.running)entrance=createBuildingEntrance(model,zones.map(z=>z.id),{privateMaterials:true,softenBakedOcclusion:true});return renderer.compileAsync(scene,camera)},
    ()=>{draw();effects.render()},
-  ]);
+  ]);}finally{if(preparingEffects&&!disposed)effects.finishPreparation(selected,effectOptions,options.night)}
   if(!completed||disposed)throw Error('Baked mode disposed');prepared=true;return api;
  });ready.catch(()=>{loadFailed=true;if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null;}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null;}for(const t of textures)t.dispose();textures.length=0});
  const api={ready,

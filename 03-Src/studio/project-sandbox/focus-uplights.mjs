@@ -11,7 +11,8 @@ export function createFocusUplights(scene,invalidateShadows=()=>{},groundHeight=
  let rig=null,lamps=[],target=null,enabled=true,dark=false,shadows=true,value=0,placed=null;
  let housingGeometry,baseGeometry,lensGeometry,housingMaterial,lensMaterial;
  let settings=normalizeUplightSettings(null);
- const direction=new Vector3();
+ const direction=new Vector3(),floors=new Map();
+ const sampleFloor=(x,z)=>{const key=`${x},${z}`;if(!floors.has(key))floors.set(key,groundHeight(x,z));return floors.get(key)};
  const releaseShadows=()=>{for(const {light} of lamps){light.shadow.dispose();light.shadow.map=null;light.shadow.mapPass=null;}};
  const dirty=()=>{if(shadows)for(const {light} of lamps)light.shadow.needsUpdate=true;invalidateShadows();};
  function ensure(){
@@ -35,8 +36,8 @@ export function createFocusUplights(scene,invalidateShadows=()=>{},groundHeight=
    rig.add(light,light.target,base,head);lamps.push({light,base,head,lens,floor:0});
   }
  }
- function place(id){
-  ensure();const [x,z,y,w,h,height]=focusFootprints[id],aim=id==='review'?1.0:Math.max(1.8,Math.min(3.6,height*.25));
+ function lampPositions(id){
+  const [x,z,y,w,h,height]=focusFootprints[id],aim=id==='review'?1.0:Math.max(1.8,Math.min(3.6,height*.25));
   // Stay outside plinths and entrance steps so they cannot block the wall wash.
   const positions=[[x-w/2-1.0,z,x-w/2+1.0,z],[x+w/2+1.0,z,x+w/2-1.0,z],
    [x,z-h/2-(id==='knowledge'?.35:1.0),x,z-h/2+1.0],[x,z+h/2+(id==='knowledge'?1.3:1.0),x,z+h/2-1.0]];
@@ -47,9 +48,13 @@ export function createFocusUplights(scene,invalidateShadows=()=>{},groundHeight=
   if(id==='review')for(const i of [0,1])positions[i][1]=positions[i][3]=-8.8;
   // Move the board's front lamp away from the neighbouring knowledge building.
   if(id==='table')positions[3]=[-5.6,-7.0,-5.6,z+h/2-1.0];
+  return {positions,aim};
+ }
+ function place(id){
+  ensure();const {positions,aim}=lampPositions(id);
   lamps.forEach((lamp,i)=>{
    const {light,base,head}=lamp;
-   const [px,pz,tx,tz]=positions[i];lamp.floor=groundHeight(px,pz);base.position.set(px,0,pz);head.position.set(px,0,pz);
+   const [px,pz,tx,tz]=positions[i];lamp.floor=sampleFloor(px,pz);base.position.set(px,0,pz);head.position.set(px,0,pz);
    light.target.position.set(tx,aim,tz);
    light.distance=Math.max(7,aim*2.8);light.castShadow=shadows;
   });
@@ -66,6 +71,7 @@ export function createFocusUplights(scene,invalidateShadows=()=>{},groundHeight=
   }
  }
  return {
+  prepareGround(id){for(const [x,z] of lampPositions(id).positions)sampleFloor(x,z)},
   configure({focus=null,enabled:show=true,night=false,shadows:cast=true,settings:raw}={}){
    target=focusFootprints[focus]?focus:null;enabled=show;dark=night;settings=normalizeUplightSettings(raw);
    if(shadows!==cast){shadows=cast;for(const {light} of lamps)light.castShadow=shadows;if(!shadows)releaseShadows();else dirty();}
@@ -92,7 +98,7 @@ export function createFocusUplights(scene,invalidateShadows=()=>{},groundHeight=
   },
   state:()=>({target,placed,settings,fixtureScale:FIXTURE_SCALE,visible:!!rig?.visible,value,count:rig?.visible?lamps.length:0,
    lights:lamps.map(({light,head,base,floor})=>({floor,basePosition:base.position.toArray(),headPosition:head.position.toArray(),headDirection:new Vector3(0,1,0).applyQuaternion(head.quaternion).toArray(),position:light.position.toArray(),target:light.target.position.toArray(),color:light.color.getHexString(),intensity:light.intensity,castShadow:light.castShadow})),
-   shadowMaps:lamps.filter(({light})=>!!light.shadow.map).length}),
-  dispose(){releaseShadows();scene.remove(rig);rig?.clear();rig=null;lamps=[];housingGeometry?.dispose();baseGeometry?.dispose();lensGeometry?.dispose();housingMaterial?.dispose();lensMaterial?.dispose();},
+   groundSamples:floors.size,shadowMaps:lamps.filter(({light})=>!!light.shadow.map).length}),
+  dispose(){floors.clear();releaseShadows();scene.remove(rig);rig?.clear();rig=null;lamps=[];housingGeometry?.dispose();baseGeometry?.dispose();lensGeometry?.dispose();housingMaterial?.dispose();lensMaterial?.dispose();},
  };
 }

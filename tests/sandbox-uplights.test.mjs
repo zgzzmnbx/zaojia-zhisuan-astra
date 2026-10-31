@@ -130,3 +130,19 @@ test('ground bloom crossfades targets, stops at rest and clears on assembly / de
  glow.dispose();assert.equal(glow.scene.children.length,0);
 
 });
+
+
+test('ground preparation samples seven buildings once without showing lights or changing their final placement',()=>{
+ const ids=['import','price','risk','knowledge','report','review','table'],scene=new Scene();let calls=0;
+ const height=(x,z)=>.2+x*.001+z*.002;
+ const warm=createFocusUplights(scene,()=>{},(x,z)=>{calls++;return height(x,z)});
+ for(const id of ids)warm.prepareGround(id);
+ const preparedCalls=calls;assert.equal(preparedCalls,28);assert.equal(scene.children.length,0);assert.equal(warm.state().visible,false);assert.equal(warm.state().target,null);
+ for(const night of [false,true])for(const id of ids){
+  const cold=createFocusUplights(new Scene(),()=>{},height);cold.configure({focus:id,night});cold.tick(0,true);
+  warm.configure({focus:id,night});warm.tick(0,true);
+  assert.deepEqual(warm.state().lights,cold.state().lights);assert.equal(calls,preparedCalls);cold.dispose();
+ }
+ for(const id of ids)warm.prepareGround(id);assert.equal(calls,preparedCalls);
+ warm.dispose();assert.equal(warm.state().groundSamples,0);assert.equal(scene.children.length,0);
+});

@@ -282,7 +282,8 @@
 
 /* A persistent toolbar control for the right-hand project cards. */
 .sandbox-info-toggle .astra-icon{transform:scaleX(-1)}
-.sandbox-info-toggle[aria-pressed="true"]{background:var(--astra-primary-soft,#eaf4ff);color:var(--astra-primary-ink)}
+.sandbox-info-toggle[aria-pressed="true"]{background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue)}
+.sandbox-info-toggle[aria-pressed="true"]:hover{background:color-mix(in srgb,var(--blue) 20%,transparent)}
 
 /* Natural roof anchors fade in place; the selected business details stay readable. */
 .project-sandbox .sandbox-markers>.sandbox-marker{opacity:var(--sandbox-label-visibility,1)!important;transition:none}
