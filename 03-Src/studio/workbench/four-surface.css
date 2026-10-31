@@ -44,7 +44,7 @@
 }
 
 /* The global header identifies the product; project ownership stays in its context. */
-.studio-identity{flex:1}.studio-identity .studio-brand{flex:none;font-size:var(--dws-font-size-16)}.studio-identity .topbar-page{display:flex;align-items:center;gap:12px;min-width:0;font-size:var(--dws-font-size-16);font-weight:500;color:var(--muted)}.topbar-page-divider{flex:none;color:var(--line)}.topbar-page>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.studio-identity{flex:1}.studio-identity .studio-brand{flex:none;font-size:var(--dws-font-size-16)}.studio-identity .topbar-page{display:flex;align-items:center;gap:12px;min-width:0;font-size:var(--dws-font-size-16);font-weight:500;color:var(--muted)}.topbar-page-divider{flex:none;color:var(--line)}.topbar-page>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--color-primary);color:#fff;border-radius:6px;padding:3px 9px;font-size:var(--dws-font-size-14);line-height:22px;font-weight:600}
 
 /* Fullscreen knowledge tabs share the global title row without remounting content. */
 .studio #shell .knowledge-immersive-topbar .studio-identity{flex:0 0 auto}
