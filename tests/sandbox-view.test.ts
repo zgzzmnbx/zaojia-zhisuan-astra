@@ -59,3 +59,15 @@ test('paint strength defaults to approved sixty-five and respects explicit zero 
  assert.equal(readPaintStrength(null),65);assert.equal(readPaintStrength(''),65);assert.equal(readPaintStrength('bad'),65);
  assert.equal(readPaintStrength('0'),0);assert.equal(readPaintStrength('85'),85);assert.equal(readPaintStrength('150'),100);assert.equal(readPaintStrength('-5'),0);
 });
+import {createAnchoredLabels} from '../03-Src/studio/project-sandbox/anchored-labels.ts';
+test('roof labels retain offscreen anchors and fade without sliding',()=>{
+ const layout=createAnchoredLabels(),items=[{id:'knowledge',ax:-300,ay:240,width:150,height:40,valid:true}];
+ let result=layout.update(items,16,false,1);assert.equal(result.placements[0].x,-375);assert.equal(result.placements[0].y,182);assert.equal(result.placements[0].alpha,1);
+ result=layout.update(items,50,true,2);const fading=result.placements[0].alpha;assert(fading>0&&fading<1);assert.equal(result.placements[0].interactive,false);assert.equal(result.placements[0].x,-375);
+ result=layout.update(items,0,true,2);assert.equal(result.placements[0].alpha,fading);
+ for(let i=0;i<10;i++)result=layout.update(items,50,true,2);assert.equal(result.placements[0].hidden,true);assert.equal(result.pending,false);
+ result=layout.update(items,50,false,1,true);assert.equal(result.placements[0].alpha,0);
+ result=layout.update(items,50,false,1);assert(result.placements[0].alpha>0);assert.equal(result.placements[0].x,-375);
+ result=layout.update(items,50,true,2);assert.equal(result.placements[0].alpha,0);
+ result=layout.update(items,16,false,1,false,true);assert.equal(result.placements[0].alpha,1);assert.equal(result.pending,false);
+});

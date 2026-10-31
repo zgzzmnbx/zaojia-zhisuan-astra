@@ -18,10 +18,9 @@ import {createConveyorWeather} from './conveyor-weather.mjs';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {MiniatureDOF} from '../../studies/sandbox-v11/miniature-dof.js';
 import {zones} from './zones.js';
-import {sandboxFrame,sandboxFocusFrame,spatialMarkerLayout} from './scene-layout.ts';
+import {sandboxFrame,sandboxFocusFrame} from './scene-layout.ts';
 import {createRoofAnchors} from './roof-labels.mjs';
-import {createMarkerLayout} from './marker-layout.ts';
-import {createMarkerMotion} from './marker-motion.ts';
+import {createAnchoredLabels} from './anchored-labels.ts';
 import {createPaintProgress} from './paint-progress.mjs';
 import {createFrameRateMeter} from './frame-rate.ts';
 import {createBakedEffects} from './baked-effects.mjs';
@@ -46,8 +45,8 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(360,360),new THREE.MeshBasicMaterial({color:0xc0c2c1,toneMapped:false,fog:false}));ground.rotation.x=-Math.PI/2;ground.position.y=-1.24;scene.add(ground);
  const heroBox=new THREE.Box3(new THREE.Vector3(-17.15,-1.18,-12.65),new THREE.Vector3(17.15,8.91,12.65));
  const viewTarget=new THREE.Vector3(0,0,-4),viewDirection=new THREE.Vector3(43,42,54).normalize();
- const objects=new Map(),contextObjects=[],zoneBounds=new Map(),spatialVisibility=new Map();
- const roofAnchors=createRoofAnchors(zones),markerLayout=createMarkerLayout(),markerMotion=createMarkerMotion(),paintProgress=createPaintProgress();
+ const objects=new Map(),contextObjects=[],zoneBounds=new Map();
+ const roofAnchors=createRoofAnchors(zones),anchoredLabels=createAnchoredLabels(),paintProgress=createPaintProgress();
  let markerSnapshot={placements:[],pending:false,reflows:0},frame=sandboxFrame(1,1),focusFrame=null;
  let active=false,inView=true,disposed=false,model=null,raf=0,width=1,height=1,frames=0,selected=null,taskTarget=null,down=null,lastTime=0,flight=null;
  let sweepPhase=0,sweepAngle=0;
@@ -99,67 +98,35 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   const conveyorMoving=conveyor.tick(delta,reduced.matches),weatherMoving=weather.tick(delta,reduced.matches);
   const effectPending=effects?.tick(time,delta,reduced.matches,paintProgress.state());
   for(const [id,state] of Object.entries(paintProgress.state())){const marker=markers.get(id);if(marker){marker.style.setProperty('--sandbox-task-fill',String(state.value));marker.dataset.paintPhase=state.phase}}
-  const pending=project(time,moving||!!flight||controls.autoRotate||!!down);
+  const pending=project(delta*1000);
   if(wasBuilding)for(const [id,marker] of markers){if(building){const alpha=entrance.label(id);marker.style.setProperty('opacity',String(alpha),'important');if(alpha<1)marker.inert=true}else marker.style.removeProperty('opacity')}
   try{draw();effects?.render()}catch{active=false;stop();onError('V11 画面渲染失败，请重试或使用经典界面。');return}frames++;fps.frame(time);if(building||effectPending||conveyorMoving||weatherMoving||painting||pending||moving||flight||controls.autoRotate)request();if(!raf)fps.idle();
  }
- // Projection below uses the same marker layout/motion algorithms as main.
- function project(time,moving){
-  if(selected||taskTarget){
-   const items=[],anchors=new Map();
-   let protectedBuilding;
-   const bounds=zoneBounds.get(selected);
-   if(bounds){
-    const corners=[];for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){const p=new THREE.Vector3(x,y,z).project(camera);corners.push({x:(p.x+1)*width/2,y:(1-p.y)*height/2})}
-    const xs=corners.map(p=>p.x),ys=corners.map(p=>p.y);protectedBuilding={x:Math.min(...xs),y:Math.min(...ys),width:Math.max(...xs)-Math.min(...xs),height:Math.max(...ys)-Math.min(...ys)};
-   }
-   for(const zone of zones){
-    const el=markers.get(zone.id);if(!el)continue;
-    el.dataset.condensed='false';el.dataset.locked='false';el.dataset.priority=String(zone.id==='price'||zone.id==='risk');
-    const p=(options.roofLabels?roofAnchors.foot(zone.id):new THREE.Vector3(...zone.anchor)).project(camera);
-    const ax=(p.x+1)*width/2,ay=(1-p.y)*height/2;anchors.set(zone.id,{ax,ay});
-    items.push({id:zone.id,ax,ay,width:el.offsetWidth||150,height:el.offsetHeight||80,selected:zone.id===selected,priority:zone.id===(selected||taskTarget)||zone.id==='price'||zone.id==='risk',valid:!!model&&(zone.id===selected||p.z>=-1&&p.z<=1)});
-   }
-   const placements=spatialMarkerLayout(items,frame,focusFrame,protectedBuilding,spatialVisibility);
-   for(const p of placements)spatialVisibility.set(p.id,p.hidden);
-   const motion=markerMotion.update(placements,time,selected||taskTarget||'overview',{width,height},reduced.matches);
-   for(const p of motion.placements){
-    const el=markers.get(p.id),{ax,ay}=anchors.get(p.id);
-    el.style.visibility=p.hidden?'hidden':'visible';el.inert=p.hidden||p.exiting;
-    el.style.transform=`translate3d(${p.x}px,${p.y}px,0)`;
-    const pin=el.querySelector('.sandbox-pin');if(pin){const dx=ax-p.x-p.width/2,dy=ay-p.y-p.height;pin.style.height=`${Math.hypot(dx,dy)}px`;pin.style.transformOrigin='top';pin.style.transform=`rotate(${Math.atan2(-dx,dy)}rad)`;}
-   }
-   markerSnapshot={placements:motion.placements,pending:motion.pending,reflows:0};return motion.pending;
-  }
-  const inputs=[],anchors=new Map();
+ // Roof labels never reflow or slide to the viewport edges. Detail UI is separate.
+ function project(deltaMs){
+  const inputs=[];
   for(const zone of zones){
-   const el=markers.get(zone.id);if(!el)continue;const p=(options.roofLabels?roofAnchors.foot(zone.id):new THREE.Vector3(...zone.anchor)).project(camera);
-   const ax=(p.x+1)*width/2,ay=(1-p.y)*height/2;
-   // Overview keeps every title available; only focused views cull background labels.
-   const hidden=p.z>1||p.z< -1||!model;el.style.visibility=hidden?'hidden':'visible';el.inert=hidden;if(hidden)continue;
-   const title=el.querySelector('.sandbox-marker-title'),result=el.querySelector('.sandbox-result-trigger');
-   const titleHeight=title?.offsetHeight||38,resultHeight=result?.offsetHeight||0,w=el.offsetWidth||150;
-   anchors.set(zone.id,{ax,ay});
-   inputs.push({id:zone.id,ax,ay,width:w,height:el.querySelector('.sandbox-node-info')?el.offsetHeight:titleHeight+(resultHeight?resultHeight+5:0),titleHeight,tailHeight:el.dataset.progressOpen==='true'?(el.querySelector('.sandbox-progress-content')?.offsetHeight||20):0,priority:zone.id===selected||zone.id==='price'||zone.id==='risk'||zone.id===options.running||el.dataset.progressOpen==='true',selected:zone.id===selected,locked:!flight&&(el.matches(':hover')||!!el.querySelector(':focus-visible'))});
+   const el=markers.get(zone.id);if(!el)continue;
+   const p=roofAnchors.foot(zone.id).project(camera);
+   inputs.push({id:zone.id,ax:(p.x+1)*width/2,ay:(1-p.y)*height/2,width:el.offsetWidth||150,height:el.offsetHeight||38,valid:!!model&&p.z>=-1&&p.z<=1});
   }
-  markerSnapshot=markerLayout.update(inputs,frame,time,moving,reduced.matches);
-  const motion=markerMotion.update(markerSnapshot.placements,time,'overview',{width,height},reduced.matches);
-  markerSnapshot={...markerSnapshot,placements:motion.placements,pending:markerSnapshot.pending||motion.pending};
+  markerSnapshot=anchoredLabels.update(inputs,deltaMs,!!(selected||taskTarget),camera.zoom/(85/effectOptions.distance),!!flight&&!selected&&!taskTarget,reduced.matches);
   for(const p of markerSnapshot.placements){
-   const el=markers.get(p.id),{ax,ay}=anchors.get(p.id);
-   el.style.visibility=p.hidden?'hidden':'visible';el.inert=p.hidden;
-   el.dataset.condensed=String(p.condensed);el.dataset.locked=String(p.locked);el.dataset.priority=String(p.id==='price'||p.id==='risk'||p.id===options.running||el.dataset.progressOpen==='true');
-   el.style.transform=`translate3d(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px,0)`;
-   const pin=el.querySelector('.sandbox-pin'),dx=ax-p.x-p.width/2,dy=ay-p.y-el.offsetHeight;
-   if(pin){pin.style.height=`${Math.hypot(dx,dy)}px`;pin.style.transformOrigin='top';pin.style.transform=`rotate(${Math.atan2(-dx,dy)}rad)`;}
+   const el=markers.get(p.id);el.style.visibility=p.hidden?'hidden':'visible';el.inert=!p.interactive||p.x+p.width<0||p.x>width||p.y+p.height<0||p.y>height;
+   el.style.setProperty('--sandbox-label-visibility',String(p.alpha));
+   el.dataset.condensed='false';el.dataset.locked='false';el.dataset.priority=String(p.id==='price'||p.id==='risk');
+   el.style.transform=`translate3d(${p.x}px,${p.y}px,0)`;
+   const pin=el.querySelector('.sandbox-pin');if(pin){pin.style.height='18px';pin.style.transform='none'}
   }
+  const detail=host.parentElement.querySelector('.sandbox-focus-details');
+  if(detail&&focusFrame){const y=frame.y+Math.min(48,frame.height*.1);detail.style.left=`${focusFrame.cardX}px`;detail.style.top=`${y}px`;const marker=markers.get(selected);if(marker){detail.style.setProperty('--sandbox-task-fill',marker.style.getPropertyValue('--sandbox-task-fill'));detail.dataset.paintPhase=marker.dataset.paintPhase||''}}
   return markerSnapshot.pending;
  }
 
  function fly(position,target,zoom){flight={p0:camera.position.clone(),p1:position,t0:controls.target.clone(),t1:target,z0:camera.zoom,z1:zoom,start:performance.now()};request()}
  function home(animate=true){
   finishEntrance();
-  selected=null;taskTarget=null;markerLayout.reset();spatialVisibility.clear();
+  selected=null;taskTarget=null;
   if(!camera.isOrthographicCamera){camera=new THREE.OrthographicCamera(-30,30,24,-24,.1,600);controls.object=camera;effects?.setCamera(camera)}
   resize();const direction=new THREE.Vector3(43,Math.hypot(43,54)*Math.tan(effectOptions.elevation*Math.PI/180),54).normalize(),position=viewTarget.clone().addScaledVector(direction,100),zoom=85/effectOptions.distance;
   if(animate)fly(position,viewTarget.clone(),zoom);else{camera.position.copy(position);controls.target.copy(viewTarget);camera.zoom=zoom;camera.updateProjectionMatrix();controls.update();request()}
@@ -167,7 +134,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  }
  function select(id,animate=true){
   finishEntrance();
-  if(id===selected)return;selected=zones.some(z=>z.id===id)?id:null;taskTarget=null;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,selected,options.night);
+  if(id===selected)return;selected=zones.some(z=>z.id===id)?id:null;taskTarget=null;reframe();effects?.configure(effectOptions,selected,options.night);
   const box=zoneBounds.get(selected);if(box){const target=box.getCenter(new THREE.Vector3()),direction=camera.position.clone().sub(controls.target).normalize();direction.y=Math.max(.38,direction.y);direction.normalize();const distance=camera.isOrthographicCamera?100:22*135/effectOptions.zoom;const zoom=camera.isOrthographicCamera?2.5*effectOptions.zoom/135:1;if(animate)fly(target.clone().addScaledVector(direction,distance),target,zoom);else{controls.target.copy(target);camera.position.copy(target).addScaledVector(direction,distance);camera.zoom=zoom;camera.updateProjectionMatrix();controls.update()}}request();
  }
  function updateContext(){plaque?.configure(effectOptions,options.night);for(const object of contextObjects)object.visible=settings.city;ground.visible=!settings.city;const color=new THREE.Color(effectOptions.backgroundColor||sandboxGroundTone(effectOptions.groundTone).color).multiplyScalar(effectOptions.backgroundBrightness/100);scene.background=options.night?new THREE.Color('#040813'):effectOptions.preset==='original'?new THREE.Color(settings.city?'#858c8d':'#c0c2c1'):color;ground.material.color.copy(options.night?new THREE.Color('#070d17'):effectOptions.preset==='original'?new THREE.Color(0xc0c2c1):color);request()}
@@ -214,7 +181,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   setProjectInfo(value){projectInfo=value;plaque?.update(value);request()},
   setPaint(input){paintProgress.update(input);request()},
   setTask(input){conveyor.setTask(input);request()},
-  focusProjectInfo(){finishEntrance();selected=null;taskTarget=null;options.orbit=false;controls.autoRotate=false;markerLayout.reset();spatialVisibility.clear();reframe();effects?.configure(effectOptions,null,options.night);const target=new THREE.Vector3(-2.3,-.6,16.5);const zoom=camera.isOrthographicCamera?Math.min(4,(camera.right-camera.left)*frame.width/width/23):1;fly(target.clone().add(new THREE.Vector3(0,24,12)),target,zoom)},
+  focusProjectInfo(){finishEntrance();selected=null;taskTarget=null;options.orbit=false;controls.autoRotate=false;reframe();effects?.configure(effectOptions,null,options.night);const target=new THREE.Vector3(-2.3,-.6,16.5);const zoom=camera.isOrthographicCamera?Math.min(4,(camera.right-camera.left)*frame.width/width/23):1;fly(target.clone().add(new THREE.Vector3(0,24,12)),target,zoom)},
   pauseOrbit(){options.orbit=false;controls.autoRotate=false;},select,focusZone(name){if(name)select(name.replace(/^zone_/,''));else home()},focusTask:select,home,reset:home,
   zoom(factor){if(!Number.isFinite(factor)||factor<=0)return;camera.zoom=THREE.MathUtils.clamp(camera.zoom/factor,.55,8);camera.updateProjectionMatrix();request()},
   refresh(){if(active)reframe();request()},
