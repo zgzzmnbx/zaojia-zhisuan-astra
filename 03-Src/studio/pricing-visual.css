@@ -26,3 +26,15 @@
 
 /* Share the chat analysis cards without inheriting generic report heading spacing. */
 .pricing-map-answer{margin-top:14px}.pricing-map-answer .pricing-analysis-section h4{margin:0 0 6px;font-size:var(--dws-font-size-13)}.pricing-map-answer .pricing-analysis-section .astra-prose{font-size:var(--dws-font-size-13)}
+
+/* The analysis occupies the full right column; each side keeps its own scroll. */
+.pricing-map-scroll.pricing-map-columns{display:grid;grid-template-columns:minmax(0,7fr) minmax(380px,3fr);overflow:hidden;scrollbar-gutter:auto}
+.pricing-map-main{min-width:0;min-height:0;overflow:auto;scrollbar-gutter:stable}
+.studio .pricing-map-columns .pricing-map-path{padding:16px 18px 12px}
+.pricing-map-columns .pricing-flow{margin-top:0}
+.pricing-map-columns .pricing-map-bottom{display:block;padding:18px}
+.pricing-map-columns>.pricing-map-report{display:flex;flex-direction:column;min-height:0;padding:14px 18px 0;border-left:1px solid var(--line)}
+.pricing-map-columns .pricing-map-report-heading{flex-shrink:0}
+.pricing-map-columns .pricing-map-report-body{flex:1;min-height:0;overflow:auto;scrollbar-gutter:stable;padding-bottom:20px}
+.pricing-map.report-expanded .pricing-map-columns{grid-template-columns:minmax(220px,.7fr) minmax(0,2fr)}
+@media(max-width:1200px){.pricing-map-scroll.pricing-map-columns{grid-template-columns:minmax(0,2fr) minmax(320px,1fr)}.pricing-map-columns>.pricing-map-report{padding-left:14px;padding-right:14px}.pricing-map.report-expanded .pricing-map-columns{grid-template-columns:220px minmax(0,1fr)}}
