@@ -6,7 +6,7 @@ import {findImportProject,importProjects,projectImportCard,readImportProjectFile
 
 test('import catalog exposes four explicit demo sources and preserves the V3.1 input identity',()=>{
  assert.equal(importProjects.length,4);assert.equal(new Set(importProjects.map(p=>p.id)).size,4);
- assert.equal(findImportProject('v31')?.url,'/api/astra/sample');assert.match(findImportProject('v31')!.filename,/v3\.1【演示】/);
+ assert.equal(findImportProject('v31')?.url,new URL('../03-Src/studio/project-import-assets/v31.xlsx',import.meta.url).href);assert.match(findImportProject('v31')!.filename,/v3\.1【演示】/);
  assert.equal(projectImportCard().status,'演示项目');assert.match(projectImportCard().note!,/本地样本副本/);
  assert.deepEqual(projectImportCard().items?.map(i=>i.action?.action),importProjects.map(p=>`import-project:${p.id}`));
 });
@@ -23,4 +23,12 @@ test('bundled derivative workbooks match their recorded source and file hashes',
  const sha=(bytes:Buffer)=>createHash('sha256').update(bytes).digest('hex');
  assert.equal(sha(readFileSync(record.source)),record.sourceSha256);
  for(const item of record.files){const bytes=readFileSync(new URL(item.file,base));assert.equal(sha(bytes),item.sha256);assert.equal(bytes.subarray(0,2).toString(),'PK');}
+});
+
+test('V3.1 upload uses the exact user-confirmed August 22 workbook bytes and filename',async()=>{
+ const base=new URL('../03-Src/studio/project-import-assets/',import.meta.url),record=JSON.parse(readFileSync(new URL('v31-source.json',base),'utf8'));
+ const original=readFileSync(record.source),bundled=readFileSync(new URL(record.file,base));
+ assert.deepEqual(bundled,original);assert.equal(bundled.length,127612);assert.equal(createHash('sha256').update(bundled).digest('hex'),'58736e3bce4670fda6d5408acc189d51ed2902e0ffddeb531750cf8da8a0a667');
+ const file=await readImportProjectFile('v31',async url=>{assert.equal(url,findImportProject('v31')!.url);return new Response(bundled)});
+ assert.equal(file.name,record.filename);assert.deepEqual(Buffer.from(await file.arrayBuffer()),original);
 });
