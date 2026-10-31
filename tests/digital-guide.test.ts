@@ -27,3 +27,15 @@ test('incomplete and error packets cannot declare completed costs',()=>{assert.m
 test('invalid session payload is rejected and distinct tasks never share guide keys',()=>{for(const invalid of [null,{}, {...state,taskId:'job_1'}, {...state,revision:-1}, {...state,files:[42]}])assert.equal(readDigitalState(invalid),null);assert.notEqual(guideReply(state).key,guideReply({...state,taskId:'task_2'}).key);});
 
 test("confirmed stages survive history loading without duplicate chat entries",()=>{const a={...state,scaleReady:true,scale:"100"};assert.equal(guideReply(a).key,guideReply({...a,run:"succeeded",runId:"later-loaded",action:"fees"}).key);assert.equal(guideReply({...a,complete:true}).key,guideReply({...a,complete:true,revision:4}).key);});
+
+test('actionable suggestions appear in chat only for the current applicable pending run',()=>{
+ const ready={...state,run:'succeeded',runId:'run_one',runPending:true,canApply:true};
+ for(const purpose of ['boundary','identify']){
+  const reply=guideReply({...ready,purpose});assert.equal(reply.actions[0].action,'digital-apply');
+  assert.equal(reply.actions[0].label,purpose==='boundary'?'采用推荐范围并识别':'一键处理AI建议');
+  const message=digitalGuideMessage({id:'ready',role:'assistant',...reply});assert.equal(message.card?.status,'待确认');
+ }
+ for(const change of [{runPending:false},{canApply:false},{run:'running'},{run:'failed'},{error:'连接中断'}])assert(!guideReply({...ready,...change}).actions.some(a=>a.action==='digital-apply'));
+ assert.notEqual(guideReply(ready).key,guideReply({...ready,runPending:false}).key);
+ for(const flag of ['runPending','canApply'])assert.equal(readDigitalState({...state,[flag]:'true'}),null);
+});

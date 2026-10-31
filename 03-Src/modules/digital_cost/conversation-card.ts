@@ -17,6 +17,7 @@ export function digitalGuideMessage(message:Message):Message{
  else if(name==='digital-identify'){title='文档已就位，开始功能点分析';status='待分析';icon='file';}
  else if(name==='digital-prices'){title='功能规模已确认，核对计价方案';status='待核对';icon='sheet';tone='attention';}
  else if(name==='digital-fees'){title='费用成果已生成';status='可查看';icon='folder';tone='success';}
+ else if(name==='digital-apply'){title=action?.label==='采用推荐范围并识别'?'系统范围已整理':'功能点建议已就绪';status='待确认';icon='shield';tone='attention';}
  else if(name==='digital-next'){title='核对功能点与原文依据';status='待确认';icon='shield';tone='attention';}
  else if(name==='digital-ai'){
   if(action?.label==='查看识别进度'){title=message.text.includes('演示案例')?'正在准备分析结果':'正在分析项目需求';status='处理中';icon='spark';}

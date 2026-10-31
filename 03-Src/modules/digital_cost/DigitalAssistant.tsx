@@ -42,7 +42,7 @@ export function DigitalAssistant({dark=false,palette='astra',active=true,onExpan
   lastTrigger.current=document.activeElement instanceof HTMLElement?document.activeElement:null;
   frame.current?.contentWindow?.postMessage({protocol:toolbarProtocol,type:'command',token:toolbar.token,id:crypto.randomUUID(),action,value},location.origin);
  }
- useEffect(()=>{if(guideCommand&&toolbar&&!toolbar.state.blocked&&!toolbar.state.busy&&active&&!error&&!checking&&commandSent.current!==guideCommand.id){commandSent.current=guideCommand.id;command('guide-'+guideCommand.action);}},[guideCommand?.id,toolbar?.token,toolbar?.state.blocked,toolbar?.state.busy,active,error,checking]);
+ useEffect(()=>{if(guideCommand&&toolbar&&!toolbar.state.blocked&&!toolbar.state.busy&&active&&!error&&!checking&&commandSent.current!==guideCommand.id){commandSent.current=guideCommand.id;command('guide-'+guideCommand.action,guideCommand.expected?JSON.stringify(guideCommand.expected):undefined);}},[guideCommand?.id,toolbar?.token,toolbar?.state.blocked,toolbar?.state.busy,active,error,checking]);
  useEffect(()=>{
   const message=(e:MessageEvent)=>{
    if(e.origin!==location.origin||e.source!==frame.current?.contentWindow)return;
