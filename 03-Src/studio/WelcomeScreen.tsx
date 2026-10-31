@@ -30,7 +30,7 @@ export function WelcomeScreen({runtimeStatus,ready,busy,dark,toggleTheme,openApp
     <p className="aw2-role">工程造价辅助智能体</p></div></div>
     <div className="aw2-actions"><button className="btn btn-primary aw2-enter" type="button" disabled={entering||creating||busy||(!ready&&!error)} onClick={()=>void enterStudio()}><Icon name="spark"/>{entering?'正在进入…':'进入系统'}</button><button className="btn btn-outline aw2-new-task" type="button" disabled={entering||creating||busy||!ready} aria-busy={creating} onClick={()=>void createTask()}>{creating?<span className="loading loading-spinner loading-sm" aria-hidden="true"/>:<Icon name="plus"/>}{creating?'正在新建…':'新建任务'}</button><label className="aw2-check"><input className="checkbox checkbox-sm" type="checkbox" checked={skip} onChange={e=>savePreference(e.target.checked)}/><span>下次直接进入主界面</span></label></div>
     <div className="aw2-feedback">
-     {!ready&&!error&&!creating&&<TaskProgress compact label="正在恢复工作空间"/>}
+     {!ready&&!error&&!creating&&<TaskProgress compact indicator="spinner" label="正在恢复工作空间"/>}
      {(creationError||error||preferenceError)&&<p className="aw2-error" role="alert">{creationError||error||preferenceError}</p>}
     </div>
    </section>

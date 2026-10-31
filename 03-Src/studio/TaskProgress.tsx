@@ -1,9 +1,10 @@
 import {useEffect,useRef,useState,type ReactNode} from 'react';
 import {LoadingLogo} from './brand/LoadingLogo';
+import {Icon} from './ui';
 import './task-progress.css';
 
 /** Only mount while the owning request is pending. Unknown duration stays indeterminate. */
-export function TaskProgress({label,detail,compact=false,leading}:{label:string;detail?:string;compact?:boolean;leading?:ReactNode}){
+export function TaskProgress({label,detail,compact=false,leading,indicator='logo'}:{label:string;detail?:string;compact?:boolean;leading?:ReactNode;indicator?:'logo'|'spinner'}){
  const ref=useRef<HTMLDivElement>(null),[animate,setAnimate]=useState(false);
  useEffect(()=>{
   const host=ref.current;if(!host)return;
@@ -16,7 +17,7 @@ export function TaskProgress({label,detail,compact=false,leading}:{label:string;
  return <div ref={ref} className={`task-progress ${compact?'task-progress--compact':''}`} data-animate={animate} aria-busy="true">
   <div className="task-progress__heading">
    {leading}
-   <span className="task-progress__spinner"><LoadingLogo size={40}/></span>
+   <span className="task-progress__spinner">{indicator==='spinner'?<Icon name="spinner-gap"/>:<LoadingLogo size={40}/>}</span>
    <div className="task-progress__copy" role="status" aria-live="polite"><strong>{label}</strong>{detail&&<small>{detail}</small>}</div>
    <span className="task-progress__activity" aria-hidden="true"><i/><i/><i/></span>
   </div>

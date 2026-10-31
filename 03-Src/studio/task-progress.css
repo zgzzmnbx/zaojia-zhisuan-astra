@@ -2,6 +2,8 @@
 .task-progress__heading{display:flex;align-items:center;gap:12px;min-width:0}
 .task-progress__spinner{display:flex;flex:none;align-items:center;justify-content:center;width:40px;height:40px;border-radius:9px;background:color-mix(in srgb,var(--task-color) 10%,transparent);color:var(--astra-accent,#1971c2)}
 .task-progress__spinner svg{width:100%;height:100%}
+.task-progress__spinner>.astra-icon{width:20px;height:20px;animation:task-spin 1.2s linear infinite}
+@keyframes task-spin{to{transform:rotate(360deg)}}
 .task-progress__copy{flex:1;min-width:0}
 .task-progress .task-progress__copy strong{display:block;font-size:13px;line-height:1.6;font-weight:600;animation:task-breathe 2.8s ease-in-out infinite}
 .task-progress .task-progress__copy small{display:block;margin-top:3px;font-size:12px;line-height:1.6;color:var(--astra-muted,#586d82)}
