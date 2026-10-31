@@ -279,3 +279,7 @@
 
 /* Title background only: text, status cards and progress remain independent. */
 .project-sandbox .sandbox-marker>.sandbox-marker-title{background:color-mix(in srgb,var(--paper) var(--sandbox-label-opacity,62%),transparent)}
+
+/* A persistent toolbar control for the right-hand project cards. */
+.sandbox-info-toggle .astra-icon{transform:scaleX(-1)}
+.sandbox-info-toggle[aria-pressed="true"]{background:var(--astra-primary-soft,#eaf4ff);color:var(--astra-primary-ink)}
