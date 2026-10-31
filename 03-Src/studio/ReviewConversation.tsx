@@ -9,12 +9,13 @@ import './review-conversation.css';
 
 const profiles=[['default','飞书'],['weact_cost','WeAct']] as const;
 function defaultDeadline(){const d=new Date(Date.now()+86400000);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16);}
-export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{request:ReviewRequest;busy:boolean;onBusy:(label:string)=>void;onSettings:()=>void;onClose:()=>void}){
+export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readOnly=false}:{request:ReviewRequest;readOnly?:boolean;busy:boolean;onBusy:(label:string)=>void;onSettings:()=>void;onClose:()=>void}){
  const [platforms,setPlatforms]=useState<ReviewPlatform[]>([]),[loading,setLoading]=useState(true),[sending,setSending]=useState(false),[feedback,setFeedback]=useState(''),[error,setError]=useState('');
  const [confirmed,setConfirmed]=useState(false),[round,setRound]=useState(false),[deadline,setDeadline]=useState(defaultDeadline),[instructions,setInstructions]=useState('请复核当前成果、匹配依据和风险项；在复核卡中填写意见后通过或退回。');
  const [tasks,setTasks]=useState<ReviewTask[]>([]),[fetchedAt,setFetchedAt]=useState(''),[external,setExternal]=useState(false);
  const [progressOpen,setProgressOpen]=useState(false),progressId=useId();
  const alive=useRef(true),epoch=useRef(0),lock=useRef(false),controller=useRef<AbortController|null>(null);
+ const editable=useRef(!readOnly);editable.current=!readOnly;
  const edit=(id:string,fn:(p:ReviewPlatform)=>ReviewPlatform)=>{setConfirmed(false);setRound(false);setPlatforms(all=>all.map(p=>p.profileId===id?fn(p):p));};
  async function load(refresh=false){
   if(lock.current)return;const generation=++epoch.current;controller.current?.abort();const abort=new AbortController();controller.current=abort;setLoading(true);setConfirmed(false);setRound(false);setError('');
@@ -22,10 +23,10 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
    const connection=await api<{external_enabled:boolean}>('/api/astra/connections',{signal:abort.signal});
    const list=await api<{items:ReviewTask[]}>('/api/collaboration/external-dispatch/tasks?limit=100',{signal:abort.signal});
    const current=latestReviewTasksByPlatform(list.items,request.jobId) as ReviewTask[];
-   const options=request.kind==='setup'?await Promise.allSettled(profiles.map(([id])=>api<ReviewOptions>(`/api/collaboration/external-dispatch/options?profile_id=${id}${refresh?'&refresh_directory=true':''}`,{signal:abort.signal}))):[];
+   const options=request.kind==='setup'&&!readOnly?await Promise.allSettled(profiles.map(([id])=>api<ReviewOptions>(`/api/collaboration/external-dispatch/options?profile_id=${id}${refresh?'&refresh_directory=true':''}`,{signal:abort.signal}))):[];
    if(!alive.current||generation!==epoch.current)return;
    setExternal(connection.external_enabled);setTasks(current);setFetchedAt(new Date().toISOString());
-   if(request.kind==='setup')setPlatforms(old=>profiles.map(([id,label],index)=>{
+   if(request.kind==='setup'&&!readOnly)setPlatforms(old=>profiles.map(([id,label],index)=>{
     const outcome=options[index],o=outcome?.status==='fulfilled'?outcome.value:null,previous=old.find(p=>p.profileId===id),task=current.find(t=>t.platform===id)||null;
     const available=!!o&&o.active_profile===id&&o.platforms.some(p=>p.profile_id===id&&p.configuration_ok)&&connection.external_enabled;
     const group=o?.directory.groups.find(g=>g.group_ref===previous?.group)||o?.directory.groups.find(g=>g.authorized);
@@ -35,9 +36,9 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
   }catch(e){if(alive.current&&generation===epoch.current){setExternal(false);setError((e as Error).message);setPlatforms(old=>old.map(p=>({...p,configurationOk:false})));}}
   finally{if(alive.current&&generation===epoch.current)setLoading(false);}
  }
- useEffect(()=>{alive.current=true;void load();return()=>{alive.current=false;epoch.current++;controller.current?.abort();};},[]);
+ useEffect(()=>{alive.current=true;void load();return()=>{alive.current=false;epoch.current++;controller.current?.abort();};},[readOnly,request.jobId,request.kind]);
  async function send(renew=false){
-  if(lock.current||busy||loading)return;
+  if(!editable.current||lock.current||busy||loading)return;
   const problem=reviewProblem(platforms,confirmed,instructions,deadline);if(problem){setFeedback(problem);return;}
   if(!external){setFeedback('请先完成协同设置。');return;}
   if(platforms.some(p=>p.enabled&&p.task)&&!renew){setRound(true);return;}
@@ -51,7 +52,7 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
     if(!payload.task||payload.task.platform!==p.profileId||payload.task.source_job_id!==request.jobId)throw new Error('复核回执与当前平台或成果不一致，请刷新核对。');
     if(alive.current)setTasks(old=>[...old.filter(t=>t.platform!==p.profileId),payload.task]);
     return payload;
-   },()=>alive.current);
+   },()=>alive.current&&editable.current);
    if(!alive.current)return;
    const notes:string[]=[];
    responses.forEach((outcome,index)=>{
@@ -66,11 +67,12 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose}:{req
   }finally{lock.current=false;onBusy('');if(alive.current)setSending(false);}
  }
  async function retry(id:string){
-  const p=platforms.find(p=>p.profileId===id);if(lock.current||busy||loading||!p?.task?.can_retry||!external)return;
+  const p=platforms.find(p=>p.profileId===id);if(!editable.current||lock.current||busy||loading||!p?.task?.can_retry||!external)return;
   lock.current=true;setSending(true);onBusy('正在重试复核失败步骤');
   try{const data=await api<{task:ReviewTask}>(`/api/collaboration/external-dispatch/tasks/${encodeURIComponent(p.task.task_id)}/retry`,{method:'POST'});if(!alive.current)return;if(data.task?.task_id!==p.task.task_id||data.task.platform!==id||data.task.source_job_id!==request.jobId)throw Error('重试回执不一致，请刷新核对。');edit(id,current=>({...current,task:data.task,feedback:`重试结果：${data.task.status_label}`}));setTasks(old=>old.map(t=>t.task_id===data.task.task_id?data.task:t));}catch(e){if(alive.current)setFeedback((e as Error).message);}finally{lock.current=false;onBusy('');if(alive.current)setSending(false);}
  }
  const display=platforms.map(p=>({...p,directDeliveryAvailable:p.options?.direct_delivery.status==='available',groups:p.options?.directory.groups||[],people:reviewPeople(p)}));
+ if(readOnly)return <div className="astra-review"><div className="review-toolbar"><span className="badge badge-ghost" title={`此卡创建于成果第 ${request.version} 版，保留对应任务的复核记录。`}>复核记录</span></div><InlineReviewProgressCard readOnly snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose}/></div>;
  return <div className="astra-review">
   <div className="review-toolbar"><span className="badge badge-outline">飞书 / WeAct</span><button className="btn btn-ghost btn-sm" disabled={sending} onClick={onSettings}>协同设置</button></div>
   {error&&<div className="alert review-read-error" role="alert"><span>{error}</span><button className="btn btn-sm" disabled={loading||sending} onClick={()=>void load()}>重试读取</button></div>}

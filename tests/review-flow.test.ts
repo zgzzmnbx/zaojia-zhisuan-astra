@@ -2,6 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {dispatchReviewPlatforms,initialReviewEnabled,reviewPeople,reviewProblem,reviewPayload,type ReviewPlatform,type ReviewRequest} from '../03-Src/studio/review-flow.ts';
 import {reviewConfirmationProblem,type ReviewSetupPlatform} from '../03-Src/professional/components/agent-workspace/review-setup-readiness.ts';
+import {reviewIsCurrent} from '../03-Src/studio/review-flow.ts';
+test('old review cards stay read-only across artifact, job and conversation changes',()=>{
+ const request:ReviewRequest={kind:'setup',jobId:'job-a',fileName:'成果.xlsx',projectName:'项目',version:2,reviewRows:0};
+ assert(reviewIsCurrent(request,'chat-a','chat-a','job-a',2,false));
+ for(const args of [['chat-a','chat-a','job-a',3,false],['chat-a','chat-a','job-b',2,false],['chat-a','chat-b','job-a',2,false],['chat-a','chat-a','job-a',2,true],[undefined,'chat-a','job-a',2,false]] as const)assert(!reviewIsCurrent(request,...args));
+ assert(!reviewIsCurrent({...request,closed:true},'chat-a','chat-a','job-a',2,false));
+ assert(reviewIsCurrent({...request,kind:'progress'},'chat-a','chat-a','job-a',2,true));
+});
 const request:ReviewRequest={kind:'setup',jobId:'job-a',fileName:'成果.xlsx',projectName:'当前项目',version:2,reviewRows:3};
 function platform(id='default'):ReviewPlatform{return {profileId:id,label:id==='default'?'飞书':'WeAct',configurationOk:true,enabled:true,expanded:true,deliveryChannels:['direct'],group:'group-a',selectedReviewers:['one'],task:null,loading:false,feedback:'',options:{active_profile:id,platforms:[{profile_id:id,configuration_ok:true}],direct_delivery:{status:'available'},directory:{people:[{person_ref:'one',display_name:'复核甲'}],groups:[{group_ref:'group-a',name:'项目群',member_count:2,authorized:true,members_available:true,people:[{person_ref:'two',display_name:'复核乙'}]}]}}};}
 const validate=(items:ReviewPlatform[],confirmed=true)=>reviewProblem(items,confirmed,'请复核','2026-12-01T18:00');

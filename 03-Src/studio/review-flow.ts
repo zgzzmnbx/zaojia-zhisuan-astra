@@ -5,6 +5,10 @@ export type ReviewOptions={active_profile:string;platforms:{profile_id:string;co
 export type ReviewTask=ReviewProgressTask&{can_retry:boolean;error?:string};
 export type ReviewPlatform={profileId:string;label:string;configurationOk:boolean;enabled:boolean;expanded:boolean;options:ReviewOptions|null;deliveryChannels:('direct'|'group')[];group:string;selectedReviewers:string[];task:ReviewTask|null;loading:boolean;feedback:string};
 export type ReviewRequest={kind:'setup'|'progress';jobId:string;fileName:string;projectName:string;reviewRows:number;version:number;closed?:boolean};
+/** Old cards remain readable; only the current artifact may initiate delivery. */
+export function reviewIsCurrent(request:ReviewRequest,context:string|undefined,activeContext:string,jobId:string|undefined,version:number,needsRecalculate:boolean){
+ return !request.closed&&context===activeContext&&request.jobId===jobId&&request.version===version&&(request.kind==='progress'||!needsRecalculate);
+}
 /** The host serializes writes. Keep each confirmed platform's result; never retry a send implicitly. */
 export async function dispatchReviewPlatforms<T,R>(items:readonly T[],dispatch:(item:T,index:number)=>Promise<R>,canContinue:()=>boolean=()=>true):Promise<PromiseSettledResult<R>[]>{
  const replies:PromiseSettledResult<R>[]=[];

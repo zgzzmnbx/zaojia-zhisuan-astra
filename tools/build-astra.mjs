@@ -28,6 +28,7 @@ for(const file of ["03-Src/studio/api.ts"])sources[file]=crypto.createHash('sha2
 const ledgerSource='03-Src/engine/backend/app/project_ledger.py';
 sources[ledgerSource]=crypto.createHash('sha256').update(fs.readFileSync(ledgerSource)).digest('hex');
 for(const name of ["03-Src/studio/LogoSettings.tsx", "03-Src/studio/PricingDetails.tsx", "03-Src/studio/TaskProgress.tsx", "03-Src/studio/brand/LoadingLogo.tsx", "03-Src/studio/brand/LoadingLogoSettings.tsx", "03-Src/studio/brand/loading-logo.css", "03-Src/studio/brand/loading-preferences.ts", "03-Src/studio/brand/loading-ring.mjs", "03-Src/studio/brand/loading-wave.mjs", "03-Src/studio/brand/logo-renderer.mjs", "03-Src/studio/brand/useLoadingMotion.ts", "03-Src/studio/data-visualization/ChartState.tsx", "03-Src/studio/knowledge-articles/KnowledgeArticlesModule.tsx", "03-Src/studio/knowledge-articles/KnowledgeNodeDetail.tsx", "03-Src/studio/task-progress.css", "tools/build-astra.mjs"])sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');
+for(const name of ['03-Src/studio/ReviewConversation.tsx','03-Src/studio/review-flow.ts','03-Src/professional/components/agent-workspace/InlineReviewProgressCard.tsx'])sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');
 fs.writeFileSync(`${staging}/astra-build.json`,JSON.stringify({version:packageInfo.version,builtAt:new Date().toISOString(),sources},null,2));
 
 publishBuild(staging,outDir);

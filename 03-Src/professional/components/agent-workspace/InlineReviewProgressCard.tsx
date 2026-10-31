@@ -20,6 +20,7 @@ import {
 import "./inlineReviewProgressCard.css";
 
 type Props = {
+  readOnly?: boolean;
   snapshot: ReviewProgressSnapshot;
   refreshing: boolean;
   onRefresh: () => void;
@@ -59,7 +60,7 @@ function deliveryLabel(value?: string) {
   return value!;
 }
 
-export default function InlineReviewProgressCard({ snapshot, refreshing, onRefresh, onStartReview, onAddPlatform = onStartReview }: Props) {
+export default function InlineReviewProgressCard({ snapshot, refreshing, onRefresh, onStartReview, onAddPlatform = onStartReview, readOnly=false }: Props) {
   const summary = summarizeReviewProgress(snapshot.tasks);
   const refreshedAt = formatDate(snapshot.fetchedAt);
 
@@ -90,7 +91,7 @@ export default function InlineReviewProgressCard({ snapshot, refreshing, onRefre
         <div className="inline-review-progress__empty">
           <span><UsersRound size={24} /></span>
           <div><strong>当前成果尚未发起审核</strong><p>发送后，这里会按飞书和 WeAct 分别显示每位复核人的处理状态。</p></div>
-          <button type="button" onClick={onStartReview}><Send size={14} />设置并发送</button>
+          {!readOnly&&<button type="button" onClick={onStartReview}><Send size={14} />设置并发送</button>}
         </div>
       ) : snapshot.tasks.length > 0 ? (
         <>
@@ -147,7 +148,7 @@ export default function InlineReviewProgressCard({ snapshot, refreshing, onRefre
                 <header>
                   <span className={`inline-review-progress__platform-mark is-${platform}`}>{platformMark(platform)}</span>
                   <div><strong>{platformLabel(platform)}</strong><small>尚未发起</small></div>
-                  <button className="inline-review-progress__refresh" type="button" onClick={onAddPlatform}><Send size={14} />设置并发送</button>
+                  {!readOnly&&<button className="inline-review-progress__refresh" type="button" onClick={onAddPlatform}><Send size={14} />设置并发送</button>}
                 </header>
                 <p className="inline-review-progress__no-reviewer">未找到本成果在此平台的复核任务。</p>
               </section>
