@@ -27,7 +27,7 @@ test('built-in defaults match the approved current browser rather than its older
  const current=normalizeSandboxParameters(null),{conveyor,...priorBaked}=current.baked;
  const {labelTransparency,...priorDisplay}=current.display;
  assert.equal(labelTransparency,38);
- assert.deepEqual({...current,baked:priorBaked,display:priorDisplay},captured.sandbox);
+ assert.deepEqual({...current,baked:priorBaked,display:priorDisplay},{...captured.sandbox,baked:{...captured.sandbox.baked,groupLogo:'white'}});
  assert.deepEqual(conveyor,{visible:true,continuous:true,style:'building-blue-edge',nightBrightness:100,weather:'clear',weatherStrength:1});
  assert.deepEqual(DEFAULT_GALAXY_SETTINGS,{...captured.galaxy,unselectedOpacity:.5,unrelatedLinkBrightness:.05});
 });

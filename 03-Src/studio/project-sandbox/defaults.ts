@@ -41,7 +41,7 @@ export const sandboxParameterDefaults={
   "shadows": false,
   "flow": true,
   "conveyor": {"visible":true,"continuous":true,"style":"building-blue-edge","nightBrightness":100,"weather":"clear","weatherStrength":1},
-  "groupLogo": "hidden",
+  "groupLogo": "white",
   "logoGlow": {"enabled": true,"brightness": 60,"color": "#b9e4ff"},
   "nightSettings": {"style":"studio","shell":25,"core":120,"halo":120,"context":110,"flowBrightness":185,"flowSoftness":150,"brightness":45,"bloom":110,"windows":true,"flow":true,"logo":true,"boats":true,"logoBrightness":110,"logoColor":"#85d0ff"},
   "groundTone": "mist",
