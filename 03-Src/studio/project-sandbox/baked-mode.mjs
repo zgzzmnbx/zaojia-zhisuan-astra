@@ -1,3 +1,4 @@
+import {createFocusConnector} from './focus-connector.mjs';
 import cleanupPriceUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/site-cleanup-v1/price-clean.png?url';
 import cleanupSiteUrl from '../../../05-视觉识别/02-3D场景/sandbox-v11/site-cleanup-v1/site-clean.png?url';
 import {applySiteCleanup} from './site-cleanup.mjs';
@@ -49,6 +50,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
  const heroBox=new THREE.Box3(new THREE.Vector3(-17.15,-1.18,-12.65),new THREE.Vector3(17.15,8.91,12.65));
  const viewTarget=new THREE.Vector3(0,0,-4),viewDirection=new THREE.Vector3(43,42,54).normalize();
  const objects=new Map(),contextObjects=[],zoneBounds=new Map();
+ const focusConnector=createFocusConnector(host,request);
  const roofAnchors=createRoofAnchors(zones),anchoredLabels=createAnchoredLabels(),paintProgress=createPaintProgress();
  let markerSnapshot={placements:[],pending:false,reflows:0},frame=sandboxFrame(1,1),focusFrame=null;
  let active=false,inView=true,disposed=false,model=null,raf=0,width=1,height=1,frames=0,selected=null,taskTarget=null,down=null,lastTime=0,flight=null;
@@ -123,6 +125,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   }
   const detail=host.parentElement.querySelector('.sandbox-focus-details');
   if(detail&&focusFrame){const y=frame.y+Math.min(48,frame.height*.1);detail.style.left=`${focusFrame.cardX}px`;detail.style.top=`${y}px`;const marker=markers.get(selected);if(marker){detail.style.setProperty('--sandbox-task-fill',marker.style.getPropertyValue('--sandbox-task-fill'));detail.dataset.paintPhase=marker.dataset.paintPhase||''}}
+  focusConnector.update(selected?inputs.find(p=>p.id===selected):null,detail&&focusFrame?detail:null,width,height);
   return markerSnapshot.pending;
  }
 
@@ -186,7 +189,7 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   if(!completed||disposed)throw Error('Baked mode disposed');prepared=true;return api;
  });ready.catch(()=>{loadFailed=true;if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null;}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null;}for(const t of textures)t.dispose();textures.length=0});
  const api={ready,
-  setActive(value){active=!!value;canvas.hidden=!active;controls.enabled=active;if(active){for(const marker of markers.values())marker.style.removeProperty('opacity');resize();request()}else stop()},
+  setActive(value){if(!value)focusConnector.hide();active=!!value;canvas.hidden=!active;controls.enabled=active;if(active){for(const marker of markers.values())marker.style.removeProperty('opacity');resize();request()}else stop()},
   setOptions(next){const previous=effectOptions,nightChanged=next.night!==undefined&&next.night!==options.night;if(entrance?.active&&(nightChanged||next.running||next.bakedSettings&&JSON.stringify(previous)!==JSON.stringify(normalizeBakedSettings(next.bakedSettings))))finishEntrance();options={...options,...next};effectOptions=normalizeBakedSettings(options.bakedSettings);conveyor.setOptions({...effectOptions.conveyor,visible:effectOptions.preset!=='original'&&effectOptions.conveyor.visible,night:options.night});weather.configure(effectOptions.preset==='original'?{weather:'clear'}:effectOptions.conveyor);if(nightChanged||JSON.stringify(previous)!==JSON.stringify(effectOptions)){effects?.configure(effectOptions,selected,options.night);updateContext();if(previous.elevation!==effectOptions.elevation||previous.distance!==effectOptions.distance)home();else if(selected&&previous.zoom!==effectOptions.zoom){const id=selected;selected=null;select(id)}}if(active)resize();request()},
   setSettings(next){settings={...settings,...next};updateContext()},
   setProjectInfo(value){projectInfo=value;plaque?.update(value);request()},
@@ -212,6 +215,6 @@ export function createBakedWorkspaceMode(host,markers,{loadModel,onSelect,onOrbi
   },
   capture(){if(!allowed())return Promise.reject(Error('Baked scene must be visible'));draw();effects?.render();return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Capture failed')),'image/png'))},
   state(){return {siteCleanup:siteCleanup?.state(),prepared,plaque:plaque?.state()??null,entrance:entrance?.state()??{active:false,skipped:entranceChecked},mode:'baked',active:allowed(),pending:!!raf,frames,ready:prepared,selected,taskTarget,paint:paintProgress.state(),conveyor:conveyor.state(),weather:weather.state(),camera:camera.position.toArray(),target:controls.target.toArray(),frame,focusFrame,size:[width,height],markerLayout:markerSnapshot,city:settings.city,dof:settings.dof,strength:settings.strength,dofFailed,drawCalls:renderer.info.render.calls,textures:renderer.info.memory.textures,geometries:renderer.info.memory.geometries,projection:camera.type,toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,output:renderer.outputColorSpace,contextRoles:contextObjects.map(o=>({role:o.userData.role,visible:o.visible})),effects:effects?.state(),background:{color:scene.background.getHexString(),custom:effectOptions.backgroundColor},settings:effectOptions}},
-  dispose(){if(disposed)return;finishEntrance();disposed=true;preparation.dispose();active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();plaque?.dispose();if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null}conveyor.dispose();weather.dispose();effects?.dispose();siteCleanup?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
+  dispose(){if(disposed)return;focusConnector.dispose();finishEntrance();disposed=true;preparation.dispose();active=false;stop();events.abort();observer.disconnect();visibility.disconnect();controls.dispose();plaque?.dispose();if(logoAsset){releaseFrozenModel(logoAsset.scene);logoAsset=null}if(plaqueAsset&&!plaque){releaseFrozenModel(plaqueAsset.scene);plaqueAsset=null}conveyor.dispose();weather.dispose();effects?.dispose();siteCleanup?.dispose();for(const t of textures)t.dispose();textures.length=0;model?.removeFromParent();miniature?.dispose();ground.geometry.dispose();ground.material.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()},
  };return api;
 }
