@@ -22,7 +22,7 @@ import {prepareReviewArtifact,reviewIsCurrent} from './review-flow';
 import {GorkSettings} from './GorkSettings';
 import {DocumentPanel} from './DocumentPanel';
 import {GongwenCard} from './GongwenCard';
-import {riskMarkdownSource as reportMarkdownSource,reportProgressCard,type RiskReportReply} from './risk-document';
+import {riskMarkdownSource as reportMarkdownSource,reportProgressCard,formatRiskReport,type RiskReportReply} from './risk-document';
 import {sourceKey,type DocumentSource,type DocumentState,type FormattedDocument,type GongwenDraft} from './document-types';
 import {installEntranceMotion} from './entrance-motion';
 import './entrance-motion.css';
@@ -571,17 +571,18 @@ function App(){
       const data=await api<RiskReportReply>('/api/risk-report',form({job_id:job,...await modelForm()}));
       if(context!==conversationContext.current||loadedJob.current!==job)return;
       progress(1);
-      const reportInfo=await refreshReport(job);
-      if(context!==conversationContext.current||loadedJob.current!==job)return;
-      const source={...reportMarkdownSource(job,data),reportRevision:reportInfo?.sha256};
-      setRiskDocument(source);
+      const markdown=reportMarkdownSource(job,data);
+      const current=()=>context===conversationContext.current&&loadedJob.current===job&&workspace.currentConversation()?.id===conversation;
       progress(2);
-      const prepared=await api<import('./document-types').GongwenPrepared>('/api/astra/documents/prepare',json({...source,conversation_id:conversation,sha256:source.revision}));
-      if(context!==conversationContext.current||loadedJob.current!==job)return;
-      const output=await api<FormattedDocument>('/api/astra/documents/format',json({...source,conversation_id:conversation,sha256:prepared.sha256,prepared_id:prepared.id,options:{...prepared.defaults,confirmed_title:'none'}}));
-      if(context!==conversationContext.current||loadedJob.current!==job||workspace.currentConversation()?.id!==conversation)return;
+      const [reportInfo,formatted]=await Promise.all([
+        refreshReport(job),
+        formatRiskReport(markdown,conversation,data,(path,payload)=>api(path,json(payload)),current),
+      ]);
+      if(!current()||!formatted)return;
+      const source={...markdown,reportRevision:reportInfo?.sha256};
+      const {output,formatDraft}=formatted;
+      setRiskDocument(source);
       progress(3);
-      const formatDraft:GongwenDraft={prepared,options:prepared.defaults,titleMode:'none',selected:'',manualTitle:''};
       setDocuments(all=>({...all,[sourceKey(source)]:{source,output,formatDraft,showOriginal:false}}));
       setGongwenSource(source);setGongwenOpen(false);gorkFeedback.success();progress(4);
       add(data.risk_report_mode==='demo_preset'?'演示风险报告已排为公文格式，未调用模型。':'模型风险报告已排为公文格式。',[{label:'查看报告',action:'report',primary:true}],'assistant',false,{kind:'artifact',title:output.name,caption:data.risk_report_mode==='demo_preset'?'演示预设 · 公文格式':'风险报告 · 公文格式',icon:'file',status:output.warnings.length?'待核对':'已生成',note:output.warnings.join('；')||undefined});
