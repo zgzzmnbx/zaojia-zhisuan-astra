@@ -60,6 +60,33 @@ def test_row_candidates_are_readonly_and_confirm_only_one_price_field(row):
     book=load_workbook(output);assert book['表2']['G2'].value==3000;assert book['表2']['H2'].value==1.5;assert book['表2']['I2'].value==0.33;assert '辅助填价人工确认' in book['表2']['G2'].comment.text;book.close()
     assert client.post('/api/astra/row-assist/confirm',json={**data,'candidate_id':data['candidates'][0]['id']}).status_code==409
 
+
+def test_pending_match_allows_explicit_row_fill_without_completing_batch(row):
+    client,root,output,payload=row
+    path=root/payload['job_id']/'process-state.json'
+    state=json.loads(path.read_text(encoding='utf-8'));state['summary']['matching_status']='pending'
+    path.write_text(json.dumps(state),encoding='utf-8')
+    book=load_workbook(output);book['表2']['G2']=None;book.save(output);book.close()
+    before=hashlib.sha256(output.read_bytes()).hexdigest();data=candidate(row)
+    assert hashlib.sha256(output.read_bytes()).hexdigest()==before
+    reply=client.post('/api/astra/row-assist/confirm',json={**data,'candidate_id':data['candidates'][0]['id']})
+    assert reply.status_code==200,reply.text
+    assert reply.json()['summary']['matching_status']=='pending'
+    book=load_workbook(output);assert book['表2']['G2'].value==3000
+    assert book['表2']['H2'].value==1.5 and book['表2']['I2'].value==0.33;book.close()
+    assert not (root/payload['job_id']/'batch-match-status.json').exists()
+
+
+def test_inflight_batch_write_excludes_row_confirmation(row):
+    client,_,output,_=row;data=candidate(row)
+    before=hashlib.sha256(output.read_bytes()).hexdigest()
+    client.portal.call(server.write_lock.acquire)
+    try:
+        reply=client.post('/api/astra/row-assist/confirm',json={**data,'candidate_id':data['candidates'][0]['id']})
+        assert reply.status_code==409,reply.text
+        assert hashlib.sha256(output.read_bytes()).hexdigest()==before
+    finally:client.portal.call(server.write_lock.release)
+
 def test_manual_change_invalidates_the_old_candidate_and_retains_pending_recalculation(row):
     client,root,output,payload=row;data=candidate(row)
     reply=client.post('/api/preview/cell',json={'job_id':payload['job_id'],'sheet_name':'表2','row_number':2,'column_number':7,'value':999,'edit_note':'人工修改','recalculate':False})

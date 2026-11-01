@@ -26,13 +26,13 @@ type Props={
   active?:boolean;location?:CellLocation;
   result:Result;sheetIndex:number;setSheetIndex:(index:number)=>void;busy:boolean;
   match:()=>void;recalculate:()=>void;needsRecalculate:boolean;selectedRow?:number;
-  assist?:(cell:SelectedCell)=>void;edit:(cell:SelectedCell)=>void;inspect:(cell:SelectedCell)=>void;
+  assistBlocked?:boolean;assist?:(cell:SelectedCell)=>void;edit:(cell:SelectedCell)=>void;inspect:(cell:SelectedCell)=>void;
   preferences:PreviewColumnPreferences;setPreferences:(value:PreviewColumnPreferences)=>void;
   refreshHeaders:(rows:Record<string,number>)=>Promise<boolean>;
 };
 
 /** Sheet toolbar / tabs / resizable columns / fixed row actions follow the original preview structure. */
-export function Workbook({active=true,location,result,sheetIndex,setSheetIndex,busy,match,recalculate,needsRecalculate,selectedRow,assist,edit,inspect,preferences,setPreferences,refreshHeaders}:Props){
+export function Workbook({active=true,location,result,sheetIndex,setSheetIndex,busy,match,recalculate,needsRecalculate,selectedRow,assist,assistBlocked=false,edit,inspect,preferences,setPreferences,refreshHeaders}:Props){
   const sheets=previewSheetsFromTablePreview(result.summary.table_preview);
   const activeSheetIndex=sheets[sheetIndex]?sheetIndex:0;
   const sheet=sheets[activeSheetIndex];
@@ -150,7 +150,7 @@ export function Workbook({active=true,location,result,sheetIndex,setSheetIndex,b
           const selected={sheet:sheet.sheet_name,row:excelRow,column:column.index+1,header:column.label,value:value??null};
           const located=target?.row===excelRow&&target.column===column.index+1;
           return <td key={column.index} data-preview-column={column.index+1} data-risk-severity={located?target.severity:undefined} tabIndex={located?-1:undefined} aria-label={located?`${column.label}，第 ${excelRow} 行，${text}，风险待复核`:undefined} className={`${previewCellClass(column,row,available)||''} ${typeof value==='number'?'preview-numeric-cell':''} ${located?'preview-cell-located':''}`} style={{'--preview-column-width':`${width(column)}px`} as CSSProperties} title={previewCellTitle(column,row,available)}>{canEdit?<button className="preview-cell-content preview-cell-edit" aria-label={`编辑第 ${excelRow} 行 ${column.label}`} title={`${text}\n双击或按 Enter 编辑`} onDoubleClick={()=>edit(selected)} onClick={e=>{if(e.detail===0)edit(selected);}}>{text||<span className="empty-cell">—</span>}</button>:<span className="preview-cell-content">{column.kind==='warning'&&text&&<Icon name={warning==='ok'?'check':'alert'}/>}<span>{text||<span className="empty-cell">—</span>}</span></span>}</td>;
-        })}<td className="row-ai-cell">{assist&&canPriceRow(sheet.headers,row,excelRow,sheet.header_row,isTotalSummaryRow(row))&&<div className="row-ai-actions"><button className="btn btn-ghost" aria-label={`第 ${excelRow} 行 AI 填价`} title="AI 填价：推荐价格、模型分析与详细依据" disabled={busy||!complete} onClick={()=>assist({sheet:sheet.sheet_name,row:excelRow,column:0,header:'',value:null})}><Icon name="spark"/></button></div>}</td></tr>;})}</tbody></table>
+        })}<td className="row-ai-cell">{assist&&canPriceRow(sheet.headers,row,excelRow,sheet.header_row,isTotalSummaryRow(row))&&<div className="row-ai-actions"><button className="btn btn-ghost" aria-label={`第 ${excelRow} 行 AI 填价`} title="AI 填价：推荐价格、模型分析与详细依据" disabled={busy||assistBlocked} onClick={()=>assist({sheet:sheet.sheet_name,row:excelRow,column:0,header:'',value:null})}><Icon name="spark"/></button></div>}</td></tr>;})}</tbody></table>
         {!rows.length&&<div className="empty-state"><Icon name="search"/><p>当前筛选没有记录</p><Button onClick={()=>{setQuery('');setHideEmpty(false);}}>显示全部预览行</Button></div>}
       </div>
     </div>
