@@ -402,6 +402,9 @@ function App(){
   },[activeDocumentSource?.source_id,activeDocumentSource?.kind,layout.chatActive]);
 
   async function perform(label:string,work:()=>Promise<void>){if(busyRef.current||!workspace.ready)return;gorkFeedback.interruptSuccess();busyRef.current=true;setBusy(label);setOperationError('');try{await work();}catch(e){const message=e instanceof Error?e.message:'操作失败，请检查服务状态后重试。';setOperationError(message);add(message,undefined,'assistant',true);}finally{setBusy('');busyRef.current=false;}}
+  async function performProjectStep(label:string,work:()=>Promise<void>){
+    await perform(label,async()=>{showSandbox();setConversationCollapsed(false);await work();});
+  }
   async function prepareReview(kind:'setup'|'progress'='setup'){
     if(busyRef.current||!workspace.ready)return;
     presentation.prepareInput();setSidebar(false);
@@ -414,7 +417,7 @@ function App(){
     pendingFeeFocus.current=message.id;setMessages(old=>[...old.filter(m=>m.id!==message.id),message]);
     };
     if(kind==='progress'){showCard(result);return;}
-    await perform('正在准备复核成果',async()=>{
+    await performProjectStep('正在准备同事复核',async()=>{
       const current=await prepareReviewArtifact(job,()=>api<Result>(`/api/astra/runs/${job}`),()=>{
         setBusy('正在重算公式并刷新复核报告');
         return api<Result>('/api/preview/recalculate',json({job_id:job}));
@@ -487,7 +490,7 @@ function App(){
     const key=result.job_id+JSON.stringify(previewPreferences.headerRows);
     if(changed&&previewRefreshAttempt.current!==key){previewRefreshAttempt.current=key;void refreshPreviewHeaders(previewPreferences.headerRows);}
   },[result,busy,view,previewPreferences.headerRows]);
-  async function inspectFile(next:File,existingAssetId?:string){if(/\.(docx?|md|markdown)$/i.test(next.name)){await openDocumentFile(next,existingAssetId);return;}const token=presentation.interactionToken();await perform('识别工作表与专业字段',async()=>{
+  async function inspectFile(next:File,existingAssetId?:string){if(/\.(docx?|md|markdown)$/i.test(next.name)){await openDocumentFile(next,existingAssetId);return;}const token=presentation.interactionToken();await performProjectStep('识别工作表与专业字段',async()=>{
     if(!next.name.toLowerCase().endsWith('.xlsx'))throw new Error('请选择 .xlsx 文件');
     if(next.size>30*1024*1024)throw new Error('文件超过 30 MB 上限');
     const data=await api<Inspection>('/api/inspect',form({file:next}));const assetId=existingAssetId||(await persistInput(next)).id;setInputFileId(assetId);
@@ -506,7 +509,7 @@ function App(){
   async function sample(importId='v31'){
     const selected=findImportProject(importId);if(!selected)return;
     const token=presentation.interactionToken(),owner=workspace.currentConversation()?.id;
-    await perform('导入项目并识别工作表',async()=>{
+    await performProjectStep('导入项目并识别工作表',async()=>{
       const next=await readImportProjectFile(importId);
       const data=await api<Inspection>('/api/inspect',form({file:next}));
       if(workspace.currentConversation()?.id!==owner)throw new Error('对话已切换，请在当前对话重新导入。');
@@ -519,7 +522,7 @@ function App(){
     });
   }
   async function inspectHeader(name:string,row:number){if(!file)return;await perform('重新识别表头与字段',async()=>{if(!Number.isInteger(row)||row<1)throw new Error('表头行必须是大于 0 的整数');const data=await api<Inspection&{headers:string[];columns:SheetConfig['columns']} >('/api/inspect',form({file,sheet_name:name,header_row:String(row)}));setSheets(current=>current.map(s=>s.sheet_name===name?{...s,header_row:row,headers:data.headers,columns:data.columns,column_mapping:{...data.suggested_mapping}}:s));add(`已重新读取「${name}」第 ${row} 行表头，请核对卡片内更新后的字段映射。`);});}
-  async function convert(){if(result){add('当前文件已完成转换，可继续批量匹配或查看成果。',[{label:completed?'查看表格':'批量匹配',action:completed?'table':'match',primary:true}]);return;}if(!file){add('先添加一份控制价 Excel，我来识别表格。',[{label:'添加 Excel',action:'attach',primary:true}]);return;}await perform('转换为待匹配预览',async()=>{if(skills.loading||skills.error)throw new Error(skills.error||'正在读取专业能力，请稍后重试');if(!sheets.some(s=>s.enabled))throw new Error('至少选择一个工作表');if(sheets.some(s=>s.enabled&&(!Number.isInteger(s.header_row)||s.header_row<1)))throw new Error('表头行必须是大于 0 的整数');const settings=await readBusiness();const effective=businessForm(settings);const data=await api<Result>('/api/process',form({file,...skillSubmission(skills.selected),project_name:project.trim(),sheet_configs:JSON.stringify(sheets.map(s=>({...s,...Object.fromEntries(Object.entries(effective).map(([key,value])=>[key,value==='true'?true:value==='false'?false:value]))}))),defer_matching:'true',...effective,task_name:'最高投标限价编制',source_type:'web'}));data.process_options={matching_mode:settings.matchingMode,only_match_rows_with_value:settings.onlyMatchRowsWithValue,match_value_filter_field:settings.matchValueFilterField};acceptResult(data);setMappingOpen(false);presentation.resultAvailable('table');gorkFeedback.success();add('结构已经准备好，确认后即可开始匹配。',[{label:settings.matchingMode==='ai_enhanced'?'核对 AI 字段':'开始批量匹配',action:settings.matchingMode==='ai_enhanced'?'advanced':'match',primary:true},{label:'查看表格',action:'table'}],'assistant',false,resultCard(data));await listRuns();});}
+  async function convert(){if(result){add('当前文件已完成转换，可继续批量匹配或查看成果。',[{label:completed?'查看表格':'批量匹配',action:completed?'table':'match',primary:true}]);return;}if(!file){add('先添加一份控制价 Excel，我来识别表格。',[{label:'添加 Excel',action:'attach',primary:true}]);return;}await performProjectStep('转换为待匹配预览',async()=>{if(skills.loading||skills.error)throw new Error(skills.error||'正在读取专业能力，请稍后重试');if(!sheets.some(s=>s.enabled))throw new Error('至少选择一个工作表');if(sheets.some(s=>s.enabled&&(!Number.isInteger(s.header_row)||s.header_row<1)))throw new Error('表头行必须是大于 0 的整数');const settings=await readBusiness();const effective=businessForm(settings);const data=await api<Result>('/api/process',form({file,...skillSubmission(skills.selected),project_name:project.trim(),sheet_configs:JSON.stringify(sheets.map(s=>({...s,...Object.fromEntries(Object.entries(effective).map(([key,value])=>[key,value==='true'?true:value==='false'?false:value]))}))),defer_matching:'true',...effective,task_name:'最高投标限价编制',source_type:'web'}));data.process_options={matching_mode:settings.matchingMode,only_match_rows_with_value:settings.onlyMatchRowsWithValue,match_value_filter_field:settings.matchValueFilterField};acceptResult(data);setMappingOpen(false);presentation.resultAvailable('table');gorkFeedback.success();add('结构已经准备好，确认后即可开始匹配。',[{label:settings.matchingMode==='ai_enhanced'?'核对 AI 字段':'开始批量匹配',action:settings.matchingMode==='ai_enhanced'?'advanced':'match',primary:true},{label:'查看表格',action:'table'}],'assistant',false,resultCard(data));await listRuns();});}
   async function recoverMatch(){if(!result)return;const job=result.job_id,context=conversationContext.current;await perform('核对后台匹配结果',async()=>{
     const state=await api<{status:string;result?:Result;message?:string}>(`/api/process/${job}/batch-match-status`);
     if(context!==conversationContext.current||loadedJob.current!==job)return;
@@ -532,7 +535,7 @@ function App(){
     if(completed){add('当前任务已完成匹配，可继续复核或查看成果。',[{label:'查看表格',action:'table'}]);return;}
     if(batchUncertainJob===result.job_id){void recoverMatch();return;}
     const job=result.job_id,context=conversationContext.current,token=presentation.interactionToken();
-    await perform('正在匹配价格与双系数',async()=>{
+    await performProjectStep('正在匹配价格与双系数',async()=>{
       const state=await api<{status:string;result?:Result}>(`/api/process/${job}/batch-match-status`);
       if(context!==conversationContext.current||loadedJob.current!==job)return;
       if(state.status==='completed'&&state.result?.job_id===job){acceptResult(state.result);return;}
@@ -553,13 +556,13 @@ function App(){
       }
     });
   }
-  async function warning(){if(!result||!completed){add('请先完成批量匹配，再进行经验池预警。');return;}const job=result.job_id;await perform('比对经验池与风险阈值',async()=>{const data=await api<Result>('/api/experience-warnings/run',form({job_id:job}));if(loadedJob.current!==job)return;acceptResult(data);const risk=await api<{items:Risk[]}>(`/api/risk/summary?job_id=${job}`);setRisks(risk.items);setRiskJobId(job);if(risk.items.length)gorkFeedback.warning();else gorkFeedback.success();presentation.resultAvailable('risk');add(risk.items.length?'检查完成。你可以从卡片直接定位需要关注的行。':'检查完成，当前没有返回风险事项。',[{label:'查看全部风险与依据',action:'risk',primary:true},{label:'生成报告',action:'risk-report'}],'assistant',false,reviewCard(risk.items));});}
+  async function warning(){if(!result||!completed){add('请先完成批量匹配，再进行经验池预警。');return;}const job=result.job_id;await performProjectStep('比对经验池与风险阈值',async()=>{const data=await api<Result>('/api/experience-warnings/run',form({job_id:job}));if(loadedJob.current!==job)return;acceptResult(data);const risk=await api<{items:Risk[]}>(`/api/risk/summary?job_id=${job}`);setRisks(risk.items);setRiskJobId(job);if(risk.items.length)gorkFeedback.warning();else gorkFeedback.success();presentation.resultAvailable('risk');add(risk.items.length?'检查完成。你可以从卡片直接定位需要关注的行。':'检查完成，当前没有返回风险事项。',[{label:'查看全部风险与依据',action:'risk',primary:true},{label:'生成报告',action:'risk-report'}],'assistant',false,reviewCard(risk.items));});}
   async function modelForm(){const model=await api<{provider:string;model:string;baseUrl:string}>('/api/astra/connections/model');return {provider:model.provider,model:model.model,base_url:model.baseUrl};}
   async function generateRisk(){
     if(!result||!completed)return;
     const job=result.job_id,context=conversationContext.current,conversation=workspace.active?.id;
     if(!conversation)return;
-    await perform('正在生成文字报告',async()=>{
+    await performProjectStep('正在生成文字报告',async()=>{
       await workspace.flush();
       const progressId=crypto.randomUUID();let stage=0;
       setMessages(old=>[...old,{id:progressId,role:'assistant',text:'',job,context,card:reportProgressCard(stage)}]);
@@ -585,7 +588,7 @@ function App(){
       }catch(error){if(context===conversationContext.current)setMessages(old=>old.map(m=>m.id===progressId?{...m,card:reportProgressCard(stage,true)}:m));throw error;}
     });
   }
-  async function recalculate(){if(!result){add('请先完成文件转换与匹配，再重算公式。');return;}const job=result.job_id;await perform('刷新公式与 Word 报告',async()=>{const data=await api<Result>('/api/preview/recalculate',json({job_id:job}));acceptResult(data);add(data.formula_recalculated?'Excel 公式已重算，预览和 Word 报告已刷新。':'预览与报告已刷新，但本机 Excel 公式重算不可用。请在 Excel 中打开成果刷新公式后再交付。',[{label:'查看报告',action:'report'}],'assistant',false,artifactCard(data,data.formula_recalculated?'公式、预览与报告已同步刷新。':'公式尚未完成重算，请在 Excel 中刷新公式后交付。'));});}
+  async function recalculate(){if(!result){add('请先完成文件转换与匹配，再重算公式。');return;}const job=result.job_id;await performProjectStep('正在重算公式与 Word 报告',async()=>{const data=await api<Result>('/api/preview/recalculate',json({job_id:job}));acceptResult(data);add(data.formula_recalculated?'Excel 公式已重算，预览和 Word 报告已刷新。':'预览与报告已刷新，但本机 Excel 公式重算不可用。请在 Excel 中打开成果刷新公式后再交付。',[{label:'查看报告',action:'report'}],'assistant',false,artifactCard(data,data.formula_recalculated?'公式、预览与报告已同步刷新。':'公式尚未完成重算，请在 Excel 中刷新公式后交付。'));});}
   function setSharedPreview(value:typeof previewPreferences){setPreviewPreferences(value);try{localStorage.setItem('astra.preview-columns.v1',JSON.stringify(value));}catch{setOperationError('预览偏好未能保存，请检查浏览器存储权限');}}
   async function beginRowAssist(cell:SelectedCell){
     if(!result||busyRef.current||!workspace.ready||startingRowAssist.current)return;

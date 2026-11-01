@@ -71,3 +71,18 @@ test('roof labels retain offscreen anchors and fade without sliding',()=>{
  result=layout.update(items,50,true,2);assert.equal(result.placements[0].alpha,0);
  result=layout.update(items,16,false,1,false,true);assert.equal(result.placements[0].alpha,1);assert.equal(result.pending,false);
 });
+
+
+import {runningZone} from '../03-Src/studio/project-sandbox/node-state.ts';
+test('project steps reveal the retained sandbox only after the operation guard accepts work',()=>{
+ const app=readFileSync(new URL('../03-Src/studio/App.tsx',import.meta.url),'utf8');
+ const helper=app.slice(app.indexOf('async function performProjectStep('),app.indexOf('async function performProjectStep(')+250);
+ assert.match(helper,/await perform\(label,async\(\)=>\{showSandbox\(\);setConversationCollapsed\(false\);await work\(\);\}\)/);
+ for(const [label,zone] of [['识别工作表与专业字段','import'],['导入项目并识别工作表','import'],['转换为待匹配预览','import'],['正在匹配价格与双系数','price'],['比对经验池与风险阈值','risk'],['正在生成文字报告','report'],['正在准备同事复核','review']]){
+  assert.ok(app.includes(`await performProjectStep('${label}',`),label);
+  assert.equal(runningZone(label),zone,label);
+ }
+ for(const label of ['正在打开对话','读取工作表预览','读取当前行的'])assert.ok(!app.includes(`performProjectStep('${label}'`));
+ assert.match(app,/sandboxMounted&&/);
+ assert.match(app,/key=\{workspace.active\?\.id\|\|'initial'\}/);
+});
