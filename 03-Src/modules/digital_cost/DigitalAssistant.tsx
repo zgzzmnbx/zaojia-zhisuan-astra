@@ -5,6 +5,7 @@ import {toolbarProtocol,readToolbarPacket,type ToolbarPacket} from "./toolbar";
 import {useEffect,useRef,useState} from 'react';
 import {DEBUG_MODE} from '../../frontend-debug/mock-adapter';
 import {Button,Note} from '../../studio/ui';
+import {LoadingLogo} from '../../studio/brand/LoadingLogo';
 import './digital-cost.css';
 
 const protocol='digital-cost-host/1';
@@ -18,15 +19,17 @@ export function DigitalAssistant({dark=false,palette='astra',active=true,onExpan
  const modalBlocked=useRef(false),restoreFocus=useRef(false);
  const target=useRef(toolbarTarget);target.current=toolbarTarget;
  const [epoch,setEpoch]=useState(0);
+ const [pageReady,setPageReady]=useState(false),[presentation,setPresentation]=useState(()=>crypto.randomUUID());
+ const presentationRef=useRef(presentation);presentationRef.current=presentation;
  const [health,setHealth]=useState<Health|null>(null),[error,setError]=useState(''),[checking,setChecking]=useState(false);
  const mounted=useRef(true),working=useRef(false);
  const appearance=useRef({dark,palette,active});appearance.current={dark,palette,active};
  function sync(){frame.current?.contentWindow?.postMessage({protocol:guideProtocol,type:'request'},location.origin);frame.current?.contentWindow?.postMessage({protocol,type:'host-state',...appearance.current},location.origin);frame.current?.contentWindow?.postMessage({protocol:toolbarProtocol,type:target.current?'request':'release'},location.origin);}
  async function connect(){
-  if(working.current||DEBUG_MODE)return;initial.current=guide.current.guided;working.current=true;setToolbar(null);importSent.current='';setChecking(true);setError('');
+  if(working.current||DEBUG_MODE)return;initial.current=guide.current.guided;working.current=true;setPageReady(false);setPresentation(crypto.randomUUID());setToolbar(null);importSent.current='';setChecking(true);setError('');
   try{
    const response=await fetch('/api/astra/digital/start',{method:'POST',headers:{'Content-Type':'application/json','X-Astra-Module':'digital-cost'},body:'{}',signal:AbortSignal.timeout(22000)});
-   const reply=await response.json();if(!response.ok)throw Error(reply.detail||'模块未能连接');
+   const reply=await response.json();if(!response.ok||!reply.available)throw Error(reply.detail||'模块未能连接');
    if(mounted.current){setHealth(reply);setEpoch(n=>n+1);setError('');}
   }catch(e){if(mounted.current)setError((e as Error).message);}finally{working.current=false;if(mounted.current)setChecking(false);}
  }
@@ -46,6 +49,7 @@ export function DigitalAssistant({dark=false,palette='astra',active=true,onExpan
  useEffect(()=>{
   const message=(e:MessageEvent)=>{
    if(e.origin!==location.origin||e.source!==frame.current?.contentWindow)return;
+   if(e.data?.protocol==='digital-cost-display/1'&&e.data.type==='ready'&&e.data.token===presentationRef.current){setPageReady(true);return;}
    if(e.data?.protocol===guideProtocol&&guide.current.guided){
     const data=e.data;
     if(data.type==='ready'&&typeof data.token==='string'&&guide.current.guided.file&&importSent.current!==guide.current.guided.id){
@@ -69,15 +73,21 @@ export function DigitalAssistant({dark=false,palette='astra',active=true,onExpan
  useEffect(()=>{
   if(!active||!health?.available)return;
   let stopped=false;const abort=new AbortController();
-  const timer=setInterval(()=>{void fetch('/api/astra/digital/status',{signal:abort.signal}).then(r=>r.json()).then((state:Health)=>{if(!stopped)setError(state.available?'':state.detail||'模块连接中断');}).catch(()=>{if(!stopped)setError('模块连接中断，可重新连接');});},10000);
+  const timer=setInterval(()=>{void fetch('/api/astra/digital/status',{signal:abort.signal}).then(r=>r.json()).then((state:Health)=>{if(!stopped){if(!state.available)setError(state.detail||'模块连接中断');else if(pageReady)setError('');}}).catch(()=>{if(!stopped)setError('模块连接中断，可重新连接');});},10000);
   return()=>{stopped=true;clearInterval(timer);abort.abort();};
- },[active,health?.available]);
+ },[active,health?.available,pageReady]);
+ useEffect(()=>{
+  if(!health?.available||checking||pageReady||error)return;
+  const timer=setTimeout(()=>setError('工作台加载时间较长，请重新连接。'),45000);
+  return()=>clearTimeout(timer);
+ },[health?.available,checking,pageReady,error,epoch]);
  if(DEBUG_MODE)return <div className="panel-content"><Note>前端调试版不连接数字化造价服务。</Note></div>;
  return <div className="digital-cost-module">
-  {toolbarTarget&&toolbar&&createPortal(<DigitalToolbar state={toolbar.state} send={command} disabled={!active||!!error||checking||toolbar.state.blocked}/>,toolbarTarget)}
-  {health?.available?<>
-   {error&&<div className="digital-cost-status" role="alert"><span>{error}</span><Button disabled={checking} onClick={()=>void connect()}>重新连接</Button></div>}
-   <iframe key={epoch} ref={frame} src={"/modules/digital-cost/?embed=1"+(initial.current?"&guided=1"+(initial.current.taskId?"&task="+encodeURIComponent(initial.current.taskId):""):"")} title="数字化造价工作台" onLoad={()=>{setToolbar(null);sync();}} sandbox="allow-scripts allow-same-origin allow-downloads allow-forms"/>
-  </>:<div className="empty-state"><h3>数字化造价</h3><p>对照需求原文，核对功能点，形成可追溯的开发费测算。</p><p role="status">{checking?'正在准备独立工作台…':error||'工作台尚未连接'}</p>{!checking&&<Button primary onClick={()=>void connect()}>连接工作台</Button>}</div>}
+  {toolbarTarget&&toolbar&&createPortal(<div style={{display:'contents',visibility:pageReady?'visible':'hidden'}}><DigitalToolbar state={toolbar.state} send={command} disabled={!active||!pageReady||!!error||checking||toolbar.state.blocked}/></div>,toolbarTarget)}
+  {!pageReady&&<div className="digital-cost-loading" role={error?'alert':'status'}><div className="digital-cost-loading-brand"><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><div><span>{error||'正在加载数字化造价助手…'}</span>{error&&<Button primary disabled={checking} onClick={()=>void connect()}>重新连接</Button>}</div></div></div>}
+  {health?.available&&!checking?<>
+   {error&&pageReady&&<div className="digital-cost-status" role="alert"><span>{error}</span><Button disabled={checking} onClick={()=>void connect()}>重新连接</Button></div>}
+   <iframe key={epoch} ref={frame} data-ready={pageReady} aria-hidden={!pageReady} inert={!pageReady} src={"/modules/digital-cost/?embed=1&presentation="+encodeURIComponent(presentation)+(initial.current?"&guided=1"+(initial.current.taskId?"&task="+encodeURIComponent(initial.current.taskId):""):"")} title="数字化造价工作台" onLoad={()=>{setToolbar(null);sync();}} sandbox="allow-scripts allow-same-origin allow-downloads allow-forms"/>
+  </>:null}
  </div>;
 }
