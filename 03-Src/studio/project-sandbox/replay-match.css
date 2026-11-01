@@ -1,0 +1,4 @@
+.sandbox-node-info footer .sandbox-replay{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.sandbox-node-info footer .sandbox-replay .btn{width:auto;min-height:28px;padding:4px 8px;color:var(--blue);font-size:12px}
+.sandbox-node-info footer .sandbox-replay .btn:disabled{color:var(--muted)}
+.sandbox-node-info footer .sandbox-replay small{align-self:stretch;overflow-wrap:anywhere}

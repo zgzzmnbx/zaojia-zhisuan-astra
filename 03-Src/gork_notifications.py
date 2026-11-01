@@ -134,6 +134,8 @@ class Notifications:
             ''')
             if 'debug' not in {row[1] for row in self.connection.execute('PRAGMA table_info(events)')}:
                 self.connection.execute('ALTER TABLE events ADD COLUMN debug INTEGER NOT NULL DEFAULT 0')
+            if 'manual' not in {row[1] for row in self.connection.execute('PRAGMA table_info(events)')}:
+                self.connection.execute('ALTER TABLE events ADD COLUMN manual INTEGER NOT NULL DEFAULT 0')
             cancel_columns={row[1] for row in self.connection.execute('PRAGMA table_info(cancellations)')}
             for name, declaration in [('confirmed','INTEGER NOT NULL DEFAULT 0'),('next_try','REAL NOT NULL DEFAULT 0')]:
                 if name not in cancel_columns:
@@ -319,7 +321,8 @@ class Notifications:
             self.db().commit()
             return confirmed
 
-    def enqueue(self, event):
+    def enqueue(self, event, *, settings=None, manual=False):
+        settings = settings or self.settings
         key = config.stage_key(event)
         job = str(event.get('job_id') or '')
         occurred = timestamp(event.get('occurred_at'))
@@ -327,11 +330,11 @@ class Notifications:
         valid_job = re.fullmatch(r'debug-[a-f0-9]{32}' if debug else r'[a-f0-9]{32}', job)
         if not key or not valid_job or occurred <= 0 or occurred > self.clock() + 30:
             return 'ASTRA_GORK_INVALID_EVENT'
-        if not debug and occurred <= self.cutoff:
+        if not debug and not manual and occurred <= self.cutoff:
             return 'ASTRA_GORK_OLD_EVENT'
         if event.get('_request') in self.cancelled_requests:
             return 'ASTRA_GORK_TASK_CANCELLED'
-        stage = self.settings.stages[key]
+        stage = settings.stages[key]
         if not stage.enabled:
             return 'ASTRA_GORK_STAGE_DISABLED'
         if occurred + stage.ttl_ms / 1000 <= self.clock():
@@ -363,19 +366,19 @@ class Notifications:
         sequence = db.execute('SELECT value FROM sequences WHERE task=?', (job,)).fetchone()[0]
         text = config.render_text(event, stage)
         speech = None
-        if self.settings.sound and stage.speech:
+        if settings.sound and stage.speech:
             speech_stage = stage.model_copy(update={'text': stage.speech_text or stage.text})
-            speech = {'text': config.render_text(event, speech_stage, spoken=True), 'mode': self.settings.speech_mode,
-                      'target': self.settings.speech_target if stage.speech_target == 'inherit' else stage.speech_target}
+            speech = {'text': config.render_text(event, speech_stage, spoken=True), 'mode': settings.speech_mode,
+                      'target': settings.speech_target if stage.speech_target == 'inherit' else stage.speech_target}
             if not speech['text'].strip():
                 speech = None
         payload = dict(protocol_version='1.0', source='astra', event_id=uuid4().hex,
                        task_id=job, attempt=attempt, stage=key, sequence=sequence,
                        kind=stage.kind, occurred_at=event['occurred_at'], expression=stage.expression,
                        expression_mode=stage.expression_mode, text=text, speech=speech,
-                       display_target=self.settings.display_target if stage.display_target == 'inherit' else stage.display_target,
+                       display_target=settings.display_target if stage.display_target == 'inherit' else stage.display_target,
                        duration_ms=stage.duration_ms, ttl_ms=stage.ttl_ms, priority=stage.priority,
-                       lease_ms=self.settings.lease_ms)
+                       lease_ms=settings.lease_ms)
         from gork_stages import amount_text
         if amount_text(event):
             payload['amount_summary'] = event['amount_summary']
@@ -384,10 +387,11 @@ class Notifications:
             payload.update(project_output(event, self.output_capabilities))
         # Skip obsolete unsent states; accepted states are superseded by the server
         # with the new sequence, without stopping speech already in progress.
-        db.execute("UPDATE events SET status='superseded' WHERE json_extract(payload,'$.task_id')=? AND status='pending'", (job,))
-        db.execute('INSERT INTO events(id,producer,payload,status,deadline,next_try,heartbeat,request_round,debug) VALUES(?,?,?,?,?,?,?,?,?)',
+        if not manual:
+            db.execute("UPDATE events SET status='superseded' WHERE json_extract(payload,'$.task_id')=? AND status='pending'", (job,))
+        db.execute('INSERT INTO events(id,producer,payload,status,deadline,next_try,heartbeat,request_round,debug,manual) VALUES(?,?,?,?,?,?,?,?,?,?)',
                    (payload['event_id'], producer, json.dumps(payload, ensure_ascii=False), 'pending',
-                    occurred + stage.ttl_ms / 1000, 0, 0, event.get('_request', ''), int(debug)))
+                    occurred + stage.ttl_ms / 1000, 0, 0, event.get('_request', ''), int(debug), int(manual)))
         if review_scope:
             db.execute('INSERT OR REPLACE INTO review_notices(scope,event_id) VALUES(?,?)', (review_scope, payload['event_id']))
         db.commit()
@@ -487,7 +491,7 @@ class Notifications:
                     except Exception:
                         self.db().execute('UPDATE cancellations SET next_try=? WHERE task=? AND attempt=?',(now+3,item['task'],item['attempt']))
                 self.db().commit()
-            if not self.settings.enabled and not self.db().execute("SELECT 1 FROM events WHERE debug=1 AND status IN ('pending','queued','dispatching','active','partial')").fetchone():
+            if not self.settings.enabled and not self.db().execute("SELECT 1 FROM events WHERE (debug=1 OR manual=1) AND status IN ('pending','queued','dispatching','active','partial')").fetchone():
                 return
             if self.client is None:
                 self.client = self.client_factory(self.settings)
@@ -503,7 +507,7 @@ class Notifications:
                 except queue.Empty:
                     break
             db = self.db()
-            rows = db.execute("SELECT * FROM events WHERE status IN ('pending','queued','dispatching','active','partial') AND next_try<=? AND (debug=1 OR ?=1) ORDER BY next_try,rowid LIMIT 8", (now, int(self.settings.enabled))).fetchall()
+            rows = db.execute("SELECT * FROM events WHERE status IN ('pending','queued','dispatching','active','partial') AND next_try<=? AND (debug=1 OR manual=1 OR ?=1) ORDER BY next_try,rowid LIMIT 8", (now, int(self.settings.enabled))).fetchall()
             for row in rows:
                 payload = json.loads(row['payload'])
                 if row['status'] == 'pending' and now >= row['deadline']:
@@ -660,6 +664,8 @@ def install(app, engine, runtime, *, manage_lifecycle=True):
             return call
         app.router.routes.remove(route)
         app.add_api_route(route.path, wrap(original, report), methods=list(route.methods), response_model=route.response_model)
+    from gork_replay import install as install_replay
+    install_replay(app, instance, runtime)
     if manage_lifecycle:
         app.add_event_handler('startup', instance.start)
         app.add_event_handler('shutdown', instance.stop)
