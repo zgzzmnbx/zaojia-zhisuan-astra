@@ -1,3 +1,4 @@
+export const projectActionLabels={match:'开始批量匹配',warning:'检查经验池预警','risk-report':'生成报告'} as const;
 export type QuickState={ready:boolean;busy:boolean;connected:boolean;hasResult:boolean;completed:boolean};
 export const quickCommands=[
  ['match','route','批量匹配'],['analysis','chart','费用分析'],['warning','shield','经验池预警'],['risk-report','file','生成报告'],

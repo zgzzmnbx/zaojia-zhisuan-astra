@@ -1,10 +1,11 @@
+import {projectActionLabels,quickUnavailable} from '../quick-actions.ts';
 import type {Result,SheetConfig} from '../types';
 import type {CurrentProject} from '../workbench/current-project';
 import type {ReviewProgressTask} from '../../professional/components/agent-workspace/reviewProgress';
 import {latestReviewTasksByPlatform,summarizeReviewProgress} from '../../professional/components/agent-workspace/reviewProgress.ts';
 export type ZoneId='import'|'price'|'risk'|'knowledge'|'report'|'review'|'table';
-export type NodeState={id:ZoneId;title:string;status:string;summary:string;tone:'idle'|'running'|'done'|'attention'|'error';facts:[string,string][];action:string;actionLabel:string;disabled?:string};
-export type SandboxInput={ready:boolean;project:CurrentProject|null;result:Result|null;filename:string;sheets:SheetConfig[];busy:string;qaRunning:boolean;operationError?:string;cancelVersion?:number;needsRecalculate:boolean;riskLoading:boolean;riskError:string;reportReady:boolean;citations:number;reviewTasks:ReviewProgressTask[]|null;reviewError:string};
+export type NodeState={id:ZoneId;title:string;status:string;summary:string;tone:'idle'|'running'|'done'|'attention'|'error';facts:[string,string][];action:string;actionLabel:string;execute?:{action:string;label:string;disabled?:string};disabled?:string};
+export type SandboxInput={ready:boolean;connected?:boolean;project:CurrentProject|null;result:Result|null;filename:string;sheets:SheetConfig[];busy:string;qaRunning:boolean;operationError?:string;cancelVersion?:number;needsRecalculate:boolean;riskLoading:boolean;riskError:string;reportReady:boolean;citations:number;reviewTasks:ReviewProgressTask[]|null;reviewError:string};
 const count=(v:unknown)=>typeof v==='number'&&Number.isFinite(v)?Math.max(0,v):null;
 export function runningZone(busy:string,qa=false):ZoneId|null{
  // Opening a view or fetching its snapshot is not a business-stage transition.
@@ -27,10 +28,10 @@ export function sandboxNodes(input:SandboxInput):NodeState[]{
  const filename=input.ready?(r?.input_filename||input.filename):'';
  const nodes:NodeState[]=[
   {id:'import',title:'清单导入',status:r?'已转换':filename?'待确认结构':'待上传',summary:r?(total===null?'清单已就绪':`${total} 项清单`):filename||'添加工程清单',tone:r?'done':filename?'attention':'idle',facts:[['输入文件',filename||'尚未上传'],['工作表',r?String(s?.table_preview?.sheets?.length||1):String((input.ready?input.sheets.filter(x=>x.enabled).length:0)||'待识别')]],action:filename?'mapping':'attach',actionLabel:filename?'查看编制设置':'上传清单'},
-  {id:'price',title:'智能填价',status:completed?'匹配完成':r?'待匹配':'待开始',summary:completed&&matched!==null&&total!==null?`匹配 ${matched} / ${total} 项`:'单价与系数匹配',tone:completed?'done':'idle',facts:[['匹配数量',matched===null?'待匹配':`${matched} / ${total??'—'}`],['待人工确认',s?.review_rows==null?'待匹配':`${s.review_rows} 项`]],action:completed?'table':'match',actionLabel:completed?'查看匹配结果':'开始匹配',disabled:!r?'请先导入清单并确认结构':undefined},
+  {id:'price',title:'智能填价',status:completed?'匹配完成':r?'待匹配':'待开始',summary:completed&&matched!==null&&total!==null?`匹配 ${matched} / ${total} 项`:'单价与系数匹配',tone:completed?'done':'idle',facts:[['匹配数量',matched===null?'待匹配':`${matched} / ${total??'—'}`],['待人工确认',s?.review_rows==null?'待匹配':`${s.review_rows} 项`]],action:'table',actionLabel:'查看匹配结果',disabled:!r?'请先导入清单并确认结构':undefined},
   {id:'risk',title:'风险复核',status:!r?'未检查':input.riskError?'读取失败':input.riskLoading?'读取中':p?.riskLoaded?'检查完成':'未检查',summary:r&&p?.riskLoaded?`${p.riskTotal} 项风险 · ${p.severity.high} 项重点`:'查看检查结果与依据',tone:r&&input.riskError?'error':r&&p?.riskLoaded?(p.riskTotal?'attention':'done'):'idle',facts:[['风险情况',r&&input.riskError?input.riskError:r&&p?.riskLoaded?`${p.riskTotal} 项，需人工核对`:'尚未取得检查结果'],['结果版本',dirty?'成果已修改，需重新检查':versionText]],action:'risk',actionLabel:'打开风险复核',disabled:!r?'请先完成清单转换':undefined},
   {id:'knowledge',title:'知识检索',status:citations?'已有引用':'随时可查',summary:citations?`本对话 ${citations} 条引用`:'检索原文与依据',tone:citations?'done':'idle',facts:[['资料范围','按现有知识库设置'],['引用数量',citations?`${citations} 条（本对话）`:'尚无引用']],action:'knowledge',actionLabel:'打开知识检索'},
-  {id:'report',title:'报告生成',status:r&&input.reportReady?'已生成 · 待审阅':'待生成',summary:r&&input.reportReady?'查看当前 Word 成果':'生成风险报告',tone:r&&input.reportReady?'done':'idle',facts:[['成果版本',versionText],['报告状态',r&&input.reportReady?'已生成，待审阅':'尚无当前成果']],action:r&&input.reportReady?'report':'risk-report',actionLabel:r&&input.reportReady?'打开报告':'生成风险报告',disabled:!completed?'请先完成填价':undefined},
+  {id:'report',title:'报告生成',status:r&&input.reportReady?'已生成 · 待审阅':'待生成',summary:r&&input.reportReady?'查看当前 Word 成果':'生成风险报告',tone:r&&input.reportReady?'done':'idle',facts:[['成果版本',versionText],['报告状态',r&&input.reportReady?'已生成，待审阅':'尚无当前成果']],action:'report',actionLabel:'查看报告',disabled:!completed?'请先完成填价':!input.reportReady?'请先生成报告':undefined},
   {id:'review',title:'协同复核',status:input.reviewError?'读取失败':!r?'未发送':input.reviewTasks===null?'读取中':'未发送',summary:input.reviewError?'回执暂不可用':'确认后发送，跟踪回执',tone:input.reviewError?'error':'idle',facts:[['回执',input.reviewError||(!r?'尚无可复核成果':input.reviewTasks===null?'正在读取':'尚未派发')]],action:'collaboration',actionLabel:'准备同事复核',disabled:!completed?'请先完成填价':undefined},
   {id:'table',title:'表格大屏',status:r?(dirty?'待重算':'成果就绪'):'暂无成果',summary:r?`${s?.table_preview?.sheets?.length||1} 张工作表 · ${versionText}`:'工作表与当前成果',tone:r?(dirty?'attention':'done'):'idle',facts:[['成果版本',versionText],['重算状态',r?(dirty?'待重新计算':r.formula_recalculated?'已确认重算':'公式重算未确认'):'尚无成果']],action:'table',actionLabel:'打开工作表',disabled:!r?'请先导入清单并完成转换':undefined},
  ];
@@ -50,5 +51,9 @@ export function sandboxNodes(input:SandboxInput):NodeState[]{
  if(dirty)for(const node of nodes.filter(n=>['price','risk','report'].includes(n.id))){if(node.tone!=='idle'){node.status='需更新';node.tone='attention';node.summary+=' · 成果已修改';}}
  const active=runningZone(input.busy,input.qaRunning);if(active){const node=nodes.find(n=>n.id===active)!;node.status='处理中';node.tone='running';node.summary=input.busy||'正在检索资料';}
  for(const n of nodes){if(!input.ready)n.disabled='工作空间正在恢复';else if(input.busy&&!['knowledge','table'].includes(n.id))n.disabled='当前任务正在执行';}
+ for(const [id,action] of [['price','match'],['risk','warning'],['report','risk-report']] as const){
+  nodes.find(n=>n.id===id)!.execute={action,label:projectActionLabels[action],disabled:quickUnavailable(action,{ready:input.ready,busy:!!input.busy,connected:input.connected!==false,hasResult:!!r,completed})};
+ }
+ if(nodes[5].action==='review-progress')nodes[5].execute={action:'collaboration',label:'准备同事复核',disabled:nodes[5].disabled};
  return nodes;
 }

@@ -367,3 +367,21 @@ test('glass preferences preserve explicit values and bound invalid saved inputs'
 test('simple workbench persists independently alongside existing view preferences',()=>{
  assert.deepEqual(readWorkbenchStyles('{"project:a":"simple","project:b":"classic","project:c":"sandbox","invalid":"other"}'),{'project:a':'simple','project:b':'classic','project:c':'sandbox'});
 });
+
+
+test('sandbox keeps executable actions beside result navigation with chat labels',()=>{
+ const i=input();i.reportReady=true;
+ for(const [id,action,label,view] of [['price','match','开始批量匹配','table'],['risk','warning','检查经验池预警','risk'],['report','risk-report','生成报告','report']]){
+  const n=node(i,id);assert.equal(n.execute?.action,action);assert.equal(n.execute?.label,label);assert.equal(n.action,view);
+ }
+ assert.ok(node(i,'price').execute?.disabled);
+ assert.equal(node(i,'risk').execute?.disabled,undefined);assert.equal(node(i,'report').execute?.disabled,undefined);
+ i.reportReady=false;assert.ok(node(i,'report').disabled);assert.equal(node(i,'report').execute?.disabled,undefined);
+ i.result!.summary.matching_status='pending';assert.equal(node(i,'price').execute?.disabled,undefined);
+ for(const id of ['risk','report'])assert.ok(node(i,id).execute?.disabled);
+});
+test('sandbox mutations reject unavailable workspace, busy work, offline and stale task data',()=>{
+ for(const override of [{ready:false},{busy:'正在匹配'},{connected:false},{project:{jobId:'other'} as any},{result:null}]){
+  const i={...input(),...override};for(const id of ['price','risk','report'])assert.ok(node(i,id).execute?.disabled);
+ }
+});

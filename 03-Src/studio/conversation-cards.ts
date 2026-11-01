@@ -1,3 +1,4 @@
+import {projectActionLabels} from './quick-actions.ts';
 import {feeSnapshot} from './fee-summary.ts';
 import type {Action,ConversationCard,Message,Result,Risk,SelectedCell,SheetConfig} from './types';
 
@@ -8,7 +9,7 @@ export function conversationActions(message:Message):Action[] {
   if(message.card?.kind==='artifact'&&['风险报告 · 公文格式','演示预设 · 公文格式'].includes(message.card.caption||'')&&!actions.some(action=>action.action==='report')){
     return [...actions,{label:'查看报告',action:'report',primary:true}];
   }
-  return actions;
+  return actions.map(a=>Object.hasOwn(projectActionLabels,a.action)?{...a,label:projectActionLabels[a.action as keyof typeof projectActionLabels]}:a);
 }
 
 /** Cards are snapshots of business responses; they never infer prices or completion. */
