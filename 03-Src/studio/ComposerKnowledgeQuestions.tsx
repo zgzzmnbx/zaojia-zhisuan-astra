@@ -1,5 +1,5 @@
 import {ChevronLeft,ChevronRight} from '../PhosphorIcons';
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {api,json} from './api';
 import {Icon} from './ui';
 import {showKnowledgeSuggestions,replaceRecommendedQuestion} from './knowledge-shortcut';
@@ -12,12 +12,23 @@ const recommendations=createRecommendationLoader(async()=>{
  return {defaults:d.zhisuanWindow?.commonQuestions??[] as string[],questions:p.preferences?.commonQuestions??d.zhisuanWindow?.commonQuestions??[] as string[],libraries:l.libraries.filter((item:any)=>item.available).map((item:any)=>item.id) as string[]};
 });
 
-export function ComposerKnowledgeQuestions({value,enabled,disabled,revision,select,focus,changed}:{value:string;enabled:boolean;disabled:boolean;revision:number;select:(q:string,libraries:string[])=>void;focus:()=>void;changed:()=>void}){
- const eligible=enabled&&showKnowledgeSuggestions(value);
+export function ComposerKnowledgeQuestions({value,open=false,onClose,enabled,disabled,revision,select,focus,changed}:{value:string;open?:boolean;onClose?:()=>void;enabled:boolean;disabled:boolean;revision:number;select:(q:string,libraries:string[])=>void;focus:()=>void;changed:()=>void}){
+ const eligible=enabled&&(open||showKnowledgeSuggestions(value));
  const cached=recommendations.peek(revision);
  const panel=useRef<HTMLElement|null>(null);
  const [libraries,setLibraries]=useState<string[]>(cached?.libraries??[]);
  const [dismissed,setDismissed]=useState(false),[questions,setQuestions]=useState<string[]>(cached?.questions??[]),[defaults,setDefaults]=useState<string[]>(cached?.defaults??[]),[page,setPage]=useState(0),[editing,setEditing]=useState(false),[drafts,setDrafts]=useState<string[]>(cached?.questions??[]),[saving,setSaving]=useState<number|null>(null),[error,setError]=useState(''),[loading,setLoading]=useState(!cached),[retry,setRetry]=useState(0);
+ const [availableHeight,setAvailableHeight]=useState(560);
+ useLayoutEffect(()=>{
+  if(!eligible||dismissed)return;
+  const composer=panel.current?.parentElement,conversation=composer?.closest('.conversation');
+  if(!composer||!conversation)return;
+  const measure=()=>setAvailableHeight(Math.max(44,composer.getBoundingClientRect().top-conversation.getBoundingClientRect().top-38));
+  measure();const observer=new ResizeObserver(measure);observer.observe(composer);observer.observe(conversation);window.addEventListener('resize',measure);
+  return()=>{observer.disconnect();window.removeEventListener('resize',measure);};
+ },[eligible,dismissed]);
+ useEffect(()=>{if(open){setDismissed(false);setPage(0);setEditing(false);}},[open]);
+ useEffect(()=>{if(!enabled)onClose?.();},[enabled]);
  useEffect(()=>{if(!eligible){setDismissed(false);setPage(0);setEditing(false);}},[eligible]);
  useEffect(()=>{
   let live=true;setLoading(true);setError('');
@@ -29,7 +40,7 @@ export function ComposerKnowledgeQuestions({value,enabled,disabled,revision,sele
  },[revision,retry,eligible]);
  const pages=Math.max(1,Math.ceil(questions.length/6));
  useEffect(()=>setPage(p=>Math.min(p,pages-1)),[pages]);
- function close(){if(saving!==null)return;setDismissed(true);setEditing(false);focus();}
+ function close(){if(saving!==null)return;setDismissed(true);setEditing(false);onClose?.();focus();}
  useEffect(()=>{
   if(!eligible||dismissed)return;
   const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'&&panel.current?.parentElement?.contains(event.target as Node)){event.preventDefault();event.stopPropagation();close();}};
@@ -45,8 +56,8 @@ export function ComposerKnowledgeQuestions({value,enabled,disabled,revision,sele
   }catch(e){setError((e as Error).message);}finally{setSaving(null);}
  }
  if(!eligible||dismissed)return null;
- return <section ref={panel} className="composer-knowledge-questions card" aria-label="知识库推荐问题">
+ return <section id="composer-knowledge-questions" ref={panel} style={{maxHeight:Math.min(560,availableHeight)}} className="composer-knowledge-questions card" aria-label="知识库推荐问题">
   <header><strong>常见问题</strong><span>{page+1} / {pages}</span><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label="上一组推荐问题" disabled={page===0||saving!==null} onClick={()=>setPage(p=>p-1)}><ChevronLeft size={16}/></button><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label="下一组推荐问题" disabled={page+1>=pages||saving!==null} onClick={()=>setPage(p=>p+1)}><ChevronRight size={16}/></button><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label={editing?'完成问题编辑':'编辑推荐问题'} disabled={saving!==null||loading||!questions.length} onClick={()=>{if(!editing)setDrafts([...questions]);setEditing(!editing);setError('');}}><Icon name={editing?'check':'settings'}/></button><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label="关闭推荐问题" disabled={saving!==null} onClick={close}><Icon name="close"/></button></header>
-  <div className="ckq-list">{error&&<div className="ckq-error" role="alert">{error}<button className="btn btn-ghost btn-sm" type="button" onClick={()=>setRetry(n=>n+1)}>重试</button></div>}{loading&&!questions.length?<p role="status">正在读取推荐问题…</p>:!questions.length?<p>暂无推荐问题</p>:questions.slice(page*6,page*6+6).map((q,i)=>{const index=page*6+i;return editing?<div className="ckq-edit" key={index}><span>{index+1}</span><textarea className="textarea textarea-bordered" aria-label={`推荐问题 ${index+1}`} rows={2} maxLength={500} value={drafts[index]||''} disabled={saving!==null} onChange={e=>setDrafts(d=>d.map((v,n)=>n===index?e.target.value:v))}/><div><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label={`保存第 ${index+1} 条推荐问题`} disabled={saving!==null||disabled} onClick={()=>void save(index)}><Icon name="check"/></button><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label={`恢复第 ${index+1} 条推荐问题`} disabled={saving!==null||disabled||!defaults[index]} onClick={()=>void save(index,true)}><Icon name="refresh"/></button></div></div>:<button className="ckq-question btn btn-ghost" type="button" key={index} disabled={disabled} onClick={()=>select(q,libraries)}><span className="ckq-number">{index+1}</span><span className="ckq-text">{q}{isDemoKnowledgeQuestion(q)&&<i className="knowledge-preset-dot" role="img" aria-label="标准演示问题" title="标准演示问题 · 预设答案"/>}</span><Icon name="arrow-up-right"/></button>;})}</div>
+  <div className="ckq-list">{error&&<div className="ckq-error" role="alert">{error}<button className="btn btn-ghost btn-sm" type="button" onClick={()=>setRetry(n=>n+1)}>重试</button></div>}{loading&&!questions.length?<p role="status">正在读取推荐问题…</p>:!questions.length?<p>暂无推荐问题</p>:questions.slice(page*6,page*6+6).map((q,i)=>{const index=page*6+i;return editing?<div className="ckq-edit" key={index}><span>{index+1}</span><textarea className="textarea textarea-bordered" aria-label={`推荐问题 ${index+1}`} rows={2} maxLength={500} value={drafts[index]||''} disabled={saving!==null} onChange={e=>setDrafts(d=>d.map((v,n)=>n===index?e.target.value:v))}/><div><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label={`保存第 ${index+1} 条推荐问题`} disabled={saving!==null||disabled} onClick={()=>void save(index)}><Icon name="check"/></button><button className="btn btn-ghost btn-square btn-sm" type="button" aria-label={`恢复第 ${index+1} 条推荐问题`} disabled={saving!==null||disabled||!defaults[index]} onClick={()=>void save(index,true)}><Icon name="refresh"/></button></div></div>:<button className="ckq-question btn btn-ghost" type="button" key={index} disabled={disabled} onClick={()=>{setDismissed(true);onClose?.();select(q,libraries);}}><span className="ckq-number">{index+1}</span><span className="ckq-text">{q}{isDemoKnowledgeQuestion(q)&&<i className="knowledge-preset-dot" role="img" aria-label="标准演示问题" title="标准演示问题 · 预设答案"/>}</span><Icon name="arrow-up-right"/></button>;})}</div>
  </section>;
 }
