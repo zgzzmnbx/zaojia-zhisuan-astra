@@ -23,23 +23,20 @@ test('label transparency extends old profiles and persists both endpoints indepe
 }));
 
 test('built-in defaults match the approved current browser rather than its older saved profile',()=>{
- const captured=JSON.parse(fs.readFileSync(new URL('../00-docs/handoff/2026-10-28-v0.11.21-默认参数快照.json',import.meta.url),'utf8'));
- const current=normalizeSandboxParameters(null),{conveyor,...priorBaked}=current.baked;
- const {labelTransparency,...priorDisplay}=current.display;
- assert.equal(labelTransparency,38);
- assert.deepEqual({...current,baked:priorBaked,display:priorDisplay},{...captured.sandbox,baked:{...captured.sandbox.baked,groupLogo:'white'}});
- assert.deepEqual(conveyor,{visible:true,continuous:true,style:'building-blue-edge',nightBrightness:100,weather:'clear',weatherStrength:1});
- assert.deepEqual(DEFAULT_GALAXY_SETTINGS,{...captured.galaxy,unselectedOpacity:.5,unrelatedLinkBrightness:.05});
+ const captured=JSON.parse(fs.readFileSync(new URL('../00-docs/handoff/2026-11-02-v0.14.11-沙盘默认参数快照.json',import.meta.url),'utf8'));
+ assert.deepEqual(normalizeSandboxParameters(null),normalizeSandboxParameters(captured.sandbox));
+ const galaxy=JSON.parse(fs.readFileSync(new URL('../00-docs/handoff/2026-10-28-v0.11.21-默认参数快照.json',import.meta.url),'utf8'));
+ assert.deepEqual(DEFAULT_GALAXY_SETTINGS,{...galaxy.galaxy,unselectedOpacity:.5,unrelatedLinkBrightness:.05});
 });
 
 test('conveyor looks and night brightness extend older saved settings without overwriting them',()=>{
  const old=normalizeBakedSettings({conveyor:{visible:false,continuous:false,weather:'snow',weatherStrength:.5}});
  assert.equal(old.conveyor.visible,false);assert.equal(old.conveyor.continuous,false);
- assert.equal(old.conveyor.style,'building-blue-edge');assert.equal(old.conveyor.nightBrightness,100);
+ assert.equal(old.conveyor.style,'building-white');assert.equal(old.conveyor.nightBrightness,30);
  assert.equal(normalizeBakedSettings({conveyor:{style:'pale-blue'}}).conveyor.style,'pale-blue');
  assert.equal(normalizeBakedSettings({conveyor:{style:'building-white',nightBrightness:0}}).conveyor.nightBrightness,0);
  assert.equal(normalizeBakedSettings({conveyor:{style:'building-blue-edge',nightBrightness:250}}).conveyor.nightBrightness,200);
- assert.equal(normalizeBakedSettings({conveyor:{style:'invalid',nightBrightness:-2}}).conveyor.style,'building-blue-edge');
+ assert.equal(normalizeBakedSettings({conveyor:{style:'invalid',nightBrightness:-2}}).conveyor.style,'building-white');
 });
 
 test('restoring defaults is a complete independent preview until the explicit save',()=>storage(values=>{
@@ -64,7 +61,7 @@ test('only explicit save persists all view parameters; later preview changes do 
 
 test('personal profile overrides legacy autosaves while global palette and theme remain independent',()=>storage(values=>{
  values.set(appearanceKey,JSON.stringify({palette:'emerald',dark:true,sandboxChatTransparency:80,sandboxRoofLabels:false,sandboxAutoOrbit:false,sandboxOrbitDelay:60}));
- let a=readAppearance();assert.equal(a.palette,'emerald');assert(a.dark);assert.equal(a.sandboxChatTransparency,15);assert(a.sandboxRoofLabels);assert(a.sandboxAutoOrbit);assert.equal(a.sandboxOrbitDelay,2);
+ let a=readAppearance();assert.equal(a.palette,'emerald');assert(a.dark);assert.equal(a.sandboxChatTransparency,15);assert(a.sandboxRoofLabels);assert(a.sandboxAutoOrbit);assert.equal(a.sandboxOrbitDelay,0);
  assert(saveCurrentParameters(normalizeSandboxParameters({display:{chatTransparency:0,roofLabels:false,autoOrbit:false,orbitDelay:30}})));
  a=readAppearance();assert.equal(a.palette,'emerald');assert(a.dark);assert.equal(a.sandboxChatTransparency,0);assert.equal(a.sandboxRoofLabels,false);assert.equal(a.sandboxAutoOrbit,false);assert.equal(a.sandboxOrbitDelay,30);
 }));

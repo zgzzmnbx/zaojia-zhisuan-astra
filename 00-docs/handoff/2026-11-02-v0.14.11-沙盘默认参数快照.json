@@ -1,0 +1,98 @@
+{
+  "capturedAt": "2026-11-02",
+  "source": "用户当前内置浏览器 http://127.0.0.1:5189/，UI v0.14.10；逐项读取日间与夜间控件。",
+  "sandbox": {
+    "version": 1,
+    "baked": {
+      "preset": "adjusted",
+      "orbitMotion": {
+        "speed": 100,
+        "acceleration": 100
+      },
+      "waterSettings": {
+        "enabled": true,
+        "motion": true,
+        "boats": true,
+        "quality": "normal",
+        "speed": 60,
+        "ripple": 100,
+        "reflection": 30,
+        "bloom": 75
+      },
+      "uplightSettings": {
+        "day": {
+          "brightness": 85,
+          "color": "#f3b344"
+        },
+        "night": {
+          "brightness": 80,
+          "color": "#ffffff"
+        }
+      },
+      "bloom": true,
+      "focusBeam": true,
+      "shadows": false,
+      "flow": true,
+      "conveyor": {
+        "visible": true,
+        "continuous": true,
+        "style": "building-white",
+        "nightBrightness": 30,
+        "weather": "clear",
+        "weatherStrength": 1
+      },
+      "groupLogo": "white",
+      "logoGlow": {
+        "enabled": true,
+        "brightness": 60,
+        "color": "#b9e4ff"
+      },
+      "nightSettings": {
+        "style": "studio",
+        "shell": 25,
+        "core": 120,
+        "halo": 120,
+        "context": 110,
+        "flowBrightness": 185,
+        "flowSoftness": 150,
+        "brightness": 45,
+        "bloom": 110,
+        "windows": true,
+        "flow": true,
+        "logo": true,
+        "boats": true,
+        "logoBrightness": 110,
+        "logoColor": "#85d0ff"
+      },
+      "groundTone": "mist",
+      "backgroundColor": "#ffffff",
+      "backgroundBrightness": 105,
+      "modelBrightness": 145,
+      "paintStrength": 0,
+      "elevation": 30,
+      "zoom": 100,
+      "distance": 60
+    },
+    "visual": {
+      "mode": "baked",
+      "city": {
+        "baked": true
+      },
+      "dof": false,
+      "strength": 0.4
+    },
+    "display": {
+      "infoVisible": true,
+      "cardTransparency": 55,
+      "labelTransparency": 38,
+      "chatTransparency": 15,
+      "roofLabels": true,
+      "autoOrbit": true,
+      "orbitDelay": 0
+    }
+  },
+  "notes": [
+    "当前可见日夜参数以本次控件采集为准；无当前控制项的旧兼容字段沿用上一固定基线。",
+    "集团Logo白模；本次固定沙盘Baked、Visual、Display参数。"
+  ]
+}

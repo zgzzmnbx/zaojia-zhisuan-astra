@@ -12,7 +12,7 @@ export function readSandboxSwitch(key:string,fallback:boolean|null):boolean|null
 }
 export function saveSandboxSwitch(key:string,value:boolean){try{localStorage.setItem(key,value?'on':'off')}catch{}}
 
-/** User-approved in-app browser snapshot, 2026-10-28. Update only on user request. */
+/** User-approved in-app browser snapshot, 2026-11-02. Update only on user request. */
 export const sandboxParameterDefaults={
  "baked": {
   "preset": "adjusted",
@@ -21,7 +21,7 @@ export const sandboxParameterDefaults={
    "motion": true,
    "boats": true,
    "quality": "normal",
-   "speed": 50,
+   "speed": 60,
    "ripple": 100,
    "reflection": 30,
    "bloom": 75
@@ -32,7 +32,7 @@ export const sandboxParameterDefaults={
     "color": "#f3b344"
    },
    "night": {
-    "brightness": 60,
+    "brightness": 80,
     "color": "#ffffff"
    }
   },
@@ -40,7 +40,7 @@ export const sandboxParameterDefaults={
   "focusBeam": true,
   "shadows": false,
   "flow": true,
-  "conveyor": {"visible":true,"continuous":true,"style":"building-blue-edge","nightBrightness":100,"weather":"clear","weatherStrength":1},
+  "conveyor": {"visible":true,"continuous":true,"style":"building-white","nightBrightness":30,"weather":"clear","weatherStrength":1},
   "groupLogo": "white",
   "logoGlow": {"enabled": true,"brightness": 60,"color": "#b9e4ff"},
   "nightSettings": {"style":"studio","shell":25,"core":120,"halo":120,"context":110,"flowBrightness":185,"flowSoftness":150,"brightness":45,"bloom":110,"windows":true,"flow":true,"logo":true,"boats":true,"logoBrightness":110,"logoColor":"#85d0ff"},
@@ -50,7 +50,7 @@ export const sandboxParameterDefaults={
   "modelBrightness": 145,
   "paintStrength": 0,
   "elevation": 30,
-  "zoom": 110,
+  "zoom": 100,
   "distance": 60
  },
  "visual": {
@@ -68,6 +68,6 @@ export const sandboxParameterDefaults={
   "chatTransparency": 15,
   "roofLabels": true,
   "autoOrbit": true,
-  "orbitDelay": 2
+  "orbitDelay": 0
  }
 } as const;
