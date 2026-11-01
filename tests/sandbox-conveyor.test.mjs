@@ -84,13 +84,35 @@ test('task parcel follows live nodes, freezes failures, permits jumps and resets
  assert(motion.tick(1,false));const atFailure=motion.state().distance;
  motion.update({scope:'a',job:'job-1',ready:true,activity:{zone:'risk',phase:'error',run:1}});
  assert.equal(motion.state().target,atFailure);assert.equal(motion.tick(1,false),false);
- motion.update({scope:'a',job:'job-1',ready:true,running:'knowledge',activity:{zone:'knowledge',phase:'running',run:2}});
- assert.equal(motion.state().target,stationDistances[6]);motion.tick(1,true);assert.equal(motion.state().distance,stationDistances[6]);
+ motion.update({scope:'a',job:'job-1',ready:true,running:'report',activity:{zone:'report',phase:'running',run:2}});
+ assert.equal(motion.state().target,stationDistances[3]);motion.tick(1,true);assert.equal(motion.state().distance,stationDistances[3]);
  motion.update({scope:'a',job:'job-1',ready:true,running:'price',activity:{zone:'price',phase:'running',run:3}});
- assert(motion.tick(1,false));assert(motion.state().distance<stationDistances[6]);
+ assert(motion.tick(1,false));assert(motion.state().distance<stationDistances[3]);
  motion.update({scope:'a',job:'job-2',ready:true,running:null});assert.equal(motion.state().visible,false);
  const restored=createTaskParcelMotion();restored.update({scope:'a',job:'job-2',ready:false,running:null});
  restored.update({scope:'a',job:'job-2',ready:true,running:'report'});assert.equal(restored.state().distance,stationDistances[3]);assert.equal(restored.tick(1,false),false);
+});
+
+test('auxiliary knowledge work cannot take a project parcel away from pricing',()=>{
+ const motion=createTaskParcelMotion();
+ motion.update({scope:'a',job:'job',ready:true,running:'price',activity:{zone:'price',phase:'running',run:1}});
+ const before=motion.state();
+ for(const phase of ['running','settled','error','cancelled']){
+  motion.update({scope:'a',job:'job',ready:true,running:phase==='running'?'knowledge':null,activity:{zone:'knowledge',phase,run:2}});
+  motion.tick(1,false);assert.deepEqual(motion.state(),before);
+ }
+ motion.update({scope:'a',job:'job',ready:true,running:'risk',activity:{zone:'risk',phase:'running',run:3}});
+ assert.equal(motion.state().zone,'risk');assert(motion.tick(1,false));
+ motion.update({scope:'b',job:'',ready:true,running:'knowledge',activity:{zone:'knowledge',phase:'running',run:1}});
+ assert.equal(motion.state().zone,'knowledge','a standalone knowledge task retains its own parcel');
+});
+
+test('task parcel travels eight world units per visible second and stops exactly at its station',()=>{
+ const motion=createTaskParcelMotion();motion.update({scope:'speed',job:'a',ready:true,running:'import'});
+ motion.update({scope:'speed',job:'a',ready:true,running:'risk'});
+ motion.tick(.25,false);assert.equal(motion.state().distance,2);
+ motion.tick(100,false);assert.equal(motion.state().distance,stationDistances[2]);
+ assert.equal(motion.tick(1,false),false);
 });
 
 test('a paused task parcel resumes from its held distance without replaying the route',()=>{

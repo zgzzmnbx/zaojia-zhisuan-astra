@@ -9,6 +9,9 @@ export function createTaskParcelMotion(){
   if(nextScope!==scope||nextJob!==job){scope=nextScope;job=nextJob;key='';initialized=false;visible=false;phase='idle';distance=target=0;changed=true}
   if(!input?.ready){initialized=false;visible=false;phase='idle';distance=target=0;return true}
   const zone=activity?.phase==='running'?activity.zone:input?.running;
+  // Project pricing progress is independent of optional knowledge Q&A. Keep its
+  // parcel at the last business station while that auxiliary task is running.
+  if(job&&(zone==='knowledge'||activity?.zone==='knowledge'))return changed;
   if(!initialized){initialized=true;if(zone&&conveyorStations.includes(zone)){distance=target=stationDistances[conveyorStations.indexOf(zone)];visible=true;phase='running';key=`${scope}:${job}:${activity?.run??0}:${zone}`}return true}
   if(activity?.phase==='error'||activity?.phase==='cancelled'){phase=activity.phase;target=distance;return true}
   if(!zone||!conveyorStations.includes(zone))return changed;
@@ -18,7 +21,7 @@ export function createTaskParcelMotion(){
  function tick(delta,reduced){if(!visible)return false;
   if(reduced){const changed=distance!==target;distance=target;return changed}
   if(Math.abs(target-distance)<=1e-4)return false;
-  const step=Math.min(Math.abs(target-distance),Math.max(0,delta)*5.5);distance+=Math.sign(target-distance)*step;return step>0;
+  const step=Math.min(Math.abs(target-distance),Math.max(0,delta)*8);distance+=Math.sign(target-distance)*step;return step>0;
  }
  return {update,tick,state};
 }

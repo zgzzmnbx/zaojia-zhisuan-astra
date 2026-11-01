@@ -113,8 +113,20 @@ test('sandbox transparency validates persisted values and retains glass amount i
 
 test('task stages distinguish import conversion from matching and keep report substeps together',()=>{
  assert.equal(runningZone('转换为待匹配预览'),'import');
- for(const label of ['正在生成文字报告','正在整理 Markdown','正在转换公文格式','正在打开 Word 预览'])assert.equal(runningZone(label),'report');
+ for(const label of ['正在生成文字报告','正在整理 Markdown','正在转换公文格式'])assert.equal(runningZone(label),'report');
  assert.equal(runningZone('载入 V3.1 正式样本副本'),'import');assert.equal(runningZone('正在打开对话'),null);
+});
+
+test('reading other modules does not advance task activity or the current pricing stage',()=>{
+ const idle={ready:true,busy:'',qaRunning:false};
+ const price=nextTaskActivity(null,{...idle,busy:'正在批量匹配'})!;
+ const settled=nextTaskActivity(price,idle)!;
+ for(const busy of ['读取工作表预览','正在打开 Word 预览','查询复核进度','正在读取风险报告','正在加载知识检索','刷新工作表']){
+  assert.equal(runningZone(busy),null,busy);
+  assert.equal(nextTaskActivity(settled,{...idle,busy}),settled,busy);
+ }
+ assert.equal(runningZone('正在检索候选依据'),'price');
+ assert.equal(runningZone('正在检索知识依据',true),'knowledge');
 });
 test('live stage feedback starts once, preserves substep identity, and never replays history',()=>{
  const idle={ready:true,busy:'',qaRunning:false};assert.equal(nextTaskActivity(null,idle),null);
