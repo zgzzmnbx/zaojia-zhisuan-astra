@@ -258,3 +258,34 @@ def test_model_shortlist_matches_visible_distinct_prices_and_retains_support():
     result=row_assist.recommendation_shortlist(items)
     assert [c['value'] for c in result]==[5,0,8]
     assert len(result[0]['supporting_sources'])==2
+
+
+@pytest.mark.parametrize('current', [None, 3203])
+def test_original_row_preset_bypasses_model_and_preserves_excel(row,monkeypatch,current):
+    client,root,output,payload=row
+    headers=['要素1','要素2','要素3','要素4','要素5','单位','基价','实物工作费调整系数','技术工作费调整系数']
+    values=['控制测量','首级控制测量','','GPS测量E级','中等','个',current,1,0.22]
+    book=Workbook();sheet=book.active;sheet.title='表2-通用工程测量费用';sheet.append(headers)
+    for _ in range(4):sheet.append([None]*len(headers))
+    sheet.append(values);book.save(output);book.close()
+    book=Workbook();sheet=book.active;sheet.append(headers);sheet.append([*values[:6],3203,1,0.22]);book.save(root/'kb.xlsx');book.close()
+    payload.update(sheet_name='表2-通用工程测量费用',row_number=6)
+    data=candidate(row);before=hashlib.sha256(output.read_bytes()).hexdigest()
+    async def no_model(*args,**kwargs):raise AssertionError('local preset must not enter model or retrieval')
+    monkeypatch.setattr(server,'knowledge_answer',no_model)
+    response=client.post('/api/astra/row-assist/ask',json={**data,'question':'分析当前字段的首选和备选建议'})
+    assert response.status_code==200,response.text
+    answer=response.json();assert answer['generated_by_model'] is False
+    assert answer['preset_id']=='offline-demo-fill-table2-row6' and '3203' in answer['answer']
+    assert hashlib.sha256(output.read_bytes()).hexdigest()==before
+    # A changed current price or coefficient target cannot reuse the base-price preset.
+    async def ordinary(payload):return {'answer':'ordinary-path','generated_by_model':False}
+    monkeypatch.setattr(server,'knowledge_answer',ordinary)
+    payload['target_header']='技术工作费调整系数';coefficient=candidate(row)
+    reply=client.post('/api/astra/row-assist/ask',json={**coefficient,'question':'分析'})
+    assert reply.status_code==200 and reply.json()['answer']=='ordinary-path'
+    book=load_workbook(output);book['表2-通用工程测量费用']['G6']=999;book.save(output);book.close()
+    payload['target_header']='基价';changed=candidate(row)
+    reply=client.post('/api/astra/row-assist/ask',json={**changed,'question':'分析'})
+    assert reply.status_code==200 and reply.json()['answer']=='ordinary-path'
+    assert client.post('/api/astra/row-assist/ask',json={**data,'question':'分析'}).status_code==409

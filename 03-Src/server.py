@@ -55,7 +55,7 @@ async def host_lifespan(_app):
             except asyncio.CancelledError:pass
         await asyncio.to_thread(gork_output.stop)
 
-app = FastAPI(title='智算Astra', version='0.9.17', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.9.18', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_replay.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
@@ -254,6 +254,17 @@ app.add_api_route('/api/knowledge/ask',knowledge_answer,methods=['POST'])
 async def row_answer(payload:dict=Body(...)):
     context=row_assist.validate(payload)
     original=await row_assist.checked_candidates(payload)
+    # Reuse the original row preset before any model configuration or model I/O.
+    # The signed current artifact and freshly checked price candidate remain authoritative.
+    preset=None
+    if any(word in context['target_header'] for word in ('基价','单价')) and '系数' not in context['target_header']:
+        preset=engine.get_row_demo_answer('推荐本行基价，比较候选',{
+            'sheet_name':context['sheet_name'],'row_number':context['row_number'],
+            'values':{**original['context']['row'],'基价（元）':context.get('current_value')}})
+    if preset and original['candidates'] and str(original['candidates'][0]['value']) in {'3203','3203.0'}:
+        row_assist.validate(payload)
+        return {'answer':preset['answer'],'sources':preset['sources'],'preset_id':preset['id'],
+                'answer_mode':'curated_demo','generated_by_model':False,'bypass_reason':preset['bypass_reason']}
     answer=await knowledge_answer({'question':payload.get('question'),'job_id':context['job_id'],
         'context_type':'row','row_context':{**original['context'],'candidate_recommendations':row_assist.recommendation_shortlist(original['candidates'])},
         'retrieval_mode':'classic'})

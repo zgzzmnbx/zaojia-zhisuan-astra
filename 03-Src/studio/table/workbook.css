@@ -67,3 +67,8 @@
 @container(max-width:430px){.astra-legacy-table .preview-filter-icon{display:inline-flex}.astra-legacy-table .preview-filter-label{display:none}.astra-legacy-table .window-actions .check-line{margin-right:5px}}
 
 @container(max-width:700px){.astra-legacy-table .window-bar{flex-wrap:wrap;gap:0;padding:3px 10px 5px}.astra-legacy-table .window-bar>.workbook-sheet-nav{flex-basis:100%}.astra-legacy-table .window-actions{min-height:34px}.astra-legacy-table .window-actions .btn{height:32px;min-height:32px}}
+
+/* Quiet marker for the original local row-price preset. */
+.studio .astra-legacy-table .row-ai-actions .btn{position:relative}
+.row-ai-offline-dot{position:absolute;right:4px;top:4px;width:3px;height:3px;border-radius:50%;background:rgb(37 99 235 / 55%);box-shadow:0 0 0 1px rgb(37 99 235 / 8%);pointer-events:none}
+:root[data-astra-scheme="dark"] .row-ai-offline-dot{background:rgb(96 165 250 / 68%);box-shadow:0 0 0 1px rgb(96 165 250 / 9%)}

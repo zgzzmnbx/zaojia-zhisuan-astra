@@ -23,3 +23,12 @@ test('pricing analysis keeps plain legacy answers and fenced headings intact',()
  const parts=pricingAnalysisSections('## 依据与解释\n```text\n## 保留原文\n```\n\n### 采用前核对\n系数0.22，不是价格。');
  assert.equal(parts.length,2);assert.match(parts[0].body,/## 保留原文/);assert.match(parts[1].body,/0.22/);
 });
+
+
+test('offline marker reuses the original exact row, element and current-price gate',async()=>{
+ const {isOfflineDemoFillContext}=await import('../03-Src/professional/utils/offlineDemoFill.ts');
+ const context={sheetName:'表2-通用工程测量费用',rowNumber:6,values:{'内容':'首级控制测量','类别':'GPS测量E级','比例尺':'中等','单位':'个','基价（元）':''}};
+ assert.equal(isOfflineDemoFillContext(context),true);
+ assert.equal(isOfflineDemoFillContext({...context,values:{...context.values,'基价（元）':'3203'}}),true);
+ for(const change of [{rowNumber:5},{sheetName:'表3-地质测绘'},{values:{...context.values,'类别':'GPS测量C级'}},{values:{...context.values,'基价（元）':'50000'}}])assert.equal(isOfflineDemoFillContext({...context,...change}),false);
+});
