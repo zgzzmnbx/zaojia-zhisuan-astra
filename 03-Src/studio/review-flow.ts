@@ -1,4 +1,23 @@
 import type {ReviewProgressTask} from '../professional/components/agent-workspace/reviewProgress';
+import type {Result} from './types';
+
+/** Prepare current local artifacts only; delivery still requires the separate confirmation card. */
+export async function prepareReviewArtifact(jobId:string,load:()=>Promise<Result>,recalculate:()=>Promise<Result>,isCurrent:()=>boolean):Promise<Result|null>{
+ let current=await load();
+ if(!isCurrent())return null;
+ const validate=(data:Result)=>{
+  if(data.job_id!==jobId)throw Error('成果任务不一致，请重新打开当前项目。');
+  if(data.summary.matching_status!=='completed'||!data.downloads.excel)throw Error('请先完成批量匹配并生成 Excel 成果，再发起同事复核。');
+ };
+ validate(current);
+ if(current.needs_recalculate){
+  current=await recalculate();
+  if(!isCurrent())return null;
+  validate(current);
+  if(current.formula_recalculated!==true||current.needs_recalculate)throw Error('公式尚未完成重算，暂未准备复核。请在表格中点击“重算公式与报告”重试；若仍失败，请检查本机 Excel 是否可用。');
+ }
+ return current;
+}
 export type Person={person_ref:string;display_name:string};
 export type Group={group_ref:string;name:string;member_count:number;members_available:boolean;authorized:boolean;people:Person[]};
 export type ReviewOptions={active_profile:string;platforms:{profile_id:string;configuration_ok:boolean}[];directory:{groups:Group[];people:Person[];refresh_error?:string};direct_delivery:{status:string}};

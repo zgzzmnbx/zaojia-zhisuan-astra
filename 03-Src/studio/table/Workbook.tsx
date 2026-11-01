@@ -140,7 +140,7 @@ export function Workbook({active=true,location,result,sheetIndex,setSheetIndex,b
       </div>
 
       {searchOpen&&<div className="preview-filterbar"><label className="preview-search"><Icon name="search"/><input autoFocus className="input" aria-label="查找表格" placeholder="查找当前工作表" value={query} onChange={e=>setQuery(e.target.value)}/><button className="btn btn-ghost btn-square" aria-label="收起表格查找" onClick={()=>{setQuery('');setSearchOpen(false);}}><Icon name="close"/></button></label><span>{matchingRows.size} 行符合条件{rows.length>matchingRows.size?' · 另显示定位行':''}</span></div>}
-      {needsRecalculate&&<Note>存在人工修改，请重算公式并刷新报告后交付。</Note>}
+      {needsRecalculate&&<Note>修改已保存，金额与报告待更新。{complete&&<><button className="btn btn-ghost" disabled={busy} onClick={recalculate}>重算公式与报告</button><span>发起同事复核时会自动更新。</span></>}</Note>}
       {storageError&&<Note>{storageError}</Note>}
       {!locatedVisible&&<Note>第 {selectedRow} 行不在当前预览或筛选范围内。可清除筛选，或下载完整 Excel 查看。</Note>}
       {hideEmpty&&isCorePreviewSheet(sheet)&&warningFilterColumnIndex(sheet.headers,'数量')<0&&<Note>当前表头未识别到数量列，已保留全部预览行。可在列设置中调整表头行。</Note>}

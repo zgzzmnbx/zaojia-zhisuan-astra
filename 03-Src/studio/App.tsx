@@ -18,7 +18,7 @@ import {agentComposerSpaceCompletion,prefixedKnowledgeQuestion,knowledgeQuestion
 import {SettingsDialog} from './SettingsDialog';
 import {settingsSectionForRoute,type SettingsSection} from './settings-sections';
 import {ReviewConversation} from './ReviewConversation';
-import {reviewIsCurrent} from './review-flow';
+import {prepareReviewArtifact,reviewIsCurrent} from './review-flow';
 import {GorkSettings} from './GorkSettings';
 import {DocumentPanel} from './DocumentPanel';
 import {GongwenCard} from './GongwenCard';
@@ -402,15 +402,26 @@ function App(){
   },[activeDocumentSource?.source_id,activeDocumentSource?.kind,layout.chatActive]);
 
   async function perform(label:string,work:()=>Promise<void>){if(busyRef.current||!workspace.ready)return;gorkFeedback.interruptSuccess();busyRef.current=true;setBusy(label);setOperationError('');try{await work();}catch(e){const message=e instanceof Error?e.message:'操作失败，请检查服务状态后重试。';setOperationError(message);add(message,undefined,'assistant',true);}finally{setBusy('');busyRef.current=false;}}
-  function prepareReview(kind:'setup'|'progress'='setup'){
+  async function prepareReview(kind:'setup'|'progress'='setup'){
     if(busyRef.current||!workspace.ready)return;
     presentation.prepareInput();setSidebar(false);
     if(!result||result.summary.matching_status!=='completed'||!result.downloads.excel){add('请先完成批量匹配并生成 Excel 成果，再发起同事复核。');return;}
-    if(needsRecalculate&&kind==='setup'){add('当前成果有待重算修改，请先刷新公式并核对成果，再发起复核。');return;}
-    const current=result,version=current.task_tracking?.task.artifact_version||0;
+    const job=result.job_id,context=conversationContext.current;
+    const showCard=(current:Result)=>{
+    const version=current.task_tracking?.task.artifact_version||0;
     const existing=messages.find(m=>m.review?.kind===kind&&!m.review.closed&&m.review.jobId===current.job_id&&m.review.version===version&&m.context===conversationContext.current);
     const message:Message=existing||{id:crypto.randomUUID(),role:'assistant',text:kind==='setup'?'请确认发送平台、复核人员和截止时间。':'当前成果的复核进度。',context:conversationContext.current,job:current.job_id,review:{kind,jobId:current.job_id,fileName:current.summary.output_excel||file?.name||'当前 Excel 成果',projectName:project||current.project_name||'',reviewRows:current.summary.review_rows,version}};
     pendingFeeFocus.current=message.id;setMessages(old=>[...old.filter(m=>m.id!==message.id),message]);
+    };
+    if(kind==='progress'){showCard(result);return;}
+    await perform('正在准备复核成果',async()=>{
+      const current=await prepareReviewArtifact(job,()=>api<Result>(`/api/astra/runs/${job}`),()=>{
+        setBusy('正在重算公式并刷新复核报告');
+        return api<Result>('/api/preview/recalculate',json({job_id:job}));
+      },()=>context===conversationContext.current&&loadedJob.current===job);
+      if(!current)return;
+      acceptResult(current);showCard(current);
+    });
   }
 
   const [digitalImport,setDigitalImport]=useState<{context:string;session:DigitalSession}|null>(null);
