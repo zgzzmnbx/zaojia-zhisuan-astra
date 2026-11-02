@@ -3,7 +3,7 @@ export type TourPhase='intro'|'cruise'|'return';
 export type GlobeTour={phase:TourPhase;elapsed:number;camera:GlobeCamera;from:GlobeCamera};
 export const EARTH_VIEW:GlobeCamera={lng:65,lat:14,zoom:.8};
 export const CHINA_VIEW:GlobeCamera={lng:108,lat:32,zoom:2.7};
-export const INTRO_MS=4200,RETURN_MS=5200;
+export const INTRO_MS=2100,RETURN_MS=5200;
 export function createGlobeTour():GlobeTour{return {phase:'intro',elapsed:0,camera:{...EARTH_VIEW},from:{...EARTH_VIEW}};}
 export function returnToChina(camera:GlobeCamera):GlobeTour{return {phase:'return',elapsed:0,camera:{...camera},from:{...camera}};}
 const smooth=(t:number)=>t*t*t*(t*(t*6-15)+10);

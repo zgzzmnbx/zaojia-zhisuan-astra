@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGlobeIdleResume} from '../03-Src/professional/components/project-spatial-map/globe-idle.ts';
-import {createGlobeTour,advanceGlobeTour,returnToChina,EARTH_VIEW,CHINA_VIEW,type GlobeTour} from '../03-Src/professional/components/project-spatial-map/globe-motion.ts';
+import {createGlobeTour,advanceGlobeTour,returnToChina,EARTH_VIEW,CHINA_VIEW,INTRO_MS,type GlobeTour} from '../03-Src/professional/components/project-spatial-map/globe-motion.ts';
 function advance(tour:GlobeTour,ms:number,visible=true){for(let t=0;t<ms;t+=16)tour=advanceGlobeTour(tour,Math.min(16,ms-t),visible);return tour;}
 
 test('idle resume waits one second after all held inputs are released',t=>{
@@ -29,8 +29,9 @@ test('pause, hidden state and disposal suppress pending automatic resumes',t=>{
 test('opening rotates and enlarges the entire Earth to China without overshooting',()=>{
   let tour=createGlobeTour();assert.deepEqual(tour.camera,EARTH_VIEW);
   let previous=tour.camera;
-  for(let i=0;i<263;i++){
-    tour=advanceGlobeTour(tour,16,true);
+  assert.equal(INTRO_MS,2100);
+  for(let elapsed=0;elapsed<INTRO_MS;elapsed+=16){
+    tour=advanceGlobeTour(tour,Math.min(16,INTRO_MS-elapsed),true);
     assert.ok(tour.camera.zoom>=previous.zoom&&tour.camera.zoom<=CHINA_VIEW.zoom);
     assert.ok(tour.camera.lng>=previous.lng&&tour.camera.lng<=CHINA_VIEW.lng);
     previous=tour.camera;
@@ -38,7 +39,7 @@ test('opening rotates and enlarges the entire Earth to China without overshootin
   assert.equal(tour.phase,'cruise');assert.deepEqual(tour.camera,CHINA_VIEW);
 });
 test('China leaving the viewport starts a smooth return, which repeats after arrival',()=>{
-  let tour=advance(createGlobeTour(),4200);
+  let tour=advance(createGlobeTour(),INTRO_MS);
   for(let cycle=0;cycle<3;cycle++){
     tour=advance(tour,16000);
     assert.ok(tour.camera.lng>CHINA_VIEW.lng+8);
@@ -52,7 +53,7 @@ test('China leaving the viewport starts a smooth return, which repeats after arr
 test('large delayed frames cannot jump the camera, and angular guard works offscreen',()=>{
   const initial=createGlobeTour();const stalled=advanceGlobeTour(initial,300000,true);
   assert.equal(stalled.phase,'intro');assert.equal(stalled.elapsed,64);
-  let tour=advance(initial,4200);
+  let tour=advance(initial,INTRO_MS);
   for(let i=0;i<7000&&tour.phase==='cruise';i++)tour=advanceGlobeTour(tour,16,true);
   assert.equal(tour.phase,'return');assert.ok(tour.camera.lng<=CHINA_VIEW.lng+68.02);
 });
