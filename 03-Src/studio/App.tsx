@@ -413,15 +413,13 @@ function App(){
     const showCard=(current:Result)=>{
     const version=current.task_tracking?.task.artifact_version||0;
     const existing=messages.find(m=>m.review?.kind===kind&&!m.review.closed&&m.review.jobId===current.job_id&&m.review.version===version&&m.context===conversationContext.current);
-    const message:Message=existing||{id:crypto.randomUUID(),role:'assistant',text:kind==='setup'?'请确认发送平台、复核人员和截止时间。':'当前成果的复核进度。',context:conversationContext.current,job:current.job_id,review:{kind,jobId:current.job_id,fileName:current.summary.output_excel||file?.name||'当前 Excel 成果',projectName:project||current.project_name||'',reviewRows:current.summary.review_rows,version}};
+    const message:Message=existing?{...existing}:{id:crypto.randomUUID(),role:'assistant',text:kind==='setup'?'请确认发送平台、复核人员和截止时间。':'当前成果的复核进度。',context:conversationContext.current,job:current.job_id,review:{kind,jobId:current.job_id,fileName:current.summary.output_excel||file?.name||'当前 Excel 成果',projectName:project||current.project_name||'',reviewRows:current.summary.review_rows,version}};
+    message.review={...message.review!,calculationUnconfirmed:!!current.needs_recalculate||current.formula_recalculated!==true};
     pendingFeeFocus.current=message.id;setMessages(old=>[...old.filter(m=>m.id!==message.id),message]);
     };
     if(kind==='progress'){showCard(result);return;}
     await performProjectStep('正在准备同事复核',async()=>{
-      const current=await prepareReviewArtifact(job,()=>api<Result>(`/api/astra/runs/${job}`),()=>{
-        setBusy('正在重算公式并刷新复核报告');
-        return api<Result>('/api/preview/recalculate',json({job_id:job}));
-      },()=>context===conversationContext.current&&loadedJob.current===job);
+      const current=await prepareReviewArtifact(job,()=>api<Result>(`/api/astra/runs/${job}`),()=>context===conversationContext.current&&loadedJob.current===job);
       if(!current)return;
       acceptResult(current);showCard(current);
     });

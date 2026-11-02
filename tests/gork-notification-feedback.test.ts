@@ -58,3 +58,11 @@ test('controller dispatch failures stay visible with a safe Chinese reason',()=>
  const failed=notificationFailure('EXTERNAL_OUTPUT_FAILED','delivery');
  assert.match(failed.title,/Gork 输出失败/);assert.match(failed.message,/不会自动重播/);
 });
+
+import {watchSpeechCompleted} from '../03-Src/studio/gork-notification-feedback.ts';
+test('manual Watch replay recognizes device playback completion, not transport acceptance',()=>{
+ assert.equal(watchSpeechCompleted('completed',{speech:'device_playback_completed'}),true);
+ assert.equal(watchSpeechCompleted('completed',{speech:'completed'}),true);
+ for(const speech of ['accepted','queued','device_acknowledged','not_requested','failed'])assert.equal(watchSpeechCompleted('completed',{speech}),false);
+ assert.equal(watchSpeechCompleted('active',{speech:'device_playback_completed'}),false);
+});

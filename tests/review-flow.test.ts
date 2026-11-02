@@ -7,38 +7,28 @@ import {prepareReviewArtifact} from '../03-Src/studio/review-flow.ts';
 import type {Result} from '../03-Src/studio/types.ts';
 
 const artifact=(patch:Partial<Result>={}):Result=>({job_id:'job-a',summary:{matching_status:'completed'} as Result['summary'],downloads:{excel:'/current.xlsx'},needs_recalculate:false,task_tracking:{task:{task_id:'task-a',artifact_version:2}},...patch});
-test('review preparation reads current state and skips recalculation for clean artifacts',async()=>{
- const current=artifact();let reads=0;
- assert.equal(await prepareReviewArtifact('job-a',async()=>{reads++;return current;},async()=>{throw Error('must not recalculate');},()=>true),current);
- assert.equal(reads,1);
-});
-test('dirty review preparation uses recalculated artifacts and their new version',async()=>{
- const updated=artifact({formula_recalculated:true,task_tracking:{task:{task_id:'task-a',artifact_version:3}}});let recalculations=0;
- assert.equal(await prepareReviewArtifact('job-a',async()=>artifact({needs_recalculate:true}),async()=>{recalculations++;return updated;},()=>true),updated);
- assert.equal(recalculations,1);
-});
-test('failed or unconfirmed formulas never become review-ready',async()=>{
- for(const result of [artifact(),artifact({formula_recalculated:false}),artifact({formula_recalculated:true,needs_recalculate:true})]){
-  await assert.rejects(prepareReviewArtifact('job-a',async()=>artifact({needs_recalculate:true}),async()=>result,()=>true),/公式尚未完成重算/);
+test('review preparation loads current artifacts without requiring recalculation',async()=>{
+ for(const patch of [{},{needs_recalculate:true},{formula_recalculated:false},{formula_recalculated:true,needs_recalculate:true}]){
+  const current=artifact(patch);let reads=0;
+  assert.equal(await prepareReviewArtifact('job-a',async()=>{reads++;return current;},()=>true),current);
+  assert.equal(reads,1);
  }
- await assert.rejects(prepareReviewArtifact('job-a',async()=>artifact({needs_recalculate:true}),async()=>{throw Error('重算失败');},()=>true),/重算失败/);
 });
 test('review preparation rejects wrong tasks, incomplete matches and missing downloads',async()=>{
  for(const result of [artifact({job_id:'job-b'}),artifact({summary:{matching_status:'pending'} as Result['summary']}),artifact({downloads:{}})]){
-  await assert.rejects(prepareReviewArtifact('job-a',async()=>result,async()=>{throw Error('must not recalculate');},()=>true));
+  await assert.rejects(prepareReviewArtifact('job-a',async()=>result,()=>true));
  }
- await assert.rejects(prepareReviewArtifact('job-a',async()=>artifact({needs_recalculate:true}),async()=>artifact({job_id:'job-b',formula_recalculated:true}),()=>true),/成果任务不一致/);
 });
-test('switching conversations while loading or recalculating cannot open a stale review',async()=>{
+test('switching conversations while loading cannot open a stale review',async()=>{
  let current=true;
- assert.equal(await prepareReviewArtifact('job-a',async()=>{current=false;return artifact({needs_recalculate:true});},async()=>{throw Error('must not recalculate');},()=>current),null);
- current=true;
- assert.equal(await prepareReviewArtifact('job-a',async()=>artifact({needs_recalculate:true}),async()=>{current=false;return artifact({formula_recalculated:true});},()=>current),null);
+ assert.equal(await prepareReviewArtifact('job-a',async()=>{current=false;return artifact({needs_recalculate:true});},()=>current),null);
 });
+
 test('old review cards stay read-only across artifact, job and conversation changes',()=>{
  const request:ReviewRequest={kind:'setup',jobId:'job-a',fileName:'成果.xlsx',projectName:'项目',version:2,reviewRows:0};
  assert(reviewIsCurrent(request,'chat-a','chat-a','job-a',2,false));
- for(const args of [['chat-a','chat-a','job-a',3,false],['chat-a','chat-a','job-b',2,false],['chat-a','chat-b','job-a',2,false],['chat-a','chat-a','job-a',2,true],[undefined,'chat-a','job-a',2,false]] as const)assert(!reviewIsCurrent(request,...args));
+ assert(reviewIsCurrent(request,'chat-a','chat-a','job-a',2,true));
+ for(const args of [['chat-a','chat-a','job-a',3,false],['chat-a','chat-a','job-b',2,false],['chat-a','chat-b','job-a',2,false],[undefined,'chat-a','job-a',2,false]] as const)assert(!reviewIsCurrent(request,...args));
  assert(!reviewIsCurrent({...request,closed:true},'chat-a','chat-a','job-a',2,false));
  assert(reviewIsCurrent({...request,kind:'progress'},'chat-a','chat-a','job-a',2,true));
 });
@@ -113,4 +103,9 @@ test('new reviews include both available platforms, existing rounds and manual c
  assert.deepEqual(missingReviewPlatforms([task]),['weact_cost']);
  assert.equal(summarizeReviewProgress([task]).total,1);
  assert.deepEqual(missingReviewPlatforms([task,{...task,platform:'weact_cost'}]),[]);
+});
+
+test('unconfirmed formulas accompany review as instructions, not a send gate',()=>{
+ const p=platform();assert.equal(validate([p]),'');
+ assert.equal(reviewPayload(p,{...request,calculationUnconfirmed:true},'请复核','2026-12-01').instructions,'请复核\n金额以当前表格为准，公式尚未确认重算，请一并复核。');
 });

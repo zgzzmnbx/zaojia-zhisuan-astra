@@ -385,10 +385,10 @@ class Notifications:
         if payload['kind'] == 'notice':
             from gork_project import project_output
             payload.update(project_output(event, self.output_capabilities))
-        # Skip obsolete unsent states; accepted states are superseded by the server
-        # with the new sequence, without stopping speech already in progress.
+        # Only transient working states become obsolete. Completion notices and
+        # explicit replays must survive the next project step starting.
         if not manual:
-            db.execute("UPDATE events SET status='superseded' WHERE json_extract(payload,'$.task_id')=? AND status='pending'", (job,))
+            db.execute("UPDATE events SET status='superseded' WHERE json_extract(payload,'$.task_id')=? AND status='pending' AND manual=0 AND json_extract(payload,'$.kind')='state'", (job,))
         db.execute('INSERT INTO events(id,producer,payload,status,deadline,next_try,heartbeat,request_round,debug,manual) VALUES(?,?,?,?,?,?,?,?,?,?)',
                    (payload['event_id'], producer, json.dumps(payload, ensure_ascii=False), 'pending',
                     occurred + stage.ttl_ms / 1000, 0, 0, event.get('_request', ''), int(debug), int(manual)))

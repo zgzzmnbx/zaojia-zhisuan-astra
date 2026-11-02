@@ -1,4 +1,4 @@
-"""Explicit, version-bound replay of a completed result through the Gork outbox."""
+"""Explicit replay of the current available result, independent of recalculation."""
 import asyncio
 from datetime import datetime, timezone
 import hashlib
@@ -10,7 +10,8 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException
 from pydantic import Field
 import gork_config as config
-from gork_project import _read, freeze_project
+from gork_project import _read, _valid_card, freeze_project
+from gork_amount import amount_summary
 from gork_stages import amount_text
 
 
@@ -29,18 +30,31 @@ def completed_event(runtime, job_id, version, now):
         state = _read(job / 'process-state.json')
         if state.get('summary', {}).get('matching_status') != 'completed':
             raise HTTPException(409, '请先完成智能填价')
-        if state.get('artifact_version') != version:
-            raise HTTPException(409, '成果版本已更新，请重新打开当前项目后播报')
         edit = job / 'astra-edit-state.json'
-        if state.get('needs_recalculate') or (edit.exists() and _read(edit).get('needs_recalculate') is not False):
-            raise HTTPException(409, '金额待重算，请重算后再播报')
+        try:
+            dirty = bool(state.get('needs_recalculate')) or (edit.exists() and _read(edit).get('needs_recalculate') is not False)
+        except (OSError, ValueError):
+            dirty = True
         event = freeze_project(dict(job_id=job_id, event_id=uuid4().hex, attempt=state.get('batch_attempt'),
             stage='match_result', status='completed', review_rows=state['summary'].get('review_rows'),
             occurred_at=datetime.fromtimestamp(now, timezone.utc).isoformat()), job)
         snapshot = event.get('_project_snapshot', {})
-        amount = snapshot.get('amount_summary')
-        if not amount_text({**event, 'amount_summary': amount}):
-            raise HTTPException(409, '当前成果金额或文件校验未通过，请先重算并刷新成果')
+        verified = bool(snapshot) and not dirty
+        # The displayed summary remains useful even if Excel was edited or its
+        # cached formulas were not refreshed. Never invent an amount or mark
+        # that summary as recalculated. Missing amounts still permit a notice.
+        amount = snapshot.get('amount_summary') or amount_summary(state, state.get('batch_attempt'))
+        if not snapshot:
+            relation = state.get('project_relation') or {}
+            card = dict(template='cost_result', project_id=state.get('project_id') or relation.get('project_id') or 'job:' + job_id,
+                        project_name=state.get('project_name') or relation.get('project_name') or state.get('input_filename') or '当前项目',
+                        result_status='completed', risk_status='not_checked', risk_count=None)
+            snapshot = dict(job_id=job_id, source_batch=state.get('batch_attempt'),
+                            artifact_version=state.get('artifact_version'),
+                            manual_edit_revision=state.get('manual_edit_revision', 0),
+                            card=card, amount_summary=amount)
+            if _valid_card(card):
+                event['_project_snapshot'] = snapshot
         # Confirmation can only come from a matching committed amount snapshot.
         for path in sorted((job / 'sentinel-events').glob('*.json'), reverse=True)[:100]:
             try:
@@ -48,7 +62,7 @@ def completed_event(runtime, job_id, version, now):
             except (OSError, ValueError):
                 continue
             source = old.get('_project_snapshot') or {}
-            if (old.get('stage') == 'match_result' and old.get('status') == 'completed'
+            if (verified and amount and old.get('stage') == 'match_result' and old.get('status') == 'completed'
                     and old.get('attempt') == state.get('batch_attempt') and amount_text(old)
                     and all(source.get(k) == snapshot.get(k) for k in
                             ('job_id', 'source_batch', 'manual_edit_revision'))
@@ -56,10 +70,11 @@ def completed_event(runtime, job_id, version, now):
                 amount['calculation_status'] = old['amount_summary']['calculation_status']
                 break
         event['amount_summary'] = amount
-        event['task_name'] = snapshot['card']['project_name']
+        event['task_name'] = snapshot.get('card', {}).get('project_name', '当前项目')
         # A replay has its own attempt; it cannot cancel or complete a business run.
         event['attempt'] = 'replay:' + uuid4().hex
-        amount['attempt'] = event['attempt']
+        if amount:
+            amount['attempt'] = event['attempt']
         snapshot.update(event_id=event['event_id'], attempt=event['attempt'])
         return event
     except (OSError, ValueError, TypeError, KeyError):
@@ -78,10 +93,8 @@ def receipt(instance, job_id, event_id):
 def replay(instance, runtime, job_id, request):
     from gork_notifications import read_console_health, error_code
     with instance.lock:
-        if instance.active:
-            raise HTTPException(409, '当前任务正在处理，请完成后再播报')
         event = completed_event(runtime, job_id, request.artifact_version, instance.clock())
-        producer = 'manual-match:' + hashlib.sha256(f'{job_id}:{request.artifact_version}:{request.request_id}'.encode()).hexdigest()
+        producer = 'manual-match:' + hashlib.sha256(f'{job_id}:{request.request_id}'.encode()).hexdigest()
         previous = instance.db().execute('SELECT id FROM events WHERE producer=?', (producer,)).fetchone()
         if previous:
             return receipt(instance, job_id, previous['id'])
@@ -102,13 +115,12 @@ def replay(instance, runtime, job_id, request):
             settings.sound = True
             client = instance.client_factory(settings)
             instance.validate_remote(client, settings)
-            latest = completed_event(runtime, job_id, request.artifact_version, instance.clock())
-            if any(latest['_project_snapshot'].get(k) != event['_project_snapshot'].get(k)
-                   for k in ('artifact_sha256', 'source_batch', 'manual_edit_revision', 'card')):
-                raise HTTPException(409, '成果已更新，请刷新后再次播报')
+            # Re-read after connecting and use the newest available summary.
+            event = completed_event(runtime, job_id, request.artifact_version, instance.clock())
             instance.client = client
             event['event_id'] = producer
-            event['_project_snapshot']['event_id'] = producer
+            if '_project_snapshot' in event:
+                event['_project_snapshot']['event_id'] = producer
             rejection = instance.enqueue(event, settings=settings, manual=True)
             if rejection:
                 raise HTTPException(409, '播报未提交，请稍后重试：' + rejection)
