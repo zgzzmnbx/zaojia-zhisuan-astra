@@ -12,13 +12,14 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 
 test('task highlight isolates materials, labels interrupted tasks and keeps the route geometry',()=>{
  const old=Object.getOwnPropertyDescriptor(globalThis,'document');
- const ctx={clearRect(){},fillText(){},beginPath(){},roundRect(){},fill(){},stroke(){}};
+ const ctx={clearRect(){},fillText(){},beginPath(){},roundRect(){},fill(){},stroke(){},moveTo(){},lineTo(){},arc(){},closePath(){}};
  Object.defineProperty(globalThis,'document',{configurable:true,value:{createElement:()=>({getContext:()=>ctx})}});
  const root=new Group(),source=new MeshStandardMaterial({name:'Porcelain | soft white',color:'#e8edf1'}),body=new Mesh(new BoxGeometry(.64,.48,.58),source);body.name='Parcel_body';root.add(body);root.position.set(2,1,3);
  try{
-  const before=root.position.clone(),look=createTaskParcelLook(root);assert.notEqual(body.material,source);assert.equal(source.color.getHexString(),'e8edf1');assert.equal(look.state().body,'168bd2');
-  look.setNight(true);look.update(new OrthographicCamera(-24,24,24,-24),960,'error');assert.equal(look.state().label,'任务中断');assert.deepEqual(root.position,before);assert(body.material.emissiveIntensity>0);
-  look.setNight(false);look.update(new OrthographicCamera(-24,24,24,-24),960,'running');assert.equal(look.state().body,'168bd2');assert.equal(look.state().label,'当前任务');assert.equal(root.getObjectByName('Current task label').material.depthTest,true);
+  const before=root.position.clone(),look=createTaskParcelLook(root);assert.notEqual(body.material,source);assert.equal(source.color.getHexString(),'e8edf1');assert.equal(look.state().body,'1676c8');
+  look.setNight(true);look.update(new OrthographicCamera(-24,24,24,-24),960,'error');assert.equal(look.state().label,'中断');assert.deepEqual(root.position,before);assert(body.material.emissiveIntensity>0);
+  look.setNight(false);look.update(new OrthographicCamera(-24,24,24,-24),960,'running');assert.equal(look.state().body,'1676c8');assert.equal(look.state().label,'当前');assert.equal(root.getObjectByName('Current task label').material.depthTest,false);
+  const motion={visible:true,phase:'running',distance:0,target:8};const frozen=JSON.stringify(motion);assert(look.tick(.1,false,motion));const glow=root.getObjectByName('Task parcel soft footprint');const opacity=glow.material.opacity;look.tick(.1,false,motion);assert.notEqual(glow.material.opacity,opacity);assert.equal(JSON.stringify(motion),frozen);assert.equal(look.tick(.1,true,motion),false);assert.equal(glow.material.opacity,.5);assert.equal(look.tick(.1,false,{...motion,phase:'cancelled'}),false);assert.equal(look.tick(.1,false,{...motion,visible:false}),false);assert.deepEqual(look.state().scale,[1,1.25,1]);assert.equal(root.getObjectByName('Current task parcel shell').scale.y,1.25);
   let released=0;root.traverse(o=>o.material?.map?.addEventListener('dispose',()=>released++));look.dispose();assert.equal(released,2);
  }finally{root.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});source.dispose();if(old)Object.defineProperty(globalThis,'document',old);else delete globalThis.document;}
 });

@@ -1,8 +1,14 @@
-import {CanvasTexture,Color,Mesh,MeshBasicMaterial,PlaneGeometry,Sprite,SpriteMaterial,SRGBColorSpace,Vector3} from 'three';
+import {Box3,CanvasTexture,Color,EdgesGeometry,Group,LineBasicMaterial,LineSegments,Mesh,MeshBasicMaterial,PlaneGeometry,Sprite,SpriteMaterial,SRGBColorSpace,Vector3} from 'three';
 
 /** Private task-only styling; never recolor the illustrative parcels or their shared materials. */
 export function createTaskParcelLook(parcel){
- const materials=[],textures=[],position=new Vector3();let dark=false,lastLabel='';
+ const materials=[],textures=[],position=new Vector3();let dark=false,lastLabel='',clock=0,arrival=0,wasTravelling=false;
+ // Taller private shell keeps the authored horizontal clearance and bottom contact.
+ const shell=new Group();shell.name='Current task parcel shell';
+ for(const child of [...parcel.children])shell.add(child);
+ const bounds=new Box3().setFromObject(shell);shell.scale.set(1,1.25,1);
+ shell.position.y=Number.isFinite(bounds.min.y)?-.25*bounds.min.y:0;parcel.add(shell);
+ const outlines=[];
  parcel.traverse(object=>{
   if(!object.isMesh||!object.material)return;
   const copies=[].concat(object.material).map(source=>{
@@ -10,30 +16,49 @@ export function createTaskParcelLook(parcel){
    const role=object.name==='Document_seal'?'seal':/Porcelain/i.test(source.name)?'body':object.name==='Parcel_lid'?'lid':/enamel/i.test(source.name)?'strap':/ink/i.test(source.name)?'ink':'paper';
    materials.push({material,role});return material;
   });object.material=Array.isArray(object.material)?copies:copies[0];
+  if(object.name==='Parcel_body'||object.name==='Parcel_lid')outlines.push(object);
  });
+ for(const object of outlines){const edge=new LineSegments(new EdgesGeometry(object.geometry,45),new LineBasicMaterial({color:'#d9f3ff',transparent:true,opacity:.5,depthWrite:false,toneMapped:false}));edge.name='Task parcel bright edges';object.add(edge)}
  const glowCanvas=document.createElement('canvas');glowCanvas.width=glowCanvas.height=128;const glowContext=glowCanvas.getContext('2d');
  // Soft rectangular footprint, no orbiting ring or additional render pass.
  for(let i=24;i>0;i--){glowContext.fillStyle=`rgba(54,174,255,${.012+(24-i)*.0007})`;glowContext.beginPath();glowContext.roundRect(32-i,38-i,64+i*2,52+i*2,12+i/2);glowContext.fill();}
  const glowTexture=new CanvasTexture(glowCanvas);glowTexture.colorSpace=SRGBColorSpace;textures.push(glowTexture);
  const glow=new Mesh(new PlaneGeometry(1.25,1.15),new MeshBasicMaterial({map:glowTexture,transparent:true,opacity:.45,depthWrite:false,toneMapped:false}));glow.name='Task parcel soft footprint';glow.rotation.x=-Math.PI/2;glow.position.y=.018;parcel.add(glow);
- const canvas=document.createElement('canvas');canvas.width=384;canvas.height=112;const ctx=canvas.getContext('2d'),map=new CanvasTexture(canvas);map.colorSpace=SRGBColorSpace;textures.push(map);
- const badge=new Sprite(new SpriteMaterial({map,transparent:true,depthTest:true,depthWrite:false,toneMapped:false}));badge.name='Current task label';badge.center.set(.5,0);badge.position.set(0,.82,0);badge.scale.set(4.2,1.225,1);parcel.add(badge);
- function setLabel(phase){const label=phase==='error'?'任务中断':phase==='cancelled'?'任务已取消':'当前任务',key=label+dark;if(key===lastLabel)return;lastLabel=key;
-  ctx.clearRect(0,0,384,112);ctx.fillStyle=dark?'#12304a':'#f5fbff';ctx.strokeStyle=dark?'#60bded':'#91c8ec';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(3,3,378,106,28);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#e8bc68';ctx.beginPath();ctx.roundRect(32,39,27,27,6);ctx.fill();ctx.fillStyle=dark?'#edf8ff':'#145785';ctx.font='600 48px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,218,58);map.needsUpdate=true;
+ const canvas=document.createElement('canvas');canvas.width=320;canvas.height=192;const ctx=canvas.getContext('2d'),map=new CanvasTexture(canvas);map.colorSpace=SRGBColorSpace;textures.push(map);
+ const badge=new Sprite(new SpriteMaterial({map,transparent:true,depthTest:false,depthWrite:false,toneMapped:false}));badge.name='Current task label';badge.renderOrder=1000;badge.center.set(.5,0);badge.position.set(0,(bounds.max.y-bounds.min.y)*1.25+bounds.min.y+.025,0);parcel.add(badge);
+ function setLabel(phase){const label=phase==='error'?'中断':phase==='cancelled'?'取消':'当前',key=label+dark;if(key===lastLabel)return;lastLabel=key;
+  ctx.clearRect(0,0,320,192);
+  // Leader is part of the camera-facing badge, so it stays short and anchored in every view.
+  ctx.strokeStyle=dark?'#bcecff':'#ffffff';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(160,116);ctx.lineTo(160,174);ctx.stroke();
+  ctx.fillStyle='#218ee9';ctx.beginPath();ctx.arc(160,174,9,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.shadowColor=dark?'rgba(32,145,255,.3)':'rgba(14,66,110,.25)';ctx.shadowBlur=12;ctx.shadowOffsetY=5;
+  ctx.fillStyle=dark?'#124d82':'#1266ae';ctx.strokeStyle=dark?'#9edfff':'#e2f5ff';ctx.lineWidth=4;ctx.beginPath();ctx.roundRect(9,8,302,108,26);ctx.fill();ctx.stroke();
+  ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+  ctx.fillStyle='#ffd079';ctx.beginPath();ctx.moveTo(52,43);ctx.lineTo(69,60);ctx.lineTo(52,77);ctx.lineTo(35,60);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#ffffff';ctx.font='600 54px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,194,64);map.needsUpdate=true;
  }
  function setNight(value){dark=value===true;
   for(const {material,role} of materials){
-   const colors={body:dark?'#176faf':'#168bd2',lid:dark?'#278dcc':'#40a7df',strap:'#e7f5ff',seal:'#e8bc68',ink:'#23506c',paper:'#f3f9fd'};
+   const colors={body:dark?'#147bc8':'#1676c8',lid:dark?'#278dcc':'#268fe0',strap:'#f5fbff',seal:'#ffc766',ink:'#23506c',paper:'#f3f9fd'};
    material.color.set(colors[role]);if(material.emissive){material.emissive.copy(new Color(role==='seal'?'#d6a34e':role==='strap'?'#8ed7ff':'#147abd'));material.emissiveIntensity=dark?(role==='body'||role==='lid'?.3:role==='strap'?.45:.1):.025;}
    material.roughness=role==='body'?.34:.45;material.metalness=role==='seal'?.3:.08;
   }
-  glow.material.opacity=dark?.8:.45;setLabel('');
+  glow.material.opacity=dark?.66:.5;setLabel('');
+ }
+ function tick(delta,reduced,motion){
+  const travelling=Math.abs(motion.target-motion.distance)>1e-4,stopped=motion.phase==='error'||motion.phase==='cancelled';
+  if(!motion.visible){clock=arrival=0;wasTravelling=false;return false}
+  if(wasTravelling&&!travelling&&!stopped&&!reduced)arrival=1;
+  wasTravelling=travelling;
+  if(reduced||stopped){arrival=0;glow.material.opacity=dark?.66:.5;return false}
+  const dt=Math.max(0,Math.min(.1,delta));clock=(clock+dt)%(Math.PI*2/.95);arrival=Math.max(0,arrival-dt/1.1);
+  glow.material.opacity=(dark?.62:.48)+Math.sin(clock*.95)*.08+Math.sin(arrival*Math.PI)*.18;
+  return true;
  }
  function update(camera,height,phase){setLabel(phase);if(!parcel.visible)return;
   parcel.getWorldPosition(position);const pixels=Math.max(1,height),worldHeight=camera.isOrthographicCamera?(camera.top-camera.bottom)/camera.zoom:2*position.distanceTo(camera.position)*Math.tan(camera.fov*Math.PI/360)/camera.zoom;
-  badge.scale.set(worldHeight*104/pixels,worldHeight*(104*112/384)/pixels,1);
+  badge.scale.set(worldHeight*84/pixels,worldHeight*(84*192/320)/pixels,1);
  }
  setNight(false);
- return {setNight,update,state:()=>({palette:'cobalt-silver',label:lastLabel.replace(/true$|false$/,''),body:materials.find(x=>x.role==='body')?.material.color.getHexString(),night:dark}),dispose:()=>textures.forEach(texture=>texture.dispose())};
+ return {setNight,update,tick,state:()=>({palette:'cobalt-silver',label:lastLabel.replace(/true$|false$/,''),body:materials.find(x=>x.role==='body')?.material.color.getHexString(),night:dark,scale:[1,1.25,1],labelPixels:84,haloOpacity:glow.material.opacity}),dispose:()=>textures.forEach(texture=>texture.dispose())};
 }

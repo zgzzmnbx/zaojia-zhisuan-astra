@@ -47,6 +47,7 @@ export function createConveyorScene(scene,request,onStatus){
  function tick(delta,reduced){if(!settings.visible||!staticModel)return false;let moving=false;
   if(settings.continuous&&!reduced){clock=(clock+delta)%conveyorTimeline.duration;placeWhite();moving=true}
   if(task.state().visible&&taskParcel){moving=task.tick(delta,reduced)||moving;place(taskParcel,task.state().distance)}
+  moving=(taskLook?.tick(delta,reduced||!settings.continuous,task.state())??false)||moving;
   return moving;
  }
  function state(){return {ready:!!staticModel,error,visible:root.visible,continuous:settings.continuous,style:settings.style,nightBrightness:settings.nightBrightness,edgeLines:!!edgeLines?.visible,parcelCount:staticModel?3:0,whiteDistances:white.map((_,index)=>whiteParcelDistance(clock+index*conveyorTimeline.duration/2)),task:task.state(),taskLook:taskLook?.state()??null,routeLength,asset:'conveyor-parcel-formal.glb',version:conveyorTimeline.version}}
