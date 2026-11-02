@@ -1,5 +1,5 @@
 import {Vector3} from 'three';
-import timeline from '../../../05-视觉识别/02-3D场景/parcel-conveyor-v1/timeline.json' with {type:'json'};
+import {stationTimeline as timeline} from './conveyor-stations.mjs';
 
 export const conveyorTimeline=timeline;
 export const conveyorStations=timeline.stations.map(station=>station.id);

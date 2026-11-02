@@ -4,6 +4,7 @@ import assetUrl from '../../../05-视觉识别/02-3D场景/parcel-conveyor-v1/co
 import {conveyorTimeline,routePose,whiteParcelDistance,routeLength} from './conveyor-route.mjs';
 import {createTaskParcelMotion} from './conveyor-task.mjs';
 import {createTaskParcelLook} from './task-parcel-look.mjs';
+import {positionPricingDock} from './conveyor-stations.mjs';
 
 /** One Blender belt, two illustrative parcels, one task parcel; no camera or renderer ownership. */
 export function createConveyorScene(scene,request,onStatus){
@@ -13,6 +14,7 @@ export function createConveyorScene(scene,request,onStatus){
  const ready=new GLTFLoader().loadAsync(assetUrl).then(gltf=>{
   if(disposed){disposeResources(gltf.scene);return}
   staticModel=gltf.scene;
+  positionPricingDock(staticModel);
   const belt=staticModel.getObjectByName('Conveyor_Belt');
   if(!belt?.isMesh){disposeResources(staticModel);staticModel=null;throw Error('Conveyor belt is missing from Blender asset')}
   const original=staticModel.getObjectByName('DATA_PARCEL');if(!original){disposeResources(staticModel);staticModel=null;throw Error('Conveyor parcel is missing from Blender asset')}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Group,Mesh,BoxGeometry,MeshStandardMaterial,OrthographicCamera} from 'three';
+import {Group,Mesh,BoxGeometry,MeshStandardMaterial,OrthographicCamera,Vector3,Box3} from 'three';
 import {createTaskParcelLook} from '../03-Src/studio/project-sandbox/task-parcel-look.mjs';
 import {companionRoute,conveyorStations,conveyorTimeline,routePose,stationDistances,whiteParcelDistance} from '../03-Src/studio/project-sandbox/conveyor-route.mjs';
 import {createInformationFlow} from '../03-Src/studio/project-sandbox/information-flow.js';
@@ -9,6 +9,41 @@ import {fasciaRoute} from '../03-Src/studio/project-sandbox/conveyor-profile.mjs
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import originalTimeline from '../05-视觉识别/02-3D场景/parcel-conveyor-v1/timeline.json' with {type:'json'};
+import {pricingDockTimeline,positionPricingDock} from '../03-Src/studio/project-sandbox/conveyor-stations.mjs';
+
+test('pricing dock, both parcel stops and information port move together along the unchanged belt',async()=>{
+ const frozen=JSON.stringify(originalTimeline),updated=pricingDockTimeline();
+ assert.equal(JSON.stringify(originalTimeline),frozen);
+ assert.deepEqual(updated.stations[1].point,[-1.4,originalTimeline.stations[1].point[1],3.25]);
+ for(const i of [0,2,3,4,5,6])assert.deepEqual(updated.stations[i],originalTimeline.stations[i]);
+ const oldPoints=originalTimeline.paths.flat(),points=updated.paths.flat();
+ // Only insert one collinear station point; no original belt sample is lost.
+ for(const p of oldPoints)assert(points.some(q=>q.every((v,i)=>v===p[i])));
+ const length=paths=>paths.reduce((sum,path)=>sum+path.slice(1).reduce((n,p,i)=>n+new Vector3(...p).distanceTo(new Vector3(...path[i])),0),0);
+ assert(Math.abs(length(updated.paths)-length(originalTimeline.paths))<1e-9);
+ const dwell=updated.timeline.find(t=>t.kind==='dwell'&&t.station===1);
+ assert(Math.abs(dwell.end-dwell.start-1.4)<1e-9);
+ for(const t of [dwell.start+.01,dwell.end-.01])assert.equal(whiteParcelDistance(t),stationDistances[1]);
+ assert(whiteParcelDistance(dwell.start-.1)<stationDistances[1]);
+ assert(whiteParcelDistance(dwell.end+.1)>stationDistances[1]);
+ assert.deepEqual(updated.timeline.slice(4),originalTimeline.timeline.slice(4));
+ const motion=createTaskParcelMotion();motion.update({scope:'dock',job:'test',ready:true,running:'import'});
+ motion.update({scope:'dock',job:'test',ready:true,running:'price'});motion.tick(100,false);
+ assert(routePose(motion.state().distance).position.distanceTo(new Vector3(...updated.stations[1].point))<1e-8);
+ assert.equal(motion.tick(1,false),false);
+ motion.update({scope:'dock',job:'test',ready:true,running:'risk'});assert(motion.tick(.1,false));assert(motion.state().distance>stationDistances[1]);
+ const port=companionRoute().stops[1].point;assert(Math.abs(port[0]+1.4)<1e-8);assert(Math.abs(port[2]-3.25+.6)<1e-8);
+ const bytes=await fs.readFile(new URL('../05-视觉识别/02-3D场景/parcel-conveyor-v1/conveyor-parcel-formal.glb',import.meta.url));
+ const gltf=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length),'');
+ const dock=gltf.scene.getObjectByName('Dock_02'),before=new Box3().setFromObject(dock),count=dock.children.length;
+ positionPricingDock(gltf.scene);const after=new Box3().setFromObject(dock);
+ assert.equal(dock.children.length,count);assert.equal(count,6);
+ assert(Math.abs(after.min.x-before.min.x-3.500000095367432)<1e-6);
+ assert(after.getSize(new Vector3()).distanceTo(before.getSize(new Vector3()))<1e-6);
+ assert(dock.position.distanceTo(routePose(stationDistances[1]).position)<1e-8);
+ gltf.scene.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});
+});
 
 test('task highlight isolates materials, labels interrupted tasks and keeps the route geometry',()=>{
  const old=Object.getOwnPropertyDescriptor(globalThis,'document');
@@ -30,7 +65,7 @@ test('architectural model keeps the approved route, buildings, roof identifiers 
  const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
  for(const [file,expected] of Object.entries(manifest.source_hashes))assert.equal(hash(await fs.readFile(new URL('../'+file,import.meta.url))),expected,file);
  assert.equal(manifest.source_hashes['05-视觉识别/02-3D场景/parcel-conveyor-v1/timeline.json'],'c9fa16157d438ebf20a78839d488df252d655462275e1aa31868043853c10ff9');
- assert.deepEqual(manifest.route,conveyorTimeline.paths);assert.deepEqual(manifest.stations,conveyorTimeline.stations);
+ assert.deepEqual(manifest.route,originalTimeline.paths);assert.deepEqual(manifest.stations,originalTimeline.stations);
  const bytes=await fs.readFile(new URL(manifest.asset,folder));assert.equal(hash(bytes),manifest.sha256);
  const gltf=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length),'');
  assert(gltf.scene.getObjectByName('DATA_PARCEL'));assert.equal(gltf.animations.length,0,'Runtime owns the original transport clock');
