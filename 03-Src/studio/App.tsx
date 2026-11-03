@@ -1,3 +1,5 @@
+import {useWatchCommands} from './useWatchCommands';
+import {watchProgress,watchRiskBlock} from './watch-commands';
 import {SkillPicker} from './SkillPicker';
 import {useProfessionalSkills} from './useProfessionalSkills';
 import {skillSubmission} from './professional-skills';
@@ -554,6 +556,12 @@ function App(){
       }
     });
   }
+  useWatchCommands({enabled:!DEBUG_MODE&&!welcomeVisible&&workspace.ready&&!!workspace.active&&!digitalSession,context:workspace.active?.id+':'+conversationContext.current,job:result?.job_id||'',execute:(command)=>{
+    const state={ready:workspace.ready,connected,busy:busyRef.current,busyLabel:busy,completed,hasResult:!!result,hasFile:!!file,error:operationError,warningCount:summary?.warning_summary?.executed&&typeof summary.warning_summary.warning_rows==='number'?summary.warning_summary.warning_rows:null};
+    if(command==='query_progress'){const message=watchProgress(state);add('查询进度',undefined,'user');add(message);return message;}
+    const blocked=watchRiskBlock(state);if(blocked)return blocked;
+    add('检查风险',undefined,'user');void warning();return '已提交风险检查，请看电脑进度。';
+  }});
   async function warning(){if(!result||!completed){add('请先完成批量匹配，再进行经验池预警。');return;}const job=result.job_id;await performProjectStep('比对经验池与风险阈值',async()=>{const data=await api<Result>('/api/experience-warnings/run',form({job_id:job}));if(loadedJob.current!==job)return;acceptResult(data);const risk=await api<{items:Risk[]}>(`/api/risk/summary?job_id=${job}`);setRisks(risk.items);setRiskJobId(job);if(risk.items.length)gorkFeedback.warning();else gorkFeedback.success();presentation.resultAvailable('risk');add(risk.items.length?'检查完成。你可以从卡片直接定位需要关注的行。':'检查完成，当前没有返回风险事项。',[{label:'查看全部风险与依据',action:'risk',primary:true},{label:'生成报告',action:'risk-report'}],'assistant',false,reviewCard(risk.items));});}
   async function modelForm(){const model=await api<{provider:string;model:string;baseUrl:string}>('/api/astra/connections/model');return {provider:model.provider,model:model.model,base_url:model.baseUrl};}
   async function generateRisk(){

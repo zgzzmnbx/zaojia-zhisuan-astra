@@ -57,10 +57,10 @@ async def host_lifespan(_app):
             except asyncio.CancelledError:pass
         await asyncio.to_thread(gork_output.stop)
 
-app = FastAPI(title='智算Astra', version='0.9.20', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.10.0', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_replay.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
+HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_replay.py','gork_commands.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()
@@ -113,6 +113,8 @@ app.include_router(workspace_router(lambda: paths.RUNTIME_DIR, checked_job))
 app.include_router(weknora_router)
 app.include_router(weknora_wiki_router)
 app.include_router(gork_router)
+import gork_commands
+watch_commands = gork_commands.install(app, ROOT / "config/gork-commands.local.json")
 import gork_config
 import gork_notifications
 app.include_router(gork_config.router)
@@ -175,7 +177,7 @@ async def boundaries(request: Request, call_next):
                 return JSONResponse({'detail':'请先在 Astra 连接设置中明确启用外部协同，再配置平台。当前未发送消息。'},409)
             if request.url.path in {'/api/collaboration/external-dispatch/tasks','/api/collaboration/external-dispatch/web-review'} and not professional_host.config().get('external_enabled'):
                 return JSONResponse({'detail':'尚未启用外部协同，未发起派发'},409)
-            if request.url.path in {'/api/astra/documents/prepare','/api/astra/row-assist/candidates','/api/astra/row-assist/details','/api/astra/row-assist/ask'} or request.url.path.startswith(('/api/astra/workspace/', '/api/astra/weknora/', '/api/astra/gork/notifications', '/api/knowledge/ask-stream', '/api/knowledge/requests/')) or request.url.path.endswith('/ai-matching/cancel'):
+            if request.url.path in {'/api/astra/documents/prepare','/api/astra/row-assist/candidates','/api/astra/row-assist/details','/api/astra/row-assist/ask'} or request.url.path.startswith(('/api/astra/workspace/', '/api/astra/weknora/', '/api/astra/gork/notifications', '/api/astra/gork/commands', '/api/knowledge/ask-stream', '/api/knowledge/requests/')) or request.url.path.endswith('/ai-matching/cancel'):
 
                 try:
                     response = await call_next(request)
