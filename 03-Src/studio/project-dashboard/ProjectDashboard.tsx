@@ -1,3 +1,4 @@
+import {ProjectDashboardLoading} from "./ProjectDashboardLoading";
 import {TaskProgress} from "../TaskProgress";
 import {
   AlertTriangle,
@@ -57,7 +58,6 @@ export default function ProjectDashboard({
   const [selectedItem, setSelectedItem] = useState<ProjectListItem | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [showSkeleton, setShowSkeleton] = useState(false);
   const [isBackfilling, setIsBackfilling] = useState(false);
   const [backfillMessage, setBackfillMessage] = useState("");
   const [openError, setOpenError] = useState("");
@@ -116,15 +116,6 @@ export default function ProjectDashboard({
       controller.abort();
     };
   }, [load,active]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      setShowSkeleton(false);
-      return undefined;
-    }
-    const timer = window.setTimeout(() => setShowSkeleton(true), 300);
-    return () => window.clearTimeout(timer);
-  }, [isLoading]);
 
   const chips = useMemo(() => filterChips(filters, dashboard), [filters, dashboard]);
 
@@ -210,7 +201,7 @@ export default function ProjectDashboard({
 
 
   const content=(
-    <div className="project-dashboard" hidden={!active}>
+    <div className="project-dashboard" hidden={!active} data-initial-loading={isLoading && !dashboard}>
       <header className="project-dashboard__header">
         <div className="project-dashboard__header-actions">
           <ProjectDashboardToolbar
@@ -249,7 +240,7 @@ export default function ProjectDashboard({
         </div>
       ) : null}
 
-      {showSkeleton && !dashboard ? <DashboardSkeleton /> : null}
+      {isLoading && !dashboard ? <ProjectDashboardLoading active={active}/> : null}
       {dashboard ? (
         <>
           <ProjectMetricGrid dashboard={dashboard} onSelect={onMetric} />
@@ -293,13 +284,4 @@ export default function ProjectDashboard({
     </div>
   );
   return content;
-}
-
-function DashboardSkeleton() {
-  return (
-    <><TaskProgress label="正在加载项目看板" detail="读取项目统计与运行记录"/><div className="project-dashboard__skeleton" aria-label="正在加载项目看板">
-      <div className="is-metrics">{Array.from({ length: 5 }, (_, index) => <i key={index} />)}</div>
-      <div className="is-charts">{Array.from({ length: 4 }, (_, index) => <i key={index} />)}</div>
-    </div></>
-  );
 }
