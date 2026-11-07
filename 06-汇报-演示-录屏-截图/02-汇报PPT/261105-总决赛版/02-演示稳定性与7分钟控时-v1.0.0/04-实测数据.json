@@ -1,0 +1,340 @@
+{
+  "excel": {
+    "sheets": [
+      "费用汇总",
+      "表1-长输管道工程勘测费用",
+      "表2-通用工程测量费用",
+      "表3-地质测绘",
+      "表4-通用工程勘察费用",
+      "表5-其他费用"
+    ],
+    "checked_sheet": "表2-通用工程测量费用",
+    "cell": "H5",
+    "value": 50000
+  },
+  "word": {
+    "paragraphs": 69,
+    "has_fixed_500000": true,
+    "has_old_deviation": true
+  },
+  "browser-repeat-mainline": {
+    "viewport": {
+      "width": 1600,
+      "height": 900
+    },
+    "rounds": [
+      {
+        "round": 1,
+        "job_id": "ed292d0c715044f78defa1e6f6fcdc5e",
+        "rows": 100,
+        "filled": 99,
+        "document": "risk-report-20261107-100204-【调整格式】.docx",
+        "measurements": [
+          {
+            "step": "import-ready",
+            "ms": 8052
+          },
+          {
+            "step": "convert-ready",
+            "ms": 6075
+          },
+          {
+            "step": "match-ready",
+            "ms": 16101
+          },
+          {
+            "step": "risk-ready",
+            "ms": 14141
+          },
+          {
+            "step": "report-format-ready",
+            "ms": 14172
+          },
+          {
+            "step": "word-preview-ready",
+            "ms": 11085
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "job_id": "a0fb29351b0a4f42b72ce1d5000d0fed",
+        "rows": 100,
+        "filled": 99,
+        "document": "risk-report-20261107-100323-【调整格式】.docx",
+        "measurements": [
+          {
+            "step": "import-ready",
+            "ms": 11167
+          },
+          {
+            "step": "convert-ready",
+            "ms": 6962
+          },
+          {
+            "step": "match-ready",
+            "ms": 13068
+          },
+          {
+            "step": "risk-ready",
+            "ms": 14131
+          },
+          {
+            "step": "report-format-ready",
+            "ms": 11116
+          },
+          {
+            "step": "word-preview-ready",
+            "ms": 10062
+          }
+        ]
+      }
+    ]
+  },
+  "browser-download-results": [
+    {
+      "name": "下载当前文稿",
+      "file": "browser-current-report.docx",
+      "suggested": "risk-report-20261107-100323-【调整格式】.docx",
+      "failure": null,
+      "ms": 3471
+    },
+    {
+      "name": "下载 Excel 计算表",
+      "file": "browser-current-calculation.xlsx",
+      "suggested": "【输出】-控制价计算表-20261107-1002-匹配-5fbf2f4e-隐藏空行.xlsx",
+      "failure": null,
+      "ms": 4032
+    }
+  ],
+  "browser-dashboard-ready-timing": {
+    "warmReadyMs": 9085
+  },
+  "browser-recovery-confirmed": {
+    "before": {
+      "draft": "隔离演练草稿-仅测试恢复-不发送",
+      "report": 1
+    },
+    "restored": true,
+    "reloadToRestoredMs": 2006
+  },
+  "browser-digital-story-visible": {
+    "before": {
+      "hidden": false,
+      "visibility": "visible",
+      "reduced": false
+    },
+    "completed": false,
+    "ms": 25081,
+    "text": "组价导览窗口\n2 / 5\n暂停\n01\n功能规模\n02\n阶段调整\n03\n工作量调整\n04\n开发工作量\n05\n基础开发费\n52 × 1.21 = 62.92\n本步依据"
+  },
+  "browser-digital-manual": {
+    "manualToStep5Ms": 3050,
+    "text": "组价导览窗口\n5 / 5\n继续\n01\n功能规模\n02\n阶段调整\n03\n工作量调整\n04\n开发工作量\n05\n基础开发费\n2.67124 人月 × 4.287 万元/人月\n本步依据"
+  },
+  "browser-knowledge-final-timing": {
+    "ms": 5810,
+    "status": 200,
+    "answer_mode": "evidence_only",
+    "model_configured": false,
+    "sources": 8,
+    "answer": "尚未生成答案：所选模型未配置独立凭证。\n\n已检索到原文依据，可先核对引用；配置模型后重新提问。"
+  },
+  "browser-knowledge-preset": {
+    "ms": 3950,
+    "status": 200,
+    "answer_mode": "curated_demo",
+    "sources": [
+      {
+        "file": "06-知识库问答资料/造价AIW资料库/2024全费用清单单价-第1册油气输送管道工程-Excel问答版.md"
+      }
+    ],
+    "answer": "| 管径 | 单位 | 清单单价 | 来源定位 |\n| --- | --- | ---: | --- |\n| D1016 | km | 2,250元 | 《建设项目全费用工程量清单单价》第1册，Excel第842行 |\n| D1219 | km | 3,000元 | 《建设项目全费用工程量清单单价》第1册，Excel第843行 |\n| D1422 | km | 4,500元 | 《建设项目全费用工程量清单单价》第1册，Excel第844行 |"
+  },
+  "backup": {
+    "backup": "D:\\Codex-Temp\\260613-【智算Astra】\\runtime\\backups\\20261107-094835-演示成功基线-v0.15.1",
+    "files": 35213,
+    "bytes": 2251905730,
+    "databases": 17,
+    "all_integrity_ok": true,
+    "manifest_sha256": "a5ede5e8fda5f1e92c069b173a3170b72620e81d335a9bec0e17f3f1455c8724",
+    "errors": [],
+    "critical_files_equal": true,
+    "restore_executed": false
+  },
+  "cases": {
+    "rows": [
+      {
+        "case": "frozen-repeat-1",
+        "status": "passed",
+        "seconds": 10.238,
+        "timings": {
+          "inspect": 0.312,
+          "convert": 0.796,
+          "match": 5.581,
+          "repeat_match": 0.117,
+          "risk": 1.951,
+          "download_excel": 0.572,
+          "download_word": 0.017,
+          "restore": 0.009
+        },
+        "note": ""
+      },
+      {
+        "case": "frozen-repeat-2",
+        "status": "passed",
+        "seconds": 7.701,
+        "timings": {
+          "inspect": 0.236,
+          "convert": 0.691,
+          "match": 3.65,
+          "repeat_match": 0.1,
+          "risk": 1.639,
+          "download_excel": 0.513,
+          "download_word": 0.011,
+          "restore": 0.008
+        },
+        "note": ""
+      },
+      {
+        "case": "frozen-repeat-3",
+        "status": "passed",
+        "seconds": 9.215,
+        "timings": {
+          "inspect": 0.316,
+          "convert": 0.771,
+          "match": 4.055,
+          "repeat_match": 0.11,
+          "risk": 2.112,
+          "download_excel": 0.726,
+          "download_word": 0.016,
+          "restore": 0.011
+        },
+        "note": ""
+      },
+      {
+        "case": "current-demo",
+        "status": "findings",
+        "seconds": 9.225,
+        "timings": {
+          "inspect": 0.36,
+          "convert": 1.01,
+          "match": 4.865,
+          "repeat_match": 0.108,
+          "risk": 1.923,
+          "download_excel": 0.552,
+          "download_word": 0.012,
+          "restore": 0.01
+        },
+        "note": ""
+      },
+      {
+        "case": "ordinary-no-model",
+        "status": "passed",
+        "seconds": 8.785,
+        "timings": {
+          "inspect": 0.314,
+          "convert": 0.806,
+          "match": 4.641,
+          "repeat_match": 0.122,
+          "risk": 2.034,
+          "download_excel": 0.614,
+          "download_word": 0.015,
+          "restore": 0.01
+        },
+        "note": ""
+      },
+      {
+        "case": "zero-blank-quantity",
+        "status": "passed",
+        "seconds": 8.663,
+        "timings": {
+          "inspect": 0.296,
+          "convert": 0.813,
+          "match": 4.661,
+          "repeat_match": 0.121,
+          "risk": 1.914,
+          "download_excel": 0.582,
+          "download_word": 0.012,
+          "restore": 0.011
+        },
+        "note": ""
+      },
+      {
+        "case": "unknown-unit",
+        "status": "passed",
+        "seconds": 7.9,
+        "timings": {
+          "inspect": 0.287,
+          "convert": 0.775,
+          "match": 4.074,
+          "repeat_match": 0.109,
+          "risk": 1.815,
+          "download_excel": 0.577,
+          "download_word": 0.014,
+          "restore": 0.012
+        },
+        "note": "Corrected test oracle: pending review text is valid; no numeric price was invented. Original record retained."
+      },
+      {
+        "case": "wrong-extension.txt",
+        "status": "passed",
+        "seconds": null,
+        "timings": null,
+        "note": ""
+      },
+      {
+        "case": "broken.xlsx",
+        "status": "passed",
+        "seconds": null,
+        "timings": null,
+        "note": ""
+      },
+      {
+        "case": "../escape.xlsx",
+        "status": "passed",
+        "seconds": null,
+        "timings": null,
+        "note": ""
+      }
+    ],
+    "passed": 9,
+    "findings": 1,
+    "source_hashes_unchanged": true
+  },
+  "module_outage": {
+    "module": {
+      "status": 200,
+      "seconds": 2.185,
+      "bytes": 79,
+      "body": {
+        "available": false,
+        "detail": "数字化造价服务未就绪，可重新连接"
+      }
+    },
+    "host": {
+      "status": 200,
+      "seconds": 0.004,
+      "bytes": 27399
+    },
+    "excel": {
+      "status": 200,
+      "seconds": 0.011,
+      "bytes": 99570
+    }
+  },
+  "scope": {
+    "formal_ui": "0.15.1",
+    "formal_host": "0.10.0",
+    "demo_seconds": 420,
+    "ppt_separate": true,
+    "real_hotspot_verified": false,
+    "real_external_receipts_verified": false,
+    "full_spoken_rehearsal_verified": false,
+    "formal_system_patched": false
+  },
+  "formal_preservation": {
+    "copied_formal_source_files_checked": 3065,
+    "changed_since_snapshot": []
+  }
+}
