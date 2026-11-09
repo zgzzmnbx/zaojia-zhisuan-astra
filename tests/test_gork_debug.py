@@ -21,7 +21,7 @@ def test_manual_signal_allowed_with_automatic_off_no_business_event(fixture):
     assert obj.debug_receipt(record['event_id'])['status']=='completed'
 
 
-def test_all_thirteen_stages_use_same_mapper_and_strict_sequence(fixture):
+def test_all_stages_use_same_mapper_and_strict_sequence(fixture):
     obj,remote,clock=fixture
     from gork_config import DEFINITIONS
     for key,*_ in DEFINITIONS:
@@ -30,7 +30,8 @@ def test_all_thirteen_stages_use_same_mapper_and_strict_sequence(fixture):
         obj.step()
         assert remote.sent[-1]['stage']==key
         assert record['task_id'].startswith('debug-')
-    assert [x['sequence'] for x in remote.sent]==list(range(1,14))
+    assert [x['sequence'] for x in remote.sent]==list(range(1,len(DEFINITIONS)+1))
+    assert remote.sent[-1]['text']=='同事已通过“独立调试任务”复核。'
     assert all(x['speech'] is None for x in remote.sent)
 
 

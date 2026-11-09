@@ -91,7 +91,8 @@ def review_delivery_event(event, job_id, database, requested_at=None):
 
 
 class Notifications:
-    def __init__(self, database, *, feed=lambda: [], client_factory=None, clock=time.time):
+    def __init__(self, database, *, feed=lambda: [], approval_feed=None, client_factory=None, clock=time.time):
+        self.approval_feed = approval_feed
         self.database, self.feed, self.clock = Path(database), feed, clock
         self.client_factory = client_factory or self._client
         self.lock = threading.RLock()
@@ -154,6 +155,8 @@ class Notifications:
             except HTTPException:
                 self.cached_status = {'state': 'error', 'message': '阶段通知设置无法读取，已停止输出'}
             self.cutoff = self.clock()
+            if self.approval_feed:
+                self.approval_feed.reset()
             self.next_connect = 0
             if self.worker is None:
                 self.worker = threading.Thread(target=self._run, name='astra-gork-output', daemon=True)
@@ -294,6 +297,8 @@ class Notifications:
             # Keep that cancellation for late events; new manual output has a new identity.
             self.debug_attempt = 'debug-' + uuid4().hex
             self.cutoff = self.clock()
+            if self.approval_feed:
+                self.approval_feed.reset()
             while not self.inbox.empty():
                 try:
                     self.inbox.get_nowait()
@@ -321,7 +326,7 @@ class Notifications:
             self.db().commit()
             return confirmed
 
-    def enqueue(self, event, *, settings=None, manual=False):
+    def enqueue(self, event, *, settings=None, manual=False, committed_approval=False):
         settings = settings or self.settings
         key = config.stage_key(event)
         job = str(event.get('job_id') or '')
@@ -330,7 +335,8 @@ class Notifications:
         valid_job = re.fullmatch(r'debug-[a-f0-9]{32}' if debug else r'[a-f0-9]{32}', job)
         if not key or not valid_job or occurred <= 0 or occurred > self.clock() + 30:
             return 'ASTRA_GORK_INVALID_EVENT'
-        if not debug and not manual and occurred <= self.cutoff:
+        same_second_approval = committed_approval and key == 'review_approved' and occurred >= int(self.cutoff)
+        if not debug and not manual and occurred <= self.cutoff and not same_second_approval:
             return 'ASTRA_GORK_OLD_EVENT'
         if event.get('_request') in self.cancelled_requests:
             return 'ASTRA_GORK_TASK_CANCELLED'
@@ -419,7 +425,7 @@ class Notifications:
             key = {'match_completed':'match_result','match_failed':'match_result',
                    'warning_completed':'warning_result','warning_found':'warning_result',
                    'warning_failed':'warning_result'}.get(stage_id, stage_id)
-            status = 'running' if stage_id.endswith('_start') else 'failed' if stage_id.endswith('_failed') else 'sent' if stage_id=='review_sent' else 'completed'
+            status = 'running' if stage_id.endswith('_start') else 'failed' if stage_id.endswith('_failed') else 'sent' if stage_id=='review_sent' else 'approved' if stage_id=='review_approved' else 'completed'
             event = {'event_id': uuid4().hex, 'job_id': self.debug_task, 'attempt': self.debug_attempt,
                      'stage': key, 'status': status, 'warning_rows': 2 if stage_id=='warning_found' else 0,
                      'review_rows': 1, 'task_name': '独立调试任务', '_debug': True,
@@ -498,6 +504,9 @@ class Notifications:
             now = self.clock()
             if self.settings.enabled and now >= self.next_feed:
                 self.next_feed = now + 5
+                if self.approval_feed:
+                    for approval in self.approval_feed.read():
+                        self.enqueue(approval, committed_approval=True)
                 for event in sorted(self.feed(), key=lambda e: e.get('occurred_at', '')):
                     if event.get('stage') == 'review_sent':
                         self.enqueue(event)
@@ -590,9 +599,11 @@ class Notifications:
 
 
 def install(app, engine, runtime, *, manage_lifecycle=True):
-    from app import sentinel_events, task_monitoring
+    from app import sentinel_events, task_monitoring, feishu_app_bot
+    from gork_review import ApprovalFeed
     instance = Notifications(config.ROOT / 'runtime/astra-gork-notifications/outbox.sqlite3',
-                             feed=lambda: engine.get_current_monitored_task()['events'])
+                             feed=lambda: engine.get_current_monitored_task()['events'],
+                             approval_feed=ApprovalFeed(feishu_app_bot.DB_PATH, runtime))
     config.bridge = instance
     original_write = sentinel_events.atomic_json
     def observe_write(path, event):

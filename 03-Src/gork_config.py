@@ -27,6 +27,7 @@ DEFINITIONS = [
     ('report_failed', '报告失败', 'confused', 'notice', '风险报告未生成，请查看错误。', 5000),
     ('review_requested', '复核发起', 'curious', 'notice', '同事复核已发起，等待投递确认。', 2000),
     ('review_sent', '复核送达', 'happy', 'notice', '复核资料已送达，等待同事反馈。', 2000),
+    ('review_approved', '复核通过', 'happy', 'notice', '同事已通过“{task}”复核。', 5000),
 ]
 TOKENS = {'amount', 'review', 'warnings', 'task'}
 
@@ -76,6 +77,14 @@ class Settings(Strict):
     heartbeat_ms: int = Field(default=10000, ge=1000, le=30000)
     lease_ms: int = Field(default=30000, ge=3000, le=90000)
     stages: dict[str, Stage] = Field(default_factory=lambda: {k: Stage(**v) for k, v in default_stages().items()})
+    @model_validator(mode='before')
+    @classmethod
+    def upgrade_previous_stages(cls, value):
+        if isinstance(value, dict) and isinstance(value.get('stages'), dict):
+            previous = {x[0] for x in DEFINITIONS} - {'review_approved'}
+            if set(value['stages']) == previous:
+                value = {**value, 'stages': {**value['stages'], 'review_approved': default_stages()['review_approved']}}
+        return value
     @model_validator(mode='after')
     def validate_scope(self):
         if set(self.stages) != {x[0] for x in DEFINITIONS}:
@@ -134,7 +143,7 @@ def stage_key(event):
         return 'warning_found' if type(warnings) is int and warnings > 0 else 'warning_completed'
     expected = {'conversion_start': 'running', 'match_start': 'running', 'warning_start': 'running',
                 'report_start': 'running', 'report_generated': 'completed', 'report_failed': 'failed',
-                'review_requested': 'completed', 'review_sent': 'sent'}
+                'review_requested': 'completed', 'review_sent': 'sent', 'review_approved': 'approved'}
     return stage if stage in expected and event.get('status') == expected[stage] else None
 
 
