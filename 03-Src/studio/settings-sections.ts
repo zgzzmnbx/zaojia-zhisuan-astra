@@ -1,6 +1,7 @@
 export const settingsSections = [
  {id:'appearance',label:'外观与主题',icon:'sun'},
  {id:'logo',label:'Logo 与动效',icon:'grid'},
+ {id:'demo-settings',label:'演示与调试',icon:'play'},
  {id:'model-settings',label:'大模型',icon:'brain'},
  {id:'knowledge-settings',label:'知识与 WeKnora',icon:'book'},
  {id:'business',label:'编制设置',icon:'sliders'},

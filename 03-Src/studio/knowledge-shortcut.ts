@@ -23,7 +23,7 @@ export function replaceRecommendedQuestion(questions:string[],index:number,value
  return questions.map((item,i)=>i===index?question:item);
 }
 
-export function knowledgeAnswerEngine(question:string,engine:'local'|'weknora'|'compare'='local'){return isDemoKnowledgeQuestion(question)?'local':engine;}
+export function knowledgeAnswerEngine(question:string,engine:'local'|'weknora'|'compare'='local',presets=true){return presets&&isDemoKnowledgeQuestion(question)?'local':engine;}
 
 /** Recommendations cover both original libraries; retain an explicit user scope. */
 export function recommendedKnowledgeScope(current:string[]|null,available:string[]){return current??available;}
@@ -31,8 +31,8 @@ export function recommendedKnowledgeScope(current:string[]|null,available:string
 export const isPresetKnowledgeQuestion=isDemoKnowledgeQuestion;
 export const PRESET_KNOWLEDGE_LOADING='正在检索答案';
 /** User-requested presentation animation; never represents model/retrieval progress. */
-export function waitForKnowledgePresentation(question:string,signal:AbortSignal):Promise<void>{
- if(!isDemoKnowledgeQuestion(question))return Promise.resolve();
+export function waitForKnowledgePresentation(question:string,signal:AbortSignal,presets=true):Promise<void>{
+ if(!presets||!isDemoKnowledgeQuestion(question))return Promise.resolve();
  if(signal.aborted)return Promise.reject(new DOMException('展示已停止','AbortError'));
  return new Promise((resolve,reject)=>{
   const abort=()=>{clearTimeout(timer);signal.removeEventListener('abort',abort);reject(new DOMException('展示已停止','AbortError'));};

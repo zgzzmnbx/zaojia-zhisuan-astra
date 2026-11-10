@@ -1,0 +1,19 @@
+.demo-mode-control{display:flex;align-items:center;flex-shrink:0;gap:4px}
+.demo-mode-control>label{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap}
+.demo-mode-control>label:has(:focus-visible){outline:2px solid var(--color-primary);outline-offset:2px}
+.demo-mode-control>label:has(:disabled){cursor:wait;opacity:.65}
+.demo-settings-panel{max-width:720px;padding:8px 0 24px}
+.demo-option{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 0;border-bottom:1px solid var(--line)}
+.demo-option>span{display:grid;gap:6px;min-width:0}
+.demo-option strong{font-size:14px;font-weight:600}
+.demo-option small{font-size:13px;line-height:1.6;color:var(--muted)}
+.demo-option input{flex-shrink:0}
+.demo-option-master{padding-top:4px;padding-bottom:24px}
+.demo-option-master strong{font-size:16px}
+.demo-preset-options{padding-left:16px}
+.demo-settings-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0}
+.demo-settings-actions>span{font-size:13px;color:var(--muted)}
+.demo-settings-error{font-size:14px;line-height:1.6;color:var(--color-error)}
+.demo-debug-tools{margin-top:16px;padding-top:20px;border-top:1px solid var(--line)}
+.demo-debug-tools h4{margin:0 0 14px;font-size:14px;font-weight:600}
+.demo-debug-tools>div{display:flex;flex-wrap:wrap;gap:12px}

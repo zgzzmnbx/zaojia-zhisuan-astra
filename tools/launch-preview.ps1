@@ -57,12 +57,12 @@ function Test-AstraReady([string]$WorkspaceRoot = '') {
         if ($health.status -ne 'ok' -or $health.service -ne 'zhisuan-astra' -or $health.isolated -ne $true) { $script:astraReadyIssue='Readiness check 6'; return $false }
         if ($WorkspaceRoot) {
             if (-not $health.workspace -or [IO.Path]::GetFullPath($health.workspace) -ne [IO.Path]::GetFullPath($WorkspaceRoot)) { $script:astraReadyIssue='Readiness check 8'; return $false }
-            foreach ($name in @('server.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py')) {
+            foreach ($name in @('server.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','demo_settings.py','business_settings.py','row_assist.py','model_adapter.py','gork_notifications.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py')) {
                 $file = Join-Path $WorkspaceRoot "03-Src/$name"
                 if (-not (Test-Path -LiteralPath $file)) { $script:astraReadyIssue='Missing file: '+$file; return $false }
                 if ($health.host_sources.$name -ne (Get-AstraSourceHash $file)) { $script:astraReadyIssue='Readiness check 12'; return $false }
             }
-            foreach ($capability in @('batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1')) {
+            foreach ($capability in @('batch-match-recovery-v1','row-assist-v1','demo-settings-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1')) {
                 if ($health.capabilities -notcontains $capability) { $script:astraReadyIssue='Readiness check 15'; return $false }
             }
             $package = Get-Content -LiteralPath (Join-Path $WorkspaceRoot 'package.json') -Raw | ConvertFrom-Json

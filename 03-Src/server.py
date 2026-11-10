@@ -31,6 +31,8 @@ from weknora_wiki import router as weknora_wiki_router
 from gork_link import router as gork_router
 import professional_host
 import business_settings
+import demo_settings
+demo_settings.install(engine)
 import row_assist
 import model_adapter
 import report_markdown
@@ -57,10 +59,10 @@ async def host_lifespan(_app):
             except asyncio.CancelledError:pass
         await asyncio.to_thread(gork_output.stop)
 
-app = FastAPI(title='智算Astra', version='0.11.0', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.12.0', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_review.py','gork_replay.py','gork_commands.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
+HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','demo_settings.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_review.py','gork_replay.py','gork_commands.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()
@@ -120,6 +122,7 @@ import gork_notifications
 app.include_router(gork_config.router)
 app.include_router(professional_host.router)
 app.include_router(business_settings.router)
+app.include_router(demo_settings.router)
 app.include_router(row_assist.router)
 # Original professional UI uses the same verified Astra WeKnora adapter.
 app.add_api_route('/api/knowledge/capabilities',weknora.capabilities,methods=['GET'])
@@ -217,7 +220,7 @@ def health():
     provider=str(professional_host.model_preference().get('provider','deepseek'))
     return {'status':'ok','service':'zhisuan-astra','version':app.version,'ui_version':package['version'],
             'host_sources':HOST_SOURCES,'host_source_sha256':HOST_SOURCE_SHA256,'build':build,'pid':os.getpid(),'workspace':str(ROOT),
-            'runtime':str(paths.RUNTIME_DIR),'capabilities':['gongwen-format-v2','commands-v1','weknora-wiki-read-v1','batch-match-recovery-v1','row-assist-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1','runtime-console-v1'],
+            'runtime':str(paths.RUNTIME_DIR),'capabilities':['gongwen-format-v2','commands-v1','weknora-wiki-read-v1','batch-match-recovery-v1','row-assist-v1','demo-settings-v1','business-settings-v1','gork-stage-notifications-v1','gork-stage-debug-v1','runtime-console-v1'],
             'engine_version':engine.APP_VERSION,'isolated':True,'mode':'mechanical+ai_enhanced',
             'model_connected':False,'model_configured':bool(professional_host.model_key(provider)),
             'model_provider':provider,'external_sending':bool(professional_host.config().get('external_enabled',False))}
