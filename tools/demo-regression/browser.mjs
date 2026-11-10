@@ -43,13 +43,26 @@ async function check(id,fn){
  save('browser-results.json',results);console.log(`${id}: ${results.at(-1).status}`,results.at(-1).status==='failed'?String(results.at(-1).detail).slice(0,250):'');
 }
 async function enter(){await page.goto(base);if(await btn('进入系统').count())await btn('进入系统').click({timeout:90000});await btn('系统架构图').waitFor();}
+async function checkDemoMatchingSwitch(){
+ await btn('设置').click();await btn('演示与调试').click();
+ const toggle=page.getByRole('switch',{name:'3.1 标准答案匹配',exact:true});
+ await toggle.waitFor();assert.equal(await toggle.isChecked(),true);
+ await toggle.uncheck();
+ let pending=page.waitForResponse(r=>r.url().endsWith('/api/astra/demo-settings')&&r.request().method()==='PUT');
+ await btn('保存设置').click();assert.equal((await pending).status(),200);
+ await btn('关闭设置').click();await btn('设置').click();await btn('演示与调试').click();
+ assert.equal(await toggle.isChecked(),false);await toggle.check();
+ pending=page.waitForResponse(r=>r.url().endsWith('/api/astra/demo-settings')&&r.request().method()==='PUT');
+ await btn('保存设置').click();assert.equal((await pending).status(),200);
+ await page.screenshot({path:path.join(out,'demo-match-settings.png')});await btn('关闭设置').click();
+}
 async function send(text){if(await btn('返回对话').isVisible())await btn('返回对话').click();await page.getByRole('textbox',{name:'告诉智算你的任务',exact:true}).fill(text);await btn('发送任务').click();}
 async function withResponse(url,action){const [r]=await Promise.all([page.waitForResponse(r=>r.url().includes(url)&&r.request().method()==='POST',{timeout:120000}),action()]);assert.equal(r.status(),200,await r.text());return r.json();}
 async function showTable(){await btn('表格').click();await page.getByRole('tab',{name:'表2-通用工程测量费用',exact:true}).click();}
 try{
  await enter();
  await check('D01',async()=>{await btn('系统架构图').click();await page.frameLocator('iframe[title="动态架构图（示意）"]').locator('body').waitFor();await btn('关闭系统架构').click();return '架构 iframe 加载且可关闭';});
- await check('D02',async()=>{await btn('新对话').click();await page.getByRole('button',{name:'查看演示项目信息',exact:true}).waitFor({timeout:90000});assert.equal(await page.locator('.sandbox-parked-hit').innerText(),'德化-永安支线');return '新对话和沙盘加载，历史演示项目可见';});
+ await check('D02',async()=>{await btn('新对话').click();await page.getByRole('button',{name:'查看演示项目信息',exact:true}).waitFor({timeout:90000});assert.equal(await page.locator('.sandbox-parked-hit').innerText(),'德化-永安支线');await checkDemoMatchingSwitch();return '新对话、沙盘与历史项目正常；3.1标准答案默认开启、关闭保存及恢复开启通过';});
  await check('D03',async()=>{
   await page.getByRole('button',{name:'导入项目 从接入项目中选择 · 含 V3.1 体验',exact:true}).click();
   let upload;
@@ -71,7 +84,7 @@ try{
   const response=await withResponse('/api/astra/row-assist/ask',()=>btn('重新分析').last().click());
   assert.equal(response.answer_mode,'curated_demo');return {top:3203,mode:response.answer_mode};
  });
- await check('D07',async()=>{assert.ok(job);await page.keyboard.press('Escape');matched=await withResponse('/api/process/batch-match',()=>btn('开始批量匹配').first().click());assert.equal(matched.summary.total_data_rows,100);assert.equal(matched.summary.filled_rows,99);return {total_rows:matched.summary.total_data_rows,filled_rows:matched.summary.filled_rows};});
+ await check('D07',async()=>{assert.ok(job);await page.keyboard.press('Escape');matched=await withResponse('/api/process/batch-match',()=>btn('开始批量匹配').first().click());assert.equal(matched.summary.total_data_rows,100);assert.equal(matched.summary.filled_rows,99);assert.equal(matched.summary.matching_source,'demo_standard_answer');assert.equal(matched.summary.generated_by_model,false);await page.getByText(/演示标准答案 · 未查询计价库/).first().waitFor();return {total_rows:matched.summary.total_data_rows,filled_rows:matched.summary.filled_rows,matching_source:matched.summary.matching_source};});
  await check('D08',async()=>{assert.ok(matched);await showTable();await page.getByText('50000',{exact:true}).first().waitFor();await page.getByRole('button',{name:/编辑第 6 行 基价/}).waitFor();return '匹配结果在实际表格显示';});
  await check('D09',async()=>{
   await withResponse('/api/experience-warnings/run',()=>btn('检查经验池预警').first().click());

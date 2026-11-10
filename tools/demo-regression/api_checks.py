@@ -70,6 +70,8 @@ def convert():
 def match():
     state['matched'] = call('POST','/api/process/batch-match',json={'job_id':state['job']}).json()
     summary = state['matched']['summary']
+    require(summary.get('matching_source')=='demo_standard_answer' and summary.get('generated_by_model') is False,
+            'V3.1 demo did not use the approved standard-answer path')
     require(summary['total_data_rows']==100 and summary['filled_rows']==99, str(summary))
     require(call('POST','/api/process/batch-match',json={'job_id':state['job']}).json()['summary']==summary,'Repeat changed summary')
     write(OUT/'matched.json',state['matched'])

@@ -26,15 +26,15 @@ export function resultCard(result:Result,restored=false):ConversationCard {
   const warned=s.warning_summary?.executed===true;
   const dirty=result.needs_recalculate===true;
   const ai=result.ai_matching?.requested_mode==='ai_enhanced'||result.process_options?.matching_mode==='ai_enhanced';
-  const mode=ai?(result.ai_matching?.effective_mode==='mechanical'?'机械降级 · 待人工复核':'AI 增强 · 逐字段确认'):'机械规则 · 保留原值';
+  const mode=s.matching_source==='demo_standard_answer'||s.report_text?.startsWith('演示标准答案')?'演示标准答案 · 未查询计价库':ai?(result.ai_matching?.effective_mode==='mechanical'?'机械降级 · 待人工复核':'AI 增强 · 逐字段确认'):'机械规则 · 保留原值';
   return {kind:done?'result':'confirmation',title:done?(restored?'继续这份控制价成果':'规则匹配已完成'):'结构已转换，准备匹配',
-    caption:restored?'任务恢复':done?'匹配结果':'执行确认',icon:done?'circlecheck':'route',
+    caption:restored?'任务恢复':done?(s.report_text?.startsWith('演示标准答案')?'演示标准答案':'匹配结果'):'执行确认',icon:done?'circlecheck':'route',
     status:dirty?'待重算':done?(s.review_rows?'待复核':'已匹配'):'待你确认',tone:dirty||!done||s.review_rows?'attention':'success',
     fees:done?feeSnapshot(result):undefined,
     metrics:done?[{label:'处理行数',value:s.total_data_rows},{label:'价格命中',value:s.matched_rows},{label:'保留原值',value:s.unchanged_rows},{label:'待复核',value:s.review_rows,tone:s.review_rows?'attention':undefined}]:[{label:'待处理行数',value:s.total_data_rows}],
     facts:!done?[{label:'匹配方式',value:mode},{label:'匹配范围',value:'基价 / 实物系数 / 技术系数'}]:undefined,
     items:done?artifactItems(result):undefined,
-    note:dirty?'存在人工修改，请先重算公式与报告再交付。':done?(warned?'经验池检查已执行；请结合风险与依据完成复核。':'经验池预警尚未执行，建议继续检查。'):ai?'先在专业编制中核对 AI 映射与候选，再开始匹配。':'尚未填写价格。确认后将按既有专业规则执行匹配。'};
+    note:(done&&s.report_text?.startsWith('演示标准答案')?'演示标准答案 · 未查询计价库。':'')+(dirty?'存在人工修改，请先重算公式与报告再交付。':done?(warned?'经验池检查已执行；请结合风险与依据完成复核。':'经验池预警尚未执行，建议继续检查。'):ai?'先在专业编制中核对 AI 映射与候选，再开始匹配。':'尚未填写价格。确认后将按既有专业规则执行匹配。')};
 }
 
 function artifactItems(result:Result):NonNullable<ConversationCard['items']> {

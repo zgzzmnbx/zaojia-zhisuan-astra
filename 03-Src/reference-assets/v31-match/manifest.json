@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "sample_sha256": "81e562f874b16d75024bf7d02055e03f7afd929e3382433c633cf9cf9b1559c7",
+  "answer_sha256": "31a812effd7eb9b753d23d8feccc8eb1f79e0943facfaa045ee89b20585765ec",
+  "summary_sha256": "1870bab578d66d1cecfb8a40c288a3c8c8f526523f3db9d1cf6cef7e02907e82",
+  "sheet_configs": [
+    {
+      "sheet_name": "表2-通用工程测量费用",
+      "enabled": true,
+      "header_row": 4,
+      "column_mapping": {
+        "要素1": "B",
+        "要素2": "C",
+        "要素3": "D",
+        "要素4": "E",
+        "要素5": "F",
+        "单位": "G",
+        "输出-价格列": "H",
+        "价格列": "H",
+        "输出-实物工作费调整系数": "J",
+        "输出-技术工作费调整系数": "L"
+      },
+      "output_match_report": true,
+      "merge_vertical_cells": true,
+      "merge_horizontal_cells": true,
+      "only_match_rows_with_value": true,
+      "match_value_filter_field": "数量"
+    },
+    {
+      "sheet_name": "表3-地质测绘",
+      "enabled": true,
+      "header_row": 4,
+      "column_mapping": {
+        "要素1": "B",
+        "要素2": "C",
+        "要素3": "D",
+        "要素4": "E",
+        "要素5": "F",
+        "单位": "G",
+        "输出-价格列": "H",
+        "价格列": "H",
+        "输出-实物工作费调整系数": "M",
+        "输出-技术工作费调整系数": "P"
+      },
+      "output_match_report": true,
+      "merge_vertical_cells": true,
+      "merge_horizontal_cells": true,
+      "only_match_rows_with_value": true,
+      "match_value_filter_field": "数量"
+    },
+    {
+      "sheet_name": "表4-通用工程勘察费用",
+      "enabled": true,
+      "header_row": 4,
+      "column_mapping": {
+        "要素1": "B",
+        "要素2": "C",
+        "要素3": "D",
+        "要素4": "E",
+        "要素5": "F",
+        "单位": "G",
+        "输出-价格列": "H",
+        "价格列": "H",
+        "输出-实物工作费调整系数": "M",
+        "输出-技术工作费调整系数": "P"
+      },
+      "output_match_report": true,
+      "merge_vertical_cells": true,
+      "merge_horizontal_cells": true,
+      "only_match_rows_with_value": true,
+      "match_value_filter_field": "数量"
+    }
+  ],
+  "expected_options": {
+    "column_mapping": null,
+    "header_row": 1,
+    "output_match_report": true,
+    "merge_vertical_cells": true,
+    "merge_horizontal_cells": true,
+    "only_match_rows_with_value": true,
+    "match_value_filter_field": "数量"
+  },
+  "answer_reference": "03-Src\\engine\\08-测试与演示\\测试-V3.1-260802\\【答案-对应版本v3.1】【输出】-控制价计算表-20260802-0123-隐藏空行.xlsx",
+  "answer_reference_sha256": "671351f7a542c9ea4bc604621fee95dd0535f0614fe3c7b458b62681c4717b91",
+  "reference_adjustment": "Only H5=50000 and its direct warning deviation follow user approval; original answer remains read-only.",
+  "pre_warning_comparison": {
+    "three_number_difference_count": 0,
+    "formula_difference_count": 0,
+    "target_fill_difference_count": 200,
+    "review_status_difference_count": 0
+  },
+  "scope": "Frozen matching workbook before risk analysis; formulas, styles and original input preserved; no live database/model call during replay."
+}

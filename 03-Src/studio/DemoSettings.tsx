@@ -13,6 +13,7 @@ export function DemoModeSwitch({controller,blocked=false,openSettings}:{controll
 }
 
 const options=[
+ ['matchPreset','3.1 标准答案匹配','仅原版 3.1 样例直接填入已核验价格与系数；五万元口径。'],
  ['rowPreset','单行填价预设','表2第6行 · 3203 元/个，仍需人工确认写入。'],
  ['reportPreset','风险报告预设','演示文件使用固定报告，五万元口径；不调用模型。'],
  ['knowledgePreset','知识问答预设','固定演示问题使用已有答案，并保留预设标识。'],

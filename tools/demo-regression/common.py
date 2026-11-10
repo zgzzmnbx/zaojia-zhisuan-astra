@@ -5,7 +5,7 @@ import json
 import time
 import traceback
 
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()

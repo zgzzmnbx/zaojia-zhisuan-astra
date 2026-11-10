@@ -1,11 +1,11 @@
 [
  {"id":"D01","segment":"09","name":"系统架构图","layers":["browser"],"expected":"图可见，可返回当前工作台"},
- {"id":"D02","segment":"10","name":"新建任务、对话和沙盘","layers":["browser"],"expected":"独立对话、沙盘正常加载；当前项目和历史演示包裹隔离"},
+ {"id":"D02","segment":"10","name":"新建任务、对话和沙盘","layers":["browser"],"expected":"独立对话、沙盘正常加载；当前项目和历史演示包裹隔离；3.1标准答案开关默认开启、关闭保存与恢复开启"},
  {"id":"D03","segment":"11","name":"V3.1 表格识别","layers":["api","browser"],"expected":"实际上传当前内置样例字节；工作表与字段映射可见"},
  {"id":"D04","segment":"12","name":"确认结构并转换","layers":["api","browser"],"expected":"100 项清单；独立 job/task；转换后尚未批量填价"},
  {"id":"D05","segment":"13","name":"空表与待填单元格","layers":["browser"],"expected":"表格可打开，保留原始值和待填状态"},
  {"id":"D06","segment":"14","name":"单行候选与 AI 填价解释","layers":["browser"],"expected":"表2第6行基价候选首选 3203，依据可查看；预设来源明确"},
- {"id":"D07","segment":"15","name":"批量匹配","layers":["api","browser"],"expected":"100 项，99 项填入、1 项保留；重复请求不改变结果"},
+ {"id":"D07","segment":"15","name":"批量匹配","layers":["api","browser"],"expected":"3.1演示标准答案路径、非模型来源可见；100 项，99 项填入、1 项保留；重复请求不改变结果"},
  {"id":"D08","segment":"16","name":"匹配结果与费用汇总","layers":["api","browser"],"expected":"当前表格、费用与同一成果对应；公式未重算时不能冒充已确认"},
  {"id":"D09","segment":"17–18","name":"两项风险、依据和定位","layers":["api","browser"],"expected":"表2 H5=50000，经验4274；表3系数1.3，经验1.15；一高一低且定位正确"},
  {"id":"D10","segment":"19","name":"生成风险报告","layers":["api","browser"],"expected":"报告当前项目同批成果；50000口径，无500000旧正文；预设与模型区分"},

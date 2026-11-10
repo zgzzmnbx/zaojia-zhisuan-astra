@@ -189,7 +189,7 @@ def main():
             gates['api']=command([str(python),str(HERE/'api_checks.py'),str(out)],PROJECT,out/'api.log',900,env)
             # Contract coverage complements browser/real business checks; it does
             # not promote mocked platform transports to real-delivery acceptance.
-            tests=['test_demo_settings.py','test_demo_report_baseline.py','test_migration_six.py','test_dashboard.py',
+            tests=['test_demo_match.py','test_demo_settings.py','test_demo_report_baseline.py','test_migration_six.py','test_dashboard.py',
                    'test_collaboration_lifecycle.py','test_gork_review_delivery.py','test_gork_review_approval.py',
                    'test_knowledge_model.py','test_digital_cost_gateway.py','test_excel_recalculation.py']
             gates['contracts']=command([str(python),'-m','pytest','-q',*[f'tests/{t}' for t in tests],f'--basetemp={out}/pytest-temp',f'--junitxml={out}/contracts.xml'],out/'app',out/'contracts.log',600,env)
