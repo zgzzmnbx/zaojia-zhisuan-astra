@@ -11,10 +11,10 @@ export function SkillPicker({skills,task,taskLocked,busy,manage}:{skills:ReturnT
  const label=shown?skillShortName(shown):taskLocked?'当前任务':skills.loading?'载入中':'选择能力';
  function close(){panel.current?.hidePopover();trigger.current?.focus({preventScroll:true})}
  useEffect(()=>{const el=panel.current;if(!el)return;const toggle=()=>setOpen(el.matches(':popover-open'));el.addEventListener('toggle',toggle);return()=>el.removeEventListener('toggle',toggle)},[]);
- useEffect(()=>{if(!open)return;setDetailId('');void skills.reload();const position=()=>{const rect=trigger.current?.getBoundingClientRect();if(rect&&panel.current){panel.current.style.left=`${Math.max(12,Math.min(rect.left,innerWidth-432))}px`;panel.current.style.top=`${rect.bottom+8}px`;panel.current.style.maxHeight=`${innerHeight-rect.bottom-20}px`}};position();window.addEventListener('resize',position);return()=>window.removeEventListener('resize',position)},[open,skills.reload]);
+ useEffect(()=>{if(!open)return;void skills.reload();const position=()=>{const rect=trigger.current?.getBoundingClientRect();if(rect&&panel.current){panel.current.style.left=`${Math.max(12,Math.min(rect.left,innerWidth-panel.current.getBoundingClientRect().width-12))}px`;panel.current.style.top=`${rect.bottom+8}px`;panel.current.style.maxHeight=`${innerHeight-rect.bottom-20}px`}};position();window.addEventListener('resize',position);return()=>window.removeEventListener('resize',position)},[open,skills.reload]);
  useEffect(()=>{if(!open||!detailId)return;const controller=new AbortController();setDetail(null);setDetailError('');api<SkillDetail>('/api/professional-skills/'+encodeURIComponent(detailId),{signal:controller.signal,cache:'no-store'}).then(value=>{if(!controller.signal.aborted)setDetail(value)}).catch(e=>{if(!controller.signal.aborted)setDetailError(String(e.message||e))});return()=>controller.abort()},[detailId,open,retry]);
  const selectedDetail=skills.catalog.items.find(item=>item.id===detailId);
- return <><button ref={trigger} type="button" className="btn studio-skill-trigger" aria-label={`Skill 专业能力：${label}`} aria-haspopup="dialog" aria-expanded={open} aria-controls={id} title={shown?`${shown.display_name} · v${shown.version}${taskLocked?' · 当前任务已锁定':''}`:'选择专业能力包'} onClick={()=>panel.current?.togglePopover()}><strong>{label}{shown?'skill':''}</strong><Icon name="chevron"/></button>
+ return <><button ref={trigger} type="button" className="btn studio-skill-trigger" aria-label={`Skill 专业能力：${label}`} aria-haspopup="dialog" aria-expanded={open} aria-controls={id} title={shown?`${shown.display_name} · v${shown.version}${taskLocked?' · 当前任务已锁定':''}`:'选择专业能力包'} onClick={()=>{if(!panel.current?.matches(':popover-open'))setDetailId(shown?.id||'');panel.current?.togglePopover()}}><strong>{label}{shown?'skill':''}</strong><Icon name="chevron"/></button>
  <div ref={panel} id={id} popover="auto" className="studio-skill-popover" role="dialog" aria-label="专业能力 Skill 包">
   <header>{detailId?<button className="btn btn-ghost btn-sm studio-skill-back" onClick={()=>setDetailId('')}><Icon name="arrow-right"/>能力包</button>:<strong>专业能力</strong>}<button className="btn btn-ghost btn-square btn-sm" aria-label="关闭 Skill 选择" onClick={close}><Icon name="close"/></button></header>
   {!detailId?<><div className="studio-skill-list">
@@ -22,8 +22,14 @@ export function SkillPicker({skills,task,taskLocked,busy,manage}:{skills:ReturnT
   </div><footer><span>{taskLocked?'当前任务沿用原能力快照':'所选能力用于新建编制任务'}</span><button className="btn btn-ghost btn-sm" onClick={()=>{close();manage()}}>能力治理<Icon name="arrow-right"/></button></footer></>:<div className="studio-skill-detail">
    {detailError?<div role="alert"><p>{detailError}</p><button className="btn btn-outline btn-sm" onClick={()=>setRetry(x=>x+1)}>重试</button></div>:!detail?<p role="status">正在读取能力详情…</p>:<><div className="studio-skill-detail-title"><h3>{detail.display_name}</h3><span>{detail.status_label} · v{detail.version}</span></div><p>{detail.description}</p>
     {!!detail.capabilities.length&&<div className="studio-skill-capabilities">{detail.capabilities.map(x=><span className="badge badge-outline" key={x}>{x}</span>)}</div>}
-    {!!detail.applicability?.includes?.length&&<ul>{detail.applicability.includes.map(x=><li key={x}>{x}</li>)}</ul>}
-    {!!detail.sub_skills?.length&&<details><summary>包含的子能力 · {detail.sub_skills.length}</summary><ul>{detail.sub_skills.map(x=><li key={x.name}><strong>{x.name}</strong><span>{x.description}</span></li>)}</ul></details>}
+    {!!detail.sub_skills?.length&&<section className="studio-skill-contents" aria-label="包内能力">
+     <div className="studio-skill-contents-heading"><strong>包内能力</strong><span>{detail.sub_skills.length} 项</span></div>
+     <ul className="studio-skill-grid">{detail.sub_skills.map(x=><li className="studio-subskill" key={x.name}>
+      <div className="studio-subskill-heading"><strong>{x.name.replace(/\s*Skill$/i,'')}</strong>{x.type&&<span className="studio-subskill-tag" data-professional={x.type==='professional'}>{x.type==='professional'?'专业':'通用'}</span>}</div>
+      <p>{x.description}</p>{x.status!=='available'&&<span className="studio-subskill-status">{x.status==='planned'?'规划中':x.status==='coming_soon'?'即将开放':x.status==='beta'?'试用中':'暂未就绪'}</span>}
+     </li>)}</ul>
+    </section>}
+    {!!detail.applicability?.includes?.length&&<ul className="studio-skill-scope">{detail.applicability.includes.map(x=><li key={x}>{x}</li>)}</ul>}
     <button className="btn btn-primary btn-sm studio-skill-use" disabled={busy||skills.loading||!!skills.error||taskLocked||!selectedDetail?.can_create_task||!detail.can_create_task} onClick={()=>{if(selectedDetail){skills.select(selectedDetail);close()}}}>{taskLocked?'当前任务能力已锁定':!detail.can_create_task?detail.status_label:'使用此能力'}</button>
    </>}
   </div>}

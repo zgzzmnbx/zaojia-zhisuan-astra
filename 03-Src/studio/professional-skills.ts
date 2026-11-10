@@ -1,7 +1,7 @@
 export type SkillSummary={id:string;display_name:string;version:string;status:string;status_label:string;description:string;can_create_task:boolean;capabilities:string[]};
 export type SkillSnapshot={id:string;display_name:string;version:string;manifest_hash?:string;compatibility_fallback?:boolean};
 export type SkillCatalog={default_skill_id:string;items:SkillSummary[]};
-export type SkillDetail=SkillSummary&{applicability?:{includes?:string[];excludes?:string[]};sub_skills?:{name:string;description:string;status:string}[];boundary?:string};
+export type SkillDetail=SkillSummary&{applicability?:{includes?:string[];excludes?:string[]};sub_skills?:{name:string;description:string;status:string;type?:string}[];boundary?:string};
 export const skillPreferenceKey='astra.professional-skill.v1';
 export function selectAvailableSkill(catalog:SkillCatalog,preferred:string){
  const available=catalog.items.filter(item=>item.can_create_task&&['active','beta'].includes(item.status));
