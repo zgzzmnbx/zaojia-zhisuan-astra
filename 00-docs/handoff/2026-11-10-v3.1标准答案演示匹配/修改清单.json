@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "status": "candidate_only_not_deployed",
+  "candidate_ui": "0.21.0",
+  "candidate_host": "0.14.0",
+  "source": "D:\\Codex-Temp\\260613-【智算Astra】\\Codex-Temp\\demo-regression\\v31-standard-answer-candidate-20261110\\app",
+  "formal": "D:\\Codex-Temp\\260613-【智算Astra】\\runtime\\astra-service",
+  "files": [
+    {
+      "file": "03-Src/demo_match.py",
+      "before_sha256": null,
+      "after_sha256": "2753c19fcdc181027abddd917a26c8f7125aad121c0c5c1be498b7c16607f9ca",
+      "bytes": 5048
+    },
+    {
+      "file": "03-Src/demo_settings.py",
+      "before_sha256": "20ef985b74ff2f8f4a2be0fa9088baae30d3188e095b8482dad507a396d27f69",
+      "after_sha256": "25331ca42345ce527fc6d39a34c422371dee9dfa9bdee5291abc947121385e77",
+      "bytes": 4082
+    },
+    {
+      "file": "03-Src/server.py",
+      "before_sha256": "8df7f7a043b633f9c3d11a3ee1009879a233d34c2a51960baaabf75e908fe395",
+      "after_sha256": "9bedce6822ad31f50d2b6283e98d4e6b4af9cf75136c53ea22abff180a1cd633",
+      "bytes": 27298
+    },
+    {
+      "file": "03-Src/studio/demo-settings.ts",
+      "before_sha256": "b64f257b32fcf4cfc4e3554f3325f0ef2259f0297372a3a507f3abb2345b2563",
+      "after_sha256": "2d2ba6bd2cfd6f1908f6ab9d660384810b5a545fdc4eee9a22e82d0e0596901c",
+      "bytes": 2307
+    },
+    {
+      "file": "03-Src/studio/DemoSettings.tsx",
+      "before_sha256": "d30d039bf2c7107e9bd353d2b05fc85329f16e4595d6e1c5dee3a431f7cdf52e",
+      "after_sha256": "02f745d8cccd14f874ca5e31c9af767b8ab351bb127a84b9a3d23b94890f2615",
+      "bytes": 4790
+    },
+    {
+      "file": "03-Src/studio/types.ts",
+      "before_sha256": "dd16e55268259c6944ed55588f715ff1dc9ff3044f2170f84c872988ccdcb912",
+      "after_sha256": "64170ec1dfa242995b6d9259b78afda9087d5ac24230567b617a19e0593549cc",
+      "bytes": 3962
+    },
+    {
+      "file": "03-Src/studio/conversation-cards.ts",
+      "before_sha256": "55c0bfedabce4297610a14cecd8dd06186deb17c3bebfa624f9c92058962963c",
+      "after_sha256": "68cce355cfc81711b8cfc6f6eee2277753a2aa42e5ea9a769191128a7e5d84f5",
+      "bytes": 8532
+    },
+    {
+      "file": "tests/test_demo_match.py",
+      "before_sha256": null,
+      "after_sha256": "7f589e9c4702ff78f56002b49299e1b563c2e3ccee22d7c01ec5f38795be59bf",
+      "bytes": 5905
+    },
+    {
+      "file": "03-Src/reference-assets/v31-match/answer.xlsx",
+      "before_sha256": null,
+      "after_sha256": "31a812effd7eb9b753d23d8feccc8eb1f79e0943facfaa045ee89b20585765ec",
+      "bytes": 95751
+    },
+    {
+      "file": "03-Src/reference-assets/v31-match/summary.json",
+      "before_sha256": null,
+      "after_sha256": "1870bab578d66d1cecfb8a40c288a3c8c8f526523f3db9d1cf6cef7e02907e82",
+      "bytes": 211890
+    },
+    {
+      "file": "03-Src/reference-assets/v31-match/manifest.json",
+      "before_sha256": null,
+      "after_sha256": "83302a0346b51323106882cb16ff8860883dec99b213f7453c414f662f5087c4",
+      "bytes": 3331
+    },
+    {
+      "file": "tools/build-astra.mjs",
+      "before_sha256": "d93acbc587d9a3ab41ae9a2fa196603481f29cc145dc1f97915e8dc6337211a5",
+      "after_sha256": "38f683f6027862ba44d7b1f9ec8f03f2de8ba03f6bb5c3f9d703648ad426adbe",
+      "bytes": 9188
+    },
+    {
+      "file": "package.json",
+      "before_sha256": "fbc7783b7f771dde29e63498578c3e4d3d2b5b9d4a3b01b9ce35cc87de1962f0",
+      "after_sha256": "51642640f6697bb7101e010cd9ba9f8afa161f7867e761b8648a41e79411da7c",
+      "bytes": 3623
+    }
+  ],
+  "zip_sha256": "1e0f50488a7119fcbb2933c9407ef66726ac1364d9c48e567dfcb51bacbe1c17",
+  "notes": [
+    "Zip contains source/assets, not a deployable runtime image; preserve local changes and use reviewed diff.",
+    "package.json preserves current development scripts; candidate build used read-only root compiler tools and private Office viewer dependencies."
+  ]
+}

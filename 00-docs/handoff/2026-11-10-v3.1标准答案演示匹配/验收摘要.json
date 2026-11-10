@@ -1,0 +1,710 @@
+{
+  "version": "1.0.0",
+  "deployed": false,
+  "backend_tests": {
+    "passed": 121,
+    "failed": 0
+  },
+  "frontend_tests": {
+    "passed": 440,
+    "failed": 1,
+    "preexisting": {
+      "candidate_sha256": "f7a67ae75eea5323f376fa5f6e48d2ec91e0b8e8f1dd94e548ed832e9c5d1fa2",
+      "formal_sha256": "f7a67ae75eea5323f376fa5f6e48d2ec91e0b8e8f1dd94e548ed832e9c5d1fa2",
+      "development_sha256": "cb26f5520b105fb9cdd8b930d5f711e7bf7475e9864f7583691af45fc408b8fe",
+      "candidate_equals_unmodified_formal": true,
+      "failure": "tests/sandbox-conveyor.test.mjs:85 expects embedded shell hidden; deployed implementation shows it",
+      "scope": "Not changed by v31 answer feature; no unrelated sandbox fix included"
+    }
+  },
+  "api": [
+    {
+      "id": "D03",
+      "status": "passed",
+      "detail": {
+        "sha256": "81e562f874b16d75024bf7d02055e03f7afd929e3382433c633cf9cf9b1559c7",
+        "sheets": 3
+      },
+      "layer": "api",
+      "seconds": 0.33
+    },
+    {
+      "id": "D04",
+      "status": "passed",
+      "detail": {
+        "job_id": "5c0cea0802574e84acf5b389a4f5d10e",
+        "total_rows": 100,
+        "evidence": "converted.json"
+      },
+      "layer": "api",
+      "seconds": 0.74
+    },
+    {
+      "id": "D07",
+      "status": "passed",
+      "detail": {
+        "total_rows": 100,
+        "filled_rows": 99,
+        "evidence": "matched.json"
+      },
+      "layer": "api",
+      "seconds": 4.59
+    },
+    {
+      "id": "D08",
+      "status": "passed",
+      "detail": {
+        "price": 50000,
+        "row6": 3203,
+        "formulas": 1913,
+        "file": "actual.xlsx"
+      },
+      "layer": "api",
+      "seconds": 1.69
+    },
+    {
+      "id": "D09",
+      "status": "passed",
+      "detail": {
+        "counts": {
+          "pool_enabled": true,
+          "total_candidate_rows": 100,
+          "candidate_rows": 100,
+          "checked_rows": 99,
+          "no_comparable_rows": 1,
+          "warning_rows": 2,
+          "high_rows": 1,
+          "low_rows": 1,
+          "medium_rows": 1,
+          "metric_counts": {
+            "基价": 1,
+            "实物工作费调整系数": 1
+          },
+          "match_mode_counts": {
+            "字段完全匹配": 99
+          },
+          "low_risk_threshold_percent": 5,
+          "high_risk_threshold_percent": 20,
+          "summary_text": "经验池预警：输入候选 100 行，可比选 99 行，未找到同类 1 行，发现 2 条预警，其中高风险 1 条、低风险 1 条；匹配模式：字段完全匹配 99 行",
+          "executed": true
+        },
+        "evidence": "risk.json"
+      },
+      "layer": "api",
+      "seconds": 3.8
+    },
+    {
+      "id": "D10",
+      "status": "passed",
+      "detail": {
+        "file": "actual.docx",
+        "mode": "demo_preset",
+        "price": 50000,
+        "deviation": "1069.9%"
+      },
+      "layer": "api",
+      "seconds": 0.3
+    },
+    {
+      "id": "D11",
+      "status": "passed",
+      "detail": {
+        "word_bytes": 220864
+      },
+      "layer": "api",
+      "seconds": 0.0
+    },
+    {
+      "id": "D12",
+      "status": "passed",
+      "detail": {
+        "common_sheets": [
+          "费用汇总",
+          "表1-长输管道工程勘测费用",
+          "表2-通用工程测量费用",
+          "表3-地质测绘",
+          "表4-通用工程勘察费用",
+          "表5-其他费用"
+        ],
+        "missing_sheets": [],
+        "compared_target_cells": 1254,
+        "three_number_difference_count": 0,
+        "three_number_differences": [],
+        "formula_difference_count": 0,
+        "formula_differences": [],
+        "target_fill_difference_count": 0,
+        "target_fill_differences": [],
+        "review_status_difference_count": 0,
+        "review_status_differences": [],
+        "hidden_row_difference_count": 0,
+        "hidden_row_differences": [],
+        "full_value_difference_count": 0
+      },
+      "layer": "api",
+      "seconds": 3.39
+    },
+    {
+      "id": "D14",
+      "status": "passed",
+      "detail": {
+        "total_projects": 1,
+        "new_this_month": 1,
+        "completed": 1,
+        "pending_review": 0,
+        "high_risk": 1,
+        "total_runs": 1,
+        "unclassified_tasks": 0,
+        "warning_not_run": 0
+      },
+      "layer": "api",
+      "seconds": 0.07
+    },
+    {
+      "id": "D16",
+      "status": "passed",
+      "detail": {
+        "mode": "curated_demo",
+        "sources": 1,
+        "question": "查询清单编码10504001至10504016的过路过桥费，按管径从小到大输出柱状图，并指出价格平台区间和最高单价，只使用造价通用知识库数据，不进行区间插值。"
+      },
+      "layer": "api",
+      "seconds": 0.01
+    },
+    {
+      "id": "D17",
+      "status": "passed",
+      "detail": {
+        "type": "bar",
+        "title": "不同管径过路过桥费对比",
+        "x_axis_label": "管径",
+        "y_axis_label": "清单单价（元/km）",
+        "unit": "元/km",
+        "items": [
+          {
+            "label": "D219.1",
+            "value": 200
+          },
+          {
+            "label": "D273.1",
+            "value": 200
+          },
+          {
+            "label": "D323.9",
+            "value": 280
+          },
+          {
+            "label": "D355.6",
+            "value": 350
+          },
+          {
+            "label": "D406.4",
+            "value": 450
+          },
+          {
+            "label": "D457",
+            "value": 600
+          },
+          {
+            "label": "D508",
+            "value": 600
+          },
+          {
+            "label": "D559",
+            "value": 600
+          },
+          {
+            "label": "D610",
+            "value": 900
+          },
+          {
+            "label": "D660",
+            "value": 900
+          },
+          {
+            "label": "D711",
+            "value": 1500
+          },
+          {
+            "label": "D813",
+            "value": 1500
+          },
+          {
+            "label": "D914",
+            "value": 2250
+          },
+          {
+            "label": "D1016",
+            "value": 2250
+          },
+          {
+            "label": "D1219",
+            "value": 3000
+          },
+          {
+            "label": "D1422",
+            "value": 4500,
+            "highlight": true
+          }
+        ]
+      },
+      "layer": "api",
+      "seconds": 0.0
+    },
+    {
+      "id": "D19",
+      "status": "passed",
+      "detail": {
+        "nodes": 100,
+        "links": 202
+      },
+      "layer": "api",
+      "seconds": 0.07
+    },
+    {
+      "id": "D23",
+      "status": "passed",
+      "detail": {
+        "invalid_files": 3,
+        "restored_job": "5c0cea0802574e84acf5b389a4f5d10e",
+        "report_off_requires_model": true
+      },
+      "layer": "api",
+      "seconds": 0.07
+    }
+  ],
+  "browser": [
+    {
+      "id": "E01",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 19.119,
+      "detail": "默认开启；关闭保存、重新打开及恢复开启通过真实设置界面验证"
+    },
+    {
+      "id": "D01",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 1.028,
+      "detail": "架构 iframe 加载且可关闭"
+    },
+    {
+      "id": "D02",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 5.993,
+      "detail": "新对话和沙盘加载，历史演示项目可见"
+    },
+    {
+      "id": "D03",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 1.978,
+      "detail": {
+        "sheets": 3,
+        "uploaded_sha256": "81e562f874b16d75024bf7d02055e03f7afd929e3382433c633cf9cf9b1559c7"
+      }
+    },
+    {
+      "id": "D04",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 1.915,
+      "detail": {
+        "job_id": "56ac87f3b886475c8f7aaea457ce1939",
+        "total_rows": 100
+      }
+    },
+    {
+      "id": "D05",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 0.978,
+      "detail": "表2待填单元格可见"
+    },
+    {
+      "id": "D06",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 2.847,
+      "detail": {
+        "top": 3203,
+        "mode": "curated_demo"
+      }
+    },
+    {
+      "id": "D07",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 11.096,
+      "detail": {
+        "total_rows": 100,
+        "filled_rows": 99
+      }
+    },
+    {
+      "id": "D08",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 0.711,
+      "detail": "匹配结果在实际表格显示"
+    },
+    {
+      "id": "D09",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 5.382,
+      "detail": {
+        "items": [
+          {
+            "id": "warning-表2-通用工程测量费用-5-基价-0",
+            "source": "experience_warning",
+            "severity": "high",
+            "severity_label": "高风险",
+            "risk_type": "经验池偏离",
+            "title": "表2-通用工程测量费用 第 5 行 基价 经验偏离",
+            "sheet_name": "表2-通用工程测量费用",
+            "excel_row": 5,
+            "metric": "基价",
+            "message": "基价 当前值 50000；经验池平均值 4274；经验范围 4274~4274；实际偏离率 1069.86%；已触发高风险预警。",
+            "suggested_action": "建议复核：基价 当前值 50000 相对经验池平均值 4274 偏离 1069.86%，请核对输入要素、单位、来源依据和人工填值。",
+            "key_text": "控制测量 / 首级控制测量 / GPS测量C级 / 中等 / 个",
+            "current_value": 50000,
+            "reference_value": 4274,
+            "deviation_percent": 1069.864296,
+            "sample_count": 1,
+            "evidence": [
+              {
+                "label": "匹配模式",
+                "text": "字段完全匹配"
+              },
+              {
+                "label": "经验范围",
+                "text": "4274~4274"
+              },
+              {
+                "label": "经验来源",
+                "text": "【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v2.4【批注】.xlsx / 表2-通用工程测量费用 第 5 行"
+              }
+            ]
+          },
+          {
+            "id": "warning-表3-地质测绘-6-实物工作费调整系数-1",
+            "source": "experience_warning",
+            "severity": "low",
+            "severity_label": "低风险",
+            "risk_type": "经验池偏离",
+            "title": "表3-地质测绘 第 6 行 实物工作费调整系数 经验偏离",
+            "sheet_name": "表3-地质测绘",
+            "excel_row": 6,
+            "metric": "实物工作费调整系数",
+            "message": "实物工作费调整系数 当前值 1.3；经验池平均值 1.15；经验范围 1~1.3；实际偏离率 13.0435%；已触发低风险预警。",
+            "suggested_action": "建议复核：实物工作费调整系数 当前值 1.3 相对经验池平均值 1.15 偏离 13.0435%，建议结合项目条件与历史范围 1~1.3 复核。",
+            "key_text": "岩土工程勘察 / 地质测绘 / 1:1000 / 中等 / km2",
+            "current_value": 1.3,
+            "reference_value": 1.15,
+            "deviation_percent": 13.043478,
+            "sample_count": 2,
+            "evidence": [
+              {
+                "label": "匹配模式",
+                "text": "字段完全匹配"
+              },
+              {
+                "label": "经验范围",
+                "text": "1~1.3"
+              },
+              {
+                "label": "经验来源",
+                "text": "【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v2.4【批注】.xlsx / 表3-地质测绘 第 6 行"
+              },
+              {
+                "label": "经验来源",
+                "text": "【项目例子】【测试输入】可行性研究勘察测量控制价计算 -v2.4【批注】.xlsx / 表3-地质测绘 第 7 行"
+              }
+            ]
+          }
+        ],
+        "located": "50000"
+      }
+    },
+    {
+      "id": "D10",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 4.07,
+      "detail": {
+        "name": "risk-report-20261110-214702-【调整格式】.docx",
+        "id": "69bd4e25041649e2a88b41a62d5fa8c4"
+      }
+    },
+    {
+      "id": "D11",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 2.143,
+      "detail": "当前Word预览就绪，实际下载成功"
+    },
+    {
+      "id": "D12",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 1.043,
+      "detail": "实际任务Excel下载；独立API用例负责逐格标准答案比较"
+    },
+    {
+      "id": "D13",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 1.237,
+      "detail": "复核渠道选择与接收人确认流程打开，未选择平台不能发送；实收见M01/M02"
+    },
+    {
+      "id": "D14",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 3.3,
+      "detail": {
+        "total": 2,
+        "filtered": 1
+      }
+    },
+    {
+      "id": "D15",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 7.365,
+      "detail": "专业工作区地域地图与三维画布实际渲染"
+    },
+    {
+      "id": "D16",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 2.145,
+      "detail": {
+        "mode": "curated_demo",
+        "sources": 1
+      }
+    },
+    {
+      "id": "D17",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 3.598,
+      "detail": {
+        "type": "bar",
+        "title": "不同管径过路过桥费对比",
+        "x_axis_label": "管径",
+        "y_axis_label": "清单单价（元/km）",
+        "unit": "元/km",
+        "items": [
+          {
+            "label": "D219.1",
+            "value": 200
+          },
+          {
+            "label": "D273.1",
+            "value": 200
+          },
+          {
+            "label": "D323.9",
+            "value": 280
+          },
+          {
+            "label": "D355.6",
+            "value": 350
+          },
+          {
+            "label": "D406.4",
+            "value": 450
+          },
+          {
+            "label": "D457",
+            "value": 600
+          },
+          {
+            "label": "D508",
+            "value": 600
+          },
+          {
+            "label": "D559",
+            "value": 600
+          },
+          {
+            "label": "D610",
+            "value": 900
+          },
+          {
+            "label": "D660",
+            "value": 900
+          },
+          {
+            "label": "D711",
+            "value": 1500
+          },
+          {
+            "label": "D813",
+            "value": 1500
+          },
+          {
+            "label": "D914",
+            "value": 2250
+          },
+          {
+            "label": "D1016",
+            "value": 2250
+          },
+          {
+            "label": "D1219",
+            "value": 3000
+          },
+          {
+            "label": "D1422",
+            "value": 4500,
+            "highlight": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "D18",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 4.517,
+      "detail": {
+        "id": "KM-871D4B8A1728",
+        "status": "pending",
+        "auto_approved": false
+      }
+    },
+    {
+      "id": "D19",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 4.551,
+      "detail": {
+        "nodes": 100,
+        "edges": 202,
+        "opened": "油气输送管道工程适用范围",
+        "related": "油气输送管道土石方清单阅读"
+      }
+    },
+    {
+      "id": "D22",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 6.78,
+      "detail": "亮暗主题往返；经典/简约/沙盘保留草稿"
+    },
+    {
+      "id": "D23",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 6.61,
+      "detail": {
+        "restored_job": "56ac87f3b886475c8f7aaea457ce1939",
+        "conversation": "23935745e39b4d39890371891832c24f",
+        "draft": true
+      }
+    },
+    {
+      "id": "D24",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 4.979,
+      "detail": {
+        "revision": 6,
+        "enabled": true,
+        "rowPreset": true,
+        "matchPreset": true,
+        "reportPreset": true,
+        "knowledgePreset": true,
+        "parkedProject": true,
+        "parkedName": "德化-永安支线",
+        "parkedStation": "report"
+      }
+    },
+    {
+      "id": "D20",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 9.19,
+      "detail": {
+        "task": "task_d9ba3c6c13ec466c8cafb1544f457436",
+        "prepared": true,
+        "paragraph_link": "P5 / 第6行",
+        "note": "预先人工确认功能点；不代表本轮调用模型识别"
+      }
+    },
+    {
+      "id": "D21",
+      "layer": "browser",
+      "status": "passed",
+      "seconds": 12.098,
+      "detail": [
+        {
+          "factor": 1,
+          "revision": 17,
+          "ufp": "52",
+          "hours": "388.544000",
+          "cost": 94641.37
+        },
+        {
+          "factor": 1.21,
+          "revision": 18,
+          "ufp": "52",
+          "hours": "470.13824000",
+          "cost": 114516.06
+        }
+      ]
+    }
+  ],
+  "excel": {
+    "reference_sha256": "671351f7a542c9ea4bc604621fee95dd0535f0614fe3c7b458b62681c4717b91",
+    "explicit_reference_adjustment": {
+      "cells": [
+        "表2-通用工程测量费用!H5",
+        "表2-通用工程测量费用!S5"
+      ],
+      "before": 500000,
+      "after": 50000,
+      "risk_deviation_formula": "(50000-4274)/4274*100; 6 significant / 6 decimal digits",
+      "reason": "用户已指定统一50000；仅同一行价格与直接算术派生的风险数值，其他字段不变"
+    },
+    "comparison": {
+      "common_sheets": [
+        "费用汇总",
+        "表1-长输管道工程勘测费用",
+        "表2-通用工程测量费用",
+        "表3-地质测绘",
+        "表4-通用工程勘察费用",
+        "表5-其他费用"
+      ],
+      "missing_sheets": [],
+      "compared_target_cells": 1254,
+      "three_number_difference_count": 0,
+      "three_number_differences": [],
+      "formula_difference_count": 0,
+      "formula_differences": [],
+      "target_fill_difference_count": 0,
+      "target_fill_differences": [],
+      "review_status_difference_count": 0,
+      "review_status_differences": [],
+      "hidden_row_difference_count": 0,
+      "hidden_row_differences": [],
+      "full_value_difference_count": 0
+    }
+  },
+  "gates": {
+    "browser": {
+      "exit_code": 0,
+      "seconds": 183.07,
+      "log": "browser.log"
+    },
+    "module_isolation": {
+      "host": "ok",
+      "module_available": false
+    },
+    "formal_changed_files": []
+  },
+  "build": "passed"
+}
