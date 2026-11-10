@@ -21,3 +21,11 @@ export async function readImportProjectFile(id:string,request:typeof fetch=fetch
  const blob=await response.blob();if(!blob.size||blob.size>30*1024*1024)throw new Error('项目文件为空或超过 30 MB 上限。');
  return new File([blob],project.filename,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
 }
+
+/** Saved conversation names take precedence over the V3.1 display default. */
+export function parcelProjectName(title:string|undefined,filename:string|undefined){
+ const name=title?.trim()||'';
+ const automatic=['','导入项目','新对话','当前对话','V3.1 勘察测量控制价 · 完整体验'];
+ if(!automatic.includes(name))return name;
+ return filename===importProjects[0].filename?'铜梁-遵义 项目':'当前';
+}

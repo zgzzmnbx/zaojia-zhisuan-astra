@@ -7,7 +7,7 @@ const parkedStations=[['import','清单导入'],['price','智能填价'],['risk'
 export function DemoModeSwitch({controller,blocked=false,openSettings}:{controller:DemoController;blocked?:boolean;openSettings:()=>void}){
  const {value,error,saving,save}=controller;
  return <div className="demo-mode-control" title={error||(!value?'正在读取演示设置':`演示模式${value.enabled?'已开启':'已关闭'}；在设置中配置演示与调试选项`)}>
-  <label><span>演示</span><input type="checkbox" role="switch" aria-label="演示模式" className="toggle toggle-primary toggle-sm" checked={!!value?.enabled} disabled={!value||saving||blocked} onChange={e=>{if(value)void save({...value,enabled:e.target.checked}).catch(()=>{});}}/></label>
+  <button type="button" className={`btn btn-sm demo-mode-button ${value?.enabled?'btn-soft btn-primary':'btn-ghost'}`} aria-label="演示模式" aria-pressed={!!value?.enabled} disabled={!value||saving||blocked} onClick={()=>{if(value)void save({...value,enabled:!value.enabled}).catch(()=>{});}}>演示</button>
   {error&&<button type="button" className="btn btn-ghost btn-square btn-sm" aria-label={`演示设置异常：${error}`} onClick={openSettings}><Icon name="info"/></button>}
  </div>;
 }

@@ -6,7 +6,7 @@ export function useIdleOrbit(enabled:boolean,delay:number,blocked:boolean,stopMa
  onInput.current=stopManual;
  delayRef.current=delay;
  useEffect(()=>{
-  const idle=createIdleOrbit(setRunning,()=>!document.hidden&&!document.querySelector('dialog[open],.sandbox-marker :focus-visible'),{set:(fn,ms)=>setTimeout(fn,ms),clear:id=>clearTimeout(id as ReturnType<typeof setTimeout>)});
+  const idle=createIdleOrbit(setRunning,()=>!document.hidden&&!document.querySelector('dialog[open],.sandbox-parked-info:popover-open,.sandbox-marker :focus-visible'),{set:(fn,ms)=>setTimeout(fn,ms),clear:id=>clearTimeout(id as ReturnType<typeof setTimeout>)});
   controller.current=idle;
   const stop=(e:Event)=>{if(!(e.target instanceof Element)||!e.target.closest('.sandbox-view-controls'))onInput.current()};
   const isCameraInput=(e:Event)=>e.target instanceof Element&&!!e.target.closest('.sandbox-canvas');

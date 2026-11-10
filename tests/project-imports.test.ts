@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {findImportProject,importProjects,projectImportCard,readImportProjectFile} from '../03-Src/studio/project-imports.ts';
+import {parcelProjectName,findImportProject,importProjects,projectImportCard,readImportProjectFile} from '../03-Src/studio/project-imports.ts';
 
 test('import catalog exposes four explicit demo sources and preserves the V3.1 input identity',()=>{
  assert.equal(importProjects.length,4);assert.equal(new Set(importProjects.map(p=>p.id)).size,4);
@@ -34,3 +34,10 @@ test('V3.1 upload uses the exact user-confirmed August 22 workbook bytes and fil
  const file=await readImportProjectFile('v31',async url=>{assert.equal(url,findImportProject('v31')!.url);return new Response(bundled)});
  assert.equal(file.name,record.filename);assert.deepEqual(Buffer.from(await file.arrayBuffer()),original);
 });
+
+ test('V3.1 parcel has its requested default and saved conversation names win',()=>{
+  assert.equal(parcelProjectName('导入项目',importProjects[0].filename),'铜梁-遵义 项目');
+  assert.equal(parcelProjectName('北线复核任务',importProjects[0].filename),'北线复核任务');
+  assert.equal(parcelProjectName('导入项目',importProjects[1].filename),'当前');
+  assert.equal(parcelProjectName('我的项目',undefined),'我的项目');
+ });
