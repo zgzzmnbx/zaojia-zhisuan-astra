@@ -153,6 +153,7 @@ V3.1 验收需要对应输入及 Excel / Word 标准答案，结果写入独立�
 
 ## 项目文档
 
+- [AGENTS.md](AGENTS.md)：开工约束、正式环境保护与固定测试指令；[专项规则与经验](00-docs/12-项目专项规则与经验.md) 按任务查阅，不必每轮通读历史记录。
 - [当前版本计划](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/codex/conveyor-integrated-white/00-docs/00-PRD/02-当前版本计划.md)：需求范围与验收口径。
 - [功能保留与接入矩阵](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/codex/conveyor-integrated-white/00-docs/00-PRD/04-功能保留与接入矩阵.md)：原型、接口及业务验收状态。
 - [DESIGN.md](DESIGN.md)：UI 设计标准。
