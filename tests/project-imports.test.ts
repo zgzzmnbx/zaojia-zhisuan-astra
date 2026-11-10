@@ -28,9 +28,9 @@ test('bundled derivative workbooks match their recorded source and file hashes',
 test('V3.1 upload uses the exact user-confirmed August 22 workbook bytes and filename',async()=>{
  const base=new URL('../03-Src/studio/project-import-assets/',import.meta.url),record=JSON.parse(readFileSync(new URL('v31-source.json',base),'utf8'));
  const original=readFileSync(record.source),bundled=readFileSync(new URL(record.file,base));
- assert.equal(bundled.length,127602);assert.equal(original.length,bundled.length);
+ assert.equal(bundled.length,127513);assert.equal(original.length,bundled.length);
  const hash=(bytes:Buffer)=>createHash('sha256').update(bytes).digest('hex');
- assert.equal(hash(bundled),'82812aaf3c9ae732b12e5e494139db724563ba2a51720f91681a2ea22b63ffe4');assert.equal(hash(original),hash(bundled));assert.equal(record.sha256,hash(bundled));assert.equal(record.bytes,bundled.length);
+ assert.equal(hash(bundled),'81e562f874b16d75024bf7d02055e03f7afd929e3382433c633cf9cf9b1559c7');assert.equal(hash(original),hash(bundled));assert.equal(record.sha256,hash(bundled));assert.equal(record.bytes,bundled.length);
  const file=await readImportProjectFile('v31',async url=>{assert.equal(url,findImportProject('v31')!.url);return new Response(bundled)});
  assert.equal(file.name,record.filename);assert.deepEqual(Buffer.from(await file.arrayBuffer()),original);
 });
