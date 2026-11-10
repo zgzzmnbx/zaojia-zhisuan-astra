@@ -7,7 +7,7 @@ from fastapi import APIRouter, Body, HTTPException
 
 router = APIRouter(prefix='/api/astra/demo-settings')
 DEFAULT = {'revision': 0, 'enabled': True, 'rowPreset': True, 'reportPreset': True, 'knowledgePreset': True,
-           'parkedProject': True, 'parkedName': '演示项目 B', 'parkedStation': 'report'}
+           'parkedProject': True, 'parkedName': '德化-永安支线', 'parkedStation': 'report'}
 LEGACY = {'revision', 'enabled', 'rowPreset', 'reportPreset', 'knowledgePreset'}
 STATIONS = {'import', 'price', 'risk', 'report', 'review', 'table', 'knowledge'}
 

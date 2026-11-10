@@ -4,7 +4,7 @@ export function createParkedProjectInfo(host){
  const button=document.createElement('button');button.type='button';button.className='sandbox-parked-hit';button.hidden=true;
  button.setAttribute('aria-label','查看演示项目信息');button.setAttribute('aria-expanded','false');button.setAttribute('aria-haspopup','dialog');
  const panel=document.createElement('section');panel.className='sandbox-parked-info';panel.popover='auto';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','演示项目信息');
- panel.innerHTML='<header><strong>项目信息</strong><button type="button" class="btn btn-ghost btn-sm" aria-label="关闭演示项目信息">关闭</button></header><dl><div><dt>项目简称</dt><dd></dd></div><div><dt>停靠站点</dt><dd></dd></div><div><dt>状态</dt><dd>演示停靠</dd></div></dl><button type="button" class="btn btn-outline" disabled>开启项目</button>';
+ panel.innerHTML='<header><strong>项目信息</strong><button type="button" class="btn btn-ghost btn-sm" aria-label="关闭演示项目信息">关闭</button></header><dl><div><dt>项目简称</dt><dd></dd></div><div><dt>停靠站点</dt><dd></dd></div><div><dt>状态</dt><dd>演示停靠</dd></div><div><dt>项目全称</dt><dd>德化-大田-永安支线</dd></div><div><dt>阶段</dt><dd>可行性研究</dd></div><div><dt>历史成果</dt><dd>勘察测量招标控制价</dd></div><div><dt>编制日期</dt><dd>2025-09-26</dd></div></dl><button type="button" class="btn btn-outline" disabled>开启项目</button>';
  const fields=panel.querySelectorAll('dd'),close=panel.querySelector('header button');
  host.append(button,panel);
  let enabled=false;

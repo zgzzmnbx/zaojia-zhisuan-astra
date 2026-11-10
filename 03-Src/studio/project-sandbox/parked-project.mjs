@@ -31,9 +31,9 @@ export function createParkedProject(parent,source,host){
  function configure(value){
   root.visible=value?.enabled===true&&value?.parkedProject===true;
   const pose=parkedProjectPose(value?.parkedStation);station=pose.station;root.position.fromArray(pose.position);
-  info?.configure(root.visible,value?.parkedName||'演示项目 B',parkedStations.find(item=>item.id===station)?.title||'报告生成');
-  const next=typeof value?.parkedName==='string'?value.parkedName.trim().slice(0,12):'演示项目 B';
-  if(next===name)return;name=next||'演示项目 B';pixels=Math.max(126,Array.from(name).length*14+26);
+  info?.configure(root.visible,value?.parkedName||'德化-永安支线',parkedStations.find(item=>item.id===station)?.title||'报告生成');
+  const next=typeof value?.parkedName==='string'?value.parkedName.trim().slice(0,12):'德化-永安支线';
+  if(next===name)return;name=next||'德化-永安支线';pixels=Math.max(126,Array.from(name).length*14+26);
 
  }
  function update(camera,height,nearParcel,nearLabelPixels=84){
