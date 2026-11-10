@@ -4,7 +4,7 @@
 
 [功能介绍](#主要功能) · [界面与演示](#界面与演示) · [快速开始](#快速开始) · [项目文档](#项目文档) · [问题反馈](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/issues)
 
-> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.16.0**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
+> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.17.0**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
 
 ## 界面与演示
 
@@ -29,6 +29,8 @@
 - [汇报 PPT 与演示资料](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/main/06-汇报-演示-录屏-截图/02-汇报PPT)
 
 ## 主要功能
+
+- **协同复核流程**：在原分配 / 查询卡上打开沙盘悬浮流程，配置平台、接收人、截止时间，并查看真实复核回执；可放大、拖动，避开两侧窗口。
 
 | 能力 | 说明 |
 | --- | --- |

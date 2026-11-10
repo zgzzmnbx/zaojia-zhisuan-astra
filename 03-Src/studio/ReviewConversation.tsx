@@ -1,4 +1,4 @@
-import {useEffect,useId,useRef,useState} from 'react';
+import {lazy,Suspense,useEffect,useId,useRef,useState} from 'react';
 import {Icon} from './ui';
 import InlineReviewSetupCard from '../professional/components/agent-workspace/InlineReviewSetupCard';
 import InlineReviewProgressCard from '../professional/components/agent-workspace/InlineReviewProgressCard';
@@ -6,10 +6,13 @@ import {latestReviewTasksByPlatform} from '../professional/components/agent-work
 import {api,json} from './api';
 import {dispatchReviewPlatforms,initialReviewEnabled,reviewPeople,reviewProblem,reviewPayload,type ReviewOptions,type ReviewPlatform,type ReviewRequest,type ReviewTask} from './review-flow';
 import './review-conversation.css';
+import './review-workflow.css';
 
+const ReviewWorkflow=lazy(()=>import('./ReviewWorkflow'));
 const profiles=[['default','飞书'],['weact_cost','WeAct']] as const;
 function defaultDeadline(){const d=new Date(Date.now()+86400000);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16);}
-export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readOnly=false}:{request:ReviewRequest;readOnly?:boolean;busy:boolean;onBusy:(label:string)=>void;onSettings:()=>void;onClose:()=>void}){
+export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readOnly=false,onOpenFlow}:{onOpenFlow?:()=>void;request:ReviewRequest;readOnly?:boolean;busy:boolean;onBusy:(label:string)=>void;onSettings:()=>void;onClose:()=>void}){
+ const [flowOpen,setFlowOpen]=useState(false);
  const [platforms,setPlatforms]=useState<ReviewPlatform[]>([]),[loading,setLoading]=useState(true),[sending,setSending]=useState(false),[feedback,setFeedback]=useState(''),[error,setError]=useState('');
  const [confirmed,setConfirmed]=useState(false),[round,setRound]=useState(false),[deadline,setDeadline]=useState(defaultDeadline),[instructions,setInstructions]=useState('请复核当前成果、匹配依据和风险项；在复核卡中填写意见后通过或退回。');
  const [tasks,setTasks]=useState<ReviewTask[]>([]),[fetchedAt,setFetchedAt]=useState(''),[external,setExternal]=useState(false);
@@ -72,16 +75,19 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readO
   try{const data=await api<{task:ReviewTask}>(`/api/collaboration/external-dispatch/tasks/${encodeURIComponent(p.task.task_id)}/retry`,{method:'POST'});if(!alive.current)return;if(data.task?.task_id!==p.task.task_id||data.task.platform!==id||data.task.source_job_id!==request.jobId)throw Error('重试回执不一致，请刷新核对。');edit(id,current=>({...current,task:data.task,feedback:`重试结果：${data.task.status_label}`}));setTasks(old=>old.map(t=>t.task_id===data.task.task_id?data.task:t));}catch(e){if(alive.current)setFeedback((e as Error).message);}finally{lock.current=false;onBusy('');if(alive.current)setSending(false);}
  }
  const display=platforms.map(p=>({...p,directDeliveryAvailable:p.options?.direct_delivery.status==='available',groups:p.options?.directory.groups||[],people:reviewPeople(p)}));
- if(readOnly)return <div className="astra-review"><div className="review-toolbar"><span className="badge badge-ghost" title={`此卡创建于成果第 ${request.version} 版，保留对应任务的复核记录。`}>复核记录</span></div><InlineReviewProgressCard readOnly snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose}/></div>;
- return <div className="astra-review">
-  <div className="review-toolbar"><span className="badge badge-outline" title={request.calculationUnconfirmed?'使用当前表格发起复核；未重算状态随复核说明保留，不影响发送。':undefined}>飞书 / WeAct</span><button className="btn btn-ghost btn-sm" disabled={sending} onClick={onSettings}>协同设置</button></div>
-  {error&&<div className="alert review-read-error" role="alert"><span>{error}</span><button className="btn btn-sm" disabled={loading||sending} onClick={()=>void load()}>重试读取</button></div>}
-  {request.kind==='setup'?<InlineReviewSetupCard fileName={request.fileName} jobId={request.jobId} reviewRows={request.reviewRows} platforms={display} deadline={deadline} instructions={instructions} audienceConfirmed={confirmed} feedback={feedback} loading={loading} sending={sending||busy} newRoundConfirmationOpen={round}
+ const setupCard=!readOnly&&(request.kind==='setup'?<InlineReviewSetupCard fileName={request.fileName} jobId={request.jobId} reviewRows={request.reviewRows} platforms={display} deadline={deadline} instructions={instructions} audienceConfirmed={confirmed} feedback={feedback} loading={loading} sending={sending||busy} newRoundConfirmationOpen={round}
    onPlatformEnabledChange={(id,value)=>edit(id,p=>({...p,enabled:value,expanded:value||p.expanded}))} onPlatformExpandedChange={(id,value)=>setPlatforms(all=>all.map(p=>p.profileId===id?{...p,expanded:value}:p))}
    onDeliveryChannelChange={(id,channel,checked)=>edit(id,p=>({...p,deliveryChannels:checked?[...new Set([...p.deliveryChannels,channel])]:p.deliveryChannels.filter(c=>c!==channel),selectedReviewers:[]}))}
    onGroupChange={(id,group)=>edit(id,p=>({...p,group,selectedReviewers:[]}))} onReviewerChange={(id,ref,checked)=>edit(id,p=>({...p,selectedReviewers:checked?[...new Set([...p.selectedReviewers,ref])].slice(0,10):p.selectedReviewers.filter(r=>r!==ref)}))}
    onDeadlineChange={value=>{setDeadline(value);setConfirmed(false);setRound(false);}} onInstructionsChange={value=>{setInstructions(value);setConfirmed(false);setRound(false);}}
-   onAudienceConfirmedChange={setConfirmed} onRefresh={()=>void load(true)} onCancel={onClose} onSubmit={()=>void send()} onRetry={id=>void retry(id)} onOpenNewRoundConfirmation={()=>setRound(true)} onCloseNewRoundConfirmation={()=>setRound(false)} onConfirmNewRound={()=>void send(true)}/>:null}
+   onAudienceConfirmedChange={setConfirmed} onRefresh={()=>void load(true)} onCancel={onClose} onSubmit={()=>void send()} onRetry={id=>void retry(id)} onOpenNewRoundConfirmation={()=>setRound(true)} onCloseNewRoundConfirmation={()=>setRound(false)} onConfirmNewRound={()=>void send(true)}/>:null);
+ const workflow=<><button type="button" className="rw-launch" onClick={()=>{onOpenFlow?.();setFlowOpen(true);}}><span><Icon name="architecture"/></span><div><strong>复核流程</strong><small>{request.kind==='setup'&&!readOnly?'分配人员与配置发送':'查看各平台与同事的复核进度'}</small></div><Icon name="expand"/></button>{flowOpen&&<Suspense fallback={<span role="status">正在打开流程…</span>}><ReviewWorkflow request={request} tasks={tasks} platforms={platforms} setup={setupCard?setupCard.props:undefined} loading={loading} error={error} refresh={()=>void load()} close={()=>setFlowOpen(false)}/></Suspense>}</>;
+ if(readOnly)return <div className="astra-review"><div className="review-toolbar"><span className="badge badge-ghost" title={`此卡创建于成果第 ${request.version} 版，保留对应任务的复核记录。`}>复核记录</span></div>{workflow}<InlineReviewProgressCard readOnly snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose}/></div>;
+ return <div className="astra-review">{workflow}
+  <div className="review-toolbar"><span className="badge badge-outline" title={request.calculationUnconfirmed?'使用当前表格发起复核；未重算状态随复核说明保留，不影响发送。':undefined}>飞书 / WeAct</span><button className="btn btn-ghost btn-sm" disabled={sending} onClick={onSettings}>协同设置</button></div>
+  {error&&<div className="alert review-read-error" role="alert"><span>{error}</span><button className="btn btn-sm" disabled={loading||sending} onClick={()=>void load()}>重试读取</button></div>}
+  {setupCard}
+
   {request.kind==='setup'&&tasks.some(t=>t.can_retry)&&<div className="review-retry-actions">{platforms.filter(p=>p.task?.can_retry).map(p=><button key={p.profileId} className="btn btn-outline btn-sm" disabled={sending||busy||loading||!external} onClick={()=>void retry(p.profileId)}>仅重试 {p.label} 失败步骤</button>)}</div>}
   {request.kind==='setup'&&tasks.length>0&&<div className="review-progress-receipt" role="status"><span className="review-progress-receipt__icon"><Icon name="check"/></span><div><strong>{tasks.length} 个平台已有复核任务</strong><small>送达状态与审核结果可在进度中查看</small></div><button type="button" className="btn btn-outline btn-sm" aria-expanded={progressOpen} aria-controls={progressId} onClick={()=>setProgressOpen(value=>!value)}><Icon name="menu"/>{progressOpen?'收起复核进度':'查看复核进度'}</button></div>}
   <div id={progressId}>{(request.kind==='progress'||progressOpen)&&<InlineReviewProgressCard snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose} onAddPlatform={request.kind==='progress'?onClose:()=>{setConfirmed(false);setPlatforms(all=>all.map(p=>({...p,enabled:p.configurationOk&&!p.task,expanded:!p.task||p.expanded})));}}/>}</div>
