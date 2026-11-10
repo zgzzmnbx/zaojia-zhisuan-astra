@@ -23,7 +23,7 @@ import {nextTaskActivity,type TaskActivity} from './task-activity';
 import type {ReviewProgressTask} from '../../professional/components/agent-workspace/reviewProgress';
 
 
-type Props={chatTransparency?:number;setChatTransparency?:(value:number)=>void;overview?:ReactNode;simple?:()=>void;roofLabels:boolean;setRoofLabels:(value:boolean)=>void;autoOrbit:boolean;setAutoOrbit?:(value:boolean)=>void;orbitDelay:number;setOrbitDelay?:(value:number)=>void;orbitSettings:()=>void;variant:'immersive'|'card';immersive:()=>void;context:string;active:boolean;dark:boolean;title:string;taskId:string;tasks:{id:string;title:string}[];input:Omit<SandboxInput,'reviewTasks'|'reviewError'>;chatCollapsed:boolean;classic:()=>void;toggleDark:()=>void;selectTask:(id:string)=>void;enter:(action:string)=>void};
+type Props={demoSettings?:import('../demo-settings').DemoSettings;chatTransparency?:number;setChatTransparency?:(value:number)=>void;overview?:ReactNode;simple?:()=>void;roofLabels:boolean;setRoofLabels:(value:boolean)=>void;autoOrbit:boolean;setAutoOrbit?:(value:boolean)=>void;orbitDelay:number;setOrbitDelay?:(value:number)=>void;orbitSettings:()=>void;variant:'immersive'|'card';immersive:()=>void;context:string;active:boolean;dark:boolean;title:string;taskId:string;tasks:{id:string;title:string}[];input:Omit<SandboxInput,'reviewTasks'|'reviewError'>;chatCollapsed:boolean;classic:()=>void;toggleDark:()=>void;selectTask:(id:string)=>void;enter:(action:string)=>void};
 export default function ProjectSandbox(props:Props){
  const [visualSettings,setVisualSettings]=useState(readVisualMode);
  const [visualStatus,setVisualStatus]=useState({mode:'baked',reason:'',loading:false,error:''});
@@ -79,7 +79,7 @@ export default function ProjectSandbox(props:Props){
   return()=>{api?.dispose();scene.current=null;delete (el as any).__sandboxState;delete (el as any).__sandboxVisual};
  },[props.context,retry]);
  useEffect(()=>{scene.current?.setVisualSettings(visualSettings)},[visualSettings,props.context,retry]);
- useEffect(()=>{scene.current?.setOptions({bakedSettings,night:props.dark,roofLabels:props.roofLabels,compact:props.variant==='card',active:props.active,orbit:orbiting&&!reduced,orbitSweep:idleOrbit&&props.orbitDelay===0&&!orbit,running:runningZone(props.input.busy,props.input.qaRunning)})},[bakedSettings,props.dark,props.roofLabels,props.context,props.variant,props.chatCollapsed,props.active,orbiting,props.orbitDelay,idleOrbit,orbit,reduced,props.input.busy,props.input.qaRunning,retry]);
+ useEffect(()=>{scene.current?.setOptions({demoSettings:props.demoSettings,bakedSettings,night:props.dark,roofLabels:props.roofLabels,compact:props.variant==='card',active:props.active,orbit:orbiting&&!reduced,orbitSweep:idleOrbit&&props.orbitDelay===0&&!orbit,running:runningZone(props.input.busy,props.input.qaRunning)})},[props.demoSettings,bakedSettings,props.dark,props.roofLabels,props.context,props.variant,props.chatCollapsed,props.active,orbiting,props.orbitDelay,idleOrbit,orbit,reduced,props.input.busy,props.input.qaRunning,retry]);
  useEffect(()=>{const running=props.input.ready?runningZone(props.input.busy,props.input.qaRunning):null;scene.current?.setTask({scope:props.context,job,ready:props.input.ready,activity,running})},[props.context,job,activity,props.input.ready,props.input.busy,props.input.qaRunning,retry]);
  useEffect(()=>{setSelected(null);setTaskFocus(null);setMenu(false);setPlaqueFocused(false);},[props.variant,props.context]);
  useEffect(()=>{scene.current?.select(selected)},[selected,retry]);

@@ -2,15 +2,16 @@ import {BufferGeometry,DoubleSide,Float32BufferAttribute,Group,Mesh,MeshBasicMat
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import assetUrl from '../../../05-视觉识别/02-3D场景/parcel-conveyor-v1/conveyor-parcel-formal.glb?url';
 import {conveyorTimeline,routePose,whiteParcelDistance,routeLength} from './conveyor-route.mjs';
+import {createParkedProject} from './parked-project.mjs';
 import {createTaskParcelMotion} from './conveyor-task.mjs';
 import {createTaskParcelLook} from './task-parcel-look.mjs';
 import {positionPricingDock} from './conveyor-stations.mjs';
 
-/** One Blender belt, two illustrative parcels, one task parcel; no camera or renderer ownership. */
+/** One Blender belt, two illustrative parcels, one task parcel and a static demo sibling; no camera or renderer ownership. */
 export function createConveyorScene(scene,request,onStatus){
  const root=new Group();root.name='Astra conveyor v1.0.4';scene.add(root);
  let disposed=false,staticModel=null,beltMaterial=null,edgeLines=null,white=[],taskParcel=null,clock=0,error='',settings={visible:true,continuous:true,style:'pale-blue',night:false,nightBrightness:100};
- const sourceMaterials=new Set(),staticTints=[],task=createTaskParcelMotion();let taskLook=null;
+ const sourceMaterials=new Set(),staticTints=[],task=createTaskParcelMotion();let taskLook=null,parked=null,parkedSettings=null;
  const ready=new GLTFLoader().loadAsync(assetUrl).then(gltf=>{
   if(disposed){disposeResources(gltf.scene);return}
   staticModel=gltf.scene;
@@ -19,6 +20,7 @@ export function createConveyorScene(scene,request,onStatus){
   if(!belt?.isMesh){disposeResources(staticModel);staticModel=null;throw Error('Conveyor belt is missing from Blender asset')}
   const original=staticModel.getObjectByName('DATA_PARCEL');if(!original){disposeResources(staticModel);staticModel=null;throw Error('Conveyor parcel is missing from Blender asset')}
   original.removeFromParent();
+  parked=createParkedProject(root,original);parked.configure(parkedSettings);
   // Isolate the static frame from parcel materials before applying night gain.
   const isolated=new Map();staticModel.traverse(object=>{
    if(!object.isMesh||object===belt||!object.material)return;
@@ -52,9 +54,9 @@ export function createConveyorScene(scene,request,onStatus){
   moving=(taskLook?.tick(delta,reduced||!settings.continuous,task.state())??false)||moving;
   return moving;
  }
- function state(){return {ready:!!staticModel,error,visible:root.visible,continuous:settings.continuous,style:settings.style,nightBrightness:settings.nightBrightness,edgeLines:!!edgeLines?.visible,parcelCount:staticModel?3:0,whiteDistances:white.map((_,index)=>whiteParcelDistance(clock+index*conveyorTimeline.duration/2)),task:task.state(),taskLook:taskLook?.state()??null,routeLength,asset:'conveyor-parcel-formal.glb',version:conveyorTimeline.version}}
- function dispose(){if(disposed)return;disposed=true;taskLook?.dispose();const resources=new Set(sourceMaterials);for(const object of [staticModel,...white,taskParcel,edgeLines])object?.traverse(child=>{if(child.geometry)resources.add(child.geometry);for(const material of child.material?[].concat(child.material):[])resources.add(material)});for(const resource of resources)resource.dispose();root.removeFromParent()}
- return {ready,setOptions,setTask,tick,state,dispose,updatePresentation:(camera,height)=>taskLook?.update(camera,height,task.state().phase)};
+ function state(){return {ready:!!staticModel,error,visible:root.visible,continuous:settings.continuous,style:settings.style,nightBrightness:settings.nightBrightness,edgeLines:!!edgeLines?.visible,parked:parked?.state()??null,parcelCount:staticModel?(parked?.state().visible?4:3):0,whiteDistances:white.map((_,index)=>whiteParcelDistance(clock+index*conveyorTimeline.duration/2)),task:task.state(),taskLook:taskLook?.state()??null,routeLength,asset:'conveyor-parcel-formal.glb',version:conveyorTimeline.version}}
+ function dispose(){if(disposed)return;disposed=true;parked?.dispose();taskLook?.dispose();const resources=new Set(sourceMaterials);for(const object of [staticModel,...white,taskParcel,edgeLines])object?.traverse(child=>{if(child.geometry)resources.add(child.geometry);for(const material of child.material?[].concat(child.material):[])resources.add(material)});for(const resource of resources)resource.dispose();root.removeFromParent()}
+ return {ready,setOptions,setTask,tick,state,dispose,setParkedProject(value){parkedSettings=value;parked?.configure(value);request()},updatePresentation:(camera,height)=>{taskLook?.update(camera,height,task.state().phase);parked?.update(camera,height,taskParcel)}};
 }
 
 function disposeResources(root){const resources=new Set();root.traverse(object=>{if(object.geometry)resources.add(object.geometry);for(const material of object.material?[].concat(object.material):[])resources.add(material)});for(const resource of resources)resource.dispose()}

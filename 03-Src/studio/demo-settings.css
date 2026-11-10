@@ -17,3 +17,5 @@
 .demo-debug-tools{margin-top:16px;padding-top:20px;border-top:1px solid var(--line)}
 .demo-debug-tools h4{margin:0 0 14px;font-size:14px;font-weight:600}
 .demo-debug-tools>div{display:flex;flex-wrap:wrap;gap:12px}
+
+.demo-parked-fields{display:flex;gap:20px;border:0;margin:0;padding:20px 0 0 16px}.demo-parked-fields label{display:grid;gap:8px;flex:1;min-width:0;font-size:13px}.demo-parked-fields .input,.demo-parked-fields .select{width:100%;font-size:14px}.demo-parked-fields:disabled{opacity:.55}

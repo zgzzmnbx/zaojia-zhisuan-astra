@@ -50,6 +50,27 @@ def test_stale_window_cannot_overwrite_new_settings(client):
     assert demo_settings.read() == saved
 
 
+def test_legacy_configuration_migrates_without_enabling_disabled_presets(client):
+    legacy = {'revision': 3, 'enabled': False, 'rowPreset': False, 'reportPreset': True, 'knowledgePreset': False}
+    path = demo_settings.filename(); path.parent.mkdir(parents=True); path.write_text(json.dumps(legacy), 'utf-8')
+    value = demo_settings.read()
+    assert all(value[key] == item for key, item in legacy.items())
+    assert value['parkedProject'] and value['parkedStation'] == 'report'
+    saved = update(client, parkedName='北线工程', parkedStation='risk')
+    # An older open page may still save the original fields; retain new options.
+    reply = client.put('/api/astra/demo-settings', json={**legacy, 'revision': saved['revision']})
+    assert reply.status_code == 200
+    assert reply.json()['parkedName'] == '北线工程' and reply.json()['parkedStation'] == 'risk'
+
+
+@pytest.mark.parametrize('change', [{'parkedName': ''}, {'parkedName': '字' * 13}, {'parkedName': 'a\nb'}, {'parkedStation': 'missing'}, {'parkedStation': []}, {'parkedProject': 'true'}])
+def test_invalid_parked_settings_preserve_saved_values(client, change):
+    value = client.get('/api/astra/demo-settings').json()
+    response = client.put('/api/astra/demo-settings', json={**value, **change})
+    assert response.status_code == 400
+    assert demo_settings.read() == value
+
+
 @pytest.mark.parametrize('bad', ['false', 0, None, []])
 def test_switch_types_are_strict_and_failed_save_preserves_previous(client, bad):
     value = client.get('/api/astra/demo-settings').json()
