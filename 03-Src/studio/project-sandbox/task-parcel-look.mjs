@@ -24,10 +24,17 @@ export function createTaskParcelLook(parcel){
  for(let i=24;i>0;i--){glowContext.fillStyle=`rgba(54,174,255,${.012+(24-i)*.0007})`;glowContext.beginPath();glowContext.roundRect(32-i,38-i,64+i*2,52+i*2,12+i/2);glowContext.fill();}
  const glowTexture=new CanvasTexture(glowCanvas);glowTexture.colorSpace=SRGBColorSpace;textures.push(glowTexture);
  const glow=new Mesh(new PlaneGeometry(1.25,1.15),new MeshBasicMaterial({map:glowTexture,transparent:true,opacity:.45,depthWrite:false,toneMapped:false}));glow.name='Task parcel soft footprint';glow.rotation.x=-Math.PI/2;glow.position.y=.018;parcel.add(glow);
- const canvas=document.createElement('canvas');canvas.width=320;canvas.height=192;const ctx=canvas.getContext('2d'),map=new CanvasTexture(canvas);map.colorSpace=SRGBColorSpace;textures.push(map);
+ const canvas=document.createElement('canvas');canvas.width=320;canvas.height=192;const ctx=canvas.getContext('2d');let map=new CanvasTexture(canvas);map.colorSpace=SRGBColorSpace;textures.push(map);
  const badge=new Sprite(new SpriteMaterial({map,transparent:true,depthTest:false,depthWrite:false,toneMapped:false}));badge.name='Current task label';badge.renderOrder=1000;badge.center.set(.5,0);badge.position.set(0,(bounds.max.y-bounds.min.y)*1.25+bounds.min.y+.025,0);parcel.add(badge);
  function setLabel(phase){const parts=Array.from(projectName),short=parts.length>14?parts.slice(0,13).join('')+'…':projectName;const label=short?(short+(phase==='error'?' · 中断':phase==='cancelled'?' · 取消':'')):phase==='error'?'中断':phase==='cancelled'?'取消':'当前',key=label+dark;if(key===lastLabel)return;lastLabel=key;
-  canvas.width=Math.max(320,Array.from(label).length*54+120);labelPixels=84*canvas.width/320;
+  ctx.font='600 54px "PingFang SC","Microsoft YaHei",sans-serif';
+  const nextWidth=Math.max(240,Math.ceil(ctx.measureText(label).width)+120);
+  if(canvas.width!==nextWidth){
+   // Uploaded textures have immutable dimensions; replace the GPU texture when the name changes width.
+   map.dispose();textures.splice(textures.indexOf(map),1);canvas.width=nextWidth;
+   map=new CanvasTexture(canvas);map.colorSpace=SRGBColorSpace;textures.push(map);badge.material.map=map;badge.material.needsUpdate=true;
+  }
+  labelPixels=84*canvas.width/320;
   ctx.clearRect(0,0,canvas.width,192);
   // Leader is part of the camera-facing badge, so it stays short and anchored in every view.
   ctx.strokeStyle=dark?'#bcecff':'#ffffff';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(canvas.width/2,116);ctx.lineTo(canvas.width/2,174);ctx.stroke();
@@ -36,7 +43,7 @@ export function createTaskParcelLook(parcel){
   ctx.fillStyle=dark?'#124d82':'#1266ae';ctx.strokeStyle=dark?'#9edfff':'#e2f5ff';ctx.lineWidth=4;ctx.beginPath();ctx.roundRect(9,8,canvas.width-18,108,26);ctx.fill();ctx.stroke();
   ctx.shadowBlur=0;ctx.shadowOffsetY=0;
   ctx.fillStyle='#ffd079';ctx.beginPath();ctx.moveTo(52,43);ctx.lineTo(69,60);ctx.lineTo(52,77);ctx.lineTo(35,60);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#ffffff';ctx.font='600 54px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,(canvas.width+100)/2,64,canvas.width-120);map.needsUpdate=true;
+  ctx.fillStyle='#ffffff';ctx.font='600 54px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,(canvas.width+78)/2,64);map.needsUpdate=true;
  }
  function setNight(value){dark=value===true;
   for(const {material,role} of materials){
@@ -58,7 +65,7 @@ export function createTaskParcelLook(parcel){
  }
  function update(camera,height,phase){setLabel(phase);if(!parcel.visible)return;
   parcel.getWorldPosition(position);const pixels=Math.max(1,height),worldHeight=camera.isOrthographicCamera?(camera.top-camera.bottom)/camera.zoom:2*position.distanceTo(camera.position)*Math.tan(camera.fov*Math.PI/360)/camera.zoom;
-  badge.scale.set(worldHeight*labelPixels/pixels,worldHeight*(84*192/320)/pixels,1);
+  badge.scale.set(worldHeight*labelPixels/pixels,worldHeight*labelPixels*(canvas.height/canvas.width)/pixels,1);
  }
  setNight(false);
  return {setName(value){projectName=typeof value==='string'?value.trim():''},setNight,update,tick,state:()=>({palette:'cobalt-silver',label:lastLabel.replace(/true$|false$/,''),body:materials.find(x=>x.role==='body')?.material.color.getHexString(),night:dark,scale:[1,1.25,1],projectName,labelPixels,haloOpacity:glow.material.opacity}),dispose:()=>textures.forEach(texture=>texture.dispose())};
