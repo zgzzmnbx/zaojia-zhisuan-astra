@@ -13,6 +13,15 @@ import {nextTaskActivity} from '../03-Src/studio/project-sandbox/task-activity.t
 const input=():SandboxInput=>({ready:true,project:{jobId:'a',riskLoaded:false,fees:null} as any,result:{job_id:'a',artifact_version:3,summary:{matching_status:'completed',total_data_rows:10,matched_rows:8,review_rows:2,table_preview:{sheets:[{},{}]}}} as any,filename:'a.xlsx',sheets:[],busy:'',qaRunning:false,needsRecalculate:false,riskLoading:false,riskError:'',reportReady:false,citations:0,reviewTasks:[],reviewError:''});
 const node=(i:SandboxInput,id:string)=>sandboxNodes(i).find(n=>n.id===id)!;
 
+test('reference answer marker follows current completed result and hides stale or dirty data',()=>{
+ const i=input();assert.equal(node(i,'price').referenceAnswer,false);
+ i.result!.summary.matching_source='demo_standard_answer';assert.equal(node(i,'price').referenceAnswer,true);
+ i.busy='正在批量匹配';assert.equal(node(i,'price').referenceAnswer,false);i.busy='';
+ i.needsRecalculate=true;assert.equal(node(i,'price').referenceAnswer,false);i.needsRecalculate=false;
+ i.project!.jobId='other';assert.equal(node(i,'price').referenceAnswer,false);i.project!.jobId='a';
+ i.ready=false;assert.equal(node(i,'price').referenceAnswer,false);
+});
+
 test('floating summaries reserve real measured width and share camera/label coordinates',()=>{
  for(const [width,height,left,right] of [[1754,900,450,250],[1366,768,350,230],[1754,900,0,250]]){
   const f=sandboxFrame(width,height,left,false,false,right);

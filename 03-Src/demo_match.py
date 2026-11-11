@@ -4,6 +4,8 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import fields
+from contextvars import ContextVar
+from functools import wraps
 from pathlib import Path
 
 import demo_settings
@@ -11,8 +13,9 @@ from app.schemas import FillSummary, ReviewRow
 
 ASSETS = Path(__file__).parent / 'reference-assets/v31-match'
 SAMPLE_SHA256 = '81e562f874b16d75024bf7d02055e03f7afd929e3382433c633cf9cf9b1559c7'
-MANIFEST_SHA256 = '83302a0346b51323106882cb16ff8860883dec99b213f7453c414f662f5087c4'
+MANIFEST_SHA256 = '75e4f7468d34049a5a80558924d7f35a1bc6a35bf2d8d5638153b5d01cd5d4c2'
 LABEL = '演示标准答案 · 未查询计价库'
+_batch_cache = ContextVar('astra_demo_batch_cache', default=None)
 
 
 def _verified(path, expected):
@@ -62,7 +65,7 @@ class DemoSummary(FillSummary):
     def to_dict(self):
         return {**super().to_dict(), 'matching_source': 'demo_standard_answer',
                 'matching_source_label': LABEL, 'generated_by_model': False,
-                'demo_answer_version': '1.0.0', 'demo_input_sha256': SAMPLE_SHA256}
+                'demo_answer_version': getattr(self, '_demo_answer_version', '1.0.1'), 'demo_input_sha256': SAMPLE_SHA256}
 
 
 class DemoFillEngine:
@@ -96,6 +99,9 @@ class DemoFillEngine:
                 summary.report_text = f'{LABEL}。' + saved['report_text']
                 summary.price_logs = ['[演示标准答案快照] ' + line for line in saved['price_logs']]
                 Path(output_path).write_bytes(answer)
+                cache = _batch_cache.get()
+                if cache is not None:
+                    cache[str(Path(output_path).resolve())] = manifest['answer_sha256']
                 return summary
         return self.original_factory(self.context).fill_workbook(input_path, output_path, **options)
 
@@ -113,3 +119,56 @@ def install(engine):
 
     factory._astra_demo_match = True
     engine._build_skill_fill_engine = factory
+
+    original_batch = engine._execute_batch_match
+    @wraps(original_batch)
+    def batch(*args, **kwargs):
+        token = _batch_cache.set({})
+        try:
+            return original_batch(*args, **kwargs)
+        finally:
+            _batch_cache.reset(token)
+    engine._execute_batch_match = batch
+
+    original_recalculate = engine.recalculate_workbook
+    @wraps(original_recalculate)
+    def recalculate(path):
+        cache = _batch_cache.get()
+        expected = cache.pop(str(Path(path).resolve()), None) if cache is not None else None
+        # A one-use grant only inside this exact batch; edits and later requests
+        # always use real Excel, even when their workbook happens to look alike.
+        if expected and hashlib.sha256(Path(path).read_bytes()).hexdigest() == expected:
+            return True
+        return original_recalculate(path)
+    engine.recalculate_workbook = recalculate
+
+    def known_source(raw):
+        known = raw.get('matching_source') == 'demo_standard_answer' and raw.get('demo_input_sha256') == SAMPLE_SHA256
+        logs = raw.get('price_logs') or []
+        legacy = str(raw.get('report_text') or '').startswith(LABEL + '。') and bool(logs) and all(str(line).startswith('[演示标准答案快照] ') for line in logs)
+        return known or legacy
+
+    # Restore provenance lost by the former summary loader without rewriting old files.
+    original_state = getattr(engine, '_load_process_state', None)
+    if original_state is not None:
+        @wraps(original_state)
+        def load_state(*args, **kwargs):
+            state = original_state(*args, **kwargs)
+            raw = state.get('summary') or {}
+            if known_source(raw) and not raw.get('matching_source'):
+                state = {**state, 'summary': {**raw, 'matching_source': 'demo_standard_answer',
+                    'matching_source_label': LABEL, 'generated_by_model': False,
+                    'demo_answer_version': '1.0.0', 'demo_input_sha256': SAMPLE_SHA256}}
+            return state
+        engine._load_process_state = load_state
+
+    original_summary = engine._summary_from_dict
+    @wraps(original_summary)
+    def restore_summary(raw):
+        summary = original_summary(raw)
+        if known_source(raw):
+            restored = DemoSummary(**{f.name: getattr(summary, f.name) for f in fields(FillSummary)})
+            restored._demo_answer_version = raw.get('demo_answer_version') or '1.0.0'
+            return restored
+        return summary
+    engine._summary_from_dict = restore_summary

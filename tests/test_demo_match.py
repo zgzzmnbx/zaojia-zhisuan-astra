@@ -131,3 +131,74 @@ def test_disabled_preset_runs_real_matching_for_full_v31_input(client):
     assert book['表2-通用工程测量费用']['H5'].value==50000
     assert book['表2-通用工程测量费用']['H6'].value==3203
     book.close()
+
+
+def test_exact_batch_uses_verified_formula_cache_without_starting_excel(client, monkeypatch):
+    converted=process(client).json();job=converted['job_id']
+    import win32com.client
+    starts=[]
+    def forbidden(*args, **kwargs):
+        starts.append(True)
+        raise AssertionError('Excel must not start for the exact cached demo batch')
+    monkeypatch.setattr(win32com.client,'DispatchEx',forbidden)
+    result=client.post('/api/process/batch-match',json={'job_id':job})
+    assert result.status_code==200,result.text
+    assert starts==[]
+    summary=result.json()['summary']
+    from openpyxl import load_workbook
+    path=server.paths.RUNTIME_DIR/job/summary['output_excel']
+    cached=load_workbook(path,data_only=True)
+    assert cached['表2-通用工程测量费用']['H5'].value==50000
+    assert cached['表2-通用工程测量费用']['N6'].value is not None
+    assert not any(c.data_type=='e' for s in cached for row in s for c in row)
+    cached.close()
+    # Outside this batch, even the same answer must go through real Excel.
+    server.engine.recalculate_workbook(path)
+    assert len(starts)==1
+    assert demo_match._batch_cache.get() is None
+
+
+@pytest.mark.parametrize('tamper',[False,True])
+def test_cache_permission_is_one_use_and_rejects_changed_workbook(tmp_path,tamper):
+    calls=[];path=tmp_path/'answer.xlsx'
+    fake=SimpleNamespace(_build_skill_fill_engine=lambda c:None,
+        _require_skill_capability=lambda *a:None,
+        recalculate_workbook=lambda p:calls.append(str(p)) or True,
+        _summary_from_dict=lambda raw:None)
+    def batch():
+        demo_match.DemoFillEngine(lambda c:None,None).fill_workbook(SAMPLE,path,**OPTIONS)
+        if tamper:path.write_bytes(path.read_bytes()+b'changed')
+        fake.recalculate_workbook(path)
+        fake.recalculate_workbook(path)
+    fake._execute_batch_match=batch
+    demo_match.install(fake)
+    fake._execute_batch_match()
+    assert len(calls)==(2 if tamper else 1)
+    assert demo_match._batch_cache.get() is None
+
+
+def test_reference_origin_survives_risk_save_and_reload(client):
+    job=process(client).json()['job_id']
+    assert client.post('/api/process/batch-match',json={'job_id':job}).status_code==200
+    risk=client.post('/api/experience-warnings/run',data={'job_id':job})
+    assert risk.status_code==200,risk.text
+    restored=client.get(f'/api/astra/runs/{job}').json()
+    assert restored['summary']['matching_source']=='demo_standard_answer'
+    assert restored['summary']['generated_by_model'] is False
+
+
+def test_legacy_provenance_restores_read_only_without_marking_ordinary_results(client):
+    job=process(client).json()['job_id']
+    assert client.post('/api/process/batch-match',json={'job_id':job}).status_code==200
+    path=server.paths.RUNTIME_DIR/job/'process-state.json'
+    state=json.loads(path.read_text('utf-8'))
+    for key in ['matching_source','matching_source_label','generated_by_model','demo_answer_version','demo_input_sha256']:
+        state['summary'].pop(key,None)
+    path.write_text(json.dumps(state,ensure_ascii=False),encoding='utf-8');before=path.read_bytes()
+    restored=client.get(f'/api/astra/runs/{job}').json()['summary']
+    assert restored['matching_source']=='demo_standard_answer'
+    assert restored['demo_answer_version']=='1.0.0'
+    assert path.read_bytes()==before
+    state['summary']['price_logs']=[]
+    path.write_text(json.dumps(state,ensure_ascii=False),encoding='utf-8')
+    assert not server.engine._load_process_state(path.parent)['summary'].get('matching_source')

@@ -4,7 +4,7 @@ import type {CurrentProject} from '../workbench/current-project';
 import type {ReviewProgressTask} from '../../professional/components/agent-workspace/reviewProgress';
 import {latestReviewTasksByPlatform,summarizeReviewProgress} from '../../professional/components/agent-workspace/reviewProgress.ts';
 export type ZoneId='import'|'price'|'risk'|'knowledge'|'report'|'review'|'table';
-export type NodeState={id:ZoneId;title:string;status:string;summary:string;tone:'idle'|'running'|'done'|'attention'|'error';facts:[string,string][];action:string;actionLabel:string;execute?:{action:string;label:string;disabled?:string};disabled?:string};
+export type NodeState={referenceAnswer?:boolean;id:ZoneId;title:string;status:string;summary:string;tone:'idle'|'running'|'done'|'attention'|'error';facts:[string,string][];action:string;actionLabel:string;execute?:{action:string;label:string;disabled?:string};disabled?:string};
 export type SandboxInput={ready:boolean;connected?:boolean;project:CurrentProject|null;result:Result|null;filename:string;sheets:SheetConfig[];busy:string;qaRunning:boolean;operationError?:string;cancelVersion?:number;needsRecalculate:boolean;riskLoading:boolean;riskError:string;reportReady:boolean;citations:number;reviewTasks:ReviewProgressTask[]|null;reviewError:string};
 const count=(v:unknown)=>typeof v==='number'&&Number.isFinite(v)?Math.max(0,v):null;
 export function runningZone(busy:string,qa=false):ZoneId|null{
@@ -55,5 +55,6 @@ export function sandboxNodes(input:SandboxInput):NodeState[]{
   nodes.find(n=>n.id===id)!.execute={action,label:projectActionLabels[action],disabled:quickUnavailable(action,{ready:input.ready,busy:!!input.busy,connected:input.connected!==false,hasResult:!!r,completed})};
  }
  if(nodes[5].action==='review-progress')nodes[5].execute={action:'collaboration',label:'准备同事复核',disabled:nodes[5].disabled};
+ nodes[1].referenceAnswer=nodes[1].status==='匹配完成'&&s?.matching_source==='demo_standard_answer';
  return nodes;
 }

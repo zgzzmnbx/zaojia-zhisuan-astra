@@ -1,0 +1,2 @@
+.sandbox-node-status .sandbox-reference-answer-dot{display:inline-block;width:3px;height:3px;flex:0 0 3px;border-radius:50%;background:rgb(37 99 235 / 55%);box-shadow:0 0 0 1px rgb(37 99 235 / 8%)}
+:root[data-astra-scheme="dark"] .sandbox-node-status .sandbox-reference-answer-dot{background:rgb(96 165 250 / 68%);box-shadow:0 0 0 1px rgb(96 165 250 / 9%)}
