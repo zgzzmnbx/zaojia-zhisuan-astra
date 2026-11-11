@@ -59,6 +59,17 @@ async function checkDemoMatchingSwitch(){
 async function send(text){if(await btn('返回对话').isVisible())await btn('返回对话').click();await page.getByRole('textbox',{name:'告诉智算你的任务',exact:true}).fill(text);await btn('发送任务').click();}
 async function withResponse(url,action){const [r]=await Promise.all([page.waitForResponse(r=>r.url().includes(url)&&r.request().method()==='POST',{timeout:120000}),action()]);assert.equal(r.status(),200,await r.text());return r.json();}
 async function showTable(){await btn('表格').click();await page.getByRole('tab',{name:'表2-通用工程测量费用',exact:true}).click();}
+async function checkRowAssistReturn(){
+ await btn('收起对话').click();
+ await withResponse('/api/astra/row-assist/candidates',()=>btn('第 6 行 AI 填价').click());
+ const card=page.locator('.row-pricing-card').last();
+ await card.getByText('本地依据 · 未生成模型答案',{exact:true}).waitFor();
+ assert.equal(await card.isVisible(),true,'Returning to AI pricing must reveal its conversation card');
+ await card.getByRole('button',{name:'详细',exact:true}).click();
+ await page.getByRole('tab',{name:'AI 分析',exact:true}).click();
+ await page.locator('.pricing-map-answer').waitFor();
+ await btn('返回聊天').click();
+}
 try{
  await enter();
  await check('D01',async()=>{await btn('系统架构图').click();await page.frameLocator('iframe[title="动态架构图（示意）"]').locator('body').waitFor();await btn('关闭系统架构').click();return '架构 iframe 加载且可关闭';});
@@ -85,7 +96,7 @@ try{
   assert.equal(response.answer_mode,'curated_demo');return {top:3203,mode:response.answer_mode};
  });
  await check('D07',async()=>{assert.ok(job);await page.keyboard.press('Escape');matched=await withResponse('/api/process/batch-match',()=>btn('开始批量匹配').first().click());assert.equal(matched.summary.total_data_rows,100);assert.equal(matched.summary.filled_rows,99);assert.equal(matched.summary.matching_source,'demo_standard_answer');assert.equal(matched.summary.generated_by_model,false);await page.getByText(/演示标准答案 · 未查询计价库/).first().waitFor(); const marker=page.locator('.sandbox-reference-answer-dot:visible').first();await marker.waitFor();assert.equal(await marker.evaluate(el=>getComputedStyle(el).width),'3px');return {total_rows:matched.summary.total_data_rows,filled_rows:matched.summary.filled_rows,matching_source:matched.summary.matching_source};});
- await check('D08',async()=>{assert.ok(matched);await showTable();await page.getByText('50000',{exact:true}).first().waitFor();await page.getByRole('button',{name:/编辑第 6 行 基价/}).waitFor();return '匹配结果在实际表格显示';});
+ await check('D08',async()=>{assert.ok(matched);await showTable();await page.getByText('50000',{exact:true}).first().waitFor();await page.getByRole('button',{name:/编辑第 6 行 基价/}).waitFor();await checkRowAssistReturn();return '匹配结果在实际表格显示；收起对话后重新填价，分析卡与详细内容正常显示';});
  await check('D09',async()=>{
   await withResponse('/api/experience-warnings/run',()=>btn('检查经验池预警').first().click());
   await btn('查看全部风险与依据').waitFor();

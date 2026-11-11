@@ -609,7 +609,7 @@ function App(){
     try{const status=await api<{status:string}>(`/api/process/${job}/batch-match-status`);if(context!==conversationContext.current||job!==loadedJob.current)return;
       if(!['pending','failed','interrupted','completed'].includes(status.status)){setBatchUncertainJob(job);add('批量匹配仍在运行或结果尚未确认，请核对后再逐行填价。',[{label:'核对匹配结果',action:'recover-match'}]);return;}
       await workspace.flush();if(context!==conversationContext.current||job!==loadedJob.current||!conversation)return;
-      const id=crypto.randomUUID();pendingFeeFocus.current=id;setRowAssist(id);chatFollow.current=false;presentation.open('table');presentation.returnToSplit();setSidebar(false);
+      const id=crypto.randomUUID();pendingFeeFocus.current=id;setRowAssist(id);chatFollow.current=false;setConversationCollapsed(false);presentation.open('table');presentation.returnToSplit();setSidebar(false);
       setMessages(old=>[...old.map(m=>m.rowPricing&&['loading','analyzing'].includes(m.rowPricing.phase)?{...m,rowPricing:{...m.rowPricing,phase:'stopped' as const}}:m),{id,role:'assistant',text:'',job,context,rowPricing:{cell,conversation,phase:'loading'}}]);
     }catch(e){add((e as Error).message,undefined,'assistant',true);}finally{startingRowAssist.current=false;}
   }
