@@ -5,10 +5,10 @@ import {WelcomeChatScene,WelcomeResultScene} from './WelcomeDemoScenes';
 import './welcome-workspace-preview.css';
 
 /** Synthetic storyboard: no live task, storage, API, or real business components. */
-export function WelcomeWorkspacePreview(){
+export function WelcomeWorkspacePreview({active=true}:{active?:boolean}){
  const root=useRef<HTMLDivElement>(null),clock=useRef({index:0,elapsed:0});
  const [{index,reply},setBeat]=useState({index:0,reply:false}),[paused,setPaused]=useState(false),[visible,setVisible]=useState(false),[hidden,setHidden]=useState(document.hidden),[reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
- const running=!paused&&visible&&!hidden&&!reduced;
+ const running=active&&!paused&&visible&&!hidden&&!reduced;
  useEffect(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)'),sync=()=>setReduced(media.matches),visibility=()=>setHidden(document.hidden);const observer=new IntersectionObserver(([entry])=>setVisible(entry.isIntersecting),{threshold:.1});if(root.current)observer.observe(root.current);media.addEventListener('change',sync);document.addEventListener('visibilitychange',visibility);sync();return()=>{observer.disconnect();media.removeEventListener('change',sync);document.removeEventListener('visibilitychange',visibility);};},[]);
  useEffect(()=>{if(!running)return;let last=performance.now();const timer=setInterval(()=>{const now=performance.now();clock.current=advanceWelcome(clock.current,now-last);last=now;const next=welcomeBeat(clock.current);setBeat(old=>old.index===next.index&&old.reply===next.reply?old:next);},200);return()=>clearInterval(timer);},[running]);
  function choose(next:number){clock.current={index:next,elapsed:650};setBeat({index:next,reply:true});}
@@ -22,7 +22,7 @@ export function WelcomeWorkspacePreview(){
      <WelcomeChatTimeline index={index} reply={answerVisible}/>
      <div className="awp-composer"><span className="awp-quick-handle"><Icon name="grid"/>快捷功能<Icon name="chevron"/></span><div className="awp-input"><span>继续描述你的需求…</span><div><span><Icon name="plus"/><Icon name="spark"/>专业工具</span><span className="awp-send"><Icon name="arrow-up"/></span></div></div></div>
     </section><section className="awp-results"><header className="awp-view-tabs">{['表格','风险','知识图谱'].map((x,i)=><span key={x} className={(resultIndex===6?2:resultIndex===5?1:0)===i?'is-current':''}>{x}{i===1&&<i>2</i>}</span>)}<Icon name="expand"/></header>
-     <div className="awp-result-stack">{WELCOME_STAGES.map((stage,i)=><div key={stage.id} className={`awp-result-scene ${i===resultIndex?'is-current':''}`}><WelcomeResultScene index={i} running={running} showGalaxy={visible&&!hidden&&resultIndex===6}/></div>)}</div>
+     <div className="awp-result-stack">{WELCOME_STAGES.map((stage,i)=><div key={stage.id} className={`awp-result-scene ${i===resultIndex?'is-current':''}`}><WelcomeResultScene index={i} running={running} showGalaxy={active&&visible&&!hidden&&resultIndex===6}/></div>)}</div>
      <footer className="awp-result-foot"><span><i/>示例成果</span><span>{index===6?'关联可追溯':'Excel / Word'}<Icon name={index===6?'network':'download'}/></span></footer>
     </section></div>
    </div>

@@ -1,0 +1,3 @@
+.welcome-style-setting{border:0;padding:0;margin:24px 0;color:var(--ink)}
+.welcome-style-setting legend{font-size:var(--dws-font-size-14);font-weight:600;margin-bottom:10px}
+.welcome-style-setting .appearance-mode{margin:0}.welcome-style-setting>p{font-size:var(--dws-font-size-12);color:var(--red);margin:8px 0 0}

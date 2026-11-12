@@ -52,7 +52,7 @@ test('console reaction duration completes one source sequence and repeated page 
  for(let i=0;i<12;i++){c.update({state:'idle',visible:true,paused:false});c.react('happy');assert.equal(delay,11200);c.update({state:'idle',visible:false,paused:false});assert.equal(mounts,disposed)}c.dispose();
 });
 test('welcome pointer and explicit return button are wired independently from saved skip preference',()=>{
- const welcome=read('03-Src/studio/WelcomeScreen.tsx'),app=read('03-Src/studio/App.tsx');assert.ok(welcome.includes('interactive followPointer'));assert.ok(welcome.includes("state={busy?'working':'idle'}"));assert.match(read('03-Src/studio/studio.css'),/welcome-return\{width:auto;flex-shrink:0/);assert.ok(app.includes('aria-label="返回欢迎页"'));assert.ok(app.includes('aria-label="返回欢迎页"'));assert.ok(app.includes('onClick={showWelcome}'));assert.match(app,/function showWelcome\(\)\{[^}]*setWelcomeVisible\(true\)/);assert.ok(welcome.includes("astra.skip-welcome.v1"));
+ const welcome=(read('03-Src/studio/ClassicWelcomeScreen.tsx')+read('03-Src/studio/WelcomeHeroScreen.tsx')),app=read('03-Src/studio/App.tsx');assert.ok(welcome.includes('interactive followPointer'));assert.ok(welcome.includes("state={busy?'working':'idle'}"));assert.match(read('03-Src/studio/studio.css'),/welcome-return\{width:auto;flex-shrink:0/);assert.ok(app.includes('aria-label="返回欢迎页"'));assert.ok(app.includes('aria-label="返回欢迎页"'));assert.ok(app.includes('onClick={showWelcome}'));assert.match(app,/function showWelcome\(\)\{[^}]*setWelcomeVisible\(true\)/);assert.ok(welcome.includes("astra.skip-welcome.v1"));
  for(const f of ['index.html','professional.html']){const html=read(f);assert.ok(html.indexOf('/gork/avatar-engine.js')<html.indexOf('/gork/gork-appearance.js'));assert.ok(html.indexOf('/gork/gork-appearance.js')<html.indexOf('type="module"'));}
 });
 
@@ -70,6 +70,6 @@ test('explicit playback keeps upstream idle turns active even when system prefer
  const a=original.tick(4500),b=playing.tick(4500);assert.equal(b.pose.headY-a.pose.headY,-18);original.player.dispose();playing.player.dispose();
 });
 test('pause controls and legacy pause preference reads are removed while invisible teardown remains',()=>{
- const gork=read('03-Src/studio/Gork.tsx'),welcome=read('03-Src/studio/WelcomeScreen.tsx'),ui=read('03-Src/studio/ui.tsx');
+ const gork=read('03-Src/studio/Gork.tsx'),welcome=(read('03-Src/studio/ClassicWelcomeScreen.tsx')+read('03-Src/studio/WelcomeHeroScreen.tsx')),ui=read('03-Src/studio/ui.tsx');
  assert.ok(gork.includes('return [false,(_next:boolean)=>{},true]'));assert.ok(!gork.includes('astra.gork-motion.v1'));assert.ok(!gork.includes('gork-pause'));assert.ok(!welcome.includes('aw2-motion'));assert.ok(!ui.includes('astra.galaxy-motion'));assert.ok(!ui.includes('toggleMotion'));assert.ok(ui.includes('allowReducedMotion:true'));assert.ok(gork.includes('visible:visible&&!document.hidden'));assert.ok(gork.includes('instance.dispose()'));
 });

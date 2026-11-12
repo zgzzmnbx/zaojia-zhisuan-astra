@@ -1,6 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {advanceWelcome,welcomeBeat,WELCOME_STAGES} from '../03-Src/studio/welcome-demo.mjs';
+import {readWelcomeStyle,writeWelcomeStyle,welcomeStyleKey} from '../03-Src/studio/welcome-preferences.ts';
+
+test('welcome style defaults to the new hero without rewriting existing skip preferences',()=>{
+ const values=new Map([['astra.skip-welcome.v1','true']]);const storage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)};
+ assert.equal(readWelcomeStyle(storage),'hero');
+ assert.equal(writeWelcomeStyle('classic',storage),'');assert.equal(readWelcomeStyle(storage),'classic');
+ assert.equal(values.get('astra.skip-welcome.v1'),'true');
+ assert.equal(writeWelcomeStyle('hero',storage),'');assert.equal(readWelcomeStyle(storage),'hero');
+ values.set(welcomeStyleKey,'unknown');assert.equal(readWelcomeStyle(storage),'hero');
+});
+test('unavailable browser storage still has a usable default and reports save failure',()=>{
+ const storage={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}};
+ assert.equal(readWelcomeStyle(storage),'hero');assert.match(writeWelcomeStyle('classic',storage),/无法保存/);
+});
 test('welcome pipeline proceeds through every scene and wraps with elapsed remainder',()=>{
  let state={index:0,elapsed:0};for(let i=0;i<WELCOME_STAGES.length;i++){state=advanceWelcome(state,WELCOME_STAGES[i].duration);assert.equal(state.index,(i+1)%WELCOME_STAGES.length);assert.equal(state.elapsed,0);}
  assert.deepEqual(advanceWelcome({index:6,elapsed:5990},30),{index:0,elapsed:20});
