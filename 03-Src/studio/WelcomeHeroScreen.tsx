@@ -20,6 +20,56 @@ export function WelcomeHeroScreen({runtimeStatus,ready,busy,dark,toggleTheme,ope
  function enterStudio(){if(actionLock.current||busy||(!ready&&!error))return;actionLock.current=true;setEntering(true);enter();}
  async function createTask(){if(actionLock.current||busy||!ready)return;actionLock.current=true;setCreating(true);setCreationError('');try{await newChat();}catch(e){setCreationError(e instanceof Error?e.message:'新建任务失败，请重试。');}finally{actionLock.current=false;setCreating(false);}}
  return <main className={`astra-welcome-hero ${paused||hidden||!logoActive?'motion-paused':''}`} aria-label="造价智算 欢迎页">
+  <svg className="welcome-lowpoly" viewBox="0 0 1600 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+   <polygon points="0,0 330,0 336,239" fillOpacity={0.16}/>
+   <polygon points="0,0 336,239 0,154" fillOpacity={0.035}/>
+   <polygon points="330,0 458,0 336,239" fillOpacity={0.055}/>
+   <polygon points="458,0 547,172 336,239" fillOpacity={0.16}/>
+   <polygon points="458,0 873,0 831,217" fillOpacity={0.16}/>
+   <polygon points="458,0 831,217 547,172" fillOpacity={0.08}/>
+   <polygon points="873,0 1165,0 831,217" fillOpacity={0.16}/>
+   <polygon points="1165,0 1091,253 831,217" fillOpacity={0.055}/>
+   <polygon points="1165,0 1427,0 1378,181" fillOpacity={0.13}/>
+   <polygon points="1165,0 1378,181 1091,253" fillOpacity={0.16}/>
+   <polygon points="1427,0 1600,0 1378,181" fillOpacity={0.08}/>
+   <polygon points="1600,0 1600,157 1378,181" fillOpacity={0.13}/>
+   <polygon points="0,154 336,239 0,418" fillOpacity={0.035}/>
+   <polygon points="336,239 280,414 0,418" fillOpacity={0.08}/>
+   <polygon points="336,239 547,172 574,468" fillOpacity={0.08}/>
+   <polygon points="336,239 574,468 280,414" fillOpacity={0.16}/>
+   <polygon points="547,172 831,217 574,468" fillOpacity={0.055}/>
+   <polygon points="831,217 807,505 574,468" fillOpacity={0.105}/>
+   <polygon points="831,217 1091,253 1145,488" fillOpacity={0.055}/>
+   <polygon points="831,217 1145,488 807,505" fillOpacity={0.055}/>
+   <polygon points="1091,253 1378,181 1145,488" fillOpacity={0.08}/>
+   <polygon points="1378,181 1428,403 1145,488" fillOpacity={0.13}/>
+   <polygon points="1378,181 1600,157 1600,449" fillOpacity={0.16}/>
+   <polygon points="1378,181 1600,449 1428,403" fillOpacity={0.035}/>
+   <polygon points="0,418 280,414 281,671" fillOpacity={0.105}/>
+   <polygon points="0,418 281,671 0,784" fillOpacity={0.105}/>
+   <polygon points="280,414 574,468 281,671" fillOpacity={0.035}/>
+   <polygon points="574,468 437,656 281,671" fillOpacity={0.13}/>
+   <polygon points="574,468 807,505 882,785" fillOpacity={0.16}/>
+   <polygon points="574,468 882,785 437,656" fillOpacity={0.035}/>
+   <polygon points="807,505 1145,488 882,785" fillOpacity={0.08}/>
+   <polygon points="1145,488 1087,672 882,785" fillOpacity={0.16}/>
+   <polygon points="1145,488 1428,403 1413,712" fillOpacity={0.055}/>
+   <polygon points="1145,488 1413,712 1087,672" fillOpacity={0.035}/>
+   <polygon points="1428,403 1600,449 1413,712" fillOpacity={0.105}/>
+   <polygon points="1600,449 1600,661 1413,712" fillOpacity={0.16}/>
+   <polygon points="0,784 281,671 0,1000" fillOpacity={0.055}/>
+   <polygon points="281,671 257,1000 0,1000" fillOpacity={0.08}/>
+   <polygon points="281,671 437,656 525,1000" fillOpacity={0.08}/>
+   <polygon points="281,671 525,1000 257,1000" fillOpacity={0.035}/>
+   <polygon points="437,656 882,785 525,1000" fillOpacity={0.035}/>
+   <polygon points="882,785 850,1000 525,1000" fillOpacity={0.055}/>
+   <polygon points="882,785 1087,672 1035,1000" fillOpacity={0.035}/>
+   <polygon points="882,785 1035,1000 850,1000" fillOpacity={0.13}/>
+   <polygon points="1087,672 1413,712 1035,1000" fillOpacity={0.055}/>
+   <polygon points="1413,712 1270,1000 1035,1000" fillOpacity={0.16}/>
+   <polygon points="1413,712 1600,661 1600,1000" fillOpacity={0.13}/>
+   <polygon points="1413,712 1600,1000 1270,1000" fillOpacity={0.16}/>
+  </svg>
   <header className="demo-header"><span className="demo-wordmark">ZSuan<span>造价智算</span></span><div>{runtimeStatus}<nav className="demo-header-actions" aria-label="欢迎页设置"><button type="button" className="btn btn-ghost btn-square" aria-label="系统架构图" title="系统架构图" onClick={openArchitecture}><Icon name="architecture"/></button><ThemeButton open={openAppearance}/><ThemeModeButton dark={dark} toggle={toggleTheme}/></nav></div></header>
   <div className="hero-layout">
    <section className="hero-copy" aria-labelledby="hero-title">
