@@ -8,7 +8,7 @@ if ($existing) {
     $page = Invoke-WebRequest -Uri $url -TimeoutSec 5 -UseBasicParsing
     if ($page.Content -notmatch '欢迎页设计 Demo') { throw '5197 端口由其他服务占用，未更改该服务。' }
 } else {
-    $entry = Join-Path $project '04-output/welcome-hero-demo-v1.0.0/03-Src/studies/welcome-hero-v1/index.html'
+    $entry = Join-Path $project '04-output/welcome-hero-demo-v1.1.0/03-Src/studies/welcome-hero-v1/index.html'
     if (-not (Test-Path -LiteralPath $entry)) {
         Push-Location -LiteralPath $project
         try {

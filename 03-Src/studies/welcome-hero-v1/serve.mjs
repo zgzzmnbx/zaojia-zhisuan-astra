@@ -4,16 +4,18 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const project=fileURLToPath(new URL('../../../',import.meta.url));
-const output=path.join(project,'04-output/welcome-hero-demo-v1.0.0');
+const output=path.join(project,'04-output/welcome-hero-demo-v1.1.0');
 const entry='/03-Src/studies/welcome-hero-v1/index.html';
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.woff2':'font/woff2','.svg':'image/svg+xml'};
-const fonts=new Set(['/assets/pingfang-sc-regular.woff2','/assets/pingfang-sc-medium.woff2']);
+const staticFiles=new Set(['/assets/pingfang-sc-regular.woff2','/assets/pingfang-sc-medium.woff2','/assets/pingfang-sc-semibold.woff2',
+ '/gork/avatar-engine.js','/gork/avatar-presets.js','/gork/gork-appearance.js','/gork/motion/gork-config.js','/gork/motion/gork-pens.js','/gork/motion/scene-controller.js','/gork/motion/gork-renderer.js','/gork/motion/gork-player.js',
+ '/system-architecture/index.html','/system-architecture/live-panel-landscape.html']);
 const server=http.createServer((req,res)=>{
  let name;try{name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);}catch{res.writeHead(400).end();return;}
  if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405).end();return;}
  if(name==='/')name=entry;
- const file=fonts.has(name)?path.join(project,'public',name.slice(1)):path.resolve(output,'.'+name);
- const allowed=fonts.has(name)||file.startsWith(output+path.sep);
+ const file=staticFiles.has(name)?path.join(project,'public',name.slice(1)):path.resolve(output,'.'+name);
+ const allowed=staticFiles.has(name)||file.startsWith(output+path.sep);
  if(!allowed||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404).end('Not found');return;}
  res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
  if(req.method==='HEAD'){res.end();return;}
