@@ -1,6 +1,6 @@
 /** Page choreography, separate from reusable individual motion clips. Seconds are wall time. */
 export const LOGO_SEQUENCES=[
- {id:'welcome',name:'欢迎页',rest:3,motions:['wave','ring']},
+ {id:'welcome',name:'欢迎页',rest:3,motions:['wave','tail']},
  {id:'studio',name:'日常页面',rest:20,motions:['wave','tail','idle']},
 ];
 // Trim the rest already baked into the individual presets: each explicit wait starts

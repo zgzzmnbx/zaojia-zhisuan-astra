@@ -29,3 +29,5 @@ Three.js、附属几何、RoomEnvironment 与 GLTFExporter 使用项目的 MIT �
 新增圆环 `Pose_Ring_Reunion`（10 秒）与波浪 `Pose_Wave_Stretch`（8 秒）。网页显示比例自适应仅负责构图；GLB 保留原尺寸的方块和完整空间运动。
 
 页面编排新增 `sequences.mjs`，SHA256 `3c400e9d5cfb20cabe58067e50644c78092eba32924b5037aa7c14e392fd2e33`。导航现复用三维渲染及 studio 循环，原矢量保留为加载/失败/减少动效回退。GLB 与 v1.0.2 相同。
+
+UI v0.22.2（2026-11-12）仅调整欢迎页编排为 wave/tail，间隔仍为3秒；`sequences.mjs` 当前 SHA256 `be7f8b2e92bc5ab4354ca25afc0599633d7723d163186df89b3aedacdd1e82bd`。单动作、几何、日常页面编排及 GLB 均未改变，无需重新导出动画资产。

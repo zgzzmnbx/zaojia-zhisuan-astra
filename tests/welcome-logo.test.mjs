@@ -8,7 +8,7 @@ import {normalizeLogoConfig,parseLogoConfig,serializeLogoConfig,LOGO_PALETTES} f
 import {sequenceSteps,sampleSequence,normalizePageCycles} from '../03-Src/studio/brand/sequences.mjs';
 const signature=p=>p.map(x=>[...x.position.toArray(),...x.quaternion.toArray()]);
 test('page cycles hold exact wall-clock waits, play each action once and repeat in order',()=>{
- for(const [id,rest,actions] of [['welcome',3,['wave','ring']],['studio',20,['wave','tail','idle']]])for(const speed of [.5,1,1.5]){
+ for(const [id,rest,actions] of [['welcome',3,['wave','tail']],['studio',20,['wave','tail','idle']]])for(const speed of [.5,1,1.5]){
   const steps=sequenceSteps(id,speed);assert.deepEqual(steps.filter(s=>s.phase==='motion').map(s=>s.mode),actions);
   const total=steps.reduce((v,s)=>v+s.duration,0);let time=0;
   steps.forEach((step,index)=>{
