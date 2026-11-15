@@ -1,6 +1,7 @@
 import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {api} from './api';
+import {useGorkSettings} from './useGorkSettings';
 import {createSpeechQueue,type SpeechItem,type SpeechSnapshot} from './gork-speech';
 import './gork-speech.css';
 
@@ -14,8 +15,9 @@ function positionBubble(element:HTMLElement,target:HTMLElement){
  element.dataset.side=above?'above':'below';
 }
 
-/** Displays the host's exact Watch speech; this component has no output/write API. */
-export function GorkSpeechBubble({active}:{active:boolean}){
+/** Independent web presentation using the shared speech wording; no output/write API. */
+export function GorkSpeechBubble({active:visible}:{active:boolean}){
+ const {preferences}=useGorkSettings(),active=visible&&preferences.speechBubble;
  const node=useRef<HTMLButtonElement>(null),queue=useRef(createSpeechQueue());
  const hovered=useRef(false),anchor=useRef<HTMLElement|null>(null),announced=useRef('');
  const [item,setItem]=useState<SpeechItem|null>(null);
@@ -28,7 +30,7 @@ export function GorkSpeechBubble({active}:{active:boolean}){
    const timeout=window.setTimeout(()=>current.abort(),5000);
    try{
     const q=queue.current.query();
-    const result=await api<SpeechSnapshot>(`/api/astra/gork/notifications/speech?stream=${encodeURIComponent(q.stream)}&after=${q.after}`,{signal:current.signal});
+    const result=await api<SpeechSnapshot>(`/api/astra/gork/web-speech?stream=${encodeURIComponent(q.stream)}&after=${q.after}`,{signal:current.signal});
     if(!disposed&&scope===generation&&!document.hidden)queue.current.accept(result,performance.now());
    }catch{/* Read failures never produce fake speech or initiate a hardware retry. */}
    finally{clearTimeout(timeout);if(!disposed&&scope===generation&&!document.hidden)timer=window.setTimeout(poll,1000);}

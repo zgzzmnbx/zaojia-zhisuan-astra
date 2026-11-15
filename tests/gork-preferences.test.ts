@@ -11,6 +11,13 @@ vm.runInContext(readFileSync(new URL('../03-Src/vendor/gork/gork-catalog.js',imp
 const presets=context.window.GorkPresets,sequences=context.window.GorkCatalog.sequences.map((s:any)=>s.id);
 const normalize=(value:unknown)=>normalizeGorkPreferences(value,presets,sequences);
 
+test('web speech defaults on for existing preferences and persists explicit off independently',()=>{
+ for(const value of [null,{}, {speechBubble:'false'}, {speechBubble:null}])assert.equal(normalize(value).speechBubble,true);
+ const old=normalize({composerLayout:'classic',floatingSize:80,expressions:{idle:'sleeping'}});
+ const off=normalize({...old,speechBubble:false});assert.equal(off.speechBubble,false);
+ assert.deepEqual(normalize({...off,speechBubble:true}),old);
+});
+
 test('layout and floating size migrate old preferences, clamp corrupt values and remain independent',()=>{
  const old={appearance:{id:'gork'},expressions:{idle:'sleeping'}};
  assert.equal(normalize(old).composerLayout,'roomy');assert.equal(normalize(old).floatingSize,56);

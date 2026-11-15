@@ -13,6 +13,7 @@ export function GorkSettings(){
  const state=robotStates.find(s=>s.id===preview)!;
  return <div className="robot-settings">
   <p className="robot-scope">仅用于本项目网页中的智算形象。</p>
+  <label className="robot-placement robot-size-control"><span>消息气泡<small>独立于 Watch 通知，默认开启</small></span><input type="checkbox" role="switch" className="toggle toggle-primary" aria-label="网页智算消息气泡" checked={preferences.speechBubble} onChange={e=>saveGorkPreferences({...preferences,speechBubble:e.target.checked})}/></label>
   <section className="robot-placement" aria-labelledby="robot-placement-title">
    <h3 id="robot-placement-title">大小与位置</h3>
    <div className="robot-layout-options" role="group" aria-label="输入区机器人布局">{([{id:'roomy',title:'放大陪伴',detail:'84px · 工具栏向右避让'},{id:'classic',title:'原来布局',detail:'56px · 工具栏位于下方'}] as const).map(option=><button type="button" className="btn btn-ghost" key={option.id} aria-pressed={preferences.composerLayout===option.id} onClick={()=>saveGorkPreferences({...preferences,composerLayout:option.id})}><strong>{option.title}</strong><span>{option.detail}</span></button>)}</div>
