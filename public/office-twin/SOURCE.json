@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.28.0",
+  "hostAdapterVersion": "0.29.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -61,7 +61,7 @@
     "previews/building-v0.6.7-offline.png": "5ac334637559d13c376cb6638629a5ebdf30000a7fc1f72c30e7fafac6abba7a",
     "previews/building_hero.png": "8f3a17af1ca0af1d1dc0f9c4c347a9a61aee96882d9c8aeac889a36a4a203463",
     "THIRD_PARTY_NOTICES.md": "caf39bc0238a31bcacb1cf133d791f8ba59299d085320d17c3e39d811c8ca0e7",
-    "viewer/astra-review.css": "c41b7c7271dd48585657e4950805cef97b03e6a0fa55f0b5441922a68c6f785a",
+    "viewer/astra-review.css": "e1c4a506d4c08ecd63c358723e8362118eb60b7bea38dcde7d79045c30c25330",
     "viewer/baked-material.js": "84faacb5245563cd4da182a66fece0d0f026442ddd5408caa63430479052af95",
     "viewer/context-view-policy.js": "325fd9916b23143130a8207bb2f9889ebbbe865b20f641c197d4c47a57f1b003",
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
@@ -106,7 +106,7 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "796e9832b9b5340136127b1ecd2ee4dfb89013ab0ae7bec7902bbd915ab42d81",
+    "viewer/viewer.js": "dfebf01f27af47a6b580b207f127a28a3313a6f8188ed0ec14f2995c6d622060",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
@@ -117,7 +117,12 @@
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
     "viewer/lighting-settings.js": "8682aa40b269051ff64981aa21ff42026585cd405a10d69f4b81eb7f303e1d5a",
     "viewer/office-entrance.js": "0f89c55accf6a8739ccb8b225cc647626984868dcc031b15530ec00b4bf54f01",
-    "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce"
+    "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce",
+    "viewer/floor-label.js": "206b9e971298c0307a3d2fe9ad211db349efaf567741b86f505d48688c97c545",
+    "viewer/vendor/interestfor/COPYRIGHT": "21426e2911f3b74fc0a5dd504e4eccdd01a3246ff99c92f5d3280886b596d6f4",
+    "viewer/vendor/interestfor/interestfor.min.js": "0d00d93bd0f3acb4a8bcd1470e8e034e29f39ec1d740b29673c91a2f6f1cd171",
+    "viewer/vendor/interestfor/LICENSE": "54c3dd9f65fffc74f4cc1295e6cd23c4378d588d9073b6363e199547043f0747",
+    "viewer/vendor/interestfor/README.md": "b5f53ad0b353ec355bee3d3883be3277da55ebe4811f24969ee64d24ab0f78b2"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs"
 }

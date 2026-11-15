@@ -4,6 +4,7 @@ import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js
 import {createOfficeOrbit} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
+import {createFloorLabel} from './floor-label.js';
 import {bindPersonPointer} from './person-pointer.js';
 import {officeClient} from './office-client.js';
 import { firstVisibleFloorHit } from './floor-picking.js?v=0.6.7';
@@ -49,6 +50,7 @@ export async function mountOfficeViewer() {
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
   let people, nightEnvironment, visibilityBlend, orbit;
+  let floorLabel,previewCamera;
   let orbitDirection=1,wasOrbitRunning=false;
   let business=officeClient.getState(),bridgeContext={id:null,revision:0};
   const unsubscribeBusiness=officeClient.subscribe((kind,value)=>{
@@ -177,6 +179,7 @@ export async function mountOfficeViewer() {
     nightEnvironment?.dispose(); nightEnvironment=null;
     picture.dispose();
     people?.dispose();
+    floorLabel?.dispose();floorLabel=null;
     if (frame) cancelAnimationFrame(frame);
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
@@ -211,7 +214,7 @@ export async function mountOfficeViewer() {
     if (typeof visible !== 'boolean') throw new TypeError('visible must be boolean');
     const returning=visible&&!requestedVisible&&loadReport.webglRendered&&!entrance.state().running;
     requestedVisible = visible;orbit?.sync();
-    if(!visible){people?.suspend();people?.closeMenu();entrance.suspend();lastFrameTime=null;}
+    if(!visible){floorLabel?.restore();people?.suspend();people?.closeMenu();entrance.suspend();lastFrameTime=null;}
     if(returning&&params.get('entrance')==='office'){setView('building',{animate:false,automatic:true});entrance.start();}
     if (!active() && frame) { cancelAnimationFrame(frame); frame = 0; }
     if (active()) requestFrame();
@@ -249,6 +252,7 @@ export async function mountOfficeViewer() {
     camera.updateMatrixWorld();
     if (roomOutline) roomOutline.update();
     people?.update(camera,view,now);
+    floorLabel?.update();
     nightEnvironment?.update();
     try{renderer.render(scene, camera);nightEnvironment?.render();}
     catch(error){error.code??='MODEL_GPU';fail(error);return;}
@@ -319,8 +323,9 @@ export async function mountOfficeViewer() {
     if (!roomOutline) return;
     scene.remove(roomOutline); roomOutline.geometry.dispose(); roomOutline.material.dispose(); roomOutline = null;
   }
-  function setView(next, { animate = true, focus = null, automatic = false } = {}) {
+  function setView(next, { animate = true, focus = null, automatic = false, labelPreview = false, cameraTarget = null } = {}) {
     if (!VIEW_MODES.includes(next)) throw new TypeError('Unknown view');
+    if(!labelPreview)floorLabel?.cancel();
     if(!automatic)entrance.cancel();
     orbit?.focus(false);
     view = next;if(controls)Object.assign(controls,officeCameraLimits(view)); selectedRoom = null; selectedFloor = ['office', 'exploded'].includes(next) ? 9 : null;
@@ -357,6 +362,7 @@ export async function mountOfficeViewer() {
     // A little more breathing room than the final office view retains the tower behind it.
     fitObject(focus ?? (['office','exploded'].includes(next) ? officeRoot : useHeroPriorityFraming(next)&&contextRoot ? model : buildingRoot), ['office','exploded'].includes(next) ? ROOM_DIRECTION : VIEW_DIRECTION);
     if(next==='exploded'&&!focus){fitHeight*=1.3;resize();}
+    if(cameraTarget)applyCameraPose(cameraTarget);
     const cameraTo = cameraPose();
     const shouldAnimate = animate && !motionPreference.matches;
     if (shouldAnimate) {
@@ -377,7 +383,7 @@ export async function mountOfficeViewer() {
     fitHeight=pose.height; camera.zoom=pose.zoom; camera.lookAt(controls.target); resize();
   }
   // A drag/wheel gives the user camera control while assembly movement finishes.
-  function takeCameraControl() { entrance.cancel();if (transition) transition.camera=null; }
+  function takeCameraControl() { floorLabel?.cancel();entrance.cancel();if (transition) transition.camera=null; }
   function contains(parent, child) {
     for (let node = child; node; node = node.parent) if (node === parent) return true;
     return false;
@@ -439,6 +445,7 @@ export async function mountOfficeViewer() {
     nightEnvironment?.dispose(); nightEnvironment=null;
     picture.dispose();
     people?.dispose();
+    floorLabel?.dispose();
     if (frame) cancelAnimationFrame(frame);
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
@@ -466,7 +473,7 @@ export async function mountOfficeViewer() {
     orbitButton.innerHTML=icon(paused?'play':'pause');
     orbitButton.querySelector('svg').style.pointerEvents='none';
   };
-  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>active()&&renderReady&&!entrance.state().running&&!motionPreference.matches&&!transition&&!(!$('#picture-panel').hidden&&!$('#rail-space').hidden&&!$('#space-cards-panel').hidden)});
+  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>active()&&renderReady&&!floorLabel?.isPreviewing()&&!entrance.state().running&&!motionPreference.matches&&!transition&&!(!$('#picture-panel').hidden&&!$('#rail-space').hidden&&!$('#space-cards-panel').hidden)});
   orbit.configure(officeClient.getMotion());
   listen(window,'office-host-motion',event=>orbit.configure(event.detail));
   listen(window,'office-person-menu',event=>orbit.focus(event.detail.open));
@@ -667,6 +674,10 @@ export async function mountOfficeViewer() {
     if(disposed)return api;
     loadReport.gpuPrepareMs=Math.round(performance.now()-gpuStarted);
     gpuPrepared=true;
+    floorLabel=createFloorLabel({viewport,floor:floors.get(9),camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
+      beginPreview:()=>{previewCamera=cameraPose();setView('exploded',{labelPreview:true});},
+      endPreview:()=>{setView('building',{labelPreview:true,cameraTarget:previewCamera,animate:active()});previewCamera=null;},
+      enter:()=>setView('office')});
     resizeObserver = new ResizeObserver(resize); resizeObserver.observe(viewport);
     intersectionObserver = new IntersectionObserver(entries => {
       inView = entries.some(entry => entry.isIntersecting);orbit.sync();if(!active()){people?.suspend();entrance.suspend();lastFrameTime=null;}
