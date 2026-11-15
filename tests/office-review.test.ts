@@ -218,6 +218,20 @@ test('only owner routes to real review; other people remain context-local demo a
  assert.equal(demos.apply({...raw,context:'two'}).employees[1].selected,false);
 });
 import {LIGHTING_DEFAULTS,LIGHTING_KEY,normalizeLighting,readLighting,saveLighting} from '../public/office-twin/viewer/lighting-settings.js';
+import {ASTRA_GLASS,ASTRA_STUDIO} from '../public/office-twin/viewer/astra-lighting-profile.js';
+test('Astra glass option preserves explicit white and shadow choices through save and reset',()=>{
+ const values=new Map<string,string>(),storage={getItem:(k:string)=>values.get(k)||null,setItem:(k:string,v:string)=>values.set(k,v)};
+ assert.equal(readLighting(storage).windowStyle,'astra-blue');assert.equal(LIGHTING_DEFAULTS.buildingWhite,0);assert.equal(LIGHTING_DEFAULTS.windowBlueStrength,55);
+ saveLighting(storage,{...LIGHTING_DEFAULTS,windowStyle:'white',realtimeShadows:true,groundColor:'#F5F7FA'});
+ assert.equal(readLighting(storage).windowStyle,'white');assert.equal(readLighting(storage).realtimeShadows,true);
+ assert.equal(normalizeLighting({windowStyle:'invalid',realtimeShadows:'false'}).windowStyle,'astra-blue');
+ assert.equal(normalizeLighting({realtimeShadows:false}).realtimeShadows,false);
+ assert.equal(normalizeLighting({windowBlueStrength:0}).windowBlueStrength,0);assert.equal(normalizeLighting({windowBlueStrength:140}).windowBlueStrength,100);
+ assert.equal(readLighting(storage).windowStyle,'white');
+ saveLighting(storage,LIGHTING_DEFAULTS);assert.equal(readLighting(storage).windowStyle,'astra-blue');
+ const decoded=new THREE.Color(ASTRA_GLASS.color);assert.ok(decoded.toArray().every((v:number,i:number)=>Math.abs(v-ASTRA_GLASS.linear[i])<1e-7));
+ assert.equal(LIGHTING_DEFAULTS.groundColor,ASTRA_STUDIO.groundColor);
+});
 test('office lighting starts from Astra white background and independent main/context gains',()=>{
  assert.equal(LIGHTING_DEFAULTS.backgroundColor,'#ffffff');assert.equal(LIGHTING_DEFAULTS.buildingBrightness,145);assert.equal(LIGHTING_DEFAULTS.contextBrightness,105);
  const v=normalizeLighting({officeBrightness:80,contextBrightness:140,nightScreens:0,backgroundColor:'#F5F7FA'});

@@ -1,13 +1,15 @@
 // Office adaptation of the approved Astra studio defaults. Change this baseline
 // only after the user asks to make a reviewed parameter snapshot the default.
-export const LIGHTING_DEFAULTS_VERSION='astra-office-studio-2026-11-15';
+import {ASTRA_STUDIO} from './astra-lighting-profile.js';
+export const LIGHTING_DEFAULTS_VERSION='astra-office-studio-2026-11-15-v2';
 export const LIGHTING_KEY='astra.office.saved-lighting.v1';
 export const LIGHTING_SPECS=Object.freeze([
+  {key:'windowBlueStrength',label:'玻璃蓝色浓度',min:0,max:100,step:1,value:55,group:'day'},
   {key:'buildingBrightness',label:'主楼亮度',min:40,max:180,step:1,value:145,group:'day'},
   {key:'officeBrightness',label:'办公室亮度',min:40,max:180,step:1,value:145,group:'day'},
   {key:'contextBrightness',label:'周边建筑亮度',min:20,max:180,step:1,value:105,group:'day'},
   {key:'groundBrightness',label:'地面亮度',min:20,max:160,step:1,value:105,group:'day'},
-  {key:'buildingWhite',label:'主体白度',min:0,max:100,step:1,value:65,group:'day'},
+  {key:'buildingWhite',label:'主体白度',min:0,max:100,step:1,value:0,group:'day'},
   {key:'contextWhite',label:'周边建筑白度',min:0,max:100,step:1,value:100,group:'day'},
   {key:'contrast',label:'明暗层次',min:50,max:150,step:1,value:100,group:'day'},
   {key:'backgroundBrightness',label:'背景亮度',min:20,max:160,step:1,value:105,group:'day'},
@@ -22,12 +24,15 @@ export const LIGHTING_SPECS=Object.freeze([
   {key:'blue',label:'蓝色点缀',min:0,max:1,step:.05,value:1,unit:'ratio'},
   {key:'exposure',label:'整体曝光',min:-1.5,max:1.5,step:.05,value:0,unit:'EV'},
 ]);
-export const LIGHTING_DEFAULTS=Object.freeze({...Object.fromEntries(LIGHTING_SPECS.map(s=>[s.key,s.value])),backgroundColor:'#ffffff'});
+export const LIGHTING_DEFAULTS=Object.freeze({...Object.fromEntries(LIGHTING_SPECS.map(s=>[s.key,s.value])),backgroundColor:ASTRA_STUDIO.backgroundColor,groundColor:ASTRA_STUDIO.groundColor,windowStyle:'astra-blue',realtimeShadows:ASTRA_STUDIO.shadows});
 export function normalizeLighting(raw){
   const result={...LIGHTING_DEFAULTS};
   if(!raw||typeof raw!=='object'||Array.isArray(raw))return result;
   for(const s of LIGHTING_SPECS)if(typeof raw[s.key]==='number'&&Number.isFinite(raw[s.key]))result[s.key]=Number((Math.round(Math.max(s.min,Math.min(s.max,raw[s.key]))/s.step)*s.step).toFixed(4));
   if(typeof raw.backgroundColor==='string'&&/^#[0-9a-f]{6}$/i.test(raw.backgroundColor))result.backgroundColor=raw.backgroundColor.toLowerCase();
+  if(typeof raw.groundColor==='string'&&/^#[0-9a-f]{6}$/i.test(raw.groundColor))result.groundColor=raw.groundColor.toLowerCase();
+  if(['white','astra-blue'].includes(raw.windowStyle))result.windowStyle=raw.windowStyle;
+  if(typeof raw.realtimeShadows==='boolean')result.realtimeShadows=raw.realtimeShadows;
   return result;
 }
 export function readLighting(storage){

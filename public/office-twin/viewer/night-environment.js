@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {ASTRA_GLASS} from './astra-lighting-profile.js';
 import {createNightBloom} from './night-bloom.mjs?v=0.6.3';
 import {classifyNightRole, nightSeatId, NIGHT_LIGHTING} from './night-lighting-policy.js?v=0.6.3';
 import {LIGHTING_DEFAULTS,normalizeLighting} from './lighting-settings.js';
@@ -18,13 +19,13 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
     Object.assign(shader.uniforms,{officeNight:shared.night,officeBloomOnly:shared.bloomOnly,officeNightExposure:shared.exposure,officeNightBlue:shared.blue,officeNightRole:{value:ROLE[role]??0},officeFloorInverse:shared.floorInverse});
     Object.assign(shader.uniforms,{officeMonitorPosition:{value:monitor?.position??new THREE.Vector3()},officeMonitorFacing:{value:monitor?.facing??new THREE.Vector3(0,0,1)},officeMonitorEnabled:{value:monitor?1:0}});
     Object.assign(shader.uniforms,{officeDayGains:shared.dayGains,officeWhite:shared.white,officeContrast:shared.contrast,officeNightGains:shared.nightGains,officeNightLamps:shared.lamps});
-    Object.assign(shader.uniforms,{officeAmbient:shared.ambient,officeRoomLightCount:roomLighting.lightCount,officeRoomLights:roomLighting.lightPositions,officeRoomColors:roomLighting.lightColors,officeRoomBounds:roomLighting.lightBounds});
+    Object.assign(shader.uniforms,{officeWindowBlue:shared.windowBlue,officeWindowStrength:shared.windowStrength,officeGroundTint:shared.groundTint,officeAmbient:shared.ambient,officeRoomLightCount:roomLighting.lightCount,officeRoomLights:roomLighting.lightPositions,officeRoomColors:roomLighting.lightColors,officeRoomBounds:roomLighting.lightBounds});
     shader.vertexShader='varying vec3 officeWorldPosition,officeWorldNormal;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
       officeWorldPosition=(modelMatrix*vec4(transformed,1.)).xyz;
       officeWorldNormal=normalize(mat3(modelMatrix)*normal);`);
     shader.fragmentShader='varying vec3 officeWorldPosition,officeWorldNormal;\nuniform vec4 officeDayGains,officeNightGains;uniform vec2 officeWhite,officeNightLamps;uniform float officeContrast;\nuniform mat4 officeFloorInverse;\nuniform vec3 officeMonitorPosition,officeMonitorFacing;\nuniform float officeMonitorEnabled;\nuniform float officeNight,officeBloomOnly,officeNightExposure,officeNightBlue,officeNightRole;\n'+shader.fragmentShader;
-    shader.fragmentShader=`uniform float officeAmbient;uniform int officeRoomLightCount;uniform vec4 officeRoomLights[${MAX_OFFICE_LIGHTS}],officeRoomBounds[${MAX_OFFICE_LIGHTS}];uniform vec3 officeRoomColors[${MAX_OFFICE_LIGHTS}];\n`+shader.fragmentShader;
+    shader.fragmentShader=`uniform float officeWindowBlue,officeWindowStrength;uniform vec3 officeGroundTint;uniform float officeAmbient;uniform int officeRoomLightCount;uniform vec4 officeRoomLights[${MAX_OFFICE_LIGHTS}],officeRoomBounds[${MAX_OFFICE_LIGHTS}];uniform vec3 officeRoomColors[${MAX_OFFICE_LIGHTS}];\n`+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
       if(officeNight<.5){
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
@@ -39,6 +40,13 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         c=mix(c,vec3(softWhite),white*mask);
         float corrected=dot(c,vec3(.2126,.7152,.0722));
         c*=pow(max(.001,corrected),officeContrast)/max(.001,corrected);
+        if(ground)c*=officeGroundTint;
+        if(officeNightRole==1.&&officeWindowBlue>.5){
+          // Reference display-linear glass; retain relief from the existing bake.
+          vec3 glass=vec3(${ASTRA_GLASS.linear.join(',')})*clamp(lum/.74,.12,1.25);
+          glass=mix(vec3(dot(glass,vec3(.2126,.7152,.0722))),glass,officeNightBlue);
+          c=mix(c,glass,officeWindowStrength);
+        }
         outgoingLight=c*gain;
       }
       if(officeNight>.5){
@@ -54,6 +62,8 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
           vec2 cell=floor(vec2(axis/8.,officeWorldPosition.y/3.6));
           float seed=fract(sin(dot(cell,vec2(17.13,39.71)))*4375.31);
           // Broad glazing stays below luminous signs and screen highlights.
+          // Same studio chromaticity/core gain; a large curtain-wall ring needs
+          // occupancy/area attenuation to avoid turning the entire tower into a lamp.
           emission=vec3(${NIGHT_LIGHTING.windowColor.join(',')})*(.48+.52*step(.32,seed))*.35;
         }
         if(officeNightRole==2.)emission=vec3(.26,.55,.65)*.65;
@@ -110,12 +120,12 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|office-local-night-v0292|'+role;
+  material.customProgramCacheKey=()=>key+'|office-studio-v0310|'+role;
   material.needsUpdate=true;
 }
 
 export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings}){
-  const shared={night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
+  const shared={windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
   Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
   const lightPlan=createInteriorLightPlan(layout);
   Object.assign(shared,{ambient:{value:1},lightCount:{value:lightPlan.length},
@@ -135,6 +145,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
   const black=new THREE.MeshBasicMaterial({color:0,toneMapped:false});
   function syncSettings(){
     settings=normalizeLighting(getSettings?.());
+    shared.windowBlue.value=settings.windowStyle==='astra-blue'?1:0;shared.windowStrength.value=settings.windowBlueStrength/100;shared.groundTint.value.set(settings.groundColor);
     shared.dayGains.value.set(settings.buildingBrightness,settings.officeBrightness,settings.contextBrightness,settings.groundBrightness).multiplyScalar(.01);
     shared.white.value.set(settings.buildingWhite,settings.contextWhite).multiplyScalar(.01);shared.contrast.value=settings.contrast/100;
     shared.nightGains.value.set(settings.nightShell,settings.nightOffice,settings.nightContext,settings.nightWindows).multiplyScalar(.01);
@@ -225,7 +236,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
         bloom.render();
       }finally{for(let i=changes.length-1;i>=0;i--)changes[i]();scene.background=background;shared.bloomOnly.value=0;}
     },
-    state:()=>({night:dark,profile:'Astra studio / local office night v0.29.2',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
+    state:()=>({night:dark,profile:'Astra studio / aligned glass v0.31.0',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
     dispose(){if(disposed)return;disposed=true;bloom.dispose();black.dispose();for(const restore of restores)restore();for(const m of materials)m.dispose();materials.clear();removeAccentLights();},
   };
 }

@@ -592,8 +592,8 @@ export async function mountOfficeViewer() {
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
     renderer.info.autoReset=false;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.AgXToneMapping;
-    renderer.shadowMap.enabled = true;
+    renderer.toneMapping = BAKED_MODE?THREE.NoToneMapping:THREE.AgXToneMapping;
+    renderer.shadowMap.enabled = picture.getState().realtimeShadows;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.localClippingEnabled = false;
     renderer.domElement.setAttribute('aria-hidden', 'true');
