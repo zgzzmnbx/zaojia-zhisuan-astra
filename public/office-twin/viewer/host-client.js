@@ -1,7 +1,9 @@
 // Astra owns all review writes. This adapter receives display snapshots only.
+import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
 let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正在读取当前成果',enabled:false};
+let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 const samples=['某支线工程控制价复核','某站场改造结算复核','某研发基地勘察测量复核','某数字化项目投资复核'];
 const $=selector=>document.querySelector(selector);
@@ -10,20 +12,22 @@ export function element(tag,text,className='') {
 }
 function post(type,data={}){parent.postMessage({namespace,type,...data},location.origin);}
 export function togglePerson(id,selected) {
-  if(!snapshot.employees.some(p=>p.id===id&&p.selectable))return;
+  const route=assignmentRoute(snapshot,id);if(!route)return;
+  if(route==='demo'){demos.set(id,selected);snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));return;}
   post('toggle',{context:snapshot.context,revision:snapshot.revision,employeeId:id,selected});
 }
 export function setDraggingPerson(id) {
-  draggingPerson=snapshot.employees.find(p=>p.id===id&&p.selectable)||null;
+  draggingPerson=snapshot.employees.find(p=>p.id===id&&p.draggable)||null;
   document.documentElement.classList.toggle('host-dragging',!!draggingPerson);
   if(draggingPerson&&$('#space-cards-panel').hidden)$('#space-card-toggle').click();
-  $('#host-dropzone').textContent=draggingPerson?`把 ${draggingPerson.name} 拖到这里`:'把人物标签拖到这里';
+  $('#host-dropzone').textContent=draggingPerson?`把 ${draggingPerson.name} 拖到这里`:'把小人拖到这里';
   if(!draggingPerson)$('#host-artifact').classList.remove('is-dragover');
 }
 function renderTasks() {
   $('#host-artifact-title').textContent=snapshot.title;
   const selected=snapshot.employees.filter(p=>p.selected);
-  $('#host-selection').textContent=selected.length?`已选 ${selected.map(p=>p.name).join('、')}`:'尚未选择复核人员';
+  const real=selected.filter(p=>!p.demoAssignment),demo=selected.filter(p=>p.demoAssignment);
+  $('#host-selection').textContent=selected.length?[real.length?`已选 ${real.map(p=>p.name).join('、')}`:'',demo.length?`演示 ${demo.map(p=>p.name).join('、')}`:''].filter(Boolean).join('；'):'尚未选择复核人员';
   $('#host-artifact').classList.toggle('has-selection',selected.length>0);
   $('#host-artifact').setAttribute('aria-label',`当前成果，${snapshot.title}，${$('#host-selection').textContent}`);
   const list=$('#task-list');list.replaceChildren();
@@ -47,9 +51,9 @@ function receive(event) {
   if(event.data.type!=='snapshot')return;
   const data=event.data;
   if(!Array.isArray(data.people)||!Array.isArray(data.tasks)||typeof data.context!=='string')return;
-  snapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
+  sourceSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
     tasks:[...data.tasks,...data.people.map((person,index)=>({id:`sample:${person.id}`,employeeId:person.id,title:samples[index%samples.length],status:index%3===0?'待复核':'审核中',demo:true}))]};
-  renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
+  snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
 }
 export const officeClient={
   start(){
@@ -61,7 +65,7 @@ export const officeClient={
     }
     const artifact=element('section','','host-artifact');artifact.id='host-artifact';
     artifact.append(element('small','当前成果'),Object.assign(element('strong',snapshot.title),{id:'host-artifact-title'}),Object.assign(element('span','尚未选择复核人员'),{id:'host-selection'}));
-    const dropzone=element('div','把人物标签拖到这里','host-dropzone');dropzone.id='host-dropzone';artifact.append(dropzone);
+    const dropzone=element('div','把小人拖到这里','host-dropzone');dropzone.id='host-dropzone';artifact.append(dropzone);
     artifact.addEventListener('dragover',event=>{if(draggingPerson&&event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');dropzone.textContent=`松开，加入 ${draggingPerson.name}`;}});
     artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)dropzone.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
     artifact.addEventListener('drop',event=>{event.preventDefault();const id=event.dataTransfer.getData('text/plain');if(draggingPerson?.id===id)togglePerson(id,true);setDraggingPerson(null);});

@@ -95,3 +95,46 @@ test('desk spill binds people and furniture to their own seat and leaves room wa
  assert.equal(nightSeatId({name:'wall',parent:{name:'H1_F09_Office'}}),null);
  assert.equal(classifyNightRole({name:'MONITOR_STAND',material:{name:'white'}}),'shell');
 });
+
+import {seatFacing,createPersonClock,seatedMotion} from '../public/office-twin/viewer/person-motion.js';
+import {canDropPerson} from '../public/office-twin/viewer/person-pointer.js';
+import {createPersonAssets,createSeatedPerson} from '../public/office-twin/viewer/seated-person.js';
+test('seated people face each individual monitor on opposite sides of the room',()=>{
+ for(const [origin,target] of [[[0,0,0],[0,1,1]],[[0,0,0],[0,1,-1]],[[2,0,3],[-1,1,4]]]){
+  const yaw=seatFacing(origin,target),dx=target[0]-origin[0],dz=target[2]-origin[2];
+  assert.ok((Math.sin(yaw)*dx+Math.cos(yaw)*dz)/Math.hypot(dx,dz)>.999999);
+ }
+ assert.equal(seatFacing([0,0,0],null,1.2),1.2);
+});
+test('person motion freezes for pause/reduced motion and resumes without hidden time catch-up',()=>{
+ const clock=createPersonClock();clock.step(1000,true);clock.step(1020,true);const value=clock.value();
+ clock.step(5000,false);assert.equal(clock.value(),value);clock.step(60000,true);assert.equal(clock.value(),value);
+ clock.suspend();clock.step(120000,true);assert.equal(clock.value(),value);
+ for(let t=0;t<30;t+=.05){const p=seatedMotion(t);assert.ok(Math.abs(p.leftTap)<=.009&&Math.abs(p.rightTap)<=.009);assert.ok(Math.abs(p.headYaw)<=.035);}
+ assert.equal(seatedMotion(3).mode,'typing');assert.equal(seatedMotion(10).mode,'reading');
+});
+test('3D drag accepts demo people but requires the same current review context and revision',()=>{
+ const start={context:'job-a',revision:2},snap={...start,enabled:true,employees:[{id:'owner',selectable:true},{id:'other',selectable:false}]};
+ assert.equal(canDropPerson(start,snap,'owner'),true);assert.equal(canDropPerson(start,snap,'other'),true);
+ assert.equal(canDropPerson(start,{...snap,context:'job-b'},'owner'),false);assert.equal(canDropPerson(start,{...snap,revision:3},'owner'),false);
+});
+test('simple seated rig keeps hands near the keyboard through typing and reading',()=>{
+ const assets=createPersonAssets();const rig=createSeatedPerson(assets,0,{seatHeight:.46,keyboard:[0,.80,.44]});
+ for(const t of [0,3,7.5,10,13]){rig.pose(t);for(const hand of rig.handPositions()){assert.ok(hand[1]>.76&&hand[1]<.84);assert.ok(hand[2]>.40&&hand[2]<.48);}}
+ assets.dispose();
+});
+
+import {assignmentRoute,createDemoAssignments} from '../public/office-twin/viewer/person-assignment.js';
+test('only owner routes to real review; other people remain context-local demo assignments',()=>{
+ const raw={context:'one',revision:1,enabled:true,title:'Current.xlsx',employees:[{id:'owner',selectable:true,selected:false},{id:'other',selectable:false,selected:false}],tasks:[]};
+ const demos=createDemoAssignments();demos.apply(raw);demos.set('other',true);demos.set('owner',true);
+ const selected=demos.apply(raw);
+ assert.equal(assignmentRoute(selected,'owner'),'review');assert.equal(assignmentRoute(selected,'other'),'demo');
+ assert.equal(assignmentRoute({...raw,enabled:false},'other'),null);
+ assert.equal(assignmentRoute({...raw,employees:[{id:'owner',selectable:false}]},'owner'),null);
+ assert.equal(selected.employees[0].selected,false);assert.equal(selected.employees[1].selected,true);
+ assert.equal(selected.tasks[0].demo,true);assert.equal(selected.tasks[0].title,raw.title);
+ assert.equal(raw.employees[1].selected,false);assert.equal(raw.tasks.length,0);
+ assert.equal(demos.apply({...raw,revision:2}).employees[1].selected,true);
+ assert.equal(demos.apply({...raw,context:'two'}).employees[1].selected,false);
+});

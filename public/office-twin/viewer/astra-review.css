@@ -63,3 +63,9 @@ body.studio.office-embed .office-modebar{flex-wrap:nowrap;gap:4px;padding:6px!im
 .host-person-marker .host-drag-grip{position:absolute;right:8px;top:7px}
 .host-person-marker[draggable="true"] strong{padding-right:30px}
 .host-person-row[draggable="true"]{cursor:grab}
+.host-person-popover{position:fixed;inset:auto;margin:0;width:284px;max-height:min(380px,calc(100vh - 90px));overflow:auto;padding:16px;border:1px solid var(--astra-line);border-radius:12px;background:var(--astra-paper);color:var(--astra-text);box-shadow:0 12px 36px #0003;font-size:13px}
+.host-person-popover-heading{display:flex;align-items:center;justify-content:space-between;font-size:16px}
+.host-person-profile{display:grid;grid-template-columns:64px 1fr;gap:8px;margin-block:12px}
+.host-person-profile dt{color:var(--astra-muted)}.host-person-profile dd{margin:0}
+.host-person-projects{margin-block:12px;max-height:176px;overflow:auto}.host-person-projects .host-task-line{padding-block:8px;border-top:1px solid var(--astra-line)}
+.host-person-drag-ghost{position:fixed;left:0;top:0;z-index:1000;pointer-events:none;padding:8px 12px;border:1px solid var(--astra-primary);border-radius:8px;background:var(--astra-paper);color:var(--astra-primary);box-shadow:0 8px 24px #0002;font-size:13px}

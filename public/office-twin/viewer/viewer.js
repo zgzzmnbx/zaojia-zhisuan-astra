@@ -2,6 +2,7 @@ import { motionProgress, createVisibilityBlend } from './navigation-motion.js?v=
 import {VERSION,ASSET_VERSION,BAKED_MODEL,REALTIME_MODEL} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
 import {createOfficeOrbit} from './office-orbit.js';
+import {bindPersonPointer} from './person-pointer.js';
 import {officeClient} from './office-client.js';
 import { firstVisibleFloorHit } from './floor-picking.js?v=0.6.7';
 import { summarizeMaterialPaths, materialCoverageCopy } from './material-provenance.js?v=0.6.7';
@@ -204,6 +205,7 @@ export async function mountOfficeViewer() {
   function setVisible(visible) {
     if (typeof visible !== 'boolean') throw new TypeError('visible must be boolean');
     requestedVisible = visible;orbit?.sync();
+    if(!visible){people?.suspend();people?.closeMenu();}
     if (!active() && frame) { cancelAnimationFrame(frame); frame = 0; }
     if (active()) requestFrame();
     return getState();
@@ -237,7 +239,7 @@ export async function mountOfficeViewer() {
     const controlsChanged = transition?.camera ? false : controls.update(motion.delta||1/60);
     camera.updateMatrixWorld();
     if (roomOutline) roomOutline.update();
-    people?.update(camera,view);
+    people?.update(camera,view,now);
     nightEnvironment?.update();
     try{renderer.render(scene, camera);nightEnvironment?.render();}
     catch(error){error.code??='MODEL_GPU';fail(error);return;}
@@ -450,11 +452,12 @@ export async function mountOfficeViewer() {
   orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>active()&&renderReady&&!motionPreference.matches&&!transition&&!(!$('#picture-panel').hidden&&!$('#rail-space').hidden&&!$('#space-cards-panel').hidden)});
   orbit.configure(officeClient.getMotion());
   listen(window,'office-host-motion',event=>orbit.configure(event.detail));
+  listen(window,'office-person-menu',event=>orbit.focus(event.detail.open));
   listen(orbitButton,'click',()=>orbit.toggle());
   let cameraHeld=false;
   listen(viewport,'pointerdown',()=>{cameraHeld=true;orbit.hold(true);},true);
   const release=()=>{if(cameraHeld){cameraHeld=false;orbit.hold(false);}};
-  listen(window,'pointerup',release);listen(window,'pointercancel',release);
+  listen(window,'pointerup',release,true);listen(window,'pointercancel',release,true);
   listen(document,'dragstart',()=>{cameraHeld=true;orbit.hold(true);},true);listen(document,'dragend',release);
   listen(window,'blur',release);
   for(const type of ['wheel','keydown'])listen(document,type,event=>{if(viewport.contains(event.target)||orbit.state().delay>0)orbit.activity();},{capture:true,passive:true});
@@ -493,7 +496,7 @@ export async function mountOfficeViewer() {
       if (event.key === 'Home') resetCamera(); else if (event.key === 'Escape') setView('building'); else zoom(event.key === '-' ? .8 : 1.25);
     }
   });
-  listen(document, 'visibilitychange', () => { orbit.sync(); if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; } });
+  listen(document, 'visibilitychange', () => { orbit.sync();if(!active())people?.suspend(); if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; } });
   listen(window, 'pagehide', event => {
     if (event.persisted) {
       pageSuspended = true;orbit.sync();
@@ -642,7 +645,7 @@ export async function mountOfficeViewer() {
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     resizeObserver = new ResizeObserver(resize); resizeObserver.observe(viewport);
     intersectionObserver = new IntersectionObserver(entries => {
-      inView = entries.some(entry => entry.isIntersecting);orbit.sync();
+      inView = entries.some(entry => entry.isIntersecting);orbit.sync();if(!active())people?.suspend();
       if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; }
     });
     intersectionObserver.observe(viewport);
@@ -652,7 +655,7 @@ export async function mountOfficeViewer() {
     });
     const pointerStart = new THREE.Vector2();
     listen(renderer.domElement, 'pointerdown', event => pointerStart.set(event.clientX,event.clientY));
-    listen(renderer.domElement, 'pointerup', event => {
+    listen(renderer.domElement, 'click', event => {
       if (event.button !== 0 || pointerStart.distanceTo(new THREE.Vector2(event.clientX,event.clientY)) > 5) return;
       const rect = renderer.domElement.getBoundingClientRect();
       const pointer = new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1, -(event.clientY-rect.top)/rect.height*2+1);
@@ -662,12 +665,14 @@ export async function mountOfficeViewer() {
         if(number!==null)selectFloor(number);
         return;
       }
-      if (people?.pick(ray)) return;
+      if (people?.pick(ray,{x:event.clientX,y:event.clientY})) return;
       for (const hit of ray.intersectObject(officeRoot,true)) {
         let node = hit.object;
         while (node && node !== officeRoot) { if (rooms.get(node.userData.room_id) === node) { focusRoom(node.userData.room_id); return; } node = node.parent; }
       }
     });
+    const pointer=bindPersonPointer({canvas:renderer.domElement,camera,controls,people,listen,canInteract:()=>active()&&['office','exploded'].includes(view),takeCameraControl});
+    listenerRemovers.push(()=>pointer.dispose());
     loadingStage('first-frame','场景已就绪，正在绘制第一帧');
     setView(view, { animate:false });
     selectTab('people');
