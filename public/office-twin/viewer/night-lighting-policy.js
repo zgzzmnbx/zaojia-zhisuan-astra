@@ -19,6 +19,7 @@ export function nightSeatId(object){
 }
 export function classifyNightRole(object,material=object.material){
   const explicit=object.userData?.night_role,n=object.name||'';
+  if(object.userData?.staticBatch)return explicit;
   if(['window','accent','sign','context','screen','interior_light'].includes(explicit))return explicit;
   for(let node=object;node;node=node.parent){
     if(/ContextWeb_RoadsBases|AstraContext_ContinuousBaseplate/.test(node.name||''))return 'ground';

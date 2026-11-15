@@ -9,7 +9,7 @@ import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from './interior-light-plan.j
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
 const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9};
-export function attachNightShader(material,role,shared,monitor=null){
+export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
   const key=previousKey();
@@ -18,7 +18,7 @@ export function attachNightShader(material,role,shared,monitor=null){
     Object.assign(shader.uniforms,{officeNight:shared.night,officeBloomOnly:shared.bloomOnly,officeNightExposure:shared.exposure,officeNightBlue:shared.blue,officeNightRole:{value:ROLE[role]??0},officeFloorInverse:shared.floorInverse});
     Object.assign(shader.uniforms,{officeMonitorPosition:{value:monitor?.position??new THREE.Vector3()},officeMonitorFacing:{value:monitor?.facing??new THREE.Vector3(0,0,1)},officeMonitorEnabled:{value:monitor?1:0}});
     Object.assign(shader.uniforms,{officeDayGains:shared.dayGains,officeWhite:shared.white,officeContrast:shared.contrast,officeNightGains:shared.nightGains,officeNightLamps:shared.lamps});
-    Object.assign(shader.uniforms,{officeAmbient:shared.ambient,officeRoomLightCount:shared.lightCount,officeRoomLights:shared.lightPositions,officeRoomColors:shared.lightColors,officeRoomBounds:shared.lightBounds});
+    Object.assign(shader.uniforms,{officeAmbient:shared.ambient,officeRoomLightCount:roomLighting.lightCount,officeRoomLights:roomLighting.lightPositions,officeRoomColors:roomLighting.lightColors,officeRoomBounds:roomLighting.lightBounds});
     shader.vertexShader='varying vec3 officeWorldPosition,officeWorldNormal;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
       officeWorldPosition=(modelMatrix*vec4(transformed,1.)).xyz;
@@ -110,7 +110,7 @@ export function attachNightShader(material,role,shared,monitor=null){
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|office-local-night-v0291|'+role;
+  material.customProgramCacheKey=()=>key+'|office-local-night-v0292|'+role;
   material.needsUpdate=true;
 }
 
@@ -123,7 +123,14 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
     lightColors:{value:Array.from({length:MAX_OFFICE_LIGHTS},(_,i)=>new THREE.Vector3(...(lightPlan[i]?.color??[0,0,0])))},
     lightBounds:{value:Array.from({length:MAX_OFFICE_LIGHTS},(_,i)=>new THREE.Vector4(...(lightPlan[i]?.bounds??[0,0,0,0])))}});
   let settings={...LIGHTING_DEFAULTS},backgroundKey='',bloomKey='';
-  const materials=new Set(),restores=[],colorSources=[],counts={};let dark=false,disposed=false,floorRoot=null,accentRoot=null,screenCount=0;
+  const roomLighting=new Map();
+  for(const roomId of new Set(lightPlan.map(l=>l.roomId))){
+    const indices=lightPlan.map((l,i)=>l.roomId===roomId?i:-1).filter(i=>i>=0);
+    const subset={lightCount:{value:indices.length}};
+    for(const key of ['lightPositions','lightColors','lightBounds'])subset[key]={value:Array.from({length:MAX_OFFICE_LIGHTS},(_,i)=>shared[key].value[indices[i]??0])};
+    roomLighting.set(roomId,subset);
+  }
+  const materials=new Set(),occluders=new Set(),restores=[],colorSources=[],counts={};let dark=false,disposed=false,floorRoot=null,accentRoot=null,screenCount=0;
   const bloom=createNightBloom(renderer,scene,camera,null);
   const black=new THREE.MeshBasicMaterial({color:0,toneMapped:false});
   function syncSettings(){
@@ -172,15 +179,18 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
       // Clone by role because the same baked atlas is shared by windows and furniture.
       const copies=new Map();
       model.traverse(object=>{
-        if(!object.isMesh||!object.material)return;
+        if(!object.isMesh||!object.material||object.userData.staticBatchSource)return;
         const source=object.material,seat=nightSeatId(object),monitor=monitors.get(seat);
         const clone=mat=>{
           const role=nightRole(object,mat);counts[role]=(counts[role]||0)+1;
-          const cloneKey=role+'|'+(monitor?seat:'');
+          let roomId=null;for(let n=object;n&&!roomId;n=n.parent)roomId=n.userData.room_id;
+          const cloneKey=role+'|'+(monitor?seat:'')+'|'+(roomId||'');
           let byRole=copies.get(mat);if(!byRole){byRole=new Map();copies.set(mat,byRole);}
           if(!byRole.has(cloneKey)){
             const copy=mat.clone();copy.onBeforeCompile=mat.onBeforeCompile;copy.customProgramCacheKey=mat.customProgramCacheKey;
-            attachNightShader(copy,role,shared,monitor);materials.add(copy);colorSources.push({copy,source:mat});byRole.set(cloneKey,copy);
+            attachNightShader(copy,role,shared,monitor,role==='interior'&&roomLighting.has(roomId)?roomLighting.get(roomId):shared);materials.add(copy);
+            if(['interior','shell','ground','person'].includes(role))occluders.add(copy);
+            colorSources.push({copy,source:mat});byRole.set(cloneKey,copy);
           }
           return byRole.get(cloneKey);
         };
@@ -192,7 +202,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
       if(disposed)return;
       for(const restore of restores)restore();
       for(const m of materials)m.dispose();
-      restores.length=0;colorSources.length=0;materials.clear();removeAccentLights();
+      restores.length=0;colorSources.length=0;materials.clear();occluders.clear();removeAccentLights();
       for(const key of Object.keys(counts))delete counts[key];
       this.attach(root);requestFrame();
     },
@@ -208,13 +218,14 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
           if(!object.isMesh||!object.material)return;
           const original=object.material;
           const isOwned=m=>materials.has(m);
-          if(Array.isArray(original)?original.every(isOwned):isOwned(original))return;
+          const list=Array.isArray(original)?original:[original];
+          if(list.every(isOwned)&&!list.every(m=>occluders.has(m)&&!m.transparent&&m.opacity===1&&m.side===black.side))return;
           changes.push(()=>{object.material=original;});object.material=black;
         });
         bloom.render();
       }finally{for(let i=changes.length-1;i>=0;i--)changes[i]();scene.background=background;shared.bloomOnly.value=0;}
     },
-    state:()=>({night:dark,profile:'Astra studio / local office night v0.29.1',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
+    state:()=>({night:dark,profile:'Astra studio / local office night v0.29.2',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
     dispose(){if(disposed)return;disposed=true;bloom.dispose();black.dispose();for(const restore of restores)restore();for(const m of materials)m.dispose();materials.clear();removeAccentLights();},
   };
 }

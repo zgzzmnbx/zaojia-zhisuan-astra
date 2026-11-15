@@ -1,4 +1,32 @@
 import test from 'node:test';
+import * as THREE from 'three';
+import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.js';
+import {createFrameMeter} from '../public/office-twin/viewer/frame-meter.js';
+import {createVisibilityBlend} from '../public/office-twin/viewer/navigation-motion.js';
+
+test('static batching preserves geometry bounds, named anchors and room/seat boundaries',()=>{
+ const root=new THREE.Group(),room=new THREE.Group();room.userData={room_id:'room',entity_type:'room'};room.position.set(4,30,2);root.add(room);
+ const material=new THREE.MeshBasicMaterial(),geometry=new THREE.BoxGeometry(1,1,1);
+ const add=(name:string,x:number,seat?:string)=>{const m=new THREE.Mesh(geometry,material);m.name=name;m.position.x=x;if(seat)m.userData.seat_id=seat;room.add(m);return m;};
+ const a=add('chair-seat',0),b=add('desk',3),other=add('other-seat',6,'seat2'),screen=add('monitor',8);screen.userData.night_role='screen';
+ const hidden=new THREE.Group();hidden.visible=false;room.add(hidden);hidden.add(new THREE.Mesh(geometry,material),new THREE.Mesh(geometry,material));
+ root.updateMatrixWorld(true);const expected=new THREE.Box3().setFromObject(a).union(new THREE.Box3().setFromObject(b));
+ const result=batchStaticGeometry(root);root.updateMatrixWorld(true);
+ const batch=room.children.find(n=>n.userData.staticBatch)!;
+ assert.equal(result.savedDraws,1);assert.ok(new THREE.Box3().setFromObject(batch).equals(expected));
+ assert.equal(root.getObjectByName('chair-seat'),a);assert.equal(a.visible,false);assert.equal(other.visible,true);assert.equal(screen.visible,true);
+ const blend=createVisibilityBlend(root),poses=blend.destination();blend.sample(poses,.5);blend.sample(poses,1);
+ assert.equal(a.visible,false);assert.equal(b.visible,false);assert.equal(batch.visible,true);
+ assert.equal(hidden.visible,false);
+});
+test('frame meter counts actual frames and resets sampling after suspension',()=>{
+ const label={textContent:''},meter=createFrameMeter(label);
+ for(let n=0;n<=60;n++)meter.frame(n*1000/60);
+ assert.equal(meter.state().fps,60);assert.equal(meter.state().frames,61);
+ meter.idle();assert.equal(label.textContent,'FPS · 静止');assert.equal(meter.state().fps,null);
+ meter.suspend();meter.frame(100000);meter.frame(100100);assert.equal(meter.state().fps,null);
+});
+
 import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from '../public/office-twin/viewer/interior-light-plan.js';
 import {evaluateInteriorSurface} from '../public/office-twin/viewer/night-lighting-policy.js';
 test('night surfaces stay dark without lamps and room lights remain inside plan bounds',()=>{
@@ -104,6 +132,11 @@ test('manual limits exclude the back and underside and leave a complete automati
  }
 });
 import {classifyNightRole,nightSeatId,NIGHT_LIGHTING} from '../public/office-twin/viewer/night-lighting-policy.js';
+test('batch lighting keeps the interpreted interior role instead of stale source shell tags',()=>{
+ const source={name:'table',userData:{night_role:'shell'},parent:{name:'H1_F09_Office'}};
+ assert.equal(classifyNightRole(source),'interior');
+ assert.equal(classifyNightRole({name:'batch',userData:{staticBatch:true,night_role:classifyNightRole(source)}}),'interior');
+});
 test('night light identifies actual glTF screen material without lighting the bezel or stand',()=>{
  const parent={name:'Furniture_SEAT_NW_01_MONITOR',userData:{seat_id:'SEAT_NW_01'},parent:{name:'H1_F09_Office'}};
  const leaf={name:'Desktop_v062_MonitorShared_3',parent,material:{name:'Device_v062_ScreenBlue'}};

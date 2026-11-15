@@ -98,7 +98,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   if(!menu.showPopover){menu.hidden=true;listen(document,'pointerdown',e=>{if(!menu.contains(e.target))closeMenu();});listen(document,'keydown',e=>{if(e.key==='Escape')closeMenu();});}
   listen(document,'keydown',event=>{if(event.key==='Escape'&&menuOpen()){closeMenu();event.preventDefault();event.stopImmediatePropagation();}},true);
   function select(id,point){const item=actors.get(id);if(!item||disposed)return false;current=id;showPanel();syncPositions();if(item.anchor&&!point)focusPerson(item.group);paint();if(point)openMenu(point);onSelect(id);requestFrame();return true;}
-  function syncPositions(){model.updateMatrixWorld(true);for(const item of actors.values()){item.group.visible=!!item.anchor;if(item.dragPosition)item.group.position.copy(item.dragPosition);else if(item.anchor)item.anchor.getWorldPosition(item.group.position);}}
+  function syncPositions(){model.updateMatrixWorld();for(const item of actors.values()){item.group.visible=!!item.anchor;if(item.dragPosition)item.group.position.copy(item.dragPosition);else if(item.anchor)item.anchor.getWorldPosition(item.group.position);}}
   function syncBusiness(){
     business=officeClient.getState();const next=business.employees.map(p=>p.id+':'+p.name).join('|');
     if(next!==signature){signature=next;build();if(!actors.has(current)){current=null;closeMenu();}}
@@ -108,14 +108,15 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     if(disposed)return;root.visible=['office','exploded'].includes(view);markers.hidden=!root.visible;if(!root.visible){clock.suspend();closeMenu();return;}
     const seconds=clock.step(now,motionEnabled&&!reduced.matches);
     syncPositions();const boxes=[];
+    const rect=viewport.getBoundingClientRect(),width=viewport.clientWidth,height=viewport.clientHeight;
     for(const item of [...actors.values()].sort((a,b)=>Number(b.person.id===current)-Number(a.person.id===current))){
       if(!item.dragPosition)item.rig.pose(seconds);
-      const head=item.group.position.clone().add(new THREE.Vector3(0,item.rig.seatHeight+.745,0)).project(camera),rect=viewport.getBoundingClientRect();item.screenPoint={x:rect.left+(head.x*.5+.5)*viewport.clientWidth,y:rect.top+(-head.y*.5+.5)*viewport.clientHeight};
+      const head=item.group.position.clone().add(new THREE.Vector3(0,item.rig.seatHeight+.745,0)).project(camera);item.screenPoint={x:rect.left+(head.x*.5+.5)*width,y:rect.top+(-head.y*.5+.5)*height};
       const pos=item.group.position.clone().add(new THREE.Vector3(0,1.9,0)).project(camera);
-      const x=(pos.x*.5+.5)*viewport.clientWidth,y=(-pos.y*.5+.5)*viewport.clientHeight;
+      const x=(pos.x*.5+.5)*width,y=(-pos.y*.5+.5)*height;
       const box={x:x-82,y:y-24,w:164,h:48};
       const overlap=boxes.some(b=>box.x<b.x+b.w&&box.x+box.w>b.x&&box.y<b.y+b.h&&box.y+box.h>b.y);
-      item.marker.hidden=!item.anchor||pos.z < -1||pos.z>1||x<82||x>viewport.clientWidth-82||y<50||y>viewport.clientHeight-30||overlap;
+      item.marker.hidden=!item.anchor||pos.z < -1||pos.z>1||x<82||x>width-82||y<50||y>height-30||overlap;
       if(!item.marker.hidden){boxes.push(box);item.marker.style.left=`${x}px`;item.marker.style.top=`${y}px`;}
     }
   }
