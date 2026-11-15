@@ -1,15 +1,24 @@
 import {useEffect,useState} from 'react';
 import type {DemoController,DemoSettings as Values} from './demo-settings';
-import {Button,Icon} from './ui';
+import {Button,Icon,Modal} from './ui';
 import './demo-settings.css';
 const parkedStations=[['import','清单导入'],['price','智能填价'],['risk','风险复核'],['report','报告生成'],['review','协同复核'],['table','专业表格'],['knowledge','知识检索']].map(([id,title])=>({id,title}));
 
 export function DemoModeSwitch({controller,blocked=false,openSettings}:{controller:DemoController;blocked?:boolean;openSettings:()=>void}){
  const {value,error,saving,save}=controller;
- return <div className="demo-mode-control" title={error||(!value?'正在读取演示设置':`演示模式${value.enabled?'已开启':'已关闭'}；在设置中配置演示与调试选项`)}>
-  <button type="button" className="btn btn-ghost btn-square header-icon-action demo-mode-button" aria-label="演示模式" aria-pressed={!!value?.enabled} disabled={!value||saving||blocked} onClick={()=>{if(value)void save({...value,enabled:!value.enabled}).catch(()=>{});}}><Icon name="presentation"/></button>
+ const [confirmClose,setConfirmClose]=useState(false);
+ useEffect(()=>{if(value&&!value.enabled)setConfirmClose(false);},[value?.enabled]);
+ return <><div className="demo-mode-control" title={error||(!value?'正在读取演示设置':`演示模式${value.enabled?'已开启':'已关闭'}；在设置中配置演示与调试选项`)}>
+  <button type="button" className="btn btn-ghost btn-square header-icon-action demo-mode-button" aria-label="演示模式" aria-pressed={!!value?.enabled} disabled={!value||saving||blocked} onClick={()=>{if(!value||saving||blocked)return;if(value.enabled)setConfirmClose(true);else void save({...value,enabled:true}).catch(()=>{});}}><Icon name="presentation"/></button>
   {error&&<button type="button" className="btn btn-ghost btn-square btn-sm" aria-label={`演示设置异常：${error}`} onClick={openSettings}><Icon name="info"/></button>}
- </div>;
+ </div>{confirmClose&&<Modal title="关闭演示模式？" close={()=>setConfirmClose(false)}>
+  <p className="demo-close-confirm">关闭后将按正常流程处理，已有任务和成果不变。</p>
+  {error&&<p className="demo-settings-error" role="alert">{error}</p>}
+  <div className="modal-action">
+   <button type="button" className="btn btn-outline" ref={node=>{if(node)node.autofocus=true;}} onClick={()=>setConfirmClose(false)}>继续演示</button>
+   <Button primary disabled={!value||saving||blocked} onClick={async()=>{if(!value||saving||blocked)return;try{await save({...value,enabled:false});setConfirmClose(false);}catch{/* Keep the dialog open with the controller's error. */}}}>{saving?'正在关闭…':'确认关闭'}</Button>
+  </div>
+ </Modal>}</>;
 }
 
 const options=[

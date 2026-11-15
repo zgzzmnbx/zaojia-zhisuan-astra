@@ -59,6 +59,25 @@ def event(clock, stage='match_start', status='running', **patch):
                 occurred_at=datetime.fromtimestamp(clock[0],timezone.utc).isoformat(),_request='real-request',**patch)
 
 
+def test_watch_bubble_mirrors_final_payload_only_once_after_acceptance(fixture):
+    obj, remote, clock = fixture
+    obj.settings.sound = True
+    obj.settings.speech_target = 'watch'
+    obj.settings.stages['match_start'].speech = True
+    obj.settings.stages['match_start'].speech_text = '这是 Watch 的最终播报。'
+    start = obj.speech_snapshot()
+    obj.begin('real-request')
+    obj.enqueue(event(clock))
+    assert obj.speech_snapshot(start['stream'])['items'] == []
+    obj.step()
+    result = obj.speech_snapshot(start['stream'])
+    assert len(result['items']) == 1
+    assert result['items'][0]['text'] == remote.sent[0]['speech']['text'] == '这是 Watch 的最终播报。'
+    clock[0] += 3
+    obj.step()
+    assert len(obj.speech_snapshot(start['stream'])['items']) == 1
+
+
 def test_no_history_first_enable_or_disabled_output(fixture):
     obj,remote,clock=fixture
     old=event([99])

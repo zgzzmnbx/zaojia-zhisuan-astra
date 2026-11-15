@@ -23,6 +23,7 @@ import httpx
 
 from fastapi import HTTPException
 import gork_config as config
+from gork_speech import SpeechMirror
 
 _spec = importlib.util.spec_from_file_location('astra_gork_sdk', Path(__file__).parent / 'vendor/gork-output/external_client.py')
 sdk = importlib.util.module_from_spec(_spec)
@@ -112,6 +113,8 @@ class Notifications:
         self.connection = None
         self.next_connect = 0
         self.platform = {'state': 'checking', 'message': '正在连接 Gork', 'checked_at': 0}
+        self.speech_mirror = SpeechMirror(clock)
+        self.current_sound_target = None
 
     def _client(self, settings):
         config.token(settings)  # Validate independent source; never return secret to UI.
@@ -267,6 +270,7 @@ class Notifications:
             if settings.sound and stage.speech and target not in (policy.get('speech_targets') or []):
                 raise HTTPException(409, '阶段声音位置未获 Gork 授权')
         self.output_capabilities = caps
+        self.current_sound_target = state.get('current_sound_target')
         return state
 
     async def configure(self, settings):
@@ -542,6 +546,8 @@ class Notifications:
                         code = 'EXTERNAL_OUTPUT_FAILED'
                     db.execute('UPDATE events SET status=?,receipt=?,next_try=?,error=? WHERE id=?',
                                (status, json.dumps(safe_receipt), now + 2, code, row['id']))
+                    if not json.loads(row['receipt']):
+                        self.speech_mirror.accepted(payload, safe_receipt, self.current_sound_target)
                     self.cached_status = {'state': 'ready', 'message': '通知接口可用，回执按输出端记录'}
                 except Exception as exc:
                     code = error_code(exc)
@@ -563,6 +569,10 @@ class Notifications:
 
     async def status(self, settings):
         return await asyncio.to_thread(self._status, settings)
+
+    def speech_snapshot(self, stream='', after=0):
+        with self.lock:
+            return self.speech_mirror.snapshot(stream, after)
 
     def _status(self, settings):
         with self.lock:
@@ -594,7 +604,8 @@ class Notifications:
                 result.update(state='unavailable', message='通用通知接口未就绪：' + error_code(exc))
             rows = self.db().execute('SELECT id,payload,status,receipt,error FROM events ORDER BY rowid DESC LIMIT 8').fetchall()
             result['history'] = [{'event_id': row['id'], 'stage': json.loads(row['payload'])['stage'], 'status': row['status'],
-                                  'delivery': json.loads(row['receipt']).get('delivery', {}), 'error': row['error']} for row in rows]
+                                  'delivery': json.loads(row['receipt']).get('delivery', {}), 'error': row['error'],
+                                  'speech_text': (json.loads(row['payload']).get('speech') or {}).get('text', '')} for row in rows]
             return result
 
 
@@ -605,6 +616,9 @@ def install(app, engine, runtime, *, manage_lifecycle=True):
                              feed=lambda: engine.get_current_monitored_task()['events'],
                              approval_feed=ApprovalFeed(feishu_app_bot.DB_PATH, runtime))
     config.bridge = instance
+    @app.get('/api/astra/gork/notifications/speech')
+    async def speech_snapshot(stream: str = '', after: int = 0):
+        return await asyncio.to_thread(instance.speech_snapshot, stream, after)
     original_write = sentinel_events.atomic_json
     def observe_write(path, event):
         from gork_project import freeze_project

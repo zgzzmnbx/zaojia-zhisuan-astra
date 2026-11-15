@@ -3,8 +3,24 @@ import time
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-import server
 from test_gork_notifications import fixture
+import server
+from gork_speech import SpeechMirror
+
+
+def test_speech_read_route_has_no_dispatch_or_history_replay(monkeypatch):
+    mirror = SpeechMirror(lambda: 100)
+    monkeypatch.setattr(server.gork_output, 'speech_mirror', mirror)
+    # No lifespan: this read endpoint must not start a worker or contact the console.
+    client = TestClient(server.app)
+    route = '/api/astra/gork/notifications/speech'
+    first = client.get(route).json()
+    mirror.accepted({'event_id': 'read-only', 'speech': {'target': 'watch', 'text': '任务已完成。'}}, {'status': 'queued'}, 'watch')
+    assert client.get(route).json()['items'] == []
+    response = client.get(route, params={'stream': first['stream'], 'after': first['cursor']})
+    assert response.status_code == 200
+    assert response.json()['items'][0]['text'] == '任务已完成。'
+    assert client.post(route).status_code == 405
 
 
 def test_real_host_lifespan_dispatches_debug_without_manual_step(fixture,monkeypatch):

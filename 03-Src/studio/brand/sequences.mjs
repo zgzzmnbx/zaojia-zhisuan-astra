@@ -23,5 +23,18 @@ export function sampleSequence(id,time,speed=1){
 export const pageCyclesKey='astra.logo-page-cycles.v1';
 export const pageCyclesEvent='astra:logo-page-cycles-change';
 export function normalizePageCycles(value){const v=value&&typeof value==='object'?value:{};return {welcome:['paused','manual'].includes(v.welcome)?v.welcome:'loop',studio:v.studio==='paused'?'paused':'loop'};}
-export function readPageCycles(){try{return normalizePageCycles(JSON.parse(localStorage.getItem(pageCyclesKey)||'null'));}catch{return normalizePageCycles(null);}}
+export function readPageCycles(){try{
+ const cycles=normalizePageCycles(JSON.parse(localStorage.getItem(pageCyclesKey)||'null'));
+ // Restore the requested two-action welcome cycle once for old wave-only choices.
+ // Later explicit manual choices, pause, palette and speed remain untouched.
+ const migration='astra.welcome-wave-tail.v1';
+ if(!localStorage.getItem(migration)){
+  const legacy=JSON.parse(localStorage.getItem('astra.welcome-logo.v1')||'{}');
+  if(cycles.welcome==='manual'&&legacy.mode==='wave'){
+   cycles.welcome='loop';localStorage.setItem(pageCyclesKey,JSON.stringify(cycles));
+  }
+  localStorage.setItem(migration,'1');
+ }
+ return cycles;
+}catch{return normalizePageCycles(null);}}
 export function savePageCycles(value){localStorage.setItem(pageCyclesKey,JSON.stringify(normalizePageCycles(value)));window.dispatchEvent(new Event(pageCyclesEvent));}

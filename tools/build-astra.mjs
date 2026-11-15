@@ -37,6 +37,7 @@ for(const name of ['03-Src/studio/ReviewConversation.tsx','03-Src/studio/review-
 sources['03-Src/studio/project-sandbox/anchored-labels.ts']=crypto.createHash('sha256').update(fs.readFileSync('03-Src/studio/project-sandbox/anchored-labels.ts')).digest('hex');
 for(const file of ['professional-skills.ts','useProfessionalSkills.ts','SkillPicker.tsx','skill-picker.css']){const name='03-Src/studio/'+file;sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex')}
 for(const name of ["03-Src/studio/project-dashboard/ProjectDashboard.tsx", "03-Src/studio/project-dashboard/ProjectDashboardLoading.tsx", "03-Src/studio/project-dashboard/dashboard-loading.css"])sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');
+for(const name of ['03-Src/studio/GorkSpeechBubble.tsx','03-Src/studio/gork-speech.ts','03-Src/studio/gork-speech.css','03-Src/studio/brand/sequences.mjs','03-Src/gork_speech.py','03-Src/gork_notifications.py','03-Src/server.py'])sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');
 fs.writeFileSync(`${staging}/astra-build.json`,JSON.stringify({version:packageInfo.version,builtAt:new Date().toISOString(),sources},null,2));
 
 publishBuild(staging,outDir);
