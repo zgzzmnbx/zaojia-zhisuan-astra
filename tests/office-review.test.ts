@@ -78,3 +78,20 @@ test('manual limits exclude the back and underside and leave a complete automati
   }
  }
 });
+import {classifyNightRole,nightSeatId,NIGHT_LIGHTING} from '../public/office-twin/viewer/night-lighting-policy.js';
+test('night light identifies actual glTF screen material without lighting the bezel or stand',()=>{
+ const parent={name:'Furniture_SEAT_NW_01_MONITOR',userData:{seat_id:'SEAT_NW_01'},parent:{name:'H1_F09_Office'}};
+ const leaf={name:'Desktop_v062_MonitorShared_3',parent,material:{name:'Device_v062_ScreenBlue'}};
+ assert.equal(classifyNightRole(leaf),'screen');
+ for(const name of ['Device_v062_SoftWhite','Device_v062_LightGray','Device_v062_KeyWhite'])assert.equal(classifyNightRole({...leaf,material:{name}}),'interior');
+ assert.equal(nightSeatId(leaf),'SEAT_NW_01');
+ assert.ok(NIGHT_LIGHTING.screenBloomGain>0&&NIGHT_LIGHTING.screenBloomGain<1);
+ const luminance=NIGHT_LIGHTING.screenColor.reduce((total,c,i)=>total+c*[.2126,.7152,.0722][i],0);
+ assert.ok(luminance*NIGHT_LIGHTING.screenBloomGain>.36,'screen extraction must exceed the existing bloom threshold');
+});
+test('desk spill binds people and furniture to their own seat and leaves room walls unbound',()=>{
+ const person={name:'actor',userData:{demoPersonId:'owner',seat_id:'SEAT_E_01'}};
+ assert.equal(nightSeatId({name:'arm',parent:person}),'SEAT_E_01');
+ assert.equal(nightSeatId({name:'wall',parent:{name:'H1_F09_Office'}}),null);
+ assert.equal(classifyNightRole({name:'MONITOR_STAND',material:{name:'white'}}),'shell');
+});

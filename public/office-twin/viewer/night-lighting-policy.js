@@ -2,7 +2,7 @@
 export const NIGHT_LIGHTING=Object.freeze({
   windowColor:[.34,.46,.50],contextWindowColor:[.119,.161,.175],
   signColor:[.78,1.02,1.08],accentColor:[.26,.55,.65],
-  screenColor:[.025,.033,.036],screenBloomGain:0,
+  screenColor:[.14,.65,1.25],screenBloomGain:.85,
   interiorAmbient:.18,interiorUpFill:.17,interiorKeyFill:.12,interiorSideFill:.05,
   cyanPool:[.018,.065,.078],violetPool:[.035,.018,.065],
 });
@@ -13,12 +13,18 @@ export function nodeIsOffice(object){
   }
   return false;
 }
-export function classifyNightRole(object){
+export function nightSeatId(object){
+  for(let node=object;node;node=node.parent)if(node.userData?.seat_id)return node.userData.seat_id;
+  return null;
+}
+export function classifyNightRole(object,material=object.material){
   const explicit=object.userData?.night_role,n=object.name||'';
   if(['window','accent','sign','context','screen','interior_light'].includes(explicit))return explicit;
   if(/Context_Building|Context_Setback/.test(n))return 'context';
   if(/PipeChina|Logo|Sign/.test(n))return 'sign';
-  if(/MONITOR|SCREEN/.test(n))return 'screen';
+  // glTF multi-primitive meshes keep MONITOR on the parent, not the render leaf.
+  // Match the actual display material; the bezel, stand and UI strokes stay opaque.
+  if(/ScreenBlue/i.test(material?.name||''))return 'screen';
   if(nodeIsOffice(object))return 'interior';
   if(/RecessedGlass|GlassVariation|Glazing/.test(n))return 'window';
   if(/F(?:09|20)_HorizontalFrame|Entry canopy/.test(n))return 'accent';

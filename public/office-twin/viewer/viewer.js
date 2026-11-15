@@ -47,7 +47,10 @@ export async function mountOfficeViewer() {
   let orbitDirection=1,wasOrbitRunning=false;
   let business=officeClient.getState(),bridgeContext={id:null,revision:0};
   const unsubscribeBusiness=officeClient.subscribe((kind,value)=>{
-    if(kind==='snapshot'){business=value;people?.syncBusiness(value);}
+    if(kind==='snapshot'){
+      business=value;const before=people?.getState().rigRevision;people?.syncBusiness(value);
+      if(people&&people.getState().rigRevision!==before)nightEnvironment?.refresh(scene);
+    }
     if(kind==='event'){people?.react(value);notify('employee-event',{seq:value.seq,employeeId:value.event.employeeId,eventType:value.event.type,contextId:bridgeContext.id});}
   });
   const loadStarted=performance.now();

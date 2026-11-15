@@ -7,7 +7,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   const card=document.querySelector('#person-card'),candidates=document.querySelector('#review-candidates');
   const message=document.querySelector('#review-status');
   const actors=new Map(),geometries=[],materials=[];
-  let current=null,disposed=false,signature='',business=officeClient.getState();
+  let current=null,disposed=false,signature='',rigRevision=0,business=officeClient.getState();
   const sphere=new THREE.SphereGeometry(.23,16,12),torso=new THREE.CapsuleGeometry(.19,.34,4,12),limb=new THREE.CapsuleGeometry(.075,.27,4,8);
   geometries.push(sphere,torso,limb);
   const white=new THREE.MeshStandardMaterial({color:0xf0f0eb,roughness:.85});
@@ -26,10 +26,11 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     });
   }
   function build(){
+    rigRevision++;
     root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();
     business.employees.forEach((person,index)=>{
       const anchor=model.getObjectByName(`PersonAnchor_${seats[index]?.seat_id}`);
-      const group=new THREE.Group();group.userData.demoPersonId=person.id;root.add(group);
+      const group=new THREE.Group();group.userData.demoPersonId=person.id;group.userData.seat_id=seats[index]?.seat_id;root.add(group);
       part(group,sphere,white,0,1.31,0);part(group,torso,blue,0,.88,0);
       for(const side of [-1,1]){part(group,limb,grey,side*.11,.52,.16,Math.PI/2);part(group,limb,grey,side*.11,.30,.32);part(group,limb,white,side*.25,.84,.14,Math.PI/3);}
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
@@ -90,6 +91,6 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   }
   function pick(ray){if(!root.visible)return false;for(const hit of ray.intersectObject(root,true)){let node=hit.object;while(node&&node!==root){if(node.userData.demoPersonId)return select(node.userData.demoPersonId);node=node.parent;}}return false;}
   syncBusiness();
-  return {select,update,pick,syncBusiness,react:()=>false,isAnimating:()=>false,getState:()=>({count:actors.size,selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id)}),
+  return {select,update,pick,syncBusiness,react:()=>false,isAnimating:()=>false,getState:()=>({count:actors.size,rigRevision,selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id)}),
     dispose(){disposed=true;scene.remove(root);geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
 }
