@@ -1,0 +1,3 @@
+/* Optional: the original Astra canvas toolbar/label rules.
+   Load after astra-ui.css only when reusing its project-sandbox markup. */
+@import "./upstream/03-Src/studio/project-sandbox/project-sandbox.css";

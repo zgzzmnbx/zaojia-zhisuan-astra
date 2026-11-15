@@ -1,0 +1,5 @@
+/* Optional exact original font bytes. Enable this stylesheet only after placing
+   the three existing Astra font files under ./fonts/. */
+@font-face{font-family:'Zaojia PingFang SC';src:url('./fonts/pingfang-sc-regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Zaojia PingFang SC';src:url('./fonts/pingfang-sc-medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Zaojia PingFang SC';src:url('./fonts/pingfang-sc-semibold.woff2') format('woff2');font-weight:600 800;font-display:swap}

@@ -1,0 +1,299 @@
+/* The retained conversation floats on the same canvas; its layout and state stay intact. */
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{background:radial-gradient(ellipse at 22% 60%,#bcdced55,transparent 60%),var(--canvas)}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation{position:relative;z-index:2;margin:16px 0 16px 16px;border:1px solid color-mix(in srgb,var(--paper) 80%,transparent);border-radius:20px;background:color-mix(in srgb,var(--paper) 66%,transparent);backdrop-filter:blur(24px) saturate(115%);box-shadow:0 16px 48px #183d5912;overflow:hidden}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation .conversation-heading,.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation .composer-wrap,.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation .messages{background:transparent}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.workbench-separator{background:transparent}
+.sandbox-workbench>.workbench-separator::before{background:transparent}
+.sandbox-workbench>.workbench-separator>span:first-child{opacity:.6}
+.sandbox-surface{grid-column:3;grid-row:1;position:relative;min-width:0;min-height:0;overflow:hidden}
+.sandbox-surface[hidden]{display:none!important}
+.project-sandbox{--glass:color-mix(in srgb,var(--paper) 65%,transparent);position:relative;width:100%;height:100%;min-height:0;overflow:hidden;isolation:isolate;color:var(--ink);container-type:inline-size}
+.sandbox-canvas,.sandbox-canvas>canvas,.sandbox-markers{position:absolute;inset:0;width:100%;height:100%}
+.sandbox-canvas>canvas{display:block;touch-action:none}
+.sandbox-canvas>canvas[hidden]{display:none!important}
+.sandbox-visual-mode{padding-bottom:8px;border-bottom:1px solid var(--border,#dce4eb);margin-bottom:8px}
+.sandbox-toolbar{position:absolute;z-index:5;top:20px;left:24px;right:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;pointer-events:none}
+.sandbox-toolbar>*{pointer-events:auto}.sandbox-project{display:flex;flex-direction:column;min-width:0;max-width:60%;gap:4px}
+.sandbox-eyebrow{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.sandbox-project>strong{font-size:20px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:650}
+.sandbox-project .select{height:30px;min-height:30px;max-width:260px;width:100%;padding-left:0;font-size:13px;color:var(--muted);background-color:transparent;border:0;box-shadow:none}
+.sandbox-switch{display:flex;align-items:center;gap:4px;padding:4px;background:var(--glass);backdrop-filter:blur(18px);border:1px solid color-mix(in srgb,var(--paper) 85%,transparent);border-radius:12px;box-shadow:0 4px 18px #1739560a}
+.sandbox-mode-current{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue);font-size:13px;font-weight:600}
+.sandbox-mode-current .astra-icon{width:16px;height:16px}.sandbox-switch .btn{font-size:13px;min-height:30px;height:30px}
+.sandbox-markers{pointer-events:none;z-index:2}
+.sandbox-marker{position:absolute;top:0;left:0;pointer-events:auto;display:flex;flex-direction:column;text-align:left;gap:3px;width:150px;min-height:64px;padding:9px 12px;border-radius:11px;border:1px solid color-mix(in srgb,var(--paper) 83%,transparent);background:color-mix(in srgb,var(--paper) 57%,transparent);backdrop-filter:blur(12px);color:var(--ink);box-shadow:0 4px 15px #1636510d;cursor:pointer;transition:background .18s,border-color .18s;will-change:transform}
+.sandbox-marker:hover,.sandbox-marker.selected{background:color-mix(in srgb,var(--paper) 88%,transparent);border-color:var(--blue);z-index:4}
+.sandbox-marker:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.sandbox-marker-title{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:14px;line-height:1.4;font-weight:700}
+.sandbox-marker-title small{font-size:12px;color:var(--blue);font-weight:650}
+.sandbox-node-status{display:flex;align-items:center;gap:5px;font-size:12px;line-height:1.4;color:var(--muted)}
+.sandbox-node-status i{width:6px;height:6px;border-radius:50%;border:1px solid currentColor;flex-shrink:0}
+.sandbox-marker[data-tone=done] .sandbox-node-status,.sandbox-marker[data-tone=running] .sandbox-node-status{color:var(--blue)}
+.sandbox-marker[data-tone=done] .sandbox-node-status i,.sandbox-marker[data-tone=running] .sandbox-node-status i{background:currentColor}
+.sandbox-marker[data-tone=attention] .sandbox-node-status{font-weight:650;color:var(--ink)}
+.sandbox-marker[data-tone=error] .sandbox-node-status{color:var(--error,#bc4343)}
+.sandbox-node-summary{font-size:12px;line-height:1.4;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.sandbox-pin{position:absolute;width:1px;height:15px;top:100%;left:50%;background:color-mix(in srgb,var(--blue) 30%,transparent)}
+.sandbox-pin::after{content:'';position:absolute;bottom:-5px;left:-3px;width:7px;height:7px;background:var(--blue);border:2px solid var(--paper);border-radius:50%;box-shadow:0 0 0 3px #ffffff38}
+.sandbox-view-controls{position:static;display:flex;align-items:center;flex-shrink:0}
+.sandbox-view-controls .btn{height:30px;min-height:30px;font-size:12px;gap:5px;padding-inline:8px}.sandbox-view-controls .btn-square{width:30px;padding:0}.sandbox-view-controls .astra-icon{width:16px;height:16px}
+.sandbox-view-controls label{display:flex;align-items:center;gap:5px;padding:0 7px;font-size:12px;white-space:nowrap;color:var(--muted);cursor:pointer}.sandbox-view-controls .toggle{color:#87919c}.sandbox-view-controls .toggle:checked{color:var(--blue)}.sandbox-view-controls .toggle:disabled{color:#87919c}
+.sandbox-scene-caption{position:absolute;bottom:7px;left:20px;font-size:12px;color:var(--muted);pointer-events:none}
+.sandbox-loading{position:absolute;inset:88px 24px 32px;display:grid;place-items:center;color:var(--muted);pointer-events:none;container-type:inline-size}
+.sandbox-loading[data-chat-open=true]{left:calc(var(--chat-size,0px) + 24px)}
+.sandbox-loading[data-info-open=true]{right:calc(clamp(210px,13.2%,248px) + 44px)}
+.sandbox-loading-content{display:flex;align-items:center;justify-content:center;gap:24px;width:100%;max-width:700px;min-height:240px}
+.sandbox-loading-content>span:last-child{font-size:var(--dws-font-size-28);line-height:1.5;white-space:nowrap}
+@container(max-width:440px){.sandbox-loading-content{flex-direction:column;gap:12px}.sandbox-loading-content>span:last-child{font-size:var(--dws-font-size-20)}}
+.project-sandbox[data-ready=false]:not(.scene-fallback) .sandbox-markers{visibility:hidden}
+.sandbox-load-error{position:absolute;top:130px;left:24px;right:24px;z-index:3;font-size:14px;line-height:1.7}.sandbox-load-error .btn{margin-right:8px}
+.scene-fallback .sandbox-markers{inset:260px 24px 100px;width:auto;height:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-content:start;overflow:auto;pointer-events:auto}
+.scene-fallback .sandbox-marker{position:relative;width:100%;transform:none!important;visibility:visible!important}.scene-fallback .sandbox-pin{display:none}
+[data-astra-scheme=dark] .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{background:radial-gradient(ellipse at 20% 65%,#11384c70,transparent 70%),var(--canvas)}
+[data-astra-scheme=dark] .sandbox-marker{border-color:color-mix(in srgb,var(--blue) 18%,transparent)}
+@media(prefers-reduced-motion:reduce){.sandbox-marker{transition:none}}
+
+.sandbox-node-summary>span{display:block;overflow:hidden;text-overflow:ellipsis}.sandbox-node-summary>.sandbox-amount{font-size:14px;font-weight:700;line-height:1.6;color:var(--blue);font-variant-numeric:tabular-nums}
+/* Titles focus buildings; status cards enter the existing professional feature. */
+.sandbox-toolbar-actions{position:relative;display:flex;align-items:center;gap:8px;flex-shrink:0}.sandbox-all{background:var(--glass);backdrop-filter:blur(14px);font-size:13px}
+.sandbox-all-menu{position:absolute;z-index:9;top:70px;right:20px;display:grid;gap:3px;padding:8px;width:190px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(24px);box-shadow:0 14px 40px #15345224}
+.sandbox-all-menu>.btn{justify-content:flex-start;font-size:14px;gap:12px}.sandbox-all-menu>.btn>span{font-size:12px;color:var(--blue)}
+.sandbox-marker,.sandbox-marker:hover,.sandbox-marker.selected{padding:0;gap:5px;min-height:0;border:0;box-shadow:none;background:transparent;backdrop-filter:none;pointer-events:none}
+.sandbox-marker-title,.sandbox-result-trigger{width:100%;pointer-events:auto;border:1px solid color-mix(in srgb,var(--paper) 72%,transparent);border-radius:9px;background:color-mix(in srgb,var(--paper) 62%,transparent);backdrop-filter:blur(12px) saturate(120%);color:var(--ink);cursor:pointer;box-shadow:0 3px 15px #335c7814}
+.sandbox-marker-title{justify-content:center;padding:9px 10px;line-height:1.4}.sandbox-result-trigger{display:flex;flex-direction:column;gap:4px;text-align:left;padding:6px 9px;background:color-mix(in srgb,var(--paper) 57%,transparent)}
+.sandbox-marker-title:hover,.sandbox-marker.selected>.sandbox-marker-title,.sandbox-result-trigger:hover,.sandbox-result-trigger:focus-visible{border-color:var(--blue);background:color-mix(in srgb,var(--paper) 80%,transparent)}
+.sandbox-marker button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}.sandbox-pin{pointer-events:none}
+.project-sandbox[data-focused=true] .sandbox-marker:not(.selected){opacity:.56}.project-sandbox[data-focused=true] .sandbox-marker:hover,.project-sandbox[data-focused=true] .sandbox-marker:focus-within{opacity:1}
+[data-astra-scheme=dark] .sandbox-marker-title,[data-astra-scheme=dark] .sandbox-result-trigger{border-color:color-mix(in srgb,var(--blue) 25%,transparent)}
+@container(max-width:650px){.sandbox-all{font-size:12px;padding-inline:7px}.sandbox-toolbar-actions{gap:4px}.sandbox-switch{gap:0;padding:3px}.sandbox-mode-current{padding-inline:6px}.sandbox-project{max-width:42%}}
+
+.studio #shell.live-shell .adjustable-workbench.conversation-collapsed{grid-template-columns:minmax(0,1fr)}
+.studio #shell.live-shell .conversation-collapsed>.conversation,.studio #shell.live-shell .conversation-collapsed>.workbench-separator{display:none!important}
+.conversation-collapsed>.sandbox-surface{grid-column:1}
+
+/* Immersive workspace: one continuous 3D canvas beneath the retained chat. */
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench{display:block;isolation:isolate}
+.studio #shell.live-shell .sandbox-workbench>.sandbox-surface{position:absolute;inset:0;z-index:0;width:100%;height:100%}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation{position:absolute;inset:16px auto 16px 16px;width:calc(var(--chat-size) - 16px);height:auto;max-width:none;margin:0;z-index:10;background:color-mix(in srgb,var(--paper) var(--astra-sandbox-chat-opacity,58%),transparent);backdrop-filter:blur(28px) saturate(120%);box-shadow:0 18px 56px #173d5924,inset 0 1px 0 #ffffff80}
+.studio #shell.live-shell .sandbox-workbench>.conversation .composer{background:color-mix(in srgb,var(--paper) 78%,transparent)}
+.studio #shell.live-shell .sandbox-workbench>.conversation .conversation-heading{background:color-mix(in srgb,var(--paper) 25%,transparent)}
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.workbench-separator{position:absolute;z-index:11;left:calc(var(--chat-size) - 6px);top:32px;bottom:32px;width:12px;height:auto;background:transparent;border:0}
+.sandbox-workbench>.workbench-separator::before,.sandbox-workbench>.workbench-separator::after{display:none}
+.sandbox-workbench .sandbox-toolbar{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+.sandbox-workbench .sandbox-scene-caption{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+.sandbox-workbench .sandbox-load-error{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+.sandbox-workbench .scene-fallback .sandbox-markers{left:calc(var(--sandbox-safe-left,0px) + 24px)}
+
+/* Classic workspace: the chat is the page; the sandbox is a floating card. */
+.studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic{display:block;--sandbox-card-width:min(60%,calc(100% - 400px));background:var(--paper)}
+.studio #shell.live-shell .four-surface.sandbox-classic>.conversation{height:100%;width:100%;max-width:none;margin:0;padding-right:calc(var(--sandbox-card-width) + 36px);box-sizing:border-box}
+.studio #shell.live-shell .four-surface.sandbox-classic>.conversation>.messages{padding-inline:28px}
+.studio #shell.live-shell .four-surface.sandbox-classic>.sandbox-surface{position:absolute;z-index:8;top:18px;right:18px;bottom:18px;width:var(--sandbox-card-width);height:auto;display:grid;grid-template-rows:minmax(0,1fr) clamp(220px,27%,280px);border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 48px #173d591c;overflow:hidden}
+.sandbox-card-mode .sandbox-toolbar{top:14px;left:16px;right:12px;gap:8px;align-items:center}
+.sandbox-card-mode .sandbox-project{max-width:52%}.sandbox-card-mode .sandbox-project>strong{font-size:16px}
+.sandbox-card-mode .sandbox-eyebrow,.sandbox-card-mode .sandbox-project>label{display:none}
+.sandbox-card-mode .sandbox-marker{width:110px}
+.sandbox-card-mode .sandbox-marker-title{width:110px;height:34px;padding:0 6px;gap:5px;font-size:13px;border-radius:9px;background:color-mix(in srgb,var(--paper) 84%,transparent)}
+.sandbox-card-mode .sandbox-result-trigger{display:none}
+.sandbox-card-mode .sandbox-marker-title small{font-size:13px}
+.sandbox-card-mode .sandbox-view-controls .btn{padding-inline:5px}.sandbox-card-mode .sandbox-view-controls label{padding-inline:3px}
+.sandbox-card-mode .sandbox-scene-caption{font-size:12px;left:14px;bottom:5px}
+.sandbox-card-mode .sandbox-all-menu{top:62px}
+.sandbox-card-mode.scene-fallback .sandbox-marker{width:auto}.sandbox-card-mode.scene-fallback .sandbox-marker-title{width:100%;border-radius:9px;gap:8px}.sandbox-card-mode.scene-fallback .sandbox-marker-title>span{display:inline}
+
+/* Crowded signs keep their title and reveal details without moving the hit target. */
+.project-sandbox:not(.sandbox-card-mode) .sandbox-marker[data-condensed=true] .sandbox-result-trigger{position:absolute;top:calc(100% + 5px);left:0;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .12s}
+.project-sandbox:not(.sandbox-card-mode) .sandbox-marker[data-condensed=true]:hover .sandbox-result-trigger,
+.project-sandbox:not(.sandbox-card-mode) .sandbox-marker[data-condensed=true]:focus-within .sandbox-result-trigger{visibility:visible;opacity:1;pointer-events:auto}
+.sandbox-marker[data-condensed=true]::after{content:'';position:absolute;left:0;right:0;top:100%;height:6px;pointer-events:auto}
+.sandbox-marker[data-priority=true]{z-index:6!important;opacity:1!important}
+.sandbox-marker[data-locked=true],.sandbox-marker:focus-within{z-index:7!important;opacity:1!important}
+.project-sandbox .sandbox-marker[data-condensed=true]>.sandbox-marker-title{box-shadow:0 3px 15px #335c7814,inset 0 -2px 0 color-mix(in srgb,var(--blue) 18%,transparent)}
+@media(prefers-reduced-motion:reduce){.project-sandbox .sandbox-marker[data-condensed=true] .sandbox-result-trigger{transition:none}}
+
+:root[data-sandbox-chat-background=solid] .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation{background:var(--paper);backdrop-filter:none}
+:root[data-sandbox-chat-background=solid] .studio #shell.live-shell .sandbox-workbench>.conversation .composer{background:var(--paper)}
+:root[data-sandbox-chat-background=solid] .studio #shell.live-shell .sandbox-workbench>.conversation .conversation-heading{background:transparent}
+
+/* Live task feedback: fixed track, no fabricated percentage. */
+.sandbox-marker[data-tone=running]{z-index:6!important;opacity:1!important}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-result-trigger,
+.project-sandbox .sandbox-marker[data-tone=running]>.sandbox-node-progress{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff);border-color:color-mix(in srgb,var(--astra-primary) 75%,white);box-shadow:0 5px 20px color-mix(in srgb,var(--astra-primary) 24%,transparent)}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-status,
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-summary,
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-amount{color:var(--astra-primary-content,#fff)}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-node-status{font-weight:650}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-progress-content{border-color:color-mix(in srgb,var(--astra-primary) 75%,white)}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-stage-progress{background:#ffffff38}
+.project-sandbox .sandbox-marker[data-tone=running] .sandbox-stage-progress>span{background:linear-gradient(90deg,#ffffff70,#fff)}
+.project-sandbox .sandbox-marker[data-tone=running] button:focus-visible{outline-color:var(--astra-primary);outline-offset:3px}
+.sandbox-node-progress{position:absolute;top:calc(100% - 2px);left:0;right:0;display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .24s ease,opacity .18s ease;pointer-events:none;border-radius:0 0 9px 9px;background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(12px);box-shadow:0 6px 16px #1636510d}
+.sandbox-node-progress[data-open=true]{grid-template-rows:1fr;opacity:1}
+.sandbox-node-progress>div{min-height:0;overflow:hidden}
+.sandbox-progress-content{height:40px;box-sizing:border-box;padding:7px 9px 9px;display:flex;flex-direction:column;gap:5px;border:1px solid color-mix(in srgb,var(--blue) 30%,transparent);border-top:0;border-radius:0 0 9px 9px}
+.sandbox-progress-content>span{font-size:12px;line-height:16px;color:var(--blue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sandbox-stage-progress{height:3px;flex-shrink:0;border-radius:4px;overflow:hidden;background:color-mix(in srgb,var(--astra-primary) 20%,transparent)}
+.sandbox-stage-progress>span{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--astra-primary) 40%,transparent),var(--astra-primary),color-mix(in srgb,var(--astra-primary) 45%,white))}
+.sandbox-node-progress[data-open=true][data-phase=running] .sandbox-stage-progress>span{animation:sandbox-task-stream 1.6s ease-in-out infinite}
+.sandbox-node-progress[data-phase=settled] .sandbox-stage-progress>span{width:100%;transform:none;transition:width .2s ease}
+.sandbox-node-progress[data-phase=error] .sandbox-progress-content>span{color:var(--error,#bc4343)}
+.sandbox-node-progress[data-phase=error] .sandbox-stage-progress>span{background:var(--error,#bc4343)}
+.sandbox-node-progress[data-phase=cancelled] .sandbox-stage-progress>span{background:var(--muted)}
+.sandbox-marker[data-progress-open=true] .sandbox-result-trigger{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.sandbox-card-mode .sandbox-marker[data-progress-open=true]{width:140px}
+.sandbox-card-mode .sandbox-marker[data-progress-open=true] .sandbox-marker-title{width:100%}
+.sandbox-card-mode .sandbox-marker[data-progress-open=true] .sandbox-result-trigger{display:flex}
+.sandbox-result-trigger:disabled{cursor:default;opacity:1}
+@keyframes sandbox-task-stream{from{transform:translateX(-105%)}to{transform:translateX(370%)}}
+.project-sandbox[data-motion-paused=true] .sandbox-stage-progress>span{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.sandbox-node-progress,.sandbox-stage-progress>span{transition:none}.sandbox-node-progress[data-open=true][data-phase=running] .sandbox-stage-progress>span{animation:none;transform:translateX(80%);opacity:.85}}
+
+/* Low-frequency scene controls stay behind a compact disclosure. */
+.sandbox-view-options{position:absolute;top:calc(100% + 10px);right:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:3px;width:max-content;max-width:calc(100cqw - 40px);padding:8px;border:1px solid var(--line);border-radius:13px;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(20px) saturate(120%);box-shadow:0 12px 32px #16324b20}
+.sandbox-view-controls>.sandbox-controls-toggle{height:32px;min-height:32px;font-size:13px}
+.sandbox-controls-toggle .astra-icon:last-child{width:12px;height:12px;transform:none}
+.sandbox-view-controls[data-expanded="true"] .sandbox-controls-toggle .astra-icon:last-child{transform:rotate(180deg)}
+
+.sandbox-card-mode .sandbox-marker[data-zone="price"],.sandbox-card-mode .sandbox-marker[data-zone="risk"]{width:140px}
+.sandbox-card-mode .sandbox-marker[data-zone="price"] .sandbox-marker-title,.sandbox-card-mode .sandbox-marker[data-zone="risk"] .sandbox-marker-title{width:140px}
+.sandbox-card-mode .sandbox-marker[data-zone="price"] .sandbox-result-trigger,.sandbox-card-mode .sandbox-marker[data-zone="risk"] .sandbox-result-trigger{display:flex}
+
+.sandbox-orbit-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;font-size:14px}.sandbox-orbit-setting .select{width:130px}.sandbox-orbit-help{font-size:12px;line-height:1.6;color:var(--muted);margin:12px 0 0}
+
+@container(max-width:650px){.sandbox-marker{width:132px}.sandbox-toolbar{left:16px;right:16px}.sandbox-project>strong{font-size:16px}.sandbox-view-controls label{padding-inline:4px}}
+
+/* The existing status already says processing; keep its folded extension to one track. */
+.sandbox-node-progress[data-phase=running] .sandbox-progress-content,.sandbox-node-progress[data-phase=settled] .sandbox-progress-content{height:20px;padding-block:8px}
+.sandbox-node-progress[data-phase=running] .sandbox-progress-content>span,.sandbox-node-progress[data-phase=settled] .sandbox-progress-content>span{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+.sandbox-label-setting{border-right:1px solid var(--line);margin-right:4px}
+.project-sandbox[data-roof-labels=true] .sandbox-result-trigger{display:flex}
+
+/* Compact project identity and persistent camera controls. */
+.sandbox-project>strong{max-width:18em}.sandbox-card-mode .sandbox-project{max-width:30%}.sandbox-card-mode .sandbox-project>strong{max-width:14em}
+.sandbox-view-options{display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;gap:0;width:420px;padding:0;max-width:calc(100cqw - 40px)}
+.sandbox-view-toggles{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sandbox-camera-settings{display:grid;gap:14px;padding:14px 4px 2px}.sandbox-camera-settings>label{display:grid;grid-template-columns:1fr auto;padding:0;gap:10px;font-size:13px;color:var(--ink)}
+.sandbox-camera-settings .range{grid-column:1/-1;width:100%;color:var(--astra-primary)}.sandbox-camera-settings output{font-variant-numeric:tabular-nums;color:var(--muted)}
+.sandbox-camera-settings>small{font-size:12px;color:var(--muted)}.sandbox-idle-setting{display:flex;align-items:center;justify-content:space-between;gap:12px}.sandbox-idle-setting label{padding:0}.sandbox-idle-setting .select{width:100px;font-size:12px;min-height:30px;height:30px}
+
+.sandbox-ground-tones{border:0;padding:0;margin:0;min-width:0}.sandbox-ground-tones legend{font-size:13px;color:var(--ink);margin-bottom:8px}.sandbox-ground-tones>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.sandbox-ground-tones .btn{border:1px solid var(--line);border-radius:8px;height:34px;gap:6px}.sandbox-ground-tones .btn[aria-pressed=true]{border-color:var(--astra-primary);background:color-mix(in srgb,var(--astra-primary) 10%,var(--paper));color:var(--astra-primary-ink)}.sandbox-ground-tones i{width:14px;height:14px;border-radius:50%;border:1px solid #8896a844;flex-shrink:0}.sandbox-ground-tones:disabled{opacity:.5}
+
+.sandbox-group-logo>div{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sandbox-view-options{max-height:min(calc(100dvh - 152px),calc(100cqh - 96px));overflow:hidden}
+.sandbox-parameter-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:12px}
+
+/* Focused buildings reveal their own information, directly below the status. */
+.project-sandbox .sandbox-marker.selected{width:var(--sandbox-focus-card-width,280px);max-width:calc(100cqw - 40px);z-index:8!important;opacity:1!important}
+.project-sandbox .sandbox-marker.selected>.sandbox-marker-title{width:100%}
+.project-sandbox .sandbox-marker.selected .sandbox-result-trigger{display:flex;position:relative;top:auto;visibility:visible;opacity:1;pointer-events:auto;border-bottom-left-radius:0;border-bottom-right-radius:0;box-shadow:none;padding:10px 13px;background:color-mix(in srgb,var(--paper) 88%,transparent)}
+.project-sandbox .sandbox-marker.selected .sandbox-node-summary{white-space:normal}
+.sandbox-node-info{pointer-events:auto;margin-top:-5px;cursor:default;border:1px solid color-mix(in srgb,var(--blue) 26%,var(--paper));border-top:0;border-radius:0 0 12px 12px;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(20px) saturate(115%);box-shadow:0 12px 28px #16365120;animation:sandbox-info-reveal .65s ease-in-out both;overflow:hidden;transform-origin:top}
+.sandbox-node-facts{max-height:min(220px,25vh,var(--sandbox-detail-facts-height,220px));overflow:auto;overscroll-behavior:contain;padding:2px 13px 8px;scrollbar-width:thin}
+.sandbox-node-facts dl{margin:0;display:grid;gap:0}.sandbox-node-facts dl>div{padding:8px 0;border-top:1px solid var(--line);display:grid;gap:4px}
+.sandbox-node-facts dt{font-size:12px;line-height:1.4;color:var(--muted)}.sandbox-node-facts dd{margin:0;font-size:13px;line-height:1.55;color:var(--ink);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.sandbox-node-info footer{padding:0 13px 12px;display:grid;gap:7px}.sandbox-node-info footer .btn{width:100%;font-size:13px;min-height:32px;height:auto;padding:7px 10px}.sandbox-node-info footer small{font-size:12px;line-height:1.5;color:var(--muted)}
+[data-astra-scheme=dark] .sandbox-node-info{background:color-mix(in srgb,var(--paper) 91%,transparent);border-color:color-mix(in srgb,var(--blue) 30%,transparent)}
+@keyframes sandbox-info-reveal{from{max-height:0}to{max-height:340px}}
+@media(prefers-reduced-motion:reduce){.sandbox-node-info{animation:none}}
+
+.sandbox-marker.selected>.sandbox-pin{visibility:hidden}
+.sandbox-node-facts dl>div{grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:baseline;padding-block:9px}
+.sandbox-node-facts dt{line-height:1.55}
+
+.project-sandbox .sandbox-marker.selected[data-tone=running] .sandbox-result-trigger{background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff)}
+
+/* The building shader and its card share one visible-time animation clock. */
+.project-sandbox .sandbox-stage-progress>span{width:100%;transform:scaleX(var(--sandbox-task-fill,0));transform-origin:left center;animation:none!important;transition:none}
+.project-sandbox .sandbox-marker[data-paint-phase=held] .sandbox-stage-progress{opacity:.6}
+
+/* Selection travels with the existing label; no delayed fade or replacement card. */
+.project-sandbox .sandbox-marker{transition:width .65s ease-in-out}
+@media(prefers-reduced-motion:reduce){.project-sandbox .sandbox-marker{transition:none}}
+
+.sandbox-fps{display:inline-block;min-width:96px;margin-right:12px;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none}
+
+.sandbox-switch .btn[aria-pressed="true"]{background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue)}
+.sandbox-lighting-settings{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 4px;border-top:1px solid var(--border)}
+.sandbox-lighting-settings label{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer}
+.sandbox-lighting-settings small{flex-basis:100%;font-size:12px;color:var(--muted)}
+.summary-heading .sandbox-switch{--glass:var(--canvas);backdrop-filter:none;box-shadow:none;flex-shrink:0}
+
+.studio #shell.live-shell .four-surface .summary-heading .sandbox-switch .btn{width:auto;min-width:48px;height:32px;min-height:32px;padding:0 10px;font-size:13px}
+
+/* Keep the reading column and composer on one inset without reducing type. */
+@media(min-width:1025px){
+ .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic>.conversation>:is(.conversation-heading,.context-line,.messages,.composer-wrap){padding-inline:clamp(32px,6%,48px)}
+ .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-workbench>.conversation>:is(.conversation-heading,.context-line,.messages,.composer-wrap){padding-inline:24px}
+ .studio #shell.live-shell .adjustable-workbench.four-surface.surface-floating>.conversation>:is(.conversation-heading,.context-line,.composer-wrap){padding-inline:48px}
+}
+
+.sandbox-lighting-settings{display:grid;grid-template-columns:1fr 1fr;gap:12px 8px;border-top:0;border-bottom:1px solid var(--line)}
+.sandbox-lighting-settings label{padding:0;min-width:0}.sandbox-lighting-settings label span{display:flex;align-items:center;gap:6px}.sandbox-lighting-settings label small{font-size:12px;color:var(--muted);flex-basis:auto}.sandbox-lighting-settings>small{grid-column:1/-1}
+.sandbox-trial-entry{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);gap:12px}.sandbox-trial-entry>span{font-size:12px;color:var(--muted)}
+.trial-slider{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;font-size:13px}.trial-slider output{font-variant-numeric:tabular-nums;color:var(--muted)}.trial-slider .range{grid-column:1/-1;width:100%;color:var(--astra-primary)}
+
+/* Task and detail panels unfold from the same fixed title edge. The hidden
+   menu reserves its natural height, keeping the title anchored during handoff. */
+.sandbox-node-slot{position:relative;width:100%;min-width:0}
+.sandbox-node-menu{display:flex;flex-direction:column;gap:5px;width:100%}
+.sandbox-node-slot[data-disclosure=progress]>.sandbox-node-menu,.sandbox-node-slot[data-disclosure=closing]>.sandbox-node-menu{visibility:hidden;pointer-events:none}
+.sandbox-node-slot>.sandbox-node-progress{top:0;border-radius:12px;overflow:hidden;transform-origin:top;transform:translateY(-8px);transition:grid-template-rows .24s ease,opacity .2s ease,transform .24s ease;background:var(--astra-primary-gradient,var(--astra-primary));color:var(--astra-primary-content,#fff)}
+.sandbox-node-slot>.sandbox-node-progress[data-open=true]{transform:translateY(0);animation:sandbox-task-reveal .28s ease-out both}
+.project-sandbox .sandbox-node-slot .sandbox-node-progress .sandbox-progress-content{height:auto;min-height:88px;padding:12px 13px;gap:8px;border:1px solid color-mix(in srgb,var(--astra-primary) 70%,white);border-radius:12px;color:inherit}
+.project-sandbox .sandbox-node-slot .sandbox-node-progress .sandbox-progress-content>span{position:static;width:auto;height:auto;padding:0;clip-path:none;overflow:visible;font-size:13px;line-height:18px;color:inherit;font-weight:650}
+.sandbox-node-slot .sandbox-progress-label{font-size:13px;line-height:1.5;margin:0;color:inherit;overflow-wrap:anywhere}
+.sandbox-node-slot .sandbox-stage-progress{background:#ffffff38}
+.sandbox-node-slot .sandbox-stage-progress>span{background:linear-gradient(90deg,#ffffff70,#fff)}
+.sandbox-node-slot .sandbox-node-progress[data-phase=error],.sandbox-node-slot .sandbox-node-progress[data-phase=cancelled]{background:var(--paper);color:var(--ink)}
+.sandbox-node-slot .sandbox-node-progress[data-phase=error] .sandbox-progress-content{border-color:var(--error,#bc4343)}
+.sandbox-node-slot[data-disclosure=details]>.sandbox-node-menu{animation:sandbox-task-reveal .36s ease-out backwards}
+.sandbox-node-slot[data-disclosure=details] .sandbox-node-info{animation:none}
+@keyframes sandbox-task-reveal{from{clip-path:inset(0 0 100%);transform:translateY(-8px);opacity:0}to{clip-path:inset(0);transform:translateY(0);opacity:1}}
+.project-sandbox[data-motion-paused=true] .sandbox-node-menu,.project-sandbox[data-motion-paused=true] .sandbox-node-progress{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.sandbox-node-slot>.sandbox-node-progress,.sandbox-node-slot[data-disclosure=details]>.sandbox-node-menu{animation:none;transition:none;transform:none}}
+
+/* Keep navigation reachable beside the wider default chat. */
+.sandbox-workbench .sandbox-toolbar{flex-wrap:wrap;row-gap:8px}
+.sandbox-workbench .sandbox-project{flex-shrink:0;max-width:100%}
+.sandbox-workbench .sandbox-toolbar-actions{flex-wrap:wrap;max-width:100%;row-gap:8px}
+.sandbox-workbench .sandbox-info-rail{top:var(--sandbox-info-top,88px)}
+.sandbox-scene-theme{border:0;margin:0 0 12px;padding:0}.sandbox-scene-theme legend,.sandbox-background legend{font-size:12px;font-weight:600;margin-bottom:8px}.sandbox-scene-theme>div{display:flex;gap:6px}.sandbox-scene-theme .btn{flex:1;font-size:13px}.sandbox-scene-theme [aria-pressed=true],.sandbox-color-options [aria-pressed=true]{color:var(--astra-primary);background:var(--astra-primary-soft,#eaf4ff);border-color:var(--astra-primary)}
+.sandbox-background{border:0;border-top:1px solid var(--astra-border,#e3e8ef);margin:12px 0 0;padding:12px 0}.sandbox-color-options{display:flex;flex-wrap:wrap;gap:5px}.sandbox-color-options .btn{font-size:12px;min-height:30px;height:30px;padding:0 8px}.sandbox-color-options i{width:12px;height:12px;border:1px solid #9ca9b655;border-radius:50%}.sandbox-custom-color{display:flex;align-items:center;gap:8px;font-size:12px;padding:4px 8px}.sandbox-custom-color input{width:28px;height:24px;padding:0;border:1px solid #9ca9b655;border-radius:4px;background:transparent}.sandbox-background:disabled{opacity:.55}
+
+.sandbox-uplight-settings{display:grid;gap:12px;padding:14px 4px 4px;border-top:1px solid var(--line)}
+.sandbox-uplight-settings fieldset{min-width:0}.sandbox-uplight-settings legend{font-size:13px;font-weight:600;color:var(--ink)}
+.sandbox-uplight-settings .trial-slider{padding:8px 0}.sandbox-uplight-settings .trial-slider .range{color:var(--astra-primary)}
+.sandbox-uplight-color{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink)}.sandbox-uplight-color output{margin-left:auto;font-size:12px;color:var(--muted)}.sandbox-uplight-color input{width:40px;height:28px;padding:2px;border:1px solid var(--line);border-radius:6px;background:var(--paper);cursor:pointer}
+
+.sandbox-water-settings{border:0;border-top:1px solid var(--line);padding:14px 4px;margin-top:12px;min-width:0}.sandbox-water-settings legend{font-size:13px;font-weight:600;color:var(--ink)}.sandbox-water-toggle{display:flex;align-items:center;gap:8px;font-size:13px}.sandbox-water-quality{display:flex;gap:6px;margin-top:10px}.sandbox-water-quality .btn{flex:1;font-size:13px}.sandbox-water-quality [aria-pressed=true]{color:var(--astra-primary);background:var(--astra-primary-soft,#eaf4ff);border-color:var(--astra-primary)}.sandbox-water-settings p{font-size:12px;color:var(--muted);margin:6px 0}.sandbox-water-settings .trial-slider{padding:6px 0}
+.sandbox-water-quality .btn[aria-pressed=false]{background:var(--paper);color:var(--muted);border-color:var(--line)}
+.sandbox-view-options .sandbox-water-settings .trial-slider{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:13px;padding:8px 0}
+.sandbox-view-options .sandbox-water-settings .trial-slider .range{grid-column:1/-1;width:100%}
+
+#sandbox-view-options [hidden]{display:none!important}
+
+.sandbox-baked-adjustments{border:0;padding:0;margin:0;min-width:0}
+
+.sandbox-parameter-actions{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line);background:var(--paper)}.sandbox-parameter-actions>span{font-size:var(--dws-font-size-12);color:var(--muted);line-height:1.5}.sandbox-parameter-actions .btn{flex-shrink:0}
+.sandbox-parameter-buttons{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* Global retained conversation collapse. */
+.studio #shell.live-shell .four-surface.conversation-collapsed>.content-artifact{grid-column:1;grid-row:1}
+.studio #shell.live-shell .four-surface.sandbox-classic.conversation-collapsed>.sandbox-surface{left:18px;right:18px;width:auto}
+
+/* Title background only: text, status cards and progress remain independent. */
+.project-sandbox .sandbox-marker>.sandbox-marker-title{background:color-mix(in srgb,var(--paper) var(--sandbox-label-opacity,62%),transparent)}
+
+/* A persistent toolbar control for the right-hand project cards. */
+.sandbox-info-toggle .astra-icon{transform:scaleX(-1)}
+.sandbox-info-toggle[aria-pressed="true"]{background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue)}
+.sandbox-info-toggle[aria-pressed="true"]:hover{background:color-mix(in srgb,var(--blue) 20%,transparent)}
+
+/* Natural roof anchors fade in place; the selected business details stay readable. */
+.project-sandbox .sandbox-markers>.sandbox-marker{opacity:var(--sandbox-label-visibility,1)!important;transition:none}
+.project-sandbox .sandbox-focus-details{left:60%;top:30%;transition:none;animation:sandbox-detail-fade .4s ease both}
+.project-sandbox .sandbox-focus-details>.sandbox-marker-title{justify-content:space-between}
+.scene-fallback .sandbox-markers>.sandbox-marker{opacity:1!important}
+@keyframes sandbox-detail-fade{from{filter:opacity(0)}to{filter:opacity(1)}}
+@media(prefers-reduced-motion:reduce){.project-sandbox .sandbox-focus-details{animation:none}}

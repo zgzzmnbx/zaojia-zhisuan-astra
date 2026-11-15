@@ -22,6 +22,11 @@ dist/
 03-Src/frontend-debug/uploaded-example/private/
 
 
+# Office private geometry and layout remain local.
+/public/office-twin/models/
+/public/office-twin/data/
+/public/office-twin/previews/
+
 # Private workspace data and local service state
 runtime/
 03-Src/vendor/gongwen-core/gongwen_core/fonts/*.ttf

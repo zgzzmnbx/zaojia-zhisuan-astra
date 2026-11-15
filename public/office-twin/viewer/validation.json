@@ -1,0 +1,341 @@
+{
+  "viewer_version": "0.3",
+  "checked_at": "2026-11-14T06:27:50.677Z",
+  "gltf_parse": "passed with actual vendored GLTFLoader",
+  "model_contract": "passed: spatial and furniture semantic contracts",
+  "furniture_entities": {
+    "status": "passed",
+    "instance_count": 324,
+    "source_asset_count": 10,
+    "role_count": 12,
+    "counts": {
+      "keyboard": 77,
+      "monitor": 77,
+      "mouse": 77,
+      "tower": 77,
+      "laptop": 4,
+      "projector": 2,
+      "survey_tools": 2,
+      "webcam": 4,
+      "plotter": 1,
+      "printer": 1,
+      "scanner": 1,
+      "survey_desk": 1
+    },
+    "unique_instance_ids": 324,
+    "all_descend_from": "Floor_09",
+    "rooms_and_optional_seats": "valid and match metadata",
+    "child_mesh_duplicate_identity": false,
+    "placement_metadata_max_error_m": 1.061825577052293e-06,
+    "gltf_shared_mesh_definition_count": 12,
+    "three_shared_primitive_geometry_count": 40,
+    "primitive_mesh_instances": 1056,
+    "primitives_per_role": {
+      "keyboard": 3,
+      "monitor": 4,
+      "mouse": 3,
+      "tower": 3,
+      "laptop": 4,
+      "projector": 3,
+      "survey_tools": 4,
+      "webcam": 3,
+      "plotter": 3,
+      "printer": 3,
+      "scanner": 3,
+      "survey_desk": 4
+    },
+    "geometry_primitives_shared_within_each_role": true,
+    "integration_sha256": "c22477f6a1cfda96e303ebcea910cc443a08a7b43cf747ea48e4e9332166c7a4"
+  },
+  "model_sha256": "9ae289e0629c50930c7b862f265d9336f282298403f133e648b3abc4f11a66f6",
+  "model_bytes": 6218180,
+  "browser_runtime": "not verified: no browser retry for v0.3; prior Chromium socket() permission denied",
+  "webgl_visual_qa": "not performed",
+  "prior_version_evidence": {
+    "version": "0.2",
+    "scope": "historical only; does not verify the v0.3 model",
+    "model_sha256": "4f605c039e25dfd9b56805a5a3879110f7ad3792b4b9fbf8aa4eed8a5f341b86",
+    "model_bytes": 5365516,
+    "checked_at": "2026-11-14T05:54:46.898Z"
+  },
+  "notes": [
+    "Node checks prove actual glTF loading, semantic transforms and geometry reuse; not browser GPU rendering.",
+    "A glTF mesh with multiple material primitives becomes multiple Three Mesh objects; this is compatible with sharing 12 glTF mesh definitions.",
+    "Furniture placements are illustrative; employee identities and business data remain unbound."
+  ],
+  "ui_static_checks": {
+    "checked_at": "2026-11-14T06:15:21.915208+00:00",
+    "javascript_syntax": "passed",
+    "unique_ids": 34,
+    "required_selectors": "all present",
+    "astra_and_scene_contract_unchanged": [
+      "astra_ui/astra-ui.css",
+      "astra_ui/icons.js",
+      "astra_ui/theme.js",
+      "viewer/scene-state.js",
+      "viewer/vendor/three.module.js",
+      "viewer/vendor/three.core.js"
+    ],
+    "lifecycle_review": "Visibility gates, demand RAF, bfcache suspension/resume and disposal code retained from v0.2; no browser runtime claimed"
+  },
+  "viewer_files": [
+    {
+      "path": "README.md",
+      "bytes": 7906,
+      "sha256": "4d5df86c435f14a9b299b68494dc752f435d6289855c7af4cbb9ea5db24490ab"
+    },
+    {
+      "path": "index.html",
+      "bytes": 8025,
+      "sha256": "3161947426f523d266f21e54281fb07a967703aa4c5f960eab6285d7a89cabce"
+    },
+    {
+      "path": "scene-state.js",
+      "bytes": 1853,
+      "sha256": "d2de6228ff2270891e7fa27581932f75c64c925a8595afad1296ae3593a2718b"
+    },
+    {
+      "path": "verify-model.mjs",
+      "bytes": 11821,
+      "sha256": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c"
+    },
+    {
+      "path": "viewer.css",
+      "bytes": 4319,
+      "sha256": "76f5b58e05cf7b42ee39dfd2af6690f9821a33e59e3f7f91b9189e2bdb5e2703"
+    },
+    {
+      "path": "viewer.js",
+      "bytes": 27921,
+      "sha256": "eb7614fb12475e4672c59eb2176c47f84ac3da6f85020663e40b08de265d2bd2"
+    }
+  ],
+  "node_version": "v24.22.1",
+  "three_revision": "186",
+  "floor_count": 20,
+  "room_count": 20,
+  "seat_count": 77,
+  "person_anchor_count": 77,
+  "mesh_count": 2544,
+  "metadata_elevations": "match GLB and floor contract",
+  "mode_states": {
+    "building": {
+      "visibleFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "ninthFloorPosition": [
+        0,
+        30.600000381469727,
+        0
+      ],
+      "facade9Visible": true
+    },
+    "exploded": {
+      "visibleFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "ninthFloorPosition": [
+        0,
+        33.60000038146973,
+        32
+      ],
+      "facade9Visible": false
+    },
+    "section": {
+      "visibleFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "ninthFloorPosition": [
+        0,
+        30.600000381469727,
+        0
+      ],
+      "facade9Visible": true
+    },
+    "office": {
+      "visibleFloors": [
+        9
+      ],
+      "ninthFloorPosition": [
+        0,
+        30.600000381469727,
+        0
+      ],
+      "facade9Visible": false
+    }
+  },
+  "host_message_source_origin_namespace": "passed",
+  "model_stage": "final frozen v0.3 model",
+  "furniture_ui": {
+    "status": "matches supplied schema",
+    "summary_text": "复用 Google Drive 已有模型，按白模方式布置电脑、外设和公共办公设备。器具布置示意，员工与任务尚未绑定。",
+    "layout_status": "器具布置示意",
+    "displayed_counts": "10 个来源资产 · 12 类器具模型 · 324 个布置实例",
+    "missing_file_behavior": "explicit not-loaded text; no inferred counts"
+  },
+  "javascript_syntax": "passed",
+  "lifecycle_source_comparison": [
+    {
+      "region": "active gate",
+      "status": "byte-identical to reviewed v0.2",
+      "sha256": "aa39721cd255ddd31ed1e35d17658b3cda62d17334ae139ce11fdf6c5e4a75ba"
+    },
+    {
+      "region": "visibility and demand frames",
+      "status": "byte-identical to reviewed v0.2",
+      "sha256": "bd9919fd5466c3c99b78d3713f9ea0c9e2e33983f7dcc8cae83892dbb5cc3be6"
+    },
+    {
+      "region": "dispose",
+      "status": "byte-identical to reviewed v0.2",
+      "sha256": "830fccb2b66754e1496c421228d435ec3e0cecd620fb2a2e68e3102134db747c"
+    },
+    {
+      "region": "page cache lifecycle",
+      "status": "byte-identical to reviewed v0.2",
+      "sha256": "2e031d8ef628714813266af307851dd1ac67cc6ebaedb318381d838524bea1b5"
+    }
+  ],
+  "http_routes": [
+    {
+      "url": "/viewer/",
+      "status": 200,
+      "type": "text/html",
+      "bytes": 8025,
+      "sha256": "3161947426f523d266f21e54281fb07a967703aa4c5f960eab6285d7a89cabce",
+      "checked_at": "2026-11-14T06:27:51.223848+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/viewer/viewer.js",
+      "status": 200,
+      "type": "text/javascript",
+      "bytes": 27921,
+      "sha256": "eb7614fb12475e4672c59eb2176c47f84ac3da6f85020663e40b08de265d2bd2",
+      "checked_at": "2026-11-14T06:27:51.225830+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/viewer/scene-state.js",
+      "status": 200,
+      "type": "text/javascript",
+      "bytes": 1853,
+      "sha256": "d2de6228ff2270891e7fa27581932f75c64c925a8595afad1296ae3593a2718b",
+      "checked_at": "2026-11-14T06:27:51.227407+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/astra_ui/astra-ui.css",
+      "status": 200,
+      "type": "text/css",
+      "bytes": 750,
+      "sha256": "7389ce3709ed1f9b98ebb0c9041901999f2097cc2650a9397a390136120fedbf",
+      "checked_at": "2026-11-14T06:27:51.228536+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/models/H1_20F_building.glb",
+      "status": 200,
+      "type": "model/gltf-binary",
+      "bytes": 6218180,
+      "sha256": "9ae289e0629c50930c7b862f265d9336f282298403f133e648b3abc4f11a66f6",
+      "checked_at": "2026-11-14T06:27:51.253148+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/data/office_layout.json",
+      "status": 200,
+      "type": "application/json",
+      "bytes": 103966,
+      "sha256": "0c909a341d639cffd95695d2300516cdf92c3257a30f392d974cf6e271f5da35",
+      "checked_at": "2026-11-14T06:27:51.255250+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/data/model_metadata.json",
+      "status": 200,
+      "type": "application/json",
+      "bytes": 34395,
+      "sha256": "daf5d5187829fca7e33ad73874ec1c614be81de575f4ba84aa012cca5db085f7",
+      "checked_at": "2026-11-14T06:27:51.256183+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/data/building_metadata.json",
+      "status": 200,
+      "type": "application/json",
+      "bytes": 43256,
+      "sha256": "41ad343d0b756c9e5c2c936f7dbbe53e4164e2fd9668425ad5a0b8e8ee51e8a2",
+      "checked_at": "2026-11-14T06:27:51.257271+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    },
+    {
+      "url": "/data/furniture_integration.json",
+      "status": 200,
+      "type": "application/json",
+      "bytes": 475962,
+      "sha256": "c22477f6a1cfda96e303ebcea910cc443a08a7b43cf747ea48e4e9332166c7a4",
+      "checked_at": "2026-11-14T06:27:51.259926+00:00",
+      "verification_phase": "v0.3 final frozen model and current viewer"
+    }
+  ],
+  "preview_validation": "not part of this check: final v0.3 previews are rendering; no earlier preview hash is reused",
+  "model_evaluated_triangles_metadata": 503982
+}

@@ -1,4 +1,5 @@
 import {lazy,Suspense,useEffect,useId,useRef,useState} from 'react';
+import {officeRoster,officeTasks,isOfficeOwner,type OfficeBridge} from './office-review';
 import {Icon} from './ui';
 import InlineReviewSetupCard from '../professional/components/agent-workspace/InlineReviewSetupCard';
 import InlineReviewProgressCard from '../professional/components/agent-workspace/InlineReviewProgressCard';
@@ -11,8 +12,9 @@ import './review-workflow.css';
 const ReviewWorkflow=lazy(()=>import('./ReviewWorkflow'));
 const profiles=[['default','飞书'],['weact_cost','WeAct']] as const;
 function defaultDeadline(){const d=new Date(Date.now()+86400000);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16);}
-export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readOnly=false,onOpenFlow}:{onOpenFlow?:()=>void;request:ReviewRequest;readOnly?:boolean;busy:boolean;onBusy:(label:string)=>void;onSettings:()=>void;onClose:()=>void}){
+export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readOnly=false,onOpenFlow,officeBridge,officeContext=''}:{officeBridge?:OfficeBridge;officeContext?:string;onOpenFlow?:()=>void;request:ReviewRequest;readOnly?:boolean;busy:boolean;onBusy:(label:string)=>void;onSettings:()=>void;onClose:()=>void}){
  const [flowOpen,setFlowOpen]=useState(false);
+ const [officeList,setOfficeList]=useState(false);
  const [platforms,setPlatforms]=useState<ReviewPlatform[]>([]),[loading,setLoading]=useState(true),[sending,setSending]=useState(false),[feedback,setFeedback]=useState(''),[error,setError]=useState('');
  const [confirmed,setConfirmed]=useState(false),[round,setRound]=useState(false),[deadline,setDeadline]=useState(defaultDeadline),[instructions,setInstructions]=useState('请复核当前成果、匹配依据和风险项；在复核卡中填写意见后通过或退回。');
  const [tasks,setTasks]=useState<ReviewTask[]>([]),[fetchedAt,setFetchedAt]=useState(''),[external,setExternal]=useState(false);
@@ -74,8 +76,23 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readO
   lock.current=true;setSending(true);onBusy('正在重试复核失败步骤');
   try{const data=await api<{task:ReviewTask}>(`/api/collaboration/external-dispatch/tasks/${encodeURIComponent(p.task.task_id)}/retry`,{method:'POST'});if(!alive.current)return;if(data.task?.task_id!==p.task.task_id||data.task.platform!==id||data.task.source_job_id!==request.jobId)throw Error('重试回执不一致，请刷新核对。');edit(id,current=>({...current,task:data.task,feedback:`重试结果：${data.task.status_label}`}));setTasks(old=>old.map(t=>t.task_id===data.task.task_id?data.task:t));}catch(e){if(alive.current)setFeedback((e as Error).message);}finally{lock.current=false;onBusy('');if(alive.current)setSending(false);}
  }
+ const officeLive=useRef({platforms,busy,loading,sending,readOnly});officeLive.current={platforms,busy,loading,sending,readOnly};
+ useEffect(()=>{
+  if(!officeBridge||readOnly||request.kind!=='setup')return;
+  officeBridge.publish({context:officeContext,request,people:officeRoster(platforms,busy||loading||sending),tasks:officeTasks(tasks,request,officeRoster(platforms,true)),toggle:(id,checked)=>{
+   const live=officeLive.current;
+   if(id!=='owner'||live.busy||live.loading||live.sending||live.readOnly||lock.current||!alive.current)return;
+   for(const p of live.platforms){
+    if(!p.enabled||!p.configurationOk||(p.task&&!['completed','returned'].includes(p.task.status)))continue;
+    const refs=reviewPeople(p).filter(person=>isOfficeOwner(p.profileId,person.display_name)).map(person=>person.person_ref);
+    if(!refs.length)continue;
+    edit(p.profileId,current=>({...current,selectedReviewers:checked?[...new Set([...current.selectedReviewers,...refs])].slice(0,10):current.selectedReviewers.filter(ref=>!refs.includes(ref))}));
+   }
+  }});
+ },[officeBridge,officeContext,readOnly,request,platforms,tasks,busy,loading,sending]);
+ useEffect(()=>()=>officeBridge?.clear(officeContext),[officeBridge,officeContext]);
  const display=platforms.map(p=>({...p,directDeliveryAvailable:p.options?.direct_delivery.status==='available',groups:p.options?.directory.groups||[],people:reviewPeople(p)}));
- const setupCard=!readOnly&&(request.kind==='setup'?<InlineReviewSetupCard fileName={request.fileName} jobId={request.jobId} reviewRows={request.reviewRows} platforms={display} deadline={deadline} instructions={instructions} audienceConfirmed={confirmed} feedback={feedback} loading={loading} sending={sending||busy} newRoundConfirmationOpen={round}
+ const setupCard=!readOnly&&(request.kind==='setup'?<InlineReviewSetupCard reviewerPicker={officeBridge&&!officeList?<div className="office-picker-summary"><p>{platforms.filter(p=>p.enabled).map(p=>`${p.label} · ${reviewPeople(p).filter(person=>p.selectedReviewers.includes(person.person_ref)).map(person=>person.display_name).join('、')||'待选人'}`).join(' / ')}</p><span>在右侧办公室点击人物，或拖入当前成果卡。</span><button type="button" className="btn btn-ghost btn-sm" onClick={()=>setOfficeList(true)}>使用列表选人</button></div>:undefined} fileName={request.fileName} jobId={request.jobId} reviewRows={request.reviewRows} platforms={display} deadline={deadline} instructions={instructions} audienceConfirmed={confirmed} feedback={feedback} loading={loading} sending={sending||busy} newRoundConfirmationOpen={round}
    onPlatformEnabledChange={(id,value)=>edit(id,p=>({...p,enabled:value,expanded:value||p.expanded}))} onPlatformExpandedChange={(id,value)=>setPlatforms(all=>all.map(p=>p.profileId===id?{...p,expanded:value}:p))}
    onDeliveryChannelChange={(id,channel,checked)=>edit(id,p=>({...p,deliveryChannels:checked?[...new Set([...p.deliveryChannels,channel])]:p.deliveryChannels.filter(c=>c!==channel),selectedReviewers:[]}))}
    onGroupChange={(id,group)=>edit(id,p=>({...p,group,selectedReviewers:[]}))} onReviewerChange={(id,ref,checked)=>edit(id,p=>({...p,selectedReviewers:checked?[...new Set([...p.selectedReviewers,ref])].slice(0,10):p.selectedReviewers.filter(r=>r!==ref)}))}
@@ -83,7 +100,7 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readO
    onAudienceConfirmedChange={setConfirmed} onRefresh={()=>void load(true)} onCancel={onClose} onSubmit={()=>void send()} onRetry={id=>void retry(id)} onOpenNewRoundConfirmation={()=>setRound(true)} onCloseNewRoundConfirmation={()=>setRound(false)} onConfirmNewRound={()=>void send(true)}/>:null);
  const workflow=<Suspense fallback={<div className="rw-inline-loading" role="status">正在载入复核流程…</div>}><ReviewWorkflow embedded={!flowOpen} onExpand={()=>{onOpenFlow?.();setFlowOpen(true);}} request={request} tasks={tasks} platforms={platforms} setup={setupCard?setupCard.props:undefined} loading={loading} error={error} refresh={()=>void load()} close={()=>setFlowOpen(false)}/></Suspense>;
  if(readOnly)return <div className="astra-review"><div className="review-toolbar"><span className="badge badge-ghost" title={`此卡创建于成果第 ${request.version} 版，保留对应任务的复核记录。`}>复核记录</span></div>{workflow}<InlineReviewProgressCard readOnly snapshot={{jobId:request.jobId,fileName:request.fileName,fetchedAt,tasks,error}} refreshing={loading} onRefresh={()=>void load()} onStartReview={onClose}/></div>;
- return <div className="astra-review">{workflow}
+ return <div className="astra-review">{!officeBridge&&workflow}
   <div className="review-toolbar"><span className="badge badge-outline" title={request.calculationUnconfirmed?'使用当前表格发起复核；未重算状态随复核说明保留，不影响发送。':undefined}>飞书 / WeAct</span><button className="btn btn-ghost btn-sm" disabled={sending} onClick={onSettings}>协同设置</button></div>
   {error&&<div className="alert review-read-error" role="alert"><span>{error}</span><button className="btn btn-sm" disabled={loading||sending} onClick={()=>void load()}>重试读取</button></div>}
   {setupCard}

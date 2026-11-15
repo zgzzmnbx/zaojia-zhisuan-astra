@@ -1,0 +1,185 @@
+/* Spatial layout only. Components, palette, typography and icons are the
+   unchanged Astra styles imported by index.html. No alternative design theme. */
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+.studio #shell.office-shell { display: flex; flex-direction: column; width: 100%; height: 100dvh; min-width: 320px; background: var(--astra-canvas); }
+.office-topbar { flex: none; }
+.office-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 324px; flex: 1; min-height: 0; gap: 14px; padding: 14px; }
+.office-workspace > .rw-window.rw-inline { min-height: 0; height: 100%; margin: 0; }
+.office-modebar { flex-wrap: wrap; }
+.office-modebar > .join { flex-shrink: 0; }
+.office-viewport { position: relative; flex: 1; min-height: 240px; overflow: hidden; isolation: isolate; background: var(--astra-canvas); touch-action: none; }
+.office-canvas-host, .office-fallback { position: absolute; inset: 0; margin: 0; }
+.office-canvas-host canvas { display: block; width: 100%; height: 100%; outline: none; }
+.office-fallback { display: flex; flex-direction: column; justify-content: center; background: var(--astra-canvas); }
+.office-fallback img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.office-fallback figcaption { position: absolute; left: 20px; right: 20px; bottom: 20px; padding: 10px 14px; border: 1px solid var(--astra-line); border-radius: 10px; background: var(--astra-paper); color: var(--astra-muted); font-size: var(--dws-font-size-13); line-height: 1.6; }
+.office-scene-caption { position: absolute; left: 16px; top: 16px; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none; }
+.office-scene-caption .badge { background: var(--astra-paper); }
+.office-camera-tools { position: absolute; right: 14px; bottom: 14px; display: flex; flex-direction: column; gap: 4px; padding: 4px; background: var(--astra-paper); border: 1px solid var(--astra-line); border-radius: 10px; }
+.office-scene > .rw-footer > #render-status { flex: 0 0 auto; white-space: nowrap; text-align: right; }
+.office-inspector-body { padding: 14px; }
+.office-picture { margin-block-end:16px; padding-block-end:14px; border-block-end:1px solid var(--astra-line); }
+.office-picture fieldset { margin:0; padding:0; border:0; min-width:0; }
+.office-picture legend { font-size:var(--dws-font-size-14); font-weight:600; margin-block-end:10px; }
+.office-picture legend span { font-size:var(--dws-font-size-12); color:var(--astra-muted); margin-inline-start:6px; }
+.office-picture-row { display:grid; grid-template-columns:1fr auto; align-items:center; margin-block:4px; }
+.office-picture-row label { font-size:var(--dws-font-size-13); }
+.office-picture-row output { font-size:var(--dws-font-size-12); font-variant-numeric:tabular-nums; color:var(--astra-muted); }
+.office-picture-row input[type="range"] { grid-column:1/-1; width:100%; min-height:32px; margin:0; accent-color:var(--astra-primary); cursor:pointer; }
+.office-picture-row input:focus-visible { outline:2px solid var(--astra-primary); outline-offset:2px; border-radius:4px; }
+.office-picture-actions { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.office-picture-actions span { font-size:var(--dws-font-size-12); color:var(--astra-muted); }
+.office-people-markers { position:absolute; inset:0; pointer-events:none; }
+.office-person-marker { position:absolute; transform:translate(-50%,-50%); pointer-events:auto; cursor:pointer; border:1px solid var(--astra-line); border-radius:7px; background:var(--astra-paper); color:var(--astra-ink); padding:5px 9px; font:inherit; font-size:11px; white-space:nowrap; }
+.office-person-marker.selected { color:var(--astra-primary); border-color:var(--astra-primary); }
+.office-person-marker:focus-visible { outline:2px solid var(--astra-primary); outline-offset:3px; }
+.office-person-card { border-block:1px solid var(--astra-line); margin-block:16px; padding-block:12px; font-size:var(--dws-font-size-13); }
+.office-person-card h3,.office-candidates-title { font-size:var(--dws-font-size-14); margin:0 0 10px; }
+.office-person-card progress { display:block; inline-size:100%; block-size:8px; appearance:none; border:0 solid; overflow:clip; border-radius:4px; background:var(--astra-line); margin-block:8px 12px; }
+.office-person-card progress::-webkit-progress-bar { background:transparent; }
+.office-person-card progress::-webkit-progress-value { background:var(--astra-primary); border-radius:4px; }
+.office-person-card progress::-moz-progress-bar { background:var(--astra-primary); border-radius:4px; }
+.office-person-actions,.office-candidate { display:flex; align-items:center; justify-content:space-between; gap:6px; }
+.office-candidate { font-size:var(--dws-font-size-12); }
+.office-description, .office-muted { color: var(--astra-muted); font-size: var(--dws-font-size-12); line-height: 1.7; }
+.office-description { margin: 0 0 12px; }
+.office-space-list { display: grid; gap: 6px; }
+.office-space-list > .btn { justify-content: space-between; width: 100%; min-height: 36px; height: auto; padding: 7px 10px; text-align: left; }
+.office-space-list > .btn > span { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.office-space-list > .btn small { font-size: var(--dws-font-size-12); opacity: .8; font-weight: 400; color: inherit; }
+.office-space-list .office-floor-num { min-width: 24px; }
+.office-selection { margin-top: 22px; }
+.office-selection h3 { margin-bottom: 0; }
+.office-selection dl { margin: 0 0 14px; }
+.office-business-note p { margin: 6px 0 0; line-height: 1.7; color: var(--astra-muted); font-size: var(--dws-font-size-12); }
+.office-furniture-note { margin-bottom: 14px; }
+.office-assumptions { margin-top: 16px; color: var(--astra-muted); font-size: var(--dws-font-size-12); line-height: 1.8; }
+.office-assumptions summary { cursor: pointer; }
+.office-assumptions p { margin-top: 8px; }
+.office-noscript { position: fixed; bottom: 0; left: 0; padding: 12px; background: var(--astra-paper); color: var(--astra-ink); }
+.office-embed .office-topbar { display: none; }
+.office-embed .office-workspace { padding: 0; gap: 0; }
+.office-embed .office-workspace > .rw-window.rw-inline { border-radius: 0; box-shadow: none; }
+[hidden] { display: none !important; }
+@media (max-width: 1000px) { .office-workspace { grid-template-columns: minmax(0, 1fr) 288px; gap: 10px; padding: 10px; } .office-desktop { display: none !important; } }
+@media (max-width: 720px) { html, body { overflow: auto; } .studio #shell.office-shell { height: auto; min-height: 100dvh; } .office-workspace { grid-template-columns: 1fr; } .office-workspace > .office-scene { height: 68dvh !important; min-height: 400px; } .office-workspace > .office-inspector { height: 430px !important; } .office-modebar { gap: 4px; } .office-modebar .astra-icon { display: none !important; } .office-modebar .btn { padding-inline: 8px; } .office-modebar #back-building .astra-icon { display: inline-flex !important; } }
+
+/* v0.6: Astra sandbox's translucent retained conversation + information rail.
+   Based on pinned project-sandbox.css, adapted to independent OfficeRoom DOM. */
+.office-conversation,.office-inspector { border:1px solid color-mix(in srgb,var(--astra-paper) 80%,var(--astra-line)); border-radius:20px!important; background:color-mix(in srgb,var(--astra-paper) 78%,transparent)!important; backdrop-filter:blur(24px) saturate(115%); box-shadow:0 16px 48px #183d5912!important; overflow:hidden; }
+.office-conversation { display:flex; flex-direction:column; }
+.office-conversation-heading { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:20px 18px 16px; border-bottom:1px solid var(--astra-line); }
+.office-conversation-heading h1 { font-size:19px; line-height:1.4; margin:5px 0 0; font-weight:650; }
+.office-eyebrow { font-size:11px; letter-spacing:.08em; color:var(--astra-muted); }
+.office-conversation-heading .badge { font-size:10px; white-space:nowrap; }
+.office-conversation-body { padding:18px; overflow-y:auto; min-height:0; flex:1; }
+.office-message { padding:13px 14px; border:1px solid var(--astra-line); border-radius:14px; background:color-mix(in srgb,var(--astra-paper) 90%,transparent); margin-bottom:12px; }
+.office-message-label { display:block; color:var(--astra-primary); font-size:11px; font-weight:650; margin-bottom:7px; }
+.office-message p { font-size:13px; line-height:1.8; margin:0; overflow-wrap:anywhere; white-space:pre-wrap; }
+.office-message p+p { margin-top:8px; }
+.office-current-context { border-left:2px solid color-mix(in srgb,var(--astra-primary) 65%,transparent); margin:20px 0 14px; padding-left:12px; }
+.office-current-context>strong { display:block; font-size:14px; line-height:1.6; margin:5px 0; }
+.office-current-context p { margin:0 0 5px; font-size:12px; line-height:1.7; color:var(--astra-muted); }
+.office-quick-actions { display:grid; gap:6px; margin-bottom:22px; }
+.office-quick-actions .btn { justify-content:flex-start; font-size:12px; background:color-mix(in srgb,var(--astra-primary) 5%,transparent); border:1px solid color-mix(in srgb,var(--astra-primary) 13%,transparent); }
+.office-notes-heading { display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; font-size:12px; }
+.office-empty-note { font-size:12px; color:var(--astra-muted); line-height:1.8; }
+.office-composer { flex:none; padding:14px 16px 16px; border-top:1px solid var(--astra-line); background:color-mix(in srgb,var(--astra-paper) 78%,transparent); }
+.office-composer label { display:block; font-size:12px; font-weight:600; margin-bottom:8px; }
+.office-composer textarea { width:100%; resize:vertical; min-height:72px; max-height:150px; box-sizing:border-box; border:1px solid var(--astra-line); border-radius:11px; padding:10px 11px; font:inherit; font-size:12px; line-height:1.7; color:var(--astra-ink); background:var(--astra-paper); }
+.office-composer textarea:focus-visible { outline:2px solid var(--astra-primary); outline-offset:2px; }
+.office-composer-actions { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:9px; }
+.office-composer-actions small { font-size:10px; color:var(--astra-muted); }
+.office-scene { border-radius:20px!important; overflow:hidden; background:transparent!important; box-shadow:none!important; }
+.office-modebar { padding:10px 12px!important; gap:7px; }
+.office-modebar .btn { font-size:12px; }
+.office-summary-card,.office-selection,.office-furniture-note,.office-business-note { padding:13px; border:1px solid var(--astra-line); border-radius:13px; background:color-mix(in srgb,var(--astra-paper) 85%,transparent); }
+.office-summary-card { margin-bottom:16px; }
+.office-card-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; }
+.office-metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:14px; }
+.office-metric-grid>div { display:flex; flex-direction:column; gap:4px; border-right:1px solid var(--astra-line); }
+.office-metric-grid>div:last-child { border:0; }
+.office-metric-grid strong { font-size:23px; line-height:1.2; color:var(--astra-primary); font-variant-numeric:tabular-nums; }
+.office-metric-grid span { font-size:10px; color:var(--astra-muted); }
+.office-selection { margin-top:18px; margin-bottom:14px; }
+.office-selection dl { margin-bottom:0; }
+.office-inspector .rw-header { padding:16px; }
+.office-inspector .rw-tabs { padding:10px 12px; gap:5px; flex-wrap:wrap; }
+.office-inspector .rw-tabs .btn { font-size:12px; }
+.office-inspector-body { padding:12px; }
+.office-inspector .office-business-note { margin-bottom:12px; }
+.office-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+[data-astra-scheme="dark"] .office-conversation,[data-astra-scheme="dark"] .office-inspector { border-color:color-mix(in srgb,var(--astra-primary) 18%,var(--astra-line)); }
+
+/* Immersive v0.6 correction: one full-viewport sandbox underneath floating UI.
+   Same composition as Astra project-sandbox.css immersive workspace, adapted IDs. */
+html,body{overflow:hidden!important}
+.studio #shell.office-shell{position:relative;height:100dvh!important;min-height:0!important;overflow:hidden}
+.studio #shell.office-shell>.office-topbar{position:absolute;z-index:30;top:12px;left:16px;right:16px;width:auto;min-height:54px;height:54px;border:1px solid color-mix(in srgb,var(--astra-paper) 75%,var(--astra-line));border-radius:16px;background:color-mix(in srgb,var(--astra-paper) 76%,transparent);backdrop-filter:blur(24px) saturate(115%);box-shadow:0 8px 28px #183d5910;display:flex!important;gap:10px;padding:0 14px;box-sizing:border-box}
+.studio #shell.office-shell>.office-topbar>.studio-identity{flex:1 1 auto;min-width:0;width:auto}
+.studio #shell.office-shell>.office-topbar>.top-actions{display:flex!important;align-items:center;flex:0 0 auto;gap:5px}
+.studio #shell.office-shell>.office-topbar #information-toggle,.studio #shell.office-shell>.office-topbar #space-card-toggle{width:auto!important;min-width:66px;white-space:nowrap;padding-inline:9px;font-size:12px}
+.office-workspace,.office-workspace[data-information-open="false"]{--information-width:286px;--cards-width:306px;--safe-left:calc(var(--information-width) + 32px);--safe-right:calc(var(--cards-width) + 32px);position:absolute;inset:0;display:block!important;padding:0;gap:0;overflow:hidden;background:radial-gradient(ellipse at 24% 60%,#bcdced40,transparent 60%),var(--astra-canvas);pointer-events:none}
+.office-workspace[data-information-open="false"]{--safe-left:16px}
+.office-workspace[data-cards-open="false"]{--safe-right:16px}
+.office-workspace>.office-scene{position:absolute;inset:0;z-index:0;width:100%;height:100%!important;min-height:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden;pointer-events:auto;display:block}
+.office-scene>.office-viewport{position:absolute;inset:0;width:100%;height:100%;min-height:0;z-index:0}
+.office-workspace>.office-conversation,.office-workspace>.office-inspector{position:absolute;z-index:20;top:84px;bottom:16px;margin:0;height:auto!important;min-height:0;max-height:none;pointer-events:auto;background:color-mix(in srgb,var(--astra-paper) 62%,transparent)!important;backdrop-filter:blur(24px) saturate(115%);box-shadow:0 18px 56px #173d5924,inset 0 1px 0 #ffffff60!important}
+.office-workspace>.office-conversation{left:16px;width:var(--information-width)}
+.office-workspace>.office-inspector{right:16px;width:var(--cards-width)}
+.office-conversation-heading,.office-inspector>.rw-header{flex:none;background:color-mix(in srgb,var(--astra-paper) 25%,transparent)}
+.office-conversation-body{min-height:0;max-height:none}
+.office-panel-close{font-size:22px!important;line-height:1;flex:none;min-width:28px;width:28px;height:28px;min-height:28px}
+.office-scene>.office-modebar{position:absolute;z-index:5;top:84px;left:var(--safe-left);right:var(--safe-right);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;padding:7px!important;min-height:42px;border:1px solid color-mix(in srgb,var(--astra-paper) 75%,var(--astra-line));border-radius:13px;background:color-mix(in srgb,var(--astra-paper) 66%,transparent);backdrop-filter:blur(18px);box-shadow:0 5px 20px #17395612;pointer-events:auto}
+.office-modebar>.join{flex-shrink:1;flex-wrap:wrap}.office-modebar .btn{padding-inline:7px;font-size:11px}
+.office-scene-caption{top:158px;left:var(--safe-left);right:var(--safe-right);pointer-events:none}
+.office-camera-tools{z-index:6;right:var(--safe-right);bottom:64px;pointer-events:auto;background:color-mix(in srgb,var(--astra-paper) 74%,transparent);backdrop-filter:blur(16px)}
+.office-scene>.rw-footer{position:absolute;z-index:4;left:var(--safe-left);right:var(--safe-right);bottom:16px;min-height:24px;display:flex;gap:10px;align-items:center;padding:7px 10px;border:0;border-radius:10px;background:color-mix(in srgb,var(--astra-paper) 65%,transparent);backdrop-filter:blur(12px);pointer-events:none;font-size:11px}
+.office-fallback figcaption{z-index:3;left:var(--safe-left);right:calc(var(--safe-right) + 48px);bottom:70px;font-size:11px;pointer-events:none;background:color-mix(in srgb,var(--astra-paper) 74%,transparent)}
+.office-fallback img{width:100%;height:100%;object-fit:contain}
+.office-inspector #floor-list,.office-inspector #room-list{max-height:230px;overflow-y:auto;overscroll-behavior:contain;padding-right:3px}
+.office-inspector .office-selection{margin-top:0}
+.office-embed .office-workspace>.office-conversation,.office-embed .office-workspace>.office-inspector{top:16px}
+.office-embed .office-scene>.office-modebar{top:16px}
+[data-astra-scheme="dark"] .office-workspace{background:radial-gradient(ellipse at 20% 65%,#11384c70,transparent 70%),var(--astra-canvas)}
+@media(max-width:1200px){.office-workspace{--information-width:250px;--cards-width:280px}.office-conversation-heading{padding:15px 12px}.office-conversation-body{padding:13px}.office-topbar .office-desktop{display:none!important}.office-modebar .btn{padding-inline:6px}}
+@media(max-width:980px){
+ .office-workspace,.office-workspace[data-information-open="false"]{--safe-left:16px;--safe-right:16px}
+ .office-workspace>.office-conversation,.office-workspace>.office-inspector{top:140px;bottom:16px;width:min(360px,calc(100% - 32px))!important;max-height:none}
+ .office-scene>.office-modebar{top:82px;left:16px;right:16px;min-height:40px}
+ .office-scene-caption{top:136px;left:16px}.office-camera-tools{right:16px;bottom:66px}
+ .office-fallback figcaption{left:16px;right:68px;bottom:66px}
+}
+@media(max-width:680px){
+ .studio #shell.office-shell>.office-topbar{top:8px;left:8px;right:8px;height:50px;min-height:50px;padding-inline:9px;gap:4px}
+ .office-topbar .studio-brand{font-size:15px}.office-topbar .topbar-page{display:none}
+ .studio #shell.office-shell>.office-topbar>.top-actions{gap:2px}
+ .studio #shell.office-shell>.office-topbar #information-toggle,.studio #shell.office-shell>.office-topbar #space-card-toggle{min-width:54px;font-size:11px;padding-inline:5px}
+ .office-topbar #model-download{display:none}
+ .office-workspace>.office-conversation,.office-workspace>.office-inspector{top:130px;bottom:12px;left:12px;right:auto;width:calc(100% - 24px)!important}
+ .office-scene>.office-modebar{top:70px;left:10px;right:10px;min-height:40px;gap:3px}
+ .office-modebar .btn{font-size:10px;padding-inline:5px}.office-modebar .astra-icon{display:none!important}
+ .office-scene-caption{top:126px;left:12px}.office-scene>.rw-footer{left:12px;right:12px;bottom:10px;font-size:10px}
+ .office-fallback figcaption{left:12px;right:58px;bottom:66px;font-size:10px;padding:7px 9px}
+ .office-camera-tools{right:12px;bottom:70px}.office-conversation-body{min-height:0;max-height:none}
+ .office-composer textarea{min-height:58px;max-height:100px}
+}
+/* Office task desk: dominant left workspace, concise right digest. */
+@media(min-width:981px){.office-workspace,.office-workspace[data-information-open="false"]{--information-width:315px;--cards-width:246px}.office-workspace>.office-inspector{bottom:auto;max-height:calc(100dvh - 100px)}.office-workspace>.office-inspector .office-inspector-body{max-height:calc(100dvh - 220px);overflow:auto}}
+@media(min-width:981px) and (max-width:1200px){.office-workspace,.office-workspace[data-information-open="false"]{--information-width:275px;--cards-width:226px}}
+.office-conversation-heading{padding:17px 18px}.office-conversation-heading h1{font-size:21px}.office-conversation-body{padding:15px 17px}.task-scope{display:flex;align-items:center;gap:5px}.task-scope>.badge{margin-left:auto;font-size:10px}.task-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0 8px}.task-metric{background:color-mix(in srgb,var(--astra-paper) 78%,transparent);border:1px solid var(--astra-line);border-radius:12px;padding:10px}.task-metric strong{display:block;font-size:23px;color:var(--astra-primary)}.task-metric span{font-size:11px;color:var(--astra-muted)}.task-demo-notice{font-size:11px;color:var(--astra-muted);margin:8px 0 16px}.task-group-heading{font-size:12px;display:flex;justify-content:space-between;margin:17px 0 8px;color:var(--astra-muted)}.task-card{display:block;width:100%;text-align:left;border:1px solid var(--astra-line);border-radius:12px;padding:12px;margin-bottom:8px;background:color-mix(in srgb,var(--astra-paper) 80%,transparent);color:var(--astra-text);cursor:pointer}.task-card:hover,.task-card[aria-pressed="true"]{border-color:var(--astra-primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--astra-primary) 9%,transparent)}.task-card strong{font-size:13px;font-weight:600;display:block;line-height:1.5}.task-card-meta{font-size:11px;color:var(--astra-muted);display:flex;justify-content:space-between;gap:8px;margin-top:8px}.task-card progress{display:block;width:100%;height:4px;margin-top:9px;accent-color:var(--astra-primary)}.task-secondary{border-top:1px solid var(--astra-line);padding:12px 0;margin-top:10px;font-size:12px}.task-secondary summary{cursor:pointer;color:var(--astra-muted)}.task-secondary .office-current-context{margin:12px 0}.task-focus-card{padding:12px;border:1px solid var(--astra-line);border-radius:12px;background:color-mix(in srgb,var(--astra-paper) 85%,transparent)}.task-focus-card h3{font-size:14px;line-height:1.5;margin:7px 0}.task-focus-card p{font-size:12px;line-height:1.6;margin:6px 0}.task-focus-card .btn{font-size:11px;margin:4px 4px 0 0;white-space:normal;height:auto;min-height:30px;padding:6px 8px}.task-focus-card select,.task-person-label select{width:100%;padding:7px;border:1px solid var(--astra-line);border-radius:8px;background:var(--astra-paper);color:inherit;font-size:12px}.task-person-label{display:block;font-size:11px;margin-top:10px}.task-focus-card label{display:block;font-size:11px;margin-top:10px}.task-focus-card .task-review-summary{font-size:11px;color:var(--astra-muted)}.office-inspector .office-selection{padding:10px;margin:10px 0}.office-selection dt:not(:first-of-type),.office-selection dd:not(:first-of-type){display:none}.office-inspector #people-list{max-height:110px;overflow:auto}.office-inspector .office-person-card{font-size:11px}.office-inspector .rw-header{padding:13px 11px}.office-inspector .rw-header small{display:none}.office-inspector .office-person-card progress{width:100%}.office-inspector .rw-footer{font-size:10px;padding:9px 12px}.office-composer{padding:11px 16px}.office-composer textarea{min-height:48px;height:48px}.office-notes-section{margin-top:12px}.office-notes-section .office-empty-note{font-size:11px}.task-review-actions{display:flex;flex-wrap:wrap}.task-focus-card .task-state-line{font-size:11px;color:var(--astra-primary)}
+#task-workbench .task-group-heading{font-size:12px!important;line-height:1.5;font-weight:600;margin:17px 0 8px!important}#task-workbench .task-card progress{-webkit-appearance:none;appearance:none;border:0;border-radius:4px;overflow:hidden}#task-workbench .task-card progress::-webkit-progress-bar{background:color-mix(in srgb,var(--astra-primary) 12%,var(--astra-paper));border-radius:4px}#task-workbench .task-card progress::-webkit-progress-value{background:var(--astra-primary);border-radius:4px}
+
+.office-topbar #office-settings-link{white-space:nowrap;min-width:42px;flex-shrink:0;padding-inline:6px;font-size:12px}
+
+/* v0.6.1: keep network progress distinct from the static fallback image. */
+.office-loading-tools{position:absolute;bottom:122px;left:var(--safe-left,16px);z-index:8;width:440px;max-width:calc(100% - var(--safe-left,16px) - var(--safe-right,16px) - 24px);padding:9px 12px;border:1px solid var(--border-color,#d8dde4);border-radius:12px;background:var(--surface-bg,#ffffffed);color:var(--text-color,#35415a);font-size:12px;box-shadow:0 8px 24px #0001;}
+.office-loading-tools[hidden]{display:none!important;}.office-loading-tools progress{display:block;width:100%;height:5px;margin:0 0 8px;accent-color:#2d47da;}.office-loading-tools summary{cursor:pointer;margin-top:6px;}.office-loading-tools textarea{display:block;width:100%;min-width:0;max-height:200px;background:transparent;color:inherit;font:11px monospace;border:1px solid #cbd2dd;border-radius:6px;padding:6px;}.office-loading-tools p{font-size:11px;margin:5px 0;}
+[data-astra-scheme="dark"] .office-loading-tools{background:#172033ed;color:#d9e2f2;border-color:#36445f;}
+/* Release badge occupies its own bottom-left safe area, not a scene overlay control. */
+.office-version{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(8px,env(safe-area-inset-bottom));z-index:45;padding:4px 9px;border:1px solid var(--astra-line,#d2d9df);border-radius:7px;background:var(--astra-paper,#fff);color:var(--astra-text,#344256);font:500 12px/1.4 system-ui,sans-serif;letter-spacing:.015em;pointer-events:none;white-space:nowrap;box-shadow:0 1px 5px #0000000d;}
+.office-workspace>.office-conversation{bottom:calc(44px + env(safe-area-inset-bottom));}
+.office-scene>.rw-footer{left:max(104px,var(--safe-left));bottom:max(8px,env(safe-area-inset-bottom));}
+@media(max-width:980px){.office-workspace>.office-conversation,.office-workspace>.office-inspector{bottom:calc(44px + env(safe-area-inset-bottom));}}
+@media(max-width:680px){.office-scene>.rw-footer{left:104px;right:12px;font-size:10px;}.office-scene>.rw-footer>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}.office-version{font-size:12px;}}
+[data-astra-scheme="dark"] .office-version{background:var(--astra-paper,#172033);color:var(--astra-text,#dbe6f4);border-color:var(--astra-line,#36445f);}

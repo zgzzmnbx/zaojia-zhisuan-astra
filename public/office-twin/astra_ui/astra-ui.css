@@ -1,0 +1,14 @@
+/* Drop-in Astra UI entry. All visual rules below come from the pinned upstream
+   commit. See style-manifest.json for exact source hashes and adaptations. */
+@layer theme, base, components, utilities;
+@import "./vendor/tailwind-preflight-4.3.3.css" layer(base);
+@import "./vendor/daisyui-5.7.47.css";
+@import "./fonts.css";
+@import "./derived/astra-foundation.css";
+@import "./upstream/03-Src/astra.css";
+@import "./upstream/03-Src/studio/studio.css";
+@import "./upstream/03-Src/studio/workbench/workbench-layout.css";
+@import "./upstream/03-Src/studio/workbench/four-surface.css";
+@import "./upstream/03-Src/studio/appearance.css";
+@import "./upstream/03-Src/studio/review-conversation.css";
+@import "./upstream/03-Src/studio/review-workflow.css";

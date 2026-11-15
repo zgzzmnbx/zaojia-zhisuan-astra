@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "package": "three",
+  "version": "0.186.1",
+  "runtime_revision": "186",
+  "license": "MIT",
+  "retrieved_on": "2026-11-14",
+  "astra_reference": {
+    "repository": "zgzzmnbx/zaojia-zhisuan-astra",
+    "branch": "codex/conveyor-integrated-white",
+    "commit": "0fdbe5d3fbea72b371afe089b88037f1c9966238",
+    "package_path": "package.json",
+    "declared_three": "0.186.1"
+  },
+  "official_verification": "https://github.com/mrdoob/three.js/blob/r186/package.json",
+  "import_map": {
+    "imports": {
+      "three": "./vendor/three.module.js",
+      "three/addons/": "./vendor/addons/"
+    }
+  },
+  "offline_notes": [
+    "全部静态模块依赖已保存，无运行时CDN依赖。",
+    "GLTFLoader 0.186.1同时依赖BufferGeometryUtils和SkeletonUtils，已一并包含。",
+    "基础GLB无需DRACO/KTX2/Meshopt解码器；本目录未配置任何远程解码器，采用压缩扩展的未来模型需再补相应解码器。",
+    "通过本地HTTP服务加载ES modules。"
+  ],
+  "modified": false,
+  "validation": {
+    "all_static_imports_resolve_locally": true,
+    "unresolved_imports": [],
+    "package_version_matches_astra": true,
+    "syntax_checked_without_execution": [
+      "three.module.js",
+      "three.core.js",
+      "addons/loaders/GLTFLoader.js",
+      "addons/controls/OrbitControls.js",
+      "addons/utils/BufferGeometryUtils.js",
+      "addons/utils/SkeletonUtils.js"
+    ]
+  },
+  "files": [
+    {
+      "file": "LICENSE.txt",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/LICENSE",
+      "size_bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc",
+      "imports": []
+    },
+    {
+      "file": "addons/controls/OrbitControls.js",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/controls/OrbitControls.js",
+      "size_bytes": 40755,
+      "sha256": "3d79d07ecb686b4e5d93232eedab255331c1beef711e13164eaa1f68655a5f2b",
+      "imports": [
+        {
+          "specifier": "three",
+          "file": "three.module.js"
+        }
+      ]
+    },
+    {
+      "file": "addons/loaders/GLTFLoader.js",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/loaders/GLTFLoader.js",
+      "size_bytes": 117570,
+      "sha256": "131c0f78c01d19368ae495caa65b3adaa10487810a36a05bb5901b769a35ac16",
+      "imports": [
+        {
+          "specifier": "three",
+          "file": "three.module.js"
+        },
+        {
+          "specifier": "../utils/BufferGeometryUtils.js",
+          "file": "addons/utils/BufferGeometryUtils.js"
+        },
+        {
+          "specifier": "../utils/SkeletonUtils.js",
+          "file": "addons/utils/SkeletonUtils.js"
+        }
+      ]
+    },
+    {
+      "file": "addons/utils/BufferGeometryUtils.js",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/utils/BufferGeometryUtils.js",
+      "size_bytes": 37712,
+      "sha256": "9fb63427ce6641fa14fd0baff9cc4d1b5f9c3d85fd084bf2e90e803c44ec1797",
+      "imports": [
+        {
+          "specifier": "three",
+          "file": "three.module.js"
+        }
+      ]
+    },
+    {
+      "file": "addons/utils/SkeletonUtils.js",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/utils/SkeletonUtils.js",
+      "size_bytes": 11535,
+      "sha256": "b1632a703206c3d830de9fcbe515696770d04b71a15ee6b50afa6d2c3298c86f",
+      "imports": [
+        {
+          "specifier": "three",
+          "file": "three.module.js"
+        }
+      ]
+    },
+    {
+      "file": "three.core.js",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.js",
+      "size_bytes": 1458113,
+      "sha256": "9edde002b066a9a05676a6127f67735b62baf399bdea529f2f7e31657da769e6",
+      "imports": []
+    },
+    {
+      "file": "three.module.js",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+      "size_bytes": 662772,
+      "sha256": "9052042d676cb0fdc1ddfefe193053f34b7ac0513a616fdac4535d49987812ea",
+      "imports": [
+        {
+          "specifier": "./three.core.js",
+          "file": "three.core.js"
+        }
+      ]
+    },
+    {
+      "file": "upstream-package.json",
+      "source_url": "https://cdn.jsdelivr.net/npm/three@0.186.1/package.json",
+      "size_bytes": 3672,
+      "sha256": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
+      "imports": []
+    }
+  ]
+}

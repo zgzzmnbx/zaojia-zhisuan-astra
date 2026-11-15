@@ -1,0 +1,6 @@
+/* The original woff2 files are absent from the source repository.
+   Preserve the original family and weights; use the installed PingFang faces.
+   No substitute font binary is bundled or silently declared identical. */
+@font-face{font-family:'Zaojia PingFang SC';src:local('PingFangSC-Regular'),local('PingFang SC Regular');font-weight:400;font-display:swap}
+@font-face{font-family:'Zaojia PingFang SC';src:local('PingFangSC-Medium'),local('PingFang SC Medium');font-weight:500;font-display:swap}
+@font-face{font-family:'Zaojia PingFang SC';src:local('PingFangSC-Semibold'),local('PingFang SC Semibold');font-weight:600 800;font-display:swap}

@@ -13,7 +13,7 @@ import {
   X,
 } from "../../../PhosphorIcons";
 import "./inlineReviewSetupCard.css";
-import {useId} from 'react';
+import {useId,type ReactNode} from 'react';
 import {reviewMethodProblem,reviewConfirmationProblem} from './review-setup-readiness';
 
 type ReviewPerson = {
@@ -59,6 +59,7 @@ export type InlineReviewPlatformSetup = {
 };
 
 type Props = {
+  reviewerPicker?: ReactNode;
   fileName: string;
   jobId: string;
   reviewRows: number;
@@ -100,6 +101,7 @@ function platformMethodReady(platform: InlineReviewPlatformSetup) {
 }
 
 export default function InlineReviewSetupCard({
+  reviewerPicker,
   fileName,
   jobId,
   reviewRows,
@@ -223,7 +225,7 @@ export default function InlineReviewSetupCard({
             <em>{selectedPeopleCount ? `共选 ${selectedPeopleCount} 人` : "按平台分别选择"}</em>
           </header>
           <div className="inline-review-setup__step-card-body">
-            {enabledPlatforms.length ? (
+            {reviewerPicker ?? (enabledPlatforms.length ? (
               <div className="inline-review-setup__reviewer-platforms">
                 {enabledPlatforms.map((platform) => {
                   const isTaskActive = Boolean(platform.task && !taskCanStartNextRound(platform.task));
@@ -251,7 +253,7 @@ export default function InlineReviewSetupCard({
                   );
                 })}
               </div>
-            ) : <div className="inline-review-setup__empty"><UsersRound size={17} /><span>请先在步骤 1 启用至少一个发送平台。</span></div>}
+            ) : <div className="inline-review-setup__empty"><UsersRound size={17} /><span>请先在步骤 1 启用至少一个发送平台。</span></div>)}
           </div>
         </section>
 

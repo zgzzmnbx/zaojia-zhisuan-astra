@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-astra-palette="astra" data-astra-scheme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>H1 办公室 · Astra 数字孪生</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../astra_ui/astra-ui.css">
+  <link rel="stylesheet" href="./viewer.css?v=0.7.0">
+  <link rel="stylesheet" href="./office-events.css?v=0.7.0">
+  <link rel="stylesheet" href="./astra-review.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
+</head>
+<body class="studio">
+<div id="shell" class="live-shell office-shell">
+  <header class="topbar four-surface-topbar office-topbar">
+    <div class="studio-identity">
+      <strong class="studio-brand">造价智算</strong>
+      <div class="topbar-page"><span data-office-name>H1 办公室</span></div>
+      <span class="badge badge-ghost office-desktop">数字孪生 · 空间预览</span>
+    </div>
+    <div class="top-actions">
+      <a id="office-settings-link" class="btn btn-ghost btn-sm" href="./settings.html">设置</a>
+      <span id="connection-state" class="badge badge-ghost office-desktop">业务未接入</span>
+      <button id="theme-toggle" class="btn btn-ghost btn-square" aria-label="切换深色主题" title="切换明暗主题"><span class="astra-icon" data-icon="moon"></span></button>
+      <a id="model-download" class="btn btn-ghost btn-square" href="../models/H1-baked-v0.6.7.glb" download aria-label="下载源模型（不含预览调色）" title="下载源模型（不含预览调色）"><span class="astra-icon" data-icon="download"></span></a>
+    </div>
+  </header>
+
+  <main class="office-workspace" data-information-open="false">
+
+    <section class="rw-window rw-inline office-scene" aria-label="建筑三维预览">
+      <nav class="rw-tabs office-modebar" aria-label="查看方式">
+        <div class="join" id="view-controls">
+          <button class="btn btn-sm join-item btn-primary" data-view="building" aria-pressed="true" disabled><span class="astra-icon" data-icon="buildings"></span>整楼</button>
+          <button class="btn btn-sm join-item btn-ghost" data-view="exploded" aria-pressed="false" disabled><span class="astra-icon" data-icon="layers"></span>展开 9F</button>
+          <button class="btn btn-sm join-item btn-ghost" data-view="office" aria-pressed="false" disabled><span class="astra-icon" data-icon="grid"></span>9 楼</button>
+        </div>
+        <button id="picture-toggle" class="btn btn-ghost btn-sm" type="button" aria-expanded="false" aria-controls="picture-panel">画面设置</button>
+        <a id="render-compare" class="btn btn-ghost btn-sm" href="?render=baked">查看材质预览</a>
+        <button id="space-card-toggle" class="btn btn-ghost btn-sm" aria-controls="space-cards-panel" aria-expanded="true">收起工作栏</button>
+        <button id="back-building" class="btn btn-ghost btn-sm" disabled><span class="astra-icon" data-icon="home"></span><span class="office-desktop">返回整楼</span></button>
+      </nav>
+
+      <div id="viewport" class="office-viewport" tabindex="0" aria-label="三维建筑，可拖动旋转，滚轮缩放，右键平移">
+        <figure id="preview-fallback" class="office-fallback">
+          <img src="../previews/building-v0.6.7-offline.png" alt="整楼 v0.6.7 实际GLB离线验证，非 WebGL 验收图" id="fallback-image">
+          <figcaption id="fallback-message">正在加载三维模型，先显示v0.6.7 实际GLB整楼离线预览，非 WebGL 验收图。</figcaption>
+        </figure>
+        <div id="loading-tools" class="office-loading-tools" aria-label="模型加载状态与恢复">
+          <progress id="model-progress" max="1" value="0" aria-label="模型下载进度"></progress>
+          <div><button type="button" id="retry-model" class="btn btn-xs btn-ghost">重新加载</button><a id="quick-realtime" class="btn btn-xs btn-ghost" href="?render=realtime&v=0.7.0">打开轻量实时版</a></div>
+          <details id="load-diagnostics"><summary>加载诊断</summary><p>可点选下方文字并复制，用于排查。不包含同事或办公室配置。</p><textarea id="load-diagnostic-text" readonly aria-label="可复制的加载诊断" rows="8"></textarea></details>
+        </div>
+        <div id="canvas-host" class="office-canvas-host"></div>
+        <div id="people-markers" class="office-people-markers" aria-label="演示员工位置"></div>
+        <div class="office-scene-caption" aria-hidden="true">
+          <span class="badge badge-ghost" id="scene-label">H1 · 20 层</span>
+          <span class="badge badge-ghost" id="room-label" hidden></span>
+        </div>
+        <div class="office-camera-tools" aria-label="相机控制">
+          <button id="zoom-in" class="btn btn-ghost btn-square" aria-label="放大" title="放大" disabled><span class="astra-icon" data-icon="magnifying-glass-plus"></span></button>
+          <button id="zoom-out" class="btn btn-ghost btn-square" aria-label="缩小" title="缩小" disabled><span class="astra-icon" data-icon="magnifying-glass-minus"></span></button>
+          <button id="reset-camera" class="btn btn-ghost btn-square" aria-label="重置视角" title="重置视角" disabled><span class="astra-icon" data-icon="refresh"></span></button>
+          <button id="top-camera" class="btn btn-ghost btn-square" aria-label="俯视" title="俯视" disabled><span class="astra-icon" data-icon="arrows-in-simple"></span></button>
+        </div>
+      </div>
+
+      <footer class="rw-footer">
+        <span id="view-description">20 层建筑示意；9 楼采用已描摹的办公室平面。</span>
+        <span id="render-status" role="status" aria-live="polite">准备加载</span>
+      </footer>
+    </section>
+
+    <aside class="rw-window rw-inline office-inspector" id="space-cards-panel" aria-label="办公室工作栏">
+      <header class="rw-header office-rail-header">
+        <nav aria-label="工作栏分类" class="office-rail-tabs">
+          <button class="btn btn-sm btn-primary" type="button" data-rail-tab="tasks" aria-pressed="true" aria-controls="rail-tasks">任务</button>
+          <button class="btn btn-sm btn-ghost" type="button" data-rail-tab="people" aria-pressed="false" aria-controls="rail-people">人员</button>
+          <button class="btn btn-sm btn-ghost" type="button" data-rail-tab="messages" aria-pressed="false" aria-controls="rail-messages">消息 <span id="message-count">0</span></button>
+          <button class="btn btn-sm btn-ghost" type="button" data-rail-tab="space" aria-pressed="false" aria-controls="rail-space">空间</button>
+        </nav>
+        <button id="space-card-close" class="btn btn-ghost btn-square btn-sm" aria-label="关闭工作栏" type="button">×</button>
+      </header>
+      <div class="rw-inspector office-inspector-body">
+        <section id="rail-tasks" aria-label="接入任务">
+          <div id="task-workbench"><label for="task-person-filter">查看任务</label><select id="task-person-filter" class="select select-bordered"><option value="">全部同事</option></select><div id="task-metrics" class="task-metrics"></div><div id="task-list"></div><p id="task-action-status" role="status" class="office-muted"></p></div>
+          <section id="task-focus-card" class="task-focus-card" aria-label="选中任务摘要"></section>
+        </section>
+        <section id="rail-messages" aria-label="接入消息" hidden>
+          <details class="event-demo"><summary>演示事件</summary><label for="demo-employee">接收同事</label><select id="demo-employee" class="select select-bordered"></select><div class="event-demo-actions"><button id="demo-task" type="button" class="btn btn-sm btn-primary" disabled>接收演示任务</button><button id="demo-message" type="button" class="btn btn-sm btn-ghost" disabled>接收演示消息</button></div><p id="demo-result" role="status" class="office-muted"></p></details>
+          <div id="incoming-messages"></div>
+        </section>
+        <section id="rail-people" aria-label="人员与复核候选" hidden>        <section id="people-panel" aria-label="演示员工与复核候选">
+          <p class="office-description">工位示意 · 示例任务标注演示</p>
+          <div id="people-list" class="office-space-list" aria-label="演示员工列表"></div>
+          <section id="person-card" class="office-person-card" aria-label="员工任务"></section>
+          <h3 class="office-candidates-title">复核候选</h3>
+          <div id="review-candidates"></div>
+          <p id="review-status" class="office-description" role="status">仅在本页选择，尚未发起复核</p>
+        </section>
+</section>
+        <section id="rail-space" aria-label="空间与画面" hidden>
+        <section class="rw-details office-selection" aria-labelledby="selection-title">
+          <h3 id="selection-title">当前空间</h3>
+          <dl><dt>位置</dt><dd id="selection-name">H1 整栋建筑</dd><dt>依据</dt><dd id="selection-basis">实景照片 + 9 楼平面图</dd><dt>模型</dt><dd id="selection-detail">20 层参数化外壳</dd></dl>
+        </section>
+        <section id="picture-panel" class="office-picture" hidden aria-label="画面设置">
+          <fieldset id="picture-controls"><legend>画面设置 <span id="picture-info" title="画面调节说明" aria-label="画面调节说明">ⓘ</span></legend></fieldset>
+          <p id="material-coverage" class="office-description">正在检查模型材质覆盖。</p>
+          <div class="office-picture-actions"><span id="picture-status" role="status">本机偏好</span><button id="picture-reset" type="button" class="btn btn-ghost btn-sm">恢复默认</button></div>
+        </section>
+        <details id="space-navigation" class="task-secondary"><summary>楼层 / 房间 / 同事导航</summary>      <nav class="rw-tabs" aria-label="空间导航分类">
+        <div class="join">
+          <button id="tab-floors" class="btn btn-sm join-item btn-primary" aria-pressed="true">楼层</button>
+          <button id="tab-rooms" class="btn btn-sm join-item btn-ghost" aria-pressed="false">9 楼房间</button>
+          <button id="tab-people" class="btn btn-sm join-item btn-ghost" aria-pressed="false">员工</button>
+        </div>
+        <span id="navigation-count" class="office-muted">20 层</span>
+      </nav>
+        <div id="floor-panel">
+          <p class="office-description">9 楼含办公室白模。其余 19 层仅表示楼板与立面。</p>
+          <div id="floor-list" class="office-space-list" aria-label="二十个楼层"></div>
+        </div>
+        <div id="room-panel" hidden>
+          <p class="office-description">按已有平面图描摹。选择房间进入 9 楼并聚焦。</p>
+          <div id="room-list" class="office-space-list" aria-label="九楼房间"></div>
+        </div>
+</details>
+
+        <details class="task-secondary"><summary>模型说明与限制</summary>        <section class="rw-artifact office-business-note office-furniture-note" aria-labelledby="furniture-title"><span class="astra-icon" data-icon="layers"></span><div><strong id="furniture-title">办公器具 · 白模</strong><p id="furniture-description">器具布置示意；器具清单尚未加载，以当前模型为准。</p><p id="furniture-counts" hidden></p></div></section>
+        <div class="rw-artifact office-business-note"><span class="astra-icon" data-icon="info"></span><div><strong>业务未接入</strong><p>人物、任务与进度为演示数据。真实员工身份与 Astra 复核服务尚未接入。</p></div></div>
+        <details class="office-assumptions"><summary>模型依据与待核项目</summary><p>20 层按本次要求设置。层高、窗格及外立面尺寸为表现参数；9 楼尺寸来自平面图描摹，需由 CAD 或现场尺寸复核。页面不显示推测的员工身份和工作状态。</p></details>
+</details>
+<details class="task-secondary"><summary>本页备注</summary>        <section class="office-notes-section" aria-label="本页记录"><div class="office-notes-heading"><strong>本页记录</strong><button id="clear-local-notes" class="btn btn-ghost btn-xs" type="button" disabled>清空</button></div><div id="local-notes" class="office-local-notes" aria-live="polite"><p class="office-empty-note">还没有记录。你可以记下本次演示需要关注的空间或人员。</p></div></section>
+      <form id="local-note-form" class="office-composer"><label for="local-note-input">记录演示备注</label><textarea id="local-note-input" rows="3" maxlength="1200" placeholder="例如：先查看 9 楼会议区，再选择复核候选。"></textarea><div class="office-composer-actions"><small>仅保留在本页，不会发送</small><button id="add-local-note" class="btn btn-primary btn-sm" type="submit">记到本页</button></div><span id="local-note-status" class="office-sr-only" role="status"></span></form>
+</details>
+        </section>
+      </div>
+      <footer class="rw-footer"><span id="event-connection" role="status">连接本机事件服务…</span><span id="package-info" hidden></span></footer>
+    </aside>
+  </main>
+</div>
+<div id="event-notice" role="status" aria-live="polite" aria-atomic="true" class="office-event-notice" hidden></div>
+<div id="viewer-version" class="office-version" aria-label="当前网页版本 v0.7.0">v0.7.0</div>
+<noscript><p class="office-noscript">请启用 JavaScript 以操作三维模型；上方建筑图片可直接查看。</p></noscript>
+<script type="module">
+  import {VERSION} from './release.js?v=0.7.0';
+  document.querySelector('#viewer-version').textContent='v'+VERSION;
+  document.querySelector('#viewer-version').setAttribute('aria-label','当前网页版本 v'+VERSION);
+  import {mountSandboxLayout} from './sandbox-layout.js?v=0.7.0';
+  import {officeClient} from './office-client.js';
+  const rail = mountSandboxLayout();
+  const desk = {dispose(){}};
+  officeClient.start();
+  window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
+  window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
+  import('./viewer.js?v='+VERSION).then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+    document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
+    document.querySelector('#render-status').textContent='静态预览';
+    document.documentElement.dataset.viewerStatus='module-error';
+    console.error('Office viewer initialization failed', error);
+  });
+</script>
+</body>
+</html>

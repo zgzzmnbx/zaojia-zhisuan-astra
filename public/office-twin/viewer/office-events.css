@@ -1,0 +1,51 @@
+/* One rail at the inline end. Scene dimensions exclude it, so models stay visible. */
+body.studio .office-workspace {
+  --cards-width: 340px; --safe-left: 16px; --safe-right: 16px;
+}
+body.studio .office-workspace > .office-scene {
+  inset-inline-end: calc(var(--cards-width) + 32px); inline-size: auto;
+}
+body.studio .office-workspace[data-cards-open="false"] > .office-scene { inset-inline-end: 0; }
+body.studio .office-workspace > .office-inspector {
+  inset-inline-start: auto; inset-inline-end: 16px; inline-size: var(--cards-width);
+  top: 84px; bottom: 16px; max-height: none; display: flex; flex-direction: column;
+}
+body.studio .office-workspace > .office-inspector[hidden] { display: none; }
+body.studio .office-workspace > .office-inspector .office-inspector-body {
+  flex: 1 1 auto; min-block-size: 0; min-inline-size: 0; max-height: none;
+  overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 14px;
+}
+.office-rail-header { gap: 4px; padding: 8px!important; }
+.office-rail-tabs { display:flex; gap:2px; flex:1 1 auto; min-inline-size:0; flex-wrap:wrap; }
+.office-rail-tabs .btn { font-size:12px; padding-inline:8px; min-block-size:32px; }
+.office-rail-tabs #message-count { font-size:10px; }
+.office-inspector #people-list { max-height:none; }
+.office-inspector #person-card { font-size:12px; }
+.office-inspector select { inline-size:100%; min-inline-size:0; font-size:12px; margin-block:6px; }
+.office-inspector h3 { font-size:14px; margin-block:8px; }
+.office-inspector p,.office-inspector button { overflow-wrap:anywhere; }
+.office-incoming-message { border:1px solid var(--astra-line); border-radius:12px; padding:12px; margin-block:10px; background:var(--astra-paper); }
+.office-incoming-message p { white-space:pre-wrap; font-size:13px; line-height:1.65; }
+.event-demo { padding-block-end:12px; border-block-end:1px solid var(--astra-line); }
+.event-demo summary { cursor:pointer; font-size:13px; margin-block-end:8px; }
+.event-demo label { display:block; font-size:12px; }
+.event-demo-actions { display:flex; flex-wrap:wrap; gap:6px; margin-block-start:8px; }
+.office-event-notice { position:fixed; z-index:35; inset-inline-start:20px; inset-block-end:60px; max-inline-size:min(440px,calc(100vw - 390px)); padding:12px 16px; border:1px solid var(--astra-line); border-inline-start:3px solid var(--astra-primary); border-radius:10px; background:var(--astra-paper); color:var(--astra-text); font-size:13px; box-shadow:0 8px 28px #173d5920; pointer-events:none; overflow-wrap:anywhere; }
+.office-person-marker.has-events { border-color:var(--astra-primary); font-weight:600; }
+.office-person-marker.event-pulse { animation:office-event-pulse 650ms ease-out 3; }
+@keyframes office-event-pulse { 50% { box-shadow:0 0 0 7px color-mix(in srgb,var(--astra-primary) 15%,transparent); } }
+@media(prefers-reduced-motion:reduce) { .office-person-marker.event-pulse { animation:none; } }
+.studio.office-embed #shell.office-shell > .office-topbar { display:none!important; }
+body.studio.office-embed .office-workspace > .office-inspector { top:16px; }
+.office-embed .office-scene-caption { top:76px; }
+@media(max-width:900px) {
+  body.studio .office-workspace { --cards-width:300px; }
+  body.studio .office-workspace > .office-inspector { width:var(--cards-width)!important; }
+  .office-modebar #render-compare,.office-modebar #back-building { display:none; }
+}
+@media(max-width:620px) {
+  body.studio .office-workspace > .office-scene { inset-inline-end:0; }
+  body.studio .office-workspace > .office-inspector { top:142px; inline-size:min(340px,calc(100% - 32px)); width:min(340px,calc(100% - 32px))!important; }
+  body.studio.office-embed .office-workspace > .office-inspector { top:76px; }
+  .office-event-notice { max-inline-size:calc(100vw - 40px); }
+}

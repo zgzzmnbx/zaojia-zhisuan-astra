@@ -42,7 +42,7 @@ export function WorkspaceSidebar({workspace:w,navigation:n,busy,newChat,select,s
    <RailButton label="数字化造价" icon="monitor" active={!panel&&activeView==='digital'} onClick={()=>go(()=>open('digital'))}/>
    <RailButton label="公文转换" icon="file" active={!panel&&activeView==='document'} onClick={()=>go(()=>open('document'))}/>
   </nav>
-  <div className="rail-bottom"><RailButton label="设置" icon="settings" active={settingsActive} onClick={()=>go(settings)}/><div className="tooltip tooltip-right rail-tip" data-tip="石萌 · 独立工作空间"><span className="rail-profile" aria-label="石萌，独立工作空间" tabIndex={0}>石</span></div><span className="rail-version" aria-label={`应用版本 ${uiVersion}`} title={`造价智算 v${uiVersion}`}>v{uiVersion}</span></div>
+  <div className="rail-bottom"><RailButton label="多人复核" icon="users" active={activeView==='office-review'} disabled={busy||!w.ready} onClick={()=>go(()=>open('office-review'))}/><RailButton label="设置" icon="settings" active={settingsActive} onClick={()=>go(settings)}/><div className="tooltip tooltip-right rail-tip" data-tip="石萌 · 独立工作空间"><span className="rail-profile" aria-label="石萌，独立工作空间" tabIndex={0}>石</span></div><span className="rail-version" aria-label={`应用版本 ${uiVersion}`} title={`造价智算 v${uiVersion}`}>v{uiVersion}</span></div>
   {panel&&<WorkspaceRailPanel mode={panel} workspace={w} busy={busy} select={id=>go(()=>select(id))} showProject={id=>go(()=>showProject(id))} newProject={()=>go(newProject)} open={view=>go(()=>open(view))} close={close} search={()=>go(search)}/>}
  </aside>;
 }

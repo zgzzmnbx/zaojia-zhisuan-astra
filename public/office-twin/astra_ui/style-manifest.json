@@ -1,0 +1,342 @@
+{
+  "schema_version": "astra-style-reuse-v1",
+  "source_repository": "zgzzmnbx/zaojia-zhisuan-astra",
+  "source_branch": "codex/conveyor-integrated-white",
+  "source_commit": "0fdbe5d3fbea72b371afe089b88037f1c9966238",
+  "source_package_version": "0.22.5",
+  "design_document_version": "1.1.38",
+  "entrypoint": "astra-ui.css",
+  "optional_sandbox_entrypoint": "astra-sandbox.css",
+  "runtime_requires_build": false,
+  "versions": {
+    "react": "19.2.7",
+    "tailwindcss": "4.3.3",
+    "daisyui": "5.7.47",
+    "three": "0.186.1",
+    "vite": "8.3.2",
+    "typescript": "6.0.3"
+  },
+  "required_dom": {
+    "html_attributes": {
+      "data-theme": "light",
+      "data-astra-palette": "astra",
+      "data-astra-scheme": "light"
+    },
+    "body_class": "studio",
+    "shell_id": "shell",
+    "shell_class": "live-shell"
+  },
+  "adaptations": [
+    {
+      "path": "derived/astra-foundation.css",
+      "from": "03-Src/style.css",
+      "change": "Remove the first two build directives; replace three unavailable woff2 declarations through fonts.css. Every remaining upstream selector and value is retained."
+    },
+    {
+      "path": "fonts.css",
+      "from": "03-Src/style.css",
+      "change": "Same family and weights; local installed PingFang faces only. Original binary font files are not available."
+    },
+    {
+      "path": "astra-ui.css",
+      "change": "Assemble upstream styles for the independent viewer without importing application code."
+    },
+    {
+      "path": "theme.js",
+      "change": "Small DOM attribute adapter; no persistent state or business functions."
+    }
+  ],
+  "font_status": {
+    "original_binary_files": "not_present_in_upstream_or_workspace",
+    "default": "original_font_stack_with_installed_system_fallback",
+    "exact_font_metrics_verified": false,
+    "optional_entry": "fonts.original.optional.css"
+  },
+  "sources": [
+    {
+      "path": "DESIGN.md",
+      "sha": "bb48f1740b703728e61612d4bd02c0230c069bd3",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/DESIGN.md",
+      "bytes": 35410
+    },
+    {
+      "path": "package.json",
+      "sha": "621973b0cf4932e32a791f8686ffac94e367a0d9",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/package.json",
+      "bytes": 3541
+    },
+    {
+      "path": "03-Src/style.css",
+      "sha": "67dc8825fe01be13a246dac0ee2344ea8973b32f",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/style.css",
+      "bytes": 29670
+    },
+    {
+      "path": "03-Src/astra.css",
+      "sha": "9817ad68189ff7259c0a06a0ec9877a686872eaa",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/astra.css",
+      "bytes": 13696
+    },
+    {
+      "path": "03-Src/studio/studio.css",
+      "sha": "5fb5bbd1e39217766bc0c060d7f2fd66a8dfb178",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/studio/studio.css",
+      "bytes": 14647
+    },
+    {
+      "path": "03-Src/studio/appearance.css",
+      "sha": "76c4bf2bb986ac08994714e6f40fd2b918852c88",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/studio/appearance.css",
+      "bytes": 15452
+    },
+    {
+      "path": "03-Src/studio/review-workflow.css",
+      "sha": "8e496f76b8a0a5b5178f33805a0c3eb62aa7ae29",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/studio/review-workflow.css",
+      "bytes": 9441
+    },
+    {
+      "path": "03-Src/studio/review-conversation.css",
+      "sha": "624fb865a478c5fbc030fffce6bc4b17673446fd",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/studio/review-conversation.css",
+      "bytes": 13260
+    },
+    {
+      "path": "03-Src/studio/project-sandbox/project-sandbox.css",
+      "sha": "fa8f2e25dc9165bcd70a2b101eeca083a8197325",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/studio/project-sandbox/project-sandbox.css",
+      "bytes": 37918
+    },
+    {
+      "path": "03-Src/studio/workbench/workbench-layout.css",
+      "sha": "060f0f53dca0f336694b1850ad1efa281d87627a",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/studio/workbench/workbench-layout.css",
+      "bytes": 14487
+    },
+    {
+      "path": "03-Src/studio/workbench/four-surface.css",
+      "sha": "b2acb54d5b821452279b1d574cab2757d67d7e5d",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/studio/workbench/four-surface.css",
+      "bytes": 13691
+    },
+    {
+      "path": "03-Src/icon-catalog.js",
+      "sha": "6ded1a5eeb5792e1efc8aee15790e3805f27e431",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/icon-catalog.js",
+      "bytes": 5710
+    },
+    {
+      "path": "03-Src/icons.js",
+      "sha": "a757d4c19741aaa8a2f0755612cb6bb5ab36ccfb",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/icons.js",
+      "bytes": 800
+    },
+    {
+      "path": "03-Src/vendor/phosphor-duotone/glyphs.js",
+      "sha": "6f407f8ce9ceef3cbcd1ad0089fb5d2ff8493631",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/vendor/phosphor-duotone/glyphs.js",
+      "bytes": 51797
+    },
+    {
+      "path": "03-Src/vendor/phosphor-duotone/LICENSE.txt",
+      "sha": "78c9810819776e135d314adc0ff26eda7bec8b38",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/03-Src/vendor/phosphor-duotone/LICENSE.txt",
+      "bytes": 1071
+    },
+    {
+      "path": "public/assets/daisyui-LICENSE.txt",
+      "sha": "232b9a3f6fe8ccf533576c7e39b2ab31ce699c67",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/public/assets/daisyui-LICENSE.txt",
+      "bytes": 1071
+    },
+    {
+      "path": "public/appearance-init.js",
+      "sha": "eba38292763243c95879e72e8aebb02d977fae16",
+      "url": "https://github.com/zgzzmnbx/zaojia-zhisuan-astra/blob/0fdbe5d3fbea72b371afe089b88037f1c9966238/public/appearance-init.js",
+      "bytes": 609
+    }
+  ],
+  "vendored": [
+    {
+      "path": "vendor/daisyui-5.7.47.css",
+      "origin": "public/assets/daisyui-5.7.47.css",
+      "git_blob_sha": "e1553710d99b5d4f1f0e95fc2bc0561064a744ca",
+      "verified_against_current_repository": true,
+      "license": "MIT"
+    },
+    {
+      "path": "vendor/tailwind-preflight-4.3.3.css",
+      "origin": "tailwindcss@4.3.3/preflight.css",
+      "verified_package_version": true,
+      "license": "MIT"
+    }
+  ],
+  "limitations": [
+    "UI CSS source reuse is complete for the included scope; exact original font bytes are unavailable.",
+    "3D material/light parity is a separate renderer acceptance task.",
+    "Viewer-specific spatial layout and controls are owned by the viewer; do not override the upstream visual tokens."
+  ],
+  "files": [
+    {
+      "path": "STYLE_ALIGNMENT.md",
+      "bytes": 4745,
+      "sha256": "6088eb5c55c47b4bd8ec15cedca4d6d77a149aa4f54b9abfa9d18ef5d1fc5db7"
+    },
+    {
+      "path": "astra-sandbox.css",
+      "bytes": 208,
+      "sha256": "b43765d5f65427883cb8a57ed2f4270eb150375b0ed1b9280f57b9436033dad6"
+    },
+    {
+      "path": "astra-ui.css",
+      "bytes": 750,
+      "sha256": "7389ce3709ed1f9b98ebb0c9041901999f2097cc2650a9397a390136120fedbf"
+    },
+    {
+      "path": "component-reference.html",
+      "bytes": 5309,
+      "sha256": "5b8acbd324eb919b2c865bee720ae3ee7ca19029df5e2c848e75ad7ebbe3ff36"
+    },
+    {
+      "path": "derived/astra-foundation.css",
+      "bytes": 29315,
+      "sha256": "fe6f5d5affb4af362aa9197963d79ff66e6ba6e7a933e3f1d5420e96ad4f39e6"
+    },
+    {
+      "path": "fonts/README.md",
+      "bytes": 819,
+      "sha256": "b74f75868b9943f5f514198d905a2550208e033a651136aafc9b5409bdb0789c"
+    },
+    {
+      "path": "fonts.css",
+      "bytes": 645,
+      "sha256": "a12b1eb979cf248ecc04087f6afb897bfa04ed1583baa1048dec6cd729930403"
+    },
+    {
+      "path": "fonts.original.optional.css",
+      "bytes": 563,
+      "sha256": "b14802255efab5a1d3cd12045770b6f41efc194055bd2831e2100cec641d8c38"
+    },
+    {
+      "path": "icons.js",
+      "bytes": 138,
+      "sha256": "277f83bdebaa809426050e2fb4ad689c6d229ee2f8b1099db2b201be3e25f421"
+    },
+    {
+      "path": "source-index.json",
+      "bytes": 4890,
+      "sha256": "87d26106bdd831253ca2d92d313de37aa6b89cf740b3c21c776453808944f035"
+    },
+    {
+      "path": "theme.js",
+      "bytes": 771,
+      "sha256": "c6feb8ee78126988718da5e46310a90e8d2cb55490700b425e74fc3365068ca2"
+    },
+    {
+      "path": "upstream/03-Src/astra.css",
+      "bytes": 13696,
+      "sha256": "3310fc467afe5fe5dcecce0fbe5bad6273eedf5b2c4ca9137dc1a5eb82f29250"
+    },
+    {
+      "path": "upstream/03-Src/icon-catalog.js",
+      "bytes": 5710,
+      "sha256": "5635921494277abcc30957178ba585cf0e36be9b93eceab74458da988954ca00"
+    },
+    {
+      "path": "upstream/03-Src/icons.js",
+      "bytes": 800,
+      "sha256": "ccc50a135d807b4b4a02b9764df06cc8aa4ba132ba374fff9fbc8715e2dbe716"
+    },
+    {
+      "path": "upstream/03-Src/studio/appearance.css",
+      "bytes": 15452,
+      "sha256": "f0821cd6ad67608f5c3378e2cd14a16f235ce03a3d5ac1cd2c186aafafd1506d"
+    },
+    {
+      "path": "upstream/03-Src/studio/project-sandbox/project-sandbox.css",
+      "bytes": 37918,
+      "sha256": "0192f1cc642a71fd99bca0dcab8a636824f2a04aab9d0fc66128ea4ec3bbb665"
+    },
+    {
+      "path": "upstream/03-Src/studio/review-conversation.css",
+      "bytes": 13260,
+      "sha256": "42ff18895c07ed46a94295a2914ecb5ee44cbd39974ef517a2ef101da4a90ce3"
+    },
+    {
+      "path": "upstream/03-Src/studio/review-workflow.css",
+      "bytes": 9441,
+      "sha256": "298df92c9526b7f0242733a6b703f7d4d812a9fead7fbac38285def73e6e8159"
+    },
+    {
+      "path": "upstream/03-Src/studio/studio.css",
+      "bytes": 14647,
+      "sha256": "96aa8ab60cd41a7a41eb8c2f79bbb14c6be776a5e58b175d3a81f555b3e18dc6"
+    },
+    {
+      "path": "upstream/03-Src/studio/workbench/four-surface.css",
+      "bytes": 13691,
+      "sha256": "f553480416c04c3857d3ed3340ac811582b4485ba33baaf02e5a511d8cc95ce7"
+    },
+    {
+      "path": "upstream/03-Src/studio/workbench/workbench-layout.css",
+      "bytes": 14487,
+      "sha256": "b507a58904eb447191932e18d7e64f0281f69c586b0f08ffa28fa833b7b6a579"
+    },
+    {
+      "path": "upstream/03-Src/style.css",
+      "bytes": 29670,
+      "sha256": "893295ff4ec65b2358b92c4d3891d55541e7d31195ecd9a54164281a0396c669"
+    },
+    {
+      "path": "upstream/03-Src/vendor/phosphor-duotone/LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "b5b1f1da112d18ea2147decfd48ddc1bf2b5aeb6c265381579340e95b15a2bb2"
+    },
+    {
+      "path": "upstream/03-Src/vendor/phosphor-duotone/glyphs.js",
+      "bytes": 51797,
+      "sha256": "7af0fbbb885606d7960c025aaff62bafb5e91cb7629a9f26256a8b35db0919fd"
+    },
+    {
+      "path": "upstream/DESIGN.md",
+      "bytes": 63965,
+      "sha256": "04c03e90fe537875b074b5834aa4bd014d9d2e745cfc5b020030da28323ca763"
+    },
+    {
+      "path": "upstream/package.json",
+      "bytes": 3541,
+      "sha256": "7734ff4a3d225cd839539cc5c69d0faadda79d282fdc9759671db07a41b50bcd"
+    },
+    {
+      "path": "upstream/public/appearance-init.js",
+      "bytes": 609,
+      "sha256": "abace6622c1a292719000998e7c1ea8a43773e34fde57288b2650343b5378d5e"
+    },
+    {
+      "path": "upstream/public/assets/daisyui-LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "8709e3ac65c84637c422dc8082b893d9997fce093751c77b2f1983bf29dbf9ea"
+    },
+    {
+      "path": "vendor/daisyui-5.7.47.css",
+      "bytes": 1138571,
+      "sha256": "d057842b420556c5f98a5a3c362b7a1eff194125bdce03e654835db1956e3d0c"
+    },
+    {
+      "path": "vendor/tailwind-LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "60e0b68c0f35c078eef3a5d29419d0b03ff84ec1df9c3f9d6e39a519a5ae7985"
+    },
+    {
+      "path": "vendor/tailwind-preflight-4.3.3.css",
+      "bytes": 8489,
+      "sha256": "ace8310eed6dc5568a56fc16e1d695cf58da7528d81d66d81649e93cce644df6"
+    }
+  ],
+  "verification": {
+    "original_git_blobs": "17/17 match",
+    "foundation_rule_tail": "exact after documented prefix change",
+    "css_imports": "all resolve",
+    "browser_visual": "not verified: Chromium socket() Operation not permitted"
+  }
+}
