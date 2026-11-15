@@ -13,6 +13,7 @@ export const LIGHTING_SPECS=Object.freeze([
   {key:'backgroundBrightness',label:'背景亮度',min:20,max:160,step:1,value:105,group:'day'},
   {key:'nightShell',label:'主楼轮廓',min:0,max:200,step:1,value:25,group:'night'},
   {key:'nightOffice',label:'室内照明',min:0,max:200,step:1,value:100,group:'night'},
+  {key:'nightAmbient',label:'夜间环境亮度',min:0,max:200,step:1,value:100,group:'night'},
   {key:'nightContext',label:'周边建筑轮廓',min:0,max:200,step:1,value:25,group:'night'},
   {key:'nightWindows',label:'主楼窗灯',min:0,max:200,step:1,value:120,group:'night'},
   {key:'nightContextWindows',label:'周边窗灯',min:0,max:200,step:1,value:110,group:'night'},

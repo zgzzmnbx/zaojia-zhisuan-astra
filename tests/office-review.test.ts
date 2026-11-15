@@ -1,4 +1,16 @@
 import test from 'node:test';
+import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from '../public/office-twin/viewer/interior-light-plan.js';
+import {evaluateInteriorSurface} from '../public/office-twin/viewer/night-lighting-policy.js';
+test('night surfaces stay dark without lamps and room lights remain inside plan bounds',()=>{
+ assert.ok(Math.max(...evaluateInteriorSurface({color:[1,1,1],up:1,key:1,side:1}))<.025);
+ const plan=createInteriorLightPlan({metadata:{recommended_px_per_m:10,recommended_world_origin_px:[100,100]},rooms:[
+  {id:'meeting',kind:'meeting',bounds_px:[0,0,200,80]},
+  {id:'old',kind:'meeting',bounds_px:[0,0,30,40],merged_into:'meeting'},
+  {id:'R_STORE',kind:'storage',bounds_px:[0,0,30,40]},
+ ],core:{zones:[]}});
+ assert.equal(plan.length,3);assert.ok(plan.every(l=>l.roomId==='meeting'&&l.position[0]>l.bounds[0]&&l.position[0]<l.bounds[2]&&l.position[2]>l.bounds[1]&&l.position[2]<l.bounds[3]));
+ assert.ok(plan.length<=MAX_OFFICE_LIGHTS);assert.deepEqual(createInteriorLightPlan(null),[]);
+});
 import {createOfficeEntrance} from '../public/office-twin/viewer/office-entrance.js';
 import assert from 'node:assert/strict';
 test('office entrance waits for presented frames and transition completion; hiding never skips ahead',()=>{

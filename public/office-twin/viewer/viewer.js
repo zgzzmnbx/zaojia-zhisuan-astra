@@ -667,7 +667,7 @@ export async function mountOfficeViewer() {
       setView('office',{focus:group});orbit.focus(true);people.update(camera,view);
     }});
     people.syncBusiness(business);
-    nightEnvironment=createNightEnvironment({scene,renderer,camera,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
+    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     const gpuStarted=performance.now();
     await prepareRenderer(renderer,scene,camera,()=>disposed);
