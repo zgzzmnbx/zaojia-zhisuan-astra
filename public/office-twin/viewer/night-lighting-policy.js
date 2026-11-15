@@ -26,6 +26,11 @@ export function classifyNightRole(object,material=object.material){
     if(/ContextWeb_Buildings|ContextBuildings|Context_Building|Context_Setback/.test(node.name||''))return 'context';
     if(node.userData?.demoPersonId)return 'person';
   }
+  // glTF primitives can be unnamed leaves. Resolve floor identity on ancestors
+  // before batching; never group a room floor with facade or office furniture.
+  for(let node=object;node;node=node.parent){
+    if(node.userData?.entity_type==='floor_slab'||/^(?:H1_F09_floor_slab|Core_floor|(?:R_|CORE_).+_floor)$/.test(node.name||''))return 'floor';
+  }
   if(/PipeChina|Logo|Sign/.test(n))return 'sign';
   // glTF multi-primitive meshes keep MONITOR on the parent, not the render leaf.
   // Match the actual display material; the bezel, stand and UI strokes stay opaque.

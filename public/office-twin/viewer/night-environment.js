@@ -9,7 +9,7 @@ import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from './interior-light-plan.j
 // This is a display overlay on a daytime lightmap, not a second physical night bake.
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
-const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9};
+const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10};
 export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
@@ -18,19 +18,19 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
     previous.call(material,shader,renderer);
     Object.assign(shader.uniforms,{officeNight:shared.night,officeBloomOnly:shared.bloomOnly,officeNightExposure:shared.exposure,officeNightBlue:shared.blue,officeNightRole:{value:ROLE[role]??0},officeFloorInverse:shared.floorInverse});
     Object.assign(shader.uniforms,{officeMonitorPosition:{value:monitor?.position??new THREE.Vector3()},officeMonitorFacing:{value:monitor?.facing??new THREE.Vector3(0,0,1)},officeMonitorEnabled:{value:monitor?1:0}});
-    Object.assign(shader.uniforms,{officeDayGains:shared.dayGains,officeWhite:shared.white,officeContrast:shared.contrast,officeNightGains:shared.nightGains,officeNightLamps:shared.lamps});
+    Object.assign(shader.uniforms,{officeFloorGain:shared.floorGain,officeDayGains:shared.dayGains,officeWhite:shared.white,officeContrast:shared.contrast,officeNightGains:shared.nightGains,officeNightLamps:shared.lamps});
     Object.assign(shader.uniforms,{officeWindowBlue:shared.windowBlue,officeWindowStrength:shared.windowStrength,officeGroundTint:shared.groundTint,officeAmbient:shared.ambient,officeRoomLightCount:roomLighting.lightCount,officeRoomLights:roomLighting.lightPositions,officeRoomColors:roomLighting.lightColors,officeRoomBounds:roomLighting.lightBounds});
     shader.vertexShader='varying vec3 officeWorldPosition,officeWorldNormal;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
       officeWorldPosition=(modelMatrix*vec4(transformed,1.)).xyz;
       officeWorldNormal=normalize(mat3(modelMatrix)*normal);`);
-    shader.fragmentShader='varying vec3 officeWorldPosition,officeWorldNormal;\nuniform vec4 officeDayGains,officeNightGains;uniform vec2 officeWhite,officeNightLamps;uniform float officeContrast;\nuniform mat4 officeFloorInverse;\nuniform vec3 officeMonitorPosition,officeMonitorFacing;\nuniform float officeMonitorEnabled;\nuniform float officeNight,officeBloomOnly,officeNightExposure,officeNightBlue,officeNightRole;\n'+shader.fragmentShader;
+    shader.fragmentShader='varying vec3 officeWorldPosition,officeWorldNormal;\nuniform vec4 officeDayGains,officeNightGains;uniform vec2 officeWhite,officeNightLamps;uniform float officeContrast,officeFloorGain;\nuniform mat4 officeFloorInverse;\nuniform vec3 officeMonitorPosition,officeMonitorFacing;\nuniform float officeMonitorEnabled;\nuniform float officeNight,officeBloomOnly,officeNightExposure,officeNightBlue,officeNightRole;\n'+shader.fragmentShader;
     shader.fragmentShader=`uniform float officeWindowBlue,officeWindowStrength;uniform vec3 officeGroundTint;uniform float officeAmbient;uniform int officeRoomLightCount;uniform vec4 officeRoomLights[${MAX_OFFICE_LIGHTS}],officeRoomBounds[${MAX_OFFICE_LIGHTS}];uniform vec3 officeRoomColors[${MAX_OFFICE_LIGHTS}];\n`+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
       if(officeNight<.5){
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
         bool interior=officeNightRole==6.||officeNightRole==5.||officeNightRole==9.;
-        float gain=ground?officeDayGains.w:context?officeDayGains.z:interior?officeDayGains.y:officeDayGains.x;
+        float gain=officeNightRole==10.?officeFloorGain:ground?officeDayGains.w:context?officeDayGains.z:interior?officeDayGains.y:officeDayGains.x;
         float white=officeNightRole==9.?0.:context||ground?officeWhite.y:officeWhite.x;
         vec3 c=outgoingLight;float lum=dot(c,vec3(.2126,.7152,.0722));
         float chroma=max(c.r,max(c.g,c.b))-min(c.r,min(c.g,c.b));
@@ -82,7 +82,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
             emission=lamp*pane*step(.66,seed);
           }
         }
-        if(officeBloomOnly<.5 && (officeNightRole==6. || officeNightRole==5. || officeNightRole==9.)){
+        if(officeBloomOnly<.5 && (officeNightRole==6. || officeNightRole==5. || officeNightRole==9. || officeNightRole==10.)){
           // A dark, cool ambient floor, not a uniformly illuminated daytime albedo.
           float up=max(n.y,0.);
           float fill=${NIGHT_LIGHTING.interiorAmbient}+${NIGHT_LIGHTING.interiorUpFill}*up+${NIGHT_LIGHTING.interiorKeyFill}*key+${NIGHT_LIGHTING.interiorSideFill}*side;
@@ -112,7 +112,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
           }
         }
         if(officeNightRole==7.){shell=vec3(0.);emission=sourceColor*.8;}
-        shell*=officeNightRole==4.||officeNightRole==8.?officeNightGains.z:officeNightRole==6.||officeNightRole==5.||officeNightRole==9.?1.:officeNightGains.x;
+        shell*=officeNightRole==4.||officeNightRole==8.?officeNightGains.z:officeNightRole==6.||officeNightRole==5.||officeNightRole==9.||officeNightRole==10.?1.:officeNightGains.x;
         emission*=officeNightRole==4.?officeNightLamps.x:officeNightRole==5.?officeNightLamps.y:officeNightRole==7.?officeNightGains.y:officeNightGains.w;
         emission=mix(vec3(dot(emission,vec3(.2126,.7152,.0722))),emission,officeNightBlue);
         vec3 haloEmission=officeNightRole==5.?emission*${NIGHT_LIGHTING.screenBloomGain}:emission;
@@ -120,12 +120,12 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|office-studio-v0310|'+role;
+  material.customProgramCacheKey=()=>key+'|office-studio-v0311|'+role;
   material.needsUpdate=true;
 }
 
 export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings}){
-  const shared={windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
+  const shared={floorGain:{value:1.45},windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
   Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
   const lightPlan=createInteriorLightPlan(layout);
   Object.assign(shared,{ambient:{value:1},lightCount:{value:lightPlan.length},
@@ -146,6 +146,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
   function syncSettings(){
     settings=normalizeLighting(getSettings?.());
     shared.windowBlue.value=settings.windowStyle==='astra-blue'?1:0;shared.windowStrength.value=settings.windowBlueStrength/100;shared.groundTint.value.set(settings.groundColor);
+    shared.floorGain.value=settings.floorBrightness/100;
     shared.dayGains.value.set(settings.buildingBrightness,settings.officeBrightness,settings.contextBrightness,settings.groundBrightness).multiplyScalar(.01);
     shared.white.value.set(settings.buildingWhite,settings.contextWhite).multiplyScalar(.01);shared.contrast.value=settings.contrast/100;
     shared.nightGains.value.set(settings.nightShell,settings.nightOffice,settings.nightContext,settings.nightWindows).multiplyScalar(.01);
@@ -199,8 +200,8 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
           let byRole=copies.get(mat);if(!byRole){byRole=new Map();copies.set(mat,byRole);}
           if(!byRole.has(cloneKey)){
             const copy=mat.clone();copy.onBeforeCompile=mat.onBeforeCompile;copy.customProgramCacheKey=mat.customProgramCacheKey;
-            attachNightShader(copy,role,shared,monitor,role==='interior'&&roomLighting.has(roomId)?roomLighting.get(roomId):shared);materials.add(copy);
-            if(['interior','shell','ground','person'].includes(role))occluders.add(copy);
+            attachNightShader(copy,role,shared,monitor,['interior','floor'].includes(role)&&roomLighting.has(roomId)?roomLighting.get(roomId):shared);materials.add(copy);
+            if(['interior','floor','shell','ground','person'].includes(role))occluders.add(copy);
             colorSources.push({copy,source:mat});byRole.set(cloneKey,copy);
           }
           return byRole.get(cloneKey);
@@ -236,7 +237,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
         bloom.render();
       }finally{for(let i=changes.length-1;i>=0;i--)changes[i]();scene.background=background;shared.bloomOnly.value=0;}
     },
-    state:()=>({night:dark,profile:'Astra studio / aligned glass v0.31.0',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
+    state:()=>({night:dark,profile:'Astra studio / independent floor v0.31.1',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
     dispose(){if(disposed)return;disposed=true;bloom.dispose();black.dispose();for(const restore of restores)restore();for(const m of materials)m.dispose();materials.clear();removeAccentLights();},
   };
 }

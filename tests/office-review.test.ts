@@ -153,6 +153,20 @@ test('manual limits exclude the back and underside and leave a complete automati
  }
 });
 import {classifyNightRole,nightSeatId,NIGHT_LIGHTING} from '../public/office-twin/viewer/night-lighting-policy.js';
+test('floor lighting survives primitive leaves and batches without sharing facade or furniture gains',()=>{
+ for(const name of ['H1_F09_floor_slab','Core_floor','R_E_floor','CORE_SERVICE_NE_floor']){
+  const source={name:'mesh_primitive',parent:{name,parent:{name:'H1_F09_Office'}}};
+  assert.equal(classifyNightRole(source),'floor');
+  assert.equal(classifyNightRole({userData:{staticBatch:true,night_role:classifyNightRole(source)}}),'floor');
+ }
+ assert.equal(classifyNightRole({name:'wall',parent:{name:'Facade_09'}}),'shell');
+ assert.equal(classifyNightRole({name:'desk',parent:{name:'H1_F09_Office'}}),'interior');
+ const old=normalizeLighting({buildingBrightness:116,officeBrightness:104});
+ assert.equal(old.floorBrightness,116);
+ const edited=normalizeLighting({...old,buildingBrightness:60});
+ assert.equal(edited.floorBrightness,116);
+ assert.equal(normalizeLighting({...edited,floorBrightness:80}).buildingBrightness,60);
+});
 test('batch lighting keeps the interpreted interior role instead of stale source shell tags',()=>{
  const source={name:'table',userData:{night_role:'shell'},parent:{name:'H1_F09_Office'}};
  assert.equal(classifyNightRole(source),'interior');
