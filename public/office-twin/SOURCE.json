@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.23.1",
+  "hostAdapterVersion": "0.23.2",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -69,7 +69,7 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "c9cb1ed34a1628a70385edd7e7c4ba05d629d7ca9471e2846dd6602b2a83563b",
     "viewer/host-people.js": "df61be99edf8d62977f76a32ad44f07168b76470cbe95cdda6e0ebdbc25b5275",
-    "viewer/index.html": "9bc3fed086eba4684649239e7ee376ebe758ac8adfe11403f66e67cfc7ffb379",
+    "viewer/index.html": "cfe3cddd32e2ddd3466b0aa985307fc5100fe1e8d574a32565dcd2fbee17498c",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
     "viewer/navigation-motion.js": "b4f47c371aac47dd97735b2e22d25403a8ffd9ffbc8733cc2177d218a5984303",
