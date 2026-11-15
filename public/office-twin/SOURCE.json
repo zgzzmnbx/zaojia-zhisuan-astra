@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.31.1",
+  "hostAdapterVersion": "0.31.2",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -115,7 +115,7 @@
     "viewer/person-pointer.js": "27ffef7bd02d88bea0fb4764dcd9ae62fb30d03f3364d01cecc6dd118bba09d8",
     "viewer/seated-person.js": "0de3bcdc22f1f716c17403598aac171ea1d07bbe9f1c314deb83b2b92360c2cf",
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
-    "viewer/lighting-settings.js": "a79c6c43553ee03ab58c0a1160dda2cf69f2edfd31d7a394c13837f08fa8e8d2",
+    "viewer/lighting-settings.js": "de8fda8154d9077555c574b50f2da13441d7393afed38feba5ca54069097b1b8",
     "viewer/office-entrance.js": "0f89c55accf6a8739ccb8b225cc647626984868dcc031b15530ec00b4bf54f01",
     "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce",
     "viewer/floor-label.js": "206b9e971298c0307a3d2fe9ad211db349efaf567741b86f505d48688c97c545",
