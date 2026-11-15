@@ -179,7 +179,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
       // Clone by role because the same baked atlas is shared by windows and furniture.
       const copies=new Map();
       model.traverse(object=>{
-        if(!object.isMesh||!object.material||object.userData.staticBatchSource)return;
+        if(!object.isMesh||!object.material||object.userData.staticBatchSource||object.userData.officeBoard)return;
         const source=object.material,seat=nightSeatId(object),monitor=monitors.get(seat);
         const clone=mat=>{
           const role=nightRole(object,mat);counts[role]=(counts[role]||0)+1;

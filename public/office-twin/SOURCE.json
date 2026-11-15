@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.29.2",
+  "hostAdapterVersion": "0.30.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -61,7 +61,7 @@
     "previews/building-v0.6.7-offline.png": "5ac334637559d13c376cb6638629a5ebdf30000a7fc1f72c30e7fafac6abba7a",
     "previews/building_hero.png": "8f3a17af1ca0af1d1dc0f9c4c347a9a61aee96882d9c8aeac889a36a4a203463",
     "THIRD_PARTY_NOTICES.md": "caf39bc0238a31bcacb1cf133d791f8ba59299d085320d17c3e39d811c8ca0e7",
-    "viewer/astra-review.css": "6f745ec91fd7e649288ebedd376b1e47a0d928d04cf1146e7cbf8528ac458e33",
+    "viewer/astra-review.css": "c265bf09a466e51c08d82a9b11763c48ff12989cf46f687a4757afde306c4ea5",
     "viewer/baked-material.js": "84faacb5245563cd4da182a66fece0d0f026442ddd5408caa63430479052af95",
     "viewer/context-view-policy.js": "325fd9916b23143130a8207bb2f9889ebbbe865b20f641c197d4c47a57f1b003",
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
@@ -72,10 +72,10 @@
     "viewer/index.html": "c2dc31b850fdb671f794d9673723832db09fd8aae70c77f49999141f2c943eed",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
-    "viewer/navigation-motion.js": "4e5a5612d35c42bd8df8c1d72233f6627382f53e4b47b2fcbe3f58210a0f9442",
+    "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "ad3fc35fb27d087023de8f00e22f35e69fe7a3aca1dee531a0126447b1b0864e",
-    "viewer/night-environment.js": "21bbf15dbabd99cb02e6055a62a722f81c1f2d76e0e66857531aaf337601b0d9",
+    "viewer/night-environment.js": "17e89f1b00fcbab526f37feec7c1d029c9405a92866f7e308512b0c052b2f5fc",
     "viewer/night-lighting-policy.js": "d9f04a4f6d69de5efe224bd17848c8aed74f9c752d03db85be6e4cc6ce481674",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
@@ -106,7 +106,7 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "407fcbdcc2474b9845362088f0b6477df62a9e6ab7280192c797f929e50a16a9",
+    "viewer/viewer.js": "a42df58500d4eb9cd79f1eff4980241ed7dd1c5aea5a6ed22102e4e11d5ed9a4",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
@@ -125,7 +125,8 @@
     "viewer/vendor/interestfor/README.md": "b5f53ad0b353ec355bee3d3883be3277da55ebe4811f24969ee64d24ab0f78b2",
     "viewer/interior-light-plan.js": "023dd9b45c479f079be5f6fef8af4748838a2658b6f1df2baf4a8e60c7dc9e43",
     "viewer/static-batches.js": "8f91eacad782f3a4e4c25c5fe3fcfd0ea55f2eb5acb6689d69338b5b33b67e74",
-    "viewer/frame-meter.js": "b71f1bafc6a9c5ac3267236181db62c4e16f83c57f497aff85938a15d53a2482"
+    "viewer/frame-meter.js": "b71f1bafc6a9c5ac3267236181db62c4e16f83c57f497aff85938a15d53a2482",
+    "viewer/office-board.js": "5e94d03c8f725c28a50aab6c3f1083f0c0b2b717609814f3ab8ceee1194e2467"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs"
 }

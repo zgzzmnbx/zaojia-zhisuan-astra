@@ -7,6 +7,7 @@ import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js';
 import {batchStaticGeometry} from './static-batches.js';
 import {createFrameMeter} from './frame-meter.js';
+import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {bindPersonPointer} from './person-pointer.js';
 import {officeClient} from './office-client.js';
 import { firstVisibleFloorHit } from './floor-picking.js?v=0.6.7';
@@ -54,12 +55,12 @@ export async function mountOfficeViewer() {
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
   let people, nightEnvironment, visibilityBlend, orbit;
-  let floorLabel,previewCamera;
+  let floorLabel,previewCamera,officeBoard;
   let orbitDirection=1,wasOrbitRunning=false;
   let business=officeClient.getState(),bridgeContext={id:null,revision:0};
   const unsubscribeBusiness=officeClient.subscribe((kind,value)=>{
     if(kind==='snapshot'){
-      business=value;const before=people?.getState().rigRevision;people?.syncBusiness(value);
+      business=value;officeBoard?.sync(value);const before=people?.getState().rigRevision;people?.syncBusiness(value);
       if(people&&people.getState().rigRevision!==before)nightEnvironment?.refresh(scene);
     }
     if(kind==='event'){people?.react(value);notify('employee-event',{seq:value.seq,employeeId:value.event.employeeId,eventType:value.event.type,contextId:bridgeContext.id});}
@@ -82,7 +83,7 @@ export async function mountOfficeViewer() {
   }
   function getState() {
     return { version: VERSION, assetVersion:ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
-      performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, entrance:entrance.state(), theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
+      officeBoard:officeBoard?.state()??null,performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, entrance:entrance.state(), theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
   }
   let loadingMessage='正在读取办公室资料', loadingTimer=null;
   const formatMB=n=>(n/1024/1024).toFixed(1)+' MiB';
@@ -182,6 +183,7 @@ export async function mountOfficeViewer() {
     loadReport.lastError={code:error?.code??'VIEWER_ERROR',message:String(error?.message??error),stage:loadReport.stage};stopLoading();
     nightEnvironment?.dispose(); nightEnvironment=null;
     picture.dispose();
+    officeBoard?.dispose();officeBoard=null;
     people?.dispose();
     floorLabel?.dispose();floorLabel=null;
     if (frame) cancelAnimationFrame(frame);
@@ -211,6 +213,7 @@ export async function mountOfficeViewer() {
     if (scene&&!nightEnvironment) scene.background = new THREE.Color(theme.scheme === 'dark' ? '#040813' : picture.getState().backgroundColor);
     picture.setTheme(theme.scheme);
     nightEnvironment?.setTheme(theme.scheme);
+    officeBoard?.setTheme(theme.scheme);
     if (roomOutline) roomOutline.material.color.set(styles.getPropertyValue('--astra-primary').trim() || '#284bd4');
     requestFrame(); return { ...theme };
   }
@@ -338,7 +341,7 @@ export async function mountOfficeViewer() {
     if(!labelPreview)floorLabel?.cancel();
     if(!automatic)entrance.cancel();
     orbit?.focus(false);
-    view = next;if(controls)Object.assign(controls,officeCameraLimits(view)); selectedRoom = null; selectedFloor = ['office', 'exploded'].includes(next) ? 9 : null;
+    view = next;officeBoard?.setView(next);if(controls)Object.assign(controls,officeCameraLimits(view)); selectedRoom = null; selectedFloor = ['office', 'exploded'].includes(next) ? 9 : null;
     clearOutline(); paintState();
     if (!renderReady) return getState();
     // Capture the displayed state, not the previous destination, so reversals never jump.
@@ -454,6 +457,7 @@ export async function mountOfficeViewer() {
     unsubscribeBusiness();window.dispatchEvent(new Event('office-disposed'));
     nightEnvironment?.dispose(); nightEnvironment=null;
     picture.dispose();
+    officeBoard?.dispose();officeBoard=null;
     people?.dispose();
     floorLabel?.dispose();
     if (frame) cancelAnimationFrame(frame);
@@ -653,6 +657,7 @@ export async function mountOfficeViewer() {
     }
     scene.add(model);
     isolateContextMaterials(buildingRoot,contextRoot);
+    hideBoardCore(officeRoot);
     staticBatches=batchStaticGeometry(model);
     originalVisibility.clear();model.traverse(object=>{originalVisibility.set(object,object.visible);object.updateMatrix();if(!/^Floor_\d+$/.test(object.name))object.matrixAutoUpdate=false;});
     visibilityBlend=createVisibilityBlend(model);
@@ -682,6 +687,7 @@ export async function mountOfficeViewer() {
     people.syncBusiness(business);
     nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
+    officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});officeBoard.setView(view);
     const gpuStarted=performance.now();
     await prepareRenderer(renderer,scene,camera,()=>disposed);
     if(disposed)return api;

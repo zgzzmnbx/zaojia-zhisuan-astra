@@ -3,6 +3,27 @@ import * as THREE from 'three';
 import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.js';
 import {createFrameMeter} from '../public/office-twin/viewer/frame-meter.js';
 import {createVisibilityBlend} from '../public/office-twin/viewer/navigation-motion.js';
+import {summarizeOfficeBoard,hideBoardCore} from '../public/office-twin/viewer/office-board.js';
+
+test('office board separates live review outcomes from demo assignments and unknown context',()=>{
+ const task=(id:string,status:string,demo=false)=>({id,status,demo});
+ const snapshot={context:'current',employees:[{id:'owner'},{id:'owner'},{id:'colleague'}],tasks:[
+  task('1','飞书 · 已通过 · 审核进行中'),task('2','WeAct · 待复核 · 已通过'),task('3','飞书 · 已退回 · 待修改'),task('4','审核中',true),task('4','审核中',true)]};
+ assert.deepEqual(summarizeOfficeBoard(snapshot),{people:2,total:3,pending:1,approved:1,returned:1,demo:1,ready:true,stale:false});
+ assert.equal(summarizeOfficeBoard({...snapshot,receiptError:true}).stale,true);
+ assert.equal(summarizeOfficeBoard({}).ready,false);
+});
+test('office core replacement keeps perimeter and furniture, and cannot reappear during floor transitions',()=>{
+ const office=new THREE.Group();office.name='H1_F09_Office';
+ const geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial();
+ const fixture=new THREE.Group();fixture.name='CORE_LIFT_01';const mesh=new THREE.Mesh(geometry,material);fixture.add(mesh);office.add(fixture);
+ const boundary=new THREE.Mesh(geometry,material);boundary.name='CORE_N_cut';office.add(boundary);
+ const desk=new THREE.Mesh(geometry,material);desk.name='Furniture_SEAT_01';office.add(desk);
+ assert.equal(hideBoardCore(office),1);batchStaticGeometry(office);
+ const blend=createVisibilityBlend(office),poses=blend.destination();blend.sample(poses,.5);blend.sample(poses,1);
+ assert.equal(fixture.visible,false);assert.equal(mesh.visible,false);assert.equal(boundary.userData.officeBoardReplaced,undefined);assert.equal(desk.userData.officeBoardReplaced,undefined);
+ assert.equal(office.getObjectByName('CORE_LIFT_01'),fixture);
+});
 
 test('static batching preserves geometry bounds, named anchors and room/seat boundaries',()=>{
  const root=new THREE.Group(),room=new THREE.Group();room.userData={room_id:'room',entity_type:'room'};room.position.set(4,30,2);root.add(room);

@@ -13,7 +13,7 @@ export function createVisibilityBlend(root) {
   const nodes=[],entries=[],sources=new Set();
   root.traverse(object=>{
     nodes.push({object,visible:object.visible});
-    if(!object.isMesh||!object.material||object.userData.staticBatchSource)return;
+    if(!object.isMesh||!object.material||object.userData.staticBatchSource||object.userData.officeBoardReplaced)return;
     const materials=[].concat(object.material).map(source=>{
       sources.add(source);
       const material=source.clone();
