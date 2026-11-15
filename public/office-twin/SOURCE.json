@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.31.2",
+  "hostAdapterVersion": "0.31.3",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -126,7 +126,7 @@
     "viewer/interior-light-plan.js": "023dd9b45c479f079be5f6fef8af4748838a2658b6f1df2baf4a8e60c7dc9e43",
     "viewer/static-batches.js": "8f91eacad782f3a4e4c25c5fe3fcfd0ea55f2eb5acb6689d69338b5b33b67e74",
     "viewer/frame-meter.js": "b71f1bafc6a9c5ac3267236181db62c4e16f83c57f497aff85938a15d53a2482",
-    "viewer/office-board.js": "5e94d03c8f725c28a50aab6c3f1083f0c0b2b717609814f3ab8ceee1194e2467",
+    "viewer/office-board.js": "3ebbfaf24823d1d3172a2ffe7aad499d981944e9cb71ba03cc6ae7f51c04bdc3",
     "viewer/astra-lighting-profile.js": "bc772f425796bcc8c106dbcf8fb05cd81fca98b0373cf15b8ac23aa21ce29f5e"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs"

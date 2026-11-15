@@ -19,10 +19,12 @@ test('office core replacement keeps perimeter and furniture, and cannot reappear
  const fixture=new THREE.Group();fixture.name='CORE_LIFT_01';const mesh=new THREE.Mesh(geometry,material);fixture.add(mesh);office.add(fixture);
  const boundary=new THREE.Mesh(geometry,material);boundary.name='CORE_N_cut';office.add(boundary);
  const desk=new THREE.Mesh(geometry,material);desk.name='Furniture_SEAT_01';office.add(desk);
- assert.equal(hideBoardCore(office),1);batchStaticGeometry(office);
+ const floor=new THREE.Group();floor.name='Core_floor';floor.add(new THREE.Mesh(geometry,material));office.add(floor);
+ assert.equal(hideBoardCore(office),2);batchStaticGeometry(office);
  const blend=createVisibilityBlend(office),poses=blend.destination();blend.sample(poses,.5);blend.sample(poses,1);
  assert.equal(fixture.visible,false);assert.equal(mesh.visible,false);assert.equal(boundary.userData.officeBoardReplaced,undefined);assert.equal(desk.userData.officeBoardReplaced,undefined);
  assert.equal(office.getObjectByName('CORE_LIFT_01'),fixture);
+ assert.equal(floor.visible,false);assert.equal(floor.children[0].visible,false);assert.equal(floor.userData.officeBoardReplaced,true);
 });
 
 test('static batching preserves geometry bounds, named anchors and room/seat boundaries',()=>{

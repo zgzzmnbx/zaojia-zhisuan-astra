@@ -16,7 +16,7 @@ export function summarizeOfficeBoard(snapshot={}){
 export function hideBoardCore(office){
   let count=0;
   for(const node of office.children){
-    if(!node.name.startsWith('CORE_')||/^CORE_(?:N_cut|S_cut|W_|E_)/.test(node.name))continue;
+    if(node.name!=='Core_floor'&&(!node.name.startsWith('CORE_')||/^CORE_(?:N_cut|S_cut|W_|E_)/.test(node.name)))continue;
     node.traverse(o=>{o.userData.officeBoardReplaced=true;o.visible=false;if(o.isMesh)count++;});
   }
   return count;
@@ -24,6 +24,13 @@ export function hideBoardCore(office){
 
 export function createOfficeBoard({office,viewport,requestFrame,scheme='light',snapshot={}}){
   const group=new THREE.Group();group.name='AstraOfficeBoard';office.add(group);
+  // The retired stairs/lifts left black occlusion in Core_floor's baked atlas.
+  // Replace its full footprint, not only the two smaller printed faces. Bounds
+  // are the authored v0.6.7 core floor; the perimeter walls remain unchanged.
+  const baseMaterial=new THREE.MeshBasicMaterial({toneMapped:false});
+  const base=new THREE.Mesh(new THREE.PlaneGeometry(15.638298,19.521276),baseMaterial);
+  base.name='OfficeBoardCoreFloor';base.rotation.x=-Math.PI/2;base.position.set(.026596,.04,0);
+  base.userData.officeBoard=true;group.add(base);
   const summary=document.createElement('section');summary.className='office-board-accessible';
   summary.setAttribute('aria-label','天津运营中心九楼造价中心看板');viewport.append(summary);
   let data=summarizeOfficeBoard(snapshot),theme=scheme,disposed=false,revision=0,lastKey='';
@@ -42,6 +49,7 @@ export function createOfficeBoard({office,viewport,requestFrame,scheme='light',s
     const css=getComputedStyle(document.documentElement),dark=theme==='dark';
     const color=(name,fallback)=>css.getPropertyValue(name).trim()||fallback;
     const paper=color('--astra-paper',dark?'#151b25':'#ffffff'),ink=color('--astra-ink',dark?'#dce4ef':'#273447');
+    baseMaterial.color.set(dark?paper:'#eef1f3');
     const muted=color('--astra-muted',dark?'#8d9aaf':'#738096'),accent=color('--astra-primary','#5268ce');
     const line=color('--astra-line',dark?'#303d50':'#dce2ec');
     panels.forEach(({canvas,texture},i)=>{
@@ -75,6 +83,6 @@ export function createOfficeBoard({office,viewport,requestFrame,scheme='light',s
     setTheme(value){theme=value;paint();},
     setView(value){group.visible=['office','exploded'].includes(value);summary.hidden=!group.visible;},
     state:()=>({...data,revision,visible:group.visible}),
-    dispose(){if(disposed)return;disposed=true;group.removeFromParent();summary.remove();panels.forEach(p=>{p.texture.dispose();p.face.material.dispose();p.face.geometry.dispose();});},
+    dispose(){if(disposed)return;disposed=true;group.removeFromParent();summary.remove();base.geometry.dispose();baseMaterial.dispose();panels.forEach(p=>{p.texture.dispose();p.face.material.dispose();p.face.geometry.dispose();});},
   };
 }
