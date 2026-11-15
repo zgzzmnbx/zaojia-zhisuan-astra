@@ -7,6 +7,7 @@ import './office-review.css';
 import {appearanceKey,normalizeAppearance,readAppearance} from './appearance';
 import {readBakedSettings} from './project-sandbox/baked-settings';
 import {sandboxParametersKey} from './project-sandbox/parameter-storage';
+import {LoadingLogo} from './brand/LoadingLogo';
 
 const namespace='astra-office-selection:v1';
 export default function OfficeReview({bridge,active,dark,palette,context,prepare,chatVisible,close}:{bridge:OfficeBridge;active:boolean;dark:boolean;palette:string;context:string;prepare:()=>void;chatVisible:boolean;close:()=>void}) {
@@ -14,6 +15,12 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   const actions=useRef({prepare,close});actions.current={prepare,close};
   const [ready,setReady]=useState(false),[error,setError]=useState(''),[generation,setGeneration]=useState(0);
   const [sceneReady,setSceneReady]=useState(0);
+  const [mounted,setMounted]=useState(false),[rendered,setRendered]=useState(false);
+  useEffect(()=>{
+    // Let the host's loading logo paint before the iframe initializes WebGL.
+    let second=0;const first=requestAnimationFrame(()=>{second=requestAnimationFrame(()=>setMounted(true));});
+    return()=>{cancelAnimationFrame(first);cancelAnimationFrame(second);};
+  },[generation]);
   const [receiptError,setReceiptError]=useState(false);
   const [directory,setDirectory]=useState<OfficePerson[]>([]);
   const [receipt,setReceipt]=useState<{context:string;tasks:OfficeTask[]}|null>(null);
@@ -71,7 +78,11 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   useEffect(()=>{
     const receive=(event:MessageEvent)=>{
       if(event.source!==frame.current?.contentWindow||event.origin==='null'||event.origin!==location.origin)return;
-      if(event.data?.namespace==='astra-office-twin:v1'&&event.data.type==='ready'){setSceneReady(v=>v+1);return;}
+      if(event.data?.namespace==='astra-office-twin:v1'&&event.data.type==='ready'){
+        if(event.data.rendererAvailable){setRendered(true);setError('');}
+        else setError('办公室载入失败，可重试或继续使用左侧复核卡。');
+        setSceneReady(v=>v+1);return;
+      }
       if(event.data?.namespace!==namespace)return;
       if(event.data.type==='ready'){setReady(true);setError('');}
       if(event.data.type==='action'&&visible.current){
@@ -86,7 +97,7 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
       }
     };
     window.addEventListener('message',receive);
-    const timer=setTimeout(()=>{if(!frame.current?.contentDocument?.documentElement.dataset.hostReady)setError('办公室加载较慢，可重试或继续使用左侧复核卡。');},20000);
+    const timer=setTimeout(()=>{if(frame.current?.contentDocument?.documentElement.dataset.viewerStatus!=='ready')setError('办公室加载较慢，可重试或继续使用左侧复核卡。');},20000);
     return()=>{clearTimeout(timer);window.removeEventListener('message',receive);};
   },[generation]);
   useEffect(()=>{
@@ -99,8 +110,9 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'visibility',visible:active},location.origin);
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'theme',theme:{palette,scheme:dark?'dark':'light'}},location.origin);
   },[ready,active,dark,palette,sceneReady]);
-  return <div className="office-review-host">
-    {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    <iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=office&host=astra" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>
+  return <div className="office-review-host" aria-busy={!rendered&&!error}>
+    {!rendered&&<div className="office-review-loading" role="status"><div><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><span>{error?'办公室尚未载入':'正在加载办公室沙盘…'}</span></div></div>}
+    {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }

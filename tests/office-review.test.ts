@@ -1,5 +1,18 @@
 import test from 'node:test';
+import {createOfficeEntrance} from '../public/office-twin/viewer/office-entrance.js';
 import assert from 'node:assert/strict';
+test('office entrance waits for presented frames and transition completion; hiding never skips ahead',()=>{
+ const entry=createOfficeEntrance(true);let now=0;
+ assert.equal(entry.step(now,false),null);entry.start();entry.step(now,false);
+ const advance=(frames:number,moving=false)=>{const events:string[]=[];for(let i=0;i<frames;i++){now+=50;const next=entry.step(now,moving);if(next)events.push(next);}return events;};
+ assert.deepEqual(advance(17),['exploded']);
+ assert.deepEqual(advance(40,true),[]);
+ entry.suspend();now+=60000;assert.equal(entry.step(now,false),null);
+ assert.deepEqual(advance(13),['office']);assert.equal(entry.state().running,true);
+ advance(30,true);assert.equal(entry.state().phase,'office');advance(1);assert.equal(entry.state().running,false);
+ entry.start();entry.cancel();assert.deepEqual(advance(100),[]);
+ entry.start();assert.equal(entry.step(now,false,true),'office');assert.equal(entry.state().running,false);
+});
 import {createOfficeBridge,officeRoster,officeTasks} from '../03-Src/studio/office-review.ts';
 import type {ReviewPlatform,ReviewRequest,ReviewTask} from '../03-Src/studio/review-flow.ts';
 const request:ReviewRequest={kind:'setup',jobId:'a',fileName:'成果.xlsx',projectName:'当前项目',reviewRows:2,version:1};

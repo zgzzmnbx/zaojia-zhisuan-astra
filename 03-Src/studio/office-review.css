@@ -10,3 +10,5 @@
 .office-surface .alert{position:absolute;z-index:4;left:calc(var(--office-chat-width,600px) + 12px);right:20px;top:72px;width:auto}
 .studio #shell.live-shell .office-workbench>.content-artifact{display:none!important}
 .rail-button[aria-label="多人复核"] .astra-icon{pointer-events:none}
+.office-review-loading{position:absolute;inset:0;z-index:3;display:grid;place-items:center;padding-left:min(var(--office-chat-width,540px),50%);background:var(--color-base-100);color:var(--muted)}
+.office-review-loading>div{display:flex;flex-direction:column;align-items:center;gap:12px;font-size:14px}

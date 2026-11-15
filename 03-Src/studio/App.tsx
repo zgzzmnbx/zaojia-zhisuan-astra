@@ -471,11 +471,10 @@ function App(){
   }
   function openSettings(section:SettingsSection='appearance'){setSettingsSection(section);setSettings(true);}
   async function openOfficeReview(){
-    const context=conversationContext.current;
     setOfficeWarm(true);
-    await prepareReview();
-    if(context!==conversationContext.current)return;
+    const preparing=prepareReview();
     setConversationCollapsed(false);presentation.open('office-review');presentation.returnToSplit();setSidebar(false);
+    await preparing;
   }
   function open(next:string,fullscreen=false){if(next==='office-review'){void openOfficeReview();return;}setSummaryOverride(false);setMappingOpen(false);setCitationMessage(null);if(next==='network'){selectKnowledgeTab('network');setSidebar(false);return;}if(next==='architecture'){setArchitectureOpening(n=>n+1);setArchitectureDark(true);setArchitectureOpen(true);setSidebar(false);return;}if(next==='articles'||next==='knowledgebase'||next==='originalqa'||next==='network'){setKnowledgeTab(next==='network'?'network':next==='articles'?'articles':'ask');next='knowledge';}else if(next==='knowledge')setKnowledgeTab('ask');const setting=settingsSectionForRoute(next);if(setting){openSettings(setting);return;}if(next==='collaboration'){prepareReview();return;}if(next==='review-progress'){prepareReview('progress');return;}if(next==='mapping'&&file&&!result){showMapping(true);return;}if(next==='document'){beginGongwen(null);return;}if(next==='word')next='report';if(next==='insights'){showInsights();return;}if(isProfessional(next))setProfessionalWarm(true);if(next==='chat'){presentation.chat();setSidebar(false);return;}if(next in titles){presentation.open(next as View);if(next==='aerial'||fullscreen)presentation.fullscreen();setSidebar(false);if(next==='risk'&&result)void refreshRisk(result.job_id);if(next==='report'&&result)void refreshReport(result.job_id);if(next==='projects'){setDashboardWarm(true);}if(next==='projects')void listRuns().catch(e=>add(e.message,undefined,'assistant',true));if(next==='trace')void loadTimeline();}else{presentation.open('tools');add('这项能力已经列入完整迁移清单，当前版本尚未接通。右侧可以查看接入状态。');}}
   async function refreshRisk(job:string,silent=false){
