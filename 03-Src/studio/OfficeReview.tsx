@@ -4,6 +4,9 @@ import {officeRoster,officeTasks,type OfficeBridge,type OfficePerson,type Office
 import type {ReviewOptions,ReviewPlatform,ReviewTask} from './review-flow';
 import {latestReviewTasksByPlatform} from '../professional/components/agent-workspace/reviewProgress';
 import './office-review.css';
+import {appearanceKey,normalizeAppearance,readAppearance} from './appearance';
+import {readBakedSettings} from './project-sandbox/baked-settings';
+import {sandboxParametersKey} from './project-sandbox/parameter-storage';
 
 const namespace='astra-office-selection:v1';
 export default function OfficeReview({bridge,active,dark,palette,context,prepare,chatVisible,close}:{bridge:OfficeBridge;active:boolean;dark:boolean;palette:string;context:string;prepare:()=>void;chatVisible:boolean;close:()=>void}) {
@@ -41,6 +44,17 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
       });
     return()=>controller.abort();
   },[context]);
+  useEffect(()=>{
+    if(!ready)return;
+    const sync=()=>{
+      let appearance=readAppearance();
+      try{const raw=localStorage.getItem(appearanceKey);if(raw)appearance=normalizeAppearance(JSON.parse(raw));}catch{}
+      const baked=readBakedSettings();
+      send('motion',{enabled:appearance.sandboxAutoOrbit,delay:appearance.sandboxOrbitDelay,motion:'orbitMotion' in baked?baked.orbitMotion:{speed:100,acceleration:100}});
+    };
+    sync();const update=(event:StorageEvent)=>{if(!event.key||[appearanceKey,sandboxParametersKey].includes(event.key))sync();};
+    window.addEventListener('storage',update);return()=>window.removeEventListener('storage',update);
+  },[ready,sceneReady,active]);
   function send(type:string,data:Record<string,unknown>={}) {frame.current?.contentWindow?.postMessage({namespace,type,...data},location.origin);}
   useEffect(()=>{
     if(!ready||!active)return;

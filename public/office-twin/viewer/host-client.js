@@ -2,7 +2,7 @@
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
 let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正在读取当前成果',enabled:false};
-let started=false,draggingPerson=null;
+let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 const samples=['某支线工程控制价复核','某站场改造结算复核','某研发基地勘察测量复核','某数字化项目投资复核'];
 const $=selector=>document.querySelector(selector);
 export function element(tag,text,className='') {
@@ -33,10 +33,12 @@ function renderTasks() {
     for(const task of tasks){const line=element('div','','host-task-line');line.append(element('span',task.title),element('small',`${task.demo?'演示 · ':''}${task.status}`));row.append(line);}
     list.append(row);
   }
-  $('#event-connection').textContent=snapshot.receiptError?'任务状态暂未刷新，请在左侧重试':snapshot.enabled?'工位示意 · 选人同步至左侧复核卡':'工位示意 · 准备成果后选人';
+  $('#event-connection').textContent=snapshot.receiptError?'任务状态暂未刷新，请在左侧重试':'';
+  $('#event-connection').closest('footer').hidden=!snapshot.receiptError;
 }
 function receive(event) {
   if(event.source!==parent||event.origin==='null'||event.origin!==location.origin||event.data?.namespace!==namespace)return;
+  if(event.data.type==='motion'){motionSettings=event.data;window.dispatchEvent(new CustomEvent('office-host-motion',{detail:motionSettings}));return;}
   if(event.data.type==='layout'){
     const left=Number(event.data.left);if(!Number.isFinite(left)||left<0)return;
     document.documentElement.style.setProperty('--host-chat-width',`${left}px`);
@@ -64,13 +66,14 @@ export const officeClient={
     artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)dropzone.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
     artifact.addEventListener('drop',event=>{event.preventDefault();const id=event.dataTransfer.getData('text/plain');if(draggingPerson?.id===id)togglePerson(id,true);setDraggingPerson(null);});
     $('.office-inspector').prepend(artifact);
-    for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#render-compare','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version'])$(selector)?.setAttribute('hidden','');
+    for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#render-compare','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version','#review-status','#people-panel>.office-description'])$(selector)?.setAttribute('hidden','');
     $('label[for="task-person-filter"]')?.setAttribute('hidden','');
     document.documentElement.dataset.hostReady='true';
     window.addEventListener('message',receive);post('ready');
   },
   subscribe(fn){listeners.add(fn);fn('snapshot',snapshot);return()=>listeners.delete(fn);},
   getState:()=>snapshot,
+  getMotion:()=>motionSettings,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
   dispose(){window.removeEventListener('message',receive);listeners.clear();},
 };

@@ -56,7 +56,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     card.replaceChildren();
     const item=actors.get(current);
     if(item){
-      const person=item.person;card.append(el('h3',person.name),el('p','工位示意位置','office-description'));
+      const person=item.person;card.append(el('h3',person.name));card.title='工位为示意位置';
       for(const task of tasksFor(current)){const row=el('div','','host-task-line');row.append(el('strong',task.title),el('small',`${task.demo?'演示 · ':''}${task.status}`));if(task.comment)row.append(el('p',task.comment));card.append(row);}
       const toggle=el('button',person.selected?'移出本次复核':'加入本次复核','btn btn-primary btn-sm');toggle.type='button';toggle.disabled=!person.selectable;
       toggle.onclick=()=>togglePerson(person.id,!person.selected);card.append(toggle);

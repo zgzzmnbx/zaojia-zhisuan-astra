@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.23.2",
+  "hostAdapterVersion": "0.24.1",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -67,9 +67,9 @@
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
     "viewer/floor-picking.js": "75c900ca730f428052915a34d1002e26647859b37e281d31cba8faa93d2787b9",
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
-    "viewer/host-client.js": "c9cb1ed34a1628a70385edd7e7c4ba05d629d7ca9471e2846dd6602b2a83563b",
-    "viewer/host-people.js": "df61be99edf8d62977f76a32ad44f07168b76470cbe95cdda6e0ebdbc25b5275",
-    "viewer/index.html": "cfe3cddd32e2ddd3466b0aa985307fc5100fe1e8d574a32565dcd2fbee17498c",
+    "viewer/host-client.js": "8e9dfe4e6b53699c09518e2c5e38bbc1c2cac573bd898fc9615c53f895984743",
+    "viewer/host-people.js": "42491f7ff1ec0c566024bda4c45f0051ab9f6d8d168662899c0739f46b0e0229",
+    "viewer/index.html": "78eaba0594ad090b8b907387e080a8d1f03536c1a75abe29f0ef71a672c79c9b",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
     "viewer/navigation-motion.js": "b4f47c371aac47dd97735b2e22d25403a8ffd9ffbc8733cc2177d218a5984303",
@@ -106,6 +106,11 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "b88bf5db7be28a3eaf93383046055d20bc133d8adae9fdc2dc896bde6221ef9b"
-  }
+    "viewer/viewer.js": "8238efc65336c83a8b749c6c7edc00633fa900f199fa05820689b6e1774a6431",
+    "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
+    "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
+    "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
+    "viewer/office-orbit.js": "4b6440dc75d5a4e1770ce9b484f24057cbc07de8e33eb8084fa4ecff6d4b7042"
+  },
+  "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs"
 }
