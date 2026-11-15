@@ -138,3 +138,32 @@ test('only owner routes to real review; other people remain context-local demo a
  assert.equal(demos.apply({...raw,revision:2}).employees[1].selected,true);
  assert.equal(demos.apply({...raw,context:'two'}).employees[1].selected,false);
 });
+import {LIGHTING_DEFAULTS,LIGHTING_KEY,normalizeLighting,readLighting,saveLighting} from '../public/office-twin/viewer/lighting-settings.js';
+test('office lighting starts from Astra white background and independent main/context gains',()=>{
+ assert.equal(LIGHTING_DEFAULTS.backgroundColor,'#ffffff');assert.equal(LIGHTING_DEFAULTS.buildingBrightness,145);assert.equal(LIGHTING_DEFAULTS.contextBrightness,105);
+ const v=normalizeLighting({officeBrightness:80,contextBrightness:140,nightScreens:0,backgroundColor:'#F5F7FA'});
+ assert.equal(v.buildingBrightness,145);assert.equal(v.officeBrightness,80);assert.equal(v.contextBrightness,140);assert.equal(v.nightScreens,0);assert.equal(v.backgroundColor,'#f5f7fa');
+ const invalid=normalizeLighting({buildingBrightness:Infinity,contextBrightness:-8,contrast:200,backgroundColor:'url(secret)'});
+ assert.equal(invalid.buildingBrightness,145);assert.equal(invalid.contextBrightness,20);assert.equal(invalid.contrast,150);assert.equal(invalid.backgroundColor,'#ffffff');
+});
+test('lighting preview/reset does not save or redefine defaults; explicit saves round-trip',()=>{
+ const values=new Map<string,string>(),storage={getItem:(k:string)=>values.get(k)||null,setItem:(k:string,v:string)=>values.set(k,v)};
+ const baseline=JSON.stringify(LIGHTING_DEFAULTS);const preview=normalizeLighting({officeBrightness:88});
+ assert.equal(readLighting(storage).officeBrightness,145);assert.equal(values.size,0);
+ saveLighting(storage,preview);assert.equal(readLighting(storage).officeBrightness,88);
+ const reset=normalizeLighting(null);assert.equal(reset.officeBrightness,145);assert.equal(readLighting(storage).officeBrightness,88);
+ saveLighting(storage,reset);assert.equal(readLighting(storage).officeBrightness,145);assert.equal(JSON.stringify(LIGHTING_DEFAULTS),baseline);
+ values.set(LIGHTING_KEY,'bad JSON');assert.deepEqual(readLighting(storage),LIGHTING_DEFAULTS);
+});
+test('lighting migration retains old exposure without restoring the obsolete gray baseline',()=>{
+ const old=JSON.stringify({exposure:.35,blue:.6,keyLight:2});
+ const v=readLighting({getItem:(key:string)=>key==='h1-office-twin:baked-picture:v2'?old:null});
+ assert.equal(v.exposure,.35);assert.equal(v.blue,.6);assert.equal(v.backgroundColor,'#ffffff');assert.equal(v.buildingBrightness,145);
+});
+test('actual v0.6.7 merged context buildings and ground receive separate lighting roles',()=>{
+ assert.equal(classifyNightRole({name:'part',parent:{name:'ContextWeb_Buildings'}}),'context');
+ assert.equal(classifyNightRole({name:'part',parent:{name:'ContextWeb_RoadsBases',parent:{name:'ContextBuildings'}}}),'ground');
+ assert.equal(classifyNightRole({name:'AstraContext_ContinuousBaseplate_v063'}),'ground');
+ assert.equal(classifyNightRole({name:'face',parent:{userData:{demoPersonId:'owner'}}}),'person');
+ assert.deepEqual(NIGHT_LIGHTING.contextWindowColor,[.055,.17,.27]);
+});

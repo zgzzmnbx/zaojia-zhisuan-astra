@@ -1,6 +1,6 @@
 /** Fixed-cost display lighting over a daytime lightmap; not physical night GI. */
 export const NIGHT_LIGHTING=Object.freeze({
-  windowColor:[.34,.46,.50],contextWindowColor:[.119,.161,.175],
+  windowColor:[.18,.43,.65],contextWindowColor:[.055,.17,.27],contextWarmWindowColor:[.24,.14,.065],
   signColor:[.78,1.02,1.08],accentColor:[.26,.55,.65],
   screenColor:[.14,.65,1.25],screenBloomGain:.85,
   interiorAmbient:.18,interiorUpFill:.17,interiorKeyFill:.12,interiorSideFill:.05,
@@ -20,7 +20,11 @@ export function nightSeatId(object){
 export function classifyNightRole(object,material=object.material){
   const explicit=object.userData?.night_role,n=object.name||'';
   if(['window','accent','sign','context','screen','interior_light'].includes(explicit))return explicit;
-  if(/Context_Building|Context_Setback/.test(n))return 'context';
+  for(let node=object;node;node=node.parent){
+    if(/ContextWeb_RoadsBases|AstraContext_ContinuousBaseplate/.test(node.name||''))return 'ground';
+    if(/ContextWeb_Buildings|ContextBuildings|Context_Building|Context_Setback/.test(node.name||''))return 'context';
+    if(node.userData?.demoPersonId)return 'person';
+  }
   if(/PipeChina|Logo|Sign/.test(n))return 'sign';
   // glTF multi-primitive meshes keep MONITOR on the parent, not the render leaf.
   // Match the actual display material; the bezel, stand and UI strokes stay opaque.

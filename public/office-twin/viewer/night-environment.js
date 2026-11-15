@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import {createNightBloom} from './night-bloom.mjs?v=0.6.3';
 import {classifyNightRole, nightSeatId, NIGHT_LIGHTING} from './night-lighting-policy.js?v=0.6.3';
+import {LIGHTING_DEFAULTS,normalizeLighting} from './lighting-settings.js';
 
 // Adapted to metre-scale OfficeRoom nodes from Astra's authored studio night profile.
 // This is a display overlay on a daytime lightmap, not a second physical night bake.
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
-const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7};
+const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9};
 export function attachNightShader(material,role,shared,monitor=null){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
@@ -15,12 +16,28 @@ export function attachNightShader(material,role,shared,monitor=null){
     previous.call(material,shader,renderer);
     Object.assign(shader.uniforms,{officeNight:shared.night,officeBloomOnly:shared.bloomOnly,officeNightExposure:shared.exposure,officeNightBlue:shared.blue,officeNightRole:{value:ROLE[role]??0},officeFloorInverse:shared.floorInverse});
     Object.assign(shader.uniforms,{officeMonitorPosition:{value:monitor?.position??new THREE.Vector3()},officeMonitorFacing:{value:monitor?.facing??new THREE.Vector3(0,0,1)},officeMonitorEnabled:{value:monitor?1:0}});
+    Object.assign(shader.uniforms,{officeDayGains:shared.dayGains,officeWhite:shared.white,officeContrast:shared.contrast,officeNightGains:shared.nightGains,officeNightLamps:shared.lamps});
     shader.vertexShader='varying vec3 officeWorldPosition,officeWorldNormal;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
       officeWorldPosition=(modelMatrix*vec4(transformed,1.)).xyz;
       officeWorldNormal=normalize(mat3(modelMatrix)*normal);`);
-    shader.fragmentShader='varying vec3 officeWorldPosition,officeWorldNormal;\nuniform mat4 officeFloorInverse;\nuniform vec3 officeMonitorPosition,officeMonitorFacing;\nuniform float officeMonitorEnabled;\nuniform float officeNight,officeBloomOnly,officeNightExposure,officeNightBlue,officeNightRole;\n'+shader.fragmentShader;
+    shader.fragmentShader='varying vec3 officeWorldPosition,officeWorldNormal;\nuniform vec4 officeDayGains,officeNightGains;uniform vec2 officeWhite,officeNightLamps;uniform float officeContrast;\nuniform mat4 officeFloorInverse;\nuniform vec3 officeMonitorPosition,officeMonitorFacing;\nuniform float officeMonitorEnabled;\nuniform float officeNight,officeBloomOnly,officeNightExposure,officeNightBlue,officeNightRole;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
+      if(officeNight<.5){
+        bool context=officeNightRole==4.,ground=officeNightRole==8.;
+        bool interior=officeNightRole==6.||officeNightRole==5.||officeNightRole==9.;
+        float gain=ground?officeDayGains.w:context?officeDayGains.z:interior?officeDayGains.y:officeDayGains.x;
+        float white=officeNightRole==9.?0.:context||ground?officeWhite.y:officeWhite.x;
+        vec3 c=outgoingLight;float lum=dot(c,vec3(.2126,.7152,.0722));
+        float chroma=max(c.r,max(c.g,c.b))-min(c.r,min(c.g,c.b));
+        float mask=context||ground?1.:1.-smoothstep(.04,.15,chroma);
+        // Neutral white model, retaining authored occlusion, texture and glazing.
+        float softWhite=context||ground?min(1.,lum/.74):lum+.14*(1.-min(1.,lum));
+        c=mix(c,vec3(softWhite),white*mask);
+        float corrected=dot(c,vec3(.2126,.7152,.0722));
+        c*=pow(max(.001,corrected),officeContrast)/max(.001,corrected);
+        outgoingLight=c*gain;
+      }
       if(officeNight>.5){
         vec3 n=normalize(officeWorldNormal);
         vec3 sourceColor=clamp(diffuseColor.rgb/max(.001,officeNightExposure),0.,1.);
@@ -33,24 +50,26 @@ export function attachNightShader(material,role,shared,monitor=null){
           float axis=abs(n.x)>.5?officeWorldPosition.z:officeWorldPosition.x;
           vec2 cell=floor(vec2(axis/8.,officeWorldPosition.y/3.6));
           float seed=fract(sin(dot(cell,vec2(17.13,39.71)))*4375.31);
-          emission=vec3(.34,.46,.50)*(.48+.52*step(.32,seed));
+          // Broad glazing stays below luminous signs and screen highlights.
+          emission=vec3(${NIGHT_LIGHTING.windowColor.join(',')})*(.48+.52*step(.32,seed))*.35;
         }
         if(officeNightRole==2.)emission=vec3(.26,.55,.65)*.65;
         if(officeNightRole==3.)emission=vec3(.78,1.02,1.08)*.7;
         if(officeNightRole==5.){
           emission=vec3(${NIGHT_LIGHTING.screenColor.join(',')});
         }
-        if(officeNightRole==4.){
+        if(officeNightRole==4.||officeNightRole==8.){
           shell*=.38;
-          if(abs(n.y)<.3){
+          if(officeNightRole==4.&&abs(n.y)<.3){
             float axis=abs(n.x)>.5?officeWorldPosition.z:officeWorldPosition.x;
             vec2 cell=vec2(axis/4.,officeWorldPosition.y/3.6),f=fract(cell);
             float pane=step(.24,f.x)*step(f.x,.70)*step(.30,f.y)*step(f.y,.67);
             float seed=fract(sin(dot(floor(cell),vec2(17.13,39.71)))*4375.31);
-            emission=vec3(.34,.46,.50)*.35*pane*step(.66,seed);
+            vec3 lamp=mix(vec3(${NIGHT_LIGHTING.contextWindowColor.join(',')}),vec3(${NIGHT_LIGHTING.contextWarmWindowColor.join(',')}),step(.91,seed));
+            emission=lamp*pane*step(.66,seed);
           }
         }
-        if(officeNightRole==6. || officeNightRole==5.){
+        if(officeNightRole==6. || officeNightRole==5. || officeNightRole==9.){
           // Office surfaces have their own readable ambient fill, not exterior darkness.
           float up=max(n.y,0.);
           float fill=.18+.17*up+.12*key+.05*side;
@@ -60,7 +79,7 @@ export function attachNightShader(material,role,shared,monitor=null){
           float violetPool=exp(-dot((p.xz-vec2(13.,5.))/vec2(8.,12.),(p.xz-vec2(13.,5.))/vec2(8.,12.)));
           float receiving=(.3+.7*up)*(.45+.55*lum);
           shell+=(vec3(.018,.065,.078)*cyanPool+vec3(.035,.018,.065)*violetPool)*receiving;
-          if(officeMonitorEnabled>.5 && officeNightRole==6.){
+          if(officeMonitorEnabled>.5 && (officeNightRole==6.||officeNightRole==9.)){
             vec3 offset=p-officeMonitorPosition;
             float distanceToScreen=length(offset);
             float front=smoothstep(-.04,.18,dot(offset,officeMonitorFacing));
@@ -68,25 +87,40 @@ export function attachNightShader(material,role,shared,monitor=null){
             vec3 localNormal=normalize(mat3(officeFloorInverse)*n);
             float receivingScreen=.25+.75*max(0.,dot(localNormal,-offset/max(.001,distanceToScreen)));
             // Local display spill for the seat's furniture/person, never through walls.
-            shell+=vec3(.045,.18,.34)*falloff*receivingScreen;
+            shell+=vec3(.045,.18,.34)*falloff*receivingScreen*officeNightLamps.y;
           }
         }
         if(officeNightRole==7.){shell=vec3(0.);emission=sourceColor*.8;}
+        shell*=officeNightRole==4.||officeNightRole==8.?officeNightGains.z:officeNightRole==6.||officeNightRole==5.||officeNightRole==9.?officeNightGains.y:officeNightGains.x;
+        emission*=officeNightRole==4.?officeNightLamps.x:officeNightRole==5.?officeNightLamps.y:officeNightRole==7.?officeNightGains.y:officeNightGains.w;
         emission=mix(vec3(dot(emission,vec3(.2126,.7152,.0722))),emission,officeNightBlue);
         vec3 haloEmission=officeNightRole==5.?emission*${NIGHT_LIGHTING.screenBloomGain}:emission;
         outgoingLight=(officeBloomOnly>.5?haloEmission:shell+emission)*officeNightExposure;
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|office-night-screen-v0242|'+role;
+  material.customProgramCacheKey=()=>key+'|office-studio-lighting-v0270|'+role;
   material.needsUpdate=true;
 }
 
-export function createNightEnvironment({scene,renderer,camera,requestFrame,getExposure,getBlue}){
+export function createNightEnvironment({scene,renderer,camera,requestFrame,getExposure,getBlue,getSettings}){
   const shared={night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
+  Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
+  let settings={...LIGHTING_DEFAULTS},backgroundKey='',bloomKey='';
   const materials=new Set(),restores=[],colorSources=[],counts={};let dark=false,disposed=false,floorRoot=null,accentRoot=null,screenCount=0;
   const bloom=createNightBloom(renderer,scene,camera,null);
   const black=new THREE.MeshBasicMaterial({color:0,toneMapped:false});
+  function syncSettings(){
+    settings=normalizeLighting(getSettings?.());
+    shared.dayGains.value.set(settings.buildingBrightness,settings.officeBrightness,settings.contextBrightness,settings.groundBrightness).multiplyScalar(.01);
+    shared.white.value.set(settings.buildingWhite,settings.contextWhite).multiplyScalar(.01);shared.contrast.value=settings.contrast/100;
+    shared.nightGains.value.set(settings.nightShell,settings.nightOffice,settings.nightContext,settings.nightWindows).multiplyScalar(.01);
+    shared.lamps.value.set(settings.nightContextWindows,settings.nightScreens).multiplyScalar(.01);
+    const nextBackground=dark?'night':settings.backgroundColor+':'+settings.backgroundBrightness;
+    if(nextBackground!==backgroundKey){backgroundKey=nextBackground;scene.background=new THREE.Color(dark?NIGHT_BACKGROUND:settings.backgroundColor);if(!dark)scene.background.multiplyScalar(settings.backgroundBrightness/100);}
+    const nextBloom=dark+':'+settings.nightBloom;
+    if(nextBloom!==bloomKey){bloomKey=nextBloom;bloom.configure(dark,110*settings.nightBloom/100,{studio:true});}
+  }
   function removeAccentLights(){
     if(!accentRoot)return;
     accentRoot.traverse(o=>{o.geometry?.dispose();if(o.material)for(const m of [].concat(o.material))m.dispose();});
@@ -146,8 +180,8 @@ export function createNightEnvironment({scene,renderer,camera,requestFrame,getEx
       for(const key of Object.keys(counts))delete counts[key];
       this.attach(root);requestFrame();
     },
-    setTheme(scheme){dark=scheme==='dark';if(accentRoot)accentRoot.visible=dark;shared.night.value=dark?1:0;scene.background=new THREE.Color(dark?NIGHT_BACKGROUND:'#cbd2d3');bloom.configure(dark,45,{studio:true});requestFrame();},
-    update(){if(floorRoot){floorRoot.updateWorldMatrix(true,false);shared.floorInverse.value.copy(floorRoot.matrixWorld).invert();}shared.exposure.value=2**(getExposure?.()??0);shared.blue.value=getBlue?.()??1;for(const {copy,source} of colorSources)if(copy.color&&source.color)copy.color.copy(source.color);},
+    setTheme(scheme){dark=scheme==='dark';if(accentRoot)accentRoot.visible=dark;shared.night.value=dark?1:0;syncSettings();requestFrame();},
+    update(){syncSettings();if(floorRoot){floorRoot.updateWorldMatrix(true,false);shared.floorInverse.value.copy(floorRoot.matrixWorld).invert();}shared.exposure.value=2**(getExposure?.()??0);shared.blue.value=getBlue?.()??1;for(const {copy,source} of colorSources)if(copy.color&&source.color)copy.color.copy(source.color);},
     render(){
       if(!dark||disposed)return;
       const changes=[],background=scene.background;
@@ -164,7 +198,7 @@ export function createNightEnvironment({scene,renderer,camera,requestFrame,getEx
         bloom.render();
       }finally{for(let i=changes.length-1;i>=0;i--)changes[i]();scene.background=background;shared.bloomOnly.value=0;}
     },
-    state:()=>({night:dark,profile:'Astra cool-blue screens and local desk spill v0.24.2',roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,lightingPolicy:NIGHT_LIGHTING}),
+    state:()=>({night:dark,profile:'Astra studio lighting v0.27.0',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),physicalNightBake:false,interiorAccentLights:accentRoot?.children.length??0,lightingPolicy:NIGHT_LIGHTING}),
     dispose(){if(disposed)return;disposed=true;bloom.dispose();black.dispose();for(const restore of restores)restore();for(const m of materials)m.dispose();materials.clear();removeAccentLights();},
   };
 }

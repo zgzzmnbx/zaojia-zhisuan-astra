@@ -1,53 +1,37 @@
-import * as THREE from 'three';
 import {sourceMaterialRecord} from './material-provenance.js?v=0.6.5';
 import { configureBakedMaterial } from './baked-material.js?v=0.6.2';
 
 export const BAKED_MODE = new URLSearchParams(location.search).get('render') !== 'realtime';
-const KEY = BAKED_MODE ? 'h1-office-twin:baked-picture:v2' : 'h1-office-twin:picture:v2';
-const OLD_KEY = 'h1-office-twin:picture:v1';
-const OLD_DEFAULTS = {exposure:.2,keyLight:1.7,fillLight:.8,rimLight:.25,shadow:.35,blue:.4};
-export const SPECS = Object.freeze([
-  {key:'exposure', label:'曝光', min:-1.5, max:1.5, step:.05, value:BAKED_MODE?0:1, unit:'EV'},
-  {key:'keyLight', label:'主灯', min:0, max:3, step:.05, value:1.7},
-  {key:'fillLight', label:'补光', min:0, max:2, step:.05, value:.8},
-  {key:'rimLight', label:'轮廓光', min:0, max:2, step:.05, value:.25},
-  {key:'shadow', label:'阴影', min:0, max:1, step:.05, value:.35, unit:'%'},
-  {key:'blue', label:'蓝色点缀', min:0, max:1, step:.05, value:BAKED_MODE?1:.75, unit:'%'},
-]);
-export const DEFAULTS = Object.freeze(Object.fromEntries(SPECS.map(s=>[s.key,s.value])));
-export function normalizePicture(value) {
-  const result = {...DEFAULTS};
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return result;
-  for (const s of SPECS) if (typeof value[s.key] === 'number' && Number.isFinite(value[s.key])) {
-    result[s.key] = Math.round(THREE.MathUtils.clamp(value[s.key],s.min,s.max)/s.step)*s.step;
-  }
-  return result;
-}
+export {LIGHTING_SPECS as SPECS,LIGHTING_DEFAULTS as DEFAULTS,normalizeLighting as normalizePicture} from './lighting-settings.js';
+import {LIGHTING_SPECS as SPECS,LIGHTING_DEFAULTS as DEFAULTS,normalizeLighting as normalizePicture,readLighting,saveLighting,LIGHTING_KEY,LIGHTING_DEFAULTS_VERSION} from './lighting-settings.js';
 
 export function createPictureSettings({listen, requestFrame, getRenderer}) {
   const root = document.querySelector('#picture-controls');
   const message = document.querySelector('#picture-status');
   let current = {...DEFAULTS}, lights = null, materials = [];
   const bakedUniforms={exposure:{value:1},blue:{value:1}};
-  try {
-    const saved = localStorage.getItem(KEY);
-    const previous = !BAKED_MODE && saved === null ? JSON.parse(localStorage.getItem(OLD_KEY)) : null;
-    const oldDefault = previous && Object.entries(OLD_DEFAULTS).every(([key,value])=>Math.abs(previous[key]-value)<.001);
-    current = normalizePicture(saved !== null ? JSON.parse(saved) : oldDefault ? null : previous);
-  }
-  catch { message.textContent = '当前设置仅本次有效'; }
-  const format = (spec,v) => spec.unit === '%' ? `${Math.round(v*100)}%` : spec.unit === 'EV' ? `${v>=0?'+':''}${v.toFixed(2)} EV` : `${v.toFixed(2)}×`;
+  let saved,hasSaved=false,scheme='light';
+  try{current=readLighting(localStorage);hasSaved=!!localStorage.getItem(LIGHTING_KEY);}catch{message.textContent='当前设置仅本次有效';}
+  saved=JSON.stringify(current);
+  const format=(spec,v)=>spec.unit==='EV'?`${v>=0?'+':''}${v.toFixed(2)} EV`:`${Math.round(v*(spec.unit==='ratio'?100:1))}%`;
   for (const spec of SPECS) {
     const row = document.createElement('div'); row.className='office-picture-row';
-    row.hidden=BAKED_MODE&&!['exposure','blue'].includes(spec.key);
+    row.dataset.lightingGroup=spec.group||'common';
     const label=document.createElement('label');label.htmlFor=`picture-${spec.key}`;label.textContent=spec.label;
     const output=document.createElement('output');output.htmlFor=`picture-${spec.key}`;output.id=`picture-${spec.key}-value`;
     const input=document.createElement('input');Object.assign(input,{type:'range',id:`picture-${spec.key}`,name:spec.key,min:String(spec.min),max:String(spec.max),step:String(spec.step)});
     row.append(label,output,input);root.append(row);
     listen(input,'input',()=>{current=normalizePicture({...current,[spec.key]:input.valueAsNumber});paint();apply();});
-    listen(input,'change',save);
   }
+  const colorRow=document.createElement('div');colorRow.className='office-picture-row';colorRow.dataset.lightingGroup='day';
+  const colorLabel=document.createElement('label');colorLabel.htmlFor='picture-backgroundColor';colorLabel.textContent='背景颜色';
+  const colorInput=document.createElement('input');Object.assign(colorInput,{type:'color',id:'picture-backgroundColor',value:current.backgroundColor});colorRow.append(colorLabel,colorInput);root.append(colorRow);
+  listen(colorInput,'input',()=>{current=normalizePicture({...current,backgroundColor:colorInput.value});paint();apply();});
+  const actions=document.querySelector('.office-picture-actions'),saveButton=document.createElement('button');saveButton.type='button';saveButton.id='picture-save';saveButton.className='btn btn-primary btn-sm';saveButton.textContent='保存参数';actions.append(saveButton);listen(saveButton,'click',save);
   function paint() {
+    colorInput.value=current.backgroundColor;
+    for(const row of root.querySelectorAll('[data-lighting-group]'))row.hidden=!['common',scheme==='dark'?'night':'day'].includes(row.dataset.lightingGroup);
+    message.textContent=JSON.stringify(current)===saved?(hasSaved?'已保存':'当前参数'):'未保存';
     for(const spec of SPECS){
       const input=document.querySelector(`#picture-${spec.key}`),text=format(spec,current[spec.key]);
       input.value=String(current[spec.key]);input.setAttribute('aria-valuetext',text);
@@ -55,26 +39,28 @@ export function createPictureSettings({listen, requestFrame, getRenderer}) {
     }
   }
   function save() {
-    try {localStorage.setItem(KEY,JSON.stringify(current));message.textContent='已保存到本机';}
+    try {saveLighting(localStorage,current);saved=JSON.stringify(current);hasSaved=true;message.textContent='已保存';}
     catch {message.textContent='无法保存，当前设置仅本次有效';}
   }
   function apply() {
     const renderer=getRenderer();
     if(renderer)renderer.toneMappingExposure=2**(current.exposure+(BAKED_MODE?1:0));
     bakedUniforms.exposure.value=2**current.exposure;bakedUniforms.blue.value=current.blue;
-    if(lights){lights.key.intensity=current.keyLight;lights.fill.intensity=current.fillLight*.7;lights.ambient.intensity=current.fillLight;lights.rim.intensity=current.rimLight;lights.key.shadow.intensity=current.shadow;}
+    if(lights){lights.key.intensity=1.7;lights.fill.intensity=.56;lights.ambient.intensity=.8;lights.rim.intensity=.25;lights.key.shadow.intensity=.35;}
     for(const item of materials){
       item.material.color.copy(item.color);
       if(item.accent){const grey=(item.color.r+item.color.g+item.color.b)/3;item.material.color.setRGB(grey,grey,grey).lerp(item.color,current.blue);}
     }
     requestFrame();
   }
-  listen(document.querySelector('#picture-reset'),'click',()=>{current={...DEFAULTS};paint();apply();save();});
+  listen(document.querySelector('#picture-reset'),'click',()=>{current={...DEFAULTS};paint();apply();});
   const panel=document.querySelector('#picture-panel'),toggle=document.querySelector('#picture-toggle');
   listen(toggle,'click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));});
   paint();
   return {
     getState:()=>({...current}),
+    getRecord:()=>({defaults:LIGHTING_DEFAULTS_VERSION,values:{...current},dirty:JSON.stringify(current)!==saved}),
+    setTheme(value){scheme=value;paint();},
     bakedMaterialCount:()=>materials.filter(item=>item.baked).length,
     attach(lightRig,model){
       lights=lightRig;const seen=new Set();

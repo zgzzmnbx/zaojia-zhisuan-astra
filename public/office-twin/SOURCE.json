@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.26.0",
+  "hostAdapterVersion": "0.27.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -61,7 +61,7 @@
     "previews/building-v0.6.7-offline.png": "5ac334637559d13c376cb6638629a5ebdf30000a7fc1f72c30e7fafac6abba7a",
     "previews/building_hero.png": "8f3a17af1ca0af1d1dc0f9c4c347a9a61aee96882d9c8aeac889a36a4a203463",
     "THIRD_PARTY_NOTICES.md": "caf39bc0238a31bcacb1cf133d791f8ba59299d085320d17c3e39d811c8ca0e7",
-    "viewer/astra-review.css": "2ca88af7d65bfaf6f5711fbede4264a94f3c3581372e8ec96c2efe04c6c655df",
+    "viewer/astra-review.css": "c41b7c7271dd48585657e4950805cef97b03e6a0fa55f0b5441922a68c6f785a",
     "viewer/baked-material.js": "84faacb5245563cd4da182a66fece0d0f026442ddd5408caa63430479052af95",
     "viewer/context-view-policy.js": "325fd9916b23143130a8207bb2f9889ebbbe865b20f641c197d4c47a57f1b003",
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
@@ -75,13 +75,13 @@
     "viewer/navigation-motion.js": "b4f47c371aac47dd97735b2e22d25403a8ffd9ffbc8733cc2177d218a5984303",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "ad3fc35fb27d087023de8f00e22f35e69fe7a3aca1dee531a0126447b1b0864e",
-    "viewer/night-environment.js": "ee95dc289f92ad915085ae5180d5f6e6eaa53eedbaff29125e0f17caa9e05f76",
-    "viewer/night-lighting-policy.js": "3d77e7c14c6560d1ab5c59f64b751251dcd50679922a53a86384498c7263daee",
+    "viewer/night-environment.js": "cef562e63a26dc0343f6debe6d308a8776a8e5427881123313cece97531782bc",
+    "viewer/night-lighting-policy.js": "95c0ebcb6373ca3155c3c0d835efb203919e064c92af94ea560c94c973086aaa",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
     "viewer/office-settings-store.js": "0914f430a027598e645865ee0a07515a47e1a6e423c0840ac12f13f7fc514139",
     "viewer/people-demo.js": "6f19823d99db3b808058a55271193b0d6b117369ce544e2bcf06d8342077d77c",
-    "viewer/picture-settings.js": "6d6338dbe90f64c3c873723fdd3b6b497885bc6b87bc8e7bd774a4051a3051d3",
+    "viewer/picture-settings.js": "e5711dd45e1d5f44034c2b875cb6fae05b7103469946a428a3e2a629969986b7",
     "viewer/README.md": "36bb727daadaf810b7373b48be58d7473f277ceb9dd0c34a04f2cd325866619c",
     "viewer/release.js": "0b2f16d6d847f6198053cf6511a7bf395a4fdacaf90073a7c62af4e11fd4efa4",
     "viewer/sandbox-layout.js": "511ea27a76ac858331b6d8d6922c672e9c4e29cdfabc537778db03c60ed13b4d",
@@ -106,7 +106,7 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "22fc0965c1ee30a145b4df8fe12e00a98fb42ed5d5979881ec00e1ad04f29451",
+    "viewer/viewer.js": "01fec3c2e3cf1a4983b8d028a6652c023ad449e92e60701cabf4666dab057b64",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
@@ -114,7 +114,8 @@
     "viewer/person-motion.js": "4b73139cbdf18ed1639623c6d07818087c69b35943d69f0265731904cc8a7a9d",
     "viewer/person-pointer.js": "27ffef7bd02d88bea0fb4764dcd9ae62fb30d03f3364d01cecc6dd118bba09d8",
     "viewer/seated-person.js": "0de3bcdc22f1f716c17403598aac171ea1d07bbe9f1c314deb83b2b92360c2cf",
-    "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020"
+    "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
+    "viewer/lighting-settings.js": "8682aa40b269051ff64981aa21ff42026585cd405a10d69f4b81eb7f303e1d5a"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs"
 }

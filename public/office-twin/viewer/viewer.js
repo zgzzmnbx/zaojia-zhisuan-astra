@@ -72,7 +72,7 @@ export async function mountOfficeViewer() {
   }
   function getState() {
     return { version: VERSION, assetVersion:ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
-      roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, theme: { ...theme }, picture:picture.getState(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
+      roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
   }
   let loadingMessage='正在读取办公室资料', loadingTimer=null;
   const formatMB=n=>(n/1024/1024).toFixed(1)+' MiB';
@@ -197,7 +197,8 @@ export async function mountOfficeViewer() {
     $('#theme-toggle').innerHTML = `<span class="astra-icon">${icon(theme.scheme === 'dark' ? 'sun' : 'moon')}</span>`;
     $('#theme-toggle').setAttribute('aria-label', theme.scheme === 'dark' ? '切换浅色主题' : '切换深色主题');
     const styles = getComputedStyle(document.documentElement);
-    if (scene) scene.background = new THREE.Color(theme.scheme === 'dark' ? '#040813' : '#cbd2d3');
+    if (scene&&!nightEnvironment) scene.background = new THREE.Color(theme.scheme === 'dark' ? '#040813' : picture.getState().backgroundColor);
+    picture.setTheme(theme.scheme);
     nightEnvironment?.setTheme(theme.scheme);
     if (roomOutline) roomOutline.material.color.set(styles.getPropertyValue('--astra-primary').trim() || '#284bd4');
     requestFrame(); return { ...theme };
@@ -478,7 +479,7 @@ export async function mountOfficeViewer() {
   const download=$('#model-download');download.href=MODEL_URL.href;download.download=BAKED_MODE?BAKED_MODEL:REALTIME_MODEL;
   download.setAttribute('aria-label',BAKED_MODE?'下载材质预览模型 GLB':'下载源模型（不含预览调色）');download.title=download.getAttribute('aria-label');
   bindModelDownload(download, MODEL_URL, { signal: aborter.signal });
-  const info=$('#picture-info');info.title=BAKED_MODE?'固定光照材质预览，可能混合贴图、顶点色与纯色；不代表全场景真实烘焙。此处调亮度和蓝色比例。':'实时灯光预览，支持灯光调节。';info.setAttribute('aria-label',info.title);
+  const info=$('#picture-info');info.title='滑块即时预览，保存参数后下次沿用；恢复默认不会覆盖已保存参数。明暗层次调节现有烘焙阴影的对比。';info.setAttribute('aria-label',info.title);
   $('#material-coverage').textContent=BAKED_MODE?materialCoverageCopy(null).summary:'保留源模型 PBR 材质，使用实时灯光预览。';
   listen($('#theme-toggle'), 'click', () => setTheme({ scheme: theme.scheme === 'light' ? 'dark' : 'light' }));
   listen($('#view-controls'), 'click', event => { const button = event.target.closest('[data-view]'); if (button) setView(button.dataset.view); });
@@ -641,7 +642,7 @@ export async function mountOfficeViewer() {
       setView('office',{focus:group});orbit.focus(true);people.update(camera,view);
     }});
     people.syncBusiness(business);
-    nightEnvironment=createNightEnvironment({scene,renderer,camera,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue});
+    nightEnvironment=createNightEnvironment({scene,renderer,camera,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     resizeObserver = new ResizeObserver(resize); resizeObserver.observe(viewport);
     intersectionObserver = new IntersectionObserver(entries => {
