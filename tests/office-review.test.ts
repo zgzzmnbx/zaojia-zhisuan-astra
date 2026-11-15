@@ -235,6 +235,16 @@ test('only owner routes to real review; other people remain context-local demo a
 });
 import {LIGHTING_DEFAULTS,LIGHTING_KEY,normalizeLighting,readLighting,saveLighting} from '../public/office-twin/viewer/lighting-settings.js';
 import {applyCutawayRepair} from '../public/office-twin/viewer/cutaway-bake-repair.js';
+import {isNightFloorReceiver} from '../public/office-twin/viewer/night-floor-bake.js';
+test('physical night bake is limited to the authored office floor atlas',()=>{
+ const material={name:'V065_NATIVE_FLOOR_LIGHTING_UNLIT',map:{}};
+ const office={name:'H1_F09_Office'},room={name:'Room_R_NE',parent:office};
+ assert.equal(isNightFloorReceiver({name:'floor',parent:room},material),true);
+ assert.equal(isNightFloorReceiver({name:'StaticBatch',parent:office},material),true);
+ assert.equal(isNightFloorReceiver({name:'H1_F09_floor_slab',parent:{name:'Floor_09'}},material),false);
+ assert.equal(isNightFloorReceiver({parent:room},{name:'BAKED_furniture_AgX',map:{}}),false);
+ assert.equal(isNightFloorReceiver({parent:room},{name:material.name}),false);
+});
 test('cutaway repair isolates shared materials and preserves geometry, UVs and normal shadows',()=>{
  const root=new THREE.Group(),source=new THREE.MeshBasicMaterial();source.name='BAKED_furniture_AgX';
  const originalMap=new THREE.Texture(),patch=new THREE.Texture();source.map=originalMap;

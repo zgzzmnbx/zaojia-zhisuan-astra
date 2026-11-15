@@ -266,7 +266,7 @@ export async function mountOfficeViewer() {
     // directional shadow pass contributes nothing to its output.
     renderer.shadowMap.autoUpdate=theme.scheme!=='dark';
     renderer.info.reset();
-    try{renderer.render(scene, camera);nightEnvironment?.render();}
+    try{if(!nightEnvironment?.render())renderer.render(scene,camera);}
     catch(error){error.code??='MODEL_GPU';fail(error);return;}
     frameMeter.frame(now);
     if(!loadReport.webglRendered){
@@ -691,6 +691,7 @@ export async function mountOfficeViewer() {
     nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});officeBoard.setView(view);
+    await nightEnvironment.prepare();if(disposed)return api;
     const gpuStarted=performance.now();
     await prepareRenderer(renderer,scene,camera,()=>disposed);
     if(disposed)return api;

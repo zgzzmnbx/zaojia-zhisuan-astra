@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.31.4",
+  "hostAdapterVersion": "0.32.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -74,8 +74,8 @@
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
-    "viewer/night-bloom.mjs": "1f9f032e542145779d256510665c6a29438826430bec6eb9b2632808335a899a",
-    "viewer/night-environment.js": "be7be7934bb01c25cf02c95b220f2c9a1e21738a51004389c70a606019a67020",
+    "viewer/night-bloom.mjs": "792856bbcc24f783acd6c8d0b13c1eb31acf795278234f37acd370f795b4e897",
+    "viewer/night-environment.js": "433f6d59c63cf321e86b0d51add8d332584d38f29961532e99ce2c84735214cf",
     "viewer/night-lighting-policy.js": "f9dc88f2dfd4d236bb7dfa9a2342967311fcaf07b8b274facf436e5c87e429c8",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
@@ -106,7 +106,7 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "6eb24446bfa443d8bd079cfdf6970a7e50b812a6304032f29cf8ac00cfdf8a1f",
+    "viewer/viewer.js": "96b1208a55859a8a89c00e6b01ca45c86f3d93d81189f357b39247333193d82b",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
@@ -131,7 +131,10 @@
     "viewer/cutaway-bake-repair.js": "1c4f17984edd5df399f1cf91b34ce6d81f316627167683afe8215ecc9588e067",
     "models/cabinet-cutaway-v0314.png": "452211e37572799ac6e3b1f745b1c3ebb501ea116a8a6cae5b818fa92bee29f5",
     "models/column-cutaway-v0314.png": "babefadc41456ae01bc6c1da936bb0600c13f1b4c830456337248ef1694a8d74",
-    "models/wall-cutaway-v0314.png": "17c34caec900817098e47472923e6ab5839f1b166db72842b42bdad822c64b8b"
+    "models/wall-cutaway-v0314.png": "17c34caec900817098e47472923e6ab5839f1b166db72842b42bdad822c64b8b",
+    "viewer/night-compositor.js": "e77b391b1317f08e4ee1ba8885e554e0974914d293ffd79a26ece9022b30dd77",
+    "viewer/night-floor-bake.js": "a72c5ff96af7fbcb6283c35afcfe1c8cbcfae776adbd24eaa7d5f94f5e954b0c",
+    "models/floor-night-v0320.png": "e32086a0a4be0d7cea66fb1e8f2bb67f646e65e62c4d2a02247c76aa84c82fac"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -139,5 +142,17 @@
     "sourceModel": "H1-baked-v0.6.7.glb",
     "scope": "Face-masked cabinet/column atlas repair and upper W_E_MS_S_cut strip; original geometry and source GLB unchanged",
     "recipe": "tools/office-twin/repair-cutaway-atlas.py"
+  },
+  "nightBake": {
+    "version": "0.32.0",
+    "sourceModel": "H1-baked-v0.6.7.glb",
+    "scope": "Cycles static office floor direct/indirect irradiance; separate adjustable ambient, room and monitor light; single geometry MRT bloom",
+    "colorSpace": "Standard sRGB PNG, hardware decode to scene-linear; not AgX",
+    "recipe": [
+      "tools/office-twin/bake-night-floor.py",
+      "tools/office-twin/denoise-night-floor.py"
+    ],
+    "resolution": 2048,
+    "samples": 64
   }
 }
