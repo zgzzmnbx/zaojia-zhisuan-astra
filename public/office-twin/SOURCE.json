@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.31.3",
+  "hostAdapterVersion": "0.31.4",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -106,7 +106,7 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "5bf643260d4c13d288dfb0f879310bc38e83d886255f8462b7403cf8497053c4",
+    "viewer/viewer.js": "6eb24446bfa443d8bd079cfdf6970a7e50b812a6304032f29cf8ac00cfdf8a1f",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
@@ -127,7 +127,17 @@
     "viewer/static-batches.js": "8f91eacad782f3a4e4c25c5fe3fcfd0ea55f2eb5acb6689d69338b5b33b67e74",
     "viewer/frame-meter.js": "b71f1bafc6a9c5ac3267236181db62c4e16f83c57f497aff85938a15d53a2482",
     "viewer/office-board.js": "3ebbfaf24823d1d3172a2ffe7aad499d981944e9cb71ba03cc6ae7f51c04bdc3",
-    "viewer/astra-lighting-profile.js": "bc772f425796bcc8c106dbcf8fb05cd81fca98b0373cf15b8ac23aa21ce29f5e"
+    "viewer/astra-lighting-profile.js": "bc772f425796bcc8c106dbcf8fb05cd81fca98b0373cf15b8ac23aa21ce29f5e",
+    "viewer/cutaway-bake-repair.js": "1c4f17984edd5df399f1cf91b34ce6d81f316627167683afe8215ecc9588e067",
+    "models/cabinet-cutaway-v0314.png": "452211e37572799ac6e3b1f745b1c3ebb501ea116a8a6cae5b818fa92bee29f5",
+    "models/column-cutaway-v0314.png": "babefadc41456ae01bc6c1da936bb0600c13f1b4c830456337248ef1694a8d74",
+    "models/wall-cutaway-v0314.png": "17c34caec900817098e47472923e6ab5839f1b166db72842b42bdad822c64b8b"
   },
-  "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs"
+  "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
+  "cutawayRepair": {
+    "version": "0.31.4",
+    "sourceModel": "H1-baked-v0.6.7.glb",
+    "scope": "Face-masked cabinet/column atlas repair and upper W_E_MS_S_cut strip; original geometry and source GLB unchanged",
+    "recipe": "tools/office-twin/repair-cutaway-atlas.py"
+  }
 }

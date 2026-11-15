@@ -234,6 +234,22 @@ test('only owner routes to real review; other people remain context-local demo a
  assert.equal(demos.apply({...raw,context:'two'}).employees[1].selected,false);
 });
 import {LIGHTING_DEFAULTS,LIGHTING_KEY,normalizeLighting,readLighting,saveLighting} from '../public/office-twin/viewer/lighting-settings.js';
+import {applyCutawayRepair} from '../public/office-twin/viewer/cutaway-bake-repair.js';
+test('cutaway repair isolates shared materials and preserves geometry, UVs and normal shadows',()=>{
+ const root=new THREE.Group(),source=new THREE.MeshBasicMaterial();source.name='BAKED_furniture_AgX';
+ const originalMap=new THREE.Texture(),patch=new THREE.Texture();source.map=originalMap;
+ const geometry=new THREE.BoxGeometry(),cabinet=new THREE.Group();cabinet.name='CAB_046';root.add(cabinet);
+ const repaired=new THREE.Mesh(geometry,source),desk=new THREE.Mesh(geometry,source);cabinet.add(repaired);root.add(desk);
+ const uv=Array.from(geometry.attributes.uv.array);
+ assert.equal(applyCutawayRepair(root,patch),1);assert.equal(repaired.material.map,patch);
+ assert.equal(desk.material,source);assert.equal(source.map,originalMap);assert.equal(repaired.geometry,geometry);
+ assert.deepEqual(Array.from(geometry.attributes.uv.array),uv);
+ const wallMaterial=new THREE.MeshBasicMaterial();wallMaterial.name='V065_NATIVE_WALL_LIGHTING_UNLIT';wallMaterial.map=originalMap;
+ const target=new THREE.Group();target.name='W_E_MS_S_cut';root.add(target);
+ const wall=new THREE.Mesh(geometry,wallMaterial),otherWall=new THREE.Mesh(geometry,wallMaterial);target.add(wall);root.add(otherWall);
+ assert.equal(applyCutawayRepair(root,patch,'wall'),1);assert.equal(wall.material.map,patch);assert.equal(otherWall.material.map,originalMap);
+ geometry.dispose();source.dispose();wallMaterial.dispose();repaired.material.dispose();wall.material.dispose();originalMap.dispose();patch.dispose();
+});
 import {ASTRA_GLASS,ASTRA_STUDIO} from '../public/office-twin/viewer/astra-lighting-profile.js';
 test('Astra glass option preserves explicit white and shadow choices through save and reset',()=>{
  const values=new Map<string,string>(),storage={getItem:(k:string)=>values.get(k)||null,setItem:(k:string,v:string)=>values.set(k,v)};

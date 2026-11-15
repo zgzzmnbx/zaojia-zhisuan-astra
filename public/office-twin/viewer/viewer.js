@@ -8,6 +8,7 @@ import {createFloorLabel} from './floor-label.js';
 import {batchStaticGeometry} from './static-batches.js';
 import {createFrameMeter} from './frame-meter.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
+import {restoreCutawayBake} from './cutaway-bake-repair.js';
 import {bindPersonPointer} from './person-pointer.js';
 import {officeClient} from './office-client.js';
 import { firstVisibleFloorHit } from './floor-picking.js?v=0.6.7';
@@ -658,6 +659,8 @@ export async function mountOfficeViewer() {
     scene.add(model);
     isolateContextMaterials(buildingRoot,contextRoot);
     hideBoardCore(officeRoot);
+    if(BAKED_MODE)loadReport.cutawayBake=await restoreCutawayBake(officeRoot,()=>disposed);
+    if(disposed)return api;
     staticBatches=batchStaticGeometry(model);
     originalVisibility.clear();model.traverse(object=>{originalVisibility.set(object,object.visible);object.updateMatrix();if(!/^Floor_\d+$/.test(object.name))object.matrixAutoUpdate=false;});
     visibilityBlend=createVisibilityBlend(model);
