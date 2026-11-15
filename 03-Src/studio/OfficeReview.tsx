@@ -8,6 +8,7 @@ import './office-review.css';
 const namespace='astra-office-selection:v1';
 export default function OfficeReview({bridge,active,dark,palette,context,prepare,chatVisible,close}:{bridge:OfficeBridge;active:boolean;dark:boolean;palette:string;context:string;prepare:()=>void;chatVisible:boolean;close:()=>void}) {
   const frame=useRef<HTMLIFrameElement>(null);
+  const actions=useRef({prepare,close});actions.current={prepare,close};
   const [ready,setReady]=useState(false),[error,setError]=useState(''),[generation,setGeneration]=useState(0);
   const [sceneReady,setSceneReady]=useState(0);
   const [receiptError,setReceiptError]=useState(false);
@@ -59,6 +60,10 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
       if(event.data?.namespace==='astra-office-twin:v1'&&event.data.type==='ready'){setSceneReady(v=>v+1);return;}
       if(event.data?.namespace!==namespace)return;
       if(event.data.type==='ready'){setReady(true);setError('');}
+      if(event.data.type==='action'&&visible.current){
+        if(event.data.action==='prepare')actions.current.prepare();
+        if(event.data.action==='close')actions.current.close();
+      }
       if(event.data.type==='toggle'){
         const value=latest.current;
         if(!visible.current||!value||event.data.context!==value.context||event.data.revision!==value.revision||typeof event.data.selected!=='boolean')return;
@@ -81,7 +86,6 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'theme',theme:{palette,scheme:dark?'dark':'light'}},location.origin);
   },[ready,active,dark,palette,sceneReady]);
   return <div className="office-review-host">
-    <div className="office-review-actions"><strong>多人复核</strong><button type="button" className="btn btn-sm btn-ghost" onClick={prepare}>复核设置</button><button type="button" className="btn btn-sm btn-ghost" onClick={close}>返回项目沙盘</button></div>
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setGeneration(v=>v+1);}}>重试</button></div>}
     <iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=office&host=astra" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>
   </div>;

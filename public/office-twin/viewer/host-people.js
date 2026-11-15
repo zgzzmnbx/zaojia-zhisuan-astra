@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {officeClient,togglePerson,element as el} from './host-client.js';
+import {officeClient,togglePerson,setDraggingPerson,element as el} from './host-client.js';
 
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
@@ -19,9 +19,10 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   });
   function part(parent,geometry,material,x,y,z,rotation=0){const mesh=new THREE.Mesh(geometry,material);mesh.position.set(x,y,z);mesh.rotation.x=rotation;mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);}
   function draggable(node,id){
+    node.addEventListener('dragend',()=>setDraggingPerson(null));
     node.addEventListener('dragstart',event=>{
       if(!business.employees.find(p=>p.id===id)?.selectable){event.preventDefault();return;}
-      event.stopPropagation();event.dataTransfer.setData('text/plain',id);event.dataTransfer.effectAllowed='copy';
+      event.stopPropagation();event.dataTransfer.setData('text/plain',id);event.dataTransfer.effectAllowed='copy';setDraggingPerson(id);
     });
   }
   function build(){
@@ -32,10 +33,10 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       part(group,sphere,white,0,1.31,0);part(group,torso,blue,0,.88,0);
       for(const side of [-1,1]){part(group,limb,grey,side*.11,.52,.16,Math.PI/2);part(group,limb,grey,side*.11,.30,.32);part(group,limb,white,side*.25,.84,.14,Math.PI/3);}
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
-      marker.append(el('strong',person.name),el('small',''));markers.append(marker);draggable(marker,person.id);
+      marker.append(el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));markers.append(marker);draggable(marker,person.id);
       marker.addEventListener('click',()=>select(person.id));
       const button=el('button','','btn btn-ghost host-person-row');button.type='button';button.dataset.personId=person.id;
-      button.append(el('span',person.name.slice(0,1),'host-avatar'),el('strong',person.name),el('small',''));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
+      button.append(el('span',person.name.slice(0,1),'host-avatar'),el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
       actors.set(person.id,{person,anchor,group,marker,button});
     });
   }
@@ -50,7 +51,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       item.marker.title=`${person.name} · ${title} · ${tasks.length} 项任务`;
       item.marker.setAttribute('aria-label',item.marker.title);
       item.button.querySelector('small').textContent=`${tasks.length} 项${person.selected?' · 已选':''}`;
-      for(const node of [item.marker,item.button]){node.draggable=person.selectable;node.classList.toggle('selected',person.selected);node.setAttribute('aria-pressed',String(current===id));}
+      for(const node of [item.marker,item.button]){node.querySelector('.host-drag-grip').hidden=!person.selectable;node.draggable=person.selectable;node.classList.toggle('selected',person.selected);node.setAttribute('aria-pressed',String(current===id));}
     }
     card.replaceChildren();
     const item=actors.get(current);

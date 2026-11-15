@@ -2,7 +2,7 @@
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
 let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正在读取当前成果',enabled:false};
-let started=false;
+let started=false,draggingPerson=null;
 const samples=['某支线工程控制价复核','某站场改造结算复核','某研发基地勘察测量复核','某数字化项目投资复核'];
 const $=selector=>document.querySelector(selector);
 export function element(tag,text,className='') {
@@ -13,10 +13,17 @@ export function togglePerson(id,selected) {
   if(!snapshot.employees.some(p=>p.id===id&&p.selectable))return;
   post('toggle',{context:snapshot.context,revision:snapshot.revision,employeeId:id,selected});
 }
+export function setDraggingPerson(id) {
+  draggingPerson=snapshot.employees.find(p=>p.id===id&&p.selectable)||null;
+  document.documentElement.classList.toggle('host-dragging',!!draggingPerson);
+  if(draggingPerson&&$('#space-cards-panel').hidden)$('#space-card-toggle').click();
+  $('#host-dropzone').textContent=draggingPerson?`把 ${draggingPerson.name} 拖到这里`:'把人物标签拖到这里';
+  if(!draggingPerson)$('#host-artifact').classList.remove('is-dragover');
+}
 function renderTasks() {
   $('#host-artifact-title').textContent=snapshot.title;
   const selected=snapshot.employees.filter(p=>p.selected);
-  $('#host-selection').textContent=selected.length?`已选 ${selected.map(p=>p.name).join('、')}`:'点击人物或拖入头像选人';
+  $('#host-selection').textContent=selected.length?`已选 ${selected.map(p=>p.name).join('、')}`:'尚未选择复核人员';
   $('#host-artifact').classList.toggle('has-selection',selected.length>0);
   $('#host-artifact').setAttribute('aria-label',`当前成果，${snapshot.title}，${$('#host-selection').textContent}`);
   const list=$('#task-list');list.replaceChildren();
@@ -45,11 +52,17 @@ function receive(event) {
 export const officeClient={
   start(){
     if(started)return;started=true;
+    const toolbar=$('.office-modebar');
+    for(const [action,label] of [['prepare','复核设置'],['close','返回沙盘']]){
+      const button=element('button',label,'btn btn-ghost btn-sm');button.type='button';button.dataset.hostAction=action;
+      button.onclick=()=>post('action',{action});toolbar.append(button);
+    }
     const artifact=element('section','','host-artifact');artifact.id='host-artifact';
-    artifact.append(element('small','当前成果'),Object.assign(element('strong',snapshot.title),{id:'host-artifact-title'}),Object.assign(element('span','点击人物或拖入头像选人'),{id:'host-selection'}));
-    artifact.addEventListener('dragover',event=>{if(event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');}});
-    artifact.addEventListener('dragleave',()=>artifact.classList.remove('is-dragover'));
-    artifact.addEventListener('drop',event=>{event.preventDefault();artifact.classList.remove('is-dragover');togglePerson(event.dataTransfer.getData('text/plain'),true);});
+    artifact.append(element('small','当前成果'),Object.assign(element('strong',snapshot.title),{id:'host-artifact-title'}),Object.assign(element('span','尚未选择复核人员'),{id:'host-selection'}));
+    const dropzone=element('div','把人物标签拖到这里','host-dropzone');dropzone.id='host-dropzone';artifact.append(dropzone);
+    artifact.addEventListener('dragover',event=>{if(draggingPerson&&event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');dropzone.textContent=`松开，加入 ${draggingPerson.name}`;}});
+    artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)dropzone.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
+    artifact.addEventListener('drop',event=>{event.preventDefault();const id=event.dataTransfer.getData('text/plain');if(draggingPerson?.id===id)togglePerson(id,true);setDraggingPerson(null);});
     $('.office-inspector').prepend(artifact);
     for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#render-compare','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version'])$(selector)?.setAttribute('hidden','');
     $('label[for="task-person-filter"]')?.setAttribute('hidden','');
