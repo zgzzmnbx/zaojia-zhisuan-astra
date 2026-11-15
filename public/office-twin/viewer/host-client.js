@@ -20,8 +20,22 @@ export function setDraggingPerson(id) {
   draggingPerson=snapshot.employees.find(p=>p.id===id&&p.draggable)||null;
   document.documentElement.classList.toggle('host-dragging',!!draggingPerson);
   if(draggingPerson&&$('#space-cards-panel').hidden)$('#space-card-toggle').click();
-  $('#host-dropzone').textContent=draggingPerson?`把 ${draggingPerson.name} 拖到这里`:'把小人拖到这里';
+  renderDropzone();
   if(!draggingPerson)$('#host-artifact').classList.remove('is-dragover');
+}
+function renderDropzone() {
+  const selected=snapshot.employees.filter(p=>p.selected),tags=$('#host-selected-people'),hint=$('#host-drop-hint');
+  tags.replaceChildren();
+  for(const person of selected){
+    const tag=element('li','','host-selected-person');tag.dataset.personId=person.id;
+    const avatar=element('span',person.name.slice(0,1),'host-avatar');avatar.setAttribute('aria-hidden','true');
+    tag.append(avatar,element('span',person.name,'host-selected-name'));
+    if(person.demoAssignment)tag.append(element('small','演示'));
+    tags.append(tag);
+  }
+  tags.hidden=!selected.length;
+  hint.textContent=draggingPerson?`把 ${draggingPerson.name} 拖到这里`:'把小人拖到这里';
+  hint.hidden=selected.length>0&&!draggingPerson;
 }
 function renderTasks() {
   $('#host-artifact-title').textContent=snapshot.title;
@@ -30,6 +44,8 @@ function renderTasks() {
   $('#host-selection').textContent=selected.length?[real.length?`已选 ${real.map(p=>p.name).join('、')}`:'',demo.length?`演示 ${demo.map(p=>p.name).join('、')}`:''].filter(Boolean).join('；'):'尚未选择复核人员';
   $('#host-artifact').classList.toggle('has-selection',selected.length>0);
   $('#host-artifact').setAttribute('aria-label',`当前成果，${snapshot.title}，${$('#host-selection').textContent}`);
+  $('#host-selection').hidden=selected.length>0;
+  renderDropzone();
   const list=$('#task-list');list.replaceChildren();
   for(const person of snapshot.employees) {
     const tasks=snapshot.tasks.filter(t=>t.employeeId===person.id);
@@ -65,9 +81,11 @@ export const officeClient={
     }
     const artifact=element('section','','host-artifact');artifact.id='host-artifact';
     artifact.append(element('small','当前成果'),Object.assign(element('strong',snapshot.title),{id:'host-artifact-title'}),Object.assign(element('span','尚未选择复核人员'),{id:'host-selection'}));
-    const dropzone=element('div','把小人拖到这里','host-dropzone');dropzone.id='host-dropzone';artifact.append(dropzone);
-    artifact.addEventListener('dragover',event=>{if(draggingPerson&&event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');dropzone.textContent=`松开，加入 ${draggingPerson.name}`;}});
-    artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)dropzone.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
+    const dropzone=element('div','','host-dropzone');dropzone.id='host-dropzone';
+    const tags=element('ul','','host-selected-people');tags.id='host-selected-people';tags.hidden=true;tags.setAttribute('aria-label','已选复核人员');tags.setAttribute('aria-live','polite');
+    const hint=element('span','把小人拖到这里');hint.id='host-drop-hint';dropzone.append(tags,hint);artifact.append(dropzone);
+    artifact.addEventListener('dragover',event=>{if(draggingPerson&&event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');hint.textContent=`松开，加入 ${draggingPerson.name}`;}});
+    artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)hint.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
     artifact.addEventListener('drop',event=>{event.preventDefault();const id=event.dataTransfer.getData('text/plain');if(draggingPerson?.id===id)togglePerson(id,true);setDraggingPerson(null);});
     $('.office-inspector').prepend(artifact);
     for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#render-compare','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version','#review-status','#people-panel>.office-description'])$(selector)?.setAttribute('hidden','');

@@ -35,7 +35,7 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
     if(!g.dragging){g.dragging=true;canvas.style.cursor='grabbing';people.closeMenu();setDraggingPerson(g.id);ghost.textContent=officeClient.getState().employees.find(p=>p.id===g.id)?.name||'';ghost.hidden=false;}
     const position=rayAt(event).ray.intersectPlane(g.plane,new THREE.Vector3());if(position)people.dragPosition(g.id,position.sub(g.offset));
     const over=!!document.elementFromPoint(event.clientX,event.clientY)?.closest('#host-artifact');target?.classList.toggle('is-dragover',over);
-    document.querySelector('#host-dropzone').textContent=over?'松开，加入本次复核':'拖到当前项目';
+    document.querySelector('#host-drop-hint').textContent=over?'松开，加入本次复核':'拖到当前项目';
     ghost.style.transform=`translate(${event.clientX+14}px,${event.clientY+14}px)`;event.preventDefault();event.stopImmediatePropagation();
   },true);
   listen(canvas,'pointerup',event=>{
