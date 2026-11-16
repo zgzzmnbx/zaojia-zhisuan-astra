@@ -2,7 +2,7 @@ import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {api} from './api';
 import {useGorkSettings} from './useGorkSettings';
-import {createSpeechQueue,type SpeechItem,type SpeechSnapshot} from './gork-speech';
+import {createSpeechQueue,createWelcomeSpeech,welcomeSpeech,type SpeechItem,type SpeechSnapshot} from './gork-speech';
 import './gork-speech.css';
 
 function positionBubble(element:HTMLElement,target:HTMLElement){
@@ -19,10 +19,11 @@ function positionBubble(element:HTMLElement,target:HTMLElement){
 export function GorkSpeechBubble({active:visible}:{active:boolean}){
  const {preferences}=useGorkSettings(),active=visible&&preferences.speechBubble;
  const node=useRef<HTMLButtonElement>(null),queue=useRef(createSpeechQueue());
+ const greeting=useRef(createWelcomeSpeech());
  const hovered=useRef(false),anchor=useRef<HTMLElement|null>(null),announced=useRef('');
  const [item,setItem]=useState<SpeechItem|null>(null);
  useEffect(()=>{
-  if(!active){queue.current.reset();setItem(null);return;}
+  if(!active){queue.current.reset();setItem(null);if(!preferences.speechBubble)greeting.current.dismiss();return;}
   let disposed=false,timer=0,generation=0,request:AbortController|null=null;
   const poll=async()=>{
    if(disposed||document.hidden)return;
@@ -38,7 +39,7 @@ export function GorkSpeechBubble({active:visible}:{active:boolean}){
   const visibility=()=>{generation++;clearTimeout(timer);request?.abort();queue.current.reset();setItem(null);if(!document.hidden)void poll();};
   document.addEventListener('visibilitychange',visibility);void poll();
   return()=>{disposed=true;clearTimeout(timer);request?.abort();document.removeEventListener('visibilitychange',visibility);};
- },[active]);
+ },[active,preferences.speechBubble]);
  useEffect(()=>{
   if(!active)return;
   let last=performance.now();
@@ -50,7 +51,8 @@ export function GorkSpeechBubble({active:visible}:{active:boolean}){
    anchor.current=target||null;
    const visible=!!target&&!document.hidden&&!document.querySelector('dialog:modal');
    const held=hovered.current||!!element?.contains(document.activeElement);
-   const next=queue.current.tick(now,Math.min(now-last,500),visible,held);last=now;
+   const business=queue.current.tick(now,Math.min(now-last,500),visible,held);last=now;
+   const next=greeting.current.tick(now,visible,business);
    setItem(old=>old?.event_id===next?.event_id?old:next);
    if(element&&target&&next)positionBubble(element,target);
   };
@@ -70,7 +72,9 @@ export function GorkSpeechBubble({active:visible}:{active:boolean}){
  },[item]);
  function dismiss(){
   if(node.current?.contains(document.activeElement))anchor.current?.focus({preventScroll:true});
-  queue.current.dismiss();setItem(null);hovered.current=false;
+  greeting.current.dismiss();
+  if(item?.event_id!==welcomeSpeech.event_id)queue.current.dismiss();
+  setItem(null);hovered.current=false;
  }
  return createPortal(<>
   <div className="gork-speech-announcement" aria-live={'ariaNotify' in document?'off':'polite'} aria-atomic="true">{item?.text||''}</div>

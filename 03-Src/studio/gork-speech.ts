@@ -2,6 +2,22 @@ export type SpeechItem={sequence:number;event_id:string;text:string;created_at:n
 export type SpeechSnapshot={stream:string;cursor:number;items:SpeechItem[]};
 export const speechReadingMs=(text:string)=>Math.min(30000,Math.max(4000,Array.from(text).length*140));
 
+export const welcomeSpeech:SpeechItem={sequence:0,event_id:'local:welcome',text:'你好，我是智算助手，有什么我可以帮你？',created_at:0};
+/** Local once-per-page greeting. Business speech takes priority and keeps its own timer. */
+export function createWelcomeSpeech(){
+ let dismissed=false,deadline:number|null=null;
+ return {
+  tick(now:number,visible:boolean,business:SpeechItem|null):SpeechItem|null{
+   if(business){dismissed=true;return business;}
+   if(deadline!==null&&now>=deadline)dismissed=true;
+   if(dismissed||!visible)return null;
+   deadline??=now+2000;
+   return welcomeSpeech;
+  },
+  dismiss(){dismissed=true;},
+ };
+}
+
 /** One queue across avatar/layout changes. Receipt polling never resets reading time. */
 export function createSpeechQueue(){
  let stream='',cursor=0,remaining=0;
