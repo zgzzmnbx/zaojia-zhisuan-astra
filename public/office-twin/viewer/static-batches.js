@@ -17,7 +17,7 @@ export function batchStaticGeometry(root){
   const groups=new Map();let sources=0,batches=0;
   root.traverse(object=>{
     const g=object.geometry,m=object.material;
-    if(!object.isMesh||object.isSkinnedMesh||object.isInstancedMesh||!object.visible||object.children.length||!g||!m||Array.isArray(m)||m.transparent||m.opacity!==1||object.morphTargetInfluences?.length||g.drawRange.start!==0||g.drawRange.count!==Infinity||object.matrixWorld.determinant()<=0)return;
+    if(object.userData.astraContextBake||!object.isMesh||object.isSkinnedMesh||object.isInstancedMesh||!object.visible||object.children.length||!g||!m||Array.isArray(m)||m.transparent||m.opacity!==1||object.morphTargetInfluences?.length||g.drawRange.start!==0||g.drawRange.count!==Infinity||object.matrixWorld.determinant()<=0)return;
     for(let parent=object.parent;parent;parent=parent.parent)if(!parent.visible)return;
     const role=classifyNightRole(object,m);
     if(['screen','window','sign','accent','interior_light','person'].includes(role))return;

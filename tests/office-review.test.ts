@@ -299,11 +299,11 @@ test('Astra glass option preserves explicit white and shadow choices through sav
  assert.equal(readLighting(storage).windowStyle,'white');
  saveLighting(storage,LIGHTING_DEFAULTS);assert.equal(readLighting(storage).windowStyle,'astra-blue');
  const decoded=new THREE.Color(ASTRA_GLASS.color);assert.ok(decoded.toArray().every((v:number,i:number)=>Math.abs(v-ASTRA_GLASS.linear[i])<1e-7));
- assert.equal(LIGHTING_DEFAULTS.groundColor,'#edf0f2');
+ assert.equal(LIGHTING_DEFAULTS.groundColor,'#f5f7fa');
 });
 test('office lighting starts from Astra white background and independent main/context gains',()=>{
  assert.deepEqual(normalizeLighting({}),LIGHTING_DEFAULTS);assert.equal(normalizeLighting({exposure:0}).floorBrightness,115);
- assert.equal(LIGHTING_DEFAULTS.backgroundColor,'#ffffff');assert.equal(LIGHTING_DEFAULTS.buildingBrightness,120);assert.equal(LIGHTING_DEFAULTS.contextBrightness,96);
+ assert.equal(LIGHTING_DEFAULTS.backgroundColor,'#ffffff');assert.equal(LIGHTING_DEFAULTS.buildingBrightness,120);assert.equal(LIGHTING_DEFAULTS.contextBrightness,105);
  const v=normalizeLighting({officeBrightness:80,contextBrightness:140,nightScreens:0,backgroundColor:'#F5F7FA'});
  assert.equal(v.buildingBrightness,120);assert.equal(v.officeBrightness,80);assert.equal(v.contextBrightness,140);assert.equal(v.nightScreens,0);assert.equal(v.backgroundColor,'#f5f7fa');
  const invalid=normalizeLighting({buildingBrightness:Infinity,contextBrightness:-8,contrast:200,backgroundColor:'url(secret)'});
