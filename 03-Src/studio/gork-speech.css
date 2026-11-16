@@ -1,8 +1,10 @@
-.gork-speech-bubble{position:fixed;inset:auto;margin:0;width:360px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);box-sizing:border-box;padding:14px 18px;border:1px solid var(--line);border-radius:16px;background:var(--paper);color:var(--ink);box-shadow:0 8px 28px #10233f26;overflow:visible;font-family:inherit;font-size:var(--dws-font-size-14,14px);font-weight:400;line-height:1.7;pointer-events:auto;text-align:left;cursor:pointer}
+.gork-speech-bubble{--speech-fill:color-mix(in srgb,var(--astra-primary) 85%,#000);position:fixed;inset:auto;margin:0;width:360px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);box-sizing:border-box;padding:14px 18px;border:1px solid var(--speech-fill);border-radius:16px;background:var(--speech-fill);color:#fff;box-shadow:0 8px 28px #10233f26;overflow:visible;font-family:inherit;font-size:var(--dws-font-size-14,14px);font-weight:400;line-height:1.7;pointer-events:auto;text-align:left;cursor:pointer}
 .gork-speech-bubble[hidden]{display:none!important}
 .gork-speech-bubble>span{display:block;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;max-height:calc(100dvh - 80px);overflow:auto;overscroll-behavior:contain}
-.gork-speech-bubble::after{content:"";position:absolute;left:var(--speech-tail-x,24px);bottom:-6px;width:10px;height:10px;background:var(--paper);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+.gork-speech-bubble::after{content:"";position:absolute;left:var(--speech-tail-x,24px);bottom:-6px;width:10px;height:10px;background:var(--speech-fill);border-right:1px solid var(--speech-fill);border-bottom:1px solid var(--speech-fill);transform:translateX(-50%) rotate(45deg)}
 .gork-speech-bubble[data-side=below]::after{top:-6px;bottom:auto;transform:translateX(-50%) rotate(225deg)}
 .gork-speech-announcement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
 .gork-speech-bubble:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+@media(forced-colors:active){.gork-speech-bubble{--speech-fill:Canvas;background:Canvas;color:CanvasText;border-color:CanvasText}.gork-speech-bubble::after{border-color:CanvasText}.gork-speech-bubble:focus-visible{outline-color:Highlight}}
