@@ -47,7 +47,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       marker.append(el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));markers.append(marker);draggable(marker,person.id);
       marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY}));
       const button=el('button','','btn btn-ghost host-person-row');button.type='button';button.dataset.personId=person.id;
-      button.append(el('span',person.name.slice(0,1),'host-avatar'),el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
+      button.append(el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
       actors.set(person.id,{person,anchor,group,marker,button,rig,yaw,seatId,dragPosition:null,screenPoint:null});
     });
   }

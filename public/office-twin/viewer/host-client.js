@@ -28,8 +28,7 @@ function renderDropzone() {
   tags.replaceChildren();
   for(const person of selected){
     const tag=element('li','','host-selected-person');tag.dataset.personId=person.id;
-    const avatar=element('span',person.name.slice(0,1),'host-avatar');avatar.setAttribute('aria-hidden','true');
-    tag.append(avatar,element('span',person.name,'host-selected-name'));
+    tag.append(element('span',person.name,'host-selected-name'));
     if(person.demoAssignment)tag.append(element('small','演示'));
     tags.append(tag);
   }
