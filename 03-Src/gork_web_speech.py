@@ -1,22 +1,26 @@
 """Independent, in-memory web speech. Never dispatches or changes Watch settings."""
 import asyncio
-from collections import OrderedDict
+from collections import OrderedDict, deque
 from functools import wraps
 import queue
 import re
 import threading
 import time
+from uuid import uuid4
 
 import gork_config as config
 from gork_notifications import timestamp
-from gork_speech import SpeechMirror
+
+# Web presentation policy only. Never reuse or alter Watch queue/lease rules.
+PROGRESS = {'conversion_start', 'match_start', 'warning_start', 'report_start', 'review_requested'}
 
 
 class WebSpeech:
     def __init__(self, *, feed=lambda: [], approval_feed=None, clock=time.time, settings=config.load):
         self.feed, self.approval_feed = feed, approval_feed
         self.clock, self.settings = clock, settings
-        self.mirror = SpeechMirror(clock)
+        self.stream, self.sequence = uuid4().hex, 0
+        self.items = deque(maxlen=64)
         self.lock = threading.Lock()
         self.inbox = queue.Queue(maxsize=128)
         self.seen = OrderedDict()
@@ -57,6 +61,7 @@ class WebSpeech:
             self.closed.wait(.2)
 
     def step(self):
+        self._drain_inbox()
         now = self.clock()
         if now >= self.next_feed:
             self.next_feed = now + 2
@@ -69,6 +74,9 @@ class WebSpeech:
                             self._publish(event, None, False, approval)
                 except Exception:
                     pass
+        self._drain_inbox()
+
+    def _drain_inbox(self):
         for _ in range(128):
             try:
                 event, settings, manual, approval = self.inbox.get_nowait()
@@ -99,17 +107,27 @@ class WebSpeech:
         text = config.render_text(event, stage.model_copy(update={'text': stage.speech_text or stage.text}), spoken=True)
         if not text.strip():
             return
+        priority = 0 if key in PROGRESS else 1
+        expires = (now if manual else occurred) + (6 if priority == 0 else 15)
+        if now >= expires:
+            return
         with self.lock:
-            self.mirror.sequence += 1
-            self.mirror.items.append(dict(sequence=self.mirror.sequence,
-                                          event_id=f'{job}:{producer}', text=text, created_at=now))
+            self.sequence += 1
+            self.items.append(dict(sequence=self.sequence, job_id=job, stage=key,
+                                   priority=priority, expires_at=expires,
+                                   event_id=f'{job}:{producer}', text=text,
+                                   created_at=now if manual else occurred))
         self.seen[identity] = None
         if len(self.seen) > 4096:
             self.seen.popitem(last=False)
 
     def snapshot(self, stream='', after=0):
         with self.lock:
-            return self.mirror.snapshot(stream, after)
+            now = self.clock()
+            items = [{**{k:v for k,v in item.items() if k != 'expires_at'},
+                      'expires_in_ms': max(0, round((item['expires_at']-now)*1000))}
+                     for item in self.items if item['sequence'] > after and item['expires_at'] > now] if stream == self.stream else []
+            return dict(stream=self.stream, cursor=self.sequence, items=items)
 
 
 def attach(web, notifications):

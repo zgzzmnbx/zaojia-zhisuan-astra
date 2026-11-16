@@ -87,7 +87,7 @@ def test_web_history_expiry_invalid_input_and_first_read(fixture):
     for invalid in [event([99]), {**event(clock), 'event_id': ''}, {**event(clock), 'job_id': '../unsafe'}, event([150])]:
         web.observe(invalid, invalid['job_id'])
     web.step()
-    assert web.mirror.sequence == 0
+    assert web.sequence == 0
     first = web.snapshot()
     web.observe(event(clock), 'a'*32); web.step()
     assert web.snapshot()['items'] == []
@@ -151,3 +151,48 @@ def test_real_web_worker_collects_when_watch_disabled(fixture):
     finally:
         web.stop()
     assert web.worker is None
+
+
+def test_web_metadata_and_expiry_do_not_change_watch_delivery(fixture):
+    obj, remote, clock = fixture
+    obj.settings.sound = True
+    obj.settings.speech_target = 'watch'
+    web = make_web(obj, clock)
+    first = web.snapshot()
+    for stage, status in [('match_start','running'), ('match_result','completed'), ('warning_result','completed')]:
+        clock[0] += 1
+        obj.observe(event(clock, stage, status, warning_rows=2), 'a'*32, 'real-request')
+        web.step();obj.step()
+    items = web.snapshot(first['stream'])['items']
+    assert [i['priority'] for i in items] == [0,1,1]
+    assert [i['stage'] for i in items] == ['match_start','match_completed','warning_found']
+    assert len(remote.sent) == 3
+    assert [p['speech']['text'] for p in remote.sent] == [i['text'] for i in items]
+    assert all('expires_in_ms' not in p and 'job_id' not in p for p in remote.sent)
+    before = json.dumps(remote.sent, sort_keys=True)
+    clock[0] += 16
+    assert web.snapshot(first['stream'])['items'] == []
+    assert json.dumps(remote.sent, sort_keys=True) == before
+    assert len(remote.sent) == 3  # Web expiry never cancels or reorders Watch messages.
+
+
+def test_live_web_events_are_published_before_monitor_feed(fixture):
+    obj, remote, clock = fixture
+    web = make_web(obj, clock)
+    first = web.snapshot()
+    observed = []
+    web.feed = lambda: (observed.append(web.snapshot(first['stream'])) or [])
+    obj.observe(event(clock), 'a'*32, 'real-request')
+    web.step()
+    assert len(observed[0]['items']) == 1
+    assert not remote.sent
+
+
+def test_delayed_progress_is_not_given_a_fresh_display_lifetime(fixture):
+    obj, remote, clock = fixture
+    web = make_web(obj, clock)
+    clock[0] = 120
+    web.observe(event([101]), 'a'*32)
+    web.observe(event([102], 'match_result', 'completed'), 'a'*32)
+    web.step()
+    assert web.sequence == 0 and not remote.sent

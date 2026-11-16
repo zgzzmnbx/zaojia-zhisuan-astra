@@ -34,17 +34,45 @@ test('speech starts at a watermark, repeats no receipts and retains exact text',
  q.accept({stream:'b',cursor:2,items:[item(2)]},3);
  assert.equal(q.tick(3,0,true,false),null);
 });
-test('speech waits for visible reading time, pauses on hover/focus and advances in order',()=>{
+test('new stages immediately replace earlier stages, including while hovered',()=>{
  const q=createSpeechQueue();q.accept({stream:'a',cursor:0,items:[]},0);
- q.accept({stream:'a',cursor:2,items:[item(1),item(2)]},0);
- assert.equal(q.tick(1000,1000,false,false),null);
- assert.equal(q.tick(1000,0,true,false)?.sequence,1);
- assert.equal(q.tick(15000,14000,true,true)?.sequence,1);
- assert.equal(q.tick(22000,7000,true,false)?.sequence,2);
- q.tick(22000,0,true,false);
- assert.equal(q.tick(29000,7000,true,false),null);
+ q.accept({stream:'a',cursor:1,items:[{...item(1,'开始转换'),job_id:'job'}]},0);
+ assert.equal(q.tick(150,150,true,true)?.sequence,1);
+ q.accept({stream:'a',cursor:3,items:[{...item(2,'开始匹配'),job_id:'job'},{...item(3),job_id:'job',priority:1}]},200);
+ assert.equal(q.tick(200,50,true,true)?.sequence,3);
+ assert.equal(q.tick(4300,4100,true,false),null);
+ assert.equal(q.tick(5000,700,true,false),null);
  assert.equal(speechReadingMs('长'.repeat(200)),28000);
  assert.equal(speechReadingMs('短句'),4000);
+});
+test('results and risk preempt progress; later progress is discarded, not replayed',()=>{
+ const q=createSpeechQueue();q.accept({stream:'a',cursor:0,items:[]},0);
+ q.accept({stream:'a',cursor:3,items:[
+  {...item(1,'开始匹配'),job_id:'one',priority:0},
+  {...item(2,'发现风险'),job_id:'one',priority:1},
+  {...item(3,'开始报告'),job_id:'one',priority:0},
+ ]},100);
+ assert.equal(q.tick(100,0,true,false)?.sequence,2);
+ q.accept({stream:'a',cursor:4,items:[{...item(4,'另一项目完成'),job_id:'two',priority:1}]},200);
+ assert.equal(q.tick(200,0,true,true)?.sequence,4);
+ q.dismiss();assert.equal(q.tick(201,0,true,false),null);
+});
+test('late old stages cannot overwrite a newer stage; expiry uses server remaining life',()=>{
+ const q=createSpeechQueue();q.accept({stream:'a',cursor:0,items:[]},0);
+ q.accept({stream:'a',cursor:1,items:[{...item(1),job_id:'one',created_at:110,priority:1,expires_in_ms:500}]},100);
+ q.accept({stream:'a',cursor:2,items:[{...item(2,'晚到的旧消息'),job_id:'one',created_at:109,priority:1}]},200);
+ assert.equal(q.tick(200,0,true,false)?.sequence,1);
+ assert.equal(q.tick(600,0,true,false),null);
+ q.accept({stream:'a',cursor:3,items:[{...item(3),expires_in_ms:0}]},700);
+ assert.equal(q.tick(700,0,true,false),null);
+});
+test('modal or hidden avatar drops messages and never catches up on return',()=>{
+ const q=createSpeechQueue();q.accept({stream:'a',cursor:0,items:[]},0);
+ q.accept({stream:'a',cursor:1,items:[item(1)]},0);
+ assert.equal(q.tick(100,100,false,false),null);
+ assert.equal(q.tick(200,100,true,false),null);
+ q.accept({stream:'a',cursor:2,items:[item(2)]},300);
+ assert.equal(q.tick(300,0,true,false)?.sequence,2);
 });
 test('hidden-page reset and stale notifications never replay',()=>{
  const q=createSpeechQueue();q.accept({stream:'a',cursor:0,items:[]},0);
