@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {officeClient,togglePerson,setDraggingPerson,element as el} from './host-client.js';
+import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,element as el} from './host-client.js';
 import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
 
@@ -21,7 +21,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     const ai=preferred.indexOf(a.seat_id),bi=preferred.indexOf(b.seat_id);return (ai<0?999:ai)-(bi<0?999:bi);
   });
   function draggable(node,id){
-    node.addEventListener('dragend',()=>setDraggingPerson(null));
+    node.addEventListener('dragend',event=>endPersonDrag(event.dataTransfer?.dropEffect));
     node.addEventListener('dragstart',event=>{
       if(!business.employees.find(p=>p.id===id)?.draggable){event.preventDefault();return;}
       event.stopPropagation();event.dataTransfer.setData('text/plain',id);event.dataTransfer.effectAllowed='copy';setDraggingPerson(id);

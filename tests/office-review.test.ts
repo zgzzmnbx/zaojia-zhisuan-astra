@@ -390,3 +390,12 @@ test('a mismatched structure bake rolls back before changing any floor or wall g
  THREE.TextureLoader.prototype.loadAsync=async()=>{const texture=new THREE.Texture();texture.addEventListener('dispose',()=>disposed++);return texture;};
  try{const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,false);assert.equal(mesh.geometry,original);assert.equal(disposed,2);}finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
 });
+
+import {validOfficeDrag} from '../03-Src/studio/office-review-drop.ts';
+test('chat drop accepts only the current review context and revision',()=>{
+ const snapshot={context:'project:artifact:1',revision:3};
+ const drag={...snapshot,employeeId:'owner',name:'石萌'};
+ assert.equal(validOfficeDrag(drag,snapshot),true);
+ for(const raw of [null,{}, {...drag,context:'other'}, {...drag,revision:2}, {...drag,employeeId:7}, {...drag,name:null}])assert.equal(validOfficeDrag(raw,snapshot),false);
+ assert.equal(validOfficeDrag(drag,null),false);
+});
