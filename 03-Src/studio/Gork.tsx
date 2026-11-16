@@ -3,7 +3,7 @@ import {useEffect,useRef,useState} from 'react';
 import '../vendor/gork/gork-catalog.js';
 import '../vendor/gork/gork-avatar.js';
 import {choreographGork,createGorkController,gorkDescriptions,greetings} from './gork-motion';
-import {gorkExpression,type GorkAppearance} from './gork-preferences';
+import {gorkExpression,type GorkAppearance,type WebGorkStage} from './gork-preferences';
 import {useGorkSettings} from './useGorkSettings';
 import {mountGorkPlayer,gorkExpressionDuration} from './gork-custom';
 import './gork.css';
@@ -13,13 +13,13 @@ import './gork.css';
 export function useGorkMotion(){return [false,(_next:boolean)=>{},true] as const;}
 const catalog=choreographGork((window as any).GorkCatalog);
 export type GorkPresented=(state:string,duration:number)=>void;
-type Props={onPresented?:GorkPresented;replay?:number;state?:string;size?:number;still?:boolean;suspended?:boolean;interactive?:boolean;completion?:number;onGreet?:()=>void;followPointer?:boolean;pointerSmoothing?:'smooth'|'default';appearanceOverride?:GorkAppearance;expressionOverride?:string};
+type Props={stage?:WebGorkStage;onPresented?:GorkPresented;replay?:number;state?:string;size?:number;still?:boolean;suspended?:boolean;interactive?:boolean;completion?:number;onGreet?:()=>void;followPointer?:boolean;pointerSmoothing?:'smooth'|'default';appearanceOverride?:GorkAppearance;expressionOverride?:string};
 
-export function Gork({onPresented,replay=0,state='idle',size=32,still=false,suspended=false,interactive=false,completion=0,onGreet,followPointer=false,pointerSmoothing='default',appearanceOverride,expressionOverride}:Props){
+export function Gork({stage,onPresented,replay=0,state='idle',size=32,still=false,suspended=false,interactive=false,completion=0,onGreet,followPointer=false,pointerSmoothing='default',appearanceOverride,expressionOverride}:Props){
   const {preferences}=useGorkSettings();
   const appearance=appearanceOverride||preferences.appearance;
-  const expression=(semantic:string)=>expressionOverride||gorkExpression(semantic,preferences);
-  const configuration=JSON.stringify([appearance,expressionOverride||preferences.expressions]);
+  const expression=(semantic:string)=>expressionOverride||gorkExpression(semantic,preferences,stage);
+  const configuration=JSON.stringify([appearance,expressionOverride||[preferences.expressions,preferences.stageExpressions,stage]]);
   const canvas=useRef<HTMLCanvasElement>(null),controller=useRef<ReturnType<typeof createGorkController>|null>(null);
   const [paused,,forceMotion]=useGorkMotion(),[status,setStatus]=useState({state,active:false});
   const values=useRef({state,paused:paused||still,suspended,followPointer,pointerSmoothing,onPresented});values.current={state,paused:paused||still,suspended,followPointer,pointerSmoothing,onPresented};

@@ -11,6 +11,31 @@ vm.runInContext(readFileSync(new URL('../03-Src/vendor/gork/gork-catalog.js',imp
 const presets=context.window.GorkPresets,sequences=context.window.GorkCatalog.sequences.map((s:any)=>s.id);
 const normalize=(value:unknown)=>normalizeGorkPreferences(value,presets,sequences);
 
+test('web stage expressions migrate existing settings and fall back on missing or invalid selections',()=>{
+ const old=normalize({expressions:{processing:'thinking'}});
+ assert.deepEqual(old.stageExpressions,{match:'',risk:'',report:''});
+ for(const stage of ['match','risk','report'] as const)assert.equal(gorkExpression('working',old,stage),'thinking');
+ const corrupted=normalize({...old,stageExpressions:{match:'missing',risk:17,report:null}});
+ assert.deepEqual(corrupted,old);
+});
+
+test('three independent work expressions round trip without changing terminal expressions or Watch settings',()=>{
+ const prefs=normalize({stageExpressions:{match:'searching',risk:'curious',report:'thinking'},expressions:{answer:'celebrate',problem:'suspicious'}});
+ const restored=normalize(JSON.parse(JSON.stringify(prefs)));
+ for(const stage of ['match','risk','report'] as const){
+  for(const state of ['working','searching','thinking'])assert.equal(gorkExpression(state,restored,stage),prefs.stageExpressions[stage]);
+  assert.equal(gorkExpression('happy',restored,stage),'celebrate');
+  assert.equal(gorkExpression('confused',restored,stage),'suspicious');
+  assert.equal(gorkExpression('idle',restored,stage),'idle');
+ }
+ assert.equal(gorkExpression('working',restored),'working');
+ const changed=normalize({...restored,stageExpressions:{...restored.stageExpressions,risk:''}});
+ assert.equal(gorkExpression('working',changed,'risk'),'working');
+ assert.equal(gorkExpression('working',changed,'match'),'searching');
+ assert.equal(gorkExpression('working',changed,'report'),'thinking');
+ assert.deepEqual(normalize({...prefs,stages:{matching:{expression:'angry'}},enabled:false,voice_enabled:false}),prefs);
+});
+
 test('web speech defaults on for existing preferences and persists explicit off independently',()=>{
  for(const value of [null,{}, {speechBubble:'false'}, {speechBubble:null}])assert.equal(normalize(value).speechBubble,true);
  const old=normalize({composerLayout:'classic',floatingSize:80,expressions:{idle:'sleeping'}});

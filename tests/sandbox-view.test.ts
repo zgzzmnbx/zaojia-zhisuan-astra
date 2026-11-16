@@ -77,7 +77,7 @@ import {runningZone} from '../03-Src/studio/project-sandbox/node-state.ts';
 test('project steps reveal the retained sandbox only after the operation guard accepts work',()=>{
  const app=readFileSync(new URL('../03-Src/studio/App.tsx',import.meta.url),'utf8');
  const helper=app.slice(app.indexOf('async function performProjectStep('),app.indexOf('async function performProjectStep(')+250);
- assert.match(helper,/await perform\(label,async\(\)=>\{showSandbox\(\);setConversationCollapsed\(false\);await work\(\);\}\)/);
+ assert.match(helper,/await perform\(label,async\(\)=>\{showSandbox\(\);setConversationCollapsed\(false\);await work\(\);\},stage\)/);
  for(const [label,zone] of [['识别工作表与专业字段','import'],['导入项目并识别工作表','import'],['转换为待匹配预览','import'],['正在匹配价格与双系数','price'],['比对经验池与风险阈值','risk'],['正在生成文字报告','report'],['正在准备同事复核','review']]){
   assert.ok(app.includes(`await performProjectStep('${label}',`),label);
   assert.equal(runningZone(label),zone,label);

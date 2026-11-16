@@ -6,13 +6,15 @@ import {clampGork,cornerForKey,cornerPosition,nearestCorner,readGorkCorner,type 
 import './floating-gork.css';
 import {useGorkTransfer} from './gork-transfer';
 
+import type {WebGorkStage} from './gork-preferences';
+
 const storageKey='astra:floating-gork-corner';
 const labels:Record<GorkCorner,string>={'bottom-left':'左下角','bottom-right':'右下角','top-left':'左上角','top-right':'右上角'};
 function initialCorner(){try{return readGorkCorner(localStorage.getItem(storageKey));}catch{return 'bottom-left' as const;}}
 
 /** Fullscreen companion stays in the browser top layer, including above modal content.
  * The original canvas renderer owns blinking and gaze; only the dock position is new. */
-export function FloatingGork({active,sourceActive=false,state,completion=0,onPresented}:{active:boolean;sourceActive?:boolean;state:string;completion?:number;onPresented?:GorkPresented}){
+export function FloatingGork({stage,active,sourceActive=false,state,completion=0,onPresented}: {stage?:WebGorkStage;active:boolean;sourceActive?:boolean;state:string;completion?:number;onPresented?:GorkPresented}){
  const {preferences}=useGorkSettings(),size=preferences.floatingSize+8;
  const [corner,setCorner]=useState(initialCorner),[position,setPosition]=useState<Point|null>(null),[host,setHost]=useState<Element>(document.body);
  const readViewport=()=>({width:innerWidth,height:innerHeight,left:innerWidth>1024?(document.getElementById('project-sidebar')?.getBoundingClientRect().right||0):0,top:document.querySelector('.four-surface-topbar')?.getBoundingClientRect().bottom||58,bottom:48});
@@ -64,7 +66,7 @@ export function FloatingGork({active,sourceActive=false,state,completion=0,onPre
     onPointerDown={start} onPointerMove={move} onPointerUp={finish} onPointerCancel={cancelDrag} onLostPointerCapture={()=>{if(drag.current)cancelDrag();}}
     onClick={()=>{if(!suppressClick.current)setMenu(value=>!value);suppressClick.current=false;}}
     onKeyDown={event=>{if(event.key==='Escape'&&(drag.current||menu)){event.preventDefault();event.stopPropagation();cancelDrag();setMenu(false);return;}const next=cornerForKey(corner,event.key);if(next){event.preventDefault();event.stopPropagation();cancelDrag();dock(next);}}}>
-    <Gork onPresented={onPresented} size={preferences.floatingSize} state={state} completion={completion} followPointer pointerSmoothing="smooth"/>
+    <Gork stage={stage} onPresented={onPresented} size={preferences.floatingSize} state={state} completion={completion} followPointer pointerSmoothing="smooth"/>
    </button>
    {menu&&<div id="floating-gork-positions" className="floating-gork-positions" role="group" aria-label="智算停靠位置">{(['top-left','top-right','bottom-left','bottom-right'] as const).map(value=><button key={value} type="button" aria-pressed={corner===value} onClick={()=>dock(value)}>{labels[value]}</button>)}</div>}
   </div>
