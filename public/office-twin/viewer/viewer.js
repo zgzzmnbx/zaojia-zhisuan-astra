@@ -662,6 +662,12 @@ export async function mountOfficeViewer() {
     scene.add(model);
     isolateContextMaterials(buildingRoot,contextRoot);
     hideBoardCore(officeRoot);
+    loadReport.removedWorkstationTowers=0;
+    officeRoot.traverse(object=>{
+      if(object.userData.furniture_asset_id!=='tower')return;
+      loadReport.removedWorkstationTowers++;
+      object.traverse(part=>{part.visible=false;});
+    });
     if(BAKED_MODE)loadReport.cutawayBake=await restoreCutawayBake(officeRoot,()=>disposed);
     if(disposed)return api;
     if(BAKED_MODE){contextBake=await attachAstraContextBake(model,()=>disposed);loadReport.astraContext=contextBake.state;}
