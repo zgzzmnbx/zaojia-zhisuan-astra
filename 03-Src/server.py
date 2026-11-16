@@ -31,6 +31,7 @@ from weknora_wiki import router as weknora_wiki_router
 from gork_link import router as gork_router
 import professional_host
 import business_settings
+import demo_cues
 import demo_settings
 demo_settings.install(engine)
 import demo_match
@@ -66,10 +67,10 @@ async def host_lifespan(_app):
         await asyncio.to_thread(gork_output.stop)
         await asyncio.to_thread(gork_web.stop)
 
-app = FastAPI(title='智算Astra', version='0.14.5', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.15.0', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','demo_settings.py','demo_match.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_speech.py','gork_web_speech.py','gork_review.py','gork_replay.py','gork_commands.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
+HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','demo_cues.py','demo_settings.py','demo_match.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_speech.py','gork_web_speech.py','gork_review.py','gork_replay.py','gork_commands.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()
@@ -130,6 +131,7 @@ app.include_router(gork_config.router)
 app.include_router(professional_host.router)
 app.include_router(business_settings.router)
 app.include_router(demo_settings.router)
+app.include_router(demo_cues.router)
 app.include_router(row_assist.router)
 # Original professional UI uses the same verified Astra WeKnora adapter.
 app.add_api_route('/api/knowledge/capabilities',weknora.capabilities,methods=['GET'])

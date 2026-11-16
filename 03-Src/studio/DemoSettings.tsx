@@ -2,6 +2,7 @@ import {useEffect,useState} from 'react';
 import type {DemoController,DemoSettings as Values} from './demo-settings';
 import {Button,Icon,Modal} from './ui';
 import './demo-settings.css';
+import {DemoCueEditor} from './DemoPrompter';
 const parkedStations=[['import','清单导入'],['price','智能填价'],['risk','风险复核'],['report','报告生成'],['review','协同复核'],['table','专业表格'],['knowledge','知识检索']].map(([id,title])=>({id,title}));
 
 export function DemoModeSwitch({controller,blocked=false,openSettings}:{controller:DemoController;blocked?:boolean;openSettings:()=>void}){
@@ -22,6 +23,7 @@ export function DemoModeSwitch({controller,blocked=false,openSettings}:{controll
 }
 
 const options=[
+ ['cuePrompts','演示提词','右下角显示当前步骤的讲解原话。'],
  ['matchPreset','3.1 标准答案匹配','仅原版 3.1 样例直接填入已核验价格与系数；五万元口径。'],
  ['rowPreset','单行填价预设','表2第6行 · 3203 元/个，仍需人工确认写入。'],
  ['reportPreset','风险报告预设','演示文件使用固定报告，五万元口径；不调用模型。'],
@@ -31,6 +33,7 @@ const options=[
 
 export function DemoSettings({controller,openDebug,blocked=false}:{controller:DemoController;openDebug:(section:'runtime-console'|'gork')=>void;blocked?:boolean}){
  const {value,error,saving,save,refresh}=controller;
+ const [editingCues,setEditingCues]=useState(false);
  const [draft,setDraft]=useState<Values>(),[dirty,setDirty]=useState(false),[message,setMessage]=useState('');
  useEffect(()=>{if(!dirty)setDraft(value);},[value,dirty]);
  const change=<K extends keyof Omit<Values,'revision'>>(key:K,checked:Values[K])=>{if(draft){setDraft({...draft,[key]:checked});setDirty(true);setMessage('');}};
@@ -46,6 +49,8 @@ export function DemoSettings({controller,openDebug,blocked=false}:{controller:De
    <div className="demo-settings-actions"><span role="status">{message||(dirty?'有未保存的更改':'')}</span><Button disabled={saving||blocked||!dirty} primary onClick={async()=>{try{setDraft(await save(draft));setDirty(false);setMessage('设置已保存');}catch{setMessage('');}}}>保存设置</Button></div>
   </>}
   {error&&<p className="demo-settings-error" role="alert">{error}</p>}
+  <div><Button onClick={()=>setEditingCues(true)}>编辑提词</Button></div>
+  {editingCues&&<DemoCueEditor close={()=>setEditingCues(false)}/>}
   <div className="demo-debug-tools"><h4>调试工具</h4><div><Button icon="monitor" onClick={()=>openDebug('runtime-console')}>运行日志</Button><Button icon="robot" onClick={()=>openDebug('gork')}>Watch机器人联动</Button><Button icon="refresh" disabled={saving} onClick={()=>{setDirty(false);setMessage('');void refresh();}}>重新读取设置</Button></div></div>
  </div>;
 }

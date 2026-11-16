@@ -1,0 +1,16 @@
+.demo-prompter.studio{position:fixed;inset:auto 12px 8px auto;margin:0;padding:6px 9px;width:max-content;max-width:min(620px,calc(100vw - 24px));max-height:32vh;overflow:auto;border:0;border-radius:6px;background:color-mix(in srgb,var(--paper,#fff) 88%,transparent);color:#777b82;font:400 12px/1.65 var(--dws-font-family-ui, sans-serif);text-align:left;box-shadow:none;z-index:10000;}
+[data-theme=dark] .demo-prompter.studio,.studio.demo-prompter[data-theme=dark]{color:#a1a5ad;}
+.demo-prompter p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;}
+.demo-prompter-controls{display:flex;justify-content:flex-end;align-items:center;gap:5px;max-height:0;overflow:hidden;opacity:0;transition:opacity .15s;}
+.demo-prompter:hover .demo-prompter-controls,.demo-prompter:focus-within .demo-prompter-controls{max-height:28px;opacity:1;margin-bottom:3px;}
+.demo-prompter-controls button,.demo-prompter-controls select{font:inherit;color:inherit;background:transparent;border:0;border-radius:3px;}
+.demo-prompter-controls button{padding:0 7px;font-size:18px;cursor:pointer;}
+.demo-prompter-controls button:disabled{opacity:.35;cursor:default;}
+.demo-prompter-controls select{max-width:260px;}
+.demo-prompter-controls :focus-visible{outline:2px solid var(--primary,#287fbc);outline-offset:-2px;}
+.demo-cue-editor{display:grid;gap:14px;}
+.demo-cue-editor label{display:grid;gap:6px;}
+.demo-cue-editor textarea,.demo-cue-editor select{width:100%;font:inherit;}
+.demo-cue-path{font-size:12px;overflow-wrap:anywhere;user-select:text;}
+@media(prefers-reduced-motion:reduce){.demo-prompter-controls{transition:none;}}
+@media print{.demo-prompter{display:none!important;}}

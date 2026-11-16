@@ -7,12 +7,12 @@ from fastapi import APIRouter, Body, HTTPException
 
 router = APIRouter(prefix='/api/astra/demo-settings')
 DEFAULT = {'revision': 0, 'enabled': True, 'rowPreset': True, 'matchPreset': True, 'reportPreset': True, 'knowledgePreset': True,
-           'parkedProject': True, 'parkedName': '德化-永安支线', 'parkedStation': 'report'}
+           'cuePrompts': True, 'parkedProject': True, 'parkedName': '德化-永安支线', 'parkedStation': 'report'}
 LEGACY = {'revision', 'enabled', 'rowPreset', 'reportPreset', 'knowledgePreset'}
 STATIONS = {'import', 'price', 'risk', 'report', 'review', 'table', 'knowledge'}
 
 def validate(value):
-    if any(type(value.get(key)) is not bool for key in ['enabled', 'rowPreset', 'reportPreset', 'knowledgePreset', 'parkedProject', 'matchPreset']):
+    if any(type(value.get(key)) is not bool for key in ['enabled', 'rowPreset', 'reportPreset', 'knowledgePreset', 'parkedProject', 'matchPreset', 'cuePrompts']):
         raise ValueError('invalid switch')
     name = value.get('parkedName')
     if not isinstance(name, str) or not name.strip() or len(name) > 12 or any(ord(c) < 32 for c in name):

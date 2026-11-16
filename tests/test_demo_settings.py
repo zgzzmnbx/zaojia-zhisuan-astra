@@ -145,3 +145,13 @@ def test_disabled_report_requires_model_even_for_demo_filename(client):
     update(client, reportPreset=False)
     reply = client.post('/api/risk-report', data={'job_id':job})
     assert reply.status_code == 409 and '未配置模型' in reply.json()['detail']
+
+
+def test_cue_switch_migrates_on_and_old_clients_preserve_it(client):
+    old = client.get('/api/astra/demo-settings').json()
+    assert old['cuePrompts'] is True
+    value = update(client, cuePrompts=False)
+    legacy = {key: item for key, item in value.items() if key != 'cuePrompts'}
+    reply = client.put('/api/astra/demo-settings', json=legacy)
+    assert reply.status_code == 200 and reply.json()['cuePrompts'] is False
+    assert client.put('/api/astra/demo-settings', json={**reply.json(), 'cuePrompts': 'true'}).status_code == 400

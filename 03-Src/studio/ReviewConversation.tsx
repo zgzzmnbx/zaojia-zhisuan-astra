@@ -1,3 +1,4 @@
+import {signalDemoCue} from './demo-cues';
 import {lazy,Suspense,useEffect,useId,useRef,useState} from 'react';
 import {officeRoster,officeTasks,isOfficeOwner,type OfficeBridge} from './office-review';
 import {Icon} from './ui';
@@ -47,6 +48,7 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readO
   const problem=reviewProblem(platforms,confirmed,instructions,deadline);if(problem){setFeedback(problem);return;}
   if(!external){setFeedback('请先完成协同设置。');return;}
   if(platforms.some(p=>p.enabled&&p.task)&&!renew){setRound(true);return;}
+  signalDemoCue('review-send');
   lock.current=true;setSending(true);setRound(false);onBusy('正在发送同事复核');
   const selected=platforms.filter(p=>p.enabled);
   try{
