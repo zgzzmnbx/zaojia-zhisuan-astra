@@ -1,4 +1,4 @@
-.demo-prompter.studio{position:fixed;inset:auto 12px 8px auto;margin:0;padding:6px 9px;width:max-content;max-width:min(620px,calc(100vw - 24px));max-height:32vh;overflow:auto;border:0;border-radius:6px;background:color-mix(in srgb,var(--paper,#fff) 88%,transparent);color:#777b82;font:400 12px/1.65 var(--dws-font-family-ui, sans-serif);text-align:left;box-shadow:none;z-index:10000;}
+.demo-prompter.studio{position:fixed;inset:auto 12px 8px auto;margin:0;padding:0;width:max-content;max-width:min(620px,calc(100vw - 24px));max-height:32vh;overflow:auto;border:0;border-radius:0;background:transparent;color:#777b82;font:400 12px/1.65 var(--dws-font-family-ui, sans-serif);text-align:left;box-shadow:none;z-index:10000;}
 [data-theme=dark] .demo-prompter.studio,.studio.demo-prompter[data-theme=dark]{color:#a1a5ad;}
 .demo-prompter p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;}
 .demo-prompter-controls{display:flex;justify-content:flex-end;align-items:center;gap:5px;max-height:0;overflow:hidden;opacity:0;transition:opacity .15s;}
