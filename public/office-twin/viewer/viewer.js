@@ -25,7 +25,7 @@ import { applyAstraTheme } from '../astra_ui/theme.js';
 import { createPictureSettings, BAKED_MODE } from './picture-settings.js?v=0.6.7';
 import { contextVisibleForView, useHeroPriorityFraming, isolateContextMaterials } from './context-view-policy.js?v=0.6.7';
 import { heroPriorityBounds } from './hero-framing.js?v=0.6.0';
-import { createNightEnvironment } from './night-environment.js?v=0.6.7';
+import { createNightEnvironment, nightRole } from './night-environment.js?v=0.6.7';
 import { createPeopleDemo } from './host-people.js';
 import { VIEW_MODES, VIEW_COPY, FLOOR_COUNT, DETAILED_FLOOR, PROTOCOL,
   floorElevation, floorPresentation, isTrustedHostMessage } from './scene-state.js?v=0.6.7';
@@ -365,10 +365,10 @@ export async function mountOfficeViewer() {
     }
     facade9.visible = floorPresentation(9, next).showFacade;
     if(contextRoot)contextRoot.visible=contextVisibleForView(next);
-    // Keep the plaza and city as a subdued spatial reference when entering 9F.
+    // Keep surrounding buildings solid; retain the existing subdued ground/plinth.
     const visibility = visibilityBlend.destination(mesh => {
       if (next !== 'office') return 1;
-      if (contextRoot && contains(contextRoot,mesh)) return .16;
+      if (contextRoot && contains(contextRoot,mesh)) return nightRole(mesh)==='context'?1:.16;
       if (contains(buildingRoot,mesh) && ![...floors.values()].some(floor=>contains(floor,mesh))) return .25;
       return 1;
     });
