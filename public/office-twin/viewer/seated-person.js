@@ -30,23 +30,41 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
   const up=new THREE.Vector3(0,1,0),direction=new THREE.Vector3();
   function bone(material,radius){const o=mesh(group,g.bone,material,[0,0,0],[radius,1,radius]);return o;}
   function join(o,a,b){direction.subVectors(b,a);o.position.copy(a).add(b).multiplyScalar(.5);o.scale.y=direction.length();o.quaternion.setFromUnitVectors(up,direction.normalize());}
-  const arms=[];
+  const arms=[],legs=[],rigidPoses=[];let hanging=false;
   for(const side of [-1,1]){
     const thigh=bone(m.pants,.075),shin=bone(m.pants,.059);
     const a=new THREE.Vector3(side*.105,hip,.025),knee=new THREE.Vector3(side*.115,hip-.06,.30),ankle=new THREE.Vector3(side*.115,.095,.32);
     join(thigh,a,knee);join(shin,knee,ankle);
-    mesh(group,g.sphere,m.pants,knee.toArray(),[.076,.073,.073]);
-    mesh(group,g.sphere,m.shoe,[side*.115,.043,.375],[.072,.043,.125]);
+    const kneeMesh=mesh(group,g.sphere,m.pants,knee.toArray(),[.076,.073,.073]);
+    const shoe=mesh(group,g.sphere,m.shoe,[side*.115,.043,.375],[.072,.043,.125]);
+    legs.push({side,thigh,shin,kneeMesh,shoe,a,knee,ankle});
     const hand=mesh(group,g.sphere,m.skin,[0,0,0],[.046,.027,.052]);
     const elbowMesh=mesh(group,g.sphere,m.skin,[0,0,0],[.044,.044,.044]);
     arms.push({side,upper:bone(shirt,.052),fore:bone(m.skin,.039),hand,elbowMesh});
   }
   const shoulder=new THREE.Vector3(),target=new THREE.Vector3(),elbow=new THREE.Vector3(),axis=new THREE.Vector3(),bend=new THREE.Vector3();
-  function pose(seconds){
-    const state=seatedMotion(seconds,index*1.71);upper.position.y=state.breath;head.rotation.set(state.headPitch,state.headYaw,0);
+  function legPose(lifted){
+    for(const leg of legs){
+      const knee=lifted?new THREE.Vector3(leg.side*.125,hip-.28,.055):leg.knee;
+      const ankle=lifted?new THREE.Vector3(leg.side*.145,hip-.67,.035):leg.ankle;
+      join(leg.thigh,leg.a,knee);join(leg.shin,knee,ankle);leg.kneeMesh.position.copy(knee);
+      leg.shoe.position.set(ankle.x,ankle.y-.052,ankle.z+.055);leg.shoe.rotation.x=lifted?.25:0;
+    }
+  }
+  function pose(seconds,lifted=false){
+    if(lifted!==hanging){
+      for(const {geometry,seated,held} of rigidPoses){
+        const shape=lifted?held:seated;
+        for(const key of ['position','normal']){geometry.attributes[key].array.set(shape[key]);geometry.attributes[key].needsUpdate=true;}
+        geometry.computeBoundingBox();geometry.computeBoundingSphere();
+      }
+      hanging=lifted;
+    }
+    const state=lifted?{mode:'lifted',breath:0,headPitch:.08,headYaw:0}:seatedMotion(seconds,index*1.71);upper.position.y=state.breath;head.rotation.set(state.headPitch,state.headYaw,0);
     for(const arm of arms){
       shoulder.set(arm.side*.175,hip+.38+state.breath,.025);
-      target.set(keyboard[0]+arm.side*.095,keyboard[1]+(arm.side<0?state.leftTap:state.rightTap),keyboard[2]);
+      if(lifted)target.set(arm.side*.22,hip-.12,.055);
+      else target.set(keyboard[0]+arm.side*.095,keyboard[1]+(arm.side<0?state.leftTap:state.rightTap),keyboard[2]);
       axis.subVectors(target,shoulder);const distance=THREE.MathUtils.clamp(axis.length(),.06,.519);axis.normalize();target.copy(shoulder).addScaledVector(axis,distance);
       const along=(.26**2-.26**2+distance**2)/(2*distance),height=Math.sqrt(Math.max(0,.26**2-along**2));
       bend.set(arm.side*.4,-1,-.15).addScaledVector(axis,-bend.dot(axis)).normalize();
@@ -57,9 +75,10 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
     return state;
   }
   pose(0);
-  // Merge only rigid siblings. Head, breathing torso and every arm joint retain
-  // their own transforms; topology, normals, materials and raycast silhouette stay.
+  // Keep the same draw count. Two cached leg shapes change only on pickup/drop;
+  // the head, breathing torso and arms keep their existing transforms.
   const dynamic=new Set(arms.flatMap(a=>[a.upper,a.fore,a.hand,a.elbowMesh])),owned=[];
+  const legParts=new Set(legs.flatMap(l=>[l.thigh,l.shin,l.kneeMesh,l.shoe]));
   for(const parent of [group,head]){
     const byMaterial=new Map();
     for(const child of parent.children){
@@ -72,6 +91,12 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
       const geometries=parts.map(o=>{o.updateMatrix();return o.geometry.clone().applyMatrix4(o.matrix);});
       const geometry=mergeGeometries(geometries,false);geometries.forEach(g=>g.dispose());
       if(!geometry)continue;
+      if(parts.some(o=>legParts.has(o))){
+        legPose(true);
+        const liftedParts=parts.map(o=>{o.updateMatrix();return o.geometry.clone().applyMatrix4(o.matrix);});
+        const lifted=mergeGeometries(liftedParts,false);liftedParts.forEach(g=>g.dispose());legPose(false);
+        rigidPoses.push({geometry,seated:{position:geometry.attributes.position.array.slice(),normal:geometry.attributes.normal.array.slice()},held:{position:lifted.attributes.position.array.slice(),normal:lifted.attributes.normal.array.slice()}});lifted.dispose();
+      }
       const combined=new THREE.Mesh(geometry,material);combined.castShadow=true;combined.receiveShadow=true;
       parent.add(combined);parts.forEach(o=>parent.remove(o));owned.push(geometry);
     }

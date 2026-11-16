@@ -233,6 +233,24 @@ test('person motion freezes for pause/reduced motion and resumes without hidden 
  for(let t=0;t<30;t+=.05){const p=seatedMotion(t);assert.ok(Math.abs(p.leftTap)<=.009&&Math.abs(p.rightTap)<=.009);assert.ok(Math.abs(p.headYaw)<=.035);}
  assert.equal(seatedMotion(3).mode,'typing');assert.equal(seatedMotion(10).mode,'reading');
 });
+test('pickup hangs limbs without extra meshes and release restores the exact seated shape',()=>{
+ const assets=createPersonAssets(),rig=createSeatedPerson(assets,0),other=createSeatedPerson(assets,1);
+ const pants=rig.group.children.find(o=>(o as THREE.Mesh).material===assets.materials.pants) as THREE.Mesh;
+ const shoes=rig.group.children.find(o=>(o as THREE.Mesh).material===assets.materials.shoe) as THREE.Mesh;
+ const original=pants.geometry.attributes.position.array.slice(),originalShoes=shoes.geometry.attributes.position.array.slice();
+ const shared=assets.geometries.bone.attributes.position.array.slice();
+ rig.pose(3,true);assert.equal(rig.group.userData.visualMotion,'lifted');
+ for(const hand of rig.handPositions()){assert.ok(hand[1]<.5);assert.ok(Math.abs(hand[2])<.1);}
+ shoes.geometry.computeBoundingBox();assert.ok(shoes.geometry.boundingBox!.min.y<-.1);assert.ok(shoes.geometry.boundingBox!.max.z<.25);
+ assert.notDeepEqual(pants.geometry.attributes.position.array,original);
+ const version=pants.geometry.attributes.position.version;rig.pose(3,true);assert.equal(pants.geometry.attributes.position.version,version);
+ rig.pose(3,false);assert.equal(rig.group.userData.visualMotion,'typing');
+ assert.deepEqual(pants.geometry.attributes.position.array,original);assert.deepEqual(shoes.geometry.attributes.position.array,originalShoes);
+ assert.deepEqual(assets.geometries.bone.attributes.position.array,shared);assert.equal(other.group.userData.visualMotion,'typing');
+ let meshes=0;rig.group.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes++;});assert.equal(meshes,15);
+ rig.dispose();other.dispose();assets.dispose();
+});
+
 test('3D drag accepts demo people but requires the same current review context and revision',()=>{
  const start={context:'job-a',revision:2},snap={...start,enabled:true,employees:[{id:'owner',selectable:true},{id:'other',selectable:false}]};
  assert.equal(canDropPerson(start,snap,'owner'),true);assert.equal(canDropPerson(start,snap,'other'),true);

@@ -111,7 +111,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     syncPositions();const boxes=[];
     const rect=viewport.getBoundingClientRect(),width=viewport.clientWidth,height=viewport.clientHeight;
     for(const item of [...actors.values()].sort((a,b)=>Number(b.person.id===current)-Number(a.person.id===current))){
-      if(!item.dragPosition)item.rig.pose(seconds);
+      item.rig.pose(seconds,!!item.dragPosition);
       const head=item.group.position.clone().add(new THREE.Vector3(0,item.rig.seatHeight+.745,0)).project(camera);item.screenPoint={x:rect.left+(head.x*.5+.5)*width,y:rect.top+(-head.y*.5+.5)*height};
       const pos=item.group.position.clone().add(new THREE.Vector3(0,1.9,0)).project(camera);
       const x=(pos.x*.5+.5)*width,y=(-pos.y*.5+.5)*height;
@@ -125,7 +125,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   function pick(ray,point){const id=hit(ray);return id?select(id,point):false;}
   syncBusiness();
   return {select,update,pick,hit,syncBusiness,closeMenu,suspend:()=>clock.suspend(),react:()=>false,
-    dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;item.dragPosition=position?.clone()??null;syncPositions();requestFrame();},
+    dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;item.dragPosition=position?.clone()??null;item.rig.pose(clock.value(),!!item.dragPosition);syncPositions();requestFrame();},
     position:id=>actors.get(id)?.group.position.clone(),
     isAnimating:()=>!disposed&&root.visible&&motionEnabled&&!reduced.matches&&actors.size>0,
     getState:()=>({count:actors.size,rigRevision,selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.yaw,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,dragging:!!a.dragPosition}))}),
