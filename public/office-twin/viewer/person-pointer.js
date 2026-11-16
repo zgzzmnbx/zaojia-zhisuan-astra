@@ -11,16 +11,17 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
   function rayAt(event){const r=canvas.getBoundingClientRect(),ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1),camera);return ray;}
   function finish(){
     const old=gesture;gesture=null;if(!old)return;
-    people.dragPosition(old.id,null);controls.enabled=old.controlsEnabled;canvas.style.cursor='';setDraggingPerson(null);target?.classList.remove('is-dragover');ghost.hidden=true;
+    people.hold?.(old.id,false);people.dragPosition(old.id,null);controls.enabled=old.controlsEnabled;canvas.style.cursor='';setDraggingPerson(null);target?.classList.remove('is-dragover');ghost.hidden=true;
     if(canvas.hasPointerCapture(old.pointer))canvas.releasePointerCapture(old.pointer);
   }
   listen(canvas,'pointerdown',event=>{
     if(event.button!==0||!canInteract()||gesture)return;
     pendingClick=null;suppressClick=false;
     const ray=rayAt(event),id=people.hit(ray),snapshot=officeClient.getState(),person=snapshot.employees.find(p=>p.id===id);
-    if(!person?.draggable)return;
+    if(!person)return;
     const origin=people.position(id),plane=new THREE.Plane().setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()),origin),point=ray.ray.intersectPlane(plane,new THREE.Vector3());if(!point)return;
-    gesture={id,pointer:event.pointerId,start:{context:snapshot.context,revision:snapshot.revision},x:event.clientX,y:event.clientY,plane,offset:point.sub(origin),controlsEnabled:controls.enabled,dragging:false};
+    gesture={id,pointer:event.pointerId,start:{context:snapshot.context,revision:snapshot.revision},x:event.clientX,y:event.clientY,plane,offset:point.sub(origin),controlsEnabled:controls.enabled,dragging:false,draggable:!!person.draggable};
+    people.hold?.(id,true);
     controls.enabled=false;takeCameraControl();canvas.setPointerCapture(event.pointerId);event.stopImmediatePropagation();
   },true);
   function move(event){
@@ -30,6 +31,7 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
       return;
     }
     if(event.pointerId!==g.pointer)return;
+    if(!g.draggable)return;
     if(!canInteract()||!canDropPerson(g.start,officeClient.getState(),g.id)){finish();return;}
     if(!g.dragging&&Math.hypot(event.clientX-g.x,event.clientY-g.y)<7)return;
     if(!g.dragging){g.dragging=true;canvas.style.cursor='grabbing';people.closeMenu();setDraggingPerson(g.id);ghost.textContent=officeClient.getState().employees.find(p=>p.id===g.id)?.name||'';ghost.hidden=false;}

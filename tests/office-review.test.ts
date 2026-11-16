@@ -399,3 +399,34 @@ test('chat drop accepts only the current review context and revision',()=>{
  for(const raw of [null,{}, {...drag,context:'other'}, {...drag,revision:2}, {...drag,employeeId:7}, {...drag,name:null}])assert.equal(validOfficeDrag(raw,snapshot),false);
  assert.equal(validOfficeDrag(drag,null),false);
 });
+
+import {activePersonTasks,personLabelLevel,createRoomWalkGraph,createPersonWander} from '../public/office-twin/viewer/person-presentation.js';
+test('person labels reveal progressively with hysteresis and finished work does not keep a person busy',()=>{
+ assert.equal(personLabelLevel(10),'hidden');assert.equal(personLabelLevel(16),'hidden');
+ assert.equal(personLabelLevel(24),'name');assert.equal(personLabelLevel(44,'name'),'name');
+ assert.equal(personLabelLevel(46),'detail');assert.equal(personLabelLevel(41,'detail'),'detail');
+ assert.equal(personLabelLevel(38,'detail'),'name');assert.equal(personLabelLevel(12,'name'),'hidden');
+ const tasks=['待复核','审核中','已通过','已完成','已退回','completed','cancelled'].map(status=>({employeeId:'a',status}));
+ assert.equal(activePersonTasks(tasks,'a').length,2);assert.equal(activePersonTasks(tasks,'b').length,0);
+});
+test('idle walkers stay inside clear aisles, pause in place and resume without catching up',()=>{
+ const layout={metadata:{recommended_px_per_m:10,recommended_world_origin_px:[0,0]},rooms:[{id:'r',bounds_px:[0,0,100,100]}],workstations:[{room_id:'r',bounds_px:[35,35,65,65]}],furniture:[]};
+ const graph=createRoomWalkGraph(layout,'r'),walker=createPersonWander(graph,{x:1,z:1},3);
+ assert.ok(walker);const before=walker.state();
+ for(let i=0;i<2400;i++){
+  const p=walker.step(.05);assert.ok(p.x>=.34&&p.x<=9.66&&p.z>=.34&&p.z<=9.66);
+  assert.ok(!(p.x>3.16&&p.x<6.84&&p.z>3.16&&p.z<6.84),'never crosses furniture clearance');
+ }
+ const paused=walker.state();walker.step(600,false);assert.equal(walker.state().x,paused.x);assert.equal(walker.state().z,paused.z);
+ walker.step(600);assert.ok(Math.hypot(walker.state().x-paused.x,walker.state().z-paused.z)<=.033);
+ assert.ok(walker.state().phase>before.phase);assert.equal(createPersonWander({cells:[]},{x:0,z:0}),null);
+});
+test('walking rig uses standing limbs, preserves pickup pose and reuses its small mesh set',()=>{
+ const assets=createPersonAssets(),rig=createSeatedPerson(assets,0),visible=()=>{let count=0;rig.group.traverseVisible(o=>{if((o as THREE.Mesh).isMesh)count++;});return count;};
+ rig.pose(2,false,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'walking');assert.equal(visible(),18);
+ const count=rig.group.children.length;for(let i=0;i<30;i++)rig.pose(i,false,{phase:i,moving:true});assert.equal(rig.group.children.length,count);
+ rig.pose(2,true,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'lifted');assert.equal(visible(),15);
+ rig.pose(2,false,{phase:2,moving:false});assert.equal(rig.group.userData.visualMotion,'idle');
+ rig.pose(2);assert.equal(rig.group.userData.visualMotion,'typing');assert.equal(visible(),15);
+ rig.dispose();assets.dispose();
+});

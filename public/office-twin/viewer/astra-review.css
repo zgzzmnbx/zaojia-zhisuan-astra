@@ -17,6 +17,11 @@ body.studio .office-workspace>.office-scene{inset-inline-end:calc(var(--cards-wi
 .host-person-marker strong{display:block;font-size:13px;font-weight:500}
 .host-person-marker small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--astra-muted);margin-top:3px}
 .host-person-marker.selected{border-color:var(--astra-primary);background:var(--astra-paper)}
+.host-person-marker[data-detail="name"]{width:80px;padding:5px 8px;text-align:center}
+.host-person-marker[data-detail="name"] small,.host-person-marker[data-detail="name"] .host-person-activity{display:none}
+.host-person-marker[data-detail="detail"]{width:180px}
+.host-person-marker[data-detail][draggable] strong{padding-right:0}
+.host-person-marker .host-person-activity,.host-idle-status{display:block;margin-top:3px;font-size:12px;color:var(--astra-muted);white-space:nowrap}
 .host-person-marker[draggable="true"]{cursor:grab}
 .host-person-row{width:100%;display:flex!important;justify-content:flex-start!important;gap:9px!important;padding:10px 8px!important;height:auto!important;border-radius:8px}
 .host-person-row strong{font-size:13px;font-weight:500;flex:1;text-align:left}

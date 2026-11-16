@@ -63,6 +63,7 @@ function renderTasks() {
     const tasks=snapshot.tasks.filter(t=>t.employeeId===person.id);
     const row=element('article','','host-task-row');row.append(element('strong',person.name));
     for(const task of tasks){const line=element('div','','host-task-line');line.append(element('span',task.title),element('small',`${task.demo?'演示 · ':''}${task.status}`));row.append(line);}
+    if(!tasks.length)row.append(element('small','暂无审核任务','host-idle-status'));
     list.append(row);
   }
   $('#event-connection').textContent=snapshot.receiptError?'任务状态暂未刷新，请在左侧重试':'';
@@ -87,7 +88,9 @@ function receive(event) {
   const data=event.data;
   if(!Array.isArray(data.people)||!Array.isArray(data.tasks)||typeof data.context!=='string')return;
   sourceSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
-    tasks:[...data.tasks,...data.people.map((person,index)=>({id:`sample:${person.id}`,employeeId:person.id,title:samples[index%samples.length],status:index%3===0?'待复核':'审核中',demo:true}))]};
+    tasks:[...data.tasks,...data.people.flatMap((person,index)=>
+      data.tasks.some(t=>t.employeeId===person.id)||(index>0&&index>=data.people.length-2)?[]:
+      [{id:`sample:${person.id}`,employeeId:person.id,title:samples[index%samples.length],status:index%3===0?'待复核':'审核中',demo:true}])]};
   snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
 }
 export const officeClient={

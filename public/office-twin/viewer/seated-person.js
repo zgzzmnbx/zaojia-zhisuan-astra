@@ -30,7 +30,7 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
   const up=new THREE.Vector3(0,1,0),direction=new THREE.Vector3();
   function bone(material,radius){const o=mesh(group,g.bone,material,[0,0,0],[radius,1,radius]);return o;}
   function join(o,a,b){direction.subVectors(b,a);o.position.copy(a).add(b).multiplyScalar(.5);o.scale.y=direction.length();o.quaternion.setFromUnitVectors(up,direction.normalize());}
-  const arms=[],legs=[],rigidPoses=[];let hanging=false;
+  const arms=[],legs=[],rigidPoses=[],seatedBottom=[];let hanging=false,walkRig=null;
   for(const side of [-1,1]){
     const thigh=bone(m.pants,.075),shin=bone(m.pants,.059);
     const a=new THREE.Vector3(side*.105,hip,.025),knee=new THREE.Vector3(side*.115,hip-.06,.30),ankle=new THREE.Vector3(side*.115,.095,.32);
@@ -51,7 +51,23 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
       leg.shoe.position.set(ankle.x,ankle.y-.052,ankle.z+.055);leg.shoe.rotation.x=lifted?.25:0;
     }
   }
-  function pose(seconds,lifted=false){
+  function prepareWalking(){
+    if(walkRig)return;
+    const body=new THREE.Group();group.add(body);const pivots=[];
+    mesh(body,g.sphere,m.pants,[0,.79,0],[.16,.075,.13]);
+    const legGeometry=new THREE.CapsuleGeometry(.065,.55,4,10);owned.push(legGeometry);
+    for(const side of [-1,1]){
+      const pivot=new THREE.Group();pivot.position.set(side*.105,.79,0);body.add(pivot);
+      mesh(pivot,legGeometry,m.pants,[0,-.35,0]);
+      mesh(pivot,g.sphere,m.shoe,[0,-.73,.06],[.072,.043,.125]);pivots.push({side,pivot});
+    }
+    walkRig={body,pivots};
+  }
+  function pose(seconds,lifted=false,walking=null){
+    const standing=!!walking&&!lifted;
+    if(standing)prepareWalking();
+    if(walkRig)walkRig.body.visible=standing;
+    for(const bottom of seatedBottom)bottom.visible=!standing;
     if(lifted!==hanging){
       for(const {geometry,seated,held} of rigidPoses){
         const shape=lifted?held:seated;
@@ -60,10 +76,14 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
       }
       hanging=lifted;
     }
-    const state=lifted?{mode:'lifted',breath:0,headPitch:.08,headYaw:0}:seatedMotion(seconds,index*1.71);upper.position.y=state.breath;head.rotation.set(state.headPitch,state.headYaw,0);
+    const swing=standing&&walking.moving?Math.sin(walking.phase*5.4)*.26:0;
+    const state=lifted?{mode:'lifted',breath:0,headPitch:.08,headYaw:0}:standing?{mode:walking.moving?'walking':'idle',breath:Math.abs(swing)*.03,headPitch:0,headYaw:.025*Math.sin(seconds*.5)}:seatedMotion(seconds,index*1.71);
+    const rise=standing?.79-hip:0;upper.position.y=rise+state.breath;head.rotation.set(state.headPitch,state.headYaw,0);
+    if(standing)for(const {side,pivot} of walkRig.pivots)pivot.rotation.x=side*swing;
     for(const arm of arms){
-      shoulder.set(arm.side*.175,hip+.38+state.breath,.025);
+      shoulder.set(arm.side*.175,hip+.38+rise+state.breath,.025);
       if(lifted)target.set(arm.side*.22,hip-.12,.055);
+      else if(standing)target.set(arm.side*.22,.79-.09,.055-arm.side*swing*.65);
       else target.set(keyboard[0]+arm.side*.095,keyboard[1]+(arm.side<0?state.leftTap:state.rightTap),keyboard[2]);
       axis.subVectors(target,shoulder);const distance=THREE.MathUtils.clamp(axis.length(),.06,.519);axis.normalize();target.copy(shoulder).addScaledVector(axis,distance);
       const along=(.26**2-.26**2+distance**2)/(2*distance),height=Math.sqrt(Math.max(0,.26**2-along**2));
@@ -98,6 +118,7 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
         rigidPoses.push({geometry,seated:{position:geometry.attributes.position.array.slice(),normal:geometry.attributes.normal.array.slice()},held:{position:lifted.attributes.position.array.slice(),normal:lifted.attributes.normal.array.slice()}});lifted.dispose();
       }
       const combined=new THREE.Mesh(geometry,material);combined.castShadow=true;combined.receiveShadow=true;
+      if(parts.some(o=>legParts.has(o)))seatedBottom.push(combined);
       parent.add(combined);parts.forEach(o=>parent.remove(o));owned.push(geometry);
     }
   }
