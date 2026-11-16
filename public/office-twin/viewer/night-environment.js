@@ -62,10 +62,13 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         c*=pow(max(.001,corrected),officeContrast)/max(.001,corrected);
         if(ground)c*=officeGroundTint;
         if(officeNightRole==1.&&officeWindowBlue>.5){
-          // Reference display-linear glass; retain relief from the existing bake.
-          vec3 glass=vec3(${ASTRA_GLASS.linear.join(',')})*clamp(lum/.74,.12,1.25);
+          // The original glazing bake is darker than the white facade. Normalize
+          // that baseline, retaining its relief, so it cannot muddy the new tint.
+          // The existing 55% default is the reference blue; higher values deepen it.
+          vec3 glass=max(vec3(.02),mix(vec3(.93),vec3(${ASTRA_GLASS.linear.join(',')}),officeWindowStrength/.55));
+          glass*=clamp(lum/.44,.25,1.25);
           glass=mix(vec3(dot(glass,vec3(.2126,.7152,.0722))),glass,officeNightBlue);
-          c=mix(c,glass,officeWindowStrength);
+          c=mix(c,glass,smoothstep(0.,.10,officeWindowStrength));
         }
         ${referenceContext?`
         // Match baked-surfaces.mjs: no AgX inversion, extra white lift, vertex
