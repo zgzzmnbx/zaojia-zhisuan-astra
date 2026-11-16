@@ -3,13 +3,13 @@
 import {ASTRA_STUDIO} from './astra-lighting-profile.js';
 // Calibrated to the user's Astra reference image on this office bake. Equal
 // numeric multipliers on different baked textures do not yield equal whites.
-export const LIGHTING_DEFAULTS_VERSION='astra-office-reference-context-2026-11-17';
+export const LIGHTING_DEFAULTS_VERSION='astra-office-reference-structure-2026-11-17';
 export const LIGHTING_KEY='astra.office.saved-lighting.v1';
 export const LIGHTING_SPECS=Object.freeze([
   {key:'windowBlueStrength',label:'玻璃蓝色浓度',min:0,max:100,step:1,value:55,group:'day'},
-  {key:'buildingBrightness',label:'主楼外墙亮度',min:40,max:180,step:1,value:120,group:'day'},
-  {key:'floorBrightness',label:'楼层地板亮度',min:40,max:180,step:1,value:115,group:'day'},
-  {key:'officeBrightness',label:'办公室亮度',min:40,max:180,step:1,value:120,group:'day'},
+  {key:'buildingBrightness',label:'主楼外墙亮度',min:40,max:180,step:1,value:105,group:'day'},
+  {key:'floorBrightness',label:'楼层地板亮度',min:40,max:180,step:1,value:105,group:'day'},
+  {key:'officeBrightness',label:'办公室亮度',min:40,max:180,step:1,value:105,group:'day'},
   {key:'contextBrightness',label:'周边建筑亮度',min:20,max:180,step:1,value:105,group:'day'},
   {key:'groundBrightness',label:'地面亮度',min:20,max:160,step:1,value:105,group:'day'},
   {key:'buildingWhite',label:'主体白度',min:0,max:100,step:1,value:0,group:'day'},

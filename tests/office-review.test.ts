@@ -302,26 +302,26 @@ test('Astra glass option preserves explicit white and shadow choices through sav
  assert.equal(LIGHTING_DEFAULTS.groundColor,'#f5f7fa');
 });
 test('office lighting starts from Astra white background and independent main/context gains',()=>{
- assert.deepEqual(normalizeLighting({}),LIGHTING_DEFAULTS);assert.equal(normalizeLighting({exposure:0}).floorBrightness,115);
- assert.equal(LIGHTING_DEFAULTS.backgroundColor,'#ffffff');assert.equal(LIGHTING_DEFAULTS.buildingBrightness,120);assert.equal(LIGHTING_DEFAULTS.contextBrightness,105);
+ assert.deepEqual(normalizeLighting({}),LIGHTING_DEFAULTS);assert.equal(normalizeLighting({exposure:0}).floorBrightness,105);
+ assert.equal(LIGHTING_DEFAULTS.backgroundColor,'#ffffff');assert.equal(LIGHTING_DEFAULTS.buildingBrightness,105);assert.equal(LIGHTING_DEFAULTS.contextBrightness,105);
  const v=normalizeLighting({officeBrightness:80,contextBrightness:140,nightScreens:0,backgroundColor:'#F5F7FA'});
- assert.equal(v.buildingBrightness,120);assert.equal(v.officeBrightness,80);assert.equal(v.contextBrightness,140);assert.equal(v.nightScreens,0);assert.equal(v.backgroundColor,'#f5f7fa');
+ assert.equal(v.buildingBrightness,105);assert.equal(v.officeBrightness,80);assert.equal(v.contextBrightness,140);assert.equal(v.nightScreens,0);assert.equal(v.backgroundColor,'#f5f7fa');
  const invalid=normalizeLighting({buildingBrightness:Infinity,contextBrightness:-8,contrast:200,backgroundColor:'url(secret)'});
- assert.equal(invalid.buildingBrightness,120);assert.equal(invalid.contextBrightness,20);assert.equal(invalid.contrast,150);assert.equal(invalid.backgroundColor,'#ffffff');
+ assert.equal(invalid.buildingBrightness,105);assert.equal(invalid.contextBrightness,20);assert.equal(invalid.contrast,150);assert.equal(invalid.backgroundColor,'#ffffff');
 });
 test('lighting preview/reset does not save or redefine defaults; explicit saves round-trip',()=>{
  const values=new Map<string,string>(),storage={getItem:(k:string)=>values.get(k)||null,setItem:(k:string,v:string)=>values.set(k,v)};
  const baseline=JSON.stringify(LIGHTING_DEFAULTS);const preview=normalizeLighting({officeBrightness:88});
- assert.equal(readLighting(storage).officeBrightness,120);assert.equal(values.size,0);
+ assert.equal(readLighting(storage).officeBrightness,105);assert.equal(values.size,0);
  saveLighting(storage,preview);assert.equal(readLighting(storage).officeBrightness,88);
- const reset=normalizeLighting(null);assert.equal(reset.officeBrightness,120);assert.equal(readLighting(storage).officeBrightness,88);
- saveLighting(storage,reset);assert.equal(readLighting(storage).officeBrightness,120);assert.equal(JSON.stringify(LIGHTING_DEFAULTS),baseline);
+ const reset=normalizeLighting(null);assert.equal(reset.officeBrightness,105);assert.equal(readLighting(storage).officeBrightness,88);
+ saveLighting(storage,reset);assert.equal(readLighting(storage).officeBrightness,105);assert.equal(JSON.stringify(LIGHTING_DEFAULTS),baseline);
  values.set(LIGHTING_KEY,'bad JSON');assert.deepEqual(readLighting(storage),LIGHTING_DEFAULTS);
 });
 test('lighting migration retains old exposure without restoring the obsolete gray baseline',()=>{
  const old=JSON.stringify({exposure:.35,blue:.6,keyLight:2});
  const v=readLighting({getItem:(key:string)=>key==='h1-office-twin:baked-picture:v2'?old:null});
- assert.equal(v.exposure,.35);assert.equal(v.blue,.6);assert.equal(v.backgroundColor,'#ffffff');assert.equal(v.buildingBrightness,120);
+ assert.equal(v.exposure,.35);assert.equal(v.blue,.6);assert.equal(v.backgroundColor,'#ffffff');assert.equal(v.buildingBrightness,105);
 });
 test('actual v0.6.7 merged context buildings and ground receive separate lighting roles',()=>{
  assert.equal(classifyNightRole({name:'part',parent:{name:'ContextWeb_Buildings'}}),'context');
@@ -329,4 +329,46 @@ test('actual v0.6.7 merged context buildings and ground receive separate lightin
  assert.equal(classifyNightRole({name:'AstraContext_ContinuousBaseplate_v063'}),'ground');
  assert.equal(classifyNightRole({name:'face',parent:{userData:{demoPersonId:'owner'}}}),'person');
  assert.deepEqual(NIGHT_LIGHTING.contextWindowColor,[.055,.17,.27]);
+});
+
+
+test('structural daylight UVs survive batching and floor/wall lighting stays separate',()=>{
+ const root=new THREE.Group(),room=new THREE.Group();room.userData.entity_type='room';root.add(room);
+ const mat=new THREE.MeshBasicMaterial(),meshes=[];
+ for(const [index,role] of ['floor','floor','interior','interior'].entries()){
+  const g=new THREE.BoxGeometry().toNonIndexed();const uv=new Float32Array(g.attributes.position.count*3);for(let i=0;i<uv.length;i+=3)uv.set([.1+index*.1,.2,2],i);
+  g.setAttribute('officeStructureUV',new THREE.BufferAttribute(uv,3));const m=new THREE.Mesh(g,mat);m.name=role==='floor'?'R_'+index+'_floor':'wall_'+index;room.add(m);meshes.push(m);
+ }
+ room.name='H1_F09_Office';const result=batchStaticGeometry(root);assert.equal(result.batches,2);
+ const batches=room.children.filter(o=>o.userData.staticBatch) as THREE.Mesh[];
+ assert.deepEqual(batches.map(o=>o.userData.night_role).sort(),['floor','interior']);
+ assert.ok(batches.every(o=>o.geometry.getAttribute('officeStructureUV').count===o.geometry.attributes.position.count));
+ const settings=normalizeLighting({...LIGHTING_DEFAULTS,buildingBrightness:40,floorBrightness:130});
+ assert.equal(settings.floorBrightness,130);assert.equal(settings.buildingBrightness,40);assert.equal(settings.officeBrightness,105);
+});
+
+
+import {attachStructureDayBake} from '../public/office-twin/viewer/structure-day-bake.js';
+test('daylight companion keeps UV0, cutaway deck lighting and source geometry, and disposes only its private resources',async()=>{
+ const root=new THREE.Group(),original=new THREE.BoxGeometry(),mesh=new THREE.Mesh(original,new THREE.MeshBasicMaterial());mesh.name='V064_F09_StructuralPlate_From08';root.add(mesh);
+ const count=original.index!.count,uv0=original.toNonIndexed().getAttribute('uv').array.slice(),values=new Float32Array(count*2);for(let i=0;i<count;i+=3)values.set([.25,.25,.5,.25,.25,.5],i*2);values.set([0,0,.99,0,.99,.00001],values.length-6);
+ const fetchBefore=globalThis.fetch,loadBefore=THREE.TextureLoader.prototype.loadAsync;let disposed=0;
+ const entry={node:mesh.name,primitive:0,sourceVertices:original.attributes.position.count,vertices:count,floats:count*2,offset:0};
+ globalThis.fetch=(async(input:any)=>String(input).endsWith('.buffer')?new Response(values.buffer):new Response(JSON.stringify({kind:String(input).includes('exterior')?'exterior':'interior',resolution:2048,entries:String(input).includes('exterior')?[entry]:[]}))) as any;
+ THREE.TextureLoader.prototype.loadAsync=async()=>{const texture=new THREE.Texture();texture.addEventListener('dispose',()=>disposed++);return texture;};
+ try{
+  const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,true);assert.notEqual(mesh.geometry,original);
+  assert.deepEqual(mesh.geometry.getAttribute('uv').array,uv0);assert.equal(mesh.geometry.getAttribute('officeStructureUV').count,count);
+  assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(0),1);assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(count-1),0);
+  assert.equal(bake.state.retainedCutawayTriangles,2);
+  for(let i=0;i<count;i++)if(mesh.geometry.attributes.normal.getY(i)>.5)assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(i),0);
+  bake.dispose();assert.equal(mesh.geometry,original);assert.equal(disposed,2);
+ }finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
+});
+test('a mismatched structure bake rolls back before changing any floor or wall geometry',async()=>{
+ const root=new THREE.Group(),original=new THREE.BoxGeometry(),mesh=new THREE.Mesh(original,new THREE.MeshBasicMaterial());mesh.name='Wall';root.add(mesh);
+ const fetchBefore=globalThis.fetch,loadBefore=THREE.TextureLoader.prototype.loadAsync;let disposed=0;
+ globalThis.fetch=(async(input:any)=>String(input).endsWith('.buffer')?new Response(new Float32Array(6).buffer):new Response(JSON.stringify({entries:[{node:'Wall',primitive:0,sourceVertices:999,vertices:3,floats:6,offset:0}]}))) as any;
+ THREE.TextureLoader.prototype.loadAsync=async()=>{const texture=new THREE.Texture();texture.addEventListener('dispose',()=>disposed++);return texture;};
+ try{const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,false);assert.equal(mesh.geometry,original);assert.equal(disposed,2);}finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
 });

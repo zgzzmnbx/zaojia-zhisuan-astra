@@ -13,12 +13,18 @@ import {collectMonitorLighting} from './monitor-lighting.js';
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
 const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10};
-export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared,bakedFloor=false,vertexMonitor=false,referenceContext=false){
+export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared,bakedFloor=false,vertexMonitor=false,referenceContext=false,referenceStructure=false){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
   const key=previousKey();
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
+    if(referenceStructure){
+      Object.assign(shader.uniforms,{officeExteriorBake:{value:shared.structureBake.exterior},officeInteriorBake:{value:shared.structureBake.interior}});
+      shader.vertexShader='attribute vec3 officeStructureUV;varying vec3 vOfficeStructureUV;\n'+shader.vertexShader;
+      shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvOfficeStructureUV=officeStructureUV;');
+      shader.fragmentShader='varying vec3 vOfficeStructureUV;uniform sampler2D officeExteriorBake,officeInteriorBake;\n'+shader.fragmentShader;
+    }
     if(referenceContext){
       Object.assign(shader.uniforms,{astraCityBake:{value:shared.contextBake.city},astraStreetBake:{value:shared.contextBake.street}});
       shader.vertexShader='attribute vec3 astraContextUV;varying vec3 vAstraContextUV;\n'+shader.vertexShader;
@@ -75,6 +81,17 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
           c*=pow(referenceLuma,officeContrast/.8)/referenceLuma;
           c*=officeNightExposure;
         }`:''}
+        ${referenceStructure?`
+        // Same diffuse-only white matte/Standard-sRGB bake as the home city.
+        // UV0 and diffuseColor stay intact for the independent night branch.
+        if(vOfficeStructureUV.z>.5){
+        c=vOfficeStructureUV.z<1.5?texture2D(officeExteriorBake,vOfficeStructureUV.xy).rgb:texture2D(officeInteriorBake,vOfficeStructureUV.xy).rgb;
+        float structureLuma=max(.001,dot(c,vec3(.2126,.7152,.0722)));
+        c=mix(c,vec3(min(1.,structureLuma+.14*(1.-min(1.,structureLuma)))),officeWhite.x);
+        c*=pow(structureLuma,officeContrast/.8)/structureLuma;
+        c*=officeNightExposure;
+        }
+        `:''}
         outgoingLight=c*gain;
       }
       if(officeNight>.5){
@@ -153,12 +170,12 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|office-studio-v0330|'+role+'|'+vertexMonitor+'|'+referenceContext;
+  material.customProgramCacheKey=()=>key+'|office-studio-v0330|'+role+'|'+vertexMonitor+'|'+referenceContext+'|'+referenceStructure;
   material.needsUpdate=true;
 }
 
-export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings,contextBake}){
-  const shared={contextBake:contextBake?.textures??{},floorGain:{value:1.45},windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
+export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings,contextBake,structureBake}){
+  const shared={structureBake:structureBake?.textures??{},contextBake:contextBake?.textures??{},floorGain:{value:1.45},windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
   Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
   const lightPlan=createInteriorLightPlan(layout);
   const floorBake=createNightFloorBake(requestFrame);shared.floorBake=floorBake.uniforms;
@@ -225,11 +242,12 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
           const bakedFloor=isNightFloorReceiver(object,mat);
           const vertexMonitor=!!object.userData.vertexMonitor;
           const referenceContext=!!object.userData.astraContextBake;
-          const cloneKey=role+'|'+(monitor?seat:'')+'|'+(roomId||'')+'|'+bakedFloor+'|'+vertexMonitor+'|'+referenceContext;
+          const referenceStructure=!!object.geometry.getAttribute('officeStructureUV');
+          const cloneKey=role+'|'+(monitor?seat:'')+'|'+(roomId||'')+'|'+bakedFloor+'|'+vertexMonitor+'|'+referenceContext+'|'+referenceStructure;
           let byRole=copies.get(mat);if(!byRole){byRole=new Map();copies.set(mat,byRole);}
           if(!byRole.has(cloneKey)){
             const copy=mat.clone();copy.onBeforeCompile=mat.onBeforeCompile;copy.customProgramCacheKey=mat.customProgramCacheKey;
-            attachNightShader(copy,role,shared,monitor,['interior','floor'].includes(role)&&roomLighting.has(roomId)?roomLighting.get(roomId):shared,bakedFloor,vertexMonitor,referenceContext);materials.add(copy);
+            attachNightShader(copy,role,shared,monitor,['interior','floor'].includes(role)&&roomLighting.has(roomId)?roomLighting.get(roomId):shared,bakedFloor,vertexMonitor,referenceContext,referenceStructure);materials.add(copy);
             colorSources.push({copy,source:mat});byRole.set(cloneKey,copy);
           }
           return byRole.get(cloneKey);

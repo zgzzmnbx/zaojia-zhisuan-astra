@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.34.4",
+  "hostAdapterVersion": "0.34.5",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -75,7 +75,7 @@
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "792856bbcc24f783acd6c8d0b13c1eb31acf795278234f37acd370f795b4e897",
-    "viewer/night-environment.js": "71ee43af5dc8cc436f439de2b6de7b662f59724e120112ee578ac4aa2ecc8d19",
+    "viewer/night-environment.js": "0d443466e46fb3952de9f2ce0c5364853006d8947bac48975ad01041227e35f6",
     "viewer/night-lighting-policy.js": "f9dc88f2dfd4d236bb7dfa9a2342967311fcaf07b8b274facf436e5c87e429c8",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
@@ -106,7 +106,7 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "deb20c74efe65373b60bdefe5a973bd7dae6e4fa469788ca07820a75a99aee94",
+    "viewer/viewer.js": "cd2b28ce8594fd4ed112ff42c4e7b414a7fe6b090c4fe2c65ec6c931600427c6",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
@@ -115,7 +115,7 @@
     "viewer/person-pointer.js": "7834ed349b37cfb1e801bb5088b0af90e7b6cfe9949917656fdf060f739e7d53",
     "viewer/seated-person.js": "6f6dbd7649d2a9db9ae90066c9f657eb91965d0f70f862447ccba6ee71e680ae",
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
-    "viewer/lighting-settings.js": "f2e0a5901b97da8ba917263c8ae203a4a6a046f39fe793563b3f26cb4f02d5a5",
+    "viewer/lighting-settings.js": "3d1505eeef6afc94b1041d4bcde9deef33b01f4f9880e3d672c5b3fc0bb75eac",
     "viewer/office-entrance.js": "0f89c55accf6a8739ccb8b225cc647626984868dcc031b15530ec00b4bf54f01",
     "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce",
     "viewer/floor-label.js": "206b9e971298c0307a3d2fe9ad211db349efaf567741b86f505d48688c97c545",
@@ -140,7 +140,14 @@
     "models/astra-context-v1/manifest.json": "3b54254e3fd7b21406e98b8007879ee4dacd5280392955b9dea018aa4003a116",
     "models/astra-context-v1/uv.buffer": "127468392e9572732114a1609b165f054e8b6321833bbb6ca70f11ec408f9d23",
     "models/astra-context-v1/city.png": "3f1d72adf598f23039da952a8e63fac541bafc989c203f84778955ae08115526",
-    "models/astra-context-v1/street.png": "4d8013d2a8f919fba701df6e6d5dd9f5673628449dea1b0fe74ba93151a3cabe"
+    "models/astra-context-v1/street.png": "4d8013d2a8f919fba701df6e6d5dd9f5673628449dea1b0fe74ba93151a3cabe",
+    "viewer/structure-day-bake.js": "4a54ed5c2a83b3ece18246411b504245141f04531cffe8af0f4e94c097f94e42",
+    "models/astra-structure-v1/interior.json": "10aee7d2cdd5d709c910a34ce70ed92aa6f9cef84eb46ee88ff053e3321e0755",
+    "models/astra-structure-v1/interior.png": "ae7cdcee6b3b97729e49060a4ca65c260034e9ce201c9889345a231dce1f05a0",
+    "models/astra-structure-v1/interior-uv.buffer": "e890cc7b0bf2a5b8978776fd62819a55b5ae1c7a96746376ec58771f9518157e",
+    "models/astra-structure-v1/exterior.json": "7b688e7c3d45447683291f1fe9928b7728bb8a5508c175e92ec4f3e7907489e4",
+    "models/astra-structure-v1/exterior.png": "f4a6ae29c8e9ea46bdb1aa4b3f29f101ddbc8bb0f9333b3a336514af340aa9c2",
+    "models/astra-structure-v1/exterior-uv.buffer": "8b42476ab8324c294453679715a3bddd667a38e5c501e23f8f7514311e396555"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -160,5 +167,30 @@
     ],
     "resolution": 2048,
     "samples": 64
+  },
+  "structureDayBake": {
+    "version": "0.34.5",
+    "sourceModel": "H1-baked-v0.6.7.glb",
+    "recipe": "tools/office-twin/bake-structure-day.py",
+    "scope": "Daytime main shell and 9F walls, columns, floors; original night UVs and cutaway deck tops retained",
+    "samples": 512,
+    "resolutions": {
+      "exterior": 4096,
+      "interior": 2048
+    },
+    "lighting": {
+      "world": 0.7,
+      "sun": 1.3,
+      "angle": 18,
+      "white": 0.9,
+      "roughness": 0.85,
+      "transform": "Standard sRGB"
+    },
+    "defaultBrightness": {
+      "building": 105,
+      "floor": 105,
+      "office": 105
+    },
+    "smallIslands": "Original shading for triangle area below 8 texels or altitude below 3 texels"
   }
 }

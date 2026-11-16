@@ -1,3 +1,4 @@
+import {attachStructureDayBake} from './structure-day-bake.js';
 import {attachAstraContextBake} from './astra-context-bake.js';
 import { motionProgress, createVisibilityBlend } from './navigation-motion.js?v=0.6.7';
 import {VERSION,ASSET_VERSION,BAKED_MODEL,REALTIME_MODEL} from './release.js?v=0.7.0';
@@ -54,7 +55,7 @@ export async function mountOfficeViewer() {
   let disposed = false, requestedVisible = true, inView = true, pageSuspended = false;
   let renderReady = false, renderStatus = 'loading', frame = 0, transition = null;
   let gpuPrepared=false,lastFrameTime=null;
-  let contextBake=null;
+  let contextBake=null,structureBake=null;
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
   let people, nightEnvironment, visibilityBlend, orbit;
@@ -192,7 +193,7 @@ export async function mountOfficeViewer() {
     if (frame) cancelAnimationFrame(frame);
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
-    controls?.dispose(); clearOutline(); contextBake?.dispose();contextBake=null;disposeObject(model);
+    controls?.dispose(); clearOutline(); contextBake?.dispose();contextBake=null;structureBake?.dispose();structureBake=null;disposeObject(model);
     scene?.traverse(object => object.shadow?.dispose());
     renderer?.dispose(); renderer?.forceContextLoss(); renderer?.domElement.remove();
     floors.clear(); rooms.clear(); originalPositions.clear(); originalVisibility.clear();
@@ -467,7 +468,7 @@ export async function mountOfficeViewer() {
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
     for (const remove of listenerRemovers) remove();
-    controls?.dispose(); clearOutline(); contextBake?.dispose();contextBake=null;disposeObject(model);
+    controls?.dispose(); clearOutline(); contextBake?.dispose();contextBake=null;structureBake?.dispose();structureBake=null;disposeObject(model);
     scene?.traverse(object => object.shadow?.dispose());
     renderer?.dispose(); renderer?.forceContextLoss();
     renderer?.domElement.remove();
@@ -665,6 +666,8 @@ export async function mountOfficeViewer() {
     if(disposed)return api;
     if(BAKED_MODE){contextBake=await attachAstraContextBake(model,()=>disposed);loadReport.astraContext=contextBake.state;}
     if(disposed){contextBake?.dispose();contextBake=null;return api;}
+    if(BAKED_MODE){structureBake=await attachStructureDayBake(model,()=>disposed);loadReport.structureDaylight=structureBake.state;}
+    if(disposed){structureBake?.dispose();structureBake=null;return api;}
     staticBatches=batchStaticGeometry(model);
     originalVisibility.clear();model.traverse(object=>{originalVisibility.set(object,object.visible);object.updateMatrix();if(!/^Floor_\d+$/.test(object.name))object.matrixAutoUpdate=false;});
     visibilityBlend=createVisibilityBlend(model);
@@ -692,7 +695,7 @@ export async function mountOfficeViewer() {
       setView('office',{focus:group});orbit.focus(true);people.update(camera,view);
     }});
     people.syncBusiness(business);
-    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,contextBake,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
+    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,contextBake,structureBake,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});officeBoard.setView(view);
     await nightEnvironment.prepare();if(disposed)return api;
