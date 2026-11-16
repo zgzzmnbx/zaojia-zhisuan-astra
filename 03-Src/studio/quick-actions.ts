@@ -13,7 +13,7 @@ export const quickPrompts={
  projects:'打开项目看板',map:'打开项目地图',knowledge:'打开知识问答',library:'打开资料库',trace:'查看任务轨迹',settings:'打开设置',
  mapping:'打开列映射与转换',advanced:'打开 AI 增强编制',workload:'打开工作量抓取',risk:'查看风险详情',experience:'打开经验池导入',settlement:'打开结算审核',word:'打开 Word 分页预览',
  knowledgebase:'打开知识库管理',articles:'打开文章与知识网络',memory:'打开知识记忆','collaboration-settings':'打开协同设置',dispatch:'打开协同派发',
- aerial:'打开项目鸟瞰',tracefull:'查看任务血缘与轨迹',digital:'打开数字化项目造价',universe:'打开能力星图',gork:'打开 Gork 机器人联动',skills:'打开专业能力治理',configuration:'打开专业设置',architecture:'打开系统架构',
+ aerial:'打开项目鸟瞰',tracefull:'查看任务血缘与轨迹',digital:'打开数字化项目造价',universe:'打开能力星图',gork:'打开 Watch机器人联动',skills:'打开专业能力治理',configuration:'打开专业设置',architecture:'打开系统架构',
 } as const;
 export type QuickActionId=keyof typeof quickPrompts;
 export function quickPrompt(id:string):string|undefined{return Object.hasOwn(quickPrompts,id)?quickPrompts[id as QuickActionId]:undefined;}

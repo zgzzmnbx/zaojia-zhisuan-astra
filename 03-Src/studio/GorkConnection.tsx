@@ -25,5 +25,5 @@ export function GorkConnection({active,open}:{active:boolean;open:()=>void}){
   return()=>{live=false;clearTimeout(timer);controller?.abort();document.removeEventListener('visibilitychange',visibility);window.removeEventListener('online',visibility);window.removeEventListener('focus',visibility);};
  },[active]);
  const status=gorkPlatformPresentation(value,failed);
- return <div className="tooltip tooltip-bottom header-icon-tip" data-tip={status.label}><button type="button" className="btn btn-ghost btn-square header-icon-action gork-platform-icon" data-tone={status.tone} aria-label={status.label+'，打开机器人联动'} title={status.label} onClick={open}><Icon name="robot"/></button></div>;
+ return <div className="tooltip tooltip-bottom header-icon-tip" data-tip={status.label}><button type="button" className="btn btn-ghost btn-square header-icon-action gork-platform-icon" data-tone={status.tone} aria-label={status.label+'，打开Watch机器人联动'} title={status.label} onClick={open}><Icon name="robot"/></button></div>;
 }

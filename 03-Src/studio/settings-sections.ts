@@ -8,8 +8,8 @@ export const settingsSections = [
  {id:'quick-settings',label:'快捷指令',icon:'grid'},
  {id:'configuration',label:'专业设置',icon:'tools'},
  {id:'collaboration-settings',label:'协同设置',icon:'users'},
- {id:'robot',label:'机器人设置',icon:'robot'},
- {id:'gork',label:'机器人联动',icon:'link'},
+ {id:'robot',label:'网页小人设置',icon:'robot'},
+ {id:'gork',label:'Watch机器人联动',icon:'link'},
  {id:'runtime-console',label:'运行日志',icon:'monitor'},
 ] as const;
 export type SettingsSection=typeof settingsSections[number]['id']|'example';

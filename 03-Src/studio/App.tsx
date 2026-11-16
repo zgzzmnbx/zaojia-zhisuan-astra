@@ -110,7 +110,7 @@ import {actionUnavailable,artifactCard,capabilitiesCard,editCard,errorCard,input
 
 const LogoSettings=lazy(()=>import('./LogoSettings'));
 const ProjectDashboard=lazy(()=>import('./project-dashboard/ProjectDashboard'));
-const titles:Record<View,string>={'office-review':'多人复核',document:'公文转换',connections:'飞书与 WeAct 连接情况',example:'表格演示',insights:'当前项目状态',universe:'能力星图（示意）',mapping:'输入结构与列映射',table:'控制价计算表',risk:'风险与人工复核',report:'成果报告',sources:'当前行的依据',projects:'项目看板',tools:'专业能力中心',trace:'任务轨迹',library:'资料库',project:'项目资料',architecture:'系统架构',knowledge:'知识工作区',articles:'知识工作区',collaboration:'智能协同',...professionalTitles,digital:'数字化造价',gork:'Gork 机器人联动'} as Record<View,string>;
+const titles:Record<View,string>={'office-review':'多人复核',document:'公文转换',connections:'飞书与 WeAct 连接情况',example:'表格演示',insights:'当前项目状态',universe:'能力星图（示意）',mapping:'输入结构与列映射',table:'控制价计算表',risk:'风险与人工复核',report:'成果报告',sources:'当前行的依据',projects:'项目看板',tools:'专业能力中心',trace:'任务轨迹',library:'资料库',project:'项目资料',architecture:'系统架构',knowledge:'知识工作区',articles:'知识工作区',collaboration:'智能协同',...professionalTitles,digital:'数字化造价',gork:'Watch机器人联动'} as Record<View,string>;
 
 
 

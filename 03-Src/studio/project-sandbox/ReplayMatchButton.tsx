@@ -26,7 +26,7 @@ export function ReplayMatchButton({result}:{result:Result;blocked:boolean;dirty:
     reply=await api<Receipt>(`${path}/${encodeURIComponent(reply.event_id)}`,{signal:current.signal});
    }
    if(current.signal.aborted)return;
-   setMessage(watchSpeechCompleted(reply.status,reply.delivery)?'Watch 播报完成':reply.status==='completed'?'Watch 已接收，语音完成尚未确认':reply.status==='failed'?'Watch 播报失败，请检查设备连接':reply.status==='expired'?'播报已过期，请重新连接 Watch 后再试':reply.status==='cancelled'||reply.status==='superseded'||reply.status==='interrupted'?'本次播报已停止':'播报回执尚未确认，可在机器人联动中查看');
+   setMessage(watchSpeechCompleted(reply.status,reply.delivery)?'Watch 播报完成':reply.status==='completed'?'Watch 已接收，语音完成尚未确认':reply.status==='failed'?'Watch 播报失败，请检查设备连接':reply.status==='expired'?'播报已过期，请重新连接 Watch 后再试':reply.status==='cancelled'||reply.status==='superseded'||reply.status==='interrupted'?'本次播报已停止':'播报回执尚未确认，可在Watch机器人联动中查看');
   }catch(error){if(!current.signal.aborted)setMessage((error as Error).message);}
   finally{lock.current=false;if(!current.signal.aborted)setSending(false);}
  }

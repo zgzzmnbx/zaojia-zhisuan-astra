@@ -46,6 +46,6 @@ export function DemoSettings({controller,openDebug,blocked=false}:{controller:De
    <div className="demo-settings-actions"><span role="status">{message||(dirty?'有未保存的更改':'')}</span><Button disabled={saving||blocked||!dirty} primary onClick={async()=>{try{setDraft(await save(draft));setDirty(false);setMessage('设置已保存');}catch{setMessage('');}}}>保存设置</Button></div>
   </>}
   {error&&<p className="demo-settings-error" role="alert">{error}</p>}
-  <div className="demo-debug-tools"><h4>调试工具</h4><div><Button icon="monitor" onClick={()=>openDebug('runtime-console')}>运行日志</Button><Button icon="robot" onClick={()=>openDebug('gork')}>机器人联动</Button><Button icon="refresh" disabled={saving} onClick={()=>{setDirty(false);setMessage('');void refresh();}}>重新读取设置</Button></div></div>
+  <div className="demo-debug-tools"><h4>调试工具</h4><div><Button icon="monitor" onClick={()=>openDebug('runtime-console')}>运行日志</Button><Button icon="robot" onClick={()=>openDebug('gork')}>Watch机器人联动</Button><Button icon="refresh" disabled={saving} onClick={()=>{setDirty(false);setMessage('');void refresh();}}>重新读取设置</Button></div></div>
  </div>;
 }
