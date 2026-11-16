@@ -13,7 +13,7 @@ def ancestor(o,root):
   if o==root:return True
   o=o.parent
  return False
-keep=[o for o in bpy.context.scene.objects if o.type=='MESH' and ancestor(o,office) and not any(n in o.name for n in ['Core_floor','CORE_'])]
+keep=[o for o in bpy.context.scene.objects if o.type=='MESH' and ancestor(o,office) and not any(n in o.name for n in ['Core_floor','CORE_','_TOWER'])]
 targets=[]
 for o in keep:
  slots=[i for i,m in enumerate(o.data.materials) if m and 'V065_NATIVE_FLOOR_LIGHTING_UNLIT' in m.name]

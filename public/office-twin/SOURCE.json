@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.34.7",
+  "hostAdapterVersion": "0.34.8",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -134,7 +134,7 @@
     "models/wall-cutaway-v0314.png": "17c34caec900817098e47472923e6ab5839f1b166db72842b42bdad822c64b8b",
     "viewer/night-compositor.js": "e77b391b1317f08e4ee1ba8885e554e0974914d293ffd79a26ece9022b30dd77",
     "viewer/night-floor-bake.js": "a72c5ff96af7fbcb6283c35afcfe1c8cbcfae776adbd24eaa7d5f94f5e954b0c",
-    "models/floor-night-v0320.png": "e32086a0a4be0d7cea66fb1e8f2bb67f646e65e62c4d2a02247c76aa84c82fac",
+    "models/floor-night-v0320.png": "09613a582ff7977b28adf961abd88c2da00b6ec380054f60b55a4b8df6a8e2dc",
     "viewer/monitor-lighting.js": "da22a694a7b0ef4cb7f4afd497e288a8d6bfb83b65c13425ca0a584cf31a14ce",
     "viewer/astra-context-bake.js": "6e79d00d4ee9e341ae4bd16b17d5b4a7fb3f2bf3944798ccdcdf231ce722898a",
     "models/astra-context-v1/manifest.json": "3b54254e3fd7b21406e98b8007879ee4dacd5280392955b9dea018aa4003a116",
@@ -142,8 +142,8 @@
     "models/astra-context-v1/city.png": "3f1d72adf598f23039da952a8e63fac541bafc989c203f84778955ae08115526",
     "models/astra-context-v1/street.png": "4d8013d2a8f919fba701df6e6d5dd9f5673628449dea1b0fe74ba93151a3cabe",
     "viewer/structure-day-bake.js": "4a54ed5c2a83b3ece18246411b504245141f04531cffe8af0f4e94c097f94e42",
-    "models/astra-structure-v1/interior.json": "10aee7d2cdd5d709c910a34ce70ed92aa6f9cef84eb46ee88ff053e3321e0755",
-    "models/astra-structure-v1/interior.png": "ae7cdcee6b3b97729e49060a4ca65c260034e9ce201c9889345a231dce1f05a0",
+    "models/astra-structure-v1/interior.json": "13b39ef29226f7f3238612b0084070f61e4f190eba6eab9a19e9683e10af36c5",
+    "models/astra-structure-v1/interior.png": "128d3a6c83ead923b19f761061f61d2a0815199488653c2097c95d92273e7e17",
     "models/astra-structure-v1/interior-uv.buffer": "e890cc7b0bf2a5b8978776fd62819a55b5ae1c7a96746376ec58771f9518157e",
     "models/astra-structure-v1/exterior.json": "7b688e7c3d45447683291f1fe9928b7728bb8a5508c175e92ec4f3e7907489e4",
     "models/astra-structure-v1/exterior.png": "f4a6ae29c8e9ea46bdb1aa4b3f29f101ddbc8bb0f9333b3a336514af340aa9c2",
@@ -166,7 +166,8 @@
       "tools/office-twin/denoise-night-floor.py"
     ],
     "resolution": 2048,
-    "samples": 64
+    "samples": 64,
+    "revision": "0.34.8-no-towers"
   },
   "structureDayBake": {
     "version": "0.34.5",
@@ -191,13 +192,15 @@
       "floor": 105,
       "office": 105
     },
-    "smallIslands": "Original shading for triangle area below 8 texels or altitude below 3 texels"
+    "smallIslands": "Original shading for triangle area below 8 texels or altitude below 3 texels",
+    "interiorRevision": "0.34.8-no-towers"
   },
   "excludedFurniture": {
     "assetIds": [
       "tower"
     ],
     "sourceInstances": 77,
-    "scope": "Excluded before batching and visibility snapshots; original private model retained"
+    "scope": "Excluded before batching and visibility snapshots; original private model retained",
+    "rebakedFloorLighting": "Day and night ground receivers re-baked without tower occluders"
   }
 }

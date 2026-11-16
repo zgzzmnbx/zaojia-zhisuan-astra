@@ -29,6 +29,7 @@ points=[];faces=[];occpoints=[];occfaces=[];entries=[]
 for i,n in enumerate(g['nodes']):
  if 'mesh' not in n:continue
  ancestors=ancestry(i);names=[x.get('name','') for x in ancestors];name=n.get('name','');office='H1_F09_Office' in names
+ if any(x.get('extras',{}).get('furniture_asset_id')=='tower' for x in ancestors):continue
  # Same removed elevator/stair core as the web board; do not bake obsolete black footprints.
  if office and (name=='Core_floor' or name.startswith('CORE_') and not re.match(r'^CORE_(?:N_cut|S_cut|W_|E_)',name)):continue
  if kind=='interior' and not office:continue
