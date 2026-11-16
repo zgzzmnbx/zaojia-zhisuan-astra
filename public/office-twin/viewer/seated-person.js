@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {seatedMotion} from './person-motion.js';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 // Original lightweight geometry, inspired by readable toy proportions, not a copied rig.
 export function createPersonAssets(){
@@ -56,5 +57,24 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
     return state;
   }
   pose(0);
-  return {group,pose,handPositions:()=>arms.map(a=>a.hand.position.toArray()),seatHeight,head};
+  // Merge only rigid siblings. Head, breathing torso and every arm joint retain
+  // their own transforms; topology, normals, materials and raycast silhouette stay.
+  const dynamic=new Set(arms.flatMap(a=>[a.upper,a.fore,a.hand,a.elbowMesh])),owned=[];
+  for(const parent of [group,head]){
+    const byMaterial=new Map();
+    for(const child of parent.children){
+      if(!child.isMesh||dynamic.has(child))continue;
+      if(!byMaterial.has(child.material))byMaterial.set(child.material,[]);
+      byMaterial.get(child.material).push(child);
+    }
+    for(const [material,parts] of byMaterial){
+      if(parts.length<2)continue;
+      const geometries=parts.map(o=>{o.updateMatrix();return o.geometry.clone().applyMatrix4(o.matrix);});
+      const geometry=mergeGeometries(geometries,false);geometries.forEach(g=>g.dispose());
+      if(!geometry)continue;
+      const combined=new THREE.Mesh(geometry,material);combined.castShadow=true;combined.receiveShadow=true;
+      parent.add(combined);parts.forEach(o=>parent.remove(o));owned.push(geometry);
+    }
+  }
+  return {group,pose,handPositions:()=>arms.map(a=>a.hand.position.toArray()),seatHeight,head,dispose(){owned.forEach(g=>g.dispose());owned.length=0;}};
 }

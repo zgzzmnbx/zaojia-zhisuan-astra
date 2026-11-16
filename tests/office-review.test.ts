@@ -1,6 +1,7 @@
 import test from 'node:test';
 import * as THREE from 'three';
 import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.js';
+import {collectMonitorLighting} from '../public/office-twin/viewer/monitor-lighting.js';
 import {createFrameMeter} from '../public/office-twin/viewer/frame-meter.js';
 import {createVisibilityBlend} from '../public/office-twin/viewer/navigation-motion.js';
 import {summarizeOfficeBoard,hideBoardCore} from '../public/office-twin/viewer/office-board.js';
@@ -48,6 +49,30 @@ test('frame meter counts actual frames and resets sampling after suspension',()=
  assert.equal(meter.state().fps,60);assert.equal(meter.state().frames,61);
  meter.idle();assert.equal(label.textContent,'FPS · 静止');assert.equal(meter.state().fps,null);
  meter.suspend();meter.frame(100000);meter.frame(100100);assert.equal(meter.state().fps,null);
+});
+
+test('room furniture batching retains each screen position, facing, UV and named seat anchor',()=>{
+ const root=new THREE.Group(),floor=new THREE.Group(),office=new THREE.Group(),room=new THREE.Group();floor.name='Floor_09';floor.position.y=30;
+ office.name='H1_F09_Office';room.name='Room_test';room.userData.room_id='test';root.add(floor);floor.add(office);office.add(room);
+ const material=new THREE.MeshBasicMaterial(),screenMaterial=new THREE.MeshBasicMaterial();screenMaterial.name='ScreenBlue';
+ const desks:THREE.Mesh[]=[];
+ for(let i=0;i<2;i++){
+  const seat=new THREE.Group();seat.name=`Seat_${i}`;seat.userData.seat_id=`s${i}`;seat.position.x=i*4;seat.rotation.y=i*Math.PI;room.add(seat);
+  const desk=new THREE.Mesh(new THREE.BoxGeometry(),material);desk.name=`Desk_${i}`;seat.add(desk);desks.push(desk);
+  const monitor=new THREE.Mesh(new THREE.PlaneGeometry(),screenMaterial);monitor.position.set(0,1,.4);seat.add(monitor);
+ }
+ const {monitors}=collectMonitorLighting(root),before=desks.map(o=>new THREE.Box3().setFromObject(o));
+ const result=batchStaticGeometry(root);assert.equal(result.savedDraws,1);
+ const batch=room.children.find(o=>o.userData.vertexMonitor) as THREE.Mesh;assert.ok(batch);
+ assert.equal(batch.userData.seat_id,undefined);assert.equal(root.getObjectByName('Desk_0'),desks[0]);assert.equal(desks[0].visible,false);
+ const position=batch.geometry.getAttribute('officeSeatMonitor'),facing=batch.geometry.getAttribute('officeSeatFacing'),uv=batch.geometry.getAttribute('uv');
+ for(let i=0;i<2;i++)for(let v=0;v<24;v++){
+  const j=i*24+v,screen=monitors.get(`s${i}`)!;assert.ok(Math.abs(position.getX(j)-screen.position.x)<1e-6);assert.ok(Math.abs(position.getZ(j)-screen.position.z)<1e-6);
+  assert.equal(position.getW(j),1);assert.ok(Math.abs(facing.getZ(j)-screen.facing.z)<1e-6);assert.equal(uv.getX(j),desks[i].geometry.getAttribute('uv').getX(v));
+ }
+ const actual=new THREE.Box3().setFromObject(batch),expected=before[0].union(before[1]);
+ assert.ok(actual.min.distanceTo(expected.min)<1e-6&&actual.max.distanceTo(expected.max)<1e-6);
+ const blend=createVisibilityBlend(root);blend.sample(blend.destination(),.5);blend.sample(blend.destination(),1);assert.equal(desks[0].visible,false);
 });
 
 import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from '../public/office-twin/viewer/interior-light-plan.js';
@@ -216,7 +241,9 @@ test('3D drag accepts demo people but requires the same current review context a
 test('simple seated rig keeps hands near the keyboard through typing and reading',()=>{
  const assets=createPersonAssets();const rig=createSeatedPerson(assets,0,{seatHeight:.46,keyboard:[0,.80,.44]});
  for(const t of [0,3,7.5,10,13]){rig.pose(t);for(const hand of rig.handPositions()){assert.ok(hand[1]>.76&&hand[1]<.84);assert.ok(hand[2]>.40&&hand[2]<.48);}}
- assets.dispose();
+ let meshes=0;rig.group.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes++;});assert.equal(meshes,15);
+ const before=rig.head.quaternion.clone();rig.pose(18);assert.ok(!rig.head.quaternion.equals(before));
+ rig.dispose();assets.dispose();
 });
 
 import {assignmentRoute,createDemoAssignments} from '../public/office-twin/viewer/person-assignment.js';

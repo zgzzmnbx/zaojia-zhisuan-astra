@@ -6,13 +6,14 @@ import {LIGHTING_DEFAULTS,normalizeLighting} from './lighting-settings.js';
 import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from './interior-light-plan.js';
 import {createNightCompositor} from './night-compositor.js';
 import {createNightFloorBake,isNightFloorReceiver} from './night-floor-bake.js';
+import {collectMonitorLighting} from './monitor-lighting.js';
 
 // Adapted to metre-scale OfficeRoom nodes from Astra's authored studio night profile.
 // Static floors use a Cycles night bake; furniture/people keep adjustable display lighting.
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
 const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10};
-export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared,bakedFloor=false){
+export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared,bakedFloor=false,vertexMonitor=false){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
   const key=previousKey();
@@ -24,12 +25,15 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
     Object.assign(shader.uniforms,{officeFloorGain:shared.floorGain,officeDayGains:shared.dayGains,officeWhite:shared.white,officeContrast:shared.contrast,officeNightGains:shared.nightGains,officeNightLamps:shared.lamps});
     Object.assign(shader.uniforms,{officeWindowBlue:shared.windowBlue,officeWindowStrength:shared.windowStrength,officeGroundTint:shared.groundTint,officeAmbient:shared.ambient,officeRoomLightCount:roomLighting.lightCount,officeRoomLights:roomLighting.lightPositions,officeRoomColors:roomLighting.lightColors,officeRoomBounds:roomLighting.lightBounds});
     shader.vertexShader='varying vec2 officeBakeUV;varying vec3 officeWorldPosition,officeWorldNormal;\n'+shader.vertexShader;
+    if(vertexMonitor)shader.vertexShader='attribute vec4 officeSeatMonitor;attribute vec3 officeSeatFacing;varying vec4 officeLocalMonitor;varying vec3 officeLocalFacing;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
+      ${vertexMonitor?'officeLocalMonitor=officeSeatMonitor;officeLocalFacing=officeSeatFacing;':''}
       officeWorldPosition=(modelMatrix*vec4(transformed,1.)).xyz;
       officeBakeUV=uv;
       officeWorldNormal=normalize(mat3(modelMatrix)*normal);`);
     shader.fragmentShader='uniform sampler2D officeNightFloorMap;uniform float officeNightFloorReady,officeBakedFloor;varying vec2 officeBakeUV;varying vec3 officeWorldPosition,officeWorldNormal;\nuniform vec4 officeDayGains,officeNightGains;uniform vec2 officeWhite,officeNightLamps;uniform float officeContrast,officeFloorGain;\nuniform mat4 officeFloorInverse;\nuniform vec3 officeMonitorPosition,officeMonitorFacing;\nuniform float officeMonitorEnabled;\nuniform float officeNight,officeBloomOnly,officeNightExposure,officeNightBlue,officeNightRole;\n'+shader.fragmentShader;
     shader.fragmentShader=`uniform float officeWindowBlue,officeWindowStrength;uniform vec3 officeGroundTint;uniform float officeAmbient;uniform int officeRoomLightCount;uniform vec4 officeRoomLights[${MAX_OFFICE_LIGHTS}],officeRoomBounds[${MAX_OFFICE_LIGHTS}];uniform vec3 officeRoomColors[${MAX_OFFICE_LIGHTS}];\n`+shader.fragmentShader;
+    if(vertexMonitor)shader.fragmentShader='varying vec4 officeLocalMonitor;varying vec3 officeLocalFacing;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
       if(officeNight<.5){
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
@@ -107,10 +111,10 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
             float occlusion=.18+.82*lum;
             shell+=officeRoomColors[i]*pool*receiving*occlusion*officeNightGains.y;
           }
-          if(officeMonitorEnabled>.5 && (officeNightRole==6.||officeNightRole==9.)){
-            vec3 offset=p-officeMonitorPosition;
+          if(${vertexMonitor?'officeLocalMonitor.w':'officeMonitorEnabled'}>.5 && (officeNightRole==6.||officeNightRole==9.)){
+            vec3 offset=p-${vertexMonitor?'officeLocalMonitor.xyz':'officeMonitorPosition'};
             float distanceToScreen=length(offset);
-            float front=smoothstep(-.04,.18,dot(offset,officeMonitorFacing));
+            float front=smoothstep(-.04,.18,dot(offset,${vertexMonitor?'officeLocalFacing':'officeMonitorFacing'}));
             float falloff=pow(max(0.,1.-distanceToScreen/1.5),2.)*front;
             float receivingScreen=.25+.75*max(0.,dot(localNormal,-offset/max(.001,distanceToScreen)));
             // Local display spill for the seat's furniture/person, never through walls.
@@ -129,7 +133,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|office-studio-v0311|'+role;
+  material.customProgramCacheKey=()=>key+'|office-studio-v0330|'+role+'|'+vertexMonitor;
   material.needsUpdate=true;
 }
 
@@ -189,16 +193,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
       addAccentLights(model);
       model.updateMatrixWorld(true);
       if(floorRoot)shared.floorInverse.value.copy(floorRoot.matrixWorld).invert();
-      const monitors=new Map();screenCount=0;
-      model.traverse(object=>{
-        if(!object.isMesh||!object.geometry||![].concat(object.material||[]).some(m=>nightRole(object,m)==='screen'))return;
-        screenCount++;
-        const seat=nightSeatId(object);if(!seat)return;
-        object.geometry.computeBoundingBox();
-        const position=object.geometry.boundingBox.getCenter(new THREE.Vector3()).applyMatrix4(object.matrixWorld).applyMatrix4(shared.floorInverse.value);
-        const facing=new THREE.Vector3(0,0,1).transformDirection(object.matrixWorld).transformDirection(shared.floorInverse.value);
-        monitors.set(seat,{position,facing});
-      });
+      const bindings=collectMonitorLighting(model),monitors=bindings.monitors;screenCount=bindings.screenCount;
       // Clone by role because the same baked atlas is shared by windows and furniture.
       const copies=new Map();
       model.traverse(object=>{
@@ -208,11 +203,12 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
           const role=nightRole(object,mat);counts[role]=(counts[role]||0)+1;
           let roomId=null;for(let n=object;n&&!roomId;n=n.parent)roomId=n.userData.room_id;
           const bakedFloor=isNightFloorReceiver(object,mat);
-          const cloneKey=role+'|'+(monitor?seat:'')+'|'+(roomId||'')+'|'+bakedFloor;
+          const vertexMonitor=!!object.userData.vertexMonitor;
+          const cloneKey=role+'|'+(monitor?seat:'')+'|'+(roomId||'')+'|'+bakedFloor+'|'+vertexMonitor;
           let byRole=copies.get(mat);if(!byRole){byRole=new Map();copies.set(mat,byRole);}
           if(!byRole.has(cloneKey)){
             const copy=mat.clone();copy.onBeforeCompile=mat.onBeforeCompile;copy.customProgramCacheKey=mat.customProgramCacheKey;
-            attachNightShader(copy,role,shared,monitor,['interior','floor'].includes(role)&&roomLighting.has(roomId)?roomLighting.get(roomId):shared,bakedFloor);materials.add(copy);
+            attachNightShader(copy,role,shared,monitor,['interior','floor'].includes(role)&&roomLighting.has(roomId)?roomLighting.get(roomId):shared,bakedFloor,vertexMonitor);materials.add(copy);
             colorSources.push({copy,source:mat});byRole.set(cloneKey,copy);
           }
           return byRole.get(cloneKey);

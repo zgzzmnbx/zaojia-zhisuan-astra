@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {classifyNightRole,nightSeatId} from './night-lighting-policy.js';
+import {collectMonitorLighting,addMonitorAttributes} from './monitor-lighting.js';
 
 function boundaryFor(object,root){
   let boundary=object.parent;
@@ -12,6 +13,7 @@ function boundaryFor(object,root){
 // Keep original named nodes for anchors, room bounds and the source-model contract.
 export function batchStaticGeometry(root){
   root.updateMatrixWorld(true);
+  const {monitors}=collectMonitorLighting(root);
   const groups=new Map();let sources=0,batches=0;
   root.traverse(object=>{
     const g=object.geometry,m=object.material;
@@ -23,18 +25,24 @@ export function batchStaticGeometry(root){
     if(!boundary)return;
     const seat=nightSeatId(object)||'';
     const format=Object.entries(g.attributes).map(([k,a])=>`${k}:${a.itemSize}:${a.normalized}:${a.array.constructor.name}`).sort().join(',');
-    const key=[boundary.uuid,m.uuid,role,seat,format,!!g.index,object.renderOrder,object.castShadow,object.receiveShadow].join('|');
-    if(!groups.has(key))groups.set(key,{boundary,material:m,role,seat,objects:[]});
+    // Only real office seats with known screen bindings may share a room batch.
+    // Keep unknown seats isolated rather than losing their lighting contract.
+    const crossSeat=role==='interior'&&monitors.has(seat);
+    const key=[boundary.uuid,m.uuid,role,crossSeat?'room-seats':seat,format,!!g.index,object.renderOrder,object.castShadow,object.receiveShadow].join('|');
+    if(!groups.has(key))groups.set(key,{boundary,material:m,role,seat,crossSeat,objects:[]});
     groups.get(key).objects.push(object);
   });
-  for(const {boundary,material,role,seat,objects} of groups.values()){
+  for(const {boundary,material,role,seat,crossSeat,objects} of groups.values()){
     if(objects.length<2)continue;
     const inverse=boundary.matrixWorld.clone().invert();
-    const parts=objects.map(o=>o.geometry.clone().applyMatrix4(new THREE.Matrix4().multiplyMatrices(inverse,o.matrixWorld)));
+    const parts=objects.map(o=>{
+      const geometry=o.geometry.clone().applyMatrix4(new THREE.Matrix4().multiplyMatrices(inverse,o.matrixWorld));
+      return crossSeat?addMonitorAttributes(geometry,monitors.get(nightSeatId(o))):geometry;
+    });
     const geometry=mergeGeometries(parts,false);parts.forEach(g=>g.dispose());
     if(!geometry)continue;
     const mesh=new THREE.Mesh(geometry,material);mesh.name='StaticBatch_'+batches;
-    mesh.userData={night_role:role,seat_id:seat||undefined,staticBatch:true};
+    mesh.userData={night_role:role,seat_id:crossSeat?undefined:seat||undefined,staticBatch:true,vertexMonitor:crossSeat};
     mesh.castShadow=objects[0].castShadow;mesh.receiveShadow=objects[0].receiveShadow;mesh.renderOrder=objects[0].renderOrder;
     boundary.add(mesh);
     for(const object of objects){object.visible=false;object.userData.staticBatchSource=true;}

@@ -29,6 +29,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   }
   function build(){
     rigRevision++;
+    actors.forEach(a=>a.rig.dispose());
     root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();
     business.employees.forEach((person,index)=>{
       const seatId=seats[index]?.seat_id,anchor=model.getObjectByName(`PersonAnchor_${seatId}`);
@@ -128,5 +129,5 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     position:id=>actors.get(id)?.group.position.clone(),
     isAnimating:()=>!disposed&&root.visible&&motionEnabled&&!reduced.matches&&actors.size>0,
     getState:()=>({count:actors.size,rigRevision,selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.yaw,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,dragging:!!a.dragPosition}))}),
-    dispose(){disposed=true;scene.remove(root);assets.dispose();motionRow.remove();menu.remove();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
+    dispose(){disposed=true;scene.remove(root);actors.forEach(a=>a.rig.dispose());assets.dispose();motionRow.remove();menu.remove();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
 }
