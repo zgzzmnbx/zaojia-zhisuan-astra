@@ -6,6 +6,7 @@ let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 let dragStart=null,chatRect=null,completedNativeDrag=null;
+let artifactObserver=null;
 const samples=['某支线工程控制价复核','某站场改造结算复核','某研发基地勘察测量复核','某数字化项目投资复核'];
 const $=selector=>document.querySelector(selector);
 export function element(tag,text,className='') {
@@ -23,7 +24,6 @@ export function setDraggingPerson(id) {
   dragStart=draggingPerson?{context:snapshot.context,revision:snapshot.revision,employeeId:id,name:draggingPerson.name}:null;
   post('person-drag',dragStart||{});
   document.documentElement.classList.toggle('host-dragging',!!draggingPerson);
-  if(draggingPerson&&$('#space-cards-panel').hidden)$('#space-card-toggle').click();
   renderDropzone();
   if(!draggingPerson)$('#host-artifact').classList.remove('is-dragover');
 }
@@ -113,7 +113,13 @@ export const officeClient={
     const rail=$('.office-inspector'),browser=element('article','','host-browser-card');
     browser.setAttribute('aria-label','任务、人员与空间');
     while(rail.firstChild)browser.append(rail.firstChild);
-    rail.append(artifact,browser);
+    rail.append(browser);
+    const workspace=rail.parentElement;
+    workspace.insertBefore(artifact,rail);
+    artifactObserver=new ResizeObserver(()=>{
+      workspace.style.setProperty('--host-artifact-height',`${artifact.getBoundingClientRect().height}px`);
+    });
+    artifactObserver.observe(artifact);
     for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#render-compare','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version','#review-status','#people-panel>.office-description'])$(selector)?.setAttribute('hidden','');
     $('label[for="task-person-filter"]')?.setAttribute('hidden','');
     document.documentElement.dataset.hostReady='true';
@@ -123,5 +129,5 @@ export const officeClient={
   getState:()=>snapshot,
   getMotion:()=>motionSettings,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
-  dispose(){window.removeEventListener('message',receive);listeners.clear();},
+  dispose(){window.removeEventListener('message',receive);artifactObserver?.disconnect();listeners.clear();},
 };

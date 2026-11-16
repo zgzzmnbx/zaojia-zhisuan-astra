@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.36.0",
+  "hostAdapterVersion": "0.36.1",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",

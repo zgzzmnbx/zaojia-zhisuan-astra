@@ -297,7 +297,7 @@ export async function mountOfficeViewer() {
     const aspect = width/height;
     camera.left = -fitHeight*aspect/2; camera.right = fitHeight*aspect/2;
     camera.top = fitHeight/2; camera.bottom = -fitHeight/2;
-    const right=document.querySelector('#space-cards-panel')?.hidden?0:300;
+    const right=document.querySelector('#host-artifact')||!document.querySelector('#space-cards-panel')?.hidden?300:0;
     const left=parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft;
     camera.setViewOffset(width,height,-(left-right)/2,0,width,height);
     camera.updateProjectionMatrix(); requestFrame();

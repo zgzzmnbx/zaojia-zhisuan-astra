@@ -102,12 +102,12 @@ html[data-astra-scheme="dark"] .office-floor-label,html[data-astra-scheme="dark"
 .office-window-options{display:flex;gap:16px;border:0;padding:8px 0 12px;margin:0}.office-window-options legend{font-size:13px;padding:0;margin-bottom:8px}.office-window-options label,.office-shadow-option{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}.office-shadow-option{padding:12px 0}
 
 /* Separate floating cards; the gap remains a window onto the live scene. */
-body.studio.office-embed .office-workspace>.office-inspector{gap:12px;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none;overflow:visible;pointer-events:none}
+body.studio.office-embed .office-workspace>.office-inspector{top:calc(32px + var(--host-artifact-height,180px));bottom:16px;max-height:calc(100% - 48px - var(--host-artifact-height,180px));background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none;overflow:visible;pointer-events:none}
 .host-artifact,.host-browser-card{pointer-events:auto;border:1px solid var(--astra-line);border-radius:16px;background:color-mix(in srgb,var(--astra-paper) 92%,transparent);backdrop-filter:blur(20px);box-shadow:0 12px 36px #173d5918;min-height:0;min-width:0}
-body.studio.office-embed .office-inspector .host-artifact{flex:none;background:color-mix(in srgb,var(--astra-paper) 92%,transparent);max-height:38%;overflow:auto}
+body.studio.office-embed .office-workspace>.host-artifact{position:absolute;z-index:6;top:16px;right:16px;width:var(--cards-width);max-height:38%;overflow:auto;overscroll-behavior:contain}
 .host-browser-card{display:flex;flex-direction:column;flex:0 1 auto;overflow:hidden}
 .host-browser-card>.office-rail-header{flex:none;border-bottom:1px solid var(--astra-line)}
-body.studio .office-workspace>.office-inspector .host-browser-card>.office-inspector-body{padding:12px;min-height:0;overflow:auto}
+body.studio .office-workspace>.office-inspector .host-browser-card>.office-inspector-body{padding:12px;min-height:0;overflow:auto;overscroll-behavior:contain}
 .host-browser-card #task-list{display:grid;gap:10px}
 .host-browser-card .host-task-row{padding:12px;border:1px solid var(--astra-line);border-radius:10px;background:var(--astra-paper)}
 .host-browser-card .host-task-row .host-task-line:last-child{margin-bottom:0}
