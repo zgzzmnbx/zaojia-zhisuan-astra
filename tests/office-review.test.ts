@@ -248,8 +248,8 @@ test('floor placement excludes furniture, walls, core and void; meeting drops ch
  mesh('wall',[.4,2,4],[-7,1,0]);mesh('table',[2,1,2],[5,.55,5]);const core=new THREE.Group();core.name='Core_floor';office.add(core);core.add(mesh('baked-core-part',[2,.1,2],[0,0,0]));core.visible=false;
  const layout={metadata:{recommended_px_per_m:10,recommended_world_origin_px:[0,0]},rooms:[{id:'R_N',bounds_px:[20,20,80,80]}]};
  const surface=createPlacementSurface({model,floor,layout}),drop=(x,z,occupied=[])=>surface.resolve(new THREE.Raycaster(new THREE.Vector3(x,40,z+32),new THREE.Vector3(0,-1,0)),occupied);
- assert.equal(drop(-7,-7).valid,true);for(const [x,z] of [[-4,-4],[-7,0],[0,0],[15,0]])assert.equal(drop(x,z).valid,false);
- assert.equal(drop(-7,-7,[{x:-7,z:-7}]).valid,false);
+ assert.equal(drop(-7,-7).valid,true);for(const [x,z] of [[-4,-4],[-7,0],[0,0],[15,0]]){const p=drop(x,z);assert.ok(p.valid&&p.snapped);assert.ok(surface.clear(p));}
+ const occupied=[{x:-7,z:-7}],snapped=drop(-7,-7,occupied);assert.ok(snapped.valid&&snapped.snapped&&surface.clear(snapped,occupied));
  const first=drop(5,5),second=drop(5,5,[first]);assert.ok(first.valid&&first.meeting&&second.valid&&second.meeting);assert.ok(Math.hypot(first.x-second.x,first.z-second.z)>=.72);assert.ok(Math.abs(first.x-5)>1.3||Math.abs(first.z-5)>1.3);
  floor.position.y+=3;floor.position.z+=8;model.updateMatrixWorld(true);const moved=surface.resolve(new THREE.Raycaster(new THREE.Vector3(-7,45,33),new THREE.Vector3(0,-1,0)));assert.equal(moved.valid,true);assert.ok(Math.abs(moved.z+7)<.001);
  assert.equal(nearestFreePoint([{x:1,z:1}],{x:0,z:0},[{x:1,z:1}]),null);
@@ -617,4 +617,21 @@ test('office idle deadline restarts on input, honors saved delay and resumes foc
  orbit.configure({enabled:true,delay:10});advance(9999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
  allowed=false;orbit.sync();advance(60000);assert.equal(orbit.state().running,false);allowed=true;orbit.sync();advance(10000);assert.equal(orbit.state().running,true);
  orbit.toggle();advance(60000);assert.equal(orbit.state().running,false);orbit.dispose();assert.equal(timers.size,0);
+});
+import {createWalkGrid,connectedWalkArea,findWalkRoute,createReturnWalk} from '../public/office-twin/viewer/person-navigation.js';
+test('return routes use both axes, avoid walls, pause during pickup and finish seated at assigned desk',()=>{
+ const clear=p=>!(p.x>-.3&&p.x<.3&&p.z<2);
+ const segment=(a,b)=>Array.from({length:51},(_,i)=>({x:a.x+(b.x-a.x)*i/50,z:a.z+(b.z-a.z)*i/50})).every(clear);
+ const graph=connectedWalkArea(createWalkGrid([-4,-4,4,4],clear,segment,.2)),start={x:-2,z:-2,yaw:0},home={x:2,z:-2,yaw:Math.PI};
+ const route=findWalkRoute(graph,start,home);assert.ok(route?.some(p=>p.z>=2));
+ let previous=start;for(const p of route){assert.ok(segment(previous,p));previous=p;}
+ const walk=createReturnWalk(graph,start,home,null,.2),paused=walk.state();for(let i=0;i<100;i++)walk.step(.05,false);assert.deepEqual(walk.state(),paused);
+ let state;for(let i=0;i<3000;i++){state=walk.step(.05);assert.ok(clear(state));if(state.done)break;}
+ assert.equal(state.done,true);assert.equal(state.rise,0);assert.equal(state.stage,'seated');assert.ok(Math.hypot(state.x-home.x,state.z-home.z)<.01);assert.ok(Math.abs(Math.atan2(Math.sin(state.yaw-home.yaw),Math.cos(state.yaw-home.yaw)))<.15);
+ const disconnected=createWalkGrid([-4,-4,4,4],p=>Math.abs(p.x)>.4,(a,b)=>Math.sign(a.x)===Math.sign(b.x),.2);assert.equal(findWalkRoute(disconnected,start,home),null);
+});
+test('return walker waits for a blocked doorway and retries after it clears',()=>{
+ const graph=createWalkGrid([0,0,5,1],()=>true,()=>true,.2),walk=createReturnWalk(graph,{x:.1,z:.5},{x:4.9,z:.5,yaw:0},null,0);
+ for(let i=0;i<160;i++)walk.step(.05,true,[{x:2.5,z:.5}]);assert.equal(walk.state().done,false);
+ for(let i=0;i<1500&&!walk.state().done;i++)walk.step(.05,true,[]);assert.equal(walk.state().done,true);
 });

@@ -61,7 +61,7 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
     const destination=canInteract()&&g.dragging&&!over&&!chat&&overFloor&&canPlacePerson(g.start,officeClient.getState(),g.id)?people.dropTarget?.(rayAt(event),g.id):null;
     finish(false);event.stopImmediatePropagation();suppressClick=g.dragging;
     if(accepted){togglePerson(g.id,true);if(chat)notifyHostDrop(g.id);}
-    else if(destination?.valid){people.place(g.id,destination);if(destination.meeting&&canDropPerson(g.start,officeClient.getState(),g.id))togglePerson(g.id,true);}
+    else if(destination?.valid)people.place(g.id,destination);
     else if(!g.dragging)pendingClick={id:g.id,point:{x:event.clientX,y:event.clientY}};
   }
   for(const surface of surfaces)listen(surface,'pointerup',up,true);

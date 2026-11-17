@@ -52,7 +52,7 @@ export function createRoomWalkGraph(layout,roomId){
 export function createPersonWander(graph,start,seed=1,occupied=[],ownBounds=null){
   if(!graph?.cells.length)return null;
   const cells=graph.cells,home={x:start.x,z:start.z},homeYaw=start.yaw??0;
-  const viable=cells.map((c,i)=>({c,i})).filter(({c})=>c.links.length&&occupied.every(p=>Math.hypot(p.x-c.x,p.z-c.z)>.75)&&(!graph.clearSegment||graph.clearSegment(home,c,ownBounds)));
+  const viable=cells.map((c,i)=>({c,i})).filter(({c})=>Math.hypot(c.x-home.x,c.z-home.z)<3&&c.links.length&&occupied.every(p=>Math.hypot(p.x-c.x,p.z-c.z)>.75)&&(!graph.clearSegment||graph.clearSegment(home,c,ownBounds)));
   viable.sort((a,b)=>Math.hypot(a.c.x-start.x,a.c.z-start.z)-Math.hypot(b.c.x-start.x,b.c.z-start.z));
   if(!viable.length)return null;
   const entry=viable[0].i,activities=['look','stretch','think'];
@@ -61,7 +61,7 @@ export function createPersonWander(graph,start,seed=1,occupied=[],ownBounds=null
   const change=next=>{stage=next;elapsed=0;};
   function plan(others){
     const queue=[entry],parents=new Map([[entry,null]]);
-    for(let n=0;n<queue.length;n++)for(const next of cells[queue[n]].links)if(!parents.has(next)&&others.every(p=>Math.hypot(cells[next].x-p.x,cells[next].z-p.z)>.75)){parents.set(next,queue[n]);queue.push(next);}
+    for(let n=0;n<queue.length;n++)for(const next of cells[queue[n]].links)if(!parents.has(next)&&Math.hypot(cells[next].x-home.x,cells[next].z-home.z)<9&&others.every(p=>Math.hypot(cells[next].x-p.x,cells[next].z-p.z)>.75)){parents.set(next,queue[n]);queue.push(next);}
     const choices=queue.filter(i=>Math.hypot(cells[i].x-home.x,cells[i].z-home.z)>1.4);
     if(!choices.length)return false;
     // A farther open spot for a visual break; short routes for stretches and
