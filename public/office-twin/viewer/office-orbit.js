@@ -1,6 +1,24 @@
 import {createOrbitSweep,normalizeOrbitMotion} from './astra-orbit-motion.js';
 import {createIdleOrbit} from './astra-idle-orbit.js';
 
+// A drag can finish in the host chat, outside the iframe's native pointer stream.
+export function bindOfficeOrbitHold({listen,document,window,orbit}){
+  const pointers=new Set();let nativeDrag=false,held=false;
+  const sync=()=>{const next=nativeDrag||pointers.size>0;if(next!==held){held=next;orbit.hold(next);}};
+  const release=event=>{pointers.delete(event.pointerId);sync();};
+  const reset=()=>{pointers.clear();nativeDrag=false;sync();};
+  listen(document,'pointerdown',event=>{pointers.add(event.pointerId);sync();},true);
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])listen(window,type,release,true);
+  listen(window,'pointermove',event=>{if(event.pointerType!=='touch'&&event.buttons===0)release(event);},true);
+  listen(document,'dragstart',()=>{nativeDrag=true;sync();},true);
+  listen(document,'dragend',reset,true);
+  listen(window,'office-chat-pointer',event=>{if(['up','cancel'].includes(event.detail?.phase))reset();});
+  listen(window,'blur',reset);
+  listen(document,'visibilitychange',()=>{if(document.hidden)reset();});
+  listen(window,'pagehide',reset);
+  return reset;
+}
+
 export function createOfficeOrbit({canRun,requestFrame,change=()=>{},clock={set:(fn,ms)=>setTimeout(fn,ms),clear:id=>clearTimeout(id)}}){
   let settings={enabled:false,delay:0,blocked:false,motion:normalizeOrbitMotion(null)};
   let paused=false,focused=false,running=false,last=0,degrees=0,key='';

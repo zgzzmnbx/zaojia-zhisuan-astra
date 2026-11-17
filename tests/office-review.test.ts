@@ -148,7 +148,7 @@ test('old card cleanup cannot clear a newer office context and revisions are mon
 
 import fs from 'node:fs';
 import ts from 'typescript';
-import {createOfficeOrbit} from '../public/office-twin/viewer/office-orbit.js';
+import {createOfficeOrbit,bindOfficeOrbitHold} from '../public/office-twin/viewer/office-orbit.js';
 import {officeCameraLimits,officeSweepDirection} from '../public/office-twin/viewer/office-camera-limits.js';
 import {orbitSweepAngle} from '../03-Src/studio/project-sandbox/orbit-motion.ts';
 test('office generated motion matches Astra implementations across checkout line endings',()=>{
@@ -638,6 +638,24 @@ test('office idle deadline restarts on input, honors saved delay and resumes foc
  orbit.configure({enabled:true,delay:10});advance(9999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
  allowed=false;orbit.sync();advance(60000);assert.equal(orbit.state().running,false);allowed=true;orbit.sync();advance(10000);assert.equal(orbit.state().running,true);
  orbit.toggle();advance(60000);assert.equal(orbit.state().running,false);orbit.dispose();assert.equal(timers.size,0);
+});
+
+test('office orbit releases host drops, lost capture and interrupted gestures without overriding manual pause',()=>{
+ let now=0,id=0;const timers=new Map<number,{at:number,fn:()=>void}>();
+ const document=Object.assign(new EventTarget(),{hidden:false}),window=new EventTarget();
+ const orbit=createOfficeOrbit({canRun:()=>!document.hidden,requestFrame(){},clock:{set(fn:()=>void,ms:number){timers.set(++id,{at:now+ms,fn});return id;},clear(key:number){timers.delete(key);}}});
+ const advance=(ms=5000)=>{now+=ms;for(const [key,t] of [...timers])if(t.at<=now){timers.delete(key);t.fn();}};
+ const emit=(target:EventTarget,type:string,data={})=>target.dispatchEvent(Object.assign(new Event(type),data));
+ const reset=bindOfficeOrbitHold({listen:(target:EventTarget,type:string,fn:EventListener)=>target.addEventListener(type,fn),document,window,orbit});
+ orbit.configure({enabled:true,delay:0});advance();assert.equal(orbit.state().running,true);
+ const down=(pointerId=1)=>{emit(document,'pointerdown',{pointerId});advance(20000);assert.equal(orbit.state().running,false);};
+ const resumed=()=>{advance(4999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);};
+ for(const [type,data] of [['pointerup',{pointerId:1}],['pointercancel',{pointerId:1}],['lostpointercapture',{pointerId:1}],['office-chat-pointer',{detail:{phase:'up'}}],['office-chat-pointer',{detail:{phase:'cancel'}}],['blur',{}],['pagehide',{}],['pointermove',{pointerId:1,pointerType:'mouse',buttons:0}]] as const){down();emit(window,type,data);resumed();}
+ down(1);down(2);emit(window,'pointerup',{pointerId:1});advance();assert.equal(orbit.state().running,false);emit(window,'pointerup',{pointerId:2});resumed();
+ down();emit(document,'dragstart');emit(window,'pointerup',{pointerId:1});advance();assert.equal(orbit.state().running,false);emit(document,'dragend');resumed();
+ down();document.hidden=true;emit(document,'visibilitychange');orbit.sync();advance(60000);assert.equal(orbit.state().running,false);document.hidden=false;orbit.sync();resumed();
+ down();reset();resumed();
+ orbit.toggle();down();emit(window,'office-chat-pointer',{detail:{phase:'up'}});advance(60000);assert.equal(orbit.state().running,false);orbit.toggle();resumed();orbit.dispose();assert.equal(timers.size,0);
 });
 import {createWalkGrid,connectedWalkArea,findWalkRoute,createReturnWalk} from '../public/office-twin/viewer/person-navigation.js';
 test('return routes use both axes, avoid walls, pause during pickup and finish seated at assigned desk',()=>{

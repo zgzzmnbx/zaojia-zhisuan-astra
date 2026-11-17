@@ -5,7 +5,7 @@ import {attachAstraContextBake} from './astra-context-bake.js';
 import { motionProgress, createVisibilityBlend } from './navigation-motion.js?v=0.6.7';
 import {VERSION,ASSET_VERSION,BAKED_MODEL,REALTIME_MODEL} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
-import {createOfficeOrbit} from './office-orbit.js';
+import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js';
@@ -61,7 +61,7 @@ export async function mountOfficeViewer() {
   let contextBake=null,structureBake=null;
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
-  let people, nightEnvironment, visibilityBlend, orbit;
+  let people, nightEnvironment, visibilityBlend, orbit, releaseOrbitHold;
   let floorLabel,previewCamera,officeBoard,seatLabels;
   let orbitDirection=1,wasOrbitRunning=false;
   let business=officeClient.getState(),bridgeContext={id:null,revision:0};
@@ -227,7 +227,7 @@ export async function mountOfficeViewer() {
   function setVisible(visible) {
     if (typeof visible !== 'boolean') throw new TypeError('visible must be boolean');
     const returning=visible&&!requestedVisible&&loadReport.webglRendered&&!entrance.state().running;
-    requestedVisible = visible;orbit?.sync();
+    requestedVisible = visible;if(!visible)releaseOrbitHold?.();orbit?.sync();
     if(!visible){frameMeter.suspend();floorLabel?.restore();people?.suspend();people?.closeMenu();entrance.suspend();lastFrameTime=null;}
     if(returning&&params.get('entrance')==='office'){setView('building',{animate:false,automatic:true});entrance.start();}
     if (!active() && frame) { cancelAnimationFrame(frame); frame = 0; }
@@ -495,7 +495,7 @@ export async function mountOfficeViewer() {
     orbitButton.innerHTML=icon(paused?'play':'pause');
     orbitButton.querySelector('svg').style.pointerEvents='none';
   };
-  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!entrance.state().running&&!motionPreference.matches&&!transition&&!(!$('#picture-panel').hidden&&!$('#rail-space').hidden&&!$('#space-cards-panel').hidden)});
+  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!entrance.state().running&&!motionPreference.matches&&!transition});
   orbit.configure(officeClient.getMotion());
   function editWorkstations(event){
     const state=event.detail;people?.closeMenu();orbit.sync();resize();
@@ -509,13 +509,8 @@ export async function mountOfficeViewer() {
   listen(window,'office-host-motion',event=>orbit.configure(event.detail));
   listen(window,'office-person-menu',event=>orbit.focus(event.detail.open));
   listen(orbitButton,'click',()=>{entrance.cancel();orbit.toggle();});
-  let cameraHeld=false;
-  listen(viewport,'pointerdown',()=>{cameraHeld=true;orbit.hold(true);},true);
-  const release=()=>{if(cameraHeld){cameraHeld=false;orbit.hold(false);}};
-  listen(window,'pointerup',release,true);listen(window,'pointercancel',release,true);
-  listen(document,'dragstart',()=>{cameraHeld=true;orbit.hold(true);},true);listen(document,'dragend',release);
-  listen(window,'blur',release);
-  for(const type of ['wheel','keydown'])listen(document,type,event=>{if(viewport.contains(event.target)||orbit.state().delay>0)orbit.activity();},{capture:true,passive:true});
+  releaseOrbitHold=bindOfficeOrbitHold({listen,document,window,orbit});
+  for(const type of ['wheel','keydown'])listen(document,type,()=>orbit.activity(),{capture:true,passive:true});
   listen(document,'click',()=>{orbit.sync();orbit.activity();requestFrame();});
   listen(document,'input',()=>orbit.activity(),true);
 
@@ -733,7 +728,7 @@ export async function mountOfficeViewer() {
       enter:()=>setView('office')});
     resizeObserver = new ResizeObserver(resize); resizeObserver.observe(viewport);
     intersectionObserver = new IntersectionObserver(entries => {
-      inView = entries.some(entry => entry.isIntersecting);orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();lastFrameTime=null;}
+      inView = entries.some(entry => entry.isIntersecting);if(!inView)releaseOrbitHold?.();orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();lastFrameTime=null;}
       if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; }
     });
     intersectionObserver.observe(viewport);
