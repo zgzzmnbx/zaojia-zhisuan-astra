@@ -227,11 +227,33 @@ test('desk spill binds people and furniture to their own seat and leaves room wa
 });
 
 import {seatFacing,createPersonClock,seatedMotion} from '../public/office-twin/viewer/person-motion.js';
-import {canDropPerson} from '../public/office-twin/viewer/person-pointer.js';
+import {canDropPerson,canPlacePerson} from '../public/office-twin/viewer/person-pointer.js';
+import {createPlacementSurface,nearestFreePoint} from '../public/office-twin/viewer/person-placement.js';
 import {createPersonAssets,createSeatedPerson} from '../public/office-twin/viewer/seated-person.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {preparePolyforkTemplate,createPolyforkPerson,normalizePersonStyle} from '../public/office-twin/viewer/people/polyfork-person.js';
 import {personScreenBounds} from '../public/office-twin/viewer/person-drag-overlay.js';
+
+test('physical placement keeps review permission and context checks independent',()=>{
+ const start={context:'a',revision:1},snapshot={...start,enabled:false,employees:[{id:'owner',selectable:false}]};
+ assert.equal(canPlacePerson(start,snapshot,'owner'),true);assert.equal(canDropPerson(start,snapshot,'owner'),false);
+ assert.equal(canPlacePerson(start,{...snapshot,context:'b'},'owner'),false);assert.equal(canPlacePerson(start,{...snapshot,revision:2},'owner'),false);assert.equal(canPlacePerson(start,snapshot,'missing'),false);
+});
+test('floor placement excludes furniture, walls, core and void; meeting drops choose separate aisle spots',()=>{
+ const model=new THREE.Group(),floor=new THREE.Group(),office=new THREE.Group();floor.name='Floor_09';floor.position.set(0,30,32);office.name='H1_F09_Office';model.add(floor);floor.add(office);
+ const mesh=(name,size,pos)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(...size),new THREE.MeshBasicMaterial());m.name=name;m.position.set(...pos);office.add(m);return m;};
+ const slab=new THREE.Group();slab.name='H1_F09_floor_slab';office.add(slab);slab.add(mesh('baked-floor-part',[20,.1,20],[0,0,0]));const anchor=new THREE.Object3D();anchor.name='PersonAnchor_SEAT_SW_08';anchor.position.y=.05;office.add(anchor);
+ const desk=mesh('desk',[2,1,2],[-4,.55,-4]);desk.visible=false;desk.userData.staticBatchSource=true;
+ mesh('wall',[.4,2,4],[-7,1,0]);mesh('table',[2,1,2],[5,.55,5]);const core=new THREE.Group();core.name='Core_floor';office.add(core);core.add(mesh('baked-core-part',[2,.1,2],[0,0,0]));core.visible=false;
+ const layout={metadata:{recommended_px_per_m:10,recommended_world_origin_px:[0,0]},rooms:[{id:'R_N',bounds_px:[20,20,80,80]}]};
+ const surface=createPlacementSurface({model,floor,layout}),drop=(x,z,occupied=[])=>surface.resolve(new THREE.Raycaster(new THREE.Vector3(x,40,z+32),new THREE.Vector3(0,-1,0)),occupied);
+ assert.equal(drop(-7,-7).valid,true);for(const [x,z] of [[-4,-4],[-7,0],[0,0],[15,0]])assert.equal(drop(x,z).valid,false);
+ assert.equal(drop(-7,-7,[{x:-7,z:-7}]).valid,false);
+ const first=drop(5,5),second=drop(5,5,[first]);assert.ok(first.valid&&first.meeting&&second.valid&&second.meeting);assert.ok(Math.hypot(first.x-second.x,first.z-second.z)>=.72);assert.ok(Math.abs(first.x-5)>1.3||Math.abs(first.z-5)>1.3);
+ floor.position.y+=3;floor.position.z+=8;model.updateMatrixWorld(true);const moved=surface.resolve(new THREE.Raycaster(new THREE.Vector3(-7,45,33),new THREE.Vector3(0,-1,0)));assert.equal(moved.valid,true);assert.ok(Math.abs(moved.z+7)<.001);
+ assert.equal(nearestFreePoint([{x:1,z:1}],{x:0,z:0},[{x:1,z:1}]),null);
+ office.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});
+});
 
 test('Polyfork styles keep independent skeletons, keyboard contact, lifted feet and skinned picking',async()=>{
  assert.equal(normalizePersonStyle('unknown'),'classic');

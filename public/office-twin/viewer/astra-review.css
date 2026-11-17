@@ -120,6 +120,9 @@ body.studio #picture-controls{max-height:calc(100dvh - 570px);min-height:180px;o
 body.studio .office-picture-row[hidden]{display:none}
 .office-person-style select{width:170px;max-width:100%;font:inherit;color:var(--astra-ink);background:var(--astra-paper);border:1px solid var(--astra-line);border-radius:8px}
 .office-person-style-status{grid-column:1/-1;color:var(--astra-muted)}
+.office-review-zone-label,.office-placement-feedback{position:absolute;transform:translate(-50%,-100%);pointer-events:none;z-index:4;border:1px solid var(--astra-line);border-radius:999px;padding:4px 10px;background:var(--astra-paper);color:var(--astra-ink);font-size:12px;font-weight:600;line-height:1.4;white-space:nowrap}
+.office-review-zone-label{color:var(--astra-primary);background:color-mix(in srgb,var(--astra-paper) 90%,var(--astra-primary) 10%)}
+.office-placement-feedback{z-index:5;margin-top:-10px}
 body.studio .office-picture-actions{display:grid;grid-template-columns:1fr auto auto;padding-block-start:10px}
 body.studio .office-picture-row input[type="color"]{width:44px;height:28px;padding:2px;border:1px solid var(--astra-line);border-radius:6px;background:var(--astra-paper);cursor:pointer}
 

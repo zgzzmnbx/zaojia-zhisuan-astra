@@ -5,6 +5,8 @@ import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
 import {activePersonTasks,personLabelLevel,createRoomWalkGraph,createPersonWander} from './person-presentation.js';
 import {personStyles,normalizePersonStyle,createPolyforkAssets,createPolyforkPerson} from './people/polyfork-person.js';
+import {createPersonPlacement} from './person-placement.js';
+import {assignmentRoute} from './person-assignment.js';
 
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
@@ -13,6 +15,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   const message=document.querySelector('#review-status');
   const actors=new Map(),assets=createPersonAssets(),clock=createPersonClock(),reduced=matchMedia('(prefers-reduced-motion: reduce)'),walkGraphs=new Map();
   const floor=model.getObjectByName('Floor_09'),projected=new THREE.Vector3(),projectedTop=new THREE.Vector3();let lastMotionTime=0;
+  const placements=new Map(),placement=createPersonPlacement({model,floor,layout,viewport,requestFrame});let placementContext=null;
   const motionKey='astra.office.people-motion.v1';let motionEnabled=true;
   try{motionEnabled=localStorage.getItem(motionKey)!=='false';}catch{}
   const motionRow=el('div','','office-picture-row'),motionLabel=el('label','人物动作'),motionInput=document.createElement('input');
@@ -72,6 +75,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const button=el('button','','btn btn-ghost host-person-row');button.type='button';button.dataset.personId=person.id;
       button.append(el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
       const seat=seats.find(s=>s.seat_id===seatId),local=floor?floor.worldToLocal(origin.clone()):origin.clone();
+      if(placements.get(person.id)?.seatId!==seatId)placements.delete(person.id);
       actors.set(person.id,{person,anchor,group,marker,button,rig,yaw,seatId,seat,local,index,held:false,idle:false,wander:null,walk:null,labelLevel:'hidden',dragPosition:null,screenPoint:null,reactionAt:-Infinity});
     });
   }
@@ -81,7 +85,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const person=business.employees.find(p=>p.id===id);item.person=person;
       const tasks=tasksFor(id),task=tasks[0];
       const pending=activePersonTasks(tasks,id);item.idle=!pending.length&&!person.selected;
-      if(item.idle&&!item.wander&&item.seat&&floor){
+      if(item.idle&&!placements.has(id)&&!item.wander&&item.seat&&floor){
         const room=item.seat.room_id;if(!walkGraphs.has(room))walkGraphs.set(room,createRoomWalkGraph(layout,room));
         item.wander=createPersonWander(walkGraphs.get(room),{x:item.local.x,z:item.local.z,yaw:item.yaw},item.index+1,[...actors.values()].filter(a=>a!==item&&a.walk).map(a=>a.walk),item.seat.bounds_px);
         item.walk=item.wander?.state()??null;
@@ -95,7 +99,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       item.marker.title=`${person.name} · ${statusLabel} · ${title} · ${tasks.length} 项任务`;
       item.marker.setAttribute('aria-label',item.marker.title);
       item.button.querySelector('small').textContent=`${tasks.length} 项${person.selected?' · 已选':''}`;
-      item.marker.dataset.draggable=String(!!person.draggable);
+      item.marker.dataset.draggable='true';
       for(const node of [item.marker,item.button]){const grip=node.querySelector('.host-drag-grip');if(grip)grip.hidden=!person.draggable;node.draggable=node===item.button&&person.draggable;node.classList.toggle('selected',person.selected);node.setAttribute('aria-pressed',String(current===id));}
     }
     card.replaceChildren();
@@ -127,6 +131,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     for(const task of tasksFor(current)){const row=el('div','','host-task-line');row.append(el('strong',task.title),el('small',`${task.demo?'演示 · ':''}${task.status}`));if(task.comment)row.append(el('p',task.comment));tasks.append(row);}
     if(!tasks.childElementCount)tasks.append(el('p','暂无审核项目'));menu.append(tasks);
     const add=el('button',item.person.selected?'移出本次复核':item.person.demoAssignment?'加入演示复核':'加入本次复核','btn btn-primary btn-sm');add.type='button';add.disabled=!item.person.draggable;add.onclick=()=>togglePerson(current,!item.person.selected);menu.append(add);
+    const move=el('button','移入复核区','btn btn-ghost btn-sm');move.type='button';move.disabled=!placement.meetingSpot(occupied(current));move.onclick=()=>{const spot=placement.meetingSpot(occupied(current));if(spot){place(current,spot);if(assignmentRoute(business,current))togglePerson(current,true);paintMenu();}};menu.append(move);
+    if(placements.has(current)){const home=el('button','回到工位','btn btn-ghost btn-sm');home.type='button';home.title='回到原工位，保留复核选择';home.onclick=()=>{placements.delete(current);item.walk=null;item.wander=null;paint();syncPositions();paintMenu();requestFrame();};menu.append(home);}
   }
   function openMenu(point){paintMenu();menu.style.left=`${Math.max(12,Math.min(innerWidth-300,point.x+12))}px`;menu.style.top=`${Math.max(68,Math.min(innerHeight-390,point.y+12))}px`;if(menu.showPopover)menu.showPopover();else{menu.hidden=false;window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:true}}));}}
   listen(menu,'toggle',event=>window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:event.newState==='open'}})));
@@ -136,24 +142,28 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   function syncPositions(){model.updateMatrixWorld();for(const item of actors.values()){
     item.group.visible=!!item.anchor&&!item.dragOverlay;
     if(item.dragPosition)item.group.position.copy(item.dragPosition);
+    else if(placements.has(item.person.id)){const p=placements.get(item.person.id);item.group.position.set(p.x,p.y,p.z);floor.localToWorld(item.group.position);item.group.rotation.y=p.yaw;}
     else if(item.walk&&floor){item.group.position.set(item.walk.x,item.local.y,item.walk.z);floor.localToWorld(item.group.position);item.group.rotation.y=item.walk.yaw;}
     else if(item.anchor){item.anchor.getWorldPosition(item.group.position);item.group.rotation.y=item.yaw;}
   }}
   function syncBusiness(){
-    business=officeClient.getState();const next=business.employees.map(p=>[p.id,p.name,p.seatId,p.gender].join(':')).join('|');
+    business=officeClient.getState();if(placementContext!==business.context){placementContext=business.context;placements.clear();placement.hint(null);}
+    for(const id of placements.keys())if(!business.employees.some(p=>p.id===id))placements.delete(id);
+    const next=business.employees.map(p=>[p.id,p.name,p.seatId,p.gender].join(':')).join('|');
     if(next!==signature){signature=next;build();if(!actors.has(current)){current=null;closeMenu();}}
     paint();if(menuOpen())paintMenu();requestFrame();
   }
   function update(camera,view,now=performance.now()){
+    placement.update(camera,view);
     if(disposed)return;root.visible=['office','exploded'].includes(view);markers.hidden=!root.visible;if(!root.visible){clock.suspend();closeMenu();return;}
     const seconds=clock.step(now,motionEnabled&&!reduced.matches);
     const delta=seconds-lastMotionTime;lastMotionTime=seconds;
-    for(const item of actors.values())if(item.wander){item.walk=item.wander.step(delta,!item.held&&!item.dragPosition&&!(current===item.person.id&&menuOpen()),[...actors.values()].filter(a=>a!==item&&a.walk).map(a=>a.walk),item.idle);}
+    for(const item of actors.values())if(item.wander&&!placements.has(item.person.id)){item.walk=item.wander.step(delta,!item.held&&!item.dragPosition&&!(current===item.person.id&&menuOpen()),[...actors.values()].filter(a=>a!==item&&a.walk).map(a=>a.walk),item.idle);}
     syncPositions();const boxes=[];
     const rect=viewport.getBoundingClientRect(),width=viewport.clientWidth,height=viewport.clientHeight;
     for(const item of [...actors.values()].sort((a,b)=>Number(b.person.id===current)-Number(a.person.id===current))){
       const reactionAge=seconds-item.reactionAt,reaction=reactionAge<1.6?Math.sin(Math.PI*Math.max(0,reactionAge)/1.6):0;
-      item.rig.pose(seconds,!!item.dragPosition,item.idle||item.walk?.rise>0?item.walk:null,reaction);
+      item.rig.pose(seconds,!!item.dragPosition,standing(item,seconds)??(item.idle||item.walk?.rise>0?item.walk:null),reaction);
       item.group.updateMatrixWorld(true);
       const head=item.rig.head.getWorldPosition(new THREE.Vector3()).project(camera);item.screenPoint={x:rect.left+(head.x*.5+.5)*width,y:rect.top+(-head.y*.5+.5)*height};
       projected.copy(item.group.position).project(camera);projectedTop.set(0,1.7,0).applyQuaternion(camera.quaternion).add(item.group.position).project(camera);
@@ -164,7 +174,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
         // Measure only at a label-level transition, not during every animation frame.
         if(level!=='hidden'){item.marker.hidden=false;item.labelWidth=item.marker.offsetWidth;item.labelHeight=item.marker.offsetHeight;}
       }
-      const active=activePersonTasks(tasksFor(item.person.id),item.person.id),activity=item.dragPosition?'拖动中':item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
+      const active=activePersonTasks(tasksFor(item.person.id),item.person.id),activity=item.dragPosition?'拖动中':placements.has(item.person.id)?(placements.get(item.person.id).meeting?'位于多人复核区':'站立'):item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
       const status=item.marker.querySelector('.host-person-activity');if(status.textContent!==activity)status.textContent=activity;
       const pos=item.group.position.clone().add(new THREE.Vector3(0,1.9,0)).project(camera);
       const x=(head.x*.5+.5)*width,y=(-head.y*.5+.5)*height-item.labelPixels*.15-(level==='detail'?43:24);
@@ -176,15 +186,19 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   }
   function hit(ray){if(!root.visible)return null;for(const hit of ray.intersectObject(root,true)){let node=hit.object;while(node&&node!==root){if(node.userData.demoPersonId)return node.userData.demoPersonId;node=node.parent;}}return null;}
   function pick(ray,point){const id=hit(ray);return id?select(id,point):false;}
+  function standing(item,seconds){return placements.has(item.person.id)?{rise:1,moving:false,phase:0,stage:'activity',activity:'look',activityTime:seconds}:null;}
+  function occupied(id){return [...actors].filter(([other])=>other!==id).map(([,a])=>{const p=floor.worldToLocal(a.group.position.clone());return {x:p.x,z:p.z};});}
+  function place(id,target){const item=actors.get(id);if(!item||!target?.valid)return false;placements.set(id,{...target,seatId:item.seatId,yaw:target.meeting?placement.meetingYaw(target):item.group.rotation.y});item.walk=null;item.wander=null;syncPositions();item.rig.pose(clock.value(),false,standing(item,clock.value()));requestFrame();return true;}
   syncBusiness();
   try{const saved=normalizePersonStyle(localStorage.getItem(styleKey));if(saved!=='classic')switchStyle(saved);}catch{}
   return {select,update,pick,hit,syncBusiness,closeMenu,suspend:()=>clock.suspend(),react:()=>false,
+    dropTarget:(ray,id)=>placement.resolve(ray,occupied(id)),dropHint:(target,canReview)=>placement.hint(target,canReview),place,
     object:id=>actors.get(id)?.group,
     dragOverlay:(id,value)=>{const item=actors.get(id);if(item){item.dragOverlay=value;item.marker.style.opacity=value?'0':'';syncPositions();requestFrame();}},
     hold:(id,value)=>{const item=actors.get(id);if(item)item.held=value;},
-    dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;item.dragPosition=position?.clone()??null;item.rig.pose(clock.value(),!!item.dragPosition,item.walk);syncPositions();requestFrame();},
+    dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;item.dragPosition=position?.clone()??null;item.rig.pose(clock.value(),!!item.dragPosition,standing(item,clock.value())??item.walk);syncPositions();requestFrame();},
     position:id=>actors.get(id)?.group.position.clone(),
     isAnimating:()=>!disposed&&root.visible&&motionEnabled&&!reduced.matches&&actors.size>0,
-    getState:()=>({count:actors.size,rigRevision,personStyle,styleLoading,styleError,personDrawCalls:[...actors.values()].reduce((n,a)=>n+a.rig.drawCalls,0),selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.group.rotation.y,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,routine:a.walk?{stage:a.walk.stage,activity:a.walk.activity,rise:a.walk.rise}:null,dragging:!!a.dragPosition,idle:a.idle,labelLevel:a.labelLevel,labelPixels:a.labelPixels,labelVisible:!a.marker.hidden}))}),
-    dispose(){disposed=true;++styleRequest;scene.remove(root);actors.forEach(a=>a.rig.dispose());assets.dispose();polyfork.dispose();styleRow.remove();motionRow.remove();menu.remove();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
+    getState:()=>({placement:placement.state(),placements:Object.fromEntries(placements),count:actors.size,rigRevision,personStyle,styleLoading,styleError,personDrawCalls:[...actors.values()].reduce((n,a)=>n+a.rig.drawCalls,0),selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.group.rotation.y,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,routine:a.walk?{stage:a.walk.stage,activity:a.walk.activity,rise:a.walk.rise}:null,dragging:!!a.dragPosition,idle:a.idle,labelLevel:a.labelLevel,labelPixels:a.labelPixels,labelVisible:!a.marker.hidden}))}),
+    dispose(){disposed=true;placement.dispose();++styleRequest;scene.remove(root);actors.forEach(a=>a.rig.dispose());assets.dispose();polyfork.dispose();styleRow.remove();motionRow.remove();menu.remove();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
 }
