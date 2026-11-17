@@ -45,7 +45,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const seatHeight=chair?new THREE.Box3().setFromObject(chair).max.y-origin.y:.46;
       const keyBox=keyboard?new THREE.Box3().setFromObject(keyboard):null;
       const keyTarget=keyBox?keyBox.getCenter(new THREE.Vector3()).setY(keyBox.max.y+.025).sub(origin).applyAxisAngle(new THREE.Vector3(0,1,0),-yaw).toArray():[0,.77,.44];
-      const rig=createSeatedPerson(assets,index,{seatHeight,keyboard:keyTarget}),group=rig.group;
+      const rig=createSeatedPerson(assets,index,{seatHeight,keyboard:keyTarget,name:person.name,gender:person.gender}),group=rig.group;
       group.userData.demoPersonId=person.id;group.userData.seat_id=seatId;group.rotation.y=yaw;root.add(group);
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
       marker.append(el('strong',person.name),el('small',''),el('span','','host-person-activity'));markers.append(marker);draggable(marker,person.id);
@@ -117,7 +117,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     else if(item.anchor){item.anchor.getWorldPosition(item.group.position);item.group.rotation.y=item.yaw;}
   }}
   function syncBusiness(){
-    business=officeClient.getState();const next=business.employees.map(p=>[p.id,p.name,p.seatId].join(':')).join('|');
+    business=officeClient.getState();const next=business.employees.map(p=>[p.id,p.name,p.seatId,p.gender].join(':')).join('|');
     if(next!==signature){signature=next;build();if(!actors.has(current)){current=null;closeMenu();}}
     paint();if(menuOpen())paintMenu();requestFrame();
   }

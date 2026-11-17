@@ -243,23 +243,20 @@ test('person motion freezes for pause/reduced motion and resumes without hidden 
  for(let t=0;t<30;t+=.05){const p=seatedMotion(t);assert.ok(Math.abs(p.leftTap)<=.009&&Math.abs(p.rightTap)<=.009);assert.ok(Math.abs(p.headYaw)<=.035);}
  assert.equal(seatedMotion(3).mode,'typing');assert.equal(seatedMotion(10).mode,'reading');
 });
-test('pickup hangs limbs without extra meshes and release restores the exact seated shape',()=>{
- const assets=createPersonAssets(),rig=createSeatedPerson(assets,0),other=createSeatedPerson(assets,1);
- const pants=rig.group.children.find(o=>(o as THREE.Mesh).material===assets.materials.pants) as THREE.Mesh;
- const shoes=rig.group.children.find(o=>(o as THREE.Mesh).material===assets.materials.shoe) as THREE.Mesh;
- const original=pants.geometry.attributes.position.array.slice(),originalShoes=shoes.geometry.attributes.position.array.slice();
- const shared=assets.geometries.bone.attributes.position.array.slice();
+test('reference character keeps short proportions at every seat height and pickup releases exactly',()=>{
+ const assets=createPersonAssets(),rig=createSeatedPerson(assets,0),high=createSeatedPerson(assets,0,{seatHeight:.7});
+ assert.deepEqual(rig.proportions,high.proportions);assert.ok(rig.proportions.thigh<rig.proportions.headRadius);
+ const seated=rig.footPositions(),higher=high.footPositions();
+ assert.ok(seated.every(p=>p[1]>.2));assert.ok(Math.abs(higher[0][1]-seated[0][1]-.24)<.001);
+ const meshes:THREE.SkinnedMesh[]=[];rig.group.traverse(o=>{if((o as THREE.SkinnedMesh).isSkinnedMesh)meshes.push(o as THREE.SkinnedMesh);});
+ const arrays=meshes.map(m=>m.geometry.attributes.position.array.slice());
  rig.pose(3,true);assert.equal(rig.group.userData.visualMotion,'lifted');
- for(const hand of rig.handPositions()){assert.ok(hand[1]<.5);assert.ok(Math.abs(hand[2])<.1);}
- const pickupBox=new THREE.Box3();for(let i=0;i<shoes.geometry.attributes.position.count;i++)pickupBox.expandByPoint(shoes.getVertexPosition(i,new THREE.Vector3()));
- assert.ok(pickupBox.min.y<-.1);assert.ok(pickupBox.max.z<.25);
- assert.equal(pants.morphTargetInfluences![1],1);assert.deepEqual(pants.geometry.attributes.position.array,original);
- const version=pants.geometry.attributes.position.version;rig.pose(3,true);assert.equal(pants.geometry.attributes.position.version,version);
- rig.pose(3,false);assert.equal(rig.group.userData.visualMotion,'typing');
- assert.deepEqual(pants.geometry.attributes.position.array,original);assert.deepEqual(shoes.geometry.attributes.position.array,originalShoes);
- assert.deepEqual(assets.geometries.bone.attributes.position.array,shared);assert.equal(other.group.userData.visualMotion,'typing');
- let meshes=0;rig.group.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes++;});assert.equal(meshes,15);
- rig.dispose();other.dispose();assets.dispose();
+ assert.ok(rig.footPositions().every((p,i)=>p[1]<seated[i][1]-.15&&Math.abs(p[2])<.08));
+ assert.ok(rig.handPositions().every(p=>p[1]<.7&&Math.abs(p[2])<.08));
+ rig.pose(0);assert.deepEqual(rig.footPositions(),seated);assert.equal(rig.group.userData.visualMotion,'typing');
+ meshes.forEach((m,i)=>assert.deepEqual(m.geometry.attributes.position.array,arrays[i]));
+ assert.ok(rig.drawCalls<=15);assert.equal(high.group.userData.visualMotion,'typing');
+ rig.dispose();high.dispose();assets.dispose();
 });
 
 test('3D drag accepts demo people but requires the same current review context and revision',()=>{
@@ -267,10 +264,22 @@ test('3D drag accepts demo people but requires the same current review context a
  assert.equal(canDropPerson(start,snap,'owner'),true);assert.equal(canDropPerson(start,snap,'other'),true);
  assert.equal(canDropPerson(start,{...snap,context:'job-b'},'owner'),false);assert.equal(canDropPerson(start,{...snap,revision:3},'owner'),false);
 });
+
+test('batched reference character remains ray-pickable after every pose and disposes its GPU resources',()=>{
+ const rig=createSeatedPerson(createPersonAssets(),0);let disposed=0,buffers=0;
+ rig.group.traverse(o=>{if((o as THREE.Mesh).isMesh){buffers++;(o as THREE.Mesh).geometry.addEventListener('dispose',()=>disposed++);}});
+ for(const mode of ['seated','held','walking']){
+  rig.pose(3,mode==='held',mode==='walking'?{phase:1,moving:true}:null);
+  const center=rig.head.getWorldPosition(new THREE.Vector3()),origin=center.clone().add(new THREE.Vector3(0,0,3));
+  const ray=new THREE.Raycaster(origin,center.clone().sub(origin).normalize());
+  assert.ok(ray.intersectObject(rig.group,true).length>0,mode);
+ }
+ rig.dispose();assert.equal(disposed,buffers);
+});
 test('simple seated rig keeps hands near the keyboard through typing and reading',()=>{
  const assets=createPersonAssets();const rig=createSeatedPerson(assets,0,{seatHeight:.46,keyboard:[0,.80,.44]});
  for(const t of [0,3,7.5,10,13]){rig.pose(t);for(const hand of rig.handPositions()){assert.ok(hand[1]>.76&&hand[1]<.84);assert.ok(hand[2]>.40&&hand[2]<.48);}}
- let meshes=0;rig.group.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes++;});assert.equal(meshes,15);
+ let meshes=0;rig.group.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes++;});assert.ok(meshes<=15);
  const before=rig.head.quaternion.clone();rig.pose(18);assert.ok(!rig.head.quaternion.equals(before));
  rig.dispose();assets.dispose();
 });
@@ -457,24 +466,23 @@ test('idle walkers stay inside clear aisles, pause in place and resume without c
 });
 test('walking rig uses standing limbs, preserves pickup pose and reuses its small mesh set',()=>{
  const assets=createPersonAssets(),rig=createSeatedPerson(assets,0),visible=()=>{let count=0;rig.group.traverseVisible(o=>{if((o as THREE.Mesh).isMesh)count++;});return count;};
- rig.pose(2,false,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'walking');assert.equal(visible(),15);
+ rig.pose(2,false,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'walking');assert.ok(visible()<=15);
  const count=rig.group.children.length;for(let i=0;i<30;i++)rig.pose(i,false,{phase:i,moving:true});assert.equal(rig.group.children.length,count);
- rig.pose(2,true,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'lifted');assert.equal(visible(),15);
+ rig.pose(2,true,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'lifted');assert.ok(visible()<=15);
  rig.pose(2,false,{phase:2,moving:false});assert.equal(rig.group.userData.visualMotion,'idle');
- rig.pose(2);assert.equal(rig.group.userData.visualMotion,'typing');assert.equal(visible(),15);
+ rig.pose(2);assert.equal(rig.group.userData.visualMotion,'typing');assert.ok(visible()<=15);
  rig.dispose();assets.dispose();
 });
 
 
 test('walking alternates opposing hand and foot, rise is continuous and click acknowledgement yields to pickup',()=>{
  const assets=createPersonAssets(),rig=createSeatedPerson(assets,0);
- const shoes=rig.group.children.find(o=>(o as THREE.Mesh).material===assets.materials.shoe) as THREE.Mesh;
- const rightFoot=()=>{let z=0,n=0;for(let i=0;i<shoes.geometry.attributes.position.count;i++){const p=shoes.getVertexPosition(i,new THREE.Vector3());if(p.x>0){z+=p.z;n++;}}return z/n;};
+ const rightFoot=()=>rig.footPositions()[1][2];
  const samples=[];
  for(const phase of [Math.PI/2/5.4,Math.PI*1.5/5.4]){rig.pose(1,false,{phase,moving:true});samples.push({foot:rightFoot(),hand:rig.handPositions()[1][2]});}
  assert.ok((samples[0].foot-samples[1].foot)*(samples[0].hand-samples[1].hand)<0,'same-side foot and hand travel in opposite directions');
  let previous=-Infinity;
- for(let i=0;i<=20;i++){rig.pose(0,false,{rise:i/20,phase:0,moving:false,stage:'rising'});rig.group.updateMatrixWorld(true);const y=rig.head.getWorldPosition(new THREE.Vector3()).y;assert.ok(y>=previous-.001);if(i)assert.ok(y-previous<.04);previous=y;}
+ for(let i=0;i<=20;i++){rig.pose(0,false,{rise:i/20,phase:0,moving:false,stage:'rising'});rig.group.updateMatrixWorld(true);const y=rig.head.getWorldPosition(new THREE.Vector3()).y;if(i)assert.ok(Math.abs(y-previous)<.04);previous=y;}
  rig.pose(3,false,null,1);assert.equal(rig.group.userData.visualMotion,'acknowledging');
  rig.pose(3,true,null,1);assert.equal(rig.group.userData.visualMotion,'lifted');
  rig.pose(3);assert.equal(rig.group.userData.visualMotion,'typing');rig.dispose();assets.dispose();

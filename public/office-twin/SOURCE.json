@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.39.1",
+  "hostAdapterVersion": "0.40.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -68,8 +68,8 @@
     "viewer/floor-picking.js": "f387b84ba8aeb6522ff3644af5f60a7c79df842b1900270df0332488fb2cee47",
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "0126b2c8c0e7c9cef5cc7b372fd632a290e846ad11ed599614b3f5748365739e",
-    "viewer/host-people.js": "144de7908f56a065761474e287927a259fac91fa0e8f4ef87a660e770a8bc462",
-    "viewer/index.html": "d0a32483d8bf0596d8b887e8922dc0968b9b81e3e325dec49bbe98b6e88d4de1",
+    "viewer/host-people.js": "c7be2e71d6a5794c3dc9b1fdf43ef478be50faba5c5d6b3bfc0145e252f96b64",
+    "viewer/index.html": "6ad5b185692cfdd27f125d555bc65f1688c8f0563c2f5680cc2a2be71078b007",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
@@ -113,7 +113,7 @@
     "viewer/office-orbit.js": "0114adfe41fa1bab3d2f3f2b9f284d9fac21fc7f6e7821d20ca2bb96b50c0dd2",
     "viewer/person-motion.js": "4b73139cbdf18ed1639623c6d07818087c69b35943d69f0265731904cc8a7a9d",
     "viewer/person-pointer.js": "720b1cce470ba1cb281a0074bdadc1fbb179664d251b4903c18d3cdcbf0d8670",
-    "viewer/seated-person.js": "2121fc403a6ddba78184cb9d4b8e015ea284a6d366b5d9dbc9da9c461875db08",
+    "viewer/seated-person.js": "1293ae9cfd1985ce350f15a08113d2043ea001bf40ef502dfd636793cb8224ed",
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
     "viewer/lighting-settings.js": "3d1505eeef6afc94b1041d4bcde9deef33b01f4f9880e3d672c5b3fc0bb75eac",
     "viewer/office-entrance.js": "0f89c55accf6a8739ccb8b225cc647626984868dcc031b15530ec00b4bf54f01",
@@ -151,7 +151,12 @@
     "viewer/person-presentation.js": "07b75d8b0560f16807562d77ee84d892f0de4d91b05e50fa3095c7a2c2ccfee1",
     "viewer/workstation-roster.js": "9f187cd65e2a72f82e385e6c1ff22efe5f9c80ed950ddab0ab437e4d7e2938eb",
     "viewer/workstation-settings.js": "44763e23adec6742a904ab39e36a516389b16d02857a5555be40f290d2c04d15",
-    "viewer/workstation-labels.js": "c106acffad480d9ac147d1441bf37041753077bc9b713ea5b4db170a71c243ce"
+    "viewer/workstation-labels.js": "c106acffad480d9ac147d1441bf37041753077bc9b713ea5b4db170a71c243ce",
+    "viewer/people/chibi-model.js": "a10db678390871843fe710e36a92e6cb2e8b326f918a4b7b7c7a06130228c91a",
+    "viewer/people/batch-rig.js": "3be211c2178ab6d608061c2cd744e6a9f9c4b635d0097fac547de5140bfec2d4",
+    "viewer/people/LICENSE.my-office.txt": "4d1ad2b2fcd6cbaf8fbc61678fc2f57a8592a4946c64b93cfd4e822bbf8fd4a0",
+    "viewer/vendor/addons/geometries/RoundedBoxGeometry.js": "c5feab96123858ed8823c889b238dc8734adab7e760e3cfd21e7f3f2f3e348e3",
+    "viewer/people/README.md": "8edc6f91cb810dcbf27ea266a482a7ff715804a0d490478d1797357782aabeb5"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -206,5 +211,13 @@
     "sourceInstances": 77,
     "scope": "Excluded before batching and visibility snapshots; original private model retained",
     "rebakedFloorLighting": "Day and night ground receivers re-baked without tower occluders"
+  },
+  "characterSource": {
+    "url": "https://github.com/khanh020905/my-office",
+    "commit": "b68228871fe30cd2c759a2c919337a9a9d1f5644",
+    "path": "src/office/people/chibi-rig.js",
+    "license": "MIT",
+    "licenseFile": "viewer/people/LICENSE.my-office.txt",
+    "adaptation": "Model-only default pixar proportions; local rigid skinning, fixed-length limbs, Astra pose adapter; no upstream business or world code."
   }
 }
