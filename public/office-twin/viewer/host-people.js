@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {genderLabel} from './workstation-roster.js';
 import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,element as el} from './host-client.js';
 import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
@@ -34,7 +35,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     actors.forEach(a=>a.rig.dispose());
     root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();
     business.employees.forEach((person,index)=>{
-      const seatId=seats[index]?.seat_id,anchor=model.getObjectByName(`PersonAnchor_${seatId}`);
+      const seatId=person.seatId??seats[index]?.seat_id,anchor=model.getObjectByName(`PersonAnchor_${seatId}`);
+      if(!anchor)return;
       model.updateMatrixWorld(true);
       const origin=anchor?.getWorldPosition(new THREE.Vector3())??new THREE.Vector3();
       const monitor=model.getObjectByName(`Furniture_${seatId}_MONITOR`),keyboard=model.getObjectByName(`Furniture_${seatId}_KEYBOARD`),chair=model.getObjectByName(`${seatId}_chair_seat`);
@@ -50,7 +52,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY}));
       const button=el('button','','btn btn-ghost host-person-row');button.type='button';button.dataset.personId=person.id;
       button.append(el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
-      const seat=seats[index],local=floor?floor.worldToLocal(origin.clone()):origin.clone();
+      const seat=seats.find(s=>s.seat_id===seatId),local=floor?floor.worldToLocal(origin.clone()):origin.clone();
       actors.set(person.id,{person,anchor,group,marker,button,rig,yaw,seatId,seat,local,index,held:false,idle:false,wander:null,walk:null,labelLevel:'hidden',dragPosition:null,screenPoint:null});
     });
   }
@@ -98,7 +100,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     menu.replaceChildren();const heading=el('div','','host-person-popover-heading'),close=el('button','×','btn btn-ghost btn-square btn-sm');close.type='button';close.setAttribute('aria-label','关闭人物详情');close.onclick=closeMenu;
     heading.append(el('strong',item.person.name),close);menu.append(heading);
     const profile=el('dl','','host-person-profile');
-    for(const [label,value] of [['工种',item.person.trade||'待补充'],['擅长审核',item.person.expertise||'待补充'],['当前状态',item.idle?'空闲':`${activePersonTasks(tasksFor(current),current).length} 项待办`],['工位',item.seatId?.replace('SEAT_','')||'未分配']])profile.append(el('dt',label),el('dd',value));menu.append(profile);
+    for(const [label,value] of [['性别',genderLabel(item.person.gender)],['工种',item.person.trade||'待补充'],['擅长审核',item.person.expertise||'待补充'],['当前状态',item.idle?'空闲':`${activePersonTasks(tasksFor(current),current).length} 项待办`],['工位',item.seatId?.replace('SEAT_','')||'未分配']])profile.append(el('dt',label),el('dd',value));menu.append(profile);
     const tasks=el('div','','host-person-projects');
     for(const task of tasksFor(current)){const row=el('div','','host-task-line');row.append(el('strong',task.title),el('small',`${task.demo?'演示 · ':''}${task.status}`));if(task.comment)row.append(el('p',task.comment));tasks.append(row);}
     if(!tasks.childElementCount)tasks.append(el('p','暂无审核项目'));menu.append(tasks);
@@ -116,7 +118,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     else if(item.anchor){item.anchor.getWorldPosition(item.group.position);item.group.rotation.y=item.yaw;}
   }}
   function syncBusiness(){
-    business=officeClient.getState();const next=business.employees.map(p=>p.id+':'+p.name).join('|');
+    business=officeClient.getState();const next=business.employees.map(p=>[p.id,p.name,p.seatId].join(':')).join('|');
     if(next!==signature){signature=next;build();if(!actors.has(current)){current=null;closeMenu();}}
     paint();if(menuOpen())paintMenu();requestFrame();
   }

@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="../astra_ui/astra-ui.css">
   <link rel="stylesheet" href="./viewer.css?v=0.7.0">
   <link rel="stylesheet" href="./office-events.css?v=0.7.0">
-  <link rel="stylesheet" href="./astra-review.css?v=0.36.4">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./structure-day-bake.js":"./structure-day-bake.js?v=0.36.4","./night-environment.js?v=0.6.7":"./night-environment.js?v=0.36.4","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.36.4","three/addons/":"./vendor/addons/","./host-client.js":"./host-client.js?v=0.36.4","./host-people.js":"./host-people.js?v=0.36.4","./seated-person.js":"./seated-person.js?v=0.36.4","./person-presentation.js":"./person-presentation.js?v=0.36.4","./person-pointer.js":"./person-pointer.js?v=0.36.4"}}</script>
+  <link rel="stylesheet" href="./astra-review.css?v=0.37.0">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./structure-day-bake.js":"./structure-day-bake.js?v=0.37.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=0.37.0","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.37.0","three/addons/":"./vendor/addons/","./host-client.js":"./host-client.js?v=0.37.0","./host-people.js":"./host-people.js?v=0.37.0","./seated-person.js":"./seated-person.js?v=0.37.0","./person-presentation.js":"./person-presentation.js?v=0.37.0","./person-pointer.js":"./person-pointer.js?v=0.37.0"}}</script>
 </head>
 <body class="studio">
 <div id="shell" class="live-shell office-shell">
@@ -157,7 +157,7 @@
   officeClient.start();
   window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
   window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
-  import('./viewer.js?v='+VERSION+'&ui=0.36.4').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+  import('./viewer.js?v='+VERSION+'&ui=0.37.0').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
     document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
     document.querySelector('#render-status').textContent='静态预览';
     document.documentElement.dataset.viewerStatus='module-error';

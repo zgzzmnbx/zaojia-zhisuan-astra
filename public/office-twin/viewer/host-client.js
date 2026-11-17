@@ -1,4 +1,6 @@
 // Astra owns all review writes. This adapter receives display snapshots only.
+import {workstationRoster} from './workstation-roster.js';
+import {createWorkstationSettings} from './workstation-settings.js';
 import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
@@ -6,7 +8,12 @@ let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 let dragStart=null,chatRect=null,completedNativeDrag=null;
-let artifactObserver=null;
+let artifactObserver=null,workstations=null,workstationConfig=null,hostSnapshot=null;
+function applyHostSnapshot(){
+  if(!hostSnapshot)return;
+  sourceSnapshot={...hostSnapshot,employees:workstationRoster(hostSnapshot.employees,workstationConfig)};
+  snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
+}
 const samples=['某支线工程控制价复核','某站场改造结算复核','某研发基地勘察测量复核','某数字化项目投资复核'];
 const $=selector=>document.querySelector(selector);
 export function element(tag,text,className='') {
@@ -87,16 +94,17 @@ function receive(event) {
   if(event.data.type!=='snapshot')return;
   const data=event.data;
   if(!Array.isArray(data.people)||!Array.isArray(data.tasks)||typeof data.context!=='string')return;
-  sourceSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
+  hostSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
     tasks:[...data.tasks,...data.people.flatMap((person,index)=>
       data.tasks.some(t=>t.employeeId===person.id)||(index>0&&index>=data.people.length-2)?[]:
       [{id:`sample:${person.id}`,employeeId:person.id,title:samples[index%samples.length],status:index%3===0?'待复核':'审核中',demo:true}])]};
-  snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
+  applyHostSnapshot();
 }
 export const officeClient={
   start(){
     if(started)return;started=true;
     const toolbar=$('.office-modebar');
+    workstations=createWorkstationSettings({toolbar,getPeople:()=>snapshot.employees,onChange:config=>{workstationConfig=config;applyHostSnapshot();}});
     for(const [action,label] of [['prepare','复核设置'],['close','返回沙盘']]){
       const button=element('button',label,'btn btn-ghost btn-sm');button.type='button';button.dataset.hostAction=action;
       button.onclick=()=>post('action',{action});toolbar.append(button);
@@ -129,5 +137,5 @@ export const officeClient={
   getState:()=>snapshot,
   getMotion:()=>motionSettings,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
-  dispose(){window.removeEventListener('message',receive);artifactObserver?.disconnect();listeners.clear();},
+  dispose(){window.removeEventListener('message',receive);artifactObserver?.disconnect();workstations?.dispose();listeners.clear();},
 };

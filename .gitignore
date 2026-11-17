@@ -34,3 +34,6 @@ runtime/
 
 # Local competition materials and input/answer workbooks; preserve locally.
 /07-测试和演示例子/
+
+# Private office personnel and workstation assignments
+/config/office-workstations.json

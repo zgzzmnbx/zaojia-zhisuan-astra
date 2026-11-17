@@ -1,4 +1,14 @@
 import test from 'node:test';
+import {workstationRoster,profile} from '../public/office-twin/viewer/workstation-roster.js';
+
+test('workstation overrides preserve host authority and make new people demo-only',()=>{
+ const directory=[{id:'owner',name:'石萌',selectable:true,selected:true,accounts:[{name:'石萌'}]},{id:'peer',name:'同事',selectable:false,selected:false,accounts:[]}];
+ const config={seats:[{id:'A'},{id:'B'},{id:'C'}],people:[{id:'owner',name:'修改名',gender:'male',seatId:'B',selectable:false,accounts:[]},{id:'local:new',name:'新增',gender:'female',seatId:'A',selectable:true,selected:true,accounts:[{name:'其他人'}]}]};
+ const result=workstationRoster(directory,config);
+ assert.equal(result[0].name,'修改名');assert.equal(result[0].gender,'male');assert.equal(result[0].selectable,true);assert.equal(result[0].selected,true);assert.deepEqual(result[0].accounts,directory[0].accounts);
+ assert.equal(result[1].seatId,'C');assert.equal(result[2].seatId,'A');assert.equal(result[2].selectable,false);assert.equal(result[2].selected,false);assert.deepEqual(result[2].accounts,[]);
+ assert.equal(directory[0].name,'石萌');assert.equal(profile(result[2]).gender,'female');assert.equal('accounts' in profile(result[0]),false);
+});
 import * as THREE from 'three';
 import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.js';
 import {collectMonitorLighting} from '../public/office-twin/viewer/monitor-lighting.js';
