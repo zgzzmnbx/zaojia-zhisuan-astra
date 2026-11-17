@@ -285,6 +285,28 @@ test('simple seated rig keeps hands near the keyboard through typing and reading
 });
 
 import {assignmentRoute,createDemoAssignments} from '../public/office-twin/viewer/person-assignment.js';
+import {canRemoveSelectedPerson,releasedOutsideSelection} from '../public/office-twin/viewer/selected-person-drag.js';
+
+test('candidate removal keeps review permissions and rejects stale or already removed selections',()=>{
+ const snapshot={context:'a',revision:2,enabled:true,employees:[{id:'owner',selected:true,selectable:true},{id:'demo',selected:true,selectable:false}]};
+ for(const id of ['owner','demo']){
+  const start={context:'a',revision:2,id};assert.equal(canRemoveSelectedPerson(start,snapshot),true);
+  assert.equal(canRemoveSelectedPerson(start,{...snapshot,context:'b'}),false);
+  assert.equal(canRemoveSelectedPerson(start,{...snapshot,revision:3}),false);
+  assert.equal(canRemoveSelectedPerson(start,{...snapshot,enabled:false}),false);
+  assert.equal(canRemoveSelectedPerson(start,{...snapshot,employees:snapshot.employees.map(p=>({...p,selected:false}))}),false);
+ }
+ assert.equal(canRemoveSelectedPerson({context:'a',revision:2,id:'owner'},{...snapshot,employees:[{id:'owner',selected:true,selectable:false}]}),false);
+});
+test('drag-out removal needs a completed drag outside the frame but inside the page',()=>{
+ const rect={left:100,right:300,top:100,bottom:200},viewport={width:800,height:600};
+ assert.equal(releasedOutsideSelection({dragging:true},{x:350,y:150},rect,viewport),true);
+ assert.equal(releasedOutsideSelection({dragging:true},{x:200,y:150},rect,viewport),false);
+ assert.equal(releasedOutsideSelection({dragging:false},{x:350,y:150},rect,viewport),false);
+ assert.equal(releasedOutsideSelection(null,{x:350,y:150},rect,viewport),false);
+ assert.equal(releasedOutsideSelection({dragging:true},{x:-1,y:150},rect,viewport),false);
+ assert.equal(releasedOutsideSelection({dragging:true},{x:350,y:601},rect,viewport),false);
+});
 test('only owner routes to real review; other people remain context-local demo assignments',()=>{
  const raw={context:'one',revision:1,enabled:true,title:'Current.xlsx',employees:[{id:'owner',selectable:true,selected:false},{id:'other',selectable:false,selected:false}],tasks:[]};
  const demos=createDemoAssignments();demos.apply(raw);demos.set('other',true);demos.set('owner',true);

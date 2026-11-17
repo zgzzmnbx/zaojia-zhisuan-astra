@@ -90,6 +90,11 @@ body.studio.office-embed .office-modebar{flex-wrap:nowrap;gap:4px;padding:6px!im
 .host-selected-person{display:flex;align-items:center;gap:6px;max-width:100%;padding:6px 10px;border:1px solid var(--astra-line);border-radius:8px;background:var(--astra-paper);color:var(--astra-ink);line-height:20px}
 .host-selected-name{min-width:0;overflow-wrap:anywhere}
 .host-selected-person small{font-size:12px;color:var(--astra-muted);white-space:nowrap}
+.host-selected-person.can-remove{cursor:grab;user-select:none;touch-action:pan-y}
+.host-selected-person.is-removing{opacity:.45;cursor:grabbing}
+body.studio .host-selected-remove{min-width:26px;min-height:26px;width:26px;height:26px;padding:0;margin:-3px -4px -3px 0;flex:none;border:0;border-radius:5px;background:transparent;color:var(--astra-muted);font-size:18px;line-height:1;box-shadow:none;cursor:pointer}
+body.studio .host-selected-remove:hover{background:color-mix(in srgb,var(--astra-primary) 10%,transparent);color:var(--astra-primary)}
+.host-dropzone:focus-visible{outline:2px solid var(--astra-primary);outline-offset:3px}
 .host-selected-people:not([hidden])+#host-drop-hint{display:block;margin-top:10px}
 .host-dragging .host-dropzone{border-style:solid;box-shadow:0 0 0 3px color-mix(in srgb,var(--astra-primary) 15%,transparent);background:color-mix(in srgb,var(--astra-primary) 10%,var(--astra-paper))}
 .host-artifact.is-dragover .host-dropzone{background:var(--astra-primary);color:var(--astra-paper)}

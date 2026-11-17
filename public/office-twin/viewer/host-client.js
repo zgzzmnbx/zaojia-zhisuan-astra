@@ -2,13 +2,14 @@
 import {workstationRoster} from './workstation-roster.js';
 import {createWorkstationSettings} from './workstation-settings.js';
 import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
+import {bindSelectedPersonDrag,canRemoveSelectedPerson} from './selected-person-drag.js';
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
 let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正在读取当前成果',enabled:false};
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 let dragStart=null,chatRect=null,completedNativeDrag=null;
-let artifactObserver=null,workstations=null,workstationConfig=null,hostSnapshot=null;
+let artifactObserver=null,workstations=null,workstationConfig=null,hostSnapshot=null,selectedDrag=null;
 function applyHostSnapshot(){
   if(!hostSnapshot)return;
   sourceSnapshot={...hostSnapshot,employees:workstationRoster(hostSnapshot.employees,workstationConfig)};
@@ -45,16 +46,25 @@ export function moveHostDrag(x,y){if(dragStart)post('person-drag-position',{...d
 export function notifyHostDrop(id){const person=snapshot.employees.find(p=>p.id===id);if(person)post('person-drop-result',{context:snapshot.context,revision:snapshot.revision,employeeId:id,name:person.name,demo:!!person.demoAssignment});}
 function renderDropzone() {
   const selected=snapshot.employees.filter(p=>p.selected),tags=$('#host-selected-people'),hint=$('#host-drop-hint');
+  const focusIndex=[...tags.querySelectorAll('button')].indexOf(document.activeElement);
+  selectedDrag?.cancel();
   tags.replaceChildren();
   for(const person of selected){
     const tag=element('li','','host-selected-person');tag.dataset.personId=person.id;
     tag.append(element('span',person.name,'host-selected-name'));
     if(person.demoAssignment)tag.append(element('small','演示'));
+    const remove=element('button','×','btn btn-ghost btn-square btn-xs host-selected-remove');remove.type='button';
+    remove.title=`取消选择 ${person.name}`;remove.setAttribute('aria-label',remove.title);
+    const start={id:person.id,context:snapshot.context,revision:snapshot.revision};
+    remove.disabled=!canRemoveSelectedPerson(start,snapshot);tag.classList.toggle('can-remove',!remove.disabled);
+    remove.addEventListener('click',event=>{event.stopPropagation();if(canRemoveSelectedPerson(start,snapshot))togglePerson(person.id,false);});
+    tag.append(remove);
     tags.append(tag);
   }
   tags.hidden=!selected.length;
   hint.textContent=draggingPerson?`把 ${draggingPerson.name} 拖到这里`:'把小人拖到这里';
   hint.hidden=selected.length>0&&!draggingPerson;
+  if(focusIndex>=0){const buttons=tags.querySelectorAll('button');(buttons[Math.min(focusIndex,buttons.length-1)]||$('#host-dropzone')).focus({preventScroll:true});}
 }
 function renderTasks() {
   $('#host-artifact-title').textContent=snapshot.title;
@@ -113,9 +123,10 @@ export const officeClient={
     }
     const artifact=element('article','','host-artifact');artifact.id='host-artifact';
     artifact.append(element('small','当前成果'),Object.assign(element('strong',snapshot.title),{id:'host-artifact-title'}),Object.assign(element('span','尚未选择复核人员'),{id:'host-selection'}));
-    const dropzone=element('div','','host-dropzone');dropzone.id='host-dropzone';
+    const dropzone=element('div','','host-dropzone');dropzone.id='host-dropzone';dropzone.tabIndex=-1;
     const tags=element('ul','','host-selected-people');tags.id='host-selected-people';tags.hidden=true;tags.setAttribute('aria-label','已选复核人员');tags.setAttribute('aria-live','polite');
     const hint=element('span','把小人拖到这里');hint.id='host-drop-hint';dropzone.append(tags,hint);artifact.append(dropzone);
+    selectedDrag=bindSelectedPersonDrag({tags,zone:dropzone,getSnapshot:()=>snapshot,remove:id=>togglePerson(id,false)});
     const acceptDrag=event=>{if(draggingPerson&&event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');hint.textContent=`松开，加入 ${draggingPerson.name}`;}};
     artifact.addEventListener('dragenter',acceptDrag);artifact.addEventListener('dragover',acceptDrag);
     artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)hint.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
@@ -139,5 +150,5 @@ export const officeClient={
   getState:()=>snapshot,
   getMotion:()=>motionSettings,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
-  dispose(){window.removeEventListener('message',receive);artifactObserver?.disconnect();workstations?.dispose();listeners.clear();},
+  dispose(){window.removeEventListener('message',receive);selectedDrag?.dispose();artifactObserver?.disconnect();workstations?.dispose();listeners.clear();},
 };

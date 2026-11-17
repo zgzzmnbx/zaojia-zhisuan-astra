@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.40.0",
+  "hostAdapterVersion": "0.40.1",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -61,15 +61,15 @@
     "previews/building-v0.6.7-offline.png": "5ac334637559d13c376cb6638629a5ebdf30000a7fc1f72c30e7fafac6abba7a",
     "previews/building_hero.png": "8f3a17af1ca0af1d1dc0f9c4c347a9a61aee96882d9c8aeac889a36a4a203463",
     "THIRD_PARTY_NOTICES.md": "caf39bc0238a31bcacb1cf133d791f8ba59299d085320d17c3e39d811c8ca0e7",
-    "viewer/astra-review.css": "10f9499dfb4f6e7cd80d85d633e45a59755e1a3b9e8ff5f5a614956f888caddf",
+    "viewer/astra-review.css": "1a8f1869d357b3fca1d8d9dc65ae7db0b83a9470cda59d1df28aeeb11e8670b8",
     "viewer/baked-material.js": "84faacb5245563cd4da182a66fece0d0f026442ddd5408caa63430479052af95",
     "viewer/context-view-policy.js": "325fd9916b23143130a8207bb2f9889ebbbe865b20f641c197d4c47a57f1b003",
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
     "viewer/floor-picking.js": "f387b84ba8aeb6522ff3644af5f60a7c79df842b1900270df0332488fb2cee47",
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
-    "viewer/host-client.js": "0126b2c8c0e7c9cef5cc7b372fd632a290e846ad11ed599614b3f5748365739e",
+    "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
     "viewer/host-people.js": "c7be2e71d6a5794c3dc9b1fdf43ef478be50faba5c5d6b3bfc0145e252f96b64",
-    "viewer/index.html": "6ad5b185692cfdd27f125d555bc65f1688c8f0563c2f5680cc2a2be71078b007",
+    "viewer/index.html": "ec32db3d80b1923e8da7e32704ca13ec07ccde045ca55af5568e883d166ba4e4",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
@@ -156,7 +156,8 @@
     "viewer/people/batch-rig.js": "3be211c2178ab6d608061c2cd744e6a9f9c4b635d0097fac547de5140bfec2d4",
     "viewer/people/LICENSE.my-office.txt": "4d1ad2b2fcd6cbaf8fbc61678fc2f57a8592a4946c64b93cfd4e822bbf8fd4a0",
     "viewer/vendor/addons/geometries/RoundedBoxGeometry.js": "c5feab96123858ed8823c889b238dc8734adab7e760e3cfd21e7f3f2f3e348e3",
-    "viewer/people/README.md": "8edc6f91cb810dcbf27ea266a482a7ff715804a0d490478d1797357782aabeb5"
+    "viewer/people/README.md": "8edc6f91cb810dcbf27ea266a482a7ff715804a0d490478d1797357782aabeb5",
+    "viewer/selected-person-drag.js": "b092aab243a8514287fb37de5b9c240f605819f62eb62604f9452f36d8b1d677"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
