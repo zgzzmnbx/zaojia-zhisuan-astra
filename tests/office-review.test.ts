@@ -251,8 +251,9 @@ test('pickup hangs limbs without extra meshes and release restores the exact sea
  const shared=assets.geometries.bone.attributes.position.array.slice();
  rig.pose(3,true);assert.equal(rig.group.userData.visualMotion,'lifted');
  for(const hand of rig.handPositions()){assert.ok(hand[1]<.5);assert.ok(Math.abs(hand[2])<.1);}
- shoes.geometry.computeBoundingBox();assert.ok(shoes.geometry.boundingBox!.min.y<-.1);assert.ok(shoes.geometry.boundingBox!.max.z<.25);
- assert.notDeepEqual(pants.geometry.attributes.position.array,original);
+ const pickupBox=new THREE.Box3();for(let i=0;i<shoes.geometry.attributes.position.count;i++)pickupBox.expandByPoint(shoes.getVertexPosition(i,new THREE.Vector3()));
+ assert.ok(pickupBox.min.y<-.1);assert.ok(pickupBox.max.z<.25);
+ assert.equal(pants.morphTargetInfluences![1],1);assert.deepEqual(pants.geometry.attributes.position.array,original);
  const version=pants.geometry.attributes.position.version;rig.pose(3,true);assert.equal(pants.geometry.attributes.position.version,version);
  rig.pose(3,false);assert.equal(rig.group.userData.visualMotion,'typing');
  assert.deepEqual(pants.geometry.attributes.position.array,original);assert.deepEqual(shoes.geometry.attributes.position.array,originalShoes);
@@ -456,10 +457,43 @@ test('idle walkers stay inside clear aisles, pause in place and resume without c
 });
 test('walking rig uses standing limbs, preserves pickup pose and reuses its small mesh set',()=>{
  const assets=createPersonAssets(),rig=createSeatedPerson(assets,0),visible=()=>{let count=0;rig.group.traverseVisible(o=>{if((o as THREE.Mesh).isMesh)count++;});return count;};
- rig.pose(2,false,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'walking');assert.equal(visible(),18);
+ rig.pose(2,false,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'walking');assert.equal(visible(),15);
  const count=rig.group.children.length;for(let i=0;i<30;i++)rig.pose(i,false,{phase:i,moving:true});assert.equal(rig.group.children.length,count);
  rig.pose(2,true,{phase:2,moving:true});assert.equal(rig.group.userData.visualMotion,'lifted');assert.equal(visible(),15);
  rig.pose(2,false,{phase:2,moving:false});assert.equal(rig.group.userData.visualMotion,'idle');
  rig.pose(2);assert.equal(rig.group.userData.visualMotion,'typing');assert.equal(visible(),15);
  rig.dispose();assets.dispose();
+});
+
+
+test('walking alternates opposing hand and foot, rise is continuous and click acknowledgement yields to pickup',()=>{
+ const assets=createPersonAssets(),rig=createSeatedPerson(assets,0);
+ const shoes=rig.group.children.find(o=>(o as THREE.Mesh).material===assets.materials.shoe) as THREE.Mesh;
+ const rightFoot=()=>{let z=0,n=0;for(let i=0;i<shoes.geometry.attributes.position.count;i++){const p=shoes.getVertexPosition(i,new THREE.Vector3());if(p.x>0){z+=p.z;n++;}}return z/n;};
+ const samples=[];
+ for(const phase of [Math.PI/2/5.4,Math.PI*1.5/5.4]){rig.pose(1,false,{phase,moving:true});samples.push({foot:rightFoot(),hand:rig.handPositions()[1][2]});}
+ assert.ok((samples[0].foot-samples[1].foot)*(samples[0].hand-samples[1].hand)<0,'same-side foot and hand travel in opposite directions');
+ let previous=-Infinity;
+ for(let i=0;i<=20;i++){rig.pose(0,false,{rise:i/20,phase:0,moving:false,stage:'rising'});rig.group.updateMatrixWorld(true);const y=rig.head.getWorldPosition(new THREE.Vector3()).y;assert.ok(y>=previous-.001);if(i)assert.ok(y-previous<.04);previous=y;}
+ rig.pose(3,false,null,1);assert.equal(rig.group.userData.visualMotion,'acknowledging');
+ rig.pose(3,true,null,1);assert.equal(rig.group.userData.visualMotion,'lifted');
+ rig.pose(3);assert.equal(rig.group.userData.visualMotion,'typing');rig.dispose();assets.dispose();
+});
+
+test('idle routine starts at its seat, completes all three activities and returns smoothly when assigned work',()=>{
+ const graph=createRoomWalkGraph({metadata:{recommended_px_per_m:10,recommended_world_origin_px:[0,0]},rooms:[{id:'r',bounds_px:[0,0,60,60]}],workstations:[]},'r');
+ const walker=createPersonWander(graph,{x:1,z:1,yaw:1},1)!;
+ assert.equal(walker.state().x,1);assert.equal(walker.state().z,1);assert.equal(walker.state().rise,0);
+ const activities=new Set(),stages=new Set();let previous=walker.state();
+ for(let i=0;i<14000;i++){
+  const p=walker.step(.05);if(p.activity)activities.add(p.activity);stages.add(p.stage);
+  assert.ok(Math.hypot(p.x-previous.x,p.z-previous.z)<.05,'no seat/aisle teleport');assert.ok(Math.abs(p.rise-previous.rise)<.05);previous=p;
+ }
+ assert.deepEqual([...activities].sort(),['look','stretch','think']);for(const stage of ['rising','walking','activity','sitting'])assert.ok(stages.has(stage));
+ for(let i=0;i<3000&&walker.state().stage!=='activity';i++)walker.step(.05);
+ const away=walker.state();assert.equal(away.stage,'activity');walker.step(.05,true,[],false);
+ assert.ok(Math.hypot(walker.state().x-away.x,walker.state().z-away.z)<.05);
+ for(let i=0;i<3000;i++)walker.step(.05,true,[],false);
+ assert.equal(walker.state().stage,'seated');assert.equal(walker.state().rise,0);assert.equal(walker.state().x,1);assert.equal(walker.state().z,1);
+ const frozen=walker.state();walker.step(600,false);assert.deepEqual(walker.state(),frozen);
 });

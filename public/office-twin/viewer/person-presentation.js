@@ -34,41 +34,72 @@ export function createRoomWalkGraph(layout,roomId){
     }
   }
   for(const c of cells)for(const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1]]){const n=lookup.get(`${c.row+dr}:${c.col+dc}`);if(n!==undefined)c.links.push(n);}
-  return {cells};
+  // Seat ingress/egress may cross its own desk envelope (which includes the
+  // chair), but never another workstation, wall or fixture.
+  const clearSegment=(a,b,ownBounds)=>{
+    const count=Math.max(1,Math.ceil(Math.hypot(b.x-a.x,b.z-a.z)/.1));
+    for(let i=1;i<=count;i++){
+      const x=(a.x+(b.x-a.x)*i/count)*scale+ox,z=(a.z+(b.z-a.z)*i/count)*scale+oz;
+      if(obstacles.some(o=>o!==ownBounds&&x>o[0]-.22*scale&&x<o[2]+.22*scale&&z>o[1]-.22*scale&&z<o[3]+.22*scale))return false;
+    }
+    return true;
+  };
+  return {cells,clearSegment};
 }
 
-export function createPersonWander(graph,start,seed=1,occupied=[]){
+// A presentation-only routine. Planning runs at activity boundaries, never in
+// the render loop. Existing task/selection state only asks the actor to return.
+export function createPersonWander(graph,start,seed=1,occupied=[],ownBounds=null){
   if(!graph?.cells.length)return null;
-  const cells=graph.cells,viable=cells.map((c,i)=>({c,i})).filter(({c})=>c.links.length&&occupied.every(p=>Math.hypot(p.x-c.x,p.z-c.z)>.75));
+  const cells=graph.cells,home={x:start.x,z:start.z},homeYaw=start.yaw??0;
+  const viable=cells.map((c,i)=>({c,i})).filter(({c})=>c.links.length&&occupied.every(p=>Math.hypot(p.x-c.x,p.z-c.z)>.75)&&(!graph.clearSegment||graph.clearSegment(home,c,ownBounds)));
   viable.sort((a,b)=>Math.hypot(a.c.x-start.x,a.c.z-start.z)-Math.hypot(b.c.x-start.x,b.c.z-start.z));
   if(!viable.length)return null;
-  let node=viable[0].i,x=cells[node].x,z=cells[node].z,route=[],wait=.7+(seed%5)*.65,yaw=0,moving=false,phase=0,blocked=0;
-  const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+  const entry=viable[0].i,activities=['look','stretch','think'];
+  let x=start.x,z=start.z,yaw=homeYaw,phase=0,moving=false,rise=0,stage='seated',elapsed=0,wait=2+seed*1.3,cycle=seed%3,activity=activities[cycle],route=[],trail=[],blocked=0,returning=false;
+  const state=()=>({x,z,yaw,moving,phase,rise,stage,activity:stage==='activity'?activity:null,activityTime:elapsed});
+  const change=next=>{stage=next;elapsed=0;};
   function plan(others){
-    const queue=[node],parents=new Map([[node,null]]);
+    const queue=[entry],parents=new Map([[entry,null]]);
     for(let n=0;n<queue.length;n++)for(const next of cells[queue[n]].links)if(!parents.has(next)&&others.every(p=>Math.hypot(cells[next].x-p.x,cells[next].z-p.z)>.75)){parents.set(next,queue[n]);queue.push(next);}
-    const choices=queue.filter(i=>Math.hypot(cells[i].x-x,cells[i].z-z)>1.6);
-    if(!choices.length){wait=4;return;}
-    let end=choices[Math.floor(random()*choices.length)];route=[];
-    while(end!==node){route.unshift(end);end=parents.get(end);}
+    const choices=queue.filter(i=>Math.hypot(cells[i].x-home.x,cells[i].z-home.z)>1.4);
+    if(!choices.length)return false;
+    // A farther open spot for a visual break; short routes for stretches and
+    // thoughtful pacing. All targets are in the seat's reachable aisle.
+    choices.sort((a,b)=>Math.hypot(cells[a].x-home.x,cells[a].z-home.z)-Math.hypot(cells[b].x-home.x,cells[b].z-home.z));
+    let end=choices[Math.min(choices.length-1,Math.floor(choices.length*(activity==='look'?.8:activity==='stretch'?.2:.5)))];
+    route=[];while(end!==null){route.unshift(cells[end]);end=parents.get(end);}
+    trail=[home];returning=false;return true;
   }
-  return {step(delta,enabled=true,others=[]){
-    moving=false;let remaining=Math.min(.05,Math.max(0,delta));
-    if(enabled&&remaining){
-      if(wait>0)wait-=remaining;
+  function goHome(){route=trail.slice().reverse();returning=true;change('walking');}
+  function turn(target,dt){const angle=Math.atan2(Math.sin(target-yaw),Math.cos(target-yaw));yaw+=Math.max(-dt*2.8,Math.min(dt*2.8,angle));return Math.abs(angle)<.12;}
+  return {state,step(delta,enabled=true,others=[],idle=true){
+    if(!enabled||!(delta>0))return state();
+    const dt=Math.min(.05,delta);moving=false;elapsed+=dt;
+    if(!idle&&!returning&&stage!=='seated'&&stage!=='sitting'&&stage!=='rising')goHome();
+    if(stage==='seated'){
+      if(idle&&(wait-=dt)<=0){activity=activities[cycle%3];if(plan(others))change('rising');else wait=8;}
+    }else if(stage==='rising'){
+      rise=Math.min(1,elapsed/1.15);if(rise===1){change('walking');if(!idle)goHome();}
+    }else if(stage==='walking'){
+      const next=route[0];
+      if(!next){if(returning)change('aligning');else change('activity');}
       else{
-        if(!route.length)plan(others);
-        const next=cells[route[0]];
-        if(next){
-          const dx=next.x-x,dz=next.z-z,d=Math.hypot(dx,dz),amount=Math.min(d,remaining*.65),nx=x+(d?dx/d*amount:0),nz=z+(d?dz/d*amount:0);
-          if(others.every(p=>Math.hypot(p.x-nx,p.z-nz)>.55)){
-            blocked=0;x=nx;z=nz;moving=amount>0;phase+=amount/.65;
-            const angle=Math.atan2(Math.sin(Math.atan2(dx,dz)-yaw),Math.cos(Math.atan2(dx,dz)-yaw));yaw+=Math.max(-remaining*4,Math.min(remaining*4,angle));
-            if(d<=amount+.00001){node=route.shift();if(!route.length)wait=2+random()*5;}
-          }else if((blocked+=remaining)>1.5){route=[node];blocked=0;}
+        const dx=next.x-x,dz=next.z-z,d=Math.hypot(dx,dz);
+        if(d<.015){x=next.x;z=next.z;route.shift();if(!returning)trail.push(next);}
+        else if(turn(Math.atan2(dx,dz),dt)){
+          const amount=Math.min(d,dt*.65),nx=x+dx/d*amount,nz=z+dz/d*amount;
+          if(others.every(p=>Math.hypot(p.x-nx,p.z-nz)>.5)){x=nx;z=nz;phase+=amount/.65;moving=true;blocked=0;}
+          else if((blocked+=dt)>2&&!returning){blocked=0;goHome();}
         }
       }
+    }else if(stage==='activity'){
+      if(elapsed> (activity==='look'?5:activity==='stretch'?4:6))goHome();
+    }else if(stage==='aligning'){
+      if(turn(homeYaw,dt))change('sitting');
+    }else if(stage==='sitting'){
+      rise=Math.max(0,1-elapsed/1.2);if(rise===0){cycle++;wait=12+(seed%5)*3;returning=false;change('seated');}
     }
-    return {x,z,yaw,moving,phase};
-  },state:()=>({x,z,yaw,moving,phase})};
+    return state();
+  }};
 }

@@ -15,7 +15,7 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
   const hip=seatHeight+.075,head=new THREE.Group(),upper=new THREE.Group();group.add(upper);upper.add(head);
   function mesh(parent,geometry,material,position,scale){const o=new THREE.Mesh(geometry,material);o.position.set(...position);if(scale)o.scale.set(...scale);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;}
   mesh(upper,g.body,shirt,[0,hip+.23,0]);
-  mesh(group,g.sphere,m.pants,[0,hip,0],[.16,.075,.13]);
+  const pelvis=mesh(group,g.sphere,m.pants,[0,hip,0],[.16,.075,.13]);
   mesh(upper,g.sphere,m.skin,[0,hip+.48,0],[.065,.07,.065]);
   head.position.set(0,hip+.67,0);
   mesh(head,g.sphere,m.skin,[0,0,0],[.21,.218,.195]);
@@ -30,7 +30,7 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
   const up=new THREE.Vector3(0,1,0),direction=new THREE.Vector3();
   function bone(material,radius){const o=mesh(group,g.bone,material,[0,0,0],[radius,1,radius]);return o;}
   function join(o,a,b){direction.subVectors(b,a);o.position.copy(a).add(b).multiplyScalar(.5);o.scale.y=direction.length();o.quaternion.setFromUnitVectors(up,direction.normalize());}
-  const arms=[],legs=[],rigidPoses=[],seatedBottom=[];let hanging=false,walkRig=null;
+  const arms=[],legs=[],morphBottom=[];
   for(const side of [-1,1]){
     const thigh=bone(m.pants,.075),shin=bone(m.pants,.059);
     const a=new THREE.Vector3(side*.105,hip,.025),knee=new THREE.Vector3(side*.115,hip-.06,.30),ankle=new THREE.Vector3(side*.115,.095,.32);
@@ -43,60 +43,57 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
     arms.push({side,upper:bone(shirt,.052),fore:bone(m.skin,.039),hand,elbowMesh});
   }
   const shoulder=new THREE.Vector3(),target=new THREE.Vector3(),elbow=new THREE.Vector3(),axis=new THREE.Vector3(),bend=new THREE.Vector3();
-  function legPose(lifted){
+  function legPose(mode,stride=0){
+    const lifted=mode==='held',standing=mode==='standing',rise=standing?.79-hip:0;
+    pelvis.position.y=hip+rise;
     for(const leg of legs){
-      const knee=lifted?new THREE.Vector3(leg.side*.125,hip-.28,.055):leg.knee;
-      const ankle=lifted?new THREE.Vector3(leg.side*.145,hip-.67,.035):leg.ankle;
-      join(leg.thigh,leg.a,knee);join(leg.shin,knee,ankle);leg.kneeMesh.position.copy(knee);
-      leg.shoe.position.set(ankle.x,ankle.y-.052,ankle.z+.055);leg.shoe.rotation.x=lifted?.25:0;
+      const step=leg.side*stride;
+      const knee=lifted?new THREE.Vector3(leg.side*.125,hip-.28,.055):standing?new THREE.Vector3(leg.side*.115,.44,.035+step*.08):leg.knee;
+      const ankle=lifted?new THREE.Vector3(leg.side*.145,hip-.67,.035):standing?new THREE.Vector3(leg.side*.115,.095+Math.max(0,step)*.035,.025+step*.18):leg.ankle;
+      join(leg.thigh,leg.a.clone().add(new THREE.Vector3(0,rise,0)),knee);join(leg.shin,knee,ankle);leg.kneeMesh.position.copy(knee);
+      leg.shoe.position.set(ankle.x,ankle.y-.052,ankle.z+.055);leg.shoe.rotation.x=lifted?.25:standing?-step*.08:0;
     }
   }
-  function prepareWalking(){
-    if(walkRig)return;
-    const body=new THREE.Group();group.add(body);const pivots=[];
-    mesh(body,g.sphere,m.pants,[0,.79,0],[.16,.075,.13]);
-    const legGeometry=new THREE.CapsuleGeometry(.065,.55,4,10);owned.push(legGeometry);
-    for(const side of [-1,1]){
-      const pivot=new THREE.Group();pivot.position.set(side*.105,.79,0);body.add(pivot);
-      mesh(pivot,legGeometry,m.pants,[0,-.35,0]);
-      mesh(pivot,g.sphere,m.shoe,[0,-.73,.06],[.072,.043,.125]);pivots.push({side,pivot});
-    }
-    walkRig={body,pivots};
-  }
-  function pose(seconds,lifted=false,walking=null){
-    const standing=!!walking&&!lifted;
-    if(standing)prepareWalking();
-    if(walkRig)walkRig.body.visible=standing;
-    for(const bottom of seatedBottom)bottom.visible=!standing;
-    if(lifted!==hanging){
-      for(const {geometry,seated,held} of rigidPoses){
-        const shape=lifted?held:seated;
-        for(const key of ['position','normal']){geometry.attributes[key].array.set(shape[key]);geometry.attributes[key].needsUpdate=true;}
-        geometry.computeBoundingBox();geometry.computeBoundingSphere();
-      }
-      hanging=lifted;
-    }
-    const swing=standing&&walking.moving?Math.sin(walking.phase*5.4)*.26:0;
-    const state=lifted?{mode:'lifted',breath:0,headPitch:.08,headYaw:0}:standing?{mode:walking.moving?'walking':'idle',breath:Math.abs(swing)*.03,headPitch:0,headYaw:.025*Math.sin(seconds*.5)}:seatedMotion(seconds,index*1.71);
-    const rise=standing?.79-hip:0;upper.position.y=rise+state.breath;head.rotation.set(state.headPitch,state.headYaw,0);
-    if(standing)for(const {side,pivot} of walkRig.pivots)pivot.rotation.x=side*swing;
+  function pose(seconds,lifted=false,walking=null,reaction=0){
+    const blend=lifted?0:Math.max(0,Math.min(1,walking?.rise??(walking?1:0)));
+    const stand=blend*blend*(3-2*blend),standing=stand>0;
+    const swing=standing&&walking?.moving?Math.sin(walking.phase*5.4):0;
+    // Four cached GPU morphs share the seated meshes: rise, pickup and two
+    // stride extremes. No new geometry, material or draw call on each step.
+    for(const bottom of morphBottom){const w=bottom.morphTargetInfluences;w[0]=stand;w[1]=lifted?1:0;w[2]=Math.max(0,swing)*stand;w[3]=Math.max(0,-swing)*stand;}
+    const state=lifted?{mode:'lifted',breath:0,headPitch:.08,headYaw:0}:standing?{mode:walking.moving?'walking':walking.stage==='rising'?'rising':walking.stage==='sitting'?'sitting':walking.activity||'idle',breath:Math.abs(swing)*.006,headPitch:0,headYaw:.025*Math.sin(seconds*.5)}:seatedMotion(seconds,index*1.71);
+    if(walking&&!standing&&!lifted){state.mode='resting';state.leftTap=state.rightTap=0;}
+    const activity=walking?.activity,t=walking?.activityTime??0;
+    const stretch=activity==='stretch'?Math.sin(Math.PI*Math.min(1,t/4)):0;
+    const think=activity==='think'?Math.sin(Math.PI*Math.min(1,t/6)):0;
+    const respond=lifted?0:reaction;
+    if(activity==='look'){state.headYaw=.28*Math.sin(t*.6);state.headPitch=-.08;}
+    if(think)state.headPitch=.08*think;
+    state.headYaw+=respond*.25;state.headPitch+=respond*.12;
+    const rise=(.79-hip)*stand;upper.position.y=rise+state.breath;
+    // A little forward lean while getting up; both endpoints remain unchanged.
+    upper.rotation.x=Math.sin(blend*Math.PI)*.12;head.rotation.set(state.headPitch,state.headYaw,0);
     for(const arm of arms){
       shoulder.set(arm.side*.175,hip+.38+rise+state.breath,.025);
       if(lifted)target.set(arm.side*.22,hip-.12,.055);
-      else if(standing)target.set(arm.side*.22,.79-.09,.055-arm.side*swing*.65);
-      else target.set(keyboard[0]+arm.side*.095,keyboard[1]+(arm.side<0?state.leftTap:state.rightTap),keyboard[2]);
+      else{
+        target.set(keyboard[0]+arm.side*.095,keyboard[1]+(arm.side<0?state.leftTap||0:state.rightTap||0),keyboard[2]);
+        // Foot forward => same-side hand back (opposite arm/leg phase).
+        target.lerp(new THREE.Vector3(arm.side*(.22+stretch*.13),.70+stretch*.60,.055-arm.side*swing*.14),stand);
+        if(think&&arm.side>0)target.lerp(new THREE.Vector3(.12,1.22,.23),think*.8);
+        if(respond&&arm.side>0)target.lerp(new THREE.Vector3(.27,hip+.45+rise,.20),respond);
+      }
       axis.subVectors(target,shoulder);const distance=THREE.MathUtils.clamp(axis.length(),.06,.519);axis.normalize();target.copy(shoulder).addScaledVector(axis,distance);
       const along=(.26**2-.26**2+distance**2)/(2*distance),height=Math.sqrt(Math.max(0,.26**2-along**2));
       bend.set(arm.side*.4,-1,-.15).addScaledVector(axis,-bend.dot(axis)).normalize();
       elbow.copy(shoulder).addScaledVector(axis,along).addScaledVector(bend,height);
       join(arm.upper,shoulder,elbow);join(arm.fore,elbow,target);arm.elbowMesh.position.copy(elbow);arm.hand.position.copy(target);
     }
-    group.userData.visualMotion=state.mode;
+    group.userData.visualMotion=respond>.05?'acknowledging':state.mode;
     return state;
   }
   pose(0);
-  // Keep the same draw count. Two cached leg shapes change only on pickup/drop;
-  // the head, breathing torso and arms keep their existing transforms.
+  // Bake the limb shapes once; per-frame work only changes morph weights.
   const dynamic=new Set(arms.flatMap(a=>[a.upper,a.fore,a.hand,a.elbowMesh])),owned=[];
   const legParts=new Set(legs.flatMap(l=>[l.thigh,l.shin,l.kneeMesh,l.shoe]));
   for(const parent of [group,head]){
@@ -111,14 +108,24 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
       const geometries=parts.map(o=>{o.updateMatrix();return o.geometry.clone().applyMatrix4(o.matrix);});
       const geometry=mergeGeometries(geometries,false);geometries.forEach(g=>g.dispose());
       if(!geometry)continue;
-      if(parts.some(o=>legParts.has(o))){
-        legPose(true);
-        const liftedParts=parts.map(o=>{o.updateMatrix();return o.geometry.clone().applyMatrix4(o.matrix);});
-        const lifted=mergeGeometries(liftedParts,false);liftedParts.forEach(g=>g.dispose());legPose(false);
-        rigidPoses.push({geometry,seated:{position:geometry.attributes.position.array.slice(),normal:geometry.attributes.normal.array.slice()},held:{position:lifted.attributes.position.array.slice(),normal:lifted.attributes.normal.array.slice()}});lifted.dispose();
+      const hasLegs=parts.some(o=>legParts.has(o));
+      if(hasLegs){
+        const shapes=[];
+        for(const [mode,stride] of [['standing',0],['held',0],['standing',1],['standing',-1]]){
+          legPose(mode,stride);
+          const clones=parts.map(o=>{o.updateMatrix();return o.geometry.clone().applyMatrix4(o.matrix);});
+          shapes.push(mergeGeometries(clones,false));clones.forEach(g=>g.dispose());
+        }
+        for(const key of ['position','normal'])geometry.morphAttributes[key]=shapes.map((shape,i)=>{
+          const values=shape.attributes[key].array.slice(),base=(i>1?shapes[0]:geometry).attributes[key].array;
+          for(let j=0;j<values.length;j++)values[j]-=base[j];
+          return new THREE.Float32BufferAttribute(values,3);
+        });
+        geometry.morphTargetsRelative=true;shapes.forEach(g=>g.dispose());legPose('seated');
+        geometry.computeBoundingBox();geometry.computeBoundingSphere();
       }
       const combined=new THREE.Mesh(geometry,material);combined.castShadow=true;combined.receiveShadow=true;
-      if(parts.some(o=>legParts.has(o)))seatedBottom.push(combined);
+      if(hasLegs)morphBottom.push(combined);
       parent.add(combined);parts.forEach(o=>parent.remove(o));owned.push(geometry);
     }
   }
