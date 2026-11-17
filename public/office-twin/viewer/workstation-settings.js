@@ -1,4 +1,6 @@
 import {profile,genderLabel} from './workstation-roster.js';
+let editState={open:false,seatId:'',people:[]};
+export const getWorkstationEditState=()=>editState;
 const endpoint='/api/astra/office-workstations';
 const el=(tag,text='',className='')=>Object.assign(document.createElement(tag),{textContent:text,className});
 async function request(payload){
@@ -8,11 +10,11 @@ async function request(payload){
   return data;
 }
 export function createWorkstationSettings({toolbar,getPeople,onChange}){
-  let config=null,draft=[],current='',saving=false,loading=false;
+  let config=null,draft=[],current='',saving=false,loading=false,opened=false,epoch=0;
   const open=el('button','工位设置','btn btn-ghost btn-sm');open.type='button';toolbar.append(open);
-  const dialog=el('dialog','','office-workstations');dialog.setAttribute('aria-labelledby','workstations-title');
+  const dialog=el('dialog','','office-workstations');dialog.id='office-workstations';dialog.setAttribute('popover','manual');dialog.setAttribute('aria-labelledby','workstations-title');
   const form=el('form'),header=el('header'),title=el('h2','工位设置');title.id='workstations-title';
-  const close=el('button','×','btn btn-ghost btn-square');close.type='button';close.setAttribute('aria-label','关闭工位设置');header.append(title,close);
+  const close=el('button','×','btn btn-ghost btn-square');close.type='button';close.setAttribute('aria-label','关闭工位设置');const all=el('button','全部工位','btn btn-ghost btn-sm');all.type='button';all.onclick=()=>publish('all');header.append(title,all,close);
   const body=el('div','','workstations-body'),sidebar=el('aside'),list=el('div','','workstations-list');list.setAttribute('aria-label','人员列表');
   const add=el('button','＋ 添加人员','btn btn-ghost');add.type='button';sidebar.append(list,add);
   const fields=el('div','','workstations-fields'),controls={};
@@ -26,7 +28,7 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
     input.addEventListener('input',()=>{
       const person=draft.find(p=>p.id===current);if(!person)return;
       person[key]=input.value;status.textContent='有未保存的修改';input.setCustomValidity('');
-      if(key==='name'||key==='seatId')renderList();
+      if(key==='name'||key==='seatId')renderList();publish(key==='seatId'?'focus':null);
     });
     row.append(labelNode,input);fields.append(row);controls[key]=input;
   }
@@ -35,6 +37,20 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   const cancel=el('button','取消','btn btn-ghost');cancel.type='button';
   const save=el('button','保存设置','btn btn-primary');save.type='submit';save.title='保存到项目 config/office-workstations.json';
   footer.append(status,cancel,save);form.append(header,body,footer);form.setAttribute('aria-labelledby',title.id);dialog.append(form);document.body.append(dialog);
+  function publish(action=null){
+    editState={open:opened,seatId:draft.find(p=>p.id===current)?.seatId||'',people:draft.map(p=>({id:p.id,name:p.name,seatId:p.seatId})),action};
+    document.body.dataset.workstationsOpen=String(opened);
+    window.dispatchEvent(new CustomEvent('office-workstations-change',{detail:editState}));
+  }
+  function pickSeat(event){
+    if(!opened||loading||saving)return;
+    const seatId=event.detail?.seatId,person=draft.find(p=>p.id===current);
+    if(!person||!config?.seats.some(s=>s.id===seatId))return;
+    const occupied=draft.find(p=>p.id!==current&&p.seatId===seatId);
+    if(occupied){status.textContent=`${seatId.replace('SEAT_','')} 已分配给 ${occupied.name||'其他人员'}`;return;}
+    person.seatId=seatId;controls.seatId.value=seatId;controls.seatId.setCustomValidity('');renderList();status.textContent='有未保存的修改';publish();
+  }
+  window.addEventListener('office-workstation-pick',pickSeat);
   function renderList(){
     list.replaceChildren();
     for(const person of draft){
@@ -46,32 +62,33 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   }
   function select(id){
     current=id;const person=draft.find(p=>p.id===id);fields.hidden=!person;renderList();if(!person)return;
-    for(const [key,input] of Object.entries(controls)){input.value=person[key];input.setCustomValidity('');}
+    for(const [key,input] of Object.entries(controls)){input.value=person[key];input.setCustomValidity('');}publish('focus');
   }
   function busy(value){saving=value;for(const input of Object.values(controls))input.disabled=value;save.disabled=value||loading;add.disabled=value||loading||!config||draft.length>=config.seats.length;list.inert=value;}
   async function load(){
     config=await request();onChange(config);return config;
   }
   open.onclick=async()=>{
-    if(dialog.open)return;
-    loading=true;status.textContent='正在读取工位…';fields.hidden=true;draft=[];renderList();save.disabled=true;dialog.showModal();
+    if(opened)return;const attempt=++epoch;opened=true;config=null;
+    loading=true;status.textContent='正在读取工位…';fields.hidden=true;draft=[];renderList();save.disabled=true;if(dialog.showPopover)dialog.showPopover();else dialog.show();publish();
     try{
-      await load();draft=getPeople().map(profile);
+      await load();if(attempt!==epoch||!opened)return;draft=getPeople().map(profile);
       controls.seatId.replaceChildren();
       controls.seatId.append(Object.assign(el('option','选择工位'),{value:''}));
       for(const seat of config.seats)controls.seatId.append(Object.assign(el('option',seat.label),{value:seat.id}));
       select(draft[0]?.id||'');status.textContent=`${draft.length} 人 · ${config.seats.length} 个工位`;controls.name.focus();
     }catch(error){status.textContent=error.message;}
-    finally{loading=false;save.disabled=!config||fields.hidden;renderList();}
+    finally{if(attempt===epoch){loading=false;save.disabled=!config||fields.hidden;renderList();publish();}}
   };
   add.onclick=()=>{
     const used=new Set(draft.map(p=>p.seatId)),seat=config.seats.find(s=>!used.has(s.id));if(!seat)return;
     const person={id:`local:${crypto.randomUUID()}`,name:'',gender:'unspecified',trade:'',expertise:'',seatId:seat.id};
     draft.push(person);select(person.id);status.textContent='有未保存的修改';save.disabled=false;controls.name.focus();
   };
-  function dismiss(){if(saving)return;dialog.close();}
+  function dismiss(){if(saving)return;opened=false;epoch++;loading=false;if(dialog.hidePopover)dialog.hidePopover();else dialog.close();publish();}
   close.onclick=dismiss;cancel.onclick=dismiss;
-  dialog.addEventListener('cancel',event=>{if(saving)event.preventDefault();});
+  const escape=event=>{if(opened&&event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();dismiss();}};
+  window.addEventListener('keydown',escape,true);
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(loading||saving||!config)return;
     const used=new Set();
@@ -92,5 +109,5 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   });
   // Loading failure is retried and surfaced when the settings page is opened.
   load().catch(()=>{});
-  return {dispose(){dialog.remove();open.remove();}};
+  return {dispose(){opened=false;epoch++;publish();window.removeEventListener('office-workstation-pick',pickSeat);window.removeEventListener('keydown',escape,true);dialog.remove();open.remove();}};
 }

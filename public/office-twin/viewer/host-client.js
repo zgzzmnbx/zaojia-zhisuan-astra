@@ -82,6 +82,8 @@ function receive(event) {
   if(event.data.type==='layout'){
     const left=Number(event.data.left);if(!Number.isFinite(left)||left<0)return;
     document.documentElement.style.setProperty('--host-chat-width',`${left}px`);
+    const bottomInset=Number(event.data.bottomInset);
+    document.documentElement.style.setProperty('--host-bottom-inset',`${Number.isFinite(bottomInset)?Math.max(0,bottomInset):0}px`);
     const r=event.data.chatRect;chatRect=r&&['left','top','right','bottom'].every(k=>Number.isFinite(r[k]))?r:null;
     window.dispatchEvent(new CustomEvent('office-host-layout',{detail:{left}}));return;
   }

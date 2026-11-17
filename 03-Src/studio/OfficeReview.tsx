@@ -77,10 +77,11 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
       const left=chatVisible&&chat?Math.max(0,chat.getBoundingClientRect().right-host.getBoundingClientRect().left+16):0;
       host.parentElement?.style.setProperty('--office-chat-width',`${left}px`);
       const f=host.getBoundingClientRect(),r=chatVisible?chat?.getBoundingClientRect():null;
-      send('layout',{left,chatRect:r?{left:r.left-f.left,top:r.top-f.top,right:r.right-f.left,bottom:r.bottom-f.top}:null});
+      send('layout',{left,bottomInset:Math.max(0,f.bottom-window.innerHeight),chatRect:r?{left:r.left-f.left,top:r.top-f.top,right:r.right-f.left,bottom:r.bottom-f.top}:null});
     };
     const observer=new ResizeObserver(measure);if(chat)observer.observe(chat);if(frame.current)observer.observe(frame.current);
-    measure();return()=>observer.disconnect();
+    window.addEventListener('resize',measure);window.addEventListener('scroll',measure,true);
+    measure();return()=>{observer.disconnect();window.removeEventListener('resize',measure);window.removeEventListener('scroll',measure,true);};
   },[ready,active,chatVisible]);
   useEffect(()=>{
     const receive=(event:MessageEvent)=>{
@@ -120,6 +121,6 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   return <div className="office-review-host" aria-busy={!rendered&&!error}>
     {!rendered&&<div className="office-review-loading" role="status"><div><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><span>{error?'办公室尚未载入':'正在加载办公室沙盘…'}</span></div></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=0.38.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=0.39.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }
