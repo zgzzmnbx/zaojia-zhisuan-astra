@@ -1,20 +1,21 @@
-import {useEffect,useRef,useState,type CSSProperties} from 'react';
-import type {mountLogo} from './logo-renderer.mjs';
+import {useEffect,useLayoutEffect,useRef,useState,type CSSProperties} from 'react';
+import {mountLoadingLogo,type LoadingRenderer} from './loading-renderer';
 import {useLoadingMotion} from './useLoadingMotion';
 import './loading-logo.css';
 
 /** Decorative only: the owning request supplies its own unchanged status text. */
 export function LoadingLogo({size=32,active=true,paused=false,allowMotion=false,solidFallback=false}:{size?:number;active?:boolean;paused?:boolean;allowMotion?:boolean;solidFallback?:boolean}){
- const host=useRef<HTMLSpanElement>(null),controller=useRef<ReturnType<typeof mountLogo>|null>(null);
+ const host=useRef<HTMLSpanElement>(null),controller=useRef<LoadingRenderer|null>(null);
  const [motion]=useLoadingMotion(),[visible,setVisible]=useState(false),[ready,setReady]=useState(false);
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
  const latest=useRef({motion,paused,reduced,allowMotion});latest.current={motion,paused,reduced,allowMotion};
  function update(){
   const p=latest.current;
-  controller.current?.update({mode:p.motion,loading:true,palette:'original',seed:'#228be6',dark:document.documentElement.dataset.astraScheme==='dark',speed:1,paused:p.paused||(p.reduced&&!p.allowMotion),active:true});
+  controller.current?.update({mode:p.motion,dark:document.documentElement.dataset.astraScheme==='dark',paused:p.paused||(p.reduced&&!p.allowMotion),active:true});
  }
- useEffect(()=>{
+ useLayoutEffect(()=>{
   const el=host.current;if(!el)return;
+  const box=el.getBoundingClientRect();setVisible(box.width>0&&box.height>0&&box.bottom>0&&box.top<innerHeight);
   const io=new IntersectionObserver(entries=>setVisible(entries[0]?.isIntersecting===true));io.observe(el);
   const mq=matchMedia('(prefers-reduced-motion: reduce)'),sync=()=>setReduced(mq.matches);mq.addEventListener('change',sync);
   return()=>{io.disconnect();mq.removeEventListener('change',sync);};
@@ -23,9 +24,7 @@ export function LoadingLogo({size=32,active=true,paused=false,allowMotion=false,
   const el=host.current;if(!el||!visible||!active)return;
   let disposed=false;
   const fail=()=>{if(disposed)return;controller.current?.dispose();controller.current=null;setReady(false);};
-  import('./logo-renderer.mjs').then(({mountLogo})=>{
-   if(disposed)return;try{controller.current=mountLogo(el,fail);update();setReady(true);}catch{fail();}
-  }).catch(fail);
+  try{controller.current=mountLoadingLogo(el,()=>{if(!disposed)setReady(true);},fail);update();}catch{fail();}
   const observer=new MutationObserver(update);observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-astra-scheme','data-astra-palette']});
   Object.defineProperty(el,'logoDiagnostics',{value:()=>controller.current?.inspect()??null,configurable:true});
   return()=>{disposed=true;observer.disconnect();controller.current?.dispose();controller.current=null;setReady(false);delete (el as any).logoDiagnostics;};
