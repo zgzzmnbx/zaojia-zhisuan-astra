@@ -468,9 +468,10 @@ test('chat drop accepts only the current review context and revision',()=>{
 import {activePersonTasks,personLabelLevel,createRoomWalkGraph,createPersonWander} from '../public/office-twin/viewer/person-presentation.js';
 test('person labels reveal progressively with hysteresis and finished work does not keep a person busy',()=>{
  assert.equal(personLabelLevel(10),'hidden');assert.equal(personLabelLevel(16),'hidden');
- assert.equal(personLabelLevel(24),'name');assert.equal(personLabelLevel(44,'name'),'name');
- assert.equal(personLabelLevel(46),'detail');assert.equal(personLabelLevel(41,'detail'),'detail');
- assert.equal(personLabelLevel(38,'detail'),'name');assert.equal(personLabelLevel(12,'name'),'hidden');
+ assert.equal(personLabelLevel(24),'name');assert.equal(personLabelLevel(70,'detail'),'name');
+ assert.equal(personLabelLevel(119,'name'),'name');assert.equal(personLabelLevel(120),'detail');
+ assert.equal(personLabelLevel(105,'detail'),'detail');assert.equal(personLabelLevel(104,'detail'),'name');
+ assert.equal(personLabelLevel(12,'name'),'hidden');
  const tasks=['待复核','审核中','已通过','已完成','已退回','completed','cancelled'].map(status=>({employeeId:'a',status}));
  assert.equal(activePersonTasks(tasks,'a').length,2);assert.equal(activePersonTasks(tasks,'b').length,0);
 });

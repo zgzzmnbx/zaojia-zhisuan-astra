@@ -4,7 +4,7 @@ export function activePersonTasks(tasks,id){return tasks.filter(t=>t.employeeId=
 export function personLabelLevel(pixels,previous='hidden'){
   if(!Number.isFinite(pixels)||pixels<13)return 'hidden';
   if(previous==='hidden'&&pixels<17)return 'hidden';
-  if(pixels>=45||(previous==='detail'&&pixels>=40))return 'detail';
+  if(pixels>=120||(previous==='detail'&&pixels>=105))return 'detail';
   return 'name';
 }
 
