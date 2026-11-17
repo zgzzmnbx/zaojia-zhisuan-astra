@@ -90,6 +90,23 @@ class WorkstationsTest(unittest.TestCase):
             self.assertEqual(self.client.put(self.url, json=data).status_code, 400)
             self.assertEqual(self.path.read_bytes(), before)
 
+    def test_colors_save_reload_legacy_preservation_and_reset(self):
+        data = self.payload()
+        data['people'][0]['colors'] = {'hair': '#abcdef', 'shirt': '#123456', 'skin': '#ffe4d3'}
+        self.assertEqual(self.client.put(self.url, json=data).status_code, 200)
+        expected = {'hair': '#ABCDEF', 'shirt': '#123456', 'skin': '#FFE4D3'}
+        self.assertEqual(json.loads(self.path.read_text('utf-8'))['people'][0]['colors'], expected)
+        legacy = self.payload(); legacy['revision'] = 1
+        self.assertEqual(self.client.put(self.url, json=legacy).json()['people'][0]['colors'], expected)
+        data = self.client.get(self.url).json(); data.pop('seats'); before = self.path.read_bytes()
+        for invalid in [None, [], {'hair': 'red'}, {'shirt': '#fff'}, {'skin': '#GG1122'}, {'accounts': '#112233'}, {'hair': 42}]:
+            data['people'][0]['colors'] = invalid
+            self.assertEqual(self.client.put(self.url, json=data).status_code, 400)
+            self.assertEqual(self.path.read_bytes(), before)
+        data['people'][0]['colors'] = {}
+        self.assertEqual(self.client.put(self.url, json=data).status_code, 200)
+        self.assertEqual(self.client.get(self.url).json()['people'][0]['colors'], {})
+
 
 if __name__ == '__main__':
     unittest.main()

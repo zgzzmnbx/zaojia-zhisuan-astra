@@ -1,8 +1,9 @@
 // Display overrides cannot supply accounts, selected state or sending permissions.
+import {normalizePersonColors} from './people/person-colors.js';
 import {normalizeAppearance} from './people/appearances.js';
 export const genderLabel=value=>({male:'男',female:'女',unspecified:'未设置'}[value]||'未设置');
 export function profile(person){
-  return {id:person.id,name:person.name,gender:person.gender||'unspecified',appearance:normalizeAppearance(person.appearance),trade:person.trade||'',expertise:person.expertise||'',seatId:person.seatId||''};
+  return {id:person.id,name:person.name,gender:person.gender||'unspecified',appearance:normalizeAppearance(person.appearance),colors:normalizePersonColors(person.colors),trade:person.trade||'',expertise:person.expertise||'',seatId:person.seatId||''};
 }
 export function workstationRoster(directory,config){
   if(!config)return directory;

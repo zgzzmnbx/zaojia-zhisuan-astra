@@ -1,4 +1,5 @@
 import {profile,genderLabel} from './workstation-roster.js';
+import {colorFields,personColorDefaults,normalizePersonColors} from './people/person-colors.js';
 import {appearances} from './people/appearances.js';
 import {createAppearancePreview} from './people/appearance-preview.js';
 let editState={open:false,seatId:'',people:[]};
@@ -32,11 +33,30 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
     input.addEventListener('input',()=>{
       const person=draft.find(p=>p.id===current);if(!person)return;
       person[key]=input.value;status.textContent='有未保存的修改';input.setCustomValidity('');
-      if(key==='appearance')preview.show(person);
+      if(key==='appearance'||key==='gender')renderColors(person);
       if(key==='name'||key==='seatId')renderList();publish(key==='seatId'?'focus':null);
     });
     row.append(labelNode,input);fields.append(row);controls[key]=input;
     if(key==='appearance'){input.title='单独设置后使用此卡通扮相；跟随画面风格则沿用全局人物风格';fields.append(previewNode);}
+  }
+  const colorsPanel=el('div','','workstations-colors'),colorInputs={};
+  for(const [key,label] of colorFields){
+    const row=el('label','','workstations-color'),input=el('input');input.type='color';input.name=key;input.setAttribute('aria-label',label);
+    input.addEventListener('input',()=>{
+      const person=draft.find(p=>p.id===current);if(!person||saving)return;
+      person.colors={...normalizePersonColors(person.colors),[key]:input.value.toUpperCase()};
+      status.textContent='有未保存的修改';showPreview(person);
+    });
+    row.append(el('span',label),input);colorsPanel.append(row);colorInputs[key]=input;
+  }
+  const resetColors=el('button','恢复扮相配色','btn btn-ghost btn-sm');resetColors.type='button';
+  resetColors.onclick=()=>{const person=draft.find(p=>p.id===current);if(!person||saving)return;person.colors={};renderColors(person);status.textContent='有未保存的修改';};
+  colorsPanel.append(resetColors);previewNode.after(colorsPanel);
+  function previewStyle(){try{return localStorage.getItem('astra.office.people-style.v1')||'classic';}catch{return 'classic';}}
+  function showPreview(person){preview.show(person,{index:draft.indexOf(person),style:previewStyle()});}
+  function renderColors(person){
+    const colors={...personColorDefaults(person,draft.indexOf(person),previewStyle()),...normalizePersonColors(person.colors)};
+    for(const [key,input] of Object.entries(colorInputs))input.value=colors[key];showPreview(person);
   }
   body.append(sidebar,fields);
   const footer=el('footer'),status=el('span','','workstations-status');status.setAttribute('role','status');
@@ -68,9 +88,9 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   }
   function select(id){
     current=id;const person=draft.find(p=>p.id===id);fields.hidden=!person;renderList();if(!person)return;
-    for(const [key,input] of Object.entries(controls)){input.value=person[key];input.setCustomValidity('');}preview.show(person);publish('focus');
+    for(const [key,input] of Object.entries(controls)){input.value=person[key];input.setCustomValidity('');}renderColors(person);publish('focus');
   }
-  function busy(value){saving=value;for(const input of Object.values(controls))input.disabled=value;save.disabled=value||loading;add.disabled=value||loading||!config||draft.length>=config.seats.length;list.inert=value;}
+  function busy(value){saving=value;resetColors.disabled=value;for(const input of Object.values(colorInputs))input.disabled=value;for(const input of Object.values(controls))input.disabled=value;save.disabled=value||loading;add.disabled=value||loading||!config||draft.length>=config.seats.length;list.inert=value;}
   async function load(){
     config=await request();onChange(config);return config;
   }
@@ -115,5 +135,5 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   });
   // Loading failure is retried and surfaced when the settings page is opened.
   load().catch(()=>{});
-  return {dispose(){opened=false;epoch++;preview.dispose();publish();window.removeEventListener('office-workstation-pick',pickSeat);window.removeEventListener('keydown',escape,true);dialog.remove();open.remove();}};
+  return {dispose(){opened=false;epoch++;preview.destroy();publish();window.removeEventListener('office-workstation-pick',pickSeat);window.removeEventListener('keydown',escape,true);dialog.remove();open.remove();}};
 }

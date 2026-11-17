@@ -236,6 +236,7 @@ import {createPlacementSurface,nearestFreePoint} from '../public/office-twin/vie
 import {createPersonAssets,createSeatedPerson} from '../public/office-twin/viewer/seated-person.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {preparePolyforkTemplate,createPolyforkPerson,normalizePersonStyle} from '../public/office-twin/viewer/people/polyfork-person.js';
+import {normalizePersonColors,personColorDefaults} from '../public/office-twin/viewer/people/person-colors.js';
 import {personScreenBounds} from '../public/office-twin/viewer/person-drag-overlay.js';
 
 test('physical placement keeps review permission and context checks independent',()=>{
@@ -281,6 +282,32 @@ test('Polyfork styles keep independent skeletons, keyboard contact, lifted feet 
   a.dispose();assert.equal(geometryDisposed,0);b.dispose();template.dispose();assert.equal(geometryDisposed,1);
  }
 });
+test('custom person colours are isolated, survive profiles and keep original rig and shaded details',async()=>{
+ const colors={hair:'#AABBCC',shirt:'#CCDDEE',skin:'#FFEEDD'};
+ assert.deepEqual(normalizePersonColors({...colors,skin:'red',accounts:true}),{hair:'#AABBCC',shirt:'#CCDDEE'});
+ assert.deepEqual(profile({id:'a',name:'a',colors}).colors,colors);
+ assert.equal(personColorDefaults({appearance:'long-black'},0,'engineer').hair,'#4B505B');
+ const original=createSeatedPerson(null,0,{}),custom=createSeatedPerson(null,0,{colors});
+ assert.equal(custom.drawCalls,original.drawCalls);custom.pose(1,true);assert.equal(custom.group.userData.visualMotion,'lifted');
+ original.dispose();custom.dispose();
+ for(const file of ['seated-office-worker','crane-banksman']){
+  const bytes=fs.readFileSync(`public/office-twin/people/${file}.glb`),gltf=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
+  const template=preparePolyforkTemplate(gltf.scene),a=createPolyforkPerson(template,0,{colors}),b=createPolyforkPerson(template,1,{});
+  const src=template.group.getObjectByName('Polyfork person').geometry,geom=a.group.getObjectByName('Polyfork person').geometry;
+  assert.notEqual(geom,src);assert.equal(b.group.getObjectByName('Polyfork person').geometry,src);
+  assert.deepEqual(geom.getAttribute('skinWeight').array,src.getAttribute('skinWeight').array);
+  assert.deepEqual(geom.getAttribute('normal').array,src.getAttribute('normal').array);
+  const seen=new Set(),indices=new Set();
+  for(const [i,key,shade] of src.userData.colorSlots){
+   seen.add(key);indices.add(i);const expected=new THREE.Color(colors[key]).multiplyScalar(shade),actual=new THREE.Color().fromBufferAttribute(geom.getAttribute('color'),i);
+   assert.ok(Math.abs(actual.r-expected.r)<1e-6&&Math.abs(actual.g-expected.g)<1e-6&&Math.abs(actual.b-expected.b)<1e-6);
+  }
+  assert.deepEqual([...seen].sort(),['hair','shirt','skin']);
+  for(let i=0;i<src.getAttribute('color').count;i++)if(!indices.has(i))assert.deepEqual(new THREE.Color().fromBufferAttribute(geom.getAttribute('color'),i),new THREE.Color().fromBufferAttribute(src.getAttribute('color'),i));
+  let disposed=0;geom.addEventListener('dispose',()=>disposed++);a.dispose();assert.equal(disposed,1);b.dispose();template.dispose();
+ }
+});
+
 test('seated people face each individual monitor on opposite sides of the room',()=>{
  for(const [origin,target] of [[[0,0,0],[0,1,1]],[[0,0,0],[0,1,-1]],[[2,0,3],[-1,1,4]]]){
   const yaw=seatFacing(origin,target),dx=target[0]-origin[0],dz=target[2]-origin[2];

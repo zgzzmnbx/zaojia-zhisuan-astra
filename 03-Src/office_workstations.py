@@ -1,6 +1,7 @@
 """Project-local office presentation settings; never changes review recipients or rights."""
 import json
 import os
+import re
 import tempfile
 from pathlib import Path
 from threading import RLock
@@ -42,7 +43,7 @@ def validate(value, available):
     ids, occupied, result = set(), set(), []
     for person in people:
         required = {'id', 'name', 'gender', 'trade', 'expertise', 'seatId'}
-        if not isinstance(person, dict) or not required <= set(person) or set(person) - required - {'appearance'}:
+        if not isinstance(person, dict) or not required <= set(person) or set(person) - required - {'appearance', 'colors'}:
             raise ValueError('人员字段无效')
         clean = {}
         for key, limit in [('id', 240), ('name', 40), ('trade', 80), ('expertise', 240), ('seatId', 80), ('gender', 16)]:
@@ -58,6 +59,12 @@ def validate(value, available):
         if not isinstance(appearance, str) or appearance not in APPEARANCES:
             raise ValueError('请选择有效人物扮相')
         clean['appearance'] = appearance
+        colors = person.get('colors', {})
+        if not isinstance(colors, dict) or set(colors) - {'hair', 'shirt', 'skin'}:
+            raise ValueError('人物颜色字段无效')
+        if any(not isinstance(c, str) or not re.fullmatch(r'#[0-9a-fA-F]{6}', c) for c in colors.values()):
+            raise ValueError('人物颜色须为六位十六进制颜色，例如 #A8D2EB')
+        clean['colors'] = {key: color.upper() for key, color in colors.items()}
         if clean['seatId'] not in available:
             raise ValueError(f"{clean['name']}：请选择有效工位")
         if clean['seatId'] in occupied:
@@ -97,6 +104,8 @@ def save(payload: dict = Body(...)):
             for incoming, person in zip(payload['people'], value['people']):
                 if 'appearance' not in incoming:
                     person['appearance'] = previous.get(person['id'], {}).get('appearance', 'inherit')
+                if 'colors' not in incoming:
+                    person['colors'] = previous.get(person['id'], {}).get('colors', {})
         except (ValueError, TypeError) as error:
             raise HTTPException(400, str(error)) from None
         value['revision'] += 1

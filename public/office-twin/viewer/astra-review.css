@@ -21,6 +21,11 @@ button,input,select,textarea{font:inherit}
 .workstations-field{display:flex;flex-direction:column;gap:6px;min-width:0}
 .workstations-appearance-preview{grid-column:1/-1;min-height:160px;text-align:center;border:1px solid var(--astra-line);border-radius:12px;background:var(--astra-soft);overflow:hidden}
 .workstations-appearance-preview canvas{display:block;max-width:100%;height:auto;margin:auto}
+.workstations-colors{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.workstations-color{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.workstations-color input[type=color]{width:100%;height:36px;padding:3px;background:var(--astra-paper);border:1px solid var(--astra-line);border-radius:8px;cursor:pointer}
+.workstations-color input:focus-visible{outline:2px solid var(--astra-primary);outline-offset:2px}
+.workstations-colors>button{grid-column:1/-1;justify-self:end}
 .workstations-field:nth-child(n+3){grid-column:1/-1}
 .workstations-field label{font-size:14px;font-weight:500}
 .workstations-field :is(input,select){width:100%;height:40px;min-width:0;background:var(--astra-paper);color:inherit;border:1px solid var(--astra-line);border-radius:8px;padding-inline:10px;font-size:14px}

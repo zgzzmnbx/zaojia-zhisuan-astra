@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+import {normalizePersonColors} from './person-colors.js';
 import {seatedMotion} from '../person-motion.js';
 
 export const personStyles=[{id:'classic',label:'原版卡通'},{id:'office',label:'低多边形办公'},{id:'engineer',label:'工程人员'}];
@@ -15,6 +16,14 @@ const softPalette=new Map(Object.entries({
   'c69a62':'ffe3cf','af7e4e':'efc8ac','ef6a1e':'f5bd8f','c2cace':'e1e8ed','8e7859':'c8c9ba','4a3a2a':'c9bca8','2e241b':'afa18e','ff7621':'f6bf93',
 }).map(([from,to])=>[parseInt(from,16),new THREE.Color('#'+to)]));
 
+// Slot membership uses original authored colours, before pastel mapping.
+const colorSlots=new Map(Object.entries({
+  '523a24':['hair',1],'8c4a28':['hair',1],
+  'd8ab88':['skin',1],'c49778':['skin',.82],'c69a62':['skin',1],'af7e4e':['skin',.82],
+  '90c4d2':['shirt',1],'83b2bf':['shirt',.88],'7099a4':['shirt',.72],
+  'ef6a1e':['shirt',1],'ff7621':['shirt',1.06],
+}).map(([hex,slot])=>[parseInt(hex,16),slot]));
+
 // The supplied meshes share a T-pose, one material and the same 31 joints.
 // Merge and recolour once, then clone skeletons; no per-frame colour work.
 export function preparePolyforkTemplate(scene){
@@ -26,9 +35,11 @@ export function preparePolyforkTemplate(scene){
   }
   const geometry=mergeGeometries(meshes.map(m=>m.geometry),false),material=source.material.clone();
   if(!geometry)throw new Error('人物模型无法合批');
-  const colors=geometry.getAttribute('color'),sample=new THREE.Color();
+  const colors=geometry.getAttribute('color'),sample=new THREE.Color();geometry.userData.colorSlots=[];
   if(colors)for(let i=0;i<colors.count;i++){
-    const target=softPalette.get(sample.fromBufferAttribute(colors,i).getHex());
+    const original=sample.fromBufferAttribute(colors,i).getHex(),slot=colorSlots.get(original);
+    if(slot)geometry.userData.colorSlots.push([i,...slot]);
+    const target=softPalette.get(original);
     if(target)colors.setXYZ(i,target.r,target.g,target.b);
   }
   const group=new THREE.Group(),hips=joints.find(b=>b.name==='Hips');group.add(hips);
@@ -59,9 +70,16 @@ export function createPolyforkAssets(){
   };
 }
 
-export function createPolyforkPerson(template,index,{seatHeight=.46,keyboard=[0,.77,.44]}={}){
+export function createPolyforkPerson(template,index,{seatHeight=.46,keyboard=[0,.77,.44],colors={}}={}){
   const group=clone(template.group),bones={};group.traverse(o=>{if(o.isBone)bones[o.name]=o;});
   const mesh=group.getObjectByName('Polyfork person'),hips=bones.Hips,spine=bones.Spine,head=bones.Head,hipY=hips.position.y;
+  const palette=normalizePersonColors(colors),customGeometry=Object.keys(palette).length>0;
+  if(customGeometry){
+    mesh.geometry=mesh.geometry.clone();const attribute=mesh.geometry.getAttribute('color'),color=new THREE.Color();
+    for(const [i,key,shade] of mesh.geometry.userData.colorSlots||[])if(palette[key]){
+      color.set(palette[key]).multiplyScalar(shade);attribute.setXYZ(i,color.r,color.g,color.b);
+    }
+  }
   const legs=[['Left',1],['Right',-1]].map(([name,side])=>({side,hip:bones[name+'UpLeg'],knee:bones[name+'Leg'],foot:bones[name+'Foot']}));
   const arms=[['Left',1],['Right',-1]].map(([name,side])=>({side,upper:bones[name+'Arm'],fore:bones[name+'ForeArm'],hand:bones[name+'Hand']}));
   const seatOffset=seatHeight+.08-(hipY+legs[0].hip.position.y);
@@ -102,5 +120,5 @@ export function createPolyforkPerson(template,index,{seatHeight=.46,keyboard=[0,
   }
   const localPosition=bone=>{group.updateMatrixWorld(true);return group.worldToLocal(bone.getWorldPosition(new THREE.Vector3())).toArray();};
   pose(0);
-  return {group,head,pose,seatHeight,drawCalls:1,handPositions:()=>arms.map(a=>localPosition(a.hand)),footPositions:()=>legs.map(l=>localPosition(l.foot)),dispose(){mesh.skeleton.dispose();}};
+  return {group,head,pose,seatHeight,drawCalls:1,handPositions:()=>arms.map(a=>localPosition(a.hand)),footPositions:()=>legs.map(l=>localPosition(l.foot)),dispose(){mesh.skeleton.dispose();if(customGeometry)mesh.geometry.dispose();}};
 }
