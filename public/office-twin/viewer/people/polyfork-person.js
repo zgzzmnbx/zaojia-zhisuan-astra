@@ -7,9 +7,15 @@ import {seatedMotion} from '../person-motion.js';
 export const personStyles=[{id:'classic',label:'原版卡通'},{id:'office',label:'低多边形办公'},{id:'engineer',label:'工程人员'}];
 export const normalizePersonStyle=value=>personStyles.some(s=>s.id===value)?value:'classic';
 const files={office:'seated-office-worker.glb',engineer:'crane-banksman.glb'};
+// Authored sRGB swatches -> Astra pastels. Match only known cloth/skin colours,
+// preserving eyes, hair, safety stripes and all normals/skin weights.
+const softPalette=new Map(Object.entries({
+  'd8ab88':'ffe4d3','c49778':'ecc5af','90c4d2':'b7dce8','83b2bf':'a6cbd9','7099a4':'92b6c5','645950':'b5c2cf','7d5840':'a2acb9','533a24':'8995a4',
+  'c69a62':'ffe3cf','af7e4e':'efc8ac','ef6a1e':'f5bd8f','c2cace':'e1e8ed','8e7859':'c8c9ba','4a3a2a':'c9bca8','2e241b':'afa18e','ff7621':'f6bf93',
+}).map(([from,to])=>[parseInt(from,16),new THREE.Color('#'+to)]));
 
 // The supplied meshes share a T-pose, one material and the same 31 joints.
-// Merge their unchanged vertex colours/skin weights once, then clone skeletons.
+// Merge and recolour once, then clone skeletons; no per-frame colour work.
 export function preparePolyforkTemplate(scene){
   scene.updateMatrixWorld(true);const meshes=[];scene.traverse(o=>{if(o.isSkinnedMesh)meshes.push(o);});
   const source=meshes[0];if(!source)throw new Error('人物模型缺少骨骼');
@@ -19,6 +25,11 @@ export function preparePolyforkTemplate(scene){
   }
   const geometry=mergeGeometries(meshes.map(m=>m.geometry),false),material=source.material.clone();
   if(!geometry)throw new Error('人物模型无法合批');
+  const colors=geometry.getAttribute('color'),sample=new THREE.Color();
+  if(colors)for(let i=0;i<colors.count;i++){
+    const target=softPalette.get(sample.fromBufferAttribute(colors,i).getHex());
+    if(target)colors.setXYZ(i,target.r,target.g,target.b);
+  }
   const group=new THREE.Group(),hips=joints.find(b=>b.name==='Hips');group.add(hips);
   const skeleton=new THREE.Skeleton(joints,source.skeleton.boneInverses.map(m=>m.clone()));
   const mesh=new THREE.SkinnedMesh(geometry,material);mesh.name='Polyfork person';group.add(mesh);

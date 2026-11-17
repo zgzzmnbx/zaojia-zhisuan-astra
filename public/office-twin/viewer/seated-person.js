@@ -2,14 +2,14 @@ import * as THREE from 'three';
 import {seatedMotion} from './person-motion.js';
 import {makeChibi} from './people/chibi-model.js?v=0.43.0';
 import {batchRig} from './people/batch-rig.js?v=0.43.0';
-import {appearanceConfig} from './people/appearances.js';
+import {appearanceConfig,personPalette} from './people/appearances.js';
 
 export function createPersonAssets(){return {dispose(){}};}
 
 // Reference default 2.6-head proportions, uniformly scaled. A higher chair
 // translates the character: fixed thighs and shins may hang above the floor.
 export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,.44],name='',gender='unspecified',appearance='inherit'}={}){
-  const original=makeChibi({look:'pixar',name:name||String(index),shirt:['#7899ab','#7c929e','#839d9a'][index%3],pants:'#64717e',hair:'#3e4852',skin:'#e3c6b0',style:gender==='female'?['bob','ponytail','bun'][index%3]:['plain','spiky','curly'][index%3],outfit:index%3===0?'shirt':'hoodie',...appearanceConfig(appearance)});
+  const original=makeChibi({look:'pixar',name:name||String(index),shirt:personPalette.shirts[index%3],pants:personPalette.pants,shoes:personPalette.shoes,hair:'#3e4852',skin:personPalette.skin,style:gender==='female'?['bob','ponytail','bun'][index%3]:['plain','spiky','curly'][index%3],outfit:index%3===0?'shirt':'hoodie',...appearanceConfig(appearance)});
   const batched=batchRig(original.root,original.P),{group,root,rig:P,meshes,skeleton}=batched,D=P.D,scale=.86;
   group.scale.setScalar(scale);
   const seatOffset=seatHeight/scale+D.legR-D.hipY;

@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="../astra_ui/astra-ui.css">
   <link rel="stylesheet" href="./viewer.css?v=0.7.0">
   <link rel="stylesheet" href="./office-events.css?v=0.7.0">
-  <link rel="stylesheet" href="./astra-review.css?v=0.44.5">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./monitor-lighting.js":"./monitor-lighting.js?v=0.44.5","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.44.5","./structure-day-bake.js":"./structure-day-bake.js?v=0.44.5","./night-environment.js?v=0.6.7":"./night-environment.js?v=0.44.5","./lighting-settings.js":"./lighting-settings.js?v=0.44.5","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.44.5","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.44.5","./workstation-settings.js":"./workstation-settings.js?v=0.44.5","./host-client.js":"./host-client.js?v=0.44.5","./host-people.js":"./host-people.js?v=0.44.5","./seated-person.js":"./seated-person.js?v=0.44.5","./person-presentation.js":"./person-presentation.js?v=0.44.5","./person-pointer.js":"./person-pointer.js?v=0.44.5"}}</script>
+  <link rel="stylesheet" href="./astra-review.css?v=0.44.6">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./monitor-lighting.js":"./monitor-lighting.js?v=0.44.6","./people/appearances.js":"./people/appearances.js?v=0.44.6","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.44.6","./structure-day-bake.js":"./structure-day-bake.js?v=0.44.6","./night-environment.js?v=0.6.7":"./night-environment.js?v=0.44.6","./lighting-settings.js":"./lighting-settings.js?v=0.44.6","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.44.6","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.44.6","./workstation-settings.js":"./workstation-settings.js?v=0.44.6","./host-client.js":"./host-client.js?v=0.44.6","./host-people.js":"./host-people.js?v=0.44.6","./seated-person.js":"./seated-person.js?v=0.44.6","./person-presentation.js":"./person-presentation.js?v=0.44.6","./person-pointer.js":"./person-pointer.js?v=0.44.6"}}</script>
 </head>
 <body class="studio">
 <div id="shell" class="live-shell office-shell">
@@ -157,7 +157,7 @@
   officeClient.start();
   window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
   window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
-  import('./viewer.js?v='+VERSION+'&ui=0.44.5').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+  import('./viewer.js?v='+VERSION+'&ui=0.44.6').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
     document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
     document.querySelector('#render-status').textContent='静态预览';
     document.documentElement.dataset.viewerStatus='module-error';
