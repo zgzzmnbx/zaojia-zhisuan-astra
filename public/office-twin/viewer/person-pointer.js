@@ -5,7 +5,7 @@ import {assignmentRoute} from './person-assignment.js';
 export function canDropPerson(start,snapshot,id){
   return !!start&&start.context===snapshot.context&&start.revision===snapshot.revision&&!!assignmentRoute(snapshot,id);
 }
-export function bindPersonPointer({canvas,camera,controls,people,listen,canInteract,takeCameraControl}){
+export function bindPersonPointer({canvas,camera,controls,people,listen,canInteract,takeCameraControl,dragVisual}){
   let gesture=null,pendingClick=null,suppressClick=false;
   const markers=document.querySelector('#people-markers'),surfaces=[canvas,markers].filter(Boolean);
   const target=document.querySelector('#host-artifact'),ghost=element('div','','host-person-drag-ghost');ghost.hidden=true;document.body.append(ghost);
@@ -13,6 +13,7 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
   function finish(cancelled=true){
     const old=gesture;gesture=null;if(!old)return;
     pendingClick=null;suppressClick=old.dragging||cancelled;old.capture.classList.remove('is-person-dragging');
+    dragVisual?.clear();people.dragOverlay?.(old.id,false);
     people.hold?.(old.id,false);people.dragPosition(old.id,null);controls.enabled=old.controlsEnabled;canvas.style.cursor='';setDraggingPerson(null);target?.classList.remove('is-dragover');ghost.hidden=true;
     if(old.capture.hasPointerCapture(old.pointer))old.capture.releasePointerCapture(old.pointer);
   }
@@ -41,6 +42,7 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
     if(!g.dragging&&Math.hypot(event.clientX-g.x,event.clientY-g.y)<7)return;
     if(!g.dragging){g.dragging=true;g.capture.classList.add('is-person-dragging');canvas.style.cursor='grabbing';people.closeMenu();setDraggingPerson(g.id);ghost.textContent=officeClient.getState().employees.find(p=>p.id===g.id)?.name||'';ghost.hidden=g.capture!==canvas;}
     const position=rayAt(event).ray.intersectPlane(g.plane,new THREE.Vector3());if(position)people.dragPosition(g.id,position.sub(g.offset));
+    if(dragVisual?.move(g.id,event.clientX,event.clientY)){people.dragOverlay(g.id,true);ghost.hidden=true;}
     const over=!!document.elementFromPoint(event.clientX,event.clientY)?.closest('#host-artifact');target?.classList.toggle('is-dragover',over);moveHostDrag(event.clientX,event.clientY);
     document.querySelector('#host-drop-hint').textContent=over?'松开，加入本次复核':'拖到当前项目';
     ghost.style.transform=`translate(${event.clientX+14}px,${event.clientY+14}px)`;event.preventDefault();event.stopImmediatePropagation();
@@ -71,5 +73,5 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
   listen(window,'office-person-style-changing',()=>finish());
   listen(document,'visibilitychange',()=>{if(document.hidden)finish();});
   listen(document,'keydown',event=>{if(event.key==='Escape'&&gesture){finish();event.preventDefault();event.stopImmediatePropagation();}},true);
-  return {dispose(){finish();ghost.remove();}};
+  return {dispose(){finish();dragVisual?.dispose();ghost.remove();}};
 }

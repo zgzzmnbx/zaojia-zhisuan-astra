@@ -231,6 +231,7 @@ import {canDropPerson} from '../public/office-twin/viewer/person-pointer.js';
 import {createPersonAssets,createSeatedPerson} from '../public/office-twin/viewer/seated-person.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {preparePolyforkTemplate,createPolyforkPerson,normalizePersonStyle} from '../public/office-twin/viewer/people/polyfork-person.js';
+import {personScreenBounds} from '../public/office-twin/viewer/person-drag-overlay.js';
 
 test('Polyfork styles keep independent skeletons, keyboard contact, lifted feet and skinned picking',async()=>{
  assert.equal(normalizePersonStyle('unknown'),'classic');
@@ -242,6 +243,11 @@ test('Polyfork styles keep independent skeletons, keyboard contact, lifted feet 
   const bFeet=b.footPositions();a.pose(0);for(const hand of a.handPositions()){assert.ok(Math.abs(hand[1]-.77)<.015);assert.ok(Math.abs(hand[2]-.39)<.015);}
   const bone=a.group.getObjectByName('LeftLeg')!,length=bone.position.length();a.pose(1,true);
   assert.equal(a.group.userData.visualMotion,'lifted');assert.ok(a.footPositions().every(p=>p[1]>0));assert.equal(bone.position.length(),length);assert.deepEqual(b.footPositions(),bFeet);
+  const camera=new THREE.OrthographicCamera(-2,2,2,-2,.1,30);camera.position.set(3,2,4);camera.lookAt(0,1,0);camera.setViewOffset(800,600,80,0,800,600);camera.updateMatrixWorld();
+  a.group.position.set(2,0,0);const bounds=personScreenBounds(a.group,camera,800,600)!;
+  for(const p of [a.head.getWorldPosition(new THREE.Vector3()),...a.footPositions().map(p=>a.group.localToWorld(new THREE.Vector3(...p)))]){
+   p.project(camera);const x=(p.x+1)*400,y=(1-p.y)*300;assert.ok(x>=bounds.x&&x<=bounds.x+bounds.width);assert.ok(y>=bounds.y&&y<=bounds.y+bounds.height);
+  }
   a.pose(1,false,{rise:1,moving:true,phase:1,stage:'walking'});assert.equal(a.group.userData.visualMotion,'walking');
   a.pose(0);a.group.updateMatrixWorld(true);const head=a.head.getWorldPosition(new THREE.Vector3());
   const ray=new THREE.Raycaster(head.clone().add(new THREE.Vector3(0,0,3)),new THREE.Vector3(0,0,-1));assert.ok(ray.intersectObject(a.group,true).length>0);

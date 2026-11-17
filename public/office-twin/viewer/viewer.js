@@ -14,6 +14,7 @@ import {createFrameMeter} from './frame-meter.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {restoreCutawayBake} from './cutaway-bake-repair.js';
 import {bindPersonPointer} from './person-pointer.js';
+import {createPersonDragOverlay} from './person-drag-overlay.js';
 import {officeClient} from './office-client.js';
 import { firstVisibleFloorHit,visibleSceneHit,outsideView } from './floor-picking.js?v=0.39.1';
 import { summarizeMaterialPaths, materialCoverageCopy } from './material-provenance.js?v=0.6.7';
@@ -760,7 +761,8 @@ export async function mountOfficeViewer() {
         while (node && node !== officeRoot) { if (rooms.get(node.userData.room_id) === node) { focusRoom(node.userData.room_id); return; } node = node.parent; }
       }
     });
-    const pointer=bindPersonPointer({canvas:renderer.domElement,camera,controls,people,listen,canInteract:()=>!getWorkstationEditState().open&&active()&&['office','exploded'].includes(view),takeCameraControl});
+    const dragVisual=createPersonDragOverlay({renderer,scene,camera,getPerson:id=>people.object(id)});
+    const pointer=bindPersonPointer({canvas:renderer.domElement,camera,controls,people,listen,canInteract:()=>!getWorkstationEditState().open&&active()&&['office','exploded'].includes(view),takeCameraControl,dragVisual});
     listenerRemovers.push(()=>pointer.dispose());
     loadingStage('first-frame','场景已就绪，正在绘制第一帧');
     setView(view, { animate:false,automatic:true });

@@ -134,7 +134,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   listen(document,'keydown',event=>{if(event.key==='Escape'&&menuOpen()){closeMenu();event.preventDefault();event.stopImmediatePropagation();}},true);
   function select(id,point){const item=actors.get(id);if(!item||disposed)return false;current=id;if(motionEnabled&&!reduced.matches&&clock.value()-item.reactionAt>1.6)item.reactionAt=clock.value();showPanel();syncPositions();if(item.anchor&&!point)focusPerson(item.group);paint();openMenu(point||item.screenPoint||{x:innerWidth-320,y:100});onSelect(id);requestFrame();return true;}
   function syncPositions(){model.updateMatrixWorld();for(const item of actors.values()){
-    item.group.visible=!!item.anchor;
+    item.group.visible=!!item.anchor&&!item.dragOverlay;
     if(item.dragPosition)item.group.position.copy(item.dragPosition);
     else if(item.walk&&floor){item.group.position.set(item.walk.x,item.local.y,item.walk.z);floor.localToWorld(item.group.position);item.group.rotation.y=item.walk.yaw;}
     else if(item.anchor){item.anchor.getWorldPosition(item.group.position);item.group.rotation.y=item.yaw;}
@@ -179,6 +179,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   syncBusiness();
   try{const saved=normalizePersonStyle(localStorage.getItem(styleKey));if(saved!=='classic')switchStyle(saved);}catch{}
   return {select,update,pick,hit,syncBusiness,closeMenu,suspend:()=>clock.suspend(),react:()=>false,
+    object:id=>actors.get(id)?.group,
+    dragOverlay:(id,value)=>{const item=actors.get(id);if(item){item.dragOverlay=value;item.marker.style.opacity=value?'0':'';syncPositions();requestFrame();}},
     hold:(id,value)=>{const item=actors.get(id);if(item)item.held=value;},
     dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;item.dragPosition=position?.clone()??null;item.rig.pose(clock.value(),!!item.dragPosition,item.walk);syncPositions();requestFrame();},
     position:id=>actors.get(id)?.group.position.clone(),
