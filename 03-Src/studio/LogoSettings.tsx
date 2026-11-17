@@ -64,7 +64,7 @@ export default function LogoSettings({active=true,standalone=false}:{active?:boo
   <div className="logo-library-options">
    <LoadingLogoSettings active={active}/>
    <fieldset className="logo-page-cycles"><legend>页面循环</legend>{LOGO_SEQUENCES.map(s=><section key={s.id} className="logo-cycle" aria-label={`${s.name}循环流程`}>
-    <header><strong>{s.name}</strong><span>{cycles[s.id as 'welcome'|'studio']==='loop'?'已启用循环':cycles[s.id as 'welcome'|'studio']==='paused'?'已暂停':'自选动作'}</span></header>
+    <header><strong>{s.name}</strong><span>{cycles[s.id as 'welcome'|'studio']==='loop'?'已启用循环':cycles[s.id as 'welcome'|'studio']==='paused'?(s.id==='studio'?'静态贴图':'已暂停'):'自选动作'}</span></header>
     <ol>{sequenceSteps(s.id).map((step,i)=><li key={i} data-current={sequence===s.id&&phase?.index===i&&!resting} aria-current={sequence===s.id&&phase?.index===i&&!resting?'step':undefined}>{step.phase==='rest'?`静止 ${s.rest} 秒`:LOGO_MOTIONS.find(m=>m.id===step.mode)?.name}</li>)}</ol>
     <footer><span>归位后重复循环</span><button type="button" className="btn btn-ghost btn-sm" aria-label={`预览${s.name}循环`} aria-pressed={sequence===s.id} onClick={()=>previewCycle(s.id)}><Icon name="play"/>预览</button><button type="button" className="btn btn-ghost btn-sm" aria-label={`${cycles[s.id as 'welcome'|'studio']==='loop'?'暂停':'启用'}${s.name}循环`} onClick={()=>toggleCycle(s.id as 'welcome'|'studio')}>{cycles[s.id as 'welcome'|'studio']==='loop'?'暂停循环':'启用循环'}</button></footer>
    </section>)}</fieldset>

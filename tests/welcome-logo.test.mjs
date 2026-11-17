@@ -5,7 +5,7 @@ import {OBB} from 'three/addons/math/OBB.js';
 import {LOGO_MOTIONS,IDLE_ORDER,IDLE_TIMING,RING_RADIUS,WAVE_TIMING,sampleMotion,poseClips} from '../03-Src/studio/brand/motions.mjs';
 import {PARTS,HERO,basePose} from '../03-Src/studio/brand/model.mjs';
 import {normalizeLogoConfig,parseLogoConfig,serializeLogoConfig,LOGO_PALETTES} from '../03-Src/studio/brand/logo-config.mjs';
-import {sequenceSteps,sampleSequence,normalizePageCycles} from '../03-Src/studio/brand/sequences.mjs';
+import {sequenceSteps,sampleSequence,normalizePageCycles,readPageCycles,pageCyclesKey} from '../03-Src/studio/brand/sequences.mjs';
 const signature=p=>p.map(x=>[...x.position.toArray(),...x.quaternion.toArray()]);
 test('page cycles hold exact wall-clock waits, play each action once and repeat in order',()=>{
  for(const [id,rest,actions] of [['welcome',3,['wave','tail']],['studio',20,['wave','tail','idle']]])for(const speed of [.5,1,1.5]){
@@ -22,7 +22,7 @@ test('page cycles hold exact wall-clock waits, play each action once and repeat 
   });
   for(const cycle of [1,2,100]){const state=sampleSequence(id,total*cycle+.001,speed);assert.equal(state.cycle,cycle);assert.equal(state.index,0);assert.equal(state.phase,'rest');assert.ok(state.remaining>rest-.002);}
  }
- assert.deepEqual(normalizePageCycles({welcome:'bad',studio:'bad'}),{welcome:'loop',studio:'loop'});
+ assert.deepEqual(normalizePageCycles({welcome:'bad',studio:'bad'}),{welcome:'loop',studio:'paused'});
  assert.deepEqual(normalizePageCycles({welcome:'manual',studio:'paused'}),{welcome:'manual',studio:'paused'});
 });
 test('static and resting intervals preserve the assembled mark; tail moves alone',()=>{
@@ -111,4 +111,17 @@ test('new poses have continuous world motion and presentation framing at every p
    a.parts.forEach((p,i)=>{assert.ok(p.position.clone().applyQuaternion(qa).distanceTo(b.parts[i].position.clone().applyQuaternion(qb))<.1);assert.deepEqual(p.scale.toArray(),[1,1,1]);});
   }
  }
+});
+
+
+test('sidebar migration selects a static mark without changing welcome choices or later explicit opt-in',()=>{
+ const descriptor=Object.getOwnPropertyDescriptor(globalThis,'localStorage');
+ const values=new Map([['astra.welcome-wave-tail.v1','1'],[pageCyclesKey,JSON.stringify({welcome:'manual',studio:'loop'})]]);
+ Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)}});
+ try{
+  assert.deepEqual(readPageCycles(),{welcome:'manual',studio:'paused'});
+  values.set(pageCyclesKey,JSON.stringify({welcome:'manual',studio:'loop'}));
+  assert.deepEqual(readPageCycles(),{welcome:'manual',studio:'loop'});
+  assert.deepEqual(normalizePageCycles(null),{welcome:'loop',studio:'paused'});
+ }finally{if(descriptor)Object.defineProperty(globalThis,'localStorage',descriptor);else delete globalThis.localStorage;}
 });

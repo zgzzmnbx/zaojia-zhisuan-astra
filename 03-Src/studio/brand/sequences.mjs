@@ -22,7 +22,7 @@ export function sampleSequence(id,time,speed=1){
 }
 export const pageCyclesKey='astra.logo-page-cycles.v1';
 export const pageCyclesEvent='astra:logo-page-cycles-change';
-export function normalizePageCycles(value){const v=value&&typeof value==='object'?value:{};return {welcome:['paused','manual'].includes(v.welcome)?v.welcome:'loop',studio:v.studio==='paused'?'paused':'loop'};}
+export function normalizePageCycles(value){const v=value&&typeof value==='object'?value:{};return {welcome:['paused','manual'].includes(v.welcome)?v.welcome:'loop',studio:v.studio==='loop'?'loop':'paused'};}
 export function readPageCycles(){try{
  const cycles=normalizePageCycles(JSON.parse(localStorage.getItem(pageCyclesKey)||'null'));
  // Restore the requested two-action welcome cycle once for old wave-only choices.
@@ -34,6 +34,12 @@ export function readPageCycles(){try{
    cycles.welcome='loop';localStorage.setItem(pageCyclesKey,JSON.stringify(cycles));
   }
   localStorage.setItem(migration,'1');
+ }
+ // Retire the old automatic sidebar cycle once; later explicit opt-in is respected.
+ const studioMigration='astra.studio-static-logo.v1';
+ if(!localStorage.getItem(studioMigration)){
+  cycles.studio='paused';localStorage.setItem(pageCyclesKey,JSON.stringify(cycles));
+  localStorage.setItem(studioMigration,'1');
  }
  return cycles;
 }catch{return normalizePageCycles(null);}}
