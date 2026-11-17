@@ -6,7 +6,7 @@ import {createPersonClock,seatFacing} from './person-motion.js';
 import {activePersonTasks,personLabelLevel,createPersonWander} from './person-presentation.js';
 import {createReturnWalk} from './person-navigation.js';
 import {personStyles,normalizePersonStyle,createPolyforkAssets,createPolyforkPerson} from './people/polyfork-person.js';
-import {createPersonPlacement} from './person-placement.js';
+import {createPersonPlacement} from './person-placement.js?v=0.44.1';
 import {assignmentRoute} from './person-assignment.js';
 import {normalizeAppearance} from './people/appearances.js';
 
@@ -144,7 +144,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   if(!menu.showPopover){menu.hidden=true;listen(document,'pointerdown',e=>{if(!menu.contains(e.target))closeMenu();});listen(document,'keydown',e=>{if(e.key==='Escape')closeMenu();});}
   listen(document,'keydown',event=>{if(event.key==='Escape'&&menuOpen()){closeMenu();event.preventDefault();event.stopImmediatePropagation();}},true);
   function select(id,point){const item=actors.get(id);if(!item||disposed)return false;current=id;if(motionEnabled&&!reduced.matches&&clock.value()-item.reactionAt>1.6)item.reactionAt=clock.value();showPanel();syncPositions();if(item.anchor&&!point)focusPerson(item.group);paint();openMenu(point||item.screenPoint||{x:innerWidth-320,y:100});onSelect(id);requestFrame();return true;}
-  function syncPositions(){model.updateMatrixWorld();for(const item of actors.values()){
+  function syncPositions(){floor.updateWorldMatrix(true,false);for(const item of actors.values()){
     item.group.visible=!!item.anchor&&!item.dragOverlay;
     if(item.dragPosition)item.group.position.copy(item.dragPosition);
     else if(placements.has(item.person.id)){const p=placements.get(item.person.id);item.group.position.set(p.x,p.y,p.z);floor.localToWorld(item.group.position);item.group.rotation.y=p.yaw;}
@@ -159,7 +159,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     paint();if(menuOpen())paintMenu();requestFrame();
   }
   function update(camera,view,now=performance.now()){
-    placement.update(camera,view);
+    const rect=viewport.getBoundingClientRect(),width=viewport.clientWidth,height=viewport.clientHeight;
+    placement.update(camera,view,{width,height});
     if(disposed)return;root.visible=['office','exploded'].includes(view);markers.hidden=!root.visible;if(!root.visible){clock.suspend();closeMenu();return;}
     const seconds=clock.step(now,motionEnabled&&!reduced.matches);
     const delta=seconds-lastMotionTime;lastMotionTime=seconds;
@@ -173,7 +174,6 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     }
     if(arrived)paint();
     syncPositions();const boxes=[];
-    const rect=viewport.getBoundingClientRect(),width=viewport.clientWidth,height=viewport.clientHeight;
     for(const item of [...actors.values()].sort((a,b)=>Number(b.person.id===current)-Number(a.person.id===current))){
       const reactionAge=seconds-item.reactionAt,reaction=reactionAge<1.6?Math.sin(Math.PI*Math.max(0,reactionAge)/1.6):0;
       item.rig.pose(seconds,!!item.dragPosition,standing(item,seconds)??(item.idle||item.walk?.rise>0?item.walk:null),reaction);

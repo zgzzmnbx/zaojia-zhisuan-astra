@@ -84,9 +84,9 @@ export function createPersonPlacement({model,floor,layout,viewport,requestFrame}
     if(target){ring.position.set(target.x,feet+.055,target.z);ring.material.color.set(target.valid?target.meeting?0x284bd4:0x1fa67a:0xd54d50);feedback.textContent=!target.valid?'没有空闲落脚点':target.meeting?(canReview?'松开，加入多人复核':'松开，放到会议室'):target.snapped?'松开，就近落地':'松开，放到这里';feedbackPoint=new THREE.Vector3(target.x,feet+.1,target.z);}
     requestFrame();
   }
-  function update(camera,view){
+  function update(camera,view,{width,height}){
     const visible=['office','exploded'].includes(view);outline.visible=visible;label.hidden=!visible;ring.visible=visible&&!!lastHint;feedback.hidden=!visible||!lastHint;
-    const position=(node,point)=>{point=floor.localToWorld(point.clone()).project(camera);if(point.z< -1||point.z>1){node.hidden=true;return;}node.style.left=`${(point.x*.5+.5)*viewport.clientWidth}px`;node.style.top=`${(-point.y*.5+.5)*viewport.clientHeight}px`;};
+    const position=(node,point)=>{point=floor.localToWorld(point.clone()).project(camera);if(point.z< -1||point.z>1){node.hidden=true;return;}node.style.left=`${(point.x*.5+.5)*width}px`;node.style.top=`${(-point.y*.5+.5)*height}px`;};
     if(visible){position(label,new THREE.Vector3(roomBounds[2]-.6,feet+.12,roomBounds[1]+.4));if(feedbackPoint&&lastHint)position(feedback,feedbackPoint);}
   }
   return {resolve,hint,update,feet,graph:surface.graph,meetingSpot:surface.meetingSpot,meetingYaw:surface.meetingYaw,

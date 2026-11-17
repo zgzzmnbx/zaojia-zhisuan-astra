@@ -9,7 +9,7 @@ import {createOfficeOrbit} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js';
-import {batchStaticGeometry} from './static-batches.js';
+import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.1';
 import {createFrameMeter} from './frame-meter.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {restoreCutawayBake} from './cutaway-bake-repair.js';
@@ -243,7 +243,7 @@ export async function mountOfficeViewer() {
     if (transition) {
       transition.elapsed+=delta;
       const { progress, amount } = motionProgress(transition.elapsed, 0, transition.duration, motionPreference.matches);
-      for (const pose of transition.poses) pose.object.position.lerpVectors(pose.from, pose.to, amount);
+      for (const pose of transition.poses){pose.object.position.lerpVectors(pose.from, pose.to, amount);pose.object.updateMatrix();}
       visibilityBlend.sample(transition.visibility, amount);
       if (transition.camera) {
         const { from, to } = transition.camera;
@@ -376,7 +376,7 @@ export async function mountOfficeViewer() {
       if (contains(buildingRoot,mesh) && ![...floors.values()].some(floor=>contains(floor,mesh))) return .25;
       return 1;
     });
-    for (const pose of poses) pose.object.position.copy(pose.to);
+    for (const pose of poses){pose.object.position.copy(pose.to);pose.object.updateMatrix();}
     model.updateMatrixWorld(true);
     people?.update(camera,view); // Resolve actor anchors at the destination before fitting.
     // Follow the projecting ninth floor, rather than fitting the enlarged whole tower.
@@ -387,7 +387,7 @@ export async function mountOfficeViewer() {
     const cameraTo = cameraPose();
     const shouldAnimate = animate && !motionPreference.matches;
     if (shouldAnimate) {
-      for (const pose of poses) pose.object.position.copy(pose.from);
+      for (const pose of poses){pose.object.position.copy(pose.from);pose.object.updateMatrix();}
       applyCameraPose(cameraFrom);
       visibilityBlend.sample(visibility,0);
       transition = { elapsed:0, duration: 1050, poses, visibility, camera:{from:cameraFrom,to:cameraTo} };
@@ -605,6 +605,8 @@ export async function mountOfficeViewer() {
   try {
     loadingStage('webgl','正在初始化三维显示');
     scene = new THREE.Scene();
+    // Identity scene root must not force every static descendant dirty each frame.
+    scene.updateMatrix();scene.matrixAutoUpdate=false;
     camera = new THREE.OrthographicCamera(-50,50,50,-50,.1,1000);
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'low-power' });
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
@@ -689,7 +691,7 @@ export async function mountOfficeViewer() {
     if(BAKED_MODE){structureBake=await attachStructureDayBake(model,()=>disposed);loadReport.structureDaylight=structureBake.state;}
     if(disposed){structureBake?.dispose();structureBake=null;return api;}
     staticBatches=batchStaticGeometry(model);
-    originalVisibility.clear();model.traverse(object=>{originalVisibility.set(object,object.visible);object.updateMatrix();if(!/^Floor_\d+$/.test(object.name))object.matrixAutoUpdate=false;});
+    originalVisibility.clear();model.traverse(object=>{originalVisibility.set(object,object.visible);});cacheStaticTransforms(model);
     visibilityBlend=createVisibilityBlend(model);
     await yieldToBrowser();if(disposed)return api;
     picture.attach({key,fill,ambient,rim},model);

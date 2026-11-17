@@ -3,6 +3,13 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {classifyNightRole,nightSeatId} from './night-lighting-policy.js';
 import {collectMonitorLighting,addMonitorAttributes} from './monitor-lighting.js';
 
+// Camera motion does not change the building's world transforms. Floors are
+// moved explicitly by the view transition, which commits updateMatrix there.
+export function cacheStaticTransforms(root){
+  root.traverse(object=>{object.updateMatrix();object.matrixAutoUpdate=false;});
+  root.updateMatrixWorld(true);
+}
+
 function boundaryFor(object,root){
   let boundary=object.parent;
   while(boundary?.parent&&boundary!==root&&boundary.userData.entity_type!=='room'&&!/^(?:Room_|Layout_|Floor_\d+$|Facade_\d+$|ContextBuildings$|H1_F09_Office$)/.test(boundary.name))boundary=boundary.parent;

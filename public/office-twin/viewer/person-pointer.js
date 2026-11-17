@@ -7,7 +7,7 @@ export function canDropPerson(start,snapshot,id){
 }
 export function canPlacePerson(start,snapshot,id){return !!start&&start.context===snapshot.context&&start.revision===snapshot.revision&&snapshot.employees.some(p=>p.id===id);}
 export function bindPersonPointer({canvas,camera,controls,people,listen,canInteract,takeCameraControl,dragVisual}){
-  let gesture=null,pendingClick=null,suppressClick=false;
+  let gesture=null,pendingClick=null,suppressClick=false,lastHover=-Infinity;
   const markers=document.querySelector('#people-markers'),surfaces=[canvas,markers].filter(Boolean);
   const target=document.querySelector('#host-artifact'),ghost=element('div','','host-person-drag-ghost');ghost.hidden=true;document.body.append(ghost);
   function rayAt(event){const r=canvas.getBoundingClientRect(),ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2((event.clientX-r.left)/r.width*2-1,-(event.clientY-r.top)/r.height*2+1),camera);return ray;}
@@ -35,6 +35,9 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
   function move(event){
     const g=gesture;
     if(!g){
+      // OrbitControls owns a camera drag. Hover picking must never interrupt it.
+      if(event.buttons)return;
+      if(event.timeStamp-lastHover<33)return;lastHover=event.timeStamp;
       if(event.currentTarget===canvas&&canInteract()){const id=people.hit(rayAt(event)),person=officeClient.getState().employees.find(p=>p.id===id);canvas.style.cursor=person?'grab':'';if(person)event.stopImmediatePropagation();}
       return;
     }

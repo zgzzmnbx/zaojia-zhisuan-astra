@@ -635,3 +635,12 @@ test('return walker waits for a blocked doorway and retries after it clears',()=
  for(let i=0;i<160;i++)walk.step(.05,true,[{x:2.5,z:.5}]);assert.equal(walk.state().done,false);
  for(let i=0;i<1500&&!walk.state().done;i++)walk.step(.05,true,[]);assert.equal(walk.state().done,true);
 });
+import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches.js';
+test('static world matrices stay cached during camera motion, but floor transitions and actors still update',()=>{
+ const scene=new THREE.Scene();scene.updateMatrix();scene.matrixAutoUpdate=false;
+ const model=new THREE.Group(),floor=new THREE.Group(),desk=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()),person=new THREE.Group();scene.add(model,person);model.add(floor);floor.add(desk);floor.position.y=30;desk.position.x=2;cacheStaticTransforms(model);scene.updateMatrixWorld();
+ let writes=0;const multiply=desk.matrixWorld.multiplyMatrices.bind(desk.matrixWorld);desk.matrixWorld.multiplyMatrices=(a,b)=>{writes++;return multiply(a,b);};
+ const before=desk.matrixWorld.clone();for(let i=0;i<20;i++){person.position.x=i;scene.updateMatrixWorld();}assert.equal(writes,0);assert.ok(desk.matrixWorld.equals(before));assert.equal(person.matrixWorld.elements[12],19);
+ floor.position.set(0,33,32);floor.updateMatrix();model.updateMatrixWorld(true);assert.equal(writes,1);assert.deepEqual(new THREE.Vector3().setFromMatrixPosition(desk.matrixWorld).toArray(),[2,33,32]);
+ scene.updateMatrixWorld();assert.equal(writes,1);floor.position.set(0,30,0);floor.updateMatrix();model.updateMatrixWorld(true);assert.ok(desk.matrixWorld.equals(before));desk.geometry.dispose();desk.material.dispose();
+});
