@@ -366,7 +366,15 @@ test('structural daylight UVs survive batching and floor/wall lighting stays sep
 });
 
 
-import {attachStructureDayBake} from '../public/office-twin/viewer/structure-day-bake.js';
+import {attachStructureDayBake,retainsCutawayShading} from '../public/office-twin/viewer/structure-day-bake.js';
+test('exposed structural backing uses cutaway shading without flattening facade grooves or interior shadows',()=>{
+ for(const name of ['V064_F10_Spine_Front_WhiteSpine','V064_F01_Spine_West_WhiteSpine','V064_F09_Spine_East_ReturnFin'])assert.equal(retainsCutawayShading(name,0,1),true);
+ for(const name of ['V064_F10_StructuralPlate_From09','V064_Integrated_Podium_Plinth','V064_Integrated_Crown_20','V067_Entry_Step_01']){
+  assert.equal(retainsCutawayShading(name,1,1),true);assert.equal(retainsCutawayShading(name,-1,1),true);
+  assert.equal(retainsCutawayShading(name,0,1),false);assert.equal(retainsCutawayShading(name,1,2),false);
+ }
+ for(const name of ['V067_F09_Groove_Front_L','V067_Entry_PlanterInset_1','W_E_MS_S_cut','Room_floor'])assert.equal(retainsCutawayShading(name,1,1),false);
+});
 test('daylight companion keeps UV0, cutaway deck lighting and source geometry, and disposes only its private resources',async()=>{
  const root=new THREE.Group(),original=new THREE.BoxGeometry(),mesh=new THREE.Mesh(original,new THREE.MeshBasicMaterial());mesh.name='V064_F09_StructuralPlate_From08';root.add(mesh);
  const count=original.index!.count,uv0=original.toNonIndexed().getAttribute('uv').array.slice(),values=new Float32Array(count*2);for(let i=0;i<count;i+=3)values.set([.25,.25,.5,.25,.25,.5],i*2);values.set([0,0,.99,0,.99,.00001],values.length-6);
@@ -378,8 +386,8 @@ test('daylight companion keeps UV0, cutaway deck lighting and source geometry, a
   const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,true);assert.notEqual(mesh.geometry,original);
   assert.deepEqual(mesh.geometry.getAttribute('uv').array,uv0);assert.equal(mesh.geometry.getAttribute('officeStructureUV').count,count);
   assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(0),1);assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(count-1),0);
-  assert.equal(bake.state.retainedCutawayTriangles,2);
-  for(let i=0;i<count;i++)if(mesh.geometry.attributes.normal.getY(i)>.5)assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(i),0);
+  assert.equal(bake.state.retainedCutawayTriangles,4);
+  for(let i=0;i<count;i++)if(Math.abs(mesh.geometry.attributes.normal.getY(i))>.5)assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(i),0);
   bake.dispose();assert.equal(mesh.geometry,original);assert.equal(disposed,2);
  }finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
 });

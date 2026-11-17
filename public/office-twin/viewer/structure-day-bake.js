@@ -1,5 +1,16 @@
 import * as THREE from 'three';
 
+// Whole-building occlusion is invalid on backing structures revealed while
+// facades move/fade. Use their original cutaway shading, not a brightness clamp.
+export function retainsCutawayShading(node,normalY,atlas){
+  if(atlas!==1)return false;
+  if(/^V064_F\d{2}_Spine_/.test(node))return true;
+  return Math.abs(normalY)>.5&&(
+    /^V064_F\d{2}_StructuralPlate_/.test(node)||
+    /^V064_Integrated_(?:Podium_Plinth|Crown_20|Crown_Inset|Entry_Canopy)$/.test(node)||
+    /^V067_Entry_Step_\d{2}$/.test(node));
+}
+
 // Companion daylight atlases, never replacements for the source/night UVs.
 // The attribute survives the existing room/floor batches.
 export async function attachStructureDayBake(root,isDisposed=()=>false){
@@ -36,9 +47,7 @@ export async function attachStructureDayBake(root,isDisposed=()=>false){
         // already accepted source shading instead of sampling black atlas gaps.
         const edge=Math.max(Math.hypot(uv[u+2]-uv[u],uv[u+3]-uv[u+1]),Math.hypot(uv[u+4]-uv[u],uv[u+5]-uv[u+1]),Math.hypot(uv[u+4]-uv[u+2],uv[u+5]-uv[u+3]))*resolution;
         const bevel=area<8||2*area/Math.max(.001,edge)<3;
-        // These deck tops are enclosed in the whole building bake, but exposed
-        // when a floor slides out. Keep the source cutaway lighting on them.
-        const cutaway=atlas===1&&entry.node.includes('StructuralPlate')&&geometry.attributes.normal?.getY(i)>.5;
+        const cutaway=retainsCutawayShading(entry.node,geometry.attributes.normal?.getY(i)??0,atlas);
         const channel=bevel||cutaway?0:atlas;if(bevel)retainedBevelTriangles++;if(cutaway)retainedCutawayTriangles++;
         for(let j=0;j<3;j++)attribute.set([uv[u+j*2],uv[u+j*2+1],channel],(i+j)*3);
       }
