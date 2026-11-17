@@ -4,6 +4,7 @@ import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,element as el}
 import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
 import {activePersonTasks,personLabelLevel,createRoomWalkGraph,createPersonWander} from './person-presentation.js';
+import {personStyles,normalizePersonStyle,createPolyforkAssets,createPolyforkPerson} from './people/polyfork-person.js';
 
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
@@ -19,6 +20,22 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   listen(motionInput,'change',()=>{motionEnabled=motionInput.checked;clock.suspend();try{localStorage.setItem(motionKey,String(motionEnabled));}catch{}requestFrame();});
   listen(reduced,'change',()=>{clock.suspend();requestFrame();});
   let current=null,disposed=false,signature='',rigRevision=0,business=officeClient.getState();
+  const polyfork=createPolyforkAssets(),styleKey='astra.office.people-style.v1';
+  let personStyle='classic',styleTemplate=null,styleRequest=0,styleLoading=false,styleError='';
+  const styleRow=el('div','','office-picture-row office-person-style'),styleLabel=el('label','人物风格'),styleSelect=el('select','','select select-sm'),styleStatus=el('small','','office-person-style-status');
+  styleSelect.id='office-person-style';styleLabel.htmlFor=styleSelect.id;styleStatus.setAttribute('role','status');styleStatus.hidden=true;
+  for(const style of personStyles){const option=el('option',style.label);option.value=style.id;styleSelect.append(option);}
+  styleRow.append(styleLabel,styleSelect,styleStatus);document.querySelector('#picture-controls').prepend(styleRow);
+  async function switchStyle(value){
+    const next=normalizePersonStyle(value),request=++styleRequest;styleSelect.value=next;styleLoading=true;styleError='';styleStatus.textContent='正在加载人物…';styleStatus.hidden=false;styleSelect.setAttribute('aria-busy','true');
+    try{
+      const template=await polyfork.load(next);if(disposed||request!==styleRequest)return;
+      window.dispatchEvent(new Event('office-person-style-changing'));closeMenu();personStyle=next;styleTemplate=template;build();paint();requestFrame();
+      try{localStorage.setItem(styleKey,personStyle);}catch{}
+    }catch(error){if(disposed||request!==styleRequest)return;styleError='人物载入失败，请重新选择';styleSelect.value=personStyle;}
+    finally{if(!disposed&&request===styleRequest){styleLoading=false;styleStatus.textContent=styleError;styleStatus.hidden=!styleError;styleSelect.removeAttribute('aria-busy');}}
+  }
+  listen(styleSelect,'change',()=>switchStyle(styleSelect.value));
   const preferred=['SEAT_NW_01','SEAT_NW_03','SEAT_E_01','SEAT_SE_01','SEAT_SW_01'];
   const seats=layout.workstations.filter(s=>s.assignable!==false).sort((a,b)=>{
     const ai=preferred.indexOf(a.seat_id),bi=preferred.indexOf(b.seat_id);return (ai<0?999:ai)-(bi<0?999:bi);
@@ -45,7 +62,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const seatHeight=chair?new THREE.Box3().setFromObject(chair).max.y-origin.y:.46;
       const keyBox=keyboard?new THREE.Box3().setFromObject(keyboard):null;
       const keyTarget=keyBox?keyBox.getCenter(new THREE.Vector3()).setY(keyBox.max.y+.025).sub(origin).applyAxisAngle(new THREE.Vector3(0,1,0),-yaw).toArray():[0,.77,.44];
-      const rig=createSeatedPerson(assets,index,{seatHeight,keyboard:keyTarget,name:person.name,gender:person.gender}),group=rig.group;
+      const options={seatHeight,keyboard:keyTarget,name:person.name,gender:person.gender};
+      const rig=styleTemplate?createPolyforkPerson(styleTemplate,index,options):createSeatedPerson(assets,index,options),group=rig.group;
       group.userData.demoPersonId=person.id;group.userData.seat_id=seatId;group.rotation.y=yaw;root.add(group);
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
       const heading=el('span','','host-person-marker-heading'),dot=el('span','','host-person-status-dot');dot.setAttribute('aria-hidden','true');
@@ -159,11 +177,12 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   function hit(ray){if(!root.visible)return null;for(const hit of ray.intersectObject(root,true)){let node=hit.object;while(node&&node!==root){if(node.userData.demoPersonId)return node.userData.demoPersonId;node=node.parent;}}return null;}
   function pick(ray,point){const id=hit(ray);return id?select(id,point):false;}
   syncBusiness();
+  try{const saved=normalizePersonStyle(localStorage.getItem(styleKey));if(saved!=='classic')switchStyle(saved);}catch{}
   return {select,update,pick,hit,syncBusiness,closeMenu,suspend:()=>clock.suspend(),react:()=>false,
     hold:(id,value)=>{const item=actors.get(id);if(item)item.held=value;},
     dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;item.dragPosition=position?.clone()??null;item.rig.pose(clock.value(),!!item.dragPosition,item.walk);syncPositions();requestFrame();},
     position:id=>actors.get(id)?.group.position.clone(),
     isAnimating:()=>!disposed&&root.visible&&motionEnabled&&!reduced.matches&&actors.size>0,
-    getState:()=>({count:actors.size,rigRevision,selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.group.rotation.y,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,routine:a.walk?{stage:a.walk.stage,activity:a.walk.activity,rise:a.walk.rise}:null,dragging:!!a.dragPosition,idle:a.idle,labelLevel:a.labelLevel,labelPixels:a.labelPixels,labelVisible:!a.marker.hidden}))}),
-    dispose(){disposed=true;scene.remove(root);actors.forEach(a=>a.rig.dispose());assets.dispose();motionRow.remove();menu.remove();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
+    getState:()=>({count:actors.size,rigRevision,personStyle,styleLoading,styleError,personDrawCalls:[...actors.values()].reduce((n,a)=>n+a.rig.drawCalls,0),selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.group.rotation.y,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,routine:a.walk?{stage:a.walk.stage,activity:a.walk.activity,rise:a.walk.rise}:null,dragging:!!a.dragPosition,idle:a.idle,labelLevel:a.labelLevel,labelPixels:a.labelPixels,labelVisible:!a.marker.hidden}))}),
+    dispose(){disposed=true;++styleRequest;scene.remove(root);actors.forEach(a=>a.rig.dispose());assets.dispose();polyfork.dispose();styleRow.remove();motionRow.remove();menu.remove();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
 }

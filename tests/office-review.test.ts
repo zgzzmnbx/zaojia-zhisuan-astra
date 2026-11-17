@@ -229,6 +229,26 @@ test('desk spill binds people and furniture to their own seat and leaves room wa
 import {seatFacing,createPersonClock,seatedMotion} from '../public/office-twin/viewer/person-motion.js';
 import {canDropPerson} from '../public/office-twin/viewer/person-pointer.js';
 import {createPersonAssets,createSeatedPerson} from '../public/office-twin/viewer/seated-person.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {preparePolyforkTemplate,createPolyforkPerson,normalizePersonStyle} from '../public/office-twin/viewer/people/polyfork-person.js';
+
+test('Polyfork styles keep independent skeletons, keyboard contact, lifted feet and skinned picking',async()=>{
+ assert.equal(normalizePersonStyle('unknown'),'classic');
+ for(const file of ['seated-office-worker','crane-banksman']){
+  const bytes=fs.readFileSync(`public/office-twin/people/${file}.glb`);
+  const gltf=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
+  const template=preparePolyforkTemplate(gltf.scene),a=createPolyforkPerson(template,0,{seatHeight:.46,keyboard:[0,.77,.44]}),b=createPolyforkPerson(template,1,{});
+  assert.equal(a.drawCalls,1);assert.notEqual(a.group.getObjectByName('Head'),b.group.getObjectByName('Head'));
+  const bFeet=b.footPositions();a.pose(0);for(const hand of a.handPositions()){assert.ok(Math.abs(hand[1]-.77)<.015);assert.ok(Math.abs(hand[2]-.39)<.015);}
+  const bone=a.group.getObjectByName('LeftLeg')!,length=bone.position.length();a.pose(1,true);
+  assert.equal(a.group.userData.visualMotion,'lifted');assert.ok(a.footPositions().every(p=>p[1]>0));assert.equal(bone.position.length(),length);assert.deepEqual(b.footPositions(),bFeet);
+  a.pose(1,false,{rise:1,moving:true,phase:1,stage:'walking'});assert.equal(a.group.userData.visualMotion,'walking');
+  a.pose(0);a.group.updateMatrixWorld(true);const head=a.head.getWorldPosition(new THREE.Vector3());
+  const ray=new THREE.Raycaster(head.clone().add(new THREE.Vector3(0,0,3)),new THREE.Vector3(0,0,-1));assert.ok(ray.intersectObject(a.group,true).length>0);
+  let geometryDisposed=0;template.group.getObjectByName('Polyfork person').geometry.addEventListener('dispose',()=>geometryDisposed++);
+  a.dispose();assert.equal(geometryDisposed,0);b.dispose();template.dispose();assert.equal(geometryDisposed,1);
+ }
+});
 test('seated people face each individual monitor on opposite sides of the room',()=>{
  for(const [origin,target] of [[[0,0,0],[0,1,1]],[[0,0,0],[0,1,-1]],[[2,0,3],[-1,1,4]]]){
   const yaw=seatFacing(origin,target),dx=target[0]-origin[0],dz=target[2]-origin[2];

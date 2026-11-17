@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.40.4",
+  "hostAdapterVersion": "0.41.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -60,16 +60,16 @@
     "models/H1_20F_building.glb": "9ae289e0629c50930c7b862f265d9336f282298403f133e648b3abc4f11a66f6",
     "previews/building-v0.6.7-offline.png": "5ac334637559d13c376cb6638629a5ebdf30000a7fc1f72c30e7fafac6abba7a",
     "previews/building_hero.png": "8f3a17af1ca0af1d1dc0f9c4c347a9a61aee96882d9c8aeac889a36a4a203463",
-    "THIRD_PARTY_NOTICES.md": "caf39bc0238a31bcacb1cf133d791f8ba59299d085320d17c3e39d811c8ca0e7",
-    "viewer/astra-review.css": "fb5862ba4bf40187370c28f9119f2d269b5e93d6cceed128738829bea148aad8",
+    "THIRD_PARTY_NOTICES.md": "74866011b27909db7c365b189c72c88ffd2ad1109156d699c8d280c9b11b7a62",
+    "viewer/astra-review.css": "13ff2f8dc33f58b189d594d4ea0d5dfc48a9baa5459761a3436b1c496685cde4",
     "viewer/baked-material.js": "84faacb5245563cd4da182a66fece0d0f026442ddd5408caa63430479052af95",
     "viewer/context-view-policy.js": "325fd9916b23143130a8207bb2f9889ebbbe865b20f641c197d4c47a57f1b003",
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
     "viewer/floor-picking.js": "f387b84ba8aeb6522ff3644af5f60a7c79df842b1900270df0332488fb2cee47",
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
-    "viewer/host-people.js": "480e9c4d9ced88a1cb971308848cfa50db3871959610d8f5466140932b7e74c3",
-    "viewer/index.html": "bf2a0f6a78b1715aba18be2126e9a826ecf86ae8ef21154edff50af7d9a5a476",
+    "viewer/host-people.js": "71c471ccd99c6749343629bf4802cfe2e6547d103d0b8fc3e80d4ade927b1c7f",
+    "viewer/index.html": "bb01b42e0fe65287a40b50d2fde1e731008c7615f557fdf8bf6252ccc3db1c2d",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
@@ -112,7 +112,7 @@
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
     "viewer/office-orbit.js": "0114adfe41fa1bab3d2f3f2b9f284d9fac21fc7f6e7821d20ca2bb96b50c0dd2",
     "viewer/person-motion.js": "4b73139cbdf18ed1639623c6d07818087c69b35943d69f0265731904cc8a7a9d",
-    "viewer/person-pointer.js": "393f8a15bfed86f5df2636868c11c31432d6e39944f6e10fcafc2819b3828ab5",
+    "viewer/person-pointer.js": "f035b6214d748af8127526890ece7ebe4fe04b44d91dcc2236b114f6c7695015",
     "viewer/seated-person.js": "1293ae9cfd1985ce350f15a08113d2043ea001bf40ef502dfd636793cb8224ed",
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
     "viewer/lighting-settings.js": "3d1505eeef6afc94b1041d4bcde9deef33b01f4f9880e3d672c5b3fc0bb75eac",
@@ -157,7 +157,11 @@
     "viewer/people/LICENSE.my-office.txt": "4d1ad2b2fcd6cbaf8fbc61678fc2f57a8592a4946c64b93cfd4e822bbf8fd4a0",
     "viewer/vendor/addons/geometries/RoundedBoxGeometry.js": "c5feab96123858ed8823c889b238dc8734adab7e760e3cfd21e7f3f2f3e348e3",
     "viewer/people/README.md": "8edc6f91cb810dcbf27ea266a482a7ff715804a0d490478d1797357782aabeb5",
-    "viewer/selected-person-drag.js": "b092aab243a8514287fb37de5b9c240f605819f62eb62604f9452f36d8b1d677"
+    "viewer/selected-person-drag.js": "b092aab243a8514287fb37de5b9c240f605819f62eb62604f9452f36d8b1d677",
+    "viewer/people/polyfork-person.js": "0c7f692df7a38fade01bec3cf436866d6534a96bc2d3bb0833dfea7a2f337056",
+    "people/seated-office-worker.glb": "9e24bc9fa77233a68d9a4f3626d49b00226dcbe4444e3dc11a611862f4c935c8",
+    "people/crane-banksman.glb": "f2aff1c08cedb00b17f258a239c67a593f60a3b45cec817baf80092ecc4e7944",
+    "people/README.md": "07f46e69184c8b8ecc88015e8c4094ccf4bc00b66bde55a6c3ae7406af64bff4"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -220,5 +224,24 @@
     "license": "MIT",
     "licenseFile": "viewer/people/LICENSE.my-office.txt",
     "adaptation": "Model-only default pixar proportions; local rigid skinning, fixed-length limbs, Astra pose adapter; no upstream business or world code."
+  },
+  "optionalCharacterStyles": {
+    "licence": "CC BY 4.0",
+    "licenceSource": "https://polyfork.dev/licensing",
+    "credits": "people/README.md",
+    "downloaded": "2026-11-17",
+    "models": [
+      {
+        "id": "office",
+        "source": "https://polyfork.dev/asset/seated-office-worker-854671",
+        "file": "people/seated-office-worker.glb"
+      },
+      {
+        "id": "engineer",
+        "source": "https://polyfork.dev/asset/crane-banksman-3994e0",
+        "file": "people/crane-banksman.glb"
+      }
+    ],
+    "adaptation": "Original GLB files retained; local runtime skin merge and seated/walk/lifted pose adapter; original cartoon remains default."
   }
 }

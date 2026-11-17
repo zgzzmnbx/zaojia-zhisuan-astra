@@ -118,6 +118,8 @@ body.studio .host-selected-remove:hover{background:color-mix(in srgb,var(--astra
 /* Keep direct lighting controls and their save/reset actions in the floating rail. */
 body.studio #picture-controls{max-height:calc(100dvh - 570px);min-height:180px;overflow:auto;padding-inline-end:8px;scrollbar-width:thin}
 body.studio .office-picture-row[hidden]{display:none}
+.office-person-style select{width:170px;max-width:100%;font:inherit;color:var(--astra-ink);background:var(--astra-paper);border:1px solid var(--astra-line);border-radius:8px}
+.office-person-style-status{grid-column:1/-1;color:var(--astra-muted)}
 body.studio .office-picture-actions{display:grid;grid-template-columns:1fr auto auto;padding-block-start:10px}
 body.studio .office-picture-row input[type="color"]{width:44px;height:28px;padding:2px;border:1px solid var(--astra-line);border-radius:6px;background:var(--astra-paper);cursor:pointer}
 

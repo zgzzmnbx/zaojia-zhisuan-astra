@@ -68,6 +68,7 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
   },true);
   for(const surface of surfaces){listen(surface,'pointercancel',finish,true);listen(surface,'lostpointercapture',finish,true);}
   listen(window,'blur',finish);
+  listen(window,'office-person-style-changing',()=>finish());
   listen(document,'visibilitychange',()=>{if(document.hidden)finish();});
   listen(document,'keydown',event=>{if(event.key==='Escape'&&gesture){finish();event.preventDefault();event.stopImmediatePropagation();}},true);
   return {dispose(){finish();ghost.remove();}};

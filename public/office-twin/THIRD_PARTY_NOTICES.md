@@ -81,6 +81,10 @@
 
 制作阶段的格式校验使用 Khronos 官方 `gltf-validator` npm 包 `2.0.0-dev.3.10`，来源为 [KhronosGroup/glTF-Validator](https://github.com/KhronosGroup/glTF-Validator)，许可为 **Apache-2.0**。该工具复用制作环境中已安装的固定版本，不是查看器运行依赖；本版保留其输出报告，未将工具安装目录声明为交付内容。模板报告见 `assets/white/validation/`，整楼报告见 `qa/gltf-static-report.json` 和 `qa/gltf-animation-report.json`；上游许可可在上述官方仓库查阅。
 
+## Polyfork 人物可选风格
+
+Seated Office Worker 与 Crane Banksman 的免费 GLB 按 **CC BY 4.0** 随包提供。作者 Polyfork，逐项来源、许可证链接与运行时改动见 [people/README.md](people/README.md)。未复制受单独许可约束的 .mjs 生成器或 HD 素材。
+
 ## 用户提供的建筑资料
 
 建筑照片与九层平面图按用户此次指示作为模型参照使用。该来源说明不另行授予第三方使用图纸、照片或其中信息的权利。模型中的其他楼层外壳和尺寸假设，以项目的建模依据与模型元数据为准。
