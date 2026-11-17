@@ -39,10 +39,15 @@ body.studio .office-workspace>.office-scene{inset-inline-end:calc(var(--cards-wi
 .host-artifact.is-dragover{outline:2px solid var(--astra-primary);outline-offset:-3px;background:color-mix(in srgb,var(--astra-primary) 8%,var(--astra-paper))}
 .host-artifact.has-selection>span{color:var(--astra-primary)}
 .host-person-marker{width:164px;padding:7px 10px;text-align:left;box-shadow:0 2px 8px #00000009;font-size:13px;border-radius:8px}
-.host-person-marker strong{display:block;font-size:13px;font-weight:500}
+.host-person-marker strong{display:block;font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.host-person-marker-heading{display:flex;align-items:center;gap:6px;min-width:0;line-height:18px}
+.host-person-status-dot{flex:none;width:7px;height:7px;border-radius:50%;background:#d08a20}
+.host-person-marker[data-status="reviewing"] .host-person-status-dot{background:#288bd5}
+.host-person-marker[data-status="idle"] .host-person-status-dot{background:#27a77c}
 .host-person-marker small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--astra-muted);margin-top:3px}
 .host-person-marker.selected{border-color:var(--astra-primary);background:var(--astra-paper)}
-.host-person-marker[data-detail="name"]{width:80px;padding:5px 8px;text-align:center}
+.host-person-marker[data-detail="name"]{width:max-content;min-width:60px;max-width:160px;min-height:26px;padding:3px 9px;border-radius:999px;text-align:left}
+.host-person-marker[data-detail="name"] .host-person-marker-heading{justify-content:center}
 .host-person-marker[data-detail="name"] small,.host-person-marker[data-detail="name"] .host-person-activity{display:none}
 .host-person-marker[data-detail="detail"]{width:180px}
 .host-person-marker[data-detail][draggable] strong{padding-right:0}

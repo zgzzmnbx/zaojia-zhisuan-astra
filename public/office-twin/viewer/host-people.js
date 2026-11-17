@@ -48,7 +48,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const rig=createSeatedPerson(assets,index,{seatHeight,keyboard:keyTarget,name:person.name,gender:person.gender}),group=rig.group;
       group.userData.demoPersonId=person.id;group.userData.seat_id=seatId;group.rotation.y=yaw;root.add(group);
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
-      marker.append(el('strong',person.name),el('small',''),el('span','','host-person-activity'));markers.append(marker);draggable(marker,person.id);
+      const heading=el('span','','host-person-marker-heading'),dot=el('span','','host-person-status-dot');dot.setAttribute('aria-hidden','true');
+      heading.append(dot,el('strong',person.name));marker.append(heading,el('small',''),el('span','','host-person-activity'));markers.append(marker);draggable(marker,person.id);
       marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY}));
       const button=el('button','','btn btn-ghost host-person-row');button.type='button';button.dataset.personId=person.id;
       button.append(el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
@@ -70,7 +71,10 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const title=task?`${task.demo?'演示 · ':''}${task.title}`:'暂无任务';
       item.marker.querySelector('strong').textContent=person.name;
       item.marker.querySelector('small').textContent=pending[0]?`${pending[0].demo?'演示 · ':''}${pending[0].title}`:'暂无待办';
-      item.marker.title=`${person.name} · ${title} · ${tasks.length} 项任务`;
+      const reviewing=pending.some(t=>t.status==='审核中'||t.status==='in_progress');
+      const statusLabel=item.idle?'空闲':reviewing?'审核中':pending[0]?.status||'已选复核';
+      item.marker.dataset.status=item.idle?'idle':reviewing?'reviewing':'pending';
+      item.marker.title=`${person.name} · ${statusLabel} · ${title} · ${tasks.length} 项任务`;
       item.marker.setAttribute('aria-label',item.marker.title);
       item.button.querySelector('small').textContent=`${tasks.length} 项${person.selected?' · 已选':''}`;
       for(const node of [item.marker,item.button]){const grip=node.querySelector('.host-drag-grip');if(grip)grip.hidden=!person.draggable;node.draggable=person.draggable;node.classList.toggle('selected',person.selected);node.setAttribute('aria-pressed',String(current===id));}
@@ -136,12 +140,16 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       projected.copy(item.group.position).project(camera);projectedTop.set(0,1.7,0).applyQuaternion(camera.quaternion).add(item.group.position).project(camera);
       item.labelPixels=Math.abs(projectedTop.y-projected.y)*height/2;
       const level=personLabelLevel(item.labelPixels,item.labelLevel);
-      if(level!==item.labelLevel){item.labelLevel=level;item.marker.dataset.detail=level;}
+      if(level!==item.labelLevel){
+        item.labelLevel=level;item.marker.dataset.detail=level;
+        // Measure only at a label-level transition, not during every animation frame.
+        if(level!=='hidden'){item.marker.hidden=false;item.labelWidth=item.marker.offsetWidth;item.labelHeight=item.marker.offsetHeight;}
+      }
       const active=activePersonTasks(tasksFor(item.person.id),item.person.id),activity=item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
       const status=item.marker.querySelector('.host-person-activity');if(status.textContent!==activity)status.textContent=activity;
       const pos=item.group.position.clone().add(new THREE.Vector3(0,1.9,0)).project(camera);
       const x=(head.x*.5+.5)*width,y=(-head.y*.5+.5)*height-item.labelPixels*.15-(level==='detail'?43:24);
-      const w=level==='detail'?180:80,h=level==='detail'?66:28,box={x:x-w/2,y:y-h/2,w,h};
+      const w=item.labelWidth||60,h=item.labelHeight||26,box={x:x-w/2,y:y-h/2,w,h};
       const overlap=boxes.some(b=>box.x<b.x+b.w&&box.x+box.w>b.x&&box.y<b.y+b.h&&box.y+box.h>b.y);
       item.marker.hidden=level==='hidden'||!item.anchor||pos.z < -1||pos.z>1||x<w/2||x>width-w/2||y<50||y>height-30||overlap;
       if(!item.marker.hidden){boxes.push(box);item.marker.style.left=`${x}px`;item.marker.style.top=`${y}px`;}
