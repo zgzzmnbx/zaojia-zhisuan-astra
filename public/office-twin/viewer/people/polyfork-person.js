@@ -7,9 +7,10 @@ import {seatedMotion} from '../person-motion.js';
 export const personStyles=[{id:'classic',label:'原版卡通'},{id:'office',label:'低多边形办公'},{id:'engineer',label:'工程人员'}];
 export const normalizePersonStyle=value=>personStyles.some(s=>s.id===value)?value:'classic';
 const files={office:'seated-office-worker.glb',engineer:'crane-banksman.glb'};
-// Authored sRGB swatches -> Astra pastels. Match only known cloth/skin colours,
-// preserving eyes, hair, safety stripes and all normals/skin weights.
+// Authored sRGB swatches -> Astra pastels. Match only known cloth/skin/hair colours,
+// preserving eyes, safety stripes and all normals/skin weights.
 const softPalette=new Map(Object.entries({
+  '523a24':'806b58','8c4a28':'a1785b',
   'd8ab88':'ffe4d3','c49778':'ecc5af','90c4d2':'b7dce8','83b2bf':'a6cbd9','7099a4':'92b6c5','645950':'b5c2cf','7d5840':'a2acb9','533a24':'8995a4',
   'c69a62':'ffe3cf','af7e4e':'efc8ac','ef6a1e':'f5bd8f','c2cace':'e1e8ed','8e7859':'c8c9ba','4a3a2a':'c9bca8','2e241b':'afa18e','ff7621':'f6bf93',
 }).map(([from,to])=>[parseInt(from,16),new THREE.Color('#'+to)]));
