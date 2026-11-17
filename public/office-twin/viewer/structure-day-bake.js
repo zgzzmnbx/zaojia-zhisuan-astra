@@ -35,7 +35,9 @@ export async function attachStructureDayBake(root,isDisposed=()=>false){
         const meshes=[];root.getObjectByName(entry.node)?.traverse(o=>{if(o.isMesh)meshes.push(o);});
         const mesh=meshes[entry.primitive],g=mesh?.geometry;
         if(!g||g.attributes.position.count!==entry.sourceVertices||(g.index?.count??g.attributes.position.count)!==entry.vertices||entry.floats!==entry.vertices*2||entry.offset+entry.floats*4>bytes.byteLength)throw Error('Structure daylight geometry mismatch: '+entry.node);
-        pending.push({mesh,entry,bytes,atlas,resolution:data.resolution});
+        // Keep the accepted small-bevel protection when a larger atlas adds
+        // corridor coverage; extra resolution must not reveal buried dark seams.
+        pending.push({mesh,entry,bytes,atlas,resolution:data.bevelReferenceResolution??data.resolution});
       }
     }
     let retainedBevelTriangles=0,retainedCutawayTriangles=0;

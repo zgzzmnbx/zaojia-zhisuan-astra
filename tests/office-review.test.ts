@@ -504,6 +504,24 @@ test('daylight companion keeps UV0, cutaway deck lighting and source geometry, a
   bake.dispose();assert.equal(mesh.geometry,original);assert.equal(disposed,3);
  }finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
 });
+test('larger corridor atlas preserves bevel protection and the original night UVs',async()=>{
+ const root=new THREE.Group(),original=new THREE.BoxGeometry(),mesh=new THREE.Mesh(original,new THREE.MeshBasicMaterial());mesh.name='H1_F09_floor_slab';root.add(mesh);
+ const count=original.index!.count,uv0=original.toNonIndexed().getAttribute('uv').array.slice(),values=new Float32Array(count*2);
+ for(let i=0;i<count;i+=3)values.set([.1,.1,.9,.1,.9,.9],i*2);
+ values.set([.1,.1,.9,.1,.9,.1008],values.length-6);
+ const entry={node:mesh.name,primitive:0,sourceVertices:original.attributes.position.count,vertices:count,floats:count*2,offset:0};
+ const fetchBefore=globalThis.fetch,loadBefore=THREE.TextureLoader.prototype.loadAsync;
+ globalThis.fetch=(async(input:any)=>String(input).endsWith('.buffer')?new Response(values.buffer):new Response(JSON.stringify({resolution:4096,bevelReferenceResolution:2048,entries:String(input).includes('interior')?[entry]:[]}))) as any;
+ THREE.TextureLoader.prototype.loadAsync=async()=>new THREE.Texture();
+ try{
+  const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,true);
+  assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(0),2);
+  assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(count-1),0);
+  assert.deepEqual(mesh.geometry.getAttribute('uv').array,uv0);
+  bake.dispose();assert.equal(mesh.geometry,original);
+ }finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
+});
+
 test('entry rebake replaces only its four meshes and keeps narrow bevels off the old atlas',async()=>{
  const root=new THREE.Group(),original=new THREE.BoxGeometry(),mesh=new THREE.Mesh(original,new THREE.MeshBasicMaterial());mesh.name='V067_Entry_Step_01';root.add(mesh);
  const count=original.index!.count,uv0=original.toNonIndexed().getAttribute('uv').array.slice(),values=new Float32Array(count*2);

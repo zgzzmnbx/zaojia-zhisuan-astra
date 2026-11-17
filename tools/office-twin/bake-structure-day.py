@@ -28,7 +28,10 @@ bpy.ops.wm.read_factory_settings(use_empty=True);scene=bpy.context.scene;bpy.con
 points=[];faces=[];occpoints=[];occfaces=[];entries=[]
 for i,n in enumerate(g['nodes']):
  if 'mesh' not in n:continue
- ancestors=ancestry(i);names=[x.get('name','') for x in ancestors];name=n.get('name','');office='H1_F09_Office' in names
+ ancestors=ancestry(i);names=[x.get('name','') for x in ancestors];name=n.get('name','')
+ # The continuous corridor/doorway deck is a sibling of Office under Floor_09.
+ # It must share the rooms' daylight bake, without pulling in the tower above.
+ office='H1_F09_Office' in names or name=='H1_F09_floor_slab'
  if any(x.get('extras',{}).get('furniture_asset_id')=='tower' for x in ancestors):continue
  # Same removed elevator/stair core as the web board; do not bake obsolete black footprints.
  if office and (name=='Core_floor' or name.startswith('CORE_') and not re.match(r'^CORE_(?:N_cut|S_cut|W_|E_)',name)):continue
@@ -101,13 +104,16 @@ worlddata=bpy.data.worlds.new('Astra uniform soft daylight');worlddata.use_nodes
 sun=bpy.data.lights.new('Astra distant soft key','SUN');sun.energy=1.3;sun.angle=math.radians(18);lamp=bpy.data.objects.new(sun.name,sun);scene.collection.objects.link(lamp);lamp.rotation_euler=Vector((.45,.35,-.82)).to_track_quat('-Z','Y').to_euler()
 scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=128 if kind=='entry' else 512;scene.cycles.use_adaptive_sampling=False;scene.cycles.max_bounces=6;scene.cycles.diffuse_bounces=4;scene.render.threads_mode='FIXED';scene.render.threads=12
 scene.view_settings.view_transform='Standard';scene.view_settings.look='None';scene.view_settings.exposure=0;scene.view_settings.gamma=1
-resolution=4096 if kind=='exterior' else 2048
+# The added continuous deck nearly doubles floor area; keep at least the
+# original room texel density instead of shrinking every existing UV island.
+resolution=2048 if kind=='entry' else 4096
 image=bpy.data.images.new('Astra '+kind+' daylight',width=resolution,height=resolution,alpha=False,float_buffer=True);m=receiver.data.materials[0];node=m.node_tree.nodes.new('ShaderNodeTexImage');node.image=image;m.node_tree.nodes.active=node
 scene.render.bake.use_pass_direct=True;scene.render.bake.use_pass_indirect=True;scene.render.bake.use_pass_color=True;scene.render.bake.margin=16 if kind=='entry' else 8
 print('BAKE_START',kind,len(entries),len(faces),len(occfaces),flush=True);bpy.ops.object.bake(type='DIFFUSE')
 scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGB';scene.render.image_settings.color_depth='16';image.save_render(str(OUT/(kind+'.png')),scene=scene)
 image.pack();bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'Codex-Temp/office-structure-match'/(kind+'.blend')))
 report={'kind':kind,'entries':entries,'sourceOfficeSHA256':hashlib.sha256(raw).hexdigest(),'textureSHA256':hashlib.sha256((OUT/(kind+'.png')).read_bytes()).hexdigest(),'uvSHA256':hashlib.sha256((OUT/(kind+'-uv.buffer')).read_bytes()).hexdigest(),'samples':scene.cycles.samples,'resolution':resolution,'lighting':{'world':.7,'sun':1.3,'angle':18,'white':.9,'roughness':.85,'transform':'Standard sRGB'},'seconds':time.time()-started}
+if kind=='interior':report['bevelReferenceResolution']=2048
 if kind=='entry':report['cutaway']={'externalOccluders':False,'selfOcclusion':True,'stepsSeparatedForBakeOnly':True,'uvPacking':'padded per-triangle patches','minimumPatchDimension':8,'padding':8,'groundShadow':'unchanged original ground atlas'}
 (OUT/(kind+'.json')).write_text(json.dumps(report,indent=2),'utf-8');print('BAKE_COMPLETE',kind,report['seconds'],flush=True)
 

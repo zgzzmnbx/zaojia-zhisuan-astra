@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.44.2",
+  "hostAdapterVersion": "0.44.3",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -69,7 +69,7 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
     "viewer/host-people.js": "2f1d4ec31dc9181d70e93033bb219daea1405592787bcd9d46b7bdabd386c575",
-    "viewer/index.html": "6c5f7fe6caf6f8b172427c94c14b6181b8774ffd9b6882f1a705eb9679be66f8",
+    "viewer/index.html": "52d7de9d795f7d76d70526b23bfc17635fec0f3c32ca3a1b811120a05fd7acda",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
@@ -141,10 +141,10 @@
     "models/astra-context-v1/uv.buffer": "127468392e9572732114a1609b165f054e8b6321833bbb6ca70f11ec408f9d23",
     "models/astra-context-v1/city.png": "3f1d72adf598f23039da952a8e63fac541bafc989c203f84778955ae08115526",
     "models/astra-context-v1/street.png": "4d8013d2a8f919fba701df6e6d5dd9f5673628449dea1b0fe74ba93151a3cabe",
-    "viewer/structure-day-bake.js": "4a54ed5c2a83b3ece18246411b504245141f04531cffe8af0f4e94c097f94e42",
-    "models/astra-structure-v1/interior.json": "13b39ef29226f7f3238612b0084070f61e4f190eba6eab9a19e9683e10af36c5",
-    "models/astra-structure-v1/interior.png": "128d3a6c83ead923b19f761061f61d2a0815199488653c2097c95d92273e7e17",
-    "models/astra-structure-v1/interior-uv.buffer": "e890cc7b0bf2a5b8978776fd62819a55b5ae1c7a96746376ec58771f9518157e",
+    "viewer/structure-day-bake.js": "6c1a204147e7a6144bebe09a70d3a42e5930621d955b1cfcadc90698fb55c450",
+    "models/astra-structure-v1/interior.json": "5439e467ba443f56767478fe39016febbf2d6425ca13e7dee9d1ede392843fe4",
+    "models/astra-structure-v1/interior.png": "31eeead82a8fe8567b673624c5915ca37c4b7d8d3d3c3089ed225ce83138fd62",
+    "models/astra-structure-v1/interior-uv.buffer": "dd8f299f0c054f4df0a8952545bca3c90738e4c13187f67f002b65079780df41",
     "models/astra-structure-v1/exterior.json": "7b688e7c3d45447683291f1fe9928b7728bb8a5508c175e92ec4f3e7907489e4",
     "models/astra-structure-v1/exterior.png": "f4a6ae29c8e9ea46bdb1aa4b3f29f101ddbc8bb0f9333b3a336514af340aa9c2",
     "models/astra-structure-v1/exterior-uv.buffer": "8b42476ab8324c294453679715a3bddd667a38e5c501e23f8f7514311e396555",
@@ -196,7 +196,7 @@
     "samples": 512,
     "resolutions": {
       "exterior": 4096,
-      "interior": 2048
+      "interior": 4096
     },
     "lighting": {
       "world": 0.7,
@@ -212,7 +212,7 @@
       "office": 105
     },
     "smallIslands": "Original shading for triangle area below 8 texels or altitude below 3 texels",
-    "interiorRevision": "0.34.8-no-towers"
+    "interiorRevision": "0.44.3-continuous-corridor-deck"
   },
   "excludedFurniture": {
     "assetIds": [
