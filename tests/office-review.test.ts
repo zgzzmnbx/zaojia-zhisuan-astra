@@ -369,7 +369,7 @@ test('structural daylight UVs survive batching and floor/wall lighting stays sep
 import {attachStructureDayBake,retainsCutawayShading} from '../public/office-twin/viewer/structure-day-bake.js';
 test('exposed structural backing uses cutaway shading without flattening facade grooves or interior shadows',()=>{
  for(const name of ['V064_F10_Spine_Front_WhiteSpine','V064_F01_Spine_West_WhiteSpine','V064_F09_Spine_East_ReturnFin'])assert.equal(retainsCutawayShading(name,0,1),true);
- for(const name of ['V064_F10_StructuralPlate_From09','V064_Integrated_Podium_Plinth','V064_Integrated_Crown_20','V067_Entry_Step_01']){
+ for(const name of ['V064_F10_StructuralPlate_From09','V064_Integrated_Crown_20']){
   assert.equal(retainsCutawayShading(name,1,1),true);assert.equal(retainsCutawayShading(name,-1,1),true);
   assert.equal(retainsCutawayShading(name,0,1),false);assert.equal(retainsCutawayShading(name,1,2),false);
  }
@@ -388,7 +388,22 @@ test('daylight companion keeps UV0, cutaway deck lighting and source geometry, a
   assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(0),1);assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(count-1),0);
   assert.equal(bake.state.retainedCutawayTriangles,4);
   for(let i=0;i<count;i++)if(Math.abs(mesh.geometry.attributes.normal.getY(i))>.5)assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(i),0);
-  bake.dispose();assert.equal(mesh.geometry,original);assert.equal(disposed,2);
+  bake.dispose();assert.equal(mesh.geometry,original);assert.equal(disposed,3);
+ }finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
+});
+test('entry rebake replaces only its four meshes and keeps narrow bevels off the old atlas',async()=>{
+ const root=new THREE.Group(),original=new THREE.BoxGeometry(),mesh=new THREE.Mesh(original,new THREE.MeshBasicMaterial());mesh.name='V067_Entry_Step_01';root.add(mesh);
+ const count=original.index!.count,uv0=original.toNonIndexed().getAttribute('uv').array.slice(),values=new Float32Array(count*2);
+ for(let i=0;i<count;i+=3)values.set([.1,.1,.9,.1,.9,.10001],i*2);
+ const entry={node:mesh.name,primitive:0,sourceVertices:original.attributes.position.count,vertices:count,floats:count*2,offset:0};
+ const fetchBefore=globalThis.fetch,loadBefore=THREE.TextureLoader.prototype.loadAsync;
+ globalThis.fetch=(async(input:any)=>String(input).endsWith('.buffer')?new Response(values.buffer):new Response(JSON.stringify({resolution:2048,entries:String(input).includes('interior')?[]:[entry]}))) as any;
+ THREE.TextureLoader.prototype.loadAsync=async()=>new THREE.Texture();
+ try{
+  const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,true);assert.equal(bake.state.primitives,1);
+  assert.deepEqual(mesh.geometry.getAttribute('uv').array,uv0);
+  for(let i=0;i<count;i++)assert.equal(mesh.geometry.getAttribute('officeStructureUV').getZ(i),3);
+  bake.dispose();assert.equal(mesh.geometry,original);
  }finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
 });
 test('a mismatched structure bake rolls back before changing any floor or wall geometry',async()=>{
@@ -396,7 +411,7 @@ test('a mismatched structure bake rolls back before changing any floor or wall g
  const fetchBefore=globalThis.fetch,loadBefore=THREE.TextureLoader.prototype.loadAsync;let disposed=0;
  globalThis.fetch=(async(input:any)=>String(input).endsWith('.buffer')?new Response(new Float32Array(6).buffer):new Response(JSON.stringify({entries:[{node:'Wall',primitive:0,sourceVertices:999,vertices:3,floats:6,offset:0}]}))) as any;
  THREE.TextureLoader.prototype.loadAsync=async()=>{const texture=new THREE.Texture();texture.addEventListener('dispose',()=>disposed++);return texture;};
- try{const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,false);assert.equal(mesh.geometry,original);assert.equal(disposed,2);}finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
+ try{const bake=await attachStructureDayBake(root);assert.equal(bake.state.ready,false);assert.equal(mesh.geometry,original);assert.equal(disposed,3);}finally{globalThis.fetch=fetchBefore;THREE.TextureLoader.prototype.loadAsync=loadBefore;}
 });
 
 import {validOfficeDrag} from '../03-Src/studio/office-review-drop.ts';

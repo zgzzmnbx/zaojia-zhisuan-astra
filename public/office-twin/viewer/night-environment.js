@@ -20,10 +20,10 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
     if(referenceStructure){
-      Object.assign(shader.uniforms,{officeExteriorBake:{value:shared.structureBake.exterior},officeInteriorBake:{value:shared.structureBake.interior}});
+      Object.assign(shader.uniforms,{officeEntryBake:{value:shared.structureBake.entry},officeExteriorBake:{value:shared.structureBake.exterior},officeInteriorBake:{value:shared.structureBake.interior}});
       shader.vertexShader='attribute vec3 officeStructureUV;varying vec3 vOfficeStructureUV;\n'+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvOfficeStructureUV=officeStructureUV;');
-      shader.fragmentShader='varying vec3 vOfficeStructureUV;uniform sampler2D officeExteriorBake,officeInteriorBake;\n'+shader.fragmentShader;
+      shader.fragmentShader='varying vec3 vOfficeStructureUV;uniform sampler2D officeExteriorBake,officeInteriorBake,officeEntryBake;\n'+shader.fragmentShader;
     }
     if(referenceContext){
       Object.assign(shader.uniforms,{astraCityBake:{value:shared.contextBake.city},astraStreetBake:{value:shared.contextBake.street}});
@@ -88,7 +88,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         // Same diffuse-only white matte/Standard-sRGB bake as the home city.
         // UV0 and diffuseColor stay intact for the independent night branch.
         if(vOfficeStructureUV.z>.5){
-        c=vOfficeStructureUV.z<1.5?texture2D(officeExteriorBake,vOfficeStructureUV.xy).rgb:texture2D(officeInteriorBake,vOfficeStructureUV.xy).rgb;
+        c=vOfficeStructureUV.z>2.5?texture2D(officeEntryBake,vOfficeStructureUV.xy).rgb:vOfficeStructureUV.z<1.5?texture2D(officeExteriorBake,vOfficeStructureUV.xy).rgb:texture2D(officeInteriorBake,vOfficeStructureUV.xy).rgb;
         float structureLuma=max(.001,dot(c,vec3(.2126,.7152,.0722)));
         c=mix(c,vec3(min(1.,structureLuma+.14*(1.-min(1.,structureLuma)))),officeWhite.x);
         c*=pow(structureLuma,officeContrast/.8)/structureLuma;

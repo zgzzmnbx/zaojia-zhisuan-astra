@@ -7,8 +7,7 @@ export function retainsCutawayShading(node,normalY,atlas){
   if(/^V064_F\d{2}_Spine_/.test(node))return true;
   return Math.abs(normalY)>.5&&(
     /^V064_F\d{2}_StructuralPlate_/.test(node)||
-    /^V064_Integrated_(?:Podium_Plinth|Crown_20|Crown_Inset|Entry_Canopy)$/.test(node)||
-    /^V067_Entry_Step_\d{2}$/.test(node));
+    /^V064_Integrated_(?:Crown_20|Crown_Inset|Entry_Canopy)$/.test(node));
 }
 
 // Companion daylight atlases, never replacements for the source/night UVs.
@@ -17,7 +16,7 @@ export async function attachStructureDayBake(root,isDisposed=()=>false){
   const base=new URL('../models/astra-structure-v1/',import.meta.url),textures={},changes=[];
   const dispose=()=>{for(const {mesh,original,geometry} of changes){mesh.geometry=original;geometry.dispose();}for(const t of Object.values(textures))t.dispose();};
   try{
-    const results=await Promise.allSettled(['exterior','interior'].map(async(kind,atlas)=>{
+    const results=await Promise.allSettled(['exterior','interior','entry'].map(async(kind,atlas)=>{
       const [manifest,buffer]=await Promise.all([fetch(new URL(kind+'.json',base)),fetch(new URL(kind+'-uv.buffer',base))]);
       if(!manifest.ok||!buffer.ok)throw Error('Structure daylight bake unavailable: '+kind);
       const loaded=await Promise.allSettled([manifest.json(),buffer.arrayBuffer(),new THREE.TextureLoader().loadAsync(new URL(kind+'.png',base).href).then(t=>(textures[kind]=t))]);
@@ -28,9 +27,11 @@ export async function attachStructureDayBake(root,isDisposed=()=>false){
     }));
     if(isDisposed()||results.some(r=>r.status!=='fulfilled'))throw Error('Structure daylight bake incomplete or disposed');
     const pending=[];
+    const entryMeshes=new Set(results[2].value.data.entries.map(e=>e.node+'#'+e.primitive));
     for(const result of results){
       const {data,bytes,atlas}=result.value;
       for(const entry of data.entries){
+        if(atlas===1&&entryMeshes.has(entry.node+'#'+entry.primitive))continue;
         const meshes=[];root.getObjectByName(entry.node)?.traverse(o=>{if(o.isMesh)meshes.push(o);});
         const mesh=meshes[entry.primitive],g=mesh?.geometry;
         if(!g||g.attributes.position.count!==entry.sourceVertices||(g.index?.count??g.attributes.position.count)!==entry.vertices||entry.floats!==entry.vertices*2||entry.offset+entry.floats*4>bytes.byteLength)throw Error('Structure daylight geometry mismatch: '+entry.node);
@@ -46,7 +47,7 @@ export async function attachStructureDayBake(root,isDisposed=()=>false){
         // Subpixel bevel islands cannot carry a stable lightmap. Keep their
         // already accepted source shading instead of sampling black atlas gaps.
         const edge=Math.max(Math.hypot(uv[u+2]-uv[u],uv[u+3]-uv[u+1]),Math.hypot(uv[u+4]-uv[u],uv[u+5]-uv[u+1]),Math.hypot(uv[u+4]-uv[u+2],uv[u+5]-uv[u+3]))*resolution;
-        const bevel=area<8||2*area/Math.max(.001,edge)<3;
+        const bevel=atlas!==3&&(area<8||2*area/Math.max(.001,edge)<3);
         const cutaway=retainsCutawayShading(entry.node,geometry.attributes.normal?.getY(i)??0,atlas);
         const channel=bevel||cutaway?0:atlas;if(bevel)retainedBevelTriangles++;if(cutaway)retainedCutawayTriangles++;
         for(let j=0;j<3;j++)attribute.set([uv[u+j*2],uv[u+j*2+1],channel],(i+j)*3);
