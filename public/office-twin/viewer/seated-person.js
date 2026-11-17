@@ -1,14 +1,15 @@
 import * as THREE from 'three';
 import {seatedMotion} from './person-motion.js';
-import {makeChibi} from './people/chibi-model.js?v=0.40.0';
-import {batchRig} from './people/batch-rig.js?v=0.40.0';
+import {makeChibi} from './people/chibi-model.js?v=0.43.0';
+import {batchRig} from './people/batch-rig.js?v=0.43.0';
+import {appearanceConfig} from './people/appearances.js';
 
 export function createPersonAssets(){return {dispose(){}};}
 
 // Reference default 2.6-head proportions, uniformly scaled. A higher chair
 // translates the character: fixed thighs and shins may hang above the floor.
-export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,.44],name='',gender='unspecified'}={}){
-  const original=makeChibi({look:'pixar',name:name||String(index),shirt:['#7899ab','#7c929e','#839d9a'][index%3],pants:'#64717e',hair:'#3e4852',skin:'#e3c6b0',style:gender==='female'?['bob','ponytail','bun'][index%3]:['plain','spiky','curly'][index%3],outfit:index%3===0?'shirt':'hoodie'});
+export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,.44],name='',gender='unspecified',appearance='inherit'}={}){
+  const original=makeChibi({look:'pixar',name:name||String(index),shirt:['#7899ab','#7c929e','#839d9a'][index%3],pants:'#64717e',hair:'#3e4852',skin:'#e3c6b0',style:gender==='female'?['bob','ponytail','bun'][index%3]:['plain','spiky','curly'][index%3],outfit:index%3===0?'shirt':'hoodie',...appearanceConfig(appearance)});
   const batched=batchRig(original.root,original.P),{group,root,rig:P,meshes,skeleton}=batched,D=P.D,scale=.86;
   group.scale.setScalar(scale);
   const seatOffset=seatHeight/scale+D.legR-D.hipY;
@@ -35,6 +36,7 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
     root.position.z=lifted?0:.10*(1-stand);
     P.spine.rotation.set((lifted?0:.16*(1-stand))+Math.sin(blend*Math.PI)*.12,0,0);
     P.torso.scale.y=1+(state.breath||0)*.3;
+    if(P.skirt)P.skirt.rotation.set(lifted?0:-1.12*(1-stand),0,swing*.035*stand);
     P.head.rotation.set(state.headPitch+respond*.12+(think?.08*think:0),state.headYaw+respond*.25,0);
     if(activity==='look')P.head.rotation.set(-.08,.28*Math.sin(t*.6),0);
     for(const [leg,side] of [[P.legL,-1],[P.legR,1]]){

@@ -6,6 +6,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 export function batchRig(root, P){
   root.updateMatrixWorld(true);
   const animated=new Set([root,P.spine,P.torso,P.head,...[P.legL,P.legR].flatMap(l=>[l.hip,l.knee]),...[P.armL,P.armR].flatMap(a=>[a.sh,a.el,a.hand]),...P.blink.flatMap(e=>[e.ball,e.lash]).filter(Boolean)]);
+  if(P.skirt)animated.add(P.skirt);
   const bones=[],mapping=new Map(),group=new THREE.Group(),buckets=new Map();
   function boneFor(node){
     if(mapping.has(node))return mapping.get(node);
@@ -41,6 +42,7 @@ export function batchRig(root, P){
   const geometries=new Set(),materials=new Set();root.traverse(o=>{if(o.isMesh){geometries.add(o.geometry);materials.add(o.material);}});
   geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());
   const rig={D:P.D,head:mapping.get(P.head),spine:mapping.get(P.spine),torso:mapping.get(P.torso),blink:P.blink.map(e=>({ball:mapping.get(e.ball),lash:mapping.get(e.lash)}))};
+  if(P.skirt){rig.skirt=mapping.get(P.skirt);rig.skirt.name='dress-skirt';}
   for(const name of ['armL','armR','legL','legR'])rig[name]=Object.fromEntries(Object.entries(P[name]).map(([key,value])=>[key,mapping.get(value)]));
   return {group,root:mapping.get(root),rig,meshes,skeleton,dispose(){meshes.forEach(m=>{m.geometry.dispose();m.material.dispose();});skeleton.dispose();}};
 }

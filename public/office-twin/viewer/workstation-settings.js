@@ -1,4 +1,6 @@
 import {profile,genderLabel} from './workstation-roster.js';
+import {appearances} from './people/appearances.js';
+import {createAppearancePreview} from './people/appearance-preview.js';
 let editState={open:false,seatId:'',people:[]};
 export const getWorkstationEditState=()=>editState;
 const endpoint='/api/astra/office-workstations';
@@ -18,19 +20,23 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   const body=el('div','','workstations-body'),sidebar=el('aside'),list=el('div','','workstations-list');list.setAttribute('aria-label','人员列表');
   const add=el('button','＋ 添加人员','btn btn-ghost');add.type='button';sidebar.append(list,add);
   const fields=el('div','','workstations-fields'),controls={};
-  for(const [key,label,limit] of [['name','姓名',40],['gender','性别'],['trade','工种',80],['expertise','擅长审核',240],['seatId','工位']]){
-    const row=el('div','','workstations-field'),labelNode=el('label',label),input=el(['gender','seatId'].includes(key)?'select':'input');
+  const previewNode=el('div','','workstations-appearance-preview'),preview=createAppearancePreview(previewNode);previewNode.hidden=true;
+  for(const [key,label,limit] of [['name','姓名',40],['gender','性别'],['appearance','人物扮相'],['trade','工种',80],['expertise','擅长审核',240],['seatId','工位']]){
+    const row=el('div','','workstations-field'),labelNode=el('label',label),input=el(['gender','seatId','appearance'].includes(key)?'select':'input');
     input.id=`workstation-${key}`;input.name=key;input.className=input.tagName==='SELECT'?'select select-bordered':'input input-bordered';labelNode.htmlFor=input.id;
     if(limit)input.maxLength=limit;
     if(key==='name'||key==='seatId')input.required=true;
     if(key==='name')input.autofocus=true;
     if(key==='gender')for(const value of ['unspecified','male','female']){const option=el('option',genderLabel(value));option.value=value;input.append(option);}
+    if(key==='appearance')for(const {id,label} of appearances){const option=el('option',label);option.value=id;input.append(option);}
     input.addEventListener('input',()=>{
       const person=draft.find(p=>p.id===current);if(!person)return;
       person[key]=input.value;status.textContent='有未保存的修改';input.setCustomValidity('');
+      if(key==='appearance')preview.show(person);
       if(key==='name'||key==='seatId')renderList();publish(key==='seatId'?'focus':null);
     });
     row.append(labelNode,input);fields.append(row);controls[key]=input;
+    if(key==='appearance'){input.title='单独设置后使用此卡通扮相；跟随画面风格则沿用全局人物风格';fields.append(previewNode);}
   }
   body.append(sidebar,fields);
   const footer=el('footer'),status=el('span','','workstations-status');status.setAttribute('role','status');
@@ -62,7 +68,7 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   }
   function select(id){
     current=id;const person=draft.find(p=>p.id===id);fields.hidden=!person;renderList();if(!person)return;
-    for(const [key,input] of Object.entries(controls)){input.value=person[key];input.setCustomValidity('');}publish('focus');
+    for(const [key,input] of Object.entries(controls)){input.value=person[key];input.setCustomValidity('');}preview.show(person);publish('focus');
   }
   function busy(value){saving=value;for(const input of Object.values(controls))input.disabled=value;save.disabled=value||loading;add.disabled=value||loading||!config||draft.length>=config.seats.length;list.inert=value;}
   async function load(){
@@ -82,10 +88,10 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   };
   add.onclick=()=>{
     const used=new Set(draft.map(p=>p.seatId)),seat=config.seats.find(s=>!used.has(s.id));if(!seat)return;
-    const person={id:`local:${crypto.randomUUID()}`,name:'',gender:'unspecified',trade:'',expertise:'',seatId:seat.id};
+    const person={id:`local:${crypto.randomUUID()}`,name:'',gender:'unspecified',appearance:'inherit',trade:'',expertise:'',seatId:seat.id};
     draft.push(person);select(person.id);status.textContent='有未保存的修改';save.disabled=false;controls.name.focus();
   };
-  function dismiss(){if(saving)return;opened=false;epoch++;loading=false;if(dialog.hidePopover)dialog.hidePopover();else dialog.close();publish();}
+  function dismiss(){if(saving)return;opened=false;epoch++;loading=false;preview.dispose();if(dialog.hidePopover)dialog.hidePopover();else dialog.close();publish();}
   close.onclick=dismiss;cancel.onclick=dismiss;
   const escape=event=>{if(opened&&event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();dismiss();}};
   window.addEventListener('keydown',escape,true);
@@ -109,5 +115,5 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   });
   // Loading failure is retried and surfaced when the settings page is opened.
   load().catch(()=>{});
-  return {dispose(){opened=false;epoch++;publish();window.removeEventListener('office-workstation-pick',pickSeat);window.removeEventListener('keydown',escape,true);dialog.remove();open.remove();}};
+  return {dispose(){opened=false;epoch++;preview.dispose();publish();window.removeEventListener('office-workstation-pick',pickSeat);window.removeEventListener('keydown',escape,true);dialog.remove();open.remove();}};
 }

@@ -10,6 +10,9 @@ from fastapi import APIRouter, Body, HTTPException
 ROOT = Path(__file__).resolve().parents[1]
 router = APIRouter(prefix='/api/astra/office-workstations')
 _lock = RLock()
+APPEARANCES = {'inherit', 'blue-shirt', 'headphones', 'glasses', 'cap', 'beanie',
+               'ponytail', 'bun', 'bob', 'curly', 'spiky', 'suit', 'red-shirt',
+               'long-black', 'long-black-lilac', 'long-wavy', 'long-wavy-rose'}
 
 
 def filename():
@@ -38,7 +41,8 @@ def validate(value, available):
         raise ValueError('人员数量超过可用工位')
     ids, occupied, result = set(), set(), []
     for person in people:
-        if not isinstance(person, dict) or set(person) != {'id', 'name', 'gender', 'trade', 'expertise', 'seatId'}:
+        required = {'id', 'name', 'gender', 'trade', 'expertise', 'seatId'}
+        if not isinstance(person, dict) or not required <= set(person) or set(person) - required - {'appearance'}:
             raise ValueError('人员字段无效')
         clean = {}
         for key, limit in [('id', 240), ('name', 40), ('trade', 80), ('expertise', 240), ('seatId', 80), ('gender', 16)]:
@@ -50,6 +54,10 @@ def validate(value, available):
             raise ValueError('姓名不能为空，人员标识不能重复')
         if clean['gender'] not in {'unspecified', 'male', 'female'}:
             raise ValueError('请选择有效性别')
+        appearance = person.get('appearance', 'inherit')
+        if not isinstance(appearance, str) or appearance not in APPEARANCES:
+            raise ValueError('请选择有效人物扮相')
+        clean['appearance'] = appearance
         if clean['seatId'] not in available:
             raise ValueError(f"{clean['name']}：请选择有效工位")
         if clean['seatId'] in occupied:
@@ -84,6 +92,11 @@ def save(payload: dict = Body(...)):
             raise HTTPException(409, '设置已被其他窗口修改，请关闭后重新打开工位设置')
         try:
             value = validate(payload, available)
+            # An older open page does not know this optional display field.
+            previous = {p['id']: p for p in current['people']}
+            for incoming, person in zip(payload['people'], value['people']):
+                if 'appearance' not in incoming:
+                    person['appearance'] = previous.get(person['id'], {}).get('appearance', 'inherit')
         except (ValueError, TypeError) as error:
             raise HTTPException(400, str(error)) from None
         value['revision'] += 1

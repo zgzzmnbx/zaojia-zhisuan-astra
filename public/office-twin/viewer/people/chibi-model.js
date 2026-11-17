@@ -69,7 +69,26 @@ const HAIR = {
   ponytail: { line: [1.12, 1.72, 1.82], locks: 10, sweep: -0.12 },
   bun: { line: [1.1, 1.6, 1.8], locks: 10 },
   curly: { line: [1.15, 1.85, 2.05], locks: 15, round: 0.5, bulge: 0.06, bumps: 0.045, tip: 0.1, twist: 0 },
+  'long-straight': { line: [1.08, 1.9, 2.05], locks: 12, sweep: -0.16, bulge: 0.018, twist: 0.12 },
+  'long-wavy': { line: [1.02, 1.85, 2.02], locks: 9, sweep: 0.2, bulge: 0.045, twist: 0.28 },
 };
+
+// Astra extension: one open-front hair curtain, merged into the existing head batch.
+// Broad waves are sculpted into the mesh, without a separate simulation or extra lights.
+function longHair(R, wavy) {
+  const columns=56, rows=24, positions=[], indices=[];
+  for(let j=0;j<=rows;j++)for(let i=0;i<=columns;i++){
+    const v=j/rows, u=i/columns, angle=.96+u*(Math.PI*2-1.92);
+    const wave=wavy?Math.sin(v*Math.PI*3.6+Math.cos(angle)*.7):0;
+    const radius=R*(1.02-.16*v+(wavy?.12*wave:.016*Math.cos(angle*14)));
+    const tip=(wavy?.1:.035)*Math.cos(angle*(wavy?7:12))*v*v;
+    positions.push(Math.sin(angle)*radius, R*(.24-2.15*v+tip),Math.cos(angle)*radius-R*.09);
+  }
+  for(let j=0;j<rows;j++)for(let i=0;i<columns;i++){
+    const a=j*(columns+1)+i,b=a+columns+1;indices.push(a,b,a+1,b,b+1,a+1);
+  }
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setIndex(indices);geometry.computeVertexNormals();return geometry;
+}
 
 export function makeChibi(cfg = {}, scale = 1) {
   const look = DIMS[cfg.look] ? cfg.look : 'pixar', D = DIMS[look], toy = look === 'toy', R = D.R;
@@ -80,7 +99,7 @@ export function makeChibi(cfg = {}, scale = 1) {
     ? { color: skinC, roughness: 0.55, clearcoat: 0.12, clearcoatRoughness: 0.6, sheen: 0.25, sheenColor: new THREE.Color('#FFB496') }
     : { color: skinC, roughness: 0.5, sheen: 0.45, sheenRoughness: 0.6, sheenColor: new THREE.Color('#FF9E80') });
   const fabric = (c, k = 1) => new THREE.MeshPhysicalMaterial({ color: darken(c, k), roughness: toy ? 0.7 : 0.85, sheen: toy ? 0.3 : 0.7, sheenRoughness: 0.8, sheenColor: lighten(c, 0.55) });
-  const top = fabric(shirtC), topDark = fabric(shirtC, 0.74), pants = fabric(cfg.pants || '#3A4150');
+  const top = fabric(shirtC), topDark = fabric(shirtC, 0.74), pants = cfg.outfit==='dress'?skin:fabric(cfg.pants || '#3A4150');
   const hair = new THREE.MeshPhysicalMaterial({ color: hairC, side: THREE.DoubleSide, roughness: toy ? 0.5 : 0.42, clearcoat: toy ? 0.15 : 0.3, clearcoatRoughness: 0.45, sheen: 0.6, sheenRoughness: 0.3, sheenColor: lighten(hairC, 0.4) });
   const shoeM = plainMat(cfg.shoes || '#2D2A2E', { roughness: 0.45 }), soleM = plainMat('#F4F1EA', { roughness: 0.7 });
   const white = new THREE.MeshBasicMaterial({ color: '#FFFFFF' });
@@ -98,7 +117,7 @@ export function makeChibi(cfg = {}, scale = 1) {
     const knee = new THREE.Group(); knee.position.y = -D.thigh; hip.add(knee);
     add(knee, sph(D.legR * 0.96), pants);
     add(knee, new THREE.CylinderGeometry(D.legR * 0.95, D.legR * 0.98, D.shin, 18), pants, 0, -D.shin / 2, 0);
-    add(knee, new THREE.CylinderGeometry(D.legR * 1.08, D.legR * 1.08, toy ? 0.05 : 0.035, 18), toy ? fabric(cfg.pants || '#3A4150', 0.85) : pants, 0, -D.shin + 0.02, 0);
+    if(cfg.outfit!=='dress')add(knee, new THREE.CylinderGeometry(D.legR * 1.08, D.legR * 1.08, toy ? 0.05 : 0.035, 18), toy ? fabric(cfg.pants || '#3A4150', 0.85) : pants, 0, -D.shin + 0.02, 0);
     const shoe = new THREE.Group(); shoe.position.set(0, -D.shin, 0.035); knee.add(shoe);
     const s = D.shoeR;
     add(shoe, sph(s, 26, 18), shoeM, 0, 0, 0.02, 0.82, 0.58, 1.32);
@@ -107,7 +126,13 @@ export function makeChibi(cfg = {}, scale = 1) {
     return { hip, knee };
   };
   P.legL = leg(-1); P.legR = leg(1);
-  add(root, sph(D.torso[1][0] * 0.98, 24, 16), pants, 0, D.hipY, 0, 1, 0.62, 0.8);
+  add(root, sph(D.torso[1][0] * 0.98, 24, 16), cfg.outfit==='dress'?top:pants, 0, D.hipY, 0, 1, 0.62, 0.8);
+  if(cfg.outfit==='dress'){
+    const skirt=new THREE.Group();skirt.position.y=D.hipY;root.add(skirt);P.skirt=skirt;
+    const profile=[[.207,.03],[.22,-.06],[.26,-.22],[.30,-.37],[.295,-.385],[.282,-.38]].map(([x,y])=>new THREE.Vector2(x,y));
+    const cloth=top.clone();cloth.side=THREE.DoubleSide;
+    add(skirt,new THREE.LatheGeometry(profile,40),cloth,0,0,0,1,1,.83);
+  }
 
   /* spine: everything above the hips leans together */
   const spine = new THREE.Group(); spine.position.y = D.hipY; root.add(spine); P.spine = spine;
@@ -235,6 +260,14 @@ export function makeChibi(cfg = {}, scale = 1) {
   const HR = R * (toy ? 1.1 : 1.12);
   const shell = add(head, hairShell(HR, line, shellOpts), hair, 0, R * 0.02, -R * 0.02, D.sx, D.sy, D.sz);
   shell.rotation.x = -0.08;
+  if(style==='long-straight'||style==='long-wavy'){
+    add(head,longHair(HR,style==='long-wavy'),hair);
+    for(const sx of [-1,1]){
+      const wavy=style==='long-wavy';
+      const points=wavy?[[sx*R*.7,R*.65,R*.4],[sx*R*.99,R*.15,R*.46],[sx*R*.87,-R*.45,R*.48],[sx*R*1.04,-R*1.05,R*.32],[sx*R*.78,-R*1.68,R*.25]]:[[sx*R*.66,R*.68,R*.42],[sx*R*.94,R*.05,R*.46],[sx*R*.92,-R*.8,R*.38],[sx*R*.86,-R*1.65,R*.25]];
+      add(head,sweep(points,t=>R*(wavy?.14:.095)*Math.pow(1-t,.55)+.002,24,8),hair);
+    }
+  }
   if (cfg.acc === 'cap' || cfg.acc === 'beanie') { shell.scale.multiplyScalar(0.97); shell.scale.y *= 0.84; }
   if (style === 'spiky') for (let i = 0; i < 6; i++) {
     const a = (i - 2.5) * 0.42, sx = Math.sin(a);
@@ -249,7 +282,7 @@ export function makeChibi(cfg = {}, scale = 1) {
     add(head, new THREE.TorusGeometry(R * 0.3, R * 0.09, 10, 26), hair, 0, R * 1.04, -R * 0.35, 1, 1, 0.9).rotation.x = Math.PI / 2 - 0.35;
     add(head, new THREE.TorusGeometry(R * 0.25, R * 0.05, 8, 22), topDark, 0, R * 0.84, -R * 0.26).rotation.x = Math.PI / 2 - 0.35;
   }
-  if (seed % 3 === 0 && style !== 'spiky' && style !== 'bun' && cfg.acc !== 'beanie' && cfg.acc !== 'cap') add(head, sweep([[R * 0.05, R * 1.0, R * 0.05], [R * 0.12, R * 1.28, R * 0.2], [0, R * 1.42, R * 0.4], [-R * 0.15, R * 1.35, R * 0.5]], (t) => R * 0.06 * (1 - t) + 0.002, 16, 8), hair);
+  if (seed % 3 === 0 && !style.startsWith('long-') && style !== 'spiky' && style !== 'bun' && cfg.acc !== 'beanie' && cfg.acc !== 'cap') add(head, sweep([[R * 0.05, R * 1.0, R * 0.05], [R * 0.12, R * 1.28, R * 0.2], [0, R * 1.42, R * 0.4], [-R * 0.15, R * 1.35, R * 0.5]], (t) => R * 0.06 * (1 - t) + 0.002, 16, 8), hair);
 
   /* accessories */
   const acc = cfg.acc;

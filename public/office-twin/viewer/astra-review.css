@@ -19,6 +19,8 @@ button,input,select,textarea{font:inherit}
 .workstations-person[aria-pressed=true]{background:color-mix(in srgb,var(--astra-primary) 12%,var(--astra-paper));color:var(--astra-primary)}
 .workstations-fields{padding:16px;display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:14px}
 .workstations-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.workstations-appearance-preview{grid-column:1/-1;min-height:160px;text-align:center;border:1px solid var(--astra-line);border-radius:12px;background:var(--astra-soft);overflow:hidden}
+.workstations-appearance-preview canvas{display:block;max-width:100%;height:auto;margin:auto}
 .workstations-field:nth-child(n+3){grid-column:1/-1}
 .workstations-field label{font-size:14px;font-weight:500}
 .workstations-field :is(input,select){width:100%;height:40px;min-width:0;background:var(--astra-paper);color:inherit;border:1px solid var(--astra-line);border-radius:8px;padding-inline:10px;font-size:14px}

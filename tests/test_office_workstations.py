@@ -69,6 +69,27 @@ class WorkstationsTest(unittest.TestCase):
         self.assertEqual(self.client.put(self.url, json=self.payload()).status_code, 503)
         self.assertEqual(self.path.read_text('utf-8'), 'broken')
 
+    def test_appearance_persists_and_legacy_clients_preserve_it(self):
+        legacy = self.payload()
+        self.path.parent.mkdir(); self.path.write_text(json.dumps(legacy), 'utf-8')
+        before = self.path.read_bytes()
+        self.assertEqual(self.client.get(self.url).json()['people'][0]['appearance'], 'inherit')
+        self.assertEqual(self.path.read_bytes(), before)
+        for choice in module.APPEARANCES:
+            data = self.client.get(self.url).json(); data.pop('seats')
+            data['people'][0]['appearance'] = choice
+            self.assertEqual(self.client.put(self.url, json=data).status_code, 200)
+            self.assertEqual(json.loads(self.path.read_text('utf-8'))['people'][0]['appearance'], choice)
+        data = self.client.get(self.url).json(); data.pop('seats'); data['people'][0]['appearance'] = 'suit'
+        self.client.put(self.url, json=data)
+        legacy['revision'] = self.client.get(self.url).json()['revision']
+        self.assertEqual(self.client.put(self.url, json=legacy).json()['people'][0]['appearance'], 'suit')
+        data = self.client.get(self.url).json(); data.pop('seats'); before = self.path.read_bytes()
+        for value in ['missing', {}, None, 42]:
+            data['people'][0]['appearance'] = value
+            self.assertEqual(self.client.put(self.url, json=data).status_code, 400)
+            self.assertEqual(self.path.read_bytes(), before)
+
 
 if __name__ == '__main__':
     unittest.main()

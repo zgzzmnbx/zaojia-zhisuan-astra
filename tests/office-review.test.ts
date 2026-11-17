@@ -1,5 +1,6 @@
 import test from 'node:test';
 import {workstationRoster,profile} from '../public/office-twin/viewer/workstation-roster.js';
+import {appearances,normalizeAppearance} from '../public/office-twin/viewer/people/appearances.js';
 
 test('workstation overrides preserve host authority and make new people demo-only',()=>{
  const directory=[{id:'owner',name:'石萌',selectable:true,selected:true,accounts:[{name:'石萌'}]},{id:'peer',name:'同事',selectable:false,selected:false,accounts:[]}];
@@ -291,6 +292,25 @@ test('person motion freezes for pause/reduced motion and resumes without hidden 
  for(let t=0;t<30;t+=.05){const p=seatedMotion(t);assert.ok(Math.abs(p.leftTap)<=.009&&Math.abs(p.rightTap)<=.009);assert.ok(Math.abs(p.headYaw)<=.035);}
  assert.equal(seatedMotion(3).mode,'typing');assert.equal(seatedMotion(10).mode,'reading');
 });
+test('all my-office appearances retain the batched rig, proportions and existing motion',()=>{
+ assert.equal(normalizeAppearance('unknown'),'inherit');assert.equal(profile({id:'x',name:'x',appearance:'suit'}).appearance,'suit');
+ const signatures=new Set();let proportions=null;
+ for(const appearance of appearances){
+  const rig=createSeatedPerson(null,0,{appearance:appearance.id});
+  if(proportions)assert.deepEqual(rig.proportions,proportions);else proportions=rig.proportions;
+  assert.ok(rig.drawCalls<=20,appearance.id);
+  const meshes=[];rig.group.traverse(o=>{if(o.isMesh)meshes.push(o);});
+  signatures.add(meshes.map(m=>`${m.geometry.attributes.position.count}:${m.geometry.attributes.color.array.slice(0,6)}`).join('|'));
+  const skirt=rig.group.getObjectByName('dress-skirt');
+  if(appearance.outfit==='dress'){assert.ok(skirt);assert.ok(skirt.rotation.x < -1);}
+  rig.pose(1,true);assert.equal(rig.group.userData.visualMotion,'lifted');assert.ok(rig.footPositions().every(p=>p[1]>0));
+  if(skirt)assert.equal(skirt.rotation.x,0);
+  rig.pose(1,false,{rise:1,moving:true,phase:1,stage:'walking'});assert.equal(rig.group.userData.visualMotion,'walking');
+  rig.pose(0);assert.equal(rig.handPositions().every(p=>p.every(Number.isFinite)),true);rig.dispose();
+ }
+ assert.equal(signatures.size,appearances.length);
+});
+
 test('reference character keeps short proportions at every seat height and pickup releases exactly',()=>{
  const assets=createPersonAssets(),rig=createSeatedPerson(assets,0),high=createSeatedPerson(assets,0,{seatHeight:.7});
  assert.deepEqual(rig.proportions,high.proportions);assert.ok(rig.proportions.thigh<rig.proportions.headRadius);

@@ -7,6 +7,7 @@ import {activePersonTasks,personLabelLevel,createRoomWalkGraph,createPersonWande
 import {personStyles,normalizePersonStyle,createPolyforkAssets,createPolyforkPerson} from './people/polyfork-person.js';
 import {createPersonPlacement} from './person-placement.js';
 import {assignmentRoute} from './person-assignment.js';
+import {normalizeAppearance} from './people/appearances.js';
 
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
@@ -65,8 +66,9 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const seatHeight=chair?new THREE.Box3().setFromObject(chair).max.y-origin.y:.46;
       const keyBox=keyboard?new THREE.Box3().setFromObject(keyboard):null;
       const keyTarget=keyBox?keyBox.getCenter(new THREE.Vector3()).setY(keyBox.max.y+.025).sub(origin).applyAxisAngle(new THREE.Vector3(0,1,0),-yaw).toArray():[0,.77,.44];
-      const options={seatHeight,keyboard:keyTarget,name:person.name,gender:person.gender};
-      const rig=styleTemplate?createPolyforkPerson(styleTemplate,index,options):createSeatedPerson(assets,index,options),group=rig.group;
+      const options={seatHeight,keyboard:keyTarget,name:person.name,gender:person.gender,appearance:normalizeAppearance(person.appearance)};
+      const rig=styleTemplate&&options.appearance==='inherit'?createPolyforkPerson(styleTemplate,index,options):createSeatedPerson(assets,index,options),group=rig.group;
+      group.userData.appearance=options.appearance;
       group.userData.demoPersonId=person.id;group.userData.seat_id=seatId;group.rotation.y=yaw;root.add(group);
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
       const heading=el('span','','host-person-marker-heading'),dot=el('span','','host-person-status-dot');dot.setAttribute('aria-hidden','true');
@@ -149,7 +151,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   function syncBusiness(){
     business=officeClient.getState();if(placementContext!==business.context){placementContext=business.context;placements.clear();placement.hint(null);}
     for(const id of placements.keys())if(!business.employees.some(p=>p.id===id))placements.delete(id);
-    const next=business.employees.map(p=>[p.id,p.name,p.seatId,p.gender].join(':')).join('|');
+    const next=business.employees.map(p=>[p.id,p.name,p.seatId,p.gender,normalizeAppearance(p.appearance)].join(':')).join('|');
     if(next!==signature){signature=next;build();if(!actors.has(current)){current=null;closeMenu();}}
     paint();if(menuOpen())paintMenu();requestFrame();
   }
