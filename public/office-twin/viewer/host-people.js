@@ -49,7 +49,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       group.userData.demoPersonId=person.id;group.userData.seat_id=seatId;group.rotation.y=yaw;root.add(group);
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
       const heading=el('span','','host-person-marker-heading'),dot=el('span','','host-person-status-dot');dot.setAttribute('aria-hidden','true');
-      heading.append(dot,el('strong',person.name));marker.append(heading,el('small',''),el('span','','host-person-activity'));markers.append(marker);draggable(marker,person.id);
+      heading.append(dot,el('strong',person.name));marker.append(heading,el('small',''),el('span','','host-person-activity'));markers.append(marker);
       marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY}));
       const button=el('button','','btn btn-ghost host-person-row');button.type='button';button.dataset.personId=person.id;
       button.append(el('strong',person.name),el('small',''),el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
@@ -77,7 +77,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       item.marker.title=`${person.name} · ${statusLabel} · ${title} · ${tasks.length} 项任务`;
       item.marker.setAttribute('aria-label',item.marker.title);
       item.button.querySelector('small').textContent=`${tasks.length} 项${person.selected?' · 已选':''}`;
-      for(const node of [item.marker,item.button]){const grip=node.querySelector('.host-drag-grip');if(grip)grip.hidden=!person.draggable;node.draggable=person.draggable;node.classList.toggle('selected',person.selected);node.setAttribute('aria-pressed',String(current===id));}
+      item.marker.dataset.draggable=String(!!person.draggable);
+      for(const node of [item.marker,item.button]){const grip=node.querySelector('.host-drag-grip');if(grip)grip.hidden=!person.draggable;node.draggable=node===item.button&&person.draggable;node.classList.toggle('selected',person.selected);node.setAttribute('aria-pressed',String(current===id));}
     }
     card.replaceChildren();
     const item=actors.get(current);
@@ -145,7 +146,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
         // Measure only at a label-level transition, not during every animation frame.
         if(level!=='hidden'){item.marker.hidden=false;item.labelWidth=item.marker.offsetWidth;item.labelHeight=item.marker.offsetHeight;}
       }
-      const active=activePersonTasks(tasksFor(item.person.id),item.person.id),activity=item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
+      const active=activePersonTasks(tasksFor(item.person.id),item.person.id),activity=item.dragPosition?'拖动中':item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
       const status=item.marker.querySelector('.host-person-activity');if(status.textContent!==activity)status.textContent=activity;
       const pos=item.group.position.clone().add(new THREE.Vector3(0,1.9,0)).project(camera);
       const x=(head.x*.5+.5)*width,y=(-head.y*.5+.5)*height-item.labelPixels*.15-(level==='detail'?43:24);

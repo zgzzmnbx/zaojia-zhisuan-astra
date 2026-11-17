@@ -52,7 +52,8 @@ body.studio .office-workspace>.office-scene{inset-inline-end:calc(var(--cards-wi
 .host-person-marker[data-detail="detail"]{width:180px}
 .host-person-marker[data-detail][draggable] strong{padding-right:0}
 .host-person-marker .host-person-activity,.host-idle-status{display:block;margin-top:3px;font-size:12px;color:var(--astra-muted);white-space:nowrap}
-.host-person-marker[draggable="true"]{cursor:grab}
+.host-person-marker[data-draggable="true"]{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.host-person-marker.is-person-dragging{cursor:grabbing}
 .host-person-row{width:100%;display:flex!important;justify-content:flex-start!important;gap:9px!important;padding:10px 8px!important;height:auto!important;border-radius:8px}
 .host-person-row strong{font-size:13px;font-weight:500;flex:1;text-align:left}
 .host-person-row small{font-size:12px;color:var(--astra-muted)}
