@@ -8,7 +8,7 @@ export function collectMonitorLighting(root){
   const inverse=floor?floor.matrixWorld.clone().invert():new THREE.Matrix4();
   const monitors=new Map();let screenCount=0;
   root.traverse(object=>{
-    if(!object.isMesh||!object.geometry||![].concat(object.material||[]).some(m=>classifyNightRole(object,m)==='screen'))return;
+    if(object.userData.staticBatch||!object.isMesh||!object.geometry||![].concat(object.material||[]).some(m=>classifyNightRole(object,m)==='screen'))return;
     screenCount++;
     const seat=nightSeatId(object);if(!seat)return;
     object.geometry.computeBoundingBox();

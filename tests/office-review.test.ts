@@ -73,8 +73,11 @@ test('room furniture batching retains each screen position, facing, UV and named
   const monitor=new THREE.Mesh(new THREE.PlaneGeometry(),screenMaterial);monitor.position.set(0,1,.4);seat.add(monitor);
  }
  const {monitors}=collectMonitorLighting(root),before=desks.map(o=>new THREE.Box3().setFromObject(o));
- const result=batchStaticGeometry(root);assert.equal(result.savedDraws,1);
- const batch=room.children.find(o=>o.userData.vertexMonitor) as THREE.Mesh;assert.ok(batch);
+ const result=batchStaticGeometry(root);assert.equal(result.savedDraws,2);
+ const screenBatch=room.children.find(o=>o.userData.staticBatch&&o.userData.night_role==='screen') as THREE.Mesh;assert.ok(screenBatch);
+ assert.equal(screenBatch.geometry.attributes.position.count,8);assert.equal(collectMonitorLighting(root).screenCount,2);
+ for(let i=0;i<2;i++)for(let v=0;v<4;v++){const binding=monitors.get(`s${i}`)!;const p=screenBatch.geometry.getAttribute('officeSeatMonitor'),f=screenBatch.geometry.getAttribute('officeSeatFacing');assert.ok(Math.abs(p.getX(i*4+v)-binding.position.x)<1e-6);assert.ok(Math.abs(f.getZ(i*4+v)-binding.facing.z)<1e-6);}
+ const batch=room.children.find(o=>o.userData.vertexMonitor&&o.userData.night_role==='interior') as THREE.Mesh;assert.ok(batch);
  assert.equal(batch.userData.seat_id,undefined);assert.equal(root.getObjectByName('Desk_0'),desks[0]);assert.equal(desks[0].visible,false);
  const position=batch.geometry.getAttribute('officeSeatMonitor'),facing=batch.geometry.getAttribute('officeSeatFacing'),uv=batch.geometry.getAttribute('uv');
  for(let i=0;i<2;i++)for(let v=0;v<24;v++){

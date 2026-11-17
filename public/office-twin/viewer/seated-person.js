@@ -58,7 +58,9 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
     const blink=Math.pow(Math.max(0,Math.cos(seconds*1.6+index)),36);
     for(const eye of P.blink){eye.ball.scale.y=1-.9*blink;if(eye.lash)eye.lash.scale.y=1.06*(1-.58*blink);}
     group.userData.visualMotion=respond>.05?'acknowledging':state.mode;
-    group.updateMatrixWorld(true);skeleton.update();
+    // WebGLRenderer uploads each skeleton once per rendered frame. Keep the
+    // current bone matrices for picking/labels, without a second texture upload.
+    group.updateMatrixWorld(true);
     return state;
   }
   pose(0);

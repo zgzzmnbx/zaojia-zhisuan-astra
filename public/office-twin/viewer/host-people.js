@@ -177,7 +177,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     for(const item of [...actors.values()].sort((a,b)=>Number(b.person.id===current)-Number(a.person.id===current))){
       const reactionAge=seconds-item.reactionAt,reaction=reactionAge<1.6?Math.sin(Math.PI*Math.max(0,reactionAge)/1.6):0;
       item.rig.pose(seconds,!!item.dragPosition,standing(item,seconds)??(item.idle||item.walk?.rise>0?item.walk:null),reaction);
-      item.group.updateMatrixWorld(true);
+      // pose() already refreshed the rig's world matrices for this frame.
       const head=item.rig.head.getWorldPosition(new THREE.Vector3()).project(camera);item.screenPoint={x:rect.left+(head.x*.5+.5)*width,y:rect.top+(-head.y*.5+.5)*height};
       projected.copy(item.group.position).project(camera);projectedTop.set(0,1.7,0).applyQuaternion(camera.quaternion).add(item.group.position).project(camera);
       item.labelPixels=Math.abs(projectedTop.y-projected.y)*height/2;

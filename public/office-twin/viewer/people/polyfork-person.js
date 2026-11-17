@@ -86,7 +86,7 @@ export function createPolyforkPerson(template,index,{seatHeight=.46,keyboard=[0,
       if(respond&&arm.side>0)p.lerp(new THREE.Vector3(.30,seatHeight+.55,.20),respond);
       reach(arm,p);
     }
-    group.userData.visualMotion=respond>.05?'acknowledging':state.mode;group.updateMatrixWorld(true);mesh.skeleton.update();return state;
+    group.userData.visualMotion=respond>.05?'acknowledging':state.mode;group.updateMatrixWorld(true);return state;
   }
   const localPosition=bone=>{group.updateMatrixWorld(true);return group.worldToLocal(bone.getWorldPosition(new THREE.Vector3())).toArray();};
   pose(0);

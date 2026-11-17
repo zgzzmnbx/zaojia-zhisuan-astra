@@ -27,14 +27,14 @@ export function batchStaticGeometry(root){
     if(object.userData.astraContextBake||!object.isMesh||object.isSkinnedMesh||object.isInstancedMesh||!object.visible||object.children.length||!g||!m||Array.isArray(m)||m.transparent||m.opacity!==1||object.morphTargetInfluences?.length||g.drawRange.start!==0||g.drawRange.count!==Infinity||object.matrixWorld.determinant()<=0)return;
     for(let parent=object.parent;parent;parent=parent.parent)if(!parent.visible)return;
     const role=classifyNightRole(object,m);
-    if(['screen','window','sign','accent','interior_light','person'].includes(role))return;
+    if(['window','sign','accent','interior_light','person'].includes(role))return;
     const boundary=boundaryFor(object,root);
     if(!boundary)return;
     const seat=nightSeatId(object)||'';
     const format=Object.entries(g.attributes).map(([k,a])=>`${k}:${a.itemSize}:${a.normalized}:${a.array.constructor.name}`).sort().join(',');
     // Only real office seats with known screen bindings may share a room batch.
     // Keep unknown seats isolated rather than losing their lighting contract.
-    const crossSeat=role==='interior'&&monitors.has(seat);
+    const crossSeat=['interior','screen'].includes(role)&&monitors.has(seat);
     const key=[boundary.uuid,m.uuid,role,crossSeat?'room-seats':seat,format,!!g.index,object.renderOrder,object.castShadow,object.receiveShadow].join('|');
     if(!groups.has(key))groups.set(key,{boundary,material:m,role,seat,crossSeat,objects:[]});
     groups.get(key).objects.push(object);

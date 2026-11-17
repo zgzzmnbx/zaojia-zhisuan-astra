@@ -9,7 +9,7 @@ import {createOfficeOrbit} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js';
-import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.1';
+import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {restoreCutawayBake} from './cutaway-bake-repair.js';
