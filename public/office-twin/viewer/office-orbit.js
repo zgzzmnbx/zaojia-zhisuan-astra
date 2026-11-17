@@ -5,13 +5,13 @@ export function createOfficeOrbit({canRun,requestFrame,change=()=>{},clock={set:
   let settings={enabled:false,delay:0,blocked:false,motion:normalizeOrbitMotion(null)};
   let paused=false,focused=false,running=false,last=0,degrees=0,key='';
   const sweep=createOrbitSweep();
-  const state=()=>({...settings,paused,focused,running,degrees});
+  const state=()=>({...settings,idleDelay:settings.delay||5,paused,focused,running,degrees});
   const idle=createIdleOrbit(value=>{
-    running=value;last=0;if(!value){sweep.reset();degrees=0;}
+    running=value;last=0;if(value)focused=false;else{sweep.reset();degrees=0;}
     change(state());if(value)requestFrame();
   },canRun,clock);
   function sync(){
-    const options={enabled:settings.enabled,delay:settings.delay*1000,blocked:paused||focused||settings.blocked||!canRun()};
+    const options={enabled:settings.enabled,delay:(settings.delay||5)*1000,blocked:paused||settings.blocked||!canRun()};
     const next=JSON.stringify(options);
     if(next!==key){key=next;idle.configure(options);change(state());}
   }
@@ -20,8 +20,8 @@ export function createOfficeOrbit({canRun,requestFrame,change=()=>{},clock={set:
     sync,
     hold(value){idle.hold(value);},
     activity(){idle.activity();},
-    focus(value){focused=value;sync();},
-    toggle(){paused=!(paused||focused);if(!paused)focused=false;sync();},
+    focus(value){focused=value;sync();idle.activity();},
+    toggle(){paused=!paused;if(!paused)focused=false;sync();},
     state,
     step(now){
       sync();if(!running)return {delta:0,angle:0,full:false};

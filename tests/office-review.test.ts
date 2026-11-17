@@ -170,11 +170,11 @@ test('office matches Astra speed and 30-degree sweep across full out-and-back cy
   h.orbit.dispose();
  }
 });
-test('office suspends during holds, focus, pause and invisibility without background catch-up',()=>{
+test('office resumes after focus but suspends holds, explicit pause and invisibility without catch-up',()=>{
  const h=orbitHarness();h.orbit.configure({enabled:true,delay:0});h.flush();assert.ok(h.orbit.step(1000).angle>0);
  h.orbit.hold(true);h.flush();assert.equal(h.orbit.step(2000).angle,0);
  h.orbit.hold(false);h.flush();h.orbit.focus(true);assert.equal(h.orbit.step(3000).angle,0);
- h.orbit.toggle();h.flush();assert.equal(h.orbit.state().focused,false);assert.ok(h.orbit.step(4000).angle>0);
+ h.flush();assert.equal(h.orbit.state().focused,false);assert.ok(h.orbit.step(4000).angle>0);
  h.orbit.toggle();assert.equal(h.orbit.step(5000).angle,0);h.orbit.toggle();h.flush();
  h.allow(false);assert.equal(h.orbit.step(60000).angle,0);h.allow(true);h.flush();
  assert.ok(h.orbit.step(120000).angle<.001);h.orbit.dispose();
@@ -496,4 +496,26 @@ test('idle routine starts at its seat, completes all three activities and return
  for(let i=0;i<3000;i++)walker.step(.05,true,[],false);
  assert.equal(walker.state().stage,'seated');assert.equal(walker.state().rise,0);assert.equal(walker.state().x,1);assert.equal(walker.state().z,1);
  const frozen=walker.state();walker.step(600,false);assert.deepEqual(walker.state(),frozen);
+});
+
+import {outsideView} from '../public/office-twin/viewer/floor-picking.js';
+test('outside clicks step back one level and ignore invisible or clipped geometry',()=>{
+ const root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());root.add(mesh);
+ const hit={object:mesh,point:new THREE.Vector3(0,-1,0)};
+ assert.equal(outsideView('office',[hit]),null);assert.equal(outsideView('exploded',[hit]),null);
+ assert.equal(outsideView('office',[]),'exploded');assert.equal(outsideView('exploded',[]),'building');assert.equal(outsideView('building',[]),null);
+ root.visible=false;assert.equal(outsideView('office',[hit]),'exploded');root.visible=true;
+ mesh.material.opacity=0;assert.equal(outsideView('exploded',[hit]),'building');mesh.material.opacity=1;
+ mesh.material.clippingPlanes=[new THREE.Plane(new THREE.Vector3(0,1,0),0)];assert.equal(outsideView('office',[hit]),'exploded');
+ mesh.geometry.dispose();mesh.material.dispose();
+});
+test('office idle deadline restarts on input, honors saved delay and resumes focused views',()=>{
+ let now=0,id=0,allowed=true;const timers=new Map<number,{at:number,fn:()=>void}>();
+ const orbit=createOfficeOrbit({canRun:()=>allowed,requestFrame(){},clock:{set(fn:()=>void,ms:number){timers.set(++id,{at:now+ms,fn});return id;},clear(key:number){timers.delete(key);}}});
+ const advance=(ms:number)=>{now+=ms;for(const [key,t] of [...timers])if(t.at<=now){timers.delete(key);t.fn();}};
+ orbit.configure({enabled:true,delay:0});advance(4999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
+ orbit.focus(true);advance(4000);orbit.activity();advance(4999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
+ orbit.configure({enabled:true,delay:10});advance(9999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
+ allowed=false;orbit.sync();advance(60000);assert.equal(orbit.state().running,false);allowed=true;orbit.sync();advance(10000);assert.equal(orbit.state().running,true);
+ orbit.toggle();advance(60000);assert.equal(orbit.state().running,false);orbit.dispose();assert.equal(timers.size,0);
 });

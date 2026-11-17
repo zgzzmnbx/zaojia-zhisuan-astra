@@ -15,7 +15,7 @@ import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {restoreCutawayBake} from './cutaway-bake-repair.js';
 import {bindPersonPointer} from './person-pointer.js';
 import {officeClient} from './office-client.js';
-import { firstVisibleFloorHit } from './floor-picking.js?v=0.6.7';
+import { firstVisibleFloorHit,visibleSceneHit,outsideView } from './floor-picking.js?v=0.39.1';
 import { summarizeMaterialPaths, materialCoverageCopy } from './material-provenance.js?v=0.6.7';
 import { loadModelBytes, bindModelDownload } from './model-transport.js?v=0.7.0';
 import {readSettings,applyRoomLabels,applyOfficeNameDOM,SETTINGS_KEY} from './office-settings-store.js';
@@ -487,14 +487,14 @@ export async function mountOfficeViewer() {
   $('.office-modebar').append(orbitButton);
   const paintOrbit=state=>{
     if(!state.running)wasOrbitRunning=false;
-    const paused=state.paused||state.focused||!state.enabled;
+    const paused=state.paused||!state.enabled;
     orbitButton.disabled=motionPreference.matches||!state.enabled;
     orbitButton.title=motionPreference.matches?'已遵循减少动效':paused?'恢复自动环游':'暂停自动环游';
     orbitButton.setAttribute('aria-label',orbitButton.title);orbitButton.setAttribute('aria-pressed',String(!paused));
     orbitButton.innerHTML=icon(paused?'play':'pause');
     orbitButton.querySelector('svg').style.pointerEvents='none';
   };
-  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!floorLabel?.isPreviewing()&&!entrance.state().running&&!motionPreference.matches&&!transition&&!(!$('#picture-panel').hidden&&!$('#rail-space').hidden&&!$('#space-cards-panel').hidden)});
+  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!entrance.state().running&&!motionPreference.matches&&!transition&&!(!$('#picture-panel').hidden&&!$('#rail-space').hidden&&!$('#space-cards-panel').hidden)});
   orbit.configure(officeClient.getMotion());
   function editWorkstations(event){
     const state=event.detail;people?.closeMenu();orbit.sync();resize();
@@ -515,7 +515,8 @@ export async function mountOfficeViewer() {
   listen(document,'dragstart',()=>{cameraHeld=true;orbit.hold(true);},true);listen(document,'dragend',release);
   listen(window,'blur',release);
   for(const type of ['wheel','keydown'])listen(document,type,event=>{if(viewport.contains(event.target)||orbit.state().delay>0)orbit.activity();},{capture:true,passive:true});
-  listen(document,'click',()=>{orbit.sync();requestFrame();});
+  listen(document,'click',()=>{orbit.sync();orbit.activity();requestFrame();});
+  listen(document,'input',()=>orbit.activity(),true);
 
   listen(window,'pageshow',event=>{if(event.persisted)location.reload();});
   listen(window,'storage',event=>{if(event.key===SETTINGS_KEY){$('#connection-state').textContent='配置已更新，刷新应用';$('#connection-state').title='另一标签页更新了本地配置，请刷新以同步沙盘和同事。';}});
@@ -737,10 +738,11 @@ export async function mountOfficeViewer() {
       event.preventDefault(); fail(new Error('WebGL context lost'));
       if (frame) cancelAnimationFrame(frame); frame = 0;
     });
-    const pointerStart = new THREE.Vector2();
-    listen(renderer.domElement, 'pointerdown', event => pointerStart.set(event.clientX,event.clientY));
+    const pointerStart = new THREE.Vector2();let pointerMoved=false;
+    listen(renderer.domElement, 'pointerdown', event => {pointerStart.set(event.clientX,event.clientY);pointerMoved=false;});
+    listen(renderer.domElement, 'pointermove', event => {if(event.buttons&&pointerStart.distanceTo(new THREE.Vector2(event.clientX,event.clientY))>5)pointerMoved=true;},true);
     listen(renderer.domElement, 'click', event => {
-      if (getWorkstationEditState().open || event.button !== 0 || pointerStart.distanceTo(new THREE.Vector2(event.clientX,event.clientY)) > 5) return;
+      if (getWorkstationEditState().open || transition || pointerMoved || event.button !== 0 || pointerStart.distanceTo(new THREE.Vector2(event.clientX,event.clientY)) > 5) return;
       const rect = renderer.domElement.getBoundingClientRect();
       const pointer = new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1, -(event.clientY-rect.top)/rect.height*2+1);
       const ray = new THREE.Raycaster(); ray.setFromCamera(pointer,camera);
@@ -750,7 +752,10 @@ export async function mountOfficeViewer() {
         return;
       }
       if (people?.pick(ray,{x:event.clientX,y:event.clientY})) return;
-      for (const hit of ray.intersectObject(officeRoot,true)) {
+      const officeHits=ray.intersectObject(officeRoot,true).filter(visibleSceneHit);
+      const back=outsideView(view,view==='office'?officeHits:ray.intersectObject(buildingRoot,true).concat(officeHits));
+      if(back){people?.closeMenu();setView(back);return;}
+      for (const hit of officeHits) {
         let node = hit.object;
         while (node && node !== officeRoot) { if (rooms.get(node.userData.room_id) === node) { focusRoom(node.userData.room_id); return; } node = node.parent; }
       }
