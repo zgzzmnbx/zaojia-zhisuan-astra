@@ -3,7 +3,8 @@ import {workstationRoster} from './workstation-roster.js';
 import {createWorkstationSettings} from './workstation-settings.js';
 import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
 import {bindSelectedPersonDrag,canRemoveSelectedPerson} from './selected-person-drag.js';
-import {mountDutyBoard,officeExamples,indexPersonTasks} from './duty-board.js';
+import {officeExamples,indexPersonTasks} from './duty-board.js';
+import {mountTaskBoard} from './task-board.js';
 import {applyTaskPlan,planEndpoint,planNotice} from './task-plan.js';
 import {mountOfficeSpeech} from './office-speech.js';
 import {createSandboxSettings} from './sandbox-settings.js';
@@ -138,7 +139,7 @@ export const officeClient={
     void refreshPlan();window.addEventListener('storage',onPlanStorage);window.addEventListener('focus',refreshPlan);
     if(window.parent===window)hostSnapshot={...snapshot,title:'办公室',enabled:false};
     const toolbar=$('#office-tools');
-    dutyBoard=mountDutyBoard($('#task-list'));
+    dutyBoard=mountTaskBoard($('#task-list'), id=>window.officeTwin?.focusPerson(id));
     workstations=createWorkstationSettings({panel:$('#office-workstations'),getPeople:()=>snapshot.employees,onChange:config=>{workstationConfig=config;applyHostSnapshot();},onClose:()=>sandboxSettings?.dismiss()});
     speech=mountOfficeSpeech();
     sandboxSettings=createSandboxSettings({workstations,getTasks:()=>hostSnapshot?.tasks||[],onSaved:acceptPlan});

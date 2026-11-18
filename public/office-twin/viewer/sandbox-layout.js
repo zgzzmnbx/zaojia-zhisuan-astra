@@ -13,7 +13,7 @@ export function mountSandboxLayout(root=document) {
     if(e.detail.open){
       if(!previous){
         const from=e.detail.from;
-        previous={hidden:rail.hidden,scroll:body.scrollTop,from,id:from?.closest('[data-person-id]')?.dataset.personId,locate:!!from?.closest('.duty-locate')};
+        previous={hidden:rail.hidden,scroll:body.scrollTop,from,id:from?.closest('[data-person-id]')?.dataset.personId,taskKey:from?.closest('[data-task-key]')?.dataset.taskKey};
       }
       header.hidden=true;body.hidden=true;detail.hidden=false;open(true);
       return;
@@ -22,8 +22,10 @@ export function mountSandboxLayout(root=document) {
     const saved=previous;previous=null;
     detail.hidden=true;header.hidden=false;body.hidden=false;open(!saved.hidden);body.scrollTop=saved.scroll;
     if(e.detail.restoreFocus){
-      const row=saved.id?body.querySelector('[data-person-id="'+CSS.escape(saved.id)+'"]'):null;
-      const target=[saved.from,saved.locate?row?.querySelector('.duty-locate'):row,header.querySelector('[aria-pressed="true"]'),toggle]
+      const card=saved.taskKey?body.querySelector('[data-task-key="'+CSS.escape(saved.taskKey)+'"]'):null;
+      const list=card||$('#rail-'+selected);
+      const row=saved.id?list?.querySelector('[data-person-id="'+CSS.escape(saved.id)+'"]'):null;
+      const target=[saved.from,row,card?.querySelector('summary'),header.querySelector('[aria-pressed="true"]'),toggle]
         .find(el=>el?.isConnected&&el!==document.body&&el.getClientRects().length);
       target?.focus({preventScroll:true});
     }

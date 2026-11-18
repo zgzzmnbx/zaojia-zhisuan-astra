@@ -1,5 +1,5 @@
 import {icon} from '../astra_ui/icons.js';
-import {personTaskSummary, taskState, emptyDutyLabel, exampleLabel} from './duty-board.js';
+import {personTaskSummary, taskState, emptyDutyLabel, exampleLabel, displayTitle} from './duty-board.js';
 import {genderLabel} from './workstation-roster.js';
 
 function node(tag, cls, text = '') {
@@ -17,10 +17,6 @@ function chip(label, tone) {
   const item = node('span', 'duty-tag', label);
   item.dataset.tone = tone;
   return item;
-}
-function displayTitle(title) {
-  const original = String(title || '');
-  return original.replace(/^(?:【(?:项目例子|测试输入)】\s*)+/u,'').replaceAll('【演示】',' ').trim() || original;
 }
 function taskBadges(task) {
   const row = node('div', 'pd-tags');

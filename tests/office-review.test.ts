@@ -183,6 +183,9 @@ test('office task receipts keep Chinese reviewer roles and exact directory ident
  const p=platform();const task={task_id:'task',platform:'default',status_label:'复核中',participants:[{role:'发起人',name:'发起甲',status:'已提交'},{role:'复核人',name:'大尾巴',status:'已通过',comment:'同意'},{role:'复核人',name:'同事',status:'待复核'}]} as ReviewTask;
  const tasks=officeTasks([task],request,officeRoster([p],false));
  assert.equal(tasks.length,2);assert.equal(tasks[0].employeeId,'owner');assert.equal(tasks[0].comment,'同意');assert.equal(tasks[0].demo,false);assert.match(tasks[0].status,/已通过/);assert.equal(tasks[1].employeeId,'default:default-other');
+ assert.equal(tasks[1].employeeName,'同事');
+ assert.equal(tasks[0].title,request.projectName||request.fileName);
+ assert.equal(officeTasks([{...task,task_name:'核对测段工程量'}],request)[0].title,'核对测段工程量');
 });
 test('old card cleanup cannot clear a newer office context and revisions are monotonic',()=>{
  const bridge=createOfficeBridge();let changed=0;const dispose=bridge.subscribe(()=>changed++);
@@ -845,6 +848,7 @@ test('return walker waits for a blocked doorway and retries after it clears',()=
 });
 import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches.js';
 import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority,dutyCountLabel} from '../public/office-twin/viewer/duty-board.js';
+import {officeTaskGroups} from '../public/office-twin/viewer/task-board.js';
 import {pendingOfficeTask} from '../03-Src/studio/office-review.ts';
 import {applyTaskPlan,emptyMember,memberEntries,olderProjectReviewKeys} from '../public/office-twin/viewer/task-plan.js';
 import {officeCameraKey,readOfficeCamera} from '../public/office-twin/viewer/office-camera.js';
@@ -915,6 +919,41 @@ test('personal pending totals include each visible assignment regardless of its 
   assert.equal(projected.length-live.length,1);
   assert.equal(dutyCountLabel(personTaskSummary(samples).live),'2 项待办');
   assert.equal(dutyCountLabel([]),'');
+});
+test('the office task list groups a review round across people and keeps independent same-title work separate',()=>{
+  const people=[{id:'a',name:'甲'},{id:'b',name:'乙'}];
+  const a={id:'ra',dispatchId:'dispatch',reviewRound:2,employeeId:'a',title:'控制价复核',status:'已通过'};
+  const b={...a,id:'rb',employeeId:'b',reviewRound:undefined,status:'待复核'};
+  const outsider={...b,id:'rc',dispatchId:'prior',employeeId:'archived',employeeName:'外部复核人',status:'已退回'};
+  const unassigned={id:'incoming',employeeId:'',title:'待分派事项',status:'待处理'};
+  const personTasks=indexPersonTasks({tasks:[a,b,outsider,unassigned],pendingTasks:[b]});
+  const all=officeTaskGroups({employees:people,personTasks});
+  assert.equal(all.length,3);
+  assert.equal(all.at(-1).state.done,true);
+  const shared=all.find(t=>t.receipts.length===2);
+  assert.equal(shared.state.label,'进行中');
+  assert.equal(shared.round,2);
+  assert.deepEqual(shared.receipts.map(r=>[r.name,r.state.label]),[['甲','已通过'],['乙','待复核']]);
+  assert.ok(all.some(t=>t.receipts[0].name==='外部复核人'&&!t.receipts[0].canLocate));
+  assert.ok(all.some(t=>t.receipts[0].name==='待分派'));
+  const separateRounds=new Map([['a',[a]],['b',[{...b,reviewRound:3}]]]);
+  assert.equal(officeTaskGroups({employees:people,personTasks:separateRounds}).length,2);
+});
+test('the office task list respects per-person visibility, task status and demo assignment identity',()=>{
+  const employees=[{id:'a',name:'甲'},{id:'b',name:'乙'}],context='work';
+  const raw=indexPersonTasks({tasks:employees.flatMap(({id})=>[
+    {id:'assignment:'+id,employeeId:id,title:'当前成果',demo:true,status:'待复核'},
+    {id:'sample:'+id,employeeId:id,title:'同名项目',demo:true,example:'legacy',status:'审核中'},
+  ])});
+  const members=Object.fromEntries(employees.map(({id})=>[id,{...emptyMember(),tasks:[{id:'manual:1',title:'同名项目',status:'待复核'}]}]));
+  members.a.adjustments['sample:a']={hidden:true};
+  members.b.adjustments['sample:b']={status:'已完成'};
+  const groups=officeTaskGroups({employees,context,personTasks:applyTaskPlan(raw,members)});
+  assert.equal(groups.length,4);
+  assert.equal(groups.filter(g=>!g.state.done).length,3);
+  assert.deepEqual(groups.find(g=>g.title==='当前成果').receipts.map(r=>r.name),['甲','乙']);
+  assert.equal(groups.filter(g=>g.title==='同名项目').length,3);
+  assert.equal(groups.at(-1).state.label,'已完成');
 });
 test('personal inbox keeps other results and shares a single entry per current dispatch and person',()=>{
   const base={platform:'default',reviewerName:'大尾巴',projectName:'工程',taskName:'复核甲',artifactName:'甲.xlsx',reviewerRef:'P1',taskId:'r1'};

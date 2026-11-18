@@ -95,13 +95,17 @@ export function indexPersonTasks(snapshot) {
   return people;
 }
 export const exampleLabel = task => task.example ? '示例' : '演示';
+export function displayTitle(title) {
+  const original = String(title || '');
+  return original.replace(/^(?:【(?:项目例子|测试输入)】\s*)+/u,'').replaceAll('【演示】',' ').trim() || original;
+}
 export function dutyCountLabel(live) {
   return live.length ? `${live.length} 项待办` : '';
 }
 export function emptyDutyLabel(snapshot) {
   return snapshot.inboxError || snapshot.receiptError ? '待办暂未刷新' : snapshot.inboxLoading ? '正在读取待办…' : '暂无待办';
 }
-const node = (tag, cls, text = '') => {
+const node = (tag, cls = '', text = '') => {
   const n = document.createElement(tag);
   n.className = cls;
   n.textContent = text;
@@ -112,155 +116,115 @@ function tag(label, tone) {
   n.dataset.tone = tone;
   return n;
 }
+export {node as dutyElement, tag as dutyTag};
 export function personTaskSummary(tasks) {
   const live = tasks.filter((t) => !taskState(t).done);
   const current = live.find((t) => !t.demo) ?? live[0];
   return {live, current, latest: current ?? tasks[0]};
 }
-export function mountDutyBoard(list) {
-  const head = node('div', 'duty-heading'),
-    title = node('h3', '', '人员任务'),
-    filters = node('div', 'duty-filters');
-  const controls = new Map(),
-    expanded = new Set();
-  let scope = 'all',
-    snapshot = null;
-  head.append(title);
-  filters.setAttribute('role', 'group');
-  filters.setAttribute('aria-label', '按任务筛选人员');
-  list.before(head, filters);
-  for (const [key, label] of [
-    ['all', '全部'],
-    ['active', '有任务'],
-    ['demo', '演示'],
-  ]) {
-    const button = node('button', 'btn btn-ghost btn-xs', label);
+export function mountDutyFilters(list, label, options, refresh) {
+  const group = node('div', 'duty-filters');
+  group.setAttribute('role', 'group');
+  group.setAttribute('aria-label', label);
+  const buttons = new Map();
+  let scope = options[0][0];
+  for (const [id, name] of options) {
+    const button = node('button', 'btn btn-ghost btn-xs', name);
     button.type = 'button';
-    button.dataset.scope = key;
-    button.onclick = () => {
-      scope = key;
-      render();
-    };
-    filters.append(button);
-    controls.set(key, button);
+    button.dataset.scope = id;
+    button.onclick = () => { scope = id; refresh(); };
+    group.append(button);
+    buttons.set(id, button);
   }
-  function row({person, tasks, live, latest}) {
-    const article = node('article', 'duty-person'),
-      button = node('button', 'duty-main'),
-      avatar = node('span', 'duty-avatar', Array.from(person.name)[0] || '·');
-    const body = node('span', 'duty-body'),
-      name = node('strong', 'duty-name', person.name);
-    const state = latest ? taskState(latest) : null,
-      flags = node('span', 'duty-flags');
-    if (state) flags.append(tag(state.label, state.tone));
-    if (latest?.demo) flags.append(tag(exampleLabel(latest), 'demo'));
-    else if(latest?.manual || latest?.adjusted)flags.append(tag(latest.manual?'自建':'沙盘已调整','demo'));
-    if (person.selected) flags.append(tag('已选', 'selected'));
-    const text = latest?.title || emptyDutyLabel(snapshot);
-    const line = node('span', 'duty-title', text);
-    line.title = text;
-    const who = node('span', 'duty-line');
-    who.append(name, flags);
-    body.append(who, line);
-    if (live.length > 1)
-      body.append(node('small', 'duty-extra', dutyCountLabel(live)));
-    article.dataset.personId = person.id;
-    article.dataset.idle = String(!latest);
+  list.before(group);
+  return {
+    get scope() { return scope; },
+    update(counts) {
+      for (const [id, name] of options) {
+        const button = buttons.get(id);
+        button.setAttribute('aria-pressed', String(scope === id));
+        button.textContent = counts[id] == null ? name : name + ' ' + counts[id];
+      }
+    },
+    remove() { group.remove(); },
+  };
+}
+
+export function mountPeopleDirectory(list, {select, bindDrag}) {
+  const rows = new Map();
+  let snapshot, selectedId;
+  const filters = mountDutyFilters(list, '筛选人员', [['all','全部'], ['active','有待办'], ['demo','演示']], render);
+  const empty = node('p', 'duty-empty');
+  list.after(empty);
+
+  function makeRow(id) {
+    const button = node('button','btn btn-ghost host-person-row');
     button.type = 'button';
-    button.append(avatar, body);
-    article.append(button);
-    const details = node('div', 'duty-details');
-    for (const task of tasks) {
-      const d = node('div', 'duty-item'),
-        s = taskState(task),
-        meta = node('span', 'duty-item-meta');
-      meta.append(tag(s.label, s.tone));
-      if (s.platform) meta.append(node('small', '', s.platform));
-      if (task.demo) meta.append(tag(exampleLabel(task), 'demo'));
-      else if(task.manual || task.adjusted)meta.append(tag(task.manual?'自建':'沙盘已调整','demo'));
-      d.append(node('strong', '', task.title), meta);
-      if (task.artifactName && task.artifactName !== task.title) d.append(node('p', '', task.artifactName));
-      if (task.comment) d.append(node('p', '', task.comment));
-      if (task.adjusted && task.dispatchId) d.append(node('p','',`原始复核 · ${task.originalStatus} · ${task.originalTitle}`));
-      if (task.description) d.append(node('p', '', task.description));
-      details.append(d);
-    }
-    const locate = node('button', 'btn btn-ghost btn-sm duty-locate', '定位同事');
-    locate.type = 'button';
-    locate.onclick = () => {
-      if (!window.officeTwin?.focusPerson(person.id)) locate.textContent = '暂无可定位工位';
-    };
-    details.append(locate);
-    article.append(details);
-    function disclose(open) {
-      button.setAttribute('aria-expanded', String(open));
-      details.hidden = !open;
-    }
-    disclose(expanded.has(person.id));
-    button.onclick = () => {
-      if (expanded.has(person.id)) expanded.delete(person.id);
-      else expanded.add(person.id);
-      disclose(expanded.has(person.id));
-    };
-    return article;
+    button.dataset.personId = id;
+    const name = node('strong'), state = tag('', 'pending'), source = tag('', 'demo');
+    const identity = node('span','duty-line');
+    identity.append(name, state, source);
+    const title = node('span','duty-title'), count = node('small','duty-extra');
+    const body = node('span','duty-body');
+    body.append(identity, title, count);
+    const grip = node('span','host-drag-grip');
+    grip.title = '拖动同事';
+    grip.setAttribute('aria-hidden','true');
+    button.append(body, grip);
+    button.onclick = () => select(id);
+    bindDrag(button, id);
+    return {button, name, state, source, title, count, grip};
   }
+
   function render() {
     if (!snapshot) return;
-    const previous = list.contains(document.activeElement)
-      ? document.activeElement.closest('article')?.dataset.personId
-      : null;
-    const onLocate = document.activeElement.classList.contains('duty-locate');
     const profiles = snapshot.employees.map(person => {
-      const all = snapshot.personTasks?.get(person.id) || [];
-      const tasks = scope === 'demo' ? all.filter(t=>t.demo) : all;
-      return {person, tasks, ...personTaskSummary(tasks)};
+      const tasks = snapshot.personTasks?.get(person.id) || [];
+      const {live, current} = personTaskSummary(tasks);
+      const examples = tasks.filter(t => t.demo);
+      const shown = filters.scope === 'demo' ? personTaskSummary(examples).latest : current;
+      return {person, tasks, live, shown, examples};
     });
-    const active = snapshot.employees.filter((p) =>
-      snapshot.personTasks?.get(p.id)?.some(t => !taskState(t).done),
-    ).length;
-    controls.get('all').textContent = '全部 ' + profiles.length;
-    controls.get('active').textContent = '有任务 ' + active;
-    for (const [key, b] of controls) b.setAttribute('aria-pressed', String(key === scope));
-    const shown = profiles
-      .filter((p) => scope === 'all' || (scope === 'demo' ? p.tasks.length : p.live.length))
-      .sort((a,b)=>taskPriority(a.latest)-taskPriority(b.latest));
-    const assigned = shown.filter((p) => p.latest),
-      unassigned = shown.filter((p) => !p.latest);
-    list.replaceChildren(...assigned.map(row));
-    if (unassigned.length) {
-      const group = node('section', 'duty-quiet'),
-        label = node('h4', '', emptyDutyLabel(snapshot));
-      label.append(node('span', '', String(unassigned.length)));
-      group.append(label);
-      const grid = node('div', 'duty-quiet-grid');
-      grid.append(...unassigned.map(row));
-      group.append(grid);
-      list.append(group);
-    }
-    if (!shown.length)
-      list.append(
-        node(
-          'p',
-          'duty-empty',
-          snapshot.receiptError || snapshot.inboxError
-            ? '任务状态暂未刷新'
-            : scope === 'active'
-              ? emptyDutyLabel(snapshot)
-              : scope === 'demo'
-                ? '暂无演示任务'
-                : snapshot.title === '正在读取当前成果' ? '正在读取人员与任务…' : '暂无人员记录',
-        ),
-      );
-    if (previous) {
-      const same = [...list.querySelectorAll('article')].find((n) => n.dataset.personId === previous);
-      same?.querySelector(onLocate ? '.duty-locate' : '.duty-main')?.focus({preventScroll: true});
-    }
+    const ids = new Set(profiles.map(p => p.person.id));
+    for (const [id, row] of rows) if (!ids.has(id)) { row.button.remove(); rows.delete(id); }
+    const active = profiles.filter(p => p.live.length).length;
+    filters.update({all:profiles.length, active});
+    const focus = list.contains(document.activeElement) ? document.activeElement : null;
+    let visible = 0;
+    profiles.sort((a,b) => taskPriority(a.shown)-taskPriority(b.shown));
+    profiles.forEach(({person, live, tasks, shown, examples}, index) => {
+      if (!rows.has(person.id)) rows.set(person.id, makeRow(person.id));
+      const row = rows.get(person.id), button = row.button;
+      row.name.textContent = person.name;
+      const status = shown && taskState(shown);
+      row.state.hidden = status == null && !person.selected;
+      row.state.dataset.tone = status?.tone || 'selected';
+      row.state.textContent = status?.label || '已选';
+      row.source.textContent = shown?.demo ? exampleLabel(shown) : shown?.manual ? '自建' : shown?.adjusted ? '沙盘已调整' : '';
+      row.source.hidden = !row.source.textContent;
+      row.title.textContent = displayTitle(shown?.title) || emptyDutyLabel(snapshot);
+      row.title.title = shown?.title || row.title.textContent;
+      row.count.textContent = live.length ? dutyCountLabel(live) : tasks.length ? tasks.length + ' 项已结束' : '';
+      row.count.hidden = !row.count.textContent;
+      button.draggable = !!person.draggable;
+      row.grip.hidden = !button.draggable;
+      button.dataset.idle = String(!live.length);
+      button.classList.toggle('selected', !!person.selected);
+      button.setAttribute('aria-pressed', String(person.id === selectedId));
+      button.hidden = (filters.scope === 'active' && !live.length) || (filters.scope === 'demo' && !examples.length);
+      if (!button.hidden) visible++;
+      const next = list.children[index] || null;
+      if (next !== button) {
+        if (list.moveBefore && button.isConnected) list.moveBefore(button,next);
+        else list.insertBefore(button,next);
+      }
+    });
+    if (focus?.isConnected && !focus.hidden && document.activeElement !== focus) focus.focus({preventScroll:true});
+    empty.hidden = visible > 0;
+    empty.textContent = filters.scope === 'active' ? emptyDutyLabel(snapshot) : filters.scope === 'demo' ? '暂无演示任务' : '暂无人员记录';
   }
   return {
-    update(next) {
-      if (snapshot?.context !== next.context) expanded.clear();
-      snapshot = next;
-      render();
-    },
+    update(next,id) { snapshot = next; selectedId = id; render(); },
+    dispose() { filters.remove(); empty.remove(); rows.clear(); list.replaceChildren(); },
   };
 }
