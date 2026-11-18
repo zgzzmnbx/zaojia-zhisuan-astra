@@ -1,0 +1,1448 @@
+{
+  "formalUI": "0.51.1",
+  "baseline": "0.48.1",
+  "platform": "Windows / Chromium",
+  "viewports": [
+    [
+      1636,
+      955
+    ],
+    [
+      1280,
+      800
+    ],
+    [
+      1024,
+      768
+    ]
+  ],
+  "mainlineObservations": 84,
+  "sameVersionRepeatDifferences": 0,
+  "directBaselineMeasurements": 76,
+  "baselineExceptions": [
+    [
+      "light-shell",
+      "聊天输入区与顶栏",
+      1,
+      {
+        "max-height": 1
+      },
+      [
+        [
+          "span",
+          "button.gork-speech-bubble"
+        ]
+      ]
+    ],
+    [
+      "light-extras",
+      "Gork业务播报-模拟事件",
+      1,
+      {
+        "max-height": 1
+      },
+      [
+        [
+          "span",
+          "button.gork-speech-bubble"
+        ]
+      ]
+    ],
+    [
+      "dark-shell",
+      "聊天输入区与顶栏",
+      1,
+      {
+        "max-height": 1
+      },
+      [
+        [
+          "span",
+          "button.gork-speech-bubble"
+        ]
+      ]
+    ],
+    [
+      "dark-extras",
+      "Gork业务播报-模拟事件",
+      1,
+      {
+        "max-height": 1
+      },
+      [
+        [
+          "span",
+          "button.gork-speech-bubble"
+        ]
+      ]
+    ],
+    [
+      "light-size1280",
+      "快捷菜单-1280",
+      1,
+      {
+        "max-height": 1
+      },
+      [
+        [
+          "span",
+          "button.gork-speech-bubble"
+        ]
+      ]
+    ],
+    [
+      "dark-size1024",
+      "快捷菜单-1024",
+      1,
+      {
+        "max-height": 1
+      },
+      [
+        [
+          "span",
+          "button.gork-speech-bubble"
+        ]
+      ]
+    ]
+  ],
+  "browserErrors": [],
+  "overview": [
+    {
+      "run": "light-shell",
+      "case": "欢迎页",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 367,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 167,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "聊天输入区与顶栏",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1074,
+      "differentElementsByVersion": {
+        "0481": 1,
+        "0491": 307,
+        "0500": 692,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "快捷菜单-常用",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1147,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 306,
+        "0500": 770,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "快捷菜单-全部功能",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1332,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 946,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "导航-项目",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1291,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 829,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "导航-最近对话",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1343,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 829,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "专业能力弹窗",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1386,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 935,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "系统架构-动态横版",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1289,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 837,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "系统架构-原系统架构",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1197,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 392,
+        "0500": 745,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-外观与主题",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1488,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 582,
+        "0500": 974,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-Logo 与动效",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1493,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-快捷指令",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1376,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-编制设置",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1351,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-演示与调试",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1395,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 890,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-协同设置",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1348,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-网页小人设置",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1457,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 947,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-shell",
+      "case": "智算设置-运行日志",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1376,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 869,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "Excel-Sheet1",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1159,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 306,
+        "0500": 815,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "Excel-Sheet2",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1309,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 957,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "Excel-查找",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1748,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 1395,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "Excel-预览列设置",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 2001,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 1505,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "风险",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1152,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 362,
+        "0500": 851,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "文字报告",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1134,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 291,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "项目看板",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1718,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "资料库",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 562,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "公文转换",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1273,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 410,
+        "0500": 304,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-modules",
+      "case": "数字化造价",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1115,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 315,
+        "0500": 295,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-entries",
+      "case": "独立入口-design.html",
+      "entry": "design.html",
+      "documentTheme": "dark",
+      "measuredElements": 234,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 0,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-entries",
+      "case": "独立入口-logo.html",
+      "entry": "logo.html",
+      "documentTheme": "light",
+      "measuredElements": 161,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 31,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-entries",
+      "case": "独立入口-professional.html",
+      "entry": "professional.html",
+      "documentTheme": "light",
+      "measuredElements": 81,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 0,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-entries",
+      "case": "独立入口-office-tasks.html",
+      "entry": "office-tasks.html",
+      "documentTheme": "light",
+      "measuredElements": 54,
+      "differentElementsByVersion": {
+        "0491": 0,
+        "0500": 0,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-office",
+      "case": "九楼-收起对话",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 118,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-office",
+      "case": "悬浮小人-停靠菜单",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 123,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-office",
+      "case": "办公室设置-人员任务",
+      "entry": "office-settings.html",
+      "documentTheme": "light",
+      "measuredElements": 33,
+      "differentElementsByVersion": {
+        "0500": 32,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-office",
+      "case": "办公室设置-人员资料",
+      "entry": "office-settings.html",
+      "documentTheme": "light",
+      "measuredElements": 33,
+      "differentElementsByVersion": {
+        "0500": 32,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-office",
+      "case": "办公室设置-聊天联动",
+      "entry": "office-settings.html",
+      "documentTheme": "light",
+      "measuredElements": 54,
+      "differentElementsByVersion": {
+        "0500": 53,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-extras",
+      "case": "Gork业务播报-模拟事件",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1070,
+      "differentElementsByVersion": {
+        "0481": 1,
+        "0491": 307,
+        "0500": 692,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-extras",
+      "case": "飞书连接详情",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1162,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 306,
+        "0500": 782,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-extras",
+      "case": "WeAct连接详情",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1294,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 914,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-extras",
+      "case": "对话内的复核确认卡",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1272,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 850,
+        "0500": 304,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "欢迎页",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 342,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 133,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "聊天输入区与顶栏",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1073,
+      "differentElementsByVersion": {
+        "0481": 1,
+        "0491": 307,
+        "0500": 692,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "快捷菜单-常用",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1055,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 260,
+        "0500": 678,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "快捷菜单-全部功能",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1332,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 946,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "导航-项目",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1291,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 829,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "导航-最近对话",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1343,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 829,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "专业能力弹窗",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1386,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 935,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "系统架构-动态横版",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1289,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 837,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "系统架构-原系统架构",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1289,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 837,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-外观与主题",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1488,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 582,
+        "0500": 974,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-Logo 与动效",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1493,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-快捷指令",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1376,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-编制设置",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1336,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-演示与调试",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1395,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 890,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-协同设置",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1348,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 830,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-网页小人设置",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1457,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 947,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-shell",
+      "case": "智算设置-运行日志",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1376,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 869,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "Excel-Sheet1",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1159,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 306,
+        "0500": 815,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "Excel-Sheet2",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1177,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 306,
+        "0500": 825,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "Excel-查找",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1702,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 1349,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "Excel-预览列设置",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 2001,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 1505,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "风险",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1244,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 943,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "文字报告",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1134,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 408,
+        "0500": 291,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "项目看板",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1718,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "资料库",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 562,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "公文转换",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1273,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 410,
+        "0500": 304,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-modules",
+      "case": "数字化造价",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1115,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 315,
+        "0500": 295,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-entries",
+      "case": "独立入口-design.html",
+      "entry": "design.html",
+      "documentTheme": "dark",
+      "measuredElements": 234,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 0,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-entries",
+      "case": "独立入口-logo.html",
+      "entry": "logo.html",
+      "documentTheme": "dark",
+      "measuredElements": 161,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 31,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-entries",
+      "case": "独立入口-professional.html",
+      "entry": "professional.html",
+      "documentTheme": "light",
+      "measuredElements": 81,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 0,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-entries",
+      "case": "独立入口-office-tasks.html",
+      "entry": "office-tasks.html",
+      "documentTheme": "light",
+      "measuredElements": 54,
+      "differentElementsByVersion": {
+        "0491": 0,
+        "0500": 0,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-office",
+      "case": "九楼-收起对话",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 118,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-office",
+      "case": "悬浮小人-停靠菜单",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 123,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 0,
+        "0500": 1,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-office",
+      "case": "办公室设置-人员任务",
+      "entry": "office-settings.html",
+      "documentTheme": "dark",
+      "measuredElements": 33,
+      "differentElementsByVersion": {
+        "0500": 32,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-office",
+      "case": "办公室设置-人员资料",
+      "entry": "office-settings.html",
+      "documentTheme": "dark",
+      "measuredElements": 33,
+      "differentElementsByVersion": {
+        "0500": 32,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-office",
+      "case": "办公室设置-聊天联动",
+      "entry": "office-settings.html",
+      "documentTheme": "dark",
+      "measuredElements": 54,
+      "differentElementsByVersion": {
+        "0500": 53,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-extras",
+      "case": "Gork业务播报-模拟事件",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1070,
+      "differentElementsByVersion": {
+        "0481": 1,
+        "0491": 307,
+        "0500": 692,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-extras",
+      "case": "飞书连接详情",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1162,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 306,
+        "0500": 782,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-extras",
+      "case": "WeAct连接详情",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1294,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 438,
+        "0500": 914,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-extras",
+      "case": "对话内的复核确认卡",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1272,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 780,
+        "0500": 304,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-size1280",
+      "case": "快捷菜单-1280",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1149,
+      "differentElementsByVersion": {
+        "0481": 1,
+        "0491": 307,
+        "0500": 772,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "light-size1280",
+      "case": "智算设置-1280",
+      "entry": "index.html",
+      "documentTheme": "light",
+      "measuredElements": 1417,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 582,
+        "0500": 967,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-size1024",
+      "case": "快捷菜单-1024",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1128,
+      "differentElementsByVersion": {
+        "0481": 1,
+        "0491": 308,
+        "0500": 789,
+        "repeat": 0
+      }
+    },
+    {
+      "run": "dark-size1024",
+      "case": "智算设置-1024",
+      "entry": "index.html",
+      "documentTheme": "dark",
+      "measuredElements": 1259,
+      "differentElementsByVersion": {
+        "0481": 0,
+        "0491": 451,
+        "0500": 921,
+        "repeat": 0
+      }
+    }
+  ],
+  "stylesByEntry": {
+    "index.html": {
+      "old": 8485,
+      "new": 8487,
+      "common": 8484,
+      "sameOrder": true,
+      "removed": 1,
+      "added": 3
+    },
+    "professional.html": {
+      "old": 4729,
+      "new": 4729,
+      "common": 4729,
+      "sameOrder": true,
+      "removed": 0,
+      "added": 0
+    },
+    "logo.html": {
+      "old": 4608,
+      "new": 4608,
+      "common": 4608,
+      "sameOrder": true,
+      "removed": 0,
+      "added": 0
+    },
+    "design.html": {
+      "old": 4235,
+      "new": 4235,
+      "common": 4235,
+      "sameOrder": true,
+      "removed": 0,
+      "added": 0
+    },
+    "office-twin/viewer/index.html": {
+      "old": 13627,
+      "new": 13731,
+      "common": 13606,
+      "sameOrder": true,
+      "removed": 21,
+      "added": 125
+    }
+  },
+  "resources": {
+    "ledger": 120,
+    "emittedAssetReferences": 464,
+    "allMissing": [],
+    "backedEntryMatches": {
+      "index.html": true,
+      "professional.html": true,
+      "logo.html": true,
+      "design.html": true,
+      "office-twin/viewer/index.html": true
+    },
+    "releaseLedgerMatches": true,
+    "html": {
+      "index.html": {
+        "samePolicy": true,
+        "sameScriptOrder": true,
+        "samePreloadAndStyles": true
+      },
+      "professional.html": {
+        "samePolicy": true,
+        "sameScriptOrder": true,
+        "samePreloadAndStyles": true
+      },
+      "logo.html": {
+        "samePolicy": true,
+        "sameScriptOrder": true,
+        "samePreloadAndStyles": true
+      },
+      "design.html": {
+        "samePolicy": true,
+        "sameScriptOrder": true,
+        "samePreloadAndStyles": true
+      },
+      "office-twin/viewer/index.html": {
+        "samePolicy": true,
+        "sameScriptOrder": true,
+        "samePreloadAndStyles": false
+      }
+    },
+    "cssFilesCompared": 19,
+    "cssMatch": [
+      "assets/appearance.css",
+      "assets/studio.css",
+      "assets/offlineDemoFill.css",
+      "assets/WeKnoraLab.css",
+      "assets/professional.css",
+      "assets/KnowledgeDemoChart.css",
+      "assets/astra.css",
+      "assets/ProjectDashboard.css",
+      "assets/style.css",
+      "assets/daisyui-5.7.47.css",
+      "assets/ProjectSandbox.css",
+      "assets/DocumentPreview.css",
+      "assets/ProjectGlobe.css",
+      "assets/SettlementAuditWorkbench.css",
+      "assets/ProjectSpatialMap.css",
+      "assets/PricingFlow.css",
+      "assets/knowledgeArticles.css",
+      "assets/LogoSettings.css"
+    ],
+    "cssDiffer": [
+      "assets/index.css"
+    ],
+    "sourceFiles": {
+      "03-Src/studio/ComposerQuickMenu.tsx": true,
+      "03-Src/studio/composer-quick-menu.css": true,
+      "03-Src/studio/WorkspaceUI.tsx": true,
+      "03-Src/studio/table/Workbook.tsx": true,
+      "03-Src/studio/ReviewConversation.tsx": true,
+      "03-Src/studio/ReviewWorkflow.tsx": true,
+      "03-Src/studio/review-workflow-model.ts": true,
+      "03-Src/studio/gork.css": true,
+      "03-Src/studio/App.tsx": true
+    }
+  },
+  "builds": {
+    "releaseSources": 464,
+    "variants": {
+      "formal": [
+        "hidden!",
+        "join!",
+        "range!",
+        "shadow!",
+        "stack!"
+      ],
+      "isolated": []
+    },
+    "firstIdenticalAssets": 106,
+    "sameRemainingOrderedCSS": true,
+    "allSevenEntryTypesAndOrderMatch": true,
+    "jsMatchedAfterFilenames": 72,
+    "secondIdenticalAssets": 120,
+    "initialBuildVisuals": {
+      "快捷菜单": {
+        "different": 0,
+        "repeat": 0,
+        "foundClass": 0
+      },
+      "Excel": {
+        "different": 0,
+        "repeat": 0,
+        "foundClass": 0
+      },
+      "智算设置": {
+        "different": 0,
+        "repeat": 0,
+        "foundClass": 0
+      },
+      "独立Logo页": {
+        "different": 0,
+        "repeat": 0,
+        "foundClass": 0
+      }
+    }
+  },
+  "nativeVersionMeasurements": {
+    "0500": {
+      "quickHeight": 34,
+      "version": "v0.50.0",
+      "logoHeader": "28px"
+    },
+    "0511": {
+      "quickHeight": 68,
+      "version": "v0.51.1",
+      "logoHeader": "20px"
+    }
+  },
+  "existingFindings": {
+    "0481": {
+      "firstTablePointerSequence": [
+        {
+          "event": "pointerdown",
+          "sameNode": true,
+          "downConnected": true,
+          "button": "表格",
+          "tag": "svg"
+        },
+        {
+          "event": "mousedown",
+          "sameNode": true,
+          "downConnected": true,
+          "button": "表格",
+          "tag": "svg"
+        },
+        {
+          "event": "pointerup",
+          "sameNode": false,
+          "downConnected": false,
+          "button": "表格",
+          "tag": "svg"
+        },
+        {
+          "event": "mouseup",
+          "sameNode": false,
+          "downConnected": false,
+          "button": "表格",
+          "tag": "svg"
+        }
+      ],
+      "workbookAfterSecondClick": 6,
+      "compactHomeWidthAfterKeyboard": 0,
+      "compactHomeWidthAfterMouse": 0,
+      "compactClassicWidth": 964,
+      "compactClassicQuickMenuItems": 16
+    },
+    "0511": {
+      "firstTablePointerSequence": [
+        {
+          "event": "pointerdown",
+          "sameNode": true,
+          "downConnected": true,
+          "button": "表格",
+          "tag": "svg"
+        },
+        {
+          "event": "mousedown",
+          "sameNode": true,
+          "downConnected": true,
+          "button": "表格",
+          "tag": "svg"
+        },
+        {
+          "event": "pointerup",
+          "sameNode": false,
+          "downConnected": false,
+          "button": "表格",
+          "tag": "svg"
+        },
+        {
+          "event": "mouseup",
+          "sameNode": false,
+          "downConnected": false,
+          "button": "表格",
+          "tag": "svg"
+        }
+      ],
+      "workbookAfterSecondClick": 6,
+      "compactHomeWidthAfterKeyboard": 0,
+      "compactHomeWidthAfterMouse": 0,
+      "compactClassicWidth": 964,
+      "compactClassicQuickMenuItems": 16
+    }
+  },
+  "collaboration": {
+    "businessDigestIdentical": true,
+    "externalDispatches": 129,
+    "pendingReviewerRounds": 55,
+    "protectedFilesMatched": 14,
+    "feishuConnected": true,
+    "weactConnected": true,
+    "feishuProcessRecoveredAtLocalTime": "02:17:56",
+    "realDeliveryExercised": false
+  },
+  "tests": {
+    "projectPassed": 549,
+    "isolatedCollaborationPassed": 73
+  }
+}
