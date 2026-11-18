@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.0",
-  "hostAdapterVersion": "0.46.1",
+  "hostAdapterVersion": "0.46.2",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -69,10 +69,10 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "27e6ea01106a398a0cc11f8aac94e92b350fe4d2497f92388d75a723ecccb266",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "58aebcd2d9c2349adbe4bd547e3b6365d4f47ea15684886916945a2fb044bbab",
+    "viewer/index.html": "6879c4b5e4d7d5a2811c6243fa9f46de025783bede7a53d010e7714b0deeb788",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "dae491840d1c74200a5dade704e72eab3700e0849b92452064578f9779c97fec",
-    "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
+    "viewer/navigation-motion.js": "25851e9be64d8fb8eda6191c528c78d3f52e2428388168a4d52a6f6b8f5c5889",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
     "viewer/night-environment.js": "a4e52375624921b666acb7121314c3262483d6f6c9e7d31b1ad4b5b29b8b6add",
@@ -108,8 +108,8 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "7ad800902f7e8f6b931f8bb1f3022a3d245530d4af45e7a9f479f6ffed1a6a8c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/miniature-focus.js": "e3a238c6175eb1d1ddf6d90b097a555993ab3d0046719657e0e2da5950e15ee3",
-    "viewer/viewer.js": "a0548a29dd06039491a2f53974f89cacc8604181eed396eba473ae2baf01aebf",
+    "viewer/miniature-focus.js": "f1fb2ee52cb9d4a1a3d8a3f7ee2131e44cf4b906c1e818df28cb3468323ce7b7",
+    "viewer/viewer.js": "12743dadac364e46422af4aff18d106125bd656cce5bf8c51d24f3d093748bfc",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "61af2411ddc2e77c6ffbc864442fb4dbee8d069d46402b62d4f85a126c85bd47",
@@ -327,7 +327,10 @@
         0,
         100
       ],
-      "fullResolutionOcclusion": true
+      "fullResolutionOcclusion": true,
+      "backgroundBlurSettleMs": 240,
+      "backgroundBlurFadeInMs": 900,
+      "backgroundBlurClearMs": 160
     },
     "nightVegetation": {
       "role": "vegetation",

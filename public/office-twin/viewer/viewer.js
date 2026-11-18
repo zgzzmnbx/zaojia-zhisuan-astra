@@ -1,6 +1,6 @@
 import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
-import { motionProgress } from './navigation-motion.js?v=0.6.7';
+import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
 import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
@@ -51,6 +51,7 @@ export async function mountOfficeViewer() {
   const params = new URLSearchParams(location.search);
   const embedded = params.get('mode') === 'embed';
   const entrance=createOfficeEntrance(params.get('entrance')==='office');
+  const floorFocus = createFloorFocusTiming();
   const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
   document.body.classList.toggle('office-embed', embedded);
   let theme = { palette: 'astra', scheme: 'light' };
@@ -248,10 +249,14 @@ export async function mountOfficeViewer() {
     frame = 0;
     if (!active() || !renderReady) return;
     const delta=lastFrameTime===null?0:Math.max(0,Math.min(100,now-lastFrameTime));lastFrameTime=now;
+    const blurLevel = picture.getState().miniatureBlur / 100;
+    const reduced = motionPreference.matches;
+    const hadTransition = !!transition;
+    const clearing = transition?.toOpen === 0 && blurLevel > 0 && !reduced && floorFocus.clearBeforeMove(delta);
     let moving = false;
-    if (transition) {
+    if (transition && !clearing) {
       transition.elapsed+=delta;
-      const { progress, amount } = motionProgress(transition.elapsed, 0, transition.duration, motionPreference.matches);
+      const { progress, amount } = motionProgress(transition.elapsed, 0, transition.duration, reduced);
       setAssembly(progress === 1 ? transition.toOpen :
         transition.fromOpen + (transition.toOpen - transition.fromOpen) * amount);
       if (transition.camera) {
@@ -271,6 +276,11 @@ export async function mountOfficeViewer() {
     if(motion.angle)camera.position.sub(controls.target).applyAxisAngle(new THREE.Vector3(0,1,0),-motion.angle*orbitDirection).add(controls.target);
     controls.autoRotate=motion.full;
     const controlsChanged = transition?.camera ? false : controls.update(motion.delta||1/60);
+    const expanded = view === 'exploded' && openness === 1;
+    if (reduced || blurLevel === 0) floorFocus.snap(expanded);
+    else if (view === 'exploded') {
+      floorFocus.reveal(delta, expanded && !hadTransition && (!controlsChanged || orbit.state().running));
+    }
     camera.updateMatrixWorld();
     const runTraffic=!!streetTraffic && picture.trafficEnabled();
     if(runTraffic)streetTraffic.step(trafficAdvancing?delta/1000:0);
@@ -285,10 +295,11 @@ export async function mountOfficeViewer() {
     renderer.shadowMap.autoUpdate=theme.scheme!=='dark';
     renderer.info.reset();
     try {
-      const strength = openness * picture.getState().miniatureBlur / 100;
+      const reveal = floorFocus.amount;
+      const strength = blurLevel * reveal;
       if (strength <= 0) miniatureFocus.release();
       const drawScene = emission => {
-        if (strength > 0) miniatureFocus.render(strength, emission);
+        if (strength > 0) miniatureFocus.render(strength, emission, reveal);
         else renderer.render(scene, camera);
       };
       if (!nightEnvironment?.render(drawScene)) drawScene(false);
@@ -308,7 +319,8 @@ export async function mountOfficeViewer() {
     }
     const next=entrance.step(now,!!transition,motionPreference.matches);
     if(next)setView(next,{automatic:true});
-    if (transition || entrance.state().running || moving || controlsChanged || people?.isAnimating() || orbit.state().running) requestFrame();
+    const revealing = expanded && blurLevel > 0 && floorFocus.pending;
+    if (transition || revealing || entrance.state().running || moving || controlsChanged || people?.isAnimating() || orbit.state().running) requestFrame();
     else if(runTraffic)trafficWake=setTimeout(requestFrame,30);
     else frameMeter.idle();
   }
@@ -414,7 +426,7 @@ export async function mountOfficeViewer() {
       setAssembly(fromOpen);
       applyCameraPose(cameraFrom);
       transition = {elapsed:0, duration:1050, fromOpen, toOpen, camera:{from:cameraFrom,to:cameraTo}};
-    }
+    } else floorFocus.snap(toOpen === 1);
     people?.update(camera,interiorLabels ? 'exploded' : 'building');
     requestFrame(); notify('view-changed', getState()); return getState();
   }

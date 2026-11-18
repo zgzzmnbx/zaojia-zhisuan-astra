@@ -14,7 +14,7 @@ import * as THREE from 'three';
 import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.js';
 import {collectMonitorLighting} from '../public/office-twin/viewer/monitor-lighting.js';
 import {createFrameMeter} from '../public/office-twin/viewer/frame-meter.js';
-import {createVisibilityBlend} from '../public/office-twin/viewer/navigation-motion.js';
+import {createFloorFocusTiming,createVisibilityBlend} from '../public/office-twin/viewer/navigation-motion.js';
 import {summarizeOfficeBoard,hideBoardCore} from '../public/office-twin/viewer/office-board.js';
 
 test('office board separates live review outcomes from demo assignments and unknown context',()=>{
@@ -102,6 +102,41 @@ test('night surfaces stay dark without lamps and room lights remain inside plan 
  assert.ok(plan.length<=MAX_OFFICE_LIGHTS);assert.deepEqual(createInteriorLightPlan(null),[]);
 });
 import {createOfficeEntrance} from '../public/office-twin/viewer/office-entrance.js';
+test('ninth-floor focus waits for a settled camera and fades on displayed time', () => {
+ const focus = createFloorFocusTiming();
+ for (let i = 0; i < 70; i++) focus.reveal(16, false);
+ assert.equal(focus.amount, 0);
+ focus.reveal(180, true);
+ focus.reveal(16, false); // A new camera movement restarts the settling interval.
+ focus.reveal(240, true);
+ assert.equal(focus.amount, 0);
+ focus.reveal(450, true);
+ assert.equal(focus.amount, .5);
+ focus.reveal(0, true); // First frame back from a hidden tab.
+ assert.equal(focus.amount, .5);
+ focus.reveal(450, true);
+ assert.equal(focus.amount, 1);
+ assert.equal(focus.pending, false);
+});
+test('closing clears the current focus before moving and a reversal starts from the displayed blend', () => {
+ const focus = createFloorFocusTiming();
+ focus.snap(true);
+ assert.equal(focus.clearBeforeMove(80), true);
+ assert.equal(focus.amount, .5);
+ focus.reveal(240, true);
+ assert.equal(focus.amount, .5);
+ focus.reveal(450, true);
+ assert.equal(focus.amount, 1);
+ assert.equal(focus.clearBeforeMove(160), true);
+ assert.equal(focus.amount, 0);
+ assert.equal(focus.clearBeforeMove(16), false);
+ focus.reveal(240, true);
+ assert.equal(focus.amount, 0);
+ focus.snap(true);
+ assert.equal(focus.amount, 1);
+ focus.snap(false);
+ assert.equal(focus.amount, 0);
+});
 import {VIEW_MODES,resolveView,floorPresentation} from '../public/office-twin/viewer/scene-state.js';
 import assert from 'node:assert/strict';
 test('old office links expand the ninth floor with the full building in view',()=>{

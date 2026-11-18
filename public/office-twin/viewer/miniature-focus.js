@@ -47,26 +47,35 @@ const fragmentShader = `
     #include <colorspace_fragment>
   }`;
 
-// Both filter passes run at miniature resolution. The final full-size pass
-// takes one colour sample, and one emission sample when night bloom is on.
+// Blend with the full-resolution background during the reveal so switching to
+// the small filter targets does not soften the scene at the very first sample.
 const compositeShader = `
   varying vec2 focusUV;
-  uniform sampler2D colorMap, depthMap;
+  uniform sampler2D colorMap, sharpColorMap, depthMap;
   uniform vec3 hazeColor;
-  uniform float strength;
+  uniform float strength, reveal;
   #ifdef FOCUS_EMISSION
     layout(location = 1) out highp vec4 blurredEmission;
-    uniform sampler2D emissionMap;
+    uniform sampler2D emissionMap, sharpEmissionMap;
   #endif
   void main() {
     // Restore the nearest actual building surface at this screen pixel. The
     // ninth floor must pass the normal depth test while sliding past the tower.
     gl_FragDepth = texture2D(depthMap, focusUV).r;
     gl_FragColor = texture2D(colorMap, focusUV);
+    #ifdef FOCUS_EMISSION
+      blurredEmission = texture2D(emissionMap, focusUV);
+    #endif
+    if (reveal < 1.) {
+      gl_FragColor = mix(texture2D(sharpColorMap, focusUV), gl_FragColor, reveal);
+      #ifdef FOCUS_EMISSION
+        blurredEmission = mix(texture2D(sharpEmissionMap, focusUV), blurredEmission, reveal);
+      #endif
+    }
     #include <tonemapping_fragment>
     gl_FragColor.rgb = mix(gl_FragColor.rgb, hazeColor, .31 * strength);
     #ifdef FOCUS_EMISSION
-      blurredEmission = texture2D(emissionMap, focusUV) * (1. - .31 * strength);
+      blurredEmission *= 1. - .31 * strength;
     #endif
     #include <colorspace_fragment>
   }`;
@@ -87,6 +96,7 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
   const size = new Vector2(), floorCenter = new Vector3();
   const uniforms = {
     colorMap:{value:null}, depthMap:{value:null}, emissionMap:{value:null},
+    sharpColorMap:{value:null}, sharpEmissionMap:{value:null}, reveal:{value:0},
     clipRange:{value:new Vector2()}, direction:{value:new Vector2()},
     focalDepth:{value:0}, strength:{value:0}, hazeColor:{value:new Color()},
   };
@@ -98,11 +108,13 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
   let raw = null, horizontal = null, blurred = null, frames = 0;
 
   function release() {
+    if (!raw) return;
     raw?.dispose();
     horizontal?.dispose();
     blurred?.dispose();
     raw = horizontal = blurred = null;
     uniforms.colorMap.value = uniforms.depthMap.value = uniforms.emissionMap.value = null;
+    uniforms.sharpColorMap.value = uniforms.sharpEmissionMap.value = null;
   }
 
   function prepare(emission) {
@@ -132,7 +144,7 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
     quad.render(renderer);
   }
 
-  function render(strength, emission) {
+  function render(strength, emission, reveal = 1) {
     prepare(emission);
     const destination = renderer.getRenderTarget(), mask = camera.layers.mask;
     const background = scene.background, autoClear = renderer.autoClear;
@@ -149,6 +161,9 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
       uniforms.clipRange.value.set(camera.near, camera.far);
       uniforms.depthMap.value = raw.depthTexture;
       uniforms.strength.value = MathUtils.clamp(strength, 0, 1);
+      uniforms.reveal.value = reveal;
+      uniforms.sharpColorMap.value = raw.textures[0];
+      uniforms.sharpEmissionMap.value = raw.textures[1] ?? null;
       uniforms.hazeColor.value.copy(background);
       quad.material = material;
       drawBlur(raw, horizontal, size.y / size.x / 900, 0);
@@ -172,6 +187,7 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
   }
 
   return {render, release, state:() => ({frames, allocated:!!raw,
+    strength:raw ? uniforms.strength.value : 0, reveal:raw ? uniforms.reveal.value : 0,
     backgroundSize:blurred ? [blurred.width, blurred.height] : null,
     depthSize:raw ? [raw.width, raw.height] : null, emission:raw?.textures.length === 2}),
     dispose() { release(); material.dispose(); composite.dispose(); quad.dispose(); },

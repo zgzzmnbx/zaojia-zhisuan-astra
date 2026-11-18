@@ -5,6 +5,34 @@ export function motionProgress(now,start,duration,reducedMotion=false) {
   return {progress,amount:progress*progress*(3-2*progress)};
 }
 
+// Advance only with time from displayed frames. Camera input can postpone a
+// reveal without clearing the focus already visible on a stationary floor.
+export function createFloorFocusTiming() {
+  const settleMs = 240, revealMs = 900, clearMs = 160;
+  let progress = 0, wait = settleMs;
+  return {
+    get amount() { return progress * progress * (3 - 2 * progress); },
+    get pending() { return progress < 1; },
+    snap(expanded) {
+      progress = expanded ? 1 : 0;
+      wait = settleMs;
+    },
+    reveal(delta, settled) {
+      if (progress === 1) return;
+      if (!settled) { wait = settleMs; return; }
+      const waited = Math.min(wait, delta);
+      wait -= waited;
+      progress = Math.min(1, progress + (delta - waited) / revealMs);
+    },
+    clearBeforeMove(delta) {
+      wait = settleMs;
+      if (progress === 0) return false;
+      progress = Math.max(0, progress - delta / clearMs);
+      return true;
+    },
+  };
+}
+
 /** Independent mesh materials prevent one fading floor changing another floor.
  * Created before picture/night hooks, which therefore retain these exact materials.
  * No colour, maps, light uniforms, or user settings are changed by this helper.
