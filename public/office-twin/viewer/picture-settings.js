@@ -85,8 +85,6 @@ export function createPictureSettings({listen, requestFrame, getRenderer,allowTr
     requestFrame();
   }
   listen(document.querySelector('#picture-reset'),'click',()=>{current={...DEFAULTS};paint();apply();});
-  const panel=document.querySelector('#picture-panel'),toggle=document.querySelector('#picture-toggle');
-  listen(toggle,'click',()=>{panel.hidden=!panel.hidden;if(!panel.hidden)paint();toggle.setAttribute('aria-expanded',String(!panel.hidden));});
   paint();
   return {
     trafficEnabled,getState:()=>({...current}),

@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState,useSyncExternalStore} from 'react';
 import {api} from './api';
-import {officeRoster,officeTasks,pendingOfficeTask,type PendingOfficeReview,type OfficeBridge,type OfficePerson,type OfficeTask} from './office-review';
-import type {ReviewOptions,ReviewPlatform,ReviewTask} from './review-flow';
+import {officeDirectory,officeTasks,pendingOfficeTask,type PendingOfficeReview,type OfficeBridge,type OfficePerson,type OfficeTask} from './office-review';
+import type {ReviewOptions,ReviewTask} from './review-flow';
 import {latestReviewTasksByPlatform} from '../professional/components/agent-workspace/reviewProgress';
 import './office-review.css';
 import {appearanceKey,normalizeAppearance,readAppearance} from './appearance';
@@ -60,8 +60,8 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
     const controller=new AbortController();
     Promise.allSettled(['default','weact_cost'].map(profile=>api<ReviewOptions>(`/api/collaboration/external-dispatch/options?profile_id=${profile}`,{signal:controller.signal})))
       .then(results=>{if(controller.signal.aborted)return;
-        const platforms=results.flatMap((r,i)=>r.status==='fulfilled'?[{profileId:['default','weact_cost'][i],options:r.value,deliveryChannels:['direct'],selectedReviewers:[],enabled:false} as unknown as ReviewPlatform]:[]);
-        setDirectory(officeRoster(platforms,true));
+        const platforms=results.flatMap((r,i)=>r.status==='fulfilled'?[{profileId:['default','weact_cost'][i],options:r.value}]:[]);
+        setDirectory(officeDirectory(platforms));
         if(!platforms.length)setError('人员目录暂不可用，可在左侧使用原复核入口刷新重试。');
       });
     return()=>controller.abort();
@@ -135,6 +135,6 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   return <div className="office-review-host" aria-busy={!rendered&&!error}>
     {!rendered&&<div className="office-review-loading" role="status"><div><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><span>{error?'办公室尚未载入':'正在加载办公室沙盘…'}</span></div></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.48.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.49.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }

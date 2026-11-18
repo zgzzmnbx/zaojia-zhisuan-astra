@@ -1,0 +1,43 @@
+.office-plan {display:grid;gap:14px;color:var(--ink)}
+.office-plan-controls {display:grid;gap:12px;padding:0;margin:0;border:0;min-width:0}
+.office-plan-heading,.office-plan-filters,.office-plan-bulk,.office-plan-select,.office-plan-footer {display:flex;align-items:center;justify-content:space-between;gap:12px}
+.office-plan-heading label,.office-plan-select label {display:inline-flex;align-items:center;gap:9px}
+.office-plan-heading label>span {white-space:nowrap}
+.office-task-page .office-plan-heading select {width:145px;max-width:45vw;flex:none}
+.office-plan-filters {flex-wrap:wrap}
+.office-plan-filters [role=group] {display:inline-flex;gap:2px;padding:3px;border-radius:9px;background:var(--canvas)}
+.office-plan-filters button {border:0;background:transparent;color:var(--muted);border-radius:7px;padding:5px 9px;font:inherit;font-size:13px;cursor:pointer}
+.office-plan-filters button[aria-pressed=true] {background:var(--paper);color:var(--astra-primary);box-shadow:0 1px 4px #19334b1a}
+.office-plan-filters b {font-variant-numeric:tabular-nums}
+.office-task-page .office-plan-filters input {width:min(100%,175px)}
+.office-plan-bulk {padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--canvas);font-size:13px}
+.office-plan-select {font-size:13px;color:var(--muted)}
+.office-plan-groups {display:grid;gap:7px}
+.office-plan-group {border:1px solid var(--line);border-radius:10px;background:var(--paper);overflow:hidden}
+.office-plan-group summary {display:list-item;list-style-position:inside;cursor:pointer;padding:10px 12px;font-size:14px;overflow-wrap:anywhere}
+.office-plan-group summary::marker {color:var(--muted);font-size:12px}
+.office-plan-group summary>span {font-weight:600}
+.office-plan-group summary>small {margin-left:8px;white-space:nowrap;font-size:12px;color:var(--muted)}
+.office-plan-row {padding:10px 12px;border-top:1px solid var(--line)}
+.office-plan-row-title {display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:9px}
+.office-plan-row-title>input {margin-top:3px}
+.office-plan-row-title strong {font-size:14px;font-weight:550;overflow-wrap:anywhere}
+.office-plan-tags {display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:4px}
+.office-plan-tags span,.office-plan-tags small,.office-plan-edit>small,.office-plan-footer small {font-size:12px;color:var(--muted)}
+.office-plan-tags span {border-radius:6px;background:var(--canvas);padding:1px 6px}
+.office-plan-edit {display:grid;grid-template-columns:minmax(0,1fr) minmax(95px,125px);gap:10px;margin-top:10px;padding:12px;border-radius:8px;background:var(--canvas)}
+.office-plan-edit label {display:grid;gap:4px;font-size:12px}
+.office-plan-edit :is(input,select,textarea) {width:100%;min-width:0;font:inherit;font-size:14px}
+.office-plan-edit textarea {min-height:55px;resize:vertical}
+.office-plan-edit label:nth-child(3),.office-plan-edit>small,.office-plan-edit>div {grid-column:1/-1}
+.office-plan-edit>div {display:flex;justify-content:flex-end;gap:6px}
+.office-plan-footer {position:sticky;bottom:0;z-index:2;padding:10px 0;border-top:1px solid var(--line);background:var(--paper)}
+.office-plan-footer>div {flex:1;display:grid;gap:3px;font-size:13px}
+.office-plan-empty {color:var(--muted);padding:14px 0;text-align:center}
+.office-plan :is(button,input,select,summary,textarea):focus-visible {outline:2px solid var(--astra-primary);outline-offset:2px}
+@media(max-width:430px){.office-plan-footer {flex-wrap:wrap}.office-plan-heading {flex-wrap:wrap}.office-plan-edit {grid-template-columns:1fr}.office-plan-bulk {align-items:start}}
+.office-task-page {--ink:var(--astra-ink);--muted:var(--astra-muted);--line:var(--astra-line);--canvas:var(--astra-soft);--paper:var(--astra-paper);margin:0;padding:6px 15px 0;background:var(--paper);color:var(--ink);font:14px/1.45 "Zaojia PingFang SC","Microsoft YaHei UI",sans-serif;color-scheme:light}
+html[data-astra-scheme=dark] .office-task-page {color-scheme:dark}
+.office-task-page :is(button,select,input,textarea) {font-family:inherit}
+.office-task-page .btn {min-height:32px}
+.office-task-page .office-plan-controls :is(select,input:not([type=checkbox]),textarea) {border:1px solid var(--line);padding:6px 9px;border-radius:7px;background:var(--paper);color:var(--ink)}

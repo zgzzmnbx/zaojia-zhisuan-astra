@@ -31,7 +31,7 @@ class WorkstationsTest(unittest.TestCase):
                 ('0','three','丙',1,'pending'),('119','four','丁',2,'pending')])
         before = database.read_bytes()
         self.assertEqual(module.pending_review_rows(database),[{'taskId':'0','platform':'default','reviewerRef':'one',
-            'reviewerName':'甲','projectName':'支线','taskName':'限价核对','artifactName':'原表.xlsx'}])
+            'reviewerName':'甲','projectName':'支线','taskName':'限价核对','artifactName':'原表.xlsx','reviewRound':2,'createdAt':'0'}])
         self.assertEqual(before,database.read_bytes())
         absent = Path(self.temp.name) / 'no-database'
         self.assertEqual(module.pending_review_rows(absent),[])

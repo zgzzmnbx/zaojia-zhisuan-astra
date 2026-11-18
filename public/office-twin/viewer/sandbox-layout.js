@@ -10,7 +10,6 @@ export function mountSandboxLayout(root=document) {
   $('#space-card-close').addEventListener('click',()=>{open(false);toggle.focus();},options);
   rail.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();open(false);toggle.focus();}},options);
   window.addEventListener('office-panel',e=>tab(e.detail?.tab),options);
-  $('#picture-toggle').addEventListener('click',()=>tab('space'),options);
   const tools=$('#office-tools'),more=$('#office-tools-toggle');
   const bar=$('.office-modebar');
   if(!('focusGroup' in HTMLElement.prototype)){

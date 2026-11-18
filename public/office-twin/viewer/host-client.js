@@ -4,6 +4,8 @@ import {createWorkstationSettings} from './workstation-settings.js';
 import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
 import {bindSelectedPersonDrag,canRemoveSelectedPerson} from './selected-person-drag.js';
 import {mountDutyBoard,officeExamples,indexPersonTasks} from './duty-board.js';
+import {applyTaskPlan,planEndpoint,planNotice} from './task-plan.js';
+import {createSandboxSettings} from './sandbox-settings.js';
 import {icon} from '../astra_ui/icons.js';
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
@@ -11,18 +13,35 @@ let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 let dragStart=null,chatRect=null,completedNativeDrag=null;
-let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null,dutyBoard=null;
+let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null,dutyBoard=null,sandboxSettings=null;
 // A directly opened office uses saved workstation profiles. The parent owns review selection.
 let hostSnapshot=null;
+let taskSettings={revision:-1,members:{}};
+function acceptPlan(value){
+  if(value?.schemaVersion!==1 || !value.members || value.revision<=taskSettings.revision)return;
+  taskSettings=value;
+  if(hostSnapshot)publishSnapshot();
+}
+async function refreshPlan(){
+  try{
+    const response=await fetch(planEndpoint,{cache:'no-store'});
+    if(response.ok)acceptPlan(await response.json());
+  }catch{/* Keep the last applied worklist until a later refresh. */}
+}
+function onPlanStorage(event){if(event.key===planNotice)void refreshPlan();}
+export function openPersonTasks(personId=''){
+  sandboxSettings?.open('tasks',personId||'owner');
+}
 function applyHostSnapshot(){
   if(!hostSnapshot)return;
   const employees=workstationRoster(hostSnapshot.employees,workstationConfig);
   sourceSnapshot={...hostSnapshot,employees,tasks:[...hostSnapshot.tasks,...officeExamples(employees)]};
   publishSnapshot();
+  sandboxSettings?.syncTasks();
 }
 function publishSnapshot(){
   snapshot=demos.apply(sourceSnapshot);
-  snapshot.personTasks=indexPersonTasks(snapshot);
+  snapshot.personTasks=applyTaskPlan(indexPersonTasks(snapshot),taskSettings.members);
   renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
 }
 const $=selector=>document.querySelector(selector);
@@ -116,10 +135,12 @@ function receive(event) {
 export const officeClient={
   start(){
     if(started)return;started=true;
+    void refreshPlan();window.addEventListener('storage',onPlanStorage);window.addEventListener('focus',refreshPlan);
     if(window.parent===window)hostSnapshot={...snapshot,title:'办公室',enabled:false};
     const toolbar=$('#office-tools');
     dutyBoard=mountDutyBoard($('#task-list'));
-    workstations=createWorkstationSettings({toolbar,getPeople:()=>snapshot.employees,onChange:config=>{workstationConfig=config;applyHostSnapshot();}});
+    workstations=createWorkstationSettings({panel:$('#office-workstations'),getPeople:()=>snapshot.employees,onChange:config=>{workstationConfig=config;applyHostSnapshot();},onClose:()=>sandboxSettings?.dismiss()});
+    sandboxSettings=createSandboxSettings({workstations,getTasks:()=>hostSnapshot?.tasks||[],onSaved:acceptPlan});
     for(const [action,label] of [['prepare','复核设置'],['close','返回沙盘']]){
       const button=element('button',label,'btn btn-ghost btn-sm');button.type='button';button.dataset.hostAction=action;
       button.setAttribute('role','menuitem');button.tabIndex=-1;
@@ -157,5 +178,5 @@ export const officeClient={
   getState:()=>snapshot,
   getMotion:()=>motionSettings,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
-  dispose(){window.removeEventListener('message',receive);selectedDrag?.dispose();artifactObserver?.disconnect();workstations?.dispose();listeners.clear();},
+  dispose(){window.removeEventListener('message',receive);window.removeEventListener('storage',onPlanStorage);window.removeEventListener('focus',refreshPlan);selectedDrag?.dispose();artifactObserver?.disconnect();sandboxSettings?.dispose();workstations?.dispose();listeners.clear();},
 };

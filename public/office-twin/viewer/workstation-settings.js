@@ -1,5 +1,4 @@
 import {profile,genderLabel} from './workstation-roster.js';
-import {icon} from '../astra_ui/icons.js';
 import {colorFields,personColorDefaults,normalizePersonColors} from './people/person-colors.js';
 import {appearances} from './people/appearances.js';
 import {createAppearancePreview} from './people/appearance-preview.js';
@@ -13,12 +12,10 @@ async function request(payload){
   if(!response.ok)throw new Error(typeof data.detail==='string'?data.detail:'工位设置读取失败，请重试');
   return data;
 }
-export function createWorkstationSettings({toolbar,getPeople,onChange}){
+export function createWorkstationSettings({panel,getPeople,onChange,onClose}){
   let config=null,draft=[],current='',saving=false,loading=false,opened=false,epoch=0;
-  const open=el('button','工位设置','btn btn-ghost btn-sm');open.type='button';open.setAttribute('role','menuitem');open.tabIndex=-1;open.insertAdjacentHTML('afterbegin',icon('squares-four'));toolbar.append(open);
-  const dialog=el('dialog','','office-workstations');dialog.id='office-workstations';dialog.setAttribute('popover','manual');dialog.setAttribute('aria-labelledby','workstations-title');
-  const form=el('form'),header=el('header'),title=el('h2','工位设置');title.id='workstations-title';
-  const close=el('button','×','btn btn-ghost btn-square');close.type='button';close.setAttribute('aria-label','关闭工位设置');const all=el('button','全部工位','btn btn-ghost btn-sm');all.type='button';all.onclick=()=>publish('all');header.append(title,all,close);
+  const form=el('form'),header=el('header');
+  const all=el('button','查看全部工位','btn btn-ghost btn-sm');all.type='button';all.onclick=()=>publish('all');header.append(all);
   const body=el('div','','workstations-body'),sidebar=el('aside'),list=el('div','','workstations-list');list.setAttribute('aria-label','人员列表');
   const add=el('button','＋ 添加人员','btn btn-ghost');add.type='button';sidebar.append(list,add);
   const fields=el('div','','workstations-fields'),controls={};
@@ -69,7 +66,7 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   const footer=el('footer'),status=el('span','','workstations-status');status.setAttribute('role','status');
   const cancel=el('button','取消','btn btn-ghost');cancel.type='button';
   const save=el('button','保存设置','btn btn-primary');save.type='submit';save.title='保存到项目 config/office-workstations.json';
-  footer.append(status,cancel,save);form.append(header,body,footer);form.setAttribute('aria-labelledby',title.id);dialog.append(form);document.body.append(dialog);
+  footer.append(status,cancel,save);form.append(header,body,footer);form.setAttribute('aria-label','人员与工位');panel.append(form);
   function publish(action=null){
     editState={open:opened,seatId:draft.find(p=>p.id===current)?.seatId||'',people:draft.map(p=>({id:p.id,name:p.name,seatId:p.seatId})),action};
     document.body.dataset.workstationsOpen=String(opened);
@@ -101,27 +98,32 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   async function load(){
     config=await request();onChange(config);return config;
   }
-  open.onclick=async()=>{
-    if(opened)return;const attempt=++epoch;opened=true;config=null;
-    loading=true;status.textContent='正在读取工位…';fields.hidden=true;draft=[];renderList();save.disabled=true;if(dialog.showPopover)dialog.showPopover();else dialog.show();publish();
+  async function activate(){
+    opened=true;
+    if(draft.length){select(current);return;}
+    if(loading)return;
+    const attempt=++epoch;
+    loading=true;status.textContent='正在读取工位…';fields.hidden=true;renderList();save.disabled=true;publish();
     try{
-      await load();if(attempt!==epoch||!opened)return;draft=getPeople().map(profile);
+      await load();if(attempt!==epoch)return;draft=getPeople().map(profile);
       controls.seatId.replaceChildren();
       controls.seatId.append(Object.assign(el('option','选择工位'),{value:''}));
       for(const seat of config.seats)controls.seatId.append(Object.assign(el('option',seat.label),{value:seat.id}));
-      select(draft[0]?.id||'');status.textContent=`${draft.length} 人 · ${config.seats.length} 个工位`;controls.name.focus();
+      current=draft[0]?.id||'';if(opened)select(current);status.textContent=`${draft.length} 人 · ${config.seats.length} 个工位`;
     }catch(error){status.textContent=error.message;}
     finally{if(attempt===epoch){loading=false;save.disabled=!config||fields.hidden;renderList();publish();}}
-  };
+  }
   add.onclick=()=>{
     const used=new Set(draft.map(p=>p.seatId)),seat=config.seats.find(s=>!used.has(s.id));if(!seat)return;
     const person={id:`local:${crypto.randomUUID()}`,name:'',gender:'unspecified',appearance:'inherit',trade:'',expertise:'',seatId:seat.id};
     draft.push(person);select(person.id);status.textContent='有未保存的修改';save.disabled=false;controls.name.focus();
   };
-  function dismiss(){if(saving)return;opened=false;epoch++;loading=false;preview.dispose();if(dialog.hidePopover)dialog.hidePopover();else dialog.close();publish();}
-  close.onclick=dismiss;cancel.onclick=dismiss;
-  const escape=event=>{if(opened&&event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();dismiss();}};
-  window.addEventListener('keydown',escape,true);
+  function deactivate(reset=false){
+    const wasOpen=opened;opened=false;
+    if(reset){epoch++;loading=false;draft=[];current='';}
+    if(wasOpen){preview.dispose();publish();}
+  }
+  cancel.onclick=onClose;
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(loading||saving||!config)return;
     const used=new Set();
@@ -142,5 +144,5 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
   });
   // Loading failure is retried and surfaced when the settings page is opened.
   load().catch(()=>{});
-  return {dispose(){opened=false;epoch++;preview.destroy();publish();window.removeEventListener('office-workstation-pick',pickSeat);window.removeEventListener('keydown',escape,true);dialog.remove();open.remove();}};
+  return {activate,deactivate,isSaving:()=>saving,dispose(){deactivate(true);preview.destroy();window.removeEventListener('office-workstation-pick',pickSeat);form.remove();}};
 }

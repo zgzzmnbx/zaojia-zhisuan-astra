@@ -830,6 +830,32 @@ test('return walker waits for a blocked doorway and retries after it clears',()=
 import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches.js';
 import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority} from '../public/office-twin/viewer/duty-board.js';
 import {pendingOfficeTask} from '../03-Src/studio/office-review.ts';
+import {applyTaskPlan,emptyMember,memberEntries,olderProjectReviewKeys} from '../public/office-twin/viewer/task-plan.js';
+
+test('sandbox changes apply by person and review round without editing shared receipts',()=>{
+  const receipt={id:'a',dispatchId:'one',employeeId:'owner',status:'待复核',title:'原任务',reviewRound:1,demo:false};
+  const sample={id:'sample:owner',example:'legacy',demo:true,status:'审核中',title:'原示例',employeeId:'owner'};
+  const snapshot={tasks:[receipt,sample],pendingTasks:[{...receipt,employeeId:'peer'}]};
+  const original=structuredClone(snapshot);
+  const member={revision:1,tasks:[{id:'manual:x',title:'自建任务',status:'进行中'}],adjustments:{
+    'review:one:1':{hidden:true},'sample:owner':{title:'本地名称',status:'已完成',description:'沙盘备注'}}};
+  const index=indexPersonTasks(snapshot), projected=applyTaskPlan(index,{owner:member});
+  assert.deepEqual(projected.get('owner').map(t=>t.title),['自建任务','本地名称']);
+  assert.equal(taskState(projected.get('owner')[1]).done,true);
+  assert.equal(projected.get('peer')[0].title,'原任务');
+  assert.deepEqual(snapshot,original);
+  assert.equal(memberEntries([receipt],'owner',emptyMember())[0].hidden,false);
+  const reopened=indexPersonTasks({tasks:[receipt],pendingTasks:[{...receipt,reviewRound:2}]});
+  assert.ok(applyTaskPlan(reopened,{owner:member}).get('owner').some(t=>t.key==='review:one:2'&&!t.hidden));
+});
+
+test('bulk tidying suggests older pending receipts only within the same project',()=>{
+  const receipt=(id:string,date:string,project:string,status='待复核')=>({id,dispatchId:id,reviewRound:1,createdAt:date,projectName:project,status,title:id,employeeId:'owner'});
+  const rows=[receipt('latest','2026-11-05','甲'),receipt('old','2026-10-11','甲'),receipt('invalid','','甲'),receipt('other','2026-11-13','乙'),receipt('done','2026-11-15','甲','已完成')];
+  const entries=memberEntries(rows,'owner',emptyMember());
+  assert.deepEqual(olderProjectReviewKeys(entries),['review:old:1']);
+  assert.deepEqual(olderProjectReviewKeys(entries.map(t=>({...t,hidden:t.dispatchId==='old'}))),[]);
+});
 
 test('legacy and survey examples remain assigned to the same people across roster reordering',()=>{
   const people=['石萌','刘君','安冉','康亚光','李洪全','王军','钱冬冬','鹿学文','李雨霏','陈希','朱琳'].map((name,i)=>({id:String(i),name}));

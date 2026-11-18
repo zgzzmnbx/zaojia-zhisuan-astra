@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {genderLabel} from './workstation-roster.js';
-import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,element as el} from './host-client.js';
+import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,openPersonTasks,element as el} from './host-client.js';
 import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
 import {personLabelLevel,createPersonWander} from './person-presentation.js';
@@ -96,9 +96,10 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   function tasksFor(id){return business.personTasks?.get(id)||[];}
   function taskLine(task){
     const row=el('div','','host-task-line'),state=taskState(task);
-    const labels=[task.demo?exampleLabel(task):'',state.platform,state.label].filter(Boolean);
+    const labels=[task.demo?exampleLabel(task):task.manual?'自建':task.adjusted?'沙盘已调整':'',state.platform,state.label].filter(Boolean);
     row.append(el('strong',task.title),el('small',labels.join(' · ')));
     if(task.artifactName&&task.artifactName!==task.title)row.append(el('p',task.artifactName));
+    if(task.adjusted&&task.dispatchId)row.append(el('small',`原始复核 · ${task.originalStatus} · ${task.originalTitle}`));
     if(task.description||task.comment)row.append(el('p',task.description||task.comment));
     return row;
   }
@@ -120,7 +121,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       item.marker.title=`${person.name} · ${statusLabel} · ${title} · ${tasks.length} 项任务`;
       item.marker.setAttribute('aria-label',item.marker.title);
       const chip=item.button.querySelector('.duty-state');chip.hidden=!status&&!person.selected;chip.dataset.tone=status?.tone||'selected';chip.textContent=status?.label||'已选';
-      const source=item.button.querySelector('[data-tone="demo"]');source.hidden=!task?.demo;source.textContent=task?.demo?exampleLabel(task):'';
+      const source=item.button.querySelector('[data-tone="demo"]');source.textContent=task?.demo?exampleLabel(task):task?.manual?'自建':task?.adjusted?'沙盘已调整':'';source.hidden=!source.textContent;
       const line=item.button.querySelector('.duty-title');line.textContent=task?.title||emptyDutyLabel(business);line.title=line.textContent;
       item.button.dataset.idle=String(!task);
       const extra=item.button.querySelector('.duty-extra');extra.hidden=pending.length<2;extra.textContent=pending.length>1?dutyCountLabel(pending):'';
@@ -161,6 +162,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     heading.append(el('strong',item.person.name),close);menu.append(heading);
     const profile=el('dl','','host-person-profile');
     for(const [label,value] of [['性别',genderLabel(item.person.gender)],['工种',item.person.trade||'待补充'],['擅长审核',item.person.expertise||'待补充'],['当前状态',dutyCountLabel(item.pending)||emptyDutyLabel(business)],['工位',item.seatId?.replace('SEAT_','')||'未分配']])profile.append(el('dt',label),el('dd',value));menu.append(profile);
+    const editTasks=el('button','编辑此人任务','btn btn-ghost btn-sm');editTasks.type='button';editTasks.onclick=()=>{closeMenu();openPersonTasks(item.person.id);};menu.append(editTasks);
     const tasks=el('div','','host-person-projects');
     for(const task of tasksFor(current))tasks.append(taskLine(task));
     if(!tasks.childElementCount)tasks.append(el('p','暂无审核项目'));menu.append(tasks);

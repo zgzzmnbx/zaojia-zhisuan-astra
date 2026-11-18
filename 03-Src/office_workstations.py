@@ -35,6 +35,7 @@ def pending_review_rows(database):
             rows = db.execute("""
                 SELECT t.task_id AS taskId, t.platform_profile_id AS platform,
                        r.mapping_id AS reviewerRef, r.display_name AS reviewerName,
+                       t.review_round AS reviewRound, CAST(t.created_at AS TEXT) AS createdAt,
                        t.project_name AS projectName, t.task_name AS taskName,
                        COALESCE(NULLIF(t.submission_file_name, ''), t.file_name, '') AS artifactName
                   FROM tasks t JOIN dispatch_reviewers r ON r.task_id = t.task_id

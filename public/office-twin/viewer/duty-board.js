@@ -74,11 +74,19 @@ export function taskPriority(task) {
 }
 export function indexPersonTasks(snapshot) {
   const people = new Map(), seen = new Set();
-  for (const task of [...snapshot.tasks,...(snapshot.pendingTasks || [])]) {
+  const receiptKey=t=>JSON.stringify([t.dispatchId,t.employeeId]);
+  const inbox=new Map((snapshot.pendingTasks || []).map(t=>[receiptKey(t),t]));
+  for (const original of [...snapshot.tasks,...inbox.values()]) {
+    let task=original;
     if (task.dispatchId) {
-      const key = JSON.stringify([task.dispatchId,task.employeeId]);
+      const key=receiptKey(task);
       if (seen.has(key)) continue;
       seen.add(key);
+      const latest=inbox.get(key);
+      if (latest&&latest!==task) {
+        if (task.reviewRound && latest.reviewRound>task.reviewRound) task=latest;
+        else task={...task,reviewRound:task.reviewRound??latest.reviewRound,createdAt:task.createdAt||latest.createdAt,projectName:task.projectName||latest.projectName};
+      }
     }
     if (!people.has(task.employeeId)) people.set(task.employeeId,[]);
     people.get(task.employeeId).push(task);
@@ -147,6 +155,7 @@ export function mountDutyBoard(list) {
       flags = node('span', 'duty-flags');
     if (state) flags.append(tag(state.label, state.tone));
     if (latest?.demo) flags.append(tag(exampleLabel(latest), 'demo'));
+    else if(latest?.manual || latest?.adjusted)flags.append(tag(latest.manual?'自建':'沙盘已调整','demo'));
     if (person.selected) flags.append(tag('已选', 'selected'));
     const text = latest?.title || emptyDutyLabel(snapshot);
     const line = node('span', 'duty-title', text);
@@ -169,9 +178,11 @@ export function mountDutyBoard(list) {
       meta.append(tag(s.label, s.tone));
       if (s.platform) meta.append(node('small', '', s.platform));
       if (task.demo) meta.append(tag(exampleLabel(task), 'demo'));
+      else if(task.manual || task.adjusted)meta.append(tag(task.manual?'自建':'沙盘已调整','demo'));
       d.append(node('strong', '', task.title), meta);
       if (task.artifactName && task.artifactName !== task.title) d.append(node('p', '', task.artifactName));
       if (task.comment) d.append(node('p', '', task.comment));
+      if (task.adjusted && task.dispatchId) d.append(node('p','',`原始复核 · ${task.originalStatus} · ${task.originalTitle}`));
       if (task.description) d.append(node('p', '', task.description));
       details.append(d);
     }
