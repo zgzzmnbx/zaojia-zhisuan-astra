@@ -297,10 +297,10 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
     },
     setTheme(scheme){dark=scheme==='dark';if(!dark)compositor.release();if(accentRoot)accentRoot.visible=dark;shared.night.value=dark?1:0;syncSettings();requestFrame();},
     update(){syncSettings();if(floorRoot){floorRoot.updateWorldMatrix(true,false);shared.floorInverse.value.copy(floorRoot.matrixWorld).invert();}shared.exposure.value=2**(getExposure?.()??0);shared.blue.value=getBlue?.()??1;for(const {copy,source} of colorSources)if(copy.color&&source.color)copy.color.copy(source.color);},
-    render(){
+    render(drawScene = () => renderer.render(scene,camera)){
       if(!dark||disposed)return false;
-      if(settings.nightBloom<=0){compositor.release();renderer.render(scene,camera);return true;}
-      compositor.render();return true;
+      if(settings.nightBloom<=0){compositor.release();drawScene(false);return true;}
+      compositor.render(drawScene);return true;
     },
     state:()=>({night:dark,profile:'Astra studio / hybrid night bake v0.32.0',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),compositor:compositor.state(),physicalNightBake:floorBake.state().status==='ready',floorBake:floorBake.state(),interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
     dispose(){if(disposed)return;disposed=true;compositor.dispose();bloom.dispose();floorBake.dispose();for(const restore of restores)restore();for(const m of materials)m.dispose();materials.clear();removeAccentLights();},

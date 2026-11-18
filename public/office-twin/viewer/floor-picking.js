@@ -10,7 +10,7 @@ export function visibleSceneHit(hit){
 }
 export function outsideView(view,hits){
  if(hits.some(visibleSceneHit))return null;
- return view==='office'?'exploded':view==='exploded'?'building':null;
+ return view==='exploded'||view==='office'?'building':null;
 }
 export function firstVisibleFloorHit(hits,floors){
  for(const hit of hits){

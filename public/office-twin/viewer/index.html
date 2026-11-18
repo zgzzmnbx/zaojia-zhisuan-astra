@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="./viewer.css?v=0.7.0">
   <link rel="stylesheet" href="./office-events.css?v=0.7.0">
   <link rel="stylesheet" href="./astra-review.css?v=0.45.0">
-  <link rel="stylesheet" href="./porcelain-demo.css?v=0.2.0">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./structure-day-bake.js":"./structure-day-bake.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=porcelain-0.2.0","./porcelain-style.js":"./porcelain-style.js?v=0.2.0","./porcelain-palette.js":"./porcelain-palette.js?v=0.2.0","./night-bloom.mjs?v=0.6.3":"./night-bloom.mjs?v=porcelain-0.2.0","./night-floor-bake.js":"./night-floor-bake.js?v=porcelain-0.1.0","./model-transport.js?v=0.7.0":"./model-transport.js?v=porcelain-0.1.0","./lighting-settings.js":"./lighting-settings.js?v=0.45.0","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.45.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.45.0","./host-client.js":"./host-client.js?v=0.45.0","./host-people.js":"./host-people.js?v=0.45.0","./seated-person.js":"./seated-person.js?v=0.45.0","./person-presentation.js":"./person-presentation.js?v=0.45.0","./person-pointer.js":"./person-pointer.js?v=0.45.0"}}</script>
+  <link rel="stylesheet" href="./porcelain-demo.css?v=0.3.0">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./structure-day-bake.js":"./structure-day-bake.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=porcelain-0.3.0","./porcelain-style.js":"./porcelain-style.js?v=porcelain-0.3.0","./porcelain-palette.js":"./porcelain-palette.js?v=0.2.0","./night-bloom.mjs?v=0.6.3":"./night-bloom.mjs?v=porcelain-0.2.0","./night-floor-bake.js":"./night-floor-bake.js?v=porcelain-0.1.0","./model-transport.js?v=0.7.0":"./model-transport.js?v=porcelain-0.1.0","./lighting-settings.js":"./lighting-settings.js?v=porcelain-0.3.0-tray","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.45.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.45.0","./host-client.js":"./host-client.js?v=0.45.0","./host-people.js":"./host-people.js?v=0.45.0","./seated-person.js":"./seated-person.js?v=0.45.0","./person-presentation.js":"./person-presentation.js?v=0.45.0","./person-pointer.js":"./person-pointer.js?v=0.45.0","./scene-state.js?v=0.6.7":"./scene-state.js?v=porcelain-0.3.0-tray","./office-entrance.js":"./office-entrance.js?v=porcelain-0.3.0","./office-camera-limits.js":"./office-camera-limits.js?v=porcelain-0.3.0","./floor-picking.js?v=0.39.1":"./floor-picking.js?v=porcelain-0.3.0","./miniature-focus.js":"./miniature-focus.js?v=porcelain-0.3.0-tray","./night-compositor.js":"./night-compositor.js?v=porcelain-0.3.0","./picture-settings.js?v=0.6.7":"./picture-settings.js?v=porcelain-0.3.0-tray"}}</script>
 </head>
 <body class="studio">
 <div id="shell" class="live-shell office-shell">
@@ -35,8 +35,7 @@
       <nav class="rw-tabs office-modebar" aria-label="办公室工具栏">
         <div class="join" id="view-controls">
           <button class="btn btn-sm join-item btn-primary" data-view="building" aria-pressed="true" disabled><span class="astra-icon" data-icon="buildings"></span>整楼</button>
-          <button class="btn btn-sm join-item btn-ghost" data-view="exploded" aria-pressed="false" disabled><span class="astra-icon" data-icon="layers"></span>展开 9F</button>
-          <button class="btn btn-sm join-item btn-ghost" data-view="office" aria-pressed="false" disabled><span class="astra-icon" data-icon="grid"></span>9 楼</button>
+          <button class="btn btn-sm join-item btn-ghost" data-view="exploded" aria-pressed="false" disabled><span class="astra-icon" data-icon="layers"></span>展开9楼</button>
         </div>
         <div class="porcelain-blue-control" hidden>
           <label for="office-theme-blue">主题蓝</label>
@@ -171,7 +170,7 @@
   }
   window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
   window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
-  import('./viewer.js?v='+VERSION+'&ui=porcelain-0.2.0').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+  import('./viewer.js?v='+VERSION+'&ui=porcelain-0.3.0-tray').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
     document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
     document.querySelector('#render-status').textContent='静态预览';
     document.documentElement.dataset.viewerStatus='module-error';

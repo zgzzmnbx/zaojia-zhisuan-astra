@@ -31,7 +31,7 @@ def index():
 
 @app.get('/preview-id')
 def identity():
-    return {'preview':'porcelain-0.2.0','root':str(ROOT)}
+    return {'preview':'porcelain-0.3.0','root':str(ROOT)}
 
 
 app.mount('/office-twin',StaticFiles(directory=OFFICE),name='office-twin')
@@ -42,7 +42,10 @@ def same_preview(port):
     url = f'http://127.0.0.1:{port}/preview-id'
     try:
         with urllib.request.urlopen(url, timeout=1) as response:
-            return json.loads(response.read(8192)) == identity()
+            service = json.loads(response.read(8192))
+            return (isinstance(service, dict) and str(service.get('preview', '')).startswith('porcelain-')
+                    and isinstance(service.get('root'), str) and bool(service['root'])
+                    and Path(service['root']).resolve() == ROOT)
     except (OSError, ValueError):
         return False
 

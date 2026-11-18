@@ -30,7 +30,10 @@ export function createPictureSettings({listen, requestFrame, getRenderer}) {
     const output=document.createElement('output');output.htmlFor=`picture-${spec.key}`;output.id=`picture-${spec.key}-value`;
     const input=document.createElement('input');Object.assign(input,{type:'range',id:`picture-${spec.key}`,name:spec.key,min:String(spec.min),max:String(spec.max),step:String(spec.step)});
     row.append(label,output,input);root.append(row);
-    listen(input,'input',()=>{current=normalizePicture({...current,[spec.key]:input.valueAsNumber});paint();apply();});
+    listen(input,'input',()=>{
+      current=normalizePicture({...current,[spec.key]:input.valueAsNumber});paint();
+      if(spec.key==='miniatureBlur')requestFrame();else apply();
+    });
   }
   const colorRow=document.createElement('div');colorRow.className='office-picture-row';colorRow.dataset.lightingGroup='day';
   const colorLabel=document.createElement('label');colorLabel.htmlFor='picture-backgroundColor';colorLabel.textContent='背景颜色';

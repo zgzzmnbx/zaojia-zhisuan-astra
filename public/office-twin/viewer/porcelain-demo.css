@@ -20,6 +20,9 @@ body.porcelain-preview #shell .office-workspace > #host-artifact {
 }
 body.porcelain-preview #shell .office-workspace > .office-inspector {top:calc(78px + var(--host-artifact-height,100px))}
 body.porcelain-preview .office-modebar #theme-toggle {display:inline-flex!important}
+@media (max-width:760px) {
+  body.studio .office-modebar #picture-toggle {display:inline-flex}
+}
 
 .porcelain-blue-control:not([hidden]) {
   display:inline-flex;align-items:center;flex:none;gap:5px;padding-inline:5px;

@@ -102,7 +102,19 @@ test('night surfaces stay dark without lamps and room lights remain inside plan 
  assert.ok(plan.length<=MAX_OFFICE_LIGHTS);assert.deepEqual(createInteriorLightPlan(null),[]);
 });
 import {createOfficeEntrance} from '../public/office-twin/viewer/office-entrance.js';
+import {VIEW_MODES,resolveView,floorPresentation} from '../public/office-twin/viewer/scene-state.js';
 import assert from 'node:assert/strict';
+test('old office links expand the ninth floor with the full building in view',()=>{
+ assert.deepEqual(VIEW_MODES,['building','exploded']);
+ assert.equal(resolveView('office'),'exploded');assert.equal(resolveView('unknown'),null);
+ for(let floor=1;floor<=20;floor++){
+  const expanded=floorPresentation(floor,'exploded');
+  assert.deepEqual(floorPresentation(floor,'office'),expanded);
+  assert.equal(expanded.visible,true);assert.equal(expanded.showFacade,floor!==9);
+  assert.equal(expanded.offsetZ,floor===9?32:0);
+  assert.deepEqual(floorPresentation(floor,'building'),{visible:true,offsetY:0,offsetZ:0,showFacade:true});
+ }
+});
 test('office entrance waits for presented frames and transition completion; hiding never skips ahead',()=>{
  const entry=createOfficeEntrance(true);let now=0;
  assert.equal(entry.step(now,false),null);entry.start();entry.step(now,false);
@@ -110,10 +122,9 @@ test('office entrance waits for presented frames and transition completion; hidi
  assert.deepEqual(advance(17),['exploded']);
  assert.deepEqual(advance(40,true),[]);
  entry.suspend();now+=60000;assert.equal(entry.step(now,false),null);
- assert.deepEqual(advance(13),['office']);assert.equal(entry.state().running,true);
- advance(30,true);assert.equal(entry.state().phase,'office');advance(1);assert.equal(entry.state().running,false);
+ assert.deepEqual(advance(100),[]);assert.equal(entry.state().phase,'complete');
  entry.start();entry.cancel();assert.deepEqual(advance(100),[]);
- entry.start();assert.equal(entry.step(now,false,true),'office');assert.equal(entry.state().running,false);
+ entry.start();assert.equal(entry.step(now,false,true),'exploded');assert.equal(entry.state().running,false);
 });
 import {createOfficeBridge,officeRoster,officeTasks} from '../03-Src/studio/office-review.ts';
 import type {ReviewPlatform,ReviewRequest,ReviewTask} from '../03-Src/studio/review-flow.ts';
@@ -653,10 +664,10 @@ test('outside clicks step back one level and ignore invisible or clipped geometr
  const root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());root.add(mesh);
  const hit={object:mesh,point:new THREE.Vector3(0,-1,0)};
  assert.equal(outsideView('office',[hit]),null);assert.equal(outsideView('exploded',[hit]),null);
- assert.equal(outsideView('office',[]),'exploded');assert.equal(outsideView('exploded',[]),'building');assert.equal(outsideView('building',[]),null);
- root.visible=false;assert.equal(outsideView('office',[hit]),'exploded');root.visible=true;
+ assert.equal(outsideView('office',[]),'building');assert.equal(outsideView('exploded',[]),'building');assert.equal(outsideView('building',[]),null);
+ root.visible=false;assert.equal(outsideView('office',[hit]),'building');root.visible=true;
  mesh.material.opacity=0;assert.equal(outsideView('exploded',[hit]),'building');mesh.material.opacity=1;
- mesh.material.clippingPlanes=[new THREE.Plane(new THREE.Vector3(0,1,0),0)];assert.equal(outsideView('office',[hit]),'exploded');
+ mesh.material.clippingPlanes=[new THREE.Plane(new THREE.Vector3(0,1,0),0)];assert.equal(outsideView('office',[hit]),'building');
  mesh.geometry.dispose();mesh.material.dispose();
 });
 test('office idle deadline restarts on input, honors saved delay and resumes focused views',()=>{

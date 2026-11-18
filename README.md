@@ -4,7 +4,7 @@
 
 [功能介绍](#主要功能) · [界面与演示](#界面与演示) · [快速开始](#快速开始) · [项目文档](#项目文档) · [问题反馈](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/issues)
 
-本分支提供[办公室白瓷沙盘 Demo v0.2.0](tools/office-twin/porcelain/README.md)。双击 **预览白瓷办公室.bat**，在工具栏的 **主题蓝** 下拉框切换七套蓝色，可在整楼、展开九楼和办公室视角比较。
+本分支提供[办公室白瓷沙盘 Demo v0.3.0](tools/office-twin/porcelain/README.md)。双击 **预览白瓷办公室.bat**，点 **展开9楼** 查看九楼，点 **整楼** 收回。**主题蓝** 提供七种配色，**画面设置 → 九楼背景虚化** 可调节楼体与园区的清晰度，默认 45%。
 
 > 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.45.0**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
 

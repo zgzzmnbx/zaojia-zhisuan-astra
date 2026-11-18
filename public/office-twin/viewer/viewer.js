@@ -2,7 +2,7 @@ import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
 import {attachStructureDayBake} from './structure-day-bake.js';
 import {attachAstraContextBake} from './astra-context-bake.js';
-import { motionProgress, createVisibilityBlend } from './navigation-motion.js?v=0.6.7';
+import { motionProgress } from './navigation-motion.js?v=0.6.7';
 import {VERSION,ASSET_VERSION,BAKED_MODEL,REALTIME_MODEL} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
@@ -11,7 +11,8 @@ import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
-import {PORCELAIN_MODEL,createOfficeMat} from './porcelain-style.js';
+import {PORCELAIN_MODEL} from './porcelain-style.js';
+import {createMiniatureFocus} from './miniature-focus.js';
 import {mountPorcelainPalette} from './porcelain-palette.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {restoreCutawayBake} from './cutaway-bake-repair.js';
@@ -30,9 +31,9 @@ import { applyAstraTheme } from '../astra_ui/theme.js';
 import { createPictureSettings, BAKED_MODE } from './picture-settings.js?v=0.6.7';
 import { contextVisibleForView, useHeroPriorityFraming, isolateContextMaterials } from './context-view-policy.js?v=0.6.7';
 import { heroPriorityBounds } from './hero-framing.js?v=0.6.0';
-import { createNightEnvironment, nightRole } from './night-environment.js?v=0.6.7';
+import { createNightEnvironment } from './night-environment.js?v=0.6.7';
 import { createPeopleDemo } from './host-people.js';
-import { VIEW_MODES, VIEW_COPY, FLOOR_COUNT, DETAILED_FLOOR, PROTOCOL,
+import { resolveView, VIEW_COPY, FLOOR_COUNT, DETAILED_FLOOR, PROTOCOL,
   floorElevation, floorPresentation, isTrustedHostMessage } from './scene-state.js?v=0.6.7';
 
 const PORCELAIN = BAKED_MODE && new URLSearchParams(location.search).get('style')!=='classic';
@@ -58,14 +59,14 @@ export async function mountOfficeViewer() {
   const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
   document.body.classList.toggle('office-embed', embedded);
   let theme = { palette: 'astra', scheme: 'light' };
-  let view = VIEW_MODES.includes(params.get('view')) ? params.get('view') : 'office';
+  let view = resolveView(params.get('view')) ?? 'exploded';
   let disposed = false, requestedVisible = true, inView = true, pageSuspended = false;
   let renderReady = false, renderStatus = 'loading', frame = 0, transition = null;
   let gpuPrepared=false,lastFrameTime=null;
-  let contextBake=null,structureBake=null,officeMat=null;
+  let contextBake=null,structureBake=null,miniatureFocus=null,openness=null,interiorLabels=false;
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
-  let people, nightEnvironment, visibilityBlend, orbit, releaseOrbitHold;
+  let people, nightEnvironment, orbit, releaseOrbitHold;
   let floorLabel,previewCamera,officeBoard,seatLabels;
   let orbitDirection=1,wasOrbitRunning=false;
   let business=officeClient.getState(),bridgeContext={id:null,revision:0};
@@ -82,7 +83,7 @@ export async function mountOfficeViewer() {
   let layout, buildingMetadata, officeMetadata, furnitureIntegration;
   let officeName='H1 办公室';
   let fitHeight = 100, selectedFloor = null, selectedRoom = null;
-  const floors = new Map(), rooms = new Map(), originalPositions = new Map(), originalVisibility = new Map();
+  const floors = new Map(), rooms = new Map(), movingFloors = [];
 
   function listen(target, type, handler, options) {
     target.addEventListener(type, handler, options);
@@ -93,7 +94,7 @@ export async function mountOfficeViewer() {
     if (embedded && window.parent !== window) window.parent.postMessage({ namespace: PROTOCOL, type, ...data }, location.origin);
   }
   function getState() {
-    return { version: VERSION, porcelainBlue:porcelainPalette?.id??null,assetVersion:PORCELAIN?'porcelain-0.2.0':ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
+    return { version: VERSION, presentationVersion:'porcelain-0.3.0', assemblyOpenness:openness, miniatureFocus:miniatureFocus?.state()??null, porcelainBlue:porcelainPalette?.id??null,assetVersion:PORCELAIN?'porcelain-0.2.0':ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
       officeBoard:officeBoard?.state()??null,performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, entrance:entrance.state(), theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
   }
   let loadingMessage='正在读取办公室资料', loadingTimer=null;
@@ -193,6 +194,7 @@ export async function mountOfficeViewer() {
     $('#office-theme-blue').disabled=true;
     if(BAKED_MODE&&!loadReport.materialPaths)$('#material-coverage').textContent='三维初始化或模型读取未完成，无法统计材质覆盖。';
     loadReport.lastError={code:error?.code??'VIEWER_ERROR',message:String(error?.message??error),stage:loadReport.stage};stopLoading();
+    miniatureFocus?.dispose();miniatureFocus=null;
     nightEnvironment?.dispose(); nightEnvironment=null;
     picture.dispose();
     officeBoard?.dispose();officeBoard=null;
@@ -204,8 +206,8 @@ export async function mountOfficeViewer() {
     controls?.dispose(); clearOutline(); contextBake?.dispose();contextBake=null;structureBake?.dispose();structureBake=null;disposeObject(model);
     scene?.traverse(object => object.shadow?.dispose());
     renderer?.dispose(); renderer?.forceContextLoss(); renderer?.domElement.remove();
-    floors.clear(); rooms.clear(); originalPositions.clear(); originalVisibility.clear();
-    visibilityBlend=null; controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; officeRoot = null; facade9 = null;
+    floors.clear(); rooms.clear(); movingFloors.length=0;
+    controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; officeRoot = null; facade9 = null;
     $('#preview-fallback').hidden = false;
     $('#fallback-message').textContent = `加载中断：${loadReport.lastError.message}。当前为静态预览，不能拖动；可重新加载或打开轻量实时版。`;
     $('#loading-tools').hidden=false;$('#load-diagnostics').open=true;refreshDiagnostic();
@@ -213,7 +215,6 @@ export async function mountOfficeViewer() {
     document.querySelectorAll('[data-view], #back-building, .office-camera-tools button').forEach(button => button.disabled = true);
     paintState();
     document.documentElement.dataset.viewerStatus = 'fallback';
-    officeMat?.dispose();officeMat=null;
     status('加载未完成 · '+loadReport.lastError.code);
     console.warn('Office viewer fallback:', error?.message ?? error);
     notify('ready', { ...getState(), capabilities: ['theme', 'visibility', 'spatial-metadata'], rendererAvailable: false });
@@ -249,8 +250,8 @@ export async function mountOfficeViewer() {
     if (transition) {
       transition.elapsed+=delta;
       const { progress, amount } = motionProgress(transition.elapsed, 0, transition.duration, motionPreference.matches);
-      for (const pose of transition.poses){pose.object.position.lerpVectors(pose.from, pose.to, amount);pose.object.updateMatrix();}
-      visibilityBlend.sample(transition.visibility, amount);
+      setAssembly(progress === 1 ? transition.toOpen :
+        transition.fromOpen + (transition.toOpen - transition.fromOpen) * amount);
       if (transition.camera) {
         const { from, to } = transition.camera;
         camera.position.lerpVectors(from.position, to.position, amount);
@@ -261,7 +262,6 @@ export async function mountOfficeViewer() {
       }
       moving = progress < 1;
       if (!moving) transition = null;
-      model.updateMatrixWorld(true);
     }
     const motion=orbit.step(now);
     if(orbit.state().running&&!wasOrbitRunning)orbitDirection=officeSweepDirection(controls.getAzimuthalAngle(),officeCameraLimits(view));
@@ -271,16 +271,23 @@ export async function mountOfficeViewer() {
     const controlsChanged = transition?.camera ? false : controls.update(motion.delta||1/60);
     camera.updateMatrixWorld();
     if (roomOutline) roomOutline.update();
-    people?.update(camera,view,now);seatLabels?.update(camera,view);
-    if(PORCELAIN&&officeRoot)officeRoot.visible=view!=='building'||!!transition;
+    const detailView = interiorLabels ? 'exploded' : 'building';
+    people?.update(camera,detailView,now);seatLabels?.update(camera,detailView);
     floorLabel?.update();
     nightEnvironment?.update();
-    officeMat?.sync(view,theme.scheme);
     // Night replaces PBR lighting with the authored display shader, so a fresh
     // directional shadow pass contributes nothing to its output.
     renderer.shadowMap.autoUpdate=theme.scheme!=='dark';
     renderer.info.reset();
-    try{if(!nightEnvironment?.render())renderer.render(scene,camera);}
+    try {
+      const strength = openness * picture.getState().miniatureBlur / 100;
+      if (strength <= 0) miniatureFocus.release();
+      const drawScene = emission => {
+        if (strength > 0) miniatureFocus.render(strength, emission);
+        else renderer.render(scene, camera);
+      };
+      if (!nightEnvironment?.render(drawScene)) drawScene(false);
+    }
     catch(error){error.code??='MODEL_GPU';fail(error);return;}
     frameMeter.frame(now);
     if(!loadReport.webglRendered){
@@ -347,8 +354,10 @@ export async function mountOfficeViewer() {
     const size = projected.getSize(new THREE.Vector3());
     const clearance=getWorkstationEditState().open?(parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft)+(document.querySelector('#office-workstations')?.getBoundingClientRect().width||380)+48:0;
     const aspect = Math.max(.1, (viewport.clientWidth-clearance)/Math.max(1, viewport.clientHeight));
-    const margin=PORCELAIN&&view==='building'&&object===model?1.01:PORCELAIN&&view==='office'&&object===officeRoot?1.24:1.18;
+    const margin=PORCELAIN&&view==='building'&&object===model?1.01:1.18;
     fitHeight = Math.max(6, size.y, size.x/aspect) * margin;
+    // Preserve the established expanded tray framing at every viewport size.
+    if(view==='exploded'&&object===officeRoot)fitHeight*=1.3;
     camera.zoom = 1; camera.far = Math.max(600, distance*4);
     resize(); controls.update(); requestFrame();
   }
@@ -356,12 +365,27 @@ export async function mountOfficeViewer() {
     if (!roomOutline) return;
     scene.remove(roomOutline); roomOutline.geometry.dispose(); roomOutline.material.dispose(); roomOutline = null;
   }
+  function setAssembly(value) {
+    if (value === openness) return;
+    openness = value;
+    for (const {object, original, offset} of movingFloors) {
+      object.position.copy(original).addScaledVector(offset, value);
+      object.updateMatrix();
+    }
+    // Refit the cover only after docking, including when a hover reverses.
+    facade9.visible = value === 0;
+    if (PORCELAIN) officeRoot.visible = value > 0;
+    interiorLabels = value >= .9;
+    model.updateMatrixWorld(true);
+  }
+
   function setView(next, { animate = true, focus = null, automatic = false, labelPreview = false, cameraTarget = null } = {}) {
-    if (!VIEW_MODES.includes(next)) throw new TypeError('Unknown view');
+    next = resolveView(next);
+    if (!next) throw new TypeError('Unknown view');
     if(!labelPreview)floorLabel?.cancel();
     if(!automatic)entrance.cancel();
     orbit?.focus(false);
-    view = next;officeBoard?.setView(next);if(controls)Object.assign(controls,officeCameraLimits(view)); selectedRoom = null; selectedFloor = ['office', 'exploded'].includes(next) ? 9 : null;
+    view = next;officeBoard?.setView(next);if(controls)Object.assign(controls,officeCameraLimits(view)); selectedRoom = null; selectedFloor = next==='exploded' ? 9 : null;
     clearOutline(); paintState();
     if (!renderReady) return getState();
     // Capture the displayed state, not the previous destination, so reversals never jump.
@@ -371,41 +395,21 @@ export async function mountOfficeViewer() {
     controls.enableDamping=false; controls.update(); controls.enableDamping=damping;
     applyCameraPose(cameraFrom);
     transition = null;
-    visibilityBlend.restore();
-    for (const [object, visible] of originalVisibility) object.visible = visible;
-    const poses = [];
-    for (const [number, object] of floors) {
-      const state = floorPresentation(number, next), original = originalPositions.get(object);
-      object.visible = state.visible;
-      poses.push({ object, from: object.position.clone(), to: original.clone().add(new THREE.Vector3(0, state.offsetY, state.offsetZ)) });
-    }
-    facade9.visible = floorPresentation(9, next).showFacade;
-    if(contextRoot)contextRoot.visible=PORCELAIN&&next==='office'?false:contextVisibleForView(next);
-    // Keep surrounding buildings solid; retain the existing subdued ground/plinth.
-    const visibility = visibilityBlend.destination(mesh => {
-      if (next !== 'office') return 1;
-      if (contextRoot && contains(contextRoot,mesh)) return nightRole(mesh)==='context'?1:.16;
-      if (contains(buildingRoot,mesh) && ![...floors.values()].some(floor=>contains(floor,mesh))) return .25;
-      return 1;
-    });
-    for (const pose of poses){pose.object.position.copy(pose.to);pose.object.updateMatrix();}
-    model.updateMatrixWorld(true);
+    const fromOpen = openness ?? 0, toOpen = next === 'exploded' ? 1 : 0;
+    setAssembly(toOpen);
+    if(contextRoot)contextRoot.visible=contextVisibleForView(next);
     people?.update(camera,view); // Resolve actor anchors at the destination before fitting.
     // Follow the projecting ninth floor, rather than fitting the enlarged whole tower.
-    // A little more breathing room than the final office view retains the tower behind it.
-    fitObject(focus ?? (['office','exploded'].includes(next) ? officeRoot : useHeroPriorityFraming(next)&&contextRoot ? model : buildingRoot), ['office','exploded'].includes(next) ? ROOM_DIRECTION : VIEW_DIRECTION);
-    if(next==='exploded'&&!focus){fitHeight*=1.3;resize();}
+    fitObject(focus ?? (next==='exploded' ? officeRoot : useHeroPriorityFraming(next)&&contextRoot ? model : buildingRoot), next==='exploded' ? ROOM_DIRECTION : VIEW_DIRECTION);
     if(cameraTarget)applyCameraPose(cameraTarget);
     const cameraTo = cameraPose();
     const shouldAnimate = animate && !motionPreference.matches;
     if (shouldAnimate) {
-      for (const pose of poses){pose.object.position.copy(pose.from);pose.object.updateMatrix();}
+      setAssembly(fromOpen);
       applyCameraPose(cameraFrom);
-      visibilityBlend.sample(visibility,0);
-      transition = { elapsed:0, duration: 1050, poses, visibility, camera:{from:cameraFrom,to:cameraTo} };
-    } else visibilityBlend.sample(visibility,1);
-    model.updateMatrixWorld(true);
-    people?.update(camera,view);
+      transition = {elapsed:0, duration:1050, fromOpen, toOpen, camera:{from:cameraFrom,to:cameraTo}};
+    }
+    people?.update(camera,interiorLabels ? 'exploded' : 'building');
     requestFrame(); notify('view-changed', getState()); return getState();
   }
   function cameraPose() {
@@ -417,13 +421,9 @@ export async function mountOfficeViewer() {
   }
   // A drag/wheel gives the user camera control while assembly movement finishes.
   function takeCameraControl() { floorLabel?.cancel();entrance.cancel();if (transition) transition.camera=null; }
-  function contains(parent, child) {
-    for (let node = child; node; node = node.parent) if (node === parent) return true;
-    return false;
-  }
   function selectFloor(number) {
     if (!Number.isInteger(number) || number < 1 || number > FLOOR_COUNT) return;
-    if (number === DETAILED_FLOOR) { setView('office'); selectTab('rooms'); }
+    if (number === DETAILED_FLOOR) { setView('exploded'); selectTab('rooms'); }
     else {
       setView('building', { focus: floors.get(number) }); selectedFloor = number;
       paintState();
@@ -434,7 +434,7 @@ export async function mountOfficeViewer() {
     id=layout?.rooms?.find(r=>r.id===id)?.merged_into||id;
     const roomData = layout?.rooms?.find(item => item.id === id);
     if (!roomData) return false;
-    setView('office', { focus: rooms.get(id) ?? officeRoot });
+    setView('exploded', { focus: rooms.get(id) ?? officeRoot });
     selectedRoom = id; orbit?.focus(true); selectedFloor = 9; selectTab('rooms'); paintState();
     if (renderReady && rooms.has(id)) {
       const color = getComputedStyle(document.documentElement).getPropertyValue('--astra-primary').trim() || '#284bd4';
@@ -455,9 +455,8 @@ export async function mountOfficeViewer() {
     orbit?.focus(false);
     if (!renderReady) return;
     takeCameraControl();
-    const target = selectedRoom && rooms.has(selectedRoom) ? rooms.get(selectedRoom) : ['office','exploded'].includes(view) ? officeRoot : selectedFloor && view === 'building' ? floors.get(selectedFloor) : useHeroPriorityFraming(view)&&contextRoot ? model : buildingRoot;
-    fitObject(target, top ? new THREE.Vector3(.001, 1, .001).normalize() : ['office','exploded'].includes(view) ? ROOM_DIRECTION : VIEW_DIRECTION);
-    if(view==='exploded'){fitHeight*=1.3;resize();}
+    const target = selectedRoom && rooms.has(selectedRoom) ? rooms.get(selectedRoom) : view==='exploded' ? officeRoot : selectedFloor && view === 'building' ? floors.get(selectedFloor) : useHeroPriorityFraming(view)&&contextRoot ? model : buildingRoot;
+    fitObject(target, top ? new THREE.Vector3(.001, 1, .001).normalize() : view==='exploded' ? ROOM_DIRECTION : VIEW_DIRECTION);
   }
   function disposeObject(object) {
     const geometries = new Set(), materials = new Set(), textures = new Set();
@@ -476,12 +475,12 @@ export async function mountOfficeViewer() {
     disposed = true; renderReady = false; renderStatus = 'disposed'; aborter.abort();stopLoading();
     $('#office-theme-blue').disabled=true;
     unsubscribeBusiness();window.dispatchEvent(new Event('office-disposed'));
+    miniatureFocus?.dispose();miniatureFocus=null;
     nightEnvironment?.dispose(); nightEnvironment=null;
     picture.dispose();
     officeBoard?.dispose();officeBoard=null;
     people?.dispose();seatLabels?.dispose();seatLabels=null;
     floorLabel?.dispose();
-    officeMat?.dispose();officeMat=null;
     if (frame) cancelAnimationFrame(frame);
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
@@ -490,8 +489,8 @@ export async function mountOfficeViewer() {
     scene?.traverse(object => object.shadow?.dispose());
     renderer?.dispose(); renderer?.forceContextLoss();
     renderer?.domElement.remove();
-    floors.clear(); rooms.clear(); originalPositions.clear(); originalVisibility.clear();
-    visibilityBlend=null; controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; officeRoot = null; facade9 = null;
+    floors.clear(); rooms.clear(); movingFloors.length=0;
+    controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; officeRoot = null; facade9 = null;
     $('#preview-fallback').hidden = false; $('#fallback-message').textContent = '三维资源已释放。刷新页面可重新打开。';
     status('已关闭'); document.documentElement.dataset.viewerStatus = 'disposed';
     notify('disposed');
@@ -514,9 +513,9 @@ export async function mountOfficeViewer() {
   orbit.configure(officeClient.getMotion());
   function editWorkstations(event){
     const state=event.detail;people?.closeMenu();orbit.sync();resize();
-    if(state.open&&(state.action==='all'||state.action==='focus'||!['office','exploded'].includes(view))){
+    if(state.open&&(state.action==='all'||state.action==='focus'||view!=='exploded')){
       const seat=layout?.workstations.find(s=>s.seat_id===state.seatId);
-      setView('office',{focus:state.action==='focus'&&seat?rooms.get(seat.room_id):null});
+      setView('exploded',{focus:state.action==='focus'&&seat?rooms.get(seat.room_id):null});
     }
     requestFrame();
   }
@@ -563,7 +562,7 @@ export async function mountOfficeViewer() {
   listen($('#top-camera'), 'click', () => resetCamera(true));
   listen($('#tab-floors'), 'click', () => selectTab('floors'));
   listen($('#tab-rooms'), 'click', () => selectTab('rooms'));
-  listen($('#tab-people'), 'click', () => {selectTab('people');setView('office');window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));});
+  listen($('#tab-people'), 'click', () => {selectTab('people');setView('exploded');window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));});
   listen(viewport, 'keydown', event => {
     if (['+','=','-','Home','Escape'].includes(event.key)) {
       event.preventDefault();
@@ -587,7 +586,7 @@ export async function mountOfficeViewer() {
     try {
       if (message.type === 'theme' && message.theme) setTheme(message.theme);
       else if (message.type === 'visibility' && typeof message.visible === 'boolean') setVisible(message.visible);
-      else if (message.type === 'view' && VIEW_MODES.includes(message.view)) setView(message.view);
+      else if (message.type === 'view' && resolveView(message.view)) setView(message.view);
       else if (message.type === 'focus-room' && typeof message.roomId === 'string') focusRoom(message.roomId);
       else if (message.type === 'focus-person' && typeof message.employeeId === 'string') notify('person-focused',{employeeId:message.employeeId,found:people?.select(message.employeeId)??false,requestId:String(message.requestId||'').slice(0,64)});
       else if (message.type === 'set-context') {
@@ -682,14 +681,17 @@ export async function mountOfficeViewer() {
     facade9 = model.getObjectByName('Facade_09');
     for (let number=1; number<=FLOOR_COUNT; number++) {
       const object = model.getObjectByName(`Floor_${String(number).padStart(2,'0')}`);
-      if (object) { floors.set(number,object); originalPositions.set(object,object.position.clone()); }
+      if (!object) continue;
+      floors.set(number,object);
+      const {offsetY,offsetZ} = floorPresentation(number,'exploded');
+      if (offsetY || offsetZ) movingFloors.push({object, original:object.position.clone(),
+        offset:new THREE.Vector3(0,offsetY,offsetZ)});
     }
     if (!buildingRoot || !officeRoot || !facade9 || floors.size !== FLOOR_COUNT) {
       const error = new Error('H1_Building / 20 Floor nodes / Facade_09 / H1_F09_Office required');
       error.code = 'MODEL_CONTRACT'; throw error;
     }
     model.traverse(object => {
-      originalVisibility.set(object, object.visible);
       if (object.userData.entity_type === 'room' && object.userData.room_id) rooms.set(object.userData.room_id, object);
       if (object.isMesh) { object.castShadow = true; object.receiveShadow = true; }
     });
@@ -713,8 +715,7 @@ export async function mountOfficeViewer() {
     if(BAKED_MODE&&!PORCELAIN){structureBake=await attachStructureDayBake(model,()=>disposed);loadReport.structureDaylight=structureBake.state;}
     if(disposed){structureBake?.dispose();structureBake=null;return api;}
     staticBatches=batchStaticGeometry(model);
-    originalVisibility.clear();model.traverse(object=>{originalVisibility.set(object,object.visible);});cacheStaticTransforms(model);
-    visibilityBlend=createVisibilityBlend(model);
+    cacheStaticTransforms(model);
     await yieldToBrowser();if(disposed)return api;
     picture.attach({key,fill,ambient,rim},model);
     await yieldToBrowser();if(disposed)return api;
@@ -736,7 +737,7 @@ export async function mountOfficeViewer() {
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     renderReady = true;
     people = createPeopleDemo({scene,model,layout,viewport,listen,requestFrame,getPicture:()=>picture.getState(),onSelect:employeeId=>notify('person-selected',{employeeId,contextId:bridgeContext.id}),onCandidates:employeeIds=>notify('review-candidates-changed',{employeeIds,contextId:bridgeContext.id,demo:true}),showPanel:()=>{selectTab('people');window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));},focusPerson:group=>{
-      setView('office',{focus:group});orbit.focus(true);people.update(camera,view);
+      setView('exploded',{focus:group});orbit.focus(true);people.update(camera,view);
     }});
     people.syncBusiness(business);
     seatLabels=createWorkstationLabels({model,layout,viewport,listen,requestFrame});
@@ -749,11 +750,15 @@ export async function mountOfficeViewer() {
     if(disposed)return api;
     loadReport.gpuPrepareMs=Math.round(performance.now()-gpuStarted);
     gpuPrepared=true;
-    if(PORCELAIN)officeMat=createOfficeMat(scene,floors.get(9));
+    miniatureFocus=createMiniatureFocus(renderer,scene,camera,model,floors.get(DETAILED_FLOOR));
     floorLabel=createFloorLabel({viewport,floor:floors.get(9),camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
       beginPreview:()=>{previewCamera=cameraPose();setView('exploded',{labelPreview:true});},
       endPreview:()=>{setView('building',{labelPreview:true,cameraTarget:previewCamera,animate:active()});previewCamera=null;},
-      enter:()=>setView('office')});
+      enter:()=>{
+        previewCamera=null;
+        if(view!=='exploded')setView('exploded');
+        else {entrance.cancel();requestFrame();}
+      }});
     resizeObserver = new ResizeObserver(resize); resizeObserver.observe(viewport);
     intersectionObserver = new IntersectionObserver(entries => {
       inView = entries.some(entry => entry.isIntersecting);if(!inView)releaseOrbitHold?.();orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();lastFrameTime=null;}
@@ -779,7 +784,7 @@ export async function mountOfficeViewer() {
       }
       if (people?.pick(ray,{x:event.clientX,y:event.clientY})) return;
       const officeHits=ray.intersectObject(officeRoot,true).filter(visibleSceneHit);
-      const back=outsideView(view,view==='office'?officeHits:ray.intersectObject(buildingRoot,true).concat(officeHits));
+      const back=outsideView(view,officeHits.length?officeHits:ray.intersectObject(buildingRoot,true));
       if(back){people?.closeMenu();setView(back);return;}
       for (const hit of officeHits) {
         let node = hit.object;
@@ -787,7 +792,7 @@ export async function mountOfficeViewer() {
       }
     });
     const dragVisual=createPersonDragOverlay({renderer,scene,camera,getPerson:id=>people.object(id)});
-    const pointer=bindPersonPointer({canvas:renderer.domElement,camera,controls,people,listen,canInteract:()=>!getWorkstationEditState().open&&active()&&['office','exploded'].includes(view),takeCameraControl,dragVisual});
+    const pointer=bindPersonPointer({canvas:renderer.domElement,camera,controls,people,listen,canInteract:()=>!getWorkstationEditState().open&&active()&&view==='exploded',takeCameraControl,dragVisual});
     listenerRemovers.push(()=>pointer.dispose());
     loadingStage('first-frame','场景已就绪，正在绘制第一帧');
     setView(view, { animate:false,automatic:true });

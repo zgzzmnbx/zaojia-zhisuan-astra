@@ -6,6 +6,7 @@ import {ASTRA_STUDIO} from './astra-lighting-profile.js';
 export const LIGHTING_DEFAULTS_VERSION='astra-office-user-approved-0.44.4-2026-11-17';
 export const LIGHTING_KEY='astra.office.saved-lighting.v1';
 export const LIGHTING_SPECS=Object.freeze([
+  {key:'miniatureBlur',label:'九楼背景虚化',min:0,max:100,step:1,value:45},
   {key:'windowBlueStrength',label:'玻璃蓝色浓度',min:0,max:100,step:1,value:23,group:'day'},
   {key:'buildingBrightness',label:'主楼外墙亮度',min:40,max:180,step:1,value:110,group:'day'},
   {key:'floorBrightness',label:'楼层地板亮度',min:40,max:180,step:1,value:95,group:'day'},
