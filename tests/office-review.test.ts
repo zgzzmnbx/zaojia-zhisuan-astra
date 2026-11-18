@@ -429,6 +429,9 @@ test('physical night bake is limited to the authored office floor atlas',()=>{
  assert.equal(isNightFloorReceiver({name:'H1_F09_floor_slab',parent:{name:'Floor_09'}},material),false);
  assert.equal(isNightFloorReceiver({parent:room},{name:'BAKED_furniture_AgX',map:{}}),false);
  assert.equal(isNightFloorReceiver({parent:room},{name:material.name}),false);
+ const porcelain={map:{},userData:{porcelainNightUV:true}};
+ assert.equal(isNightFloorReceiver({name:'StaticBatch',parent:room},porcelain),true);
+ assert.equal(isNightFloorReceiver({name:'Roof',parent:{name:'Floor_20'}},porcelain),false);
 });
 test('cutaway repair isolates shared materials and preserves geometry, UVs and normal shadows',()=>{
  const root=new THREE.Group(),source=new THREE.MeshBasicMaterial();source.name='BAKED_furniture_AgX';

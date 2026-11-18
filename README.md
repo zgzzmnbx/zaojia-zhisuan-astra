@@ -4,6 +4,8 @@
 
 [功能介绍](#主要功能) · [界面与演示](#界面与演示) · [快速开始](#快速开始) · [项目文档](#项目文档) · [问题反馈](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/issues)
 
+本分支提供[办公室白瓷沙盘 Demo v0.1.0](tools/office-twin/porcelain/README.md)。在带本地模型的工作副本中双击 **预览白瓷办公室.bat**，可切换整楼、展开九楼、办公室和原版本对照。
+
 > 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.45.0**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
 
 办公室沙盘“工位设置”可分别调整每个人的头发、衣服与肤色，预览后点“保存设置”写入项目 `config/office-workstations.json`；“恢复扮相配色”清除该人的颜色覆盖，保存后生效。

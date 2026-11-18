@@ -7,6 +7,7 @@ import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from './interior-light-plan.j
 import {createNightCompositor} from './night-compositor.js';
 import {createNightFloorBake,isNightFloorReceiver} from './night-floor-bake.js';
 import {collectMonitorLighting} from './monitor-lighting.js';
+import {porcelainDaylight} from './porcelain-style.js';
 
 // Adapted to metre-scale OfficeRoom nodes from Astra's authored studio night profile.
 // Static floors use a Cycles night bake; furniture/people keep adjustable display lighting.
@@ -41,13 +42,18 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
       ${vertexMonitor?'officeLocalMonitor=officeSeatMonitor;officeLocalFacing=officeSeatFacing;':''}
       officeWorldPosition=(modelMatrix*vec4(transformed,1.)).xyz;
-      officeBakeUV=uv;
+      officeBakeUV=${material.userData.porcelainNightUV?'uv1':'uv'};
       officeWorldNormal=normalize(mat3(modelMatrix)*normal);`);
     shader.fragmentShader='uniform sampler2D officeNightFloorMap;uniform float officeNightFloorReady,officeBakedFloor;varying vec2 officeBakeUV;varying vec3 officeWorldPosition,officeWorldNormal;\nuniform vec4 officeDayGains,officeNightGains;uniform vec2 officeWhite,officeNightLamps;uniform float officeContrast,officeFloorGain;\nuniform mat4 officeFloorInverse;\nuniform vec3 officeMonitorPosition,officeMonitorFacing;\nuniform float officeMonitorEnabled;\nuniform float officeNight,officeBloomOnly,officeNightExposure,officeNightBlue,officeNightRole;\n'+shader.fragmentShader;
     shader.fragmentShader=`uniform float officeWindowBlue,officeWindowStrength;uniform vec3 officeGroundTint;uniform float officeAmbient;uniform int officeRoomLightCount;uniform vec4 officeRoomLights[${MAX_OFFICE_LIGHTS}],officeRoomBounds[${MAX_OFFICE_LIGHTS}];uniform vec3 officeRoomColors[${MAX_OFFICE_LIGHTS}];\n`+shader.fragmentShader;
     if(vertexMonitor)shader.fragmentShader='varying vec4 officeLocalMonitor;varying vec3 officeLocalFacing;\n'+shader.fragmentShader;
+    if(material.userData.porcelainNightUV)shader.vertexShader='#ifndef USE_UV1\nattribute vec2 uv1;\n#endif\n'+shader.vertexShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
       if(officeNight<.5){
+        ${material.userData.porcelain?'#define OFFICE_PORCELAIN_DAY':''}
+        #ifdef OFFICE_PORCELAIN_DAY
+        ${porcelainDaylight}
+        #else
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
         bool interior=officeNightRole==6.||officeNightRole==5.||officeNightRole==9.;
         float gain=officeNightRole==10.?officeFloorGain:ground?officeDayGains.w:context?officeDayGains.z:interior?officeDayGains.y:officeDayGains.x;
@@ -96,6 +102,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         }
         `:''}
         outgoingLight=c*gain;
+        #endif
       }
       if(officeNight>.5){
         vec3 n=normalize(officeWorldNormal);
@@ -173,13 +180,14 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|office-studio-v0330|'+role+'|'+vertexMonitor+'|'+referenceContext+'|'+referenceStructure;
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,!!material.userData.porcelain,!!material.userData.porcelainNightUV].join('|');
   material.needsUpdate=true;
 }
 
 export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings,contextBake,structureBake}){
   const shared={structureBake:structureBake?.textures??{},contextBake:contextBake?.textures??{},floorGain:{value:1.45},windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
   Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
+  const porcelain=!!scene.getObjectByName('Porcelain_F01_shell');
   const lightPlan=createInteriorLightPlan(layout);
   const floorBake=createNightFloorBake(requestFrame);shared.floorBake=floorBake.uniforms;
   Object.assign(shared,{ambient:{value:1},lightCount:{value:lightPlan.length},
@@ -207,7 +215,13 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
     shared.lamps.value.set(settings.nightContextWindows,settings.nightScreens).multiplyScalar(.01);
     shared.ambient.value=settings.nightAmbient/100;
     const nextBackground=dark?'night':settings.backgroundColor+':'+settings.backgroundBrightness;
-    if(nextBackground!==backgroundKey){backgroundKey=nextBackground;scene.background=new THREE.Color(dark?NIGHT_BACKGROUND:settings.backgroundColor);if(!dark)scene.background.multiplyScalar(settings.backgroundBrightness/100);}
+    if(nextBackground!==backgroundKey){
+      backgroundKey=nextBackground;scene.background=new THREE.Color(dark?NIGHT_BACKGROUND:settings.backgroundColor);
+      if(!dark){
+        scene.background.multiplyScalar(settings.backgroundBrightness/(porcelain?83:100));
+        if(porcelain)scene.background.multiply(new THREE.Color('#f6f8fc'));
+      }
+    }
     const nextBloom=dark+':'+settings.nightBloom;
     if(nextBloom!==bloomKey){bloomKey=nextBloom;bloom.configure(dark,110*settings.nightBloom/100,{studio:true});}
   }

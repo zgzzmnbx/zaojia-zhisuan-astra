@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="./viewer.css?v=0.7.0">
   <link rel="stylesheet" href="./office-events.css?v=0.7.0">
   <link rel="stylesheet" href="./astra-review.css?v=0.45.0">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./structure-day-bake.js":"./structure-day-bake.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=0.45.0","./lighting-settings.js":"./lighting-settings.js?v=0.45.0","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.45.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.45.0","./host-client.js":"./host-client.js?v=0.45.0","./host-people.js":"./host-people.js?v=0.45.0","./seated-person.js":"./seated-person.js?v=0.45.0","./person-presentation.js":"./person-presentation.js?v=0.45.0","./person-pointer.js":"./person-pointer.js?v=0.45.0"}}</script>
+  <link rel="stylesheet" href="./porcelain-demo.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./structure-day-bake.js":"./structure-day-bake.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=porcelain-0.1.0","./night-floor-bake.js":"./night-floor-bake.js?v=porcelain-0.1.0","./model-transport.js?v=0.7.0":"./model-transport.js?v=porcelain-0.1.0","./lighting-settings.js":"./lighting-settings.js?v=0.45.0","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=0.45.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.45.0","./host-client.js":"./host-client.js?v=0.45.0","./host-people.js":"./host-people.js?v=0.45.0","./seated-person.js":"./seated-person.js?v=0.45.0","./person-presentation.js":"./person-presentation.js?v=0.45.0","./person-pointer.js":"./person-pointer.js?v=0.45.0"}}</script>
 </head>
 <body class="studio">
 <div id="shell" class="live-shell office-shell">
@@ -45,8 +46,8 @@
 
       <div id="viewport" class="office-viewport" tabindex="0" aria-label="三维建筑，可拖动旋转，滚轮缩放，右键平移">
         <figure id="preview-fallback" class="office-fallback">
-          <img src="../previews/building-v0.6.7-offline.png" alt="整楼 v0.6.7 实际GLB离线验证，非 WebGL 验收图" id="fallback-image">
-          <figcaption id="fallback-message">正在加载三维模型，先显示v0.6.7 实际GLB整楼离线预览，非 WebGL 验收图。</figcaption>
+          <img alt="H1 办公楼模型静态预览" id="fallback-image">
+          <figcaption id="fallback-message">正在加载办公室三维模型。</figcaption>
         </figure>
         <div id="loading-tools" class="office-loading-tools" aria-label="模型加载状态与恢复">
           <progress id="model-progress" max="1" value="0" aria-label="模型下载进度"></progress>
@@ -153,11 +154,18 @@
   import {mountSandboxLayout} from './sandbox-layout.js?v=0.7.0';
   import {officeClient} from './office-client.js';
   const rail = mountSandboxLayout();
+  const params=new URLSearchParams(location.search);
+  document.querySelector('#fallback-image').src=params.get('render')==='realtime'||params.get('style')==='classic'
+    ?'../previews/building-v0.6.7-offline.png':'../previews/porcelain-v0.1.0.webp';
   const desk = {dispose(){}};
   officeClient.start();
+  if(window===parent&&new URLSearchParams(location.search).get('preview')==='porcelain'){
+    const {mountPorcelainDemo}=await import('./porcelain-demo.js');
+    mountPorcelainDemo();
+  }
   window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
   window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
-  import('./viewer.js?v='+VERSION+'&ui=0.45.0').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+  import('./viewer.js?v='+VERSION+'&ui=porcelain-0.1.0').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
     document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
     document.querySelector('#render-status').textContent='静态预览';
     document.documentElement.dataset.viewerStatus='module-error';

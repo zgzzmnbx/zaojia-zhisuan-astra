@@ -11,6 +11,7 @@ import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
+import {PORCELAIN_MODEL,createOfficeMat} from './porcelain-style.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {restoreCutawayBake} from './cutaway-bake-repair.js';
 import {bindPersonPointer} from './person-pointer.js';
@@ -33,7 +34,9 @@ import { createPeopleDemo } from './host-people.js';
 import { VIEW_MODES, VIEW_COPY, FLOOR_COUNT, DETAILED_FLOOR, PROTOCOL,
   floorElevation, floorPresentation, isTrustedHostMessage } from './scene-state.js?v=0.6.7';
 
-const MODEL_URL = new URL('../models/'+(BAKED_MODE?BAKED_MODEL:REALTIME_MODEL), import.meta.url);
+const PORCELAIN = BAKED_MODE && new URLSearchParams(location.search).get('style')!=='classic';
+const modelFile = PORCELAIN ? PORCELAIN_MODEL : BAKED_MODE ? BAKED_MODEL : REALTIME_MODEL;
+const MODEL_URL = new URL('../models/'+modelFile, import.meta.url);
 const DATA_ROOT = new URL('../data/', import.meta.url);
 const VIEW_DIRECTION = new THREE.Vector3(1.1, .83, 1.5).normalize();
 const ROOM_DIRECTION = new THREE.Vector3(.9, 1.25, 1.25).normalize();
@@ -58,7 +61,7 @@ export async function mountOfficeViewer() {
   let disposed = false, requestedVisible = true, inView = true, pageSuspended = false;
   let renderReady = false, renderStatus = 'loading', frame = 0, transition = null;
   let gpuPrepared=false,lastFrameTime=null;
-  let contextBake=null,structureBake=null;
+  let contextBake=null,structureBake=null,officeMat=null;
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
   let people, nightEnvironment, visibilityBlend, orbit, releaseOrbitHold;
@@ -89,12 +92,12 @@ export async function mountOfficeViewer() {
     if (embedded && window.parent !== window) window.parent.postMessage({ namespace: PROTOCOL, type, ...data }, location.origin);
   }
   function getState() {
-    return { version: VERSION, assetVersion:ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
+    return { version: VERSION, assetVersion:PORCELAIN?'porcelain-0.1.0':ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
       officeBoard:officeBoard?.state()??null,performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, entrance:entrance.state(), theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
   }
   let loadingMessage='正在读取办公室资料', loadingTimer=null;
   const formatMB=n=>(n/1024/1024).toFixed(1)+' MiB';
-  function diagnosticText(){return JSON.stringify({viewerVersion:loadReport.viewerVersion,renderMode:BAKED_MODE?'baked':'realtime',stage:loadReport.stage,elapsedSeconds:Math.round((performance.now()-loadStarted)/1000),decodedModelBytes:loadReport.decodedModelBytes,fetchMs:loadReport.fetchMs,parseMs:loadReport.parseMs,firstRenderMs:loadReport.firstRenderMs,webglRendered:loadReport.webglRendered,materialPaths:loadReport.materialPaths??null,colorPipeline:loadReport.colorPipeline??null,lastError:loadReport.lastError},null,2);}
+  function diagnosticText(){return JSON.stringify({viewerVersion:loadReport.viewerVersion,renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime',stage:loadReport.stage,elapsedSeconds:Math.round((performance.now()-loadStarted)/1000),decodedModelBytes:loadReport.decodedModelBytes,fetchMs:loadReport.fetchMs,parseMs:loadReport.parseMs,firstRenderMs:loadReport.firstRenderMs,webglRendered:loadReport.webglRendered,materialPaths:loadReport.materialPaths??null,colorPipeline:loadReport.colorPipeline??null,lastError:loadReport.lastError},null,2);}
   function refreshDiagnostic(){const box=$('#load-diagnostic-text');if(box)box.value=diagnosticText();}
   function renderLoading(){
     if(disposed||renderStatus!=='loading')return;
@@ -114,8 +117,8 @@ export async function mountOfficeViewer() {
   }
   function paintState() {
     const copy = VIEW_COPY[view];
-    $('#scene-label').textContent = renderStatus === 'fallback' ? 'H1 · v0.6.7 实际GLB离线预览' : `${BAKED_MODE?materialCoverageCopy(loadReport.materialPaths).label+' · ':''}${copy.label}`;
-    $('#view-description').textContent = renderStatus === 'fallback' ? '当前图片为v0.6.7 实际GLB整楼离线预览，非 WebGL 验收图；右侧仅切换空间资料。' : copy.description;
+    $('#scene-label').textContent = renderStatus === 'fallback' ? 'H1 · 整楼静态预览' : `${PORCELAIN?'白瓷 · ':BAKED_MODE?materialCoverageCopy(loadReport.materialPaths).label+' · ':''}${copy.label}`;
+    $('#view-description').textContent = renderStatus === 'fallback' ? '当前显示整楼静态预览，可在工作栏查看空间资料。' : copy.description;
     document.querySelectorAll('[data-view]').forEach(button => {
       const chosen = button.dataset.view === view;
       button.classList.toggle('btn-primary', chosen); button.classList.toggle('btn-ghost', !chosen);
@@ -135,7 +138,7 @@ export async function mountOfficeViewer() {
     const room = layout?.rooms?.find(item => item.id === selectedRoom);
     if (room) $('#room-label').textContent = room.label;
     $('#selection-name').textContent = room ? `9 楼 · ${room.label}` : selectedFloor ? `${officeName} · ${selectedFloor} 楼` : `${officeName} · 整栋建筑`;
-    $('#selection-basis').textContent = selectedFloor === 9 ? '已有 9 楼平面图描摹' : selectedFloor ? '楼层外壳示意' : '实景照片 + 9 楼平面图';
+    $('#selection-basis').textContent = selectedFloor === 9 ? '已有 9 楼平面图描摹' : selectedFloor ? '楼层外壳示意' : PORCELAIN ? '白瓷楼体设计 + 原始九楼平面图' : '实景照片 + 9 楼平面图';
     const seats = room ? layout?.workstations?.filter(item => item.room_id === room.id && item.assignable!==false).length : 0;
     const floorRecord = buildingMetadata?.floors?.find(item => item.floor_number === selectedFloor);
     const elevation = selectedFloor ? (Number.isFinite(floorRecord?.elevation_m) ? floorRecord.elevation_m : floorElevation(selectedFloor)) : null;
@@ -208,6 +211,7 @@ export async function mountOfficeViewer() {
     document.querySelectorAll('[data-view], #back-building, .office-camera-tools button').forEach(button => button.disabled = true);
     paintState();
     document.documentElement.dataset.viewerStatus = 'fallback';
+    officeMat?.dispose();officeMat=null;
     status('加载未完成 · '+loadReport.lastError.code);
     console.warn('Office viewer fallback:', error?.message ?? error);
     notify('ready', { ...getState(), capabilities: ['theme', 'visibility', 'spatial-metadata'], rendererAvailable: false });
@@ -266,8 +270,10 @@ export async function mountOfficeViewer() {
     camera.updateMatrixWorld();
     if (roomOutline) roomOutline.update();
     people?.update(camera,view,now);seatLabels?.update(camera,view);
+    if(PORCELAIN&&officeRoot)officeRoot.visible=view!=='building'||!!transition;
     floorLabel?.update();
     nightEnvironment?.update();
+    officeMat?.sync(view,theme.scheme);
     // Night replaces PBR lighting with the authored display shader, so a fresh
     // directional shadow pass contributes nothing to its output.
     renderer.shadowMap.autoUpdate=theme.scheme!=='dark';
@@ -300,7 +306,9 @@ export async function mountOfficeViewer() {
     const aspect = width/height;
     camera.left = -fitHeight*aspect/2; camera.right = fitHeight*aspect/2;
     camera.top = fitHeight/2; camera.bottom = -fitHeight/2;
-    const right=getWorkstationEditState().open?(document.querySelector('#office-workstations')?.getBoundingClientRect().width||380)+24:(document.querySelector('#host-artifact')||!document.querySelector('#space-cards-panel')?.hidden?300:0);
+    const visibleRail=!document.querySelector('#space-cards-panel')?.hidden;
+    const artifact=document.querySelector('#host-artifact');
+    const right=getWorkstationEditState().open?(document.querySelector('#office-workstations')?.getBoundingClientRect().width||380)+24:(artifact?.offsetWidth||visibleRail?300:0);
     const left=parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft;
     camera.setViewOffset(width,height,-(left-right)/2,0,width,height);
     camera.updateProjectionMatrix(); requestFrame();
@@ -336,7 +344,8 @@ export async function mountOfficeViewer() {
     const size = projected.getSize(new THREE.Vector3());
     const clearance=getWorkstationEditState().open?(parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft)+(document.querySelector('#office-workstations')?.getBoundingClientRect().width||380)+48:0;
     const aspect = Math.max(.1, (viewport.clientWidth-clearance)/Math.max(1, viewport.clientHeight));
-    fitHeight = Math.max(6, size.y, size.x/aspect) * 1.18;
+    const margin=PORCELAIN&&view==='building'&&object===model?1.01:PORCELAIN&&view==='office'&&object===officeRoot?1.24:1.18;
+    fitHeight = Math.max(6, size.y, size.x/aspect) * margin;
     camera.zoom = 1; camera.far = Math.max(600, distance*4);
     resize(); controls.update(); requestFrame();
   }
@@ -368,7 +377,7 @@ export async function mountOfficeViewer() {
       poses.push({ object, from: object.position.clone(), to: original.clone().add(new THREE.Vector3(0, state.offsetY, state.offsetZ)) });
     }
     facade9.visible = floorPresentation(9, next).showFacade;
-    if(contextRoot)contextRoot.visible=contextVisibleForView(next);
+    if(contextRoot)contextRoot.visible=PORCELAIN&&next==='office'?false:contextVisibleForView(next);
     // Keep surrounding buildings solid; retain the existing subdued ground/plinth.
     const visibility = visibilityBlend.destination(mesh => {
       if (next !== 'office') return 1;
@@ -468,6 +477,7 @@ export async function mountOfficeViewer() {
     officeBoard?.dispose();officeBoard=null;
     people?.dispose();seatLabels?.dispose();seatLabels=null;
     floorLabel?.dispose();
+    officeMat?.dispose();officeMat=null;
     if (frame) cancelAnimationFrame(frame);
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
@@ -523,10 +533,18 @@ export async function mountOfficeViewer() {
   listen($('#retry-model'),'click',()=>location.reload());
   listen($('#load-diagnostic-text'),'click',event=>event.target.select());
   loadingTimer=setInterval(renderLoading,1000);renderLoading();
-  const compare=$('#render-compare');compare.textContent=BAKED_MODE?'实时对比':'查看材质预览';
-  function compareURL(){const url=new URL(location.href);url.searchParams.set('render',BAKED_MODE?'realtime':'baked');url.searchParams.set('view',view);url.searchParams.set('v',VERSION);compare.href=url.href;}
+  const compare=$('#render-compare');
+  const compareDemo=document.body.classList.contains('porcelain-preview')&&BAKED_MODE;
+  if(compareDemo)compare.hidden=false;
+  compare.textContent=compareDemo?(PORCELAIN?'对照原版':'返回白瓷版'):(BAKED_MODE?'实时对比':'查看材质预览');
+  function compareURL(){
+    const url=new URL(location.href);
+    if(compareDemo)url.searchParams.set('style',PORCELAIN?'classic':'porcelain');
+    else url.searchParams.set('render',BAKED_MODE?'realtime':'baked');
+    url.searchParams.set('view',view);url.searchParams.set('v',VERSION);compare.href=url.href;
+  }
   compareURL();listen(compare,'click',compareURL);
-  const download=$('#model-download');download.href=MODEL_URL.href;download.download=BAKED_MODE?BAKED_MODEL:REALTIME_MODEL;
+  const download=$('#model-download');download.href=MODEL_URL.href;download.download=modelFile;
   download.setAttribute('aria-label',BAKED_MODE?'下载材质预览模型 GLB':'下载源模型（不含预览调色）');download.title=download.getAttribute('aria-label');
   bindModelDownload(download, MODEL_URL, { signal: aborter.signal });
   const info=$('#picture-info');info.title='滑块即时预览，保存参数后下次沿用；恢复默认不会覆盖已保存参数。明暗层次调节现有烘焙阴影的对比。';info.setAttribute('aria-label',info.title);
@@ -637,7 +655,11 @@ export async function mountOfficeViewer() {
     const fetchStarted=performance.now();
     const modelBytes=await loadModelBytes(MODEL_URL, { signal: aborter.signal,
       onState: transportState,
-      onProgress: (loaded,total) => { loadingStage('download',`正在读取模型 ${formatMB(loaded)} / ${formatMB(total)} · ${Math.floor(loaded/total*100)}%`); const bar=$('#model-progress');bar.max=total;bar.value=loaded;} });
+      onProgress: (loaded,total) => {
+        const bar=$('#model-progress');
+        loadingStage('download',`正在读取模型 ${formatMB(loaded)}`+(total?` / ${formatMB(total)} · ${Math.min(100,Math.floor(loaded/total*100))}%`:''));
+        if(total){bar.max=total;bar.value=loaded;}else bar.removeAttribute('value');
+      } });
     loadReport.decodedModelBytes=modelBytes.byteLength;
     loadReport.fetchMs=Math.round((performance.now()-fetchStarted)*10)/10;
     loadingStage('parse','下载与校验完成，正在解析模型和纹理');
@@ -679,11 +701,11 @@ export async function mountOfficeViewer() {
       loadReport.removedWorkstationTowers++;
       object.traverse(part=>{part.visible=false;});
     });
-    if(BAKED_MODE)loadReport.cutawayBake=await restoreCutawayBake(officeRoot,()=>disposed);
+    if(BAKED_MODE&&!PORCELAIN)loadReport.cutawayBake=await restoreCutawayBake(officeRoot,()=>disposed);
     if(disposed)return api;
-    if(BAKED_MODE){contextBake=await attachAstraContextBake(model,()=>disposed);loadReport.astraContext=contextBake.state;}
+    if(BAKED_MODE&&!PORCELAIN){contextBake=await attachAstraContextBake(model,()=>disposed);loadReport.astraContext=contextBake.state;}
     if(disposed){contextBake?.dispose();contextBake=null;return api;}
-    if(BAKED_MODE){structureBake=await attachStructureDayBake(model,()=>disposed);loadReport.structureDaylight=structureBake.state;}
+    if(BAKED_MODE&&!PORCELAIN){structureBake=await attachStructureDayBake(model,()=>disposed);loadReport.structureDaylight=structureBake.state;}
     if(disposed){structureBake?.dispose();structureBake=null;return api;}
     staticBatches=batchStaticGeometry(model);
     originalVisibility.clear();model.traverse(object=>{originalVisibility.set(object,object.visible);});cacheStaticTransforms(model);
@@ -693,7 +715,7 @@ export async function mountOfficeViewer() {
     await yieldToBrowser();if(disposed)return api;
     loadReport.materialPaths=summarizeMaterialPaths(model);
     if(BAKED_MODE){const coverage=materialCoverageCopy(loadReport.materialPaths);$('#material-coverage').textContent=coverage.summary;info.title=coverage.summary;info.setAttribute('aria-label',info.title);}
-    loadReport.colorPipeline={outputColorSpace:renderer.outputColorSpace,toneMapping:renderer.toneMapping,toneMappingExposure:renderer.toneMappingExposure,bakedMaps:"sRGB display/AgX atlas decoded once; unlit toneMapped=false",unlitSolids:"linear baseColor/COLOR_0 forwarded, no inferred AgX conversion",physicalShadows:"lit PBR only; unlit ignores receiveShadow"};
+    loadReport.colorPipeline={outputColorSpace:renderer.outputColorSpace,toneMapping:renderer.toneMapping,toneMappingExposure:renderer.toneMappingExposure,bakedMaps:PORCELAIN?"Porcelain / directional daylight and horizon occlusion, Standard sRGB":"sRGB display/AgX atlas decoded once; unlit toneMapped=false",unlitSolids:"linear baseColor/COLOR_0 forwarded, no inferred AgX conversion",physicalShadows:"lit PBR only; unlit ignores receiveShadow"};
     const seenTextures=new Set();
     model.traverse(object=>{
       for(const mat of (Array.isArray(object.material)?object.material:object.material?[object.material]:[])){
@@ -722,6 +744,7 @@ export async function mountOfficeViewer() {
     if(disposed)return api;
     loadReport.gpuPrepareMs=Math.round(performance.now()-gpuStarted);
     gpuPrepared=true;
+    if(PORCELAIN)officeMat=createOfficeMat(scene,floors.get(9));
     floorLabel=createFloorLabel({viewport,floor:floors.get(9),camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
       beginPreview:()=>{previewCamera=cameraPose();setView('exploded',{labelPreview:true});},
       endPreview:()=>{setView('building',{labelPreview:true,cameraTarget:previewCamera,animate:active()});previewCamera=null;},

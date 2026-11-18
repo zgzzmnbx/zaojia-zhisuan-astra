@@ -1,0 +1,22 @@
+body.studio.porcelain-preview #shell.office-shell > header.office-topbar,
+body.porcelain-preview .office-modebar [data-host-action],
+body.porcelain-preview .office-modebar #back-building,
+body.porcelain-preview .office-workspace[data-cards-open="false"] > #host-artifact,
+body.porcelain-preview .office-workspace[data-cards-open="false"] > .office-inspector {display:none!important}
+body.porcelain-preview #shell .office-workspace,
+body.porcelain-preview #shell .office-workspace > .office-scene {inset:0!important;width:100%!important;height:100%!important}
+body.porcelain-preview #shell .office-modebar {
+  position:absolute;z-index:4;top:16px;left:18px;right:auto;bottom:auto;
+  display:flex;align-items:center;gap:5px;padding:5px 8px!important;width:max-content;max-width:calc(100% - 38px);
+  min-height:42px;height:auto;border:1px solid var(--astra-line);border-radius:12px;
+  background:var(--astra-paper);box-shadow:0 2px 10px #253b6820;
+}
+.porcelain-title {font-size:14px;font-weight:650;padding:0 10px 0 5px;color:var(--astra-text);white-space:nowrap}
+html[data-viewer-view="building"] .porcelain-preview #office-people-reset {display:none}
+body.porcelain-preview #canvas-host,body.porcelain-preview #viewport {inset:0!important;height:100%!important}
+body.porcelain-preview #shell .office-workspace > #host-artifact {
+  position:absolute;z-index:20;top:72px;right:12px;width:var(--cards-width,280px);
+  box-sizing:border-box;border:1px solid var(--astra-line);border-radius:12px;
+}
+body.porcelain-preview #shell .office-workspace > .office-inspector {top:calc(78px + var(--host-artifact-height,100px))}
+body.porcelain-preview .office-modebar #theme-toggle {display:inline-flex!important}

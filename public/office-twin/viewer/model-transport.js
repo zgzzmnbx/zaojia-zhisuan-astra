@@ -5,7 +5,7 @@ const transportError=(message,code,retryable=false)=>Object.assign(new Error(mes
 const abortError=()=>new DOMException('读取已取消','AbortError');
 const sleep=(ms,signal)=>new Promise((resolve,reject)=>{if(signal?.aborted)return reject(abortError());const done=()=>{clearTimeout(timer);signal?.removeEventListener('abort',cancel);};const cancel=()=>{done();reject(abortError());};const timer=setTimeout(()=>{done();resolve();},ms);signal?.addEventListener('abort',cancel,{once:true});});
 
-async function readRequest(url,{signal,expectedBytes,onChunk,onState,fetchFn,idleTimeoutMs,maxRequestMs,retries,retryDelayMs}){
+async function readRequest(url,{signal,expectedBytes,onChunk,onLength,onState,fetchFn,idleTimeoutMs,maxRequestMs,retries,retryDelayMs}){
   for(let attempt=0;attempt<=retries;attempt++){
     if(signal?.aborted)throw abortError();
     const controller=new AbortController();let idleTimer,totalTimer,timeoutFailure,reader;
@@ -15,6 +15,8 @@ async function readRequest(url,{signal,expectedBytes,onChunk,onState,fetchFn,idl
     armIdle();totalTimer=setTimeout(timeout,maxRequestMs);onChunk?.(0);onState?.({phase:attempt?'retry':'request',file:url.pathname.split('/').pop(),attempt:attempt+1,maxAttempts:retries+1});
     try{
       const response=await fetchFn(url,{signal:controller.signal,credentials:'same-origin'});
+      const length=Number(response.headers?.get('content-length'));
+      if(Number.isSafeInteger(length)&&length>0&&!response.headers?.get('content-encoding'))onLength?.(length);
       if(!response.ok){const auth=[401,403].includes(response.status);throw transportError(auth?'登录权限已失效，请重新登录本站':`模型请求失败（HTTP ${response.status}）`,auth?'MODEL_AUTH':'MODEL_HTTP',[408,429].includes(response.status)||response.status>=500);}
       if((response.headers?.get('content-type')||'').includes('text/html'))throw transportError('模型请求返回登录页面，请重新登录本站','MODEL_AUTH');
       let count=0;const chunks=[];const output=expectedBytes?new Uint8Array(expectedBytes):null;
@@ -45,7 +47,9 @@ export async function loadModelBytes(url,{signal,onProgress,onState,fetchFn=fetc
   const source=new URL(url);const config={signal,fetchFn,idleTimeoutMs,maxRequestMs,retries,retryDelayMs,onState};
   onState?.({phase:'manifest',file:source.pathname.split('/').pop()});
   if(!source.pathname.endsWith('.parts.json')){
-    const b=await readRequest(source,{...config,onChunk:n=>onProgress?.(n,source.pathname.includes('realtime')?6312932:43100924)});onProgress?.(b.byteLength,b.byteLength);return b;
+    let total=0;
+    const b=await readRequest(source,{...config,onLength:n=>{total=n;},onChunk:n=>onProgress?.(n,total)});
+    onProgress?.(b.byteLength,b.byteLength);return b;
   }
   const raw=await readRequest(source,config);let manifest;
   try{manifest=JSON.parse(new TextDecoder().decode(raw));}catch{throw transportError('模型清单读取失败，请刷新后重试','MODEL_MANIFEST');}
