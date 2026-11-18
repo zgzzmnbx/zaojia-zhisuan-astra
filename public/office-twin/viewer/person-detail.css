@@ -35,7 +35,7 @@
 .pd-profile { gap: 4px 10px; border-inline-start: 1px solid var(--astra-line); padding-inline-start: 10px; font-size: 12px; }
 .pd-attribute { overflow-wrap: anywhere; }
 .pd-attribute > span { margin-right: 5px; color: var(--astra-muted); }
-.pd-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); padding: 11px 0; margin: 13px 0; border-block: 1px solid var(--astra-line); }
+.pd-stats { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0,1fr); padding: 11px 0; margin: 13px 0; border-block: 1px solid var(--astra-line); }
 .pd-stat { padding-inline: 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 5px; }
 .pd-stat:first-child { padding-inline-start: 0; }
 .pd-stat + .pd-stat { border-inline-start: 1px solid var(--astra-line); }

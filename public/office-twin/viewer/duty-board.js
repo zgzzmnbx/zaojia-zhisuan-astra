@@ -63,7 +63,7 @@ export function officeExamples(employees) {
   }
   for (const [name,key,project,action,status,description] of surveyCases) {
     const people = matches(name);
-    if (people.length === 1) examples.push({id:'survey:'+key,employeeId:people[0].id,title:project+' · '+action,status,description,demo:true,example:'survey'});
+    if (people.length === 1) examples.push({id:'survey:'+key,employeeId:people[0].id,projectName:project,title:project+' · '+action,status,description,demo:true,example:'survey'});
   }
   return examples;
 }
@@ -96,8 +96,7 @@ export function indexPersonTasks(snapshot) {
 }
 export const exampleLabel = task => task.example ? '示例' : '演示';
 export function dutyCountLabel(live) {
-  const real = live.filter(t=>!t.demo).length, examples = live.length-real;
-  return [real && `${real} 项待办`,examples && `${examples} 项示例`].filter(Boolean).join(' · ');
+  return live.length ? `${live.length} 项待办` : '';
 }
 export function emptyDutyLabel(snapshot) {
   return snapshot.inboxError || snapshot.receiptError ? '待办暂未刷新' : snapshot.inboxLoading ? '正在读取待办…' : '暂无待办';

@@ -844,7 +844,7 @@ test('return walker waits for a blocked doorway and retries after it clears',()=
  for(let i=0;i<1500&&!walk.state().done;i++)walk.step(.05,true,[]);assert.equal(walk.state().done,true);
 });
 import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches.js';
-import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority} from '../public/office-twin/viewer/duty-board.js';
+import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority,dutyCountLabel} from '../public/office-twin/viewer/duty-board.js';
 import {pendingOfficeTask} from '../03-Src/studio/office-review.ts';
 import {applyTaskPlan,emptyMember,memberEntries,olderProjectReviewKeys} from '../public/office-twin/viewer/task-plan.js';
 import {officeCameraKey,readOfficeCamera} from '../public/office-twin/viewer/office-camera.js';
@@ -900,6 +900,21 @@ test('legacy and survey examples remain assigned to the same people across roste
   assert.ok(examples.every(t=>t.demo));
   assert.deepEqual(examples.filter(t=>t.employeeId==='7').map(t=>t.status),['审核中','待复核']);
   assert.ok(!examples.some(t=>t.employeeId==='10'));
+});
+test('personal pending totals include each visible assignment regardless of its source',()=>{
+  const person={id:'reviewer',name:'鹿学文'};
+  const samples=officeExamples([person]);
+  const receipt={id:'receipt',employeeId:person.id,dispatchId:'r1',reviewRound:1,status:'待复核',title:'成果复核'};
+  const raw=indexPersonTasks({tasks:[receipt,...samples],pendingTasks:[receipt]});
+  const projected=applyTaskPlan(raw,{[person.id]:{
+    ...emptyMember(),tasks:[{id:'manual:local',title:'现场复核',status:'进行中'}],
+    adjustments:{[samples[1].id]:{status:'已完成'}},
+  }}).get(person.id);
+  const {live}=personTaskSummary(projected);
+  assert.equal(dutyCountLabel(live),'3 项待办');
+  assert.equal(projected.length-live.length,1);
+  assert.equal(dutyCountLabel(personTaskSummary(samples).live),'2 项待办');
+  assert.equal(dutyCountLabel([]),'');
 });
 test('personal inbox keeps other results and shares a single entry per current dispatch and person',()=>{
   const base={platform:'default',reviewerName:'大尾巴',projectName:'工程',taskName:'复核甲',artifactName:'甲.xlsx',reviewerRef:'P1',taskId:'r1'};

@@ -95,8 +95,8 @@ function groupedQueue(tasks, current) {
   for (const task of tasks) {
     if (task === current) continue;
     const ended = taskState(task).done;
-    const kind = ended ? 'closed' : task.demo ? 'sample' : 'project';
-    const label = ended ? '已结束的任务' : task.demo ? '沙盘示例' : task.projectName || (task.manual ? '自建任务' : '其他待办');
+    const kind = ended ? 'closed' : 'project';
+    const label = ended ? '已结束的任务' : task.projectName || (task.manual ? '自建任务' : '其他待办');
     const key = JSON.stringify([kind,label]);
     if (!groups.has(key)) groups.set(key,{key,kind,label,tasks:[]});
     groups.get(key).tasks.push(task);
@@ -107,7 +107,7 @@ function groupedQueue(tasks, current) {
   head.append(node('span','pd-total',String(tasks.length - (current ? 1 : 0))));
   queue.append(head);
   const pendingCount = [...groups.values()].filter(g=>g.kind==='project').reduce((n,g)=>n+g.tasks.length,0);
-  const order = {project:0,sample:1,closed:2};
+  const order = {project:0,closed:1};
   for (const group of [...groups.values()].sort((a,b)=>order[a.kind]-order[b.kind])) {
     if (group.kind==='project' && pendingCount<=3) {
       group.tasks.forEach((task,i)=>queue.append(otherTask(task,JSON.stringify([group.key,task.key || task.id || task.dispatchId || i,task.reviewRound]),true)));
@@ -117,7 +117,7 @@ function groupedQueue(tasks, current) {
     const name = node('span','pd-group-name',displayTitle(group.label));
     const count = node('span','pd-count',String(group.tasks.length));
     count.setAttribute('aria-label',group.tasks.length+' 项');
-    summary.append(glyph(group.kind==='closed'?'check-circle':group.kind==='sample'?'stack':'folder-open'),name,count,glyph('caret-down'));
+    summary.append(glyph(group.kind==='closed'?'check-circle':'folder-open'),name,count,glyph('caret-down'));
     const contents = node('div','pd-entries');
     // Long histories stay cheap until requested. Keys and the scroll anchor survive live refreshes.
     const populate = () => {
@@ -166,9 +166,8 @@ export function mountPersonDetail(pane, actions) {
       return line;
     }));
     profile.hidden = !labels.length;
-    const real = live.filter(t=>!t.demo).length;
     const stats = get('.pd-stats');
-    stats.replaceChildren(...[[real,'待办'],[live.length-real,'示例'],[tasks.length-live.length,'已结束']].map(([count,label])=>{
+    stats.replaceChildren(...[[live.length,'待办'],[tasks.length-live.length,'已结束']].map(([count,label])=>{
       const cell = node('div','pd-stat');
       cell.append(node('strong','',String(count)),node('span','',label));
       return cell;
