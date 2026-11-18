@@ -205,6 +205,12 @@ test('manual limits exclude the back and underside and leave a complete automati
  }
 });
 import {classifyNightRole,nightSeatId,NIGHT_LIGHTING} from '../public/office-twin/viewer/night-lighting-policy.js';
+test('campus trees keep the vegetation role alongside emissive architectural accents',()=>{
+ const parent={name:'ContextBuildings'};
+ assert.equal(classifyNightRole({parent,userData:{night_role:'vegetation'}}),'vegetation');
+ assert.equal(classifyNightRole({parent,userData:{night_role:'accent'}}),'accent');
+ assert.equal(classifyNightRole({parent,userData:{}}),'context');
+});
 test('floor lighting survives primitive leaves and batches without sharing facade or furniture gains',()=>{
  for(const name of ['H1_F09_floor_slab','Core_floor','R_E_floor','CORE_SERVICE_NE_floor']){
   const source={name:'mesh_primitive',parent:{name,parent:{name:'H1_F09_Office'}}};

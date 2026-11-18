@@ -16,7 +16,7 @@ from receivers import Receiver
 
 ROOT=Path(__file__).resolve().parents[3]
 PACKAGE=ROOT/'public/office-twin'
-MODEL='H1-porcelain-v0.2.0.glb'
+MODEL='H1-porcelain-v0.3.1.glb'
 BASELINE='H1-baked-v0.6.7.glb'
 BASELINE_HASH='c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545'
 LAYOUT_HASH='ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a'
@@ -159,6 +159,10 @@ def verify(source,generated):
             assert len(ink)==len(generated.array(attrs['POSITION']))
             ink_values.update(np.unique(ink).tolist())
     assert ink_values=={0,1,2,3},'Missing or unknown porcelain pigment band'
+    trees=generated.doc['nodes'][generated.named['Porcelain_Campus_vegetation']]
+    assert trees['extras']['night_role']=='vegetation'
+    tree_primitive,=generated.doc['meshes'][trees['mesh']]['primitives']
+    assert set(np.unique(generated.array(tree_primitive['attributes']['_BLUEINK'])))=={0,2}
     return {'lockedNodes':locked_nodes,'lockedTriangles':triangles,'storeys':20}
 
 

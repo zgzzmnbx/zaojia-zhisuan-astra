@@ -13,7 +13,7 @@ import {porcelainDaylight} from './porcelain-style.js';
 // Static floors use a Cycles night bake; furniture/people keep adjustable display lighting.
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
-const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10};
+const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10,vegetation:11};
 export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared,bakedFloor=false,vertexMonitor=false,referenceContext=false,referenceStructure=false){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
@@ -21,15 +21,22 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
     const themeInk = material.userData.porcelain && shared.porcelainPalette;
+    if(themeInk || role==='vegetation')shader.vertexShader='attribute float _blueink;\n'+shader.vertexShader;
     if(themeInk){
       shader.uniforms.porcelainInk = themeInk.inks;
       shader.uniforms.porcelainLampTint = themeInk.lamp;
-      shader.vertexShader = 'attribute float _blueink; uniform vec3 porcelainInk[4];\n' + shader.vertexShader;
+      shader.vertexShader = 'uniform vec3 porcelainInk[4];\n' + shader.vertexShader;
       shader.vertexShader = shader.vertexShader.replace('#include <color_vertex>', `#include <color_vertex>
         #if defined(USE_COLOR) || defined(USE_COLOR_ALPHA)
         vColor.rgb *= porcelainInk[int(_blueink)];
         #endif`);
       shader.fragmentShader = 'uniform vec3 porcelainLampTint;\n' + shader.fragmentShader;
+    }
+    if(role==='vegetation'){
+      // The tree batch carries leaf pigment on crowns and neutral pigment on bark.
+      shader.vertexShader='varying float porcelainLeaf;\n'+shader.vertexShader.replace(
+        '#include <begin_vertex>','#include <begin_vertex>\nporcelainLeaf=step(.5,_blueink);');
+      shader.fragmentShader='varying float porcelainLeaf;\n'+shader.fragmentShader;
     }
     if(referenceStructure){
       Object.assign(shader.uniforms,{officeEntryBake:{value:shared.structureBake.entry},officeExteriorBake:{value:shared.structureBake.exterior},officeInteriorBake:{value:shared.structureBake.interior}});
@@ -182,6 +189,12 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         ${themeInk?'if(officeNightRole==1.||officeNightRole==2.||officeNightRole==3.||officeNightRole==5.)emission*=porcelainLampTint;':''}
         if(officeNightRole==7.){shell=vec3(0.);emission=sourceColor*.8;}
         shell*=officeNightRole==4.||officeNightRole==8.?officeNightGains.z:officeNightRole==6.||officeNightRole==5.||officeNightRole==9.||officeNightRole==10.?1.:officeNightGains.x;
+        ${role==='vegetation'?`
+        vec3 canopy=vec3(.032,.066,.058)+.09*min(sourceColor,vec3(.45));
+        vec3 bark=vec3(.066,.054,.044);
+        float sky=.28+.52*key+.15*max(n.y,0.)+.10*side;
+        float contact=mix(.72,1.12,smoothstep(.01,.26,lum));
+        shell=mix(bark,canopy,porcelainLeaf)*sky*contact*officeAmbient;`:''}
         emission*=officeNightRole==4.?officeNightLamps.x:officeNightRole==5.?officeNightLamps.y:officeNightRole==7.?officeNightGains.y:officeNightGains.w;
         emission=mix(vec3(dot(emission,vec3(.2126,.7152,.0722))),emission,officeNightBlue);
         vec3 haloEmission=officeNightRole==5.?emission*${NIGHT_LIGHTING.screenBloomGain}:emission;

@@ -1,12 +1,18 @@
 # H1 办公室 · 白瓷与七种主题蓝
 
-Astra 办公室沙盘独立 Demo v0.3.0，2026 年 11 月 18 日。20 层楼体采用白瓷立面、钴蓝窗带与退台屋顶。九楼保留原始房间、家具与工位的几何位置，重新制作地面、隔断、桌椅的材质与照明。
+Astra 办公室沙盘独立 Demo v0.3.1，2026 年 11 月 18 日。20 层楼体采用白瓷立面、钴蓝窗带与退台屋顶。九楼保留原始房间、家具与工位的几何位置，重新制作地面、隔断、桌椅的材质与照明。
 
 ## 运行与对照
 
 1. 完整解压本地运行包，双击根目录的 **预览白瓷办公室.bat**。预览需要 Python 3.10 或以上、FastAPI、Uvicorn 和支持 WebGL 2 的浏览器。渲染使用包内的模型、字体和 Three.js。
 2. 点 **展开9楼** 拉出办公层，点 **整楼** 收回。在九楼打开工作栏，可以定位房间、点选人物、将人移入复核区或送回工位。**对照原版** 会在同一视图打开原模型，点 **返回白瓷版** 即可切回。
 3. 独立预览提供 5 名模拟员工。工位设置保存到当前解压目录，关闭启动窗口即可停止服务。默认监听本机 5278 端口，端口已占用时另选本机空闲端口。可选用 `python tools/office-twin/porcelain/preview.py --port 5279 --no-browser` 指定端口。
+
+## 园区夜景
+
+园区 23 棵树共用一个植被绘制批次。低饱和的灰绿树冠与灰棕树干接受冷色环境光，暗部沿用模型中烘焙的遮蔽。树木的自发光为零。窗带、标识和办公室屏幕继续使用各自的夜间灯光。
+
+与 v0.3.0 相比，全场三角形、白天顶点颜色与三张内嵌贴图逐项一致。入口同机位的日景画布像素一致，夜景实测整楼多 1 次绘制。已检查整楼、展开九楼、七种主题蓝，以及景深和辉光开关。当前模型 12.59 MB。
 
 ## 展开9楼与背景虚化
 
@@ -16,7 +22,7 @@ Astra 办公室沙盘独立 Demo v0.3.0，2026 年 11 月 18 日。20 层楼体�
 
 在 1440 × 900 和 1024 × 768 两种窗口下，分别从 v0.2.0 提交 8005f19 加载原查看器，同步采样展开和收回各 6 个时刻。两版托盘四角的屏幕偏差均小于 0.1 像素。另在 8 个过渡画面逐像素比对遮挡，九楼可见区域与直接深度渲染一致。鼠标悬停、离开、点击固定和中途反向均按同一轨迹运行。
 
-本机 Intel Arc B390、Chromium、1440 × 900、DPR 1，5 名模拟人员。持续拖动 4.1 秒，展开九楼日景测得 53.3 FPS、夜景 59.8 FPS。整楼白天和夜间均约 60 FPS。隐藏后停止绘制，返回整楼或关闭虚化后释放景深缓冲。
+v0.3.0 本机 Intel Arc B390、Chromium、1440 × 900、DPR 1，5 名模拟人员。持续拖动 4.1 秒，展开九楼日景测得 53.3 FPS、夜景 59.8 FPS。整楼白天和夜间均约 60 FPS。隐藏后停止绘制，返回整楼或关闭虚化后释放景深缓冲。
 
 ## 主题蓝
 
@@ -67,4 +73,4 @@ python tools/office-twin/porcelain/build.py --verify-only
 python tools/office-twin/porcelain/build.py
 ```
 
-生成器在临时文件中完成烘焙，通过几何核对后写入 `public/office-twin/models/H1-porcelain-v0.2.0.glb`。原始及生成模型、平面和预览图片随本地交付包提供。版本及文件指纹记录在 `public/office-twin/SOURCE.json`。Astra 开发基线为 `6fc00dd`，本次候选分支为 `codex/office-porcelain-demo-20261118`。改写前的源码已推至 [GitHub 备份分支](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/backup-office-before-porcelain-20261118)。
+生成器在临时文件中完成烘焙，通过几何核对后写入 `public/office-twin/models/H1-porcelain-v0.3.1.glb`。原始及生成模型、平面和预览图片随本地交付包提供。版本及文件指纹记录在 `public/office-twin/SOURCE.json`。Astra 开发基线为 `6fc00dd`，本次候选分支为 `codex/office-porcelain-demo-20261118`。改写前的源码已推至 [GitHub 备份分支](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/backup-office-before-porcelain-20261118)。

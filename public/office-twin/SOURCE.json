@@ -72,14 +72,14 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "2d898aaf8950b11cab295935feb289abbe3190bbc909c5cdc31da1b96d7bcf34",
+    "viewer/index.html": "f4b164fd7344487b96147db7e7480440e5c19a66518a2af46fb6cb5e7a68fd82",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "1d1c8eca2bcf613ad8264b99e0c2a42763708899218b8f33c49960b30f4a1568",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
-    "viewer/night-environment.js": "59964021afdcaa67b6dd571fa6f39780586e1a5a33564af44a61895b9fb86b0a",
-    "viewer/night-lighting-policy.js": "f9dc88f2dfd4d236bb7dfa9a2342967311fcaf07b8b274facf436e5c87e429c8",
+    "viewer/night-environment.js": "9a578fa18f68cdebed135f239a8aca23f3946501baa753a60633f5e85701b032",
+    "viewer/night-lighting-policy.js": "419166dc036c04151e8d168cb4039a2c66006a0c18d1de85aa391815dc5142cf",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
     "viewer/office-settings-store.js": "0914f430a027598e645865ee0a07515a47e1a6e423c0840ac12f13f7fc514139",
@@ -88,7 +88,7 @@
     "viewer/porcelain-demo.css": "12524c569393958bf8149b18477cd7913e3811a98497e011330d5bfc03970058",
     "viewer/porcelain-demo.js": "942bc6a96c3878022ae329145701ec32914542952b12355b3e243a15d3a6702b",
     "viewer/porcelain-palette.js": "3fbef686772b98dd206e88ea36a84bb36a2e4025062b1508e43d9c808c48a362",
-    "viewer/porcelain-style.js": "d60933fa1f2c60b0c3d433bbd0cb4a90fdbf088acb2c5075a78a8a9ed558fa74",
+    "viewer/porcelain-style.js": "a18d2affde2b830d93e72be9a41c85cf9c78a58ffeddb30d53dab2e9a6722643",
     "viewer/README.md": "36bb727daadaf810b7373b48be58d7473f277ceb9dd0c34a04f2cd325866619c",
     "viewer/release.js": "0b2f16d6d847f6198053cf6511a7bf395a4fdacaf90073a7c62af4e11fd4efa4",
     "viewer/sandbox-layout.js": "511ea27a76ac858331b6d8d6922c672e9c4e29cdfabc537778db03c60ed13b4d",
@@ -114,7 +114,7 @@
     "viewer/verify-model.mjs": "7ad800902f7e8f6b931f8bb1f3022a3d245530d4af45e7a9f479f6ffed1a6a8c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
     "viewer/miniature-focus.js": "a63322a700211665bd0fbfc100f8ec3645473e40bb8aafeb41eb6b7ce6fa6ef5",
-    "viewer/viewer.js": "86f397d3ce0331794adfa77922db8c55e1fad15aa3aa0563a3dcca17e7dc9136",
+    "viewer/viewer.js": "3ff9b8d9974c9d2deaba13c7718307df3ccb6344b505f81676fb3cbe83939957",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "cb0ad38ebc8595b9946b97044fb50caa77fac6cef119efc5fcc3864032180752",
@@ -175,7 +175,8 @@
     "viewer/people/appearances.js": "5c3cae4f81eb7caa98a20c058baef995cd0299da8de349ab7fc8e760d490fe22",
     "viewer/people/appearance-preview.js": "a9aed1bf99cac282fc07f1324aef7c5a27483c21fc1ee3b2b8b51709ea34d132",
     "viewer/person-navigation.js": "722fd8b1a71734c6c7dbc4f12147b47c94e893b7d6a4c271205d8e0602298f33",
-    "viewer/people/person-colors.js": "3a0bbd2ebf089fe16a31877875fbafa9826bbc76ae85e58d60911c07e31311aa"
+    "viewer/people/person-colors.js": "3a0bbd2ebf089fe16a31877875fbafa9826bbc76ae85e58d60911c07e31311aa",
+    "models/H1-porcelain-v0.3.1.glb": "ae9dd77b984663f9cfaf5c8969a564fd7c2bf43058fb6c207d7ae3b4dd09c648"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -289,12 +290,12 @@
     }
   },
   "porcelainDemo": {
-    "version": "0.3.0",
+    "version": "0.3.1",
     "baseline": "6fc00dd",
     "sourceModel": "models/H1-baked-v0.6.7.glb",
-    "model": "models/H1-porcelain-v0.2.0.glb",
-    "modelBytes": 12614940,
-    "modelSHA256": "edf4ed82c48782eb78ddf7ecaf261ae54771596ebc298814d6d96002c7ec42a0",
+    "model": "models/H1-porcelain-v0.3.1.glb",
+    "modelBytes": 12594284,
+    "modelSHA256": "ae9dd77b984663f9cfaf5c8969a564fd7c2bf43058fb6c207d7ae3b4dd09c648",
     "planSHA256": "ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a",
     "frozenDetailedFloor": {
       "nodes": 2405,
@@ -327,6 +328,12 @@
         100
       ],
       "fullResolutionOcclusion": true
+    },
+    "nightVegetation": {
+      "role": "vegetation",
+      "emissive": false,
+      "trees": 23,
+      "batches": 1
     }
   }
 }
