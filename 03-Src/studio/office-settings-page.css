@@ -1,31 +1,58 @@
 .office-task-page {padding:0;background:var(--canvas)}
-.office-management {display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box;width:min(1080px,calc(100vw - 48px));height:min(800px,calc(100dvh - 64px));margin:max(32px,calc((100dvh - 800px)/2)) auto;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink)}
+.office-management {
+  box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden;
+  width:min(1080px,calc(100vw - 48px));height:min(800px,calc(100dvh - 64px));
+  margin:max(32px,calc((100dvh - 800px)/2)) auto;border:1px solid var(--line);
+  border-radius:20px;background:var(--paper);color:var(--ink);
+}
 .office-management[data-embedded=true] {width:100%;height:100dvh;margin:0;border:0;border-radius:0}
 .office-settings-sidebar {min-height:0;overflow:auto;background:var(--canvas);border-right:1px solid var(--line)}
 .office-settings-sidebar .settings-navigation {border:0;overflow:visible}
-.office-settings-sidebar .office-preview-links {padding-top:10px;border-top:1px solid var(--line)}
-.channel-heading,.settings-person-select,.settings-person-select label {display:flex;align-items:center;gap:10px}
-.setting-intro,.setting-note,.settings-actions>span,.channel-heading small,.switch-row small {color:var(--muted);line-height:1.6}
-.setting-intro {margin:-8px 0 20px}
-.setting-fields {min-width:0;display:grid;gap:16px;margin:0;padding:0;border:0}
-.setting-fields .input,.setting-fields .select {border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);min-height:38px;padding:7px 10px;font:inherit}
-.setting-row {display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:10px;border-bottom:1px solid var(--line)}
-.switch-row small {display:block;font-size:12px;margin-top:3px}
-.office-switch {appearance:none;position:relative;width:40px;height:24px;border-radius:99px;border:1px solid var(--muted);background:var(--muted);cursor:pointer;flex:none}
-.office-switch::before {content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white}
+.office-settings-sidebar .office-preview-links {margin:0 10px;padding:12px 0;border-top:1px solid var(--line)}
+.office-management .settings-section {display:flex;flex-direction:column;padding:0}
+.office-management .settings-section>p {margin:var(--office-pad)}
+.office-settings-form .setting-fields {display:block}
+.settings-person-select {grid-template-columns:minmax(0,1fr) auto;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.office-management .profile-grid {
+  display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:16px 18px;padding-top:20px;
+}
+.office-management .profile-grid label:nth-child(n+3) {grid-column:1/-1}
+.office-settings-form .switch-row {
+  display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 0 20px;
+  border-bottom:1px solid var(--line);cursor:pointer;
+}
+.office-settings-form .switch-row b {font-size:16px;font-weight:600}
+.office-settings-form .switch-row small {display:block;margin-top:3px;color:var(--muted);font-size:13px;line-height:1.6}
+.office-switch {
+  appearance:none;position:relative;flex:none;width:38px;height:22px;border:1px solid var(--muted);
+  border-radius:99px;background:var(--muted);cursor:pointer;
+}
+.office-switch::before {content:"";position:absolute;inset:2px auto auto 2px;width:16px;height:16px;border-radius:50%;background:white}
 .office-switch:checked {background:var(--astra-primary);border-color:var(--astra-primary)}
 .office-switch:checked::before {transform:translateX(16px)}
-.office-management :is(button,a,input,textarea,select,[role=tabpanel]):focus-visible {outline:2px solid var(--astra-primary);outline-offset:2px}
-.channel-row {display:grid;gap:7px}.channel-heading label {font-size:16px;font-weight:600}
-.setting-tag {padding:2px 8px;border-radius:99px;background:var(--canvas);color:var(--muted);font-size:12px}
-.setting-note {font-size:13px}.settings-actions {display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:14px}
-.settings-actions>span {font-size:13px}.settings-error {color:var(--ink);border-inline-start:3px solid #cc7853;padding:10px}
-.settings-person-select {justify-content:space-between;flex-wrap:wrap}
-.profile-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.profile-grid label {display:grid;gap:6px}.profile-grid label:last-child {grid-column:1/-1}.profile-grid textarea {width:100%;height:auto;resize:vertical}
-@media(max-width:700px){
- .office-management {width:calc(100vw - 16px);height:calc(100dvh - 24px);margin:12px auto;border-radius:14px}
- .office-settings-sidebar {display:flex;overflow:auto;border:0;border-bottom:1px solid var(--line)}
- .office-settings-sidebar .settings-navigation {flex-shrink:0}
- .office-settings-sidebar .office-preview-links {border:0;border-inline-start:1px solid var(--line);padding:8px}
+.office-channels {display:grid;gap:16px;padding-top:20px}
+.channel-row {display:grid;align-items:center;gap:6px}
+.channel-heading {display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.channel-heading label {font-size:14px;font-weight:600}
+.channel-heading small,.setting-note {color:var(--muted);font-size:12px}
+.channel-heading small {flex-basis:100%}
+.setting-tag {padding:1px 6px;border:1px solid var(--line);border-radius:5px;color:var(--muted);font-size:12px}
+.settings-error {border-inline-start:3px solid var(--office-returned);padding:8px 12px;font-size:13px;overflow-wrap:anywhere}
+@container office-panel (min-width:450px) {
+  .office-management .profile-grid {grid-template-columns:minmax(0,2fr) minmax(120px,1fr)}
+  .office-channels {grid-template-columns:minmax(110px,auto) minmax(0,1fr);column-gap:18px}
+  .office-channels .channel-row {grid-column:1/-1;grid-template-columns:subgrid}
+  .office-channels .setting-note {grid-column:2}
 }
-@media(max-width:440px){.profile-grid{grid-template-columns:1fr}}
+@media(max-width:700px) {
+  .office-management {width:calc(100vw - 16px);height:calc(100dvh - 24px);margin:12px auto;border-radius:14px}
+  .office-settings-sidebar {display:flex;overflow:auto;border:0;border-bottom:1px solid var(--line)}
+  .office-settings-sidebar .settings-navigation {flex:none}
+  .office-settings-sidebar .office-preview-links {margin:0;border:0;border-inline-start:1px solid var(--line);padding:8px}
+}
+@media(max-width:480px) {
+  .office-settings-sidebar .settings-navigation {padding:6px;gap:2px}
+  .office-settings-sidebar .settings-navigation button {padding:8px 6px;gap:4px}
+  .office-settings-sidebar .office-preview-links {margin-inline-start:auto}
+  .office-preview-links button>span:not(.astra-icon) {display:none}
+}

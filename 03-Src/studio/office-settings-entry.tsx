@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {icon as glyph} from '../icons.js';
+import Icon from './OfficeSettingsIcon';
 import OfficeTaskSettings from './OfficeTaskSettings';
 import OfficeChatSettings from './OfficeChatSettings';
 import OfficeProfileSettings from './OfficeProfileSettings';
@@ -9,7 +9,6 @@ import './settings-dialog.css';
 import './office-settings-page.css';
 
 const namespace='astra-office-settings:v1';
-function Icon({name}:{name:string}){return <span className="astra-icon" aria-hidden="true" dangerouslySetInnerHTML={{__html:glyph(name)}}/>;}
 const tabs=[{id:'tasks',label:'人员任务',icon:'list-checks'},{id:'profiles',label:'人员资料',icon:'users'},{id:'chat',label:'聊天联动',icon:'message'}] as const;
 type Tab=typeof tabs[number]['id'];
 const query=new URLSearchParams(location.search),embedded=parent!==window;
@@ -54,8 +53,8 @@ function OfficeSettings(){
       const n=tabs.length,next=({ArrowDown:(i+1)%n,ArrowRight:(i+1)%n,ArrowUp:(i+n-1)%n,ArrowLeft:(i+n-1)%n,Home:0,End:n-1} as Record<string,number>)[e.key];
       if(next!==undefined){e.preventDefault();buttons.current[next]?.focus();navigate(tabs[next].id);}
     }}>{tabs.map(({id,label,icon},i)=><button key={id} className={tab===id?'is-active':''} role="tab" id={'tab-'+id} aria-selected={tab===id} aria-controls={'panel-'+id} tabIndex={tab===id?0:-1} disabled={busy} ref={el=>{buttons.current[i]=el;}} onClick={()=>navigate(id)}><Icon name={icon}/>{label}</button>)}</nav>
-      <nav className="settings-navigation office-preview-links" aria-label="现场调节"><button disabled={busy} onClick={()=>preview('seats')}><Icon name="pin"/>人员工位</button><button disabled={busy} onClick={()=>preview('picture')}><Icon name="buildings"/>建筑外观</button></nav>
-    </aside><div className="settings-content">{tabs.map(({id,label})=><section key={id} role="tabpanel" className="settings-section" id={'panel-'+id} aria-labelledby={'tab-'+id} tabIndex={0} hidden={tab!==id}><h3 className="settings-section-title">{label}</h3>
+      <nav className="settings-navigation office-preview-links" aria-label="现场调节"><button aria-label="人员工位" title="人员工位" disabled={busy} onClick={()=>preview('seats')}><Icon name="pin"/><span>人员工位</span></button><button aria-label="建筑外观" title="建筑外观" disabled={busy} onClick={()=>preview('picture')}><Icon name="buildings"/><span>建筑外观</span></button></nav>
+    </aside><div className="settings-content">{tabs.map(({id})=><section key={id} role="tabpanel" className="settings-section" id={'panel-'+id} aria-labelledby={'tab-'+id} tabIndex={0} hidden={tab!==id}>
       {visited.has(id)&&(id==='tasks'?<OfficeTaskSettings currentTasks={tasks} initialPerson={person} onBusy={s=>saving(!!s)} onSaved={value=>send('saved',{value})}/>:id==='profiles'?<OfficeProfileSettings onBusy={saving} onSave={()=>send('roster-saved')}/>:<OfficeChatSettings onBusy={saving} onSave={value=>send('chat-saved',{value})}/>)}
     </section>)}</div></div></main>;
 }

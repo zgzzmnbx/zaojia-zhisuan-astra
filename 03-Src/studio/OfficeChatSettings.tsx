@@ -27,18 +27,18 @@ export default function OfficeChatSettings({onBusy,onSave}:{onBusy:(v:boolean)=>
     finally{setSaving(false);onBusy(false);}
   }
   const dirty=!!draft&&JSON.stringify(draft)!==JSON.stringify(saved);
-  return <><p className="setting-intro">在九楼石萌的小人头顶显示指定群里的本人新发言，气泡会自动收起。</p>
-    {draft&&<form onSubmit={e=>{e.preventDefault();void save();}}><fieldset disabled={saving} className="setting-fields">
-      <label className="setting-row switch-row"><span><b>显示聊天气泡</b><small>{saved?.enabled?'已启用群消息读取':'当前已关闭群消息读取'}</small></span>
-        <input type="checkbox" {...{switch:''}} role="switch" className="office-switch" checked={draft.enabled} onChange={e=>{setDraft({...draft,enabled:e.target.checked});setNotice('');}}/></label>
+  return <>
+    {draft&&<form className="office-settings-form" onSubmit={e=>{e.preventDefault();void save();}}><fieldset disabled={saving} className="setting-fields">
+      <label className="setting-row switch-row"><span><b>显示聊天气泡</b><small id="office-chat-hint">在九楼石萌的头顶显示本人在指定群里的新发言。</small></span>
+        <input type="checkbox" {...{switch:''}} role="switch" aria-label="显示聊天气泡" aria-describedby="office-chat-hint" className="office-switch" checked={draft.enabled} onChange={e=>{setDraft({...draft,enabled:e.target.checked});setNotice('');}}/></label>
+      <div className="office-channels">
       {(['weact','feishu'] as const).map(platform=><div className="channel-row" key={platform}>
         <div className="channel-heading"><label htmlFor={'chat-'+platform}>{platform==='weact'?'WeAct':'飞书'}</label><span className="setting-tag">{platform==='weact'?'石萌':'大尾巴'}</span>
           {saved?.enabled&&saved[platform]&&state[platform]&&<small>{state[platform]}</small>}</div>
         <input id={'chat-'+platform} aria-label={(platform==='weact'?'WeAct':'飞书')+'群聊'} className="input" maxLength={160} value={draft[platform]} placeholder="输入群名称或群 ID" onChange={e=>{setDraft({...draft,[platform]:e.target.value});setNotice('');}}/>
       </div>)}
-      <small className="setting-note">留空的平台不接入。群名重复时可以填写群 ID。</small>
-      <footer className="settings-actions"><span role="status">{notice||(dirty?'有未保存的修改':'')}</span><button className="btn btn-primary" disabled={!dirty||(draft.enabled&&!draft.weact.trim()&&!draft.feishu.trim())}>{saving?'正在保存…':'保存聊天设置'}</button></footer>
-    </fieldset></form>}
+      <small className="setting-note">只填写需要接入的群聊。重名群可填写群 ID。</small></div>
+    </fieldset><footer className="office-plan-footer"><div className="office-save-state" data-dirty={dirty}><span role="status">{notice||(dirty?'有未保存的修改':'')}</span></div><button className="btn btn-primary" disabled={saving||!dirty||(draft.enabled&&!draft.weact.trim()&&!draft.feishu.trim())}>{saving?'正在保存…':'保存聊天设置'}</button></footer></form>}
     {error&&<p className="settings-error" role="alert">{error} <button className="btn btn-ghost" onClick={()=>reload(n=>n+1)}>重新载入</button></p>}
     {!draft&&!error&&<p role="status">正在读取聊天设置…</p>}
   </>;

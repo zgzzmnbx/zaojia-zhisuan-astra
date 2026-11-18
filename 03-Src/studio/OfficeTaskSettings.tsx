@@ -3,6 +3,7 @@ import type {ReactNode} from 'react';
 import {api} from './api';
 import {pendingOfficeTask,type OfficeTask,type PendingOfficeReview} from './office-review';
 import {loadOfficeRoster} from './office-settings-roster';
+import Icon from './OfficeSettingsIcon';
 import './office-task-settings.css';
 
 type Person={id:string;name:string};
@@ -16,9 +17,9 @@ type Model={
   officeExamples:(people:Person[])=>OfficeTask[];
   workstationRoster:(people:Person[],settings:unknown)=>Person[];
   indexPersonTasks:(input:{tasks:OfficeTask[];pendingTasks:OfficeTask[]})=>Map<string,OfficeTask[]>;
-  memberEntries:(tasks:OfficeTask[],person:string,member:Member)=>Entry[];
+  memberEntries:(tasks:OfficeTask[],person:string,member?:Member)=>Entry[];
   olderProjectReviewKeys:(entries:Entry[])=>string[];
-  taskState:(task:OfficeTask)=>{label:string};
+  taskState:(task:OfficeTask)=>{label:string;tone:string};
 };
 type Resources={model:Model;people:Person[];pending:OfficeTask[];plan:Plan;pendingError:boolean};
 const endpoint='/api/astra/office-task-settings';
@@ -41,7 +42,10 @@ function TaskGroup({name,count,reveal,initiallyOpen,children}:{name:string;count
   const start=useRef(initiallyOpen);
   useEffect(()=>{if(ref.current)ref.current.open=start.current;},[]);
   useEffect(()=>{if(reveal&&ref.current)ref.current.open=true;},[reveal]);
-  return <details className="office-plan-group" ref={ref}><summary><span>{name}</span><small>{count} 项</small></summary>{children}</details>;
+  return <details className="office-plan-group" ref={ref}>
+    <summary><Icon name="caret-right"/><strong>{name}</strong><small>{count} 项</small></summary>
+    {children}
+  </details>;
 }
 
 export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,onSaved}:{currentTasks:OfficeTask[];initialPerson:string;onBusy:(value:string)=>void;onSaved:(value:Plan)=>void}){
@@ -85,6 +89,7 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
   const older=model.olderProjectReviewKeys(entries);
   const dirty=Object.keys(drafts).length>0;
   function resetList(){setSelected(new Set());setEditKey('');setQuery('');}
+  function choosePerson(id:string){setPerson(id);resetList();setRemoved(false);}
   function modify(change:(member:Member)=>void){
     setDrafts(previous=>{
       const base=plan.members[personId]||model.emptyMember();
@@ -153,27 +158,47 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
   }
   const shownSelected=filtered.filter(t=>selected.has(t.key)).map(t=>t.key);
   const allChecked=filtered.length>0&&shownSelected.length===filtered.length;
+  const directory=people.map(p=>({
+    person:p,
+    count:p.id===personId?inView.length:model.memberEntries(raw.get(p.id)||[],p.id,drafts[p.id]||plan.members[p.id]).filter(t=>t.key&&!t.hidden).length,
+  })).sort((a,b)=>Number(b.count>0)-Number(a.count>0));
   return <div className="office-plan">
-    <fieldset disabled={saving} className="office-plan-controls"><div className="office-plan-heading">
-      <label><span>同事</span><select className="select select-bordered" value={personId} onChange={e=>{setPerson(e.target.value);resetList();setRemoved(false);}}>
-        {people.map(p=><option key={p.id} value={p.id}>{p.name}{drafts[p.id]?' · 未保存':''}</option>)}
-      </select></label>
-      <button type="button" className="btn btn-primary" onClick={add} disabled={!who}><span aria-hidden="true">＋</span>新建任务</button>
+    <fieldset disabled={saving} className="office-plan-controls">
+    <nav className="office-plan-people" aria-label="选择同事">
+      <div className="office-people-heading"><strong>同事</strong><span>沙盘任务</span></div>
+      {directory.map(({person:p,count})=><button key={p.id} type="button" aria-pressed={p.id===personId} aria-label={p.name+'，'+count+' 项沙盘任务'} onClick={()=>choosePerson(p.id)}>
+          <span>{p.name}</span>{drafts[p.id]&&<i role="img" aria-label="未保存"/>}<small>{count}</small>
+        </button>)}
+    </nav>
+    <div className="office-plan-list-pane">
+    <div className="office-plan-heading">
+      <h3 className="office-person-title">{who?who.name+'的任务':'人员任务'}</h3>
+      <label className="office-person-picker"><span>同事</span><select aria-label="同事" value={personId} onChange={e=>choosePerson(e.target.value)}>
+        {directory.map(({person:p})=><option key={p.id} value={p.id}>{p.name}{drafts[p.id]?' · 未保存':''}</option>)}
+      </select><Icon name="caret-down"/></label>
+      <label className="office-plan-search"><Icon name="search"/><input type="search" aria-label="搜索任务" placeholder="搜索项目或任务" value={query} onChange={e=>{setQuery(e.target.value);setSelected(new Set());}}/></label>
+      <button type="button" className="btn office-add" onClick={add} disabled={!who}><Icon name="plus"/>新建任务</button>
     </div>
     {data.pendingError&&<p role="status">平台待办暂未刷新。<button type="button" className="btn btn-ghost btn-xs" onClick={()=>setReload(n=>n+1)}>重试读取</button></p>}
-    <div className="office-plan-filters"><div role="group" aria-label="沙盘显示范围">{[false,true].map(v=><button type="button" key={String(v)} aria-pressed={removed===v} onClick={()=>{setRemoved(v);resetList();}}>{v?'已移除':'在沙盘'} <b>{v?entries.length-inView.length:inView.length}</b></button>)}</div>
-      <input className="input input-bordered" aria-label="搜索任务" placeholder="搜索项目或任务" value={query} onChange={e=>{setQuery(e.target.value);setSelected(new Set());}}/>
+    <div className="office-plan-filters">
+      <div className="office-plan-scopes" role="group" aria-label="沙盘显示范围">{[false,true].map(v=><button type="button" key={String(v)} aria-pressed={removed===v} onClick={()=>{setRemoved(v);resetList();}}>{v?'已移除':'在沙盘'} <b>{v?entries.length-inView.length:inView.length}</b></button>)}</div>
+      {!!filtered.length&&<div className="office-plan-select"><label><input type="checkbox" className="checkbox checkbox-sm" aria-label="全选当前列表" checked={allChecked} ref={input=>{if(input)input.indeterminate=shownSelected.length>0&&!allChecked;}} onChange={()=>setSelected(allChecked?new Set():new Set(filtered.map(t=>t.key)))}/>全选</label>
+        {!!shownSelected.length&&<button type="button" className="btn btn-ghost btn-sm" onClick={()=>hide(shownSelected,!removed)}>{removed?'恢复所选':'移除所选'} {shownSelected.length}</button>}
+      </div>}
     </div>
-    {!removed&&older.length>0&&<div className="office-plan-bulk"><span>同项目仅保留最新一条复核</span><button type="button" className="btn btn-sm" onClick={()=>hide(older,true)}>收起 {older.length} 条</button></div>}
-    <div className="office-plan-select"><label><input type="checkbox" className="checkbox checkbox-sm" checked={allChecked} disabled={!filtered.length} onChange={()=>setSelected(allChecked?new Set():new Set(filtered.map(t=>t.key)))}/>全选当前列表</label>
-      <button type="button" className="btn btn-ghost btn-sm" disabled={!shownSelected.length} onClick={()=>hide(shownSelected,!removed)}>{removed?'恢复所选':'移除所选'}{shownSelected.length?' '+shownSelected.length:''}</button>
-    </div>
+    {!removed&&older.length>0&&<div className="office-plan-bulk"><span>同项目仅保留最新一条复核</span><button type="button" className="btn btn-ghost btn-sm" onClick={()=>hide(older,true)}>收起 {older.length} 条</button></div>}
     <section className="office-plan-groups" aria-label={who?who.name+'的任务':'人员任务'}>
     {[...groups].map(([group,rows])=><TaskGroup key={personId+'|'+removed+'|'+group} name={group} count={rows.length} reveal={!!search||rows.some(t=>t.key===editKey)} initiallyOpen={rows.length===1||rows.some(t=>t.manual)}>
-      {rows.map(t=><article className="office-plan-row" key={t.key} data-task-key={t.key}><div className="office-plan-row-title">
+      {rows.map(t=>{
+        const state=model.taskState(t), detail=t.description||t.artifactName;
+        return <article className="office-plan-row" key={t.key} data-task-key={t.key}><div className="office-plan-row-title">
         <input type="checkbox" className="checkbox checkbox-sm" aria-label={'选择 '+(t.title||'新任务')} checked={selected.has(t.key)} onChange={e=>{const next=new Set(selected);if(e.target.checked)next.add(t.key);else next.delete(t.key);setSelected(next);}}/>
-        <div><strong>{t.title||'新任务'}</strong><div className="office-plan-tags"><span>{origin(t)}</span><span>{model.taskState(t).label}</span>{t.adjusted&&<small>沙盘已调整</small>}{t.createdAt&&<small>{dateLabel(t.createdAt)}</small>}</div></div>
-        <button type="button" className="btn btn-ghost btn-sm" aria-label={(removed?'恢复 ':'编辑 ')+(t.title||'新任务')} aria-expanded={removed?undefined:editKey===t.key} onClick={()=>removed?hide([t.key],false):setEditKey(editKey===t.key?'':t.key)}>{removed?'恢复':editKey===t.key?'收起':'编辑'}</button>
+        <div className="office-task-copy"><strong>{t.title||'新任务'}</strong>
+          {detail&&detail!==t.title&&<span className="office-task-detail" title={detail}>{detail}</span>}
+          <div className="office-plan-tags"><span>{origin(t)}</span>{t.adjusted&&<small>沙盘已调整</small>}{t.createdAt&&<time dateTime={t.createdAt}>{dateLabel(t.createdAt)}</time>}</div>
+        </div>
+        <span className="office-task-state" data-tone={state.tone}>{state.label}</span>
+        <button type="button" className="btn btn-ghost btn-sm office-row-action" title={removed?'恢复':editKey===t.key?'收起编辑':'编辑'} aria-label={(removed?'恢复 ':editKey===t.key?'收起编辑 ':'编辑 ')+(t.title||'新任务')} aria-expanded={removed?undefined:editKey===t.key} onClick={()=>removed?hide([t.key],false):setEditKey(editKey===t.key?'':t.key)}><Icon name={removed?'arrow-counter-clockwise':editKey===t.key?'caret-down':'edit'}/></button>
       </div>
       {editKey===t.key&&!removed&&<div className="office-plan-edit">
         <label>任务名称<input ref={titleInput} className="input input-bordered" maxLength={200} value={t.title} onChange={e=>changeField(t,'title',e.target.value)}/></label>
@@ -181,11 +206,11 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
         <label>任务备注<textarea className="textarea textarea-bordered" maxLength={1200} value={t.description||''} onChange={e=>changeField(t,'description',e.target.value)}/></label>
         {t.dispatchId&&<small>平台原记录 · {t.originalStatus} · {t.originalTitle}</small>}
         <div>{t.adjusted&&!t.manual&&<button className="btn btn-ghost btn-sm" type="button" onClick={()=>modify(m=>{delete m.adjustments[t.key];})}>恢复原内容</button>}<button className="btn btn-ghost btn-sm" type="button" onClick={()=>hide([t.key],true)}>从沙盘移除</button></div>
-      </div>}</article>)}
+      </div>}</article>;})}
     </TaskGroup>)}
-    {!groups.size&&<p className="office-plan-empty">{search?'没有匹配的任务':removed?'没有已移除的任务':'这位同事暂无沙盘任务'}</p>}
-    </section></fieldset>
-    <footer className="office-plan-footer"><div><span role="status">{error||notice||(dirty?'有未保存的修改':'仅修改办公室沙盘')}</span><small>智算派发、平台任务与原始回执保留。</small></div>
+    {!groups.size&&<div className="office-plan-empty"><Icon name={search?'search':'list-checks'}/><p>{search?'没有匹配的任务':removed?'没有已移除的任务':'这位同事暂无沙盘任务'}</p>{search&&<button type="button" className="btn btn-ghost btn-sm" onClick={()=>setQuery('')}>清除搜索</button>}</div>}
+    </section></div></fieldset>
+    <footer className="office-plan-footer"><div className="office-save-state" data-dirty={dirty} data-error={!!error}><span role="status">{error||notice||(dirty?'有未保存的修改':'仅修改办公室沙盘')}</span><span className="office-save-info" tabIndex={0} aria-label="智算派发、平台任务与原始回执保留。" title="智算派发、平台任务与原始回执保留。"><Icon name="info"/></span></div>
       {dirty&&<button className="btn btn-ghost btn-sm" disabled={saving} type="button" onClick={discard}>{conflict?'放弃草稿并重新载入':'放弃修改'}</button>}
       <button className="btn btn-primary" type="button" disabled={!dirty||saving||conflict} onClick={()=>void save()}>{saving?'正在保存…':'保存修改'}</button>
     </footer>

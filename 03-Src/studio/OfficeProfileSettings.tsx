@@ -1,5 +1,6 @@
 import {useEffect,useState} from 'react';
 import {loadOfficeRoster,type OfficeProfile} from './office-settings-roster';
+import Icon from './OfficeSettingsIcon';
 
 export default function OfficeProfileSettings({onBusy,onSave}:{onBusy:(v:boolean)=>void;onSave:()=>void}){
   const [roster,setRoster]=useState<Awaited<ReturnType<typeof loadOfficeRoster>>|null>(null),[people,setPeople]=useState<OfficeProfile[]>([]);
@@ -32,17 +33,16 @@ export default function OfficeProfileSettings({onBusy,onSave}:{onBusy:(v:boolean
     }catch(e){setError(e instanceof Error?e.message:'资料保存失败');}
     finally{setSaving(false);onBusy(false);}
   }
-  return <>{roster&&<form onSubmit={e=>{e.preventDefault();void save();}}><fieldset className="setting-fields" disabled={saving}>
-    <div className="settings-person-select"><label>同事<select className="select" value={current} onChange={e=>select(e.target.value)}>{people.map(p=><option value={p.id} key={p.id}>{p.name||'新增人员'}</option>)}</select></label>
-      <button className="btn btn-ghost" type="button" disabled={!freeSeat} onClick={add}>＋ 添加人员</button></div>
+  return <>{roster&&<form className="office-settings-form" onSubmit={e=>{e.preventDefault();void save();}}><fieldset className="setting-fields" disabled={saving}>
+    <div className="settings-person-select"><label className="office-person-picker"><span>同事</span><select aria-label="同事" value={current} onChange={e=>select(e.target.value)}>{people.map(p=><option value={p.id} key={p.id}>{p.name||'新增人员'}</option>)}</select><Icon name="caret-down"/></label>
+      <button className="btn office-add" type="button" disabled={!freeSeat} onClick={add}><Icon name="plus"/>添加人员</button></div>
     {person&&<div className="profile-grid">
       <label>姓名<input className="input" required maxLength={40} value={person.name} onChange={e=>edit('name',e.target.value)}/></label>
       <label>性别<select className="select" value={person.gender} onChange={e=>edit('gender',e.target.value)}><option value="unspecified">未设置</option><option value="male">男</option><option value="female">女</option></select></label>
       <label>工种<input className="input" maxLength={80} value={person.trade} onChange={e=>edit('trade',e.target.value)}/></label>
-      <label>擅长审核<textarea className="input" rows={3} maxLength={240} value={person.expertise} onChange={e=>edit('expertise',e.target.value)}/></label>
+      <label>擅长审核<textarea className="textarea" rows={3} maxLength={240} value={person.expertise} onChange={e=>edit('expertise',e.target.value)}/></label>
     </div>}
-    <footer className="settings-actions"><span role="status">{dirty?'有未保存的修改':notice}</span><button className="btn btn-primary" disabled={!dirty}>{saving?'正在保存…':'保存人员资料'}</button></footer>
-  </fieldset></form>}
+  </fieldset><footer className="office-plan-footer"><div className="office-save-state" data-dirty={!!dirty}><span role="status">{dirty?'有未保存的修改':notice}</span></div><button className="btn btn-primary" disabled={!dirty||saving}>{saving?'正在保存…':'保存人员资料'}</button></footer></form>}
     {!roster&&!error&&<p role="status">正在读取人员资料…</p>}
     {error&&<p className="settings-error" role="alert">{error} <button className="btn btn-ghost" onClick={()=>reload(n=>n+1)}>重新载入</button></p>}
   </>;
