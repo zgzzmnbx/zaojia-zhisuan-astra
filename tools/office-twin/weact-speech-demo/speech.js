@@ -27,12 +27,16 @@ function attachToSpeaker() {
   const marker = markers.querySelector(speakerSelector);
   const ready = Boolean(marker && document.documentElement.dataset.viewerStatus === 'ready');
   locate.disabled = !ready;
-  if (!ready) return;
+  if (!ready) {
+    paintStatus();
+    return;
+  }
   if (!initialFocus) {
     initialFocus = true;
     document.title = '造价智算 · WeAct 发言气泡 Demo';
     focusSpeaker();
   }
+  paintStatus();
   if (!pending && bubble.hidden) return;
   if (bubble.parentElement !== marker) marker.append(bubble);
   if (!pending) return;
@@ -49,9 +53,18 @@ function attachToSpeaker() {
   pending = undefined;
 }
 
-function setStatus(message, state) {
+function paintStatus() {
+  const state = panel.dataset.feedState;
+  const message = !initialFocus ? '正在加载办公室'
+    : state === 'unavailable' ? '读取暂不可用 · 自动重试'
+    : state !== 'ready' ? '正在连接 WeAct'
+    : sequence ? '已收到你的发言' : '等待石萌在群里发文字';
   if (status.textContent !== message) status.textContent = message;
+}
+
+function setStatus(state) {
   panel.dataset.feedState = state;
+  paintStatus();
 }
 
 async function poll() {
@@ -64,7 +77,7 @@ async function poll() {
     if (!response.ok) throw new Error('无法读取群消息');
     const snapshot = await response.json();
     if (snapshot.state !== 'ready') {
-      setStatus('读取暂不可用 · 自动重试', 'unavailable');
+      setStatus('unavailable');
       return;
     }
     if (snapshot.message && snapshot.message.sequence > sequence) {
@@ -72,9 +85,9 @@ async function poll() {
       pending = snapshot.message;
       attachToSpeaker();
     }
-    setStatus(sequence ? '已收到你的发言' : '等待石萌在群里发文字', 'ready');
+    setStatus('ready');
   } catch {
-    if (!document.hidden) setStatus('读取暂不可用 · 自动重试', 'unavailable');
+    if (!document.hidden) setStatus('unavailable');
   } finally {
     clearTimeout(timeout);
     request = undefined;

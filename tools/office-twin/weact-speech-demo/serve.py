@@ -9,9 +9,11 @@ import sys
 import time
 import webbrowser
 from contextlib import suppress
+from hashlib import file_digest, sha256
 from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from threading import Lock
 from urllib.parse import unquote, urlsplit
 
@@ -26,6 +28,59 @@ VIEWER = "/office-twin/viewer/index.html"
 POLL_SECONDS = 5
 ERROR_RETRY_SECONDS = 15
 MAX_TEXT_LENGTH = 240
+FONTS = {f"assets/pingfang-sc-{weight}.woff2" for weight in ("regular", "medium", "semibold")}
+
+
+def sha256_file(path):
+    with path.open("rb") as source:
+        return file_digest(source, "sha256").hexdigest()
+
+
+def pin_office_build(build, cache):
+    """Keep markup, all viewer modules, and models on the same deployed build."""
+    build = build.resolve(strict=True)
+    cache = cache.resolve()
+    cache.mkdir(parents=True, exist_ok=True)
+    manifest_path = build / "astra-build.json"
+    manifest_bytes = manifest_path.read_bytes()
+    manifest = json.loads(manifest_bytes)
+    assets = {
+        name.removeprefix("public/"): digest
+        for name, digest in manifest["sources"].items()
+        if name.startswith("public/office-twin/")
+    }
+    if VIEWER.lstrip("/") not in assets:
+        raise RuntimeError("正式构建清单缺少办公室页面")
+    assets.update({name: sha256_file(build / name) for name in FONTS if (build / name).is_file()})
+    key = sha256(json.dumps(assets, sort_keys=True).encode("utf-8")).hexdigest()[:24]
+    pinned = cache / key
+    if pinned.resolve().parent != cache:
+        raise RuntimeError("办公室资源缓存路径无效")
+    if pinned.is_dir():
+        return pinned
+
+    with TemporaryDirectory(prefix="staging-", dir=cache) as staging:
+        staging_root = Path(staging).resolve(strict=True)
+        if staging_root.parent != cache:
+            raise RuntimeError("办公室资源暂存路径无效")
+        snapshot = staging_root / "snapshot"
+        for name, expected in assets.items():
+            source = (build / name).resolve(strict=True)
+            target = (snapshot / name).resolve()
+            if not source.is_relative_to(build) or not target.is_relative_to(snapshot):
+                raise RuntimeError("办公室资源路径无效")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, target)
+            if sha256_file(target) != expected:
+                raise RuntimeError("正式办公室正在更新，资源校验失败")
+        if manifest_path.read_bytes() != manifest_bytes:
+            raise RuntimeError("正式办公室构建已切换，请重新启动 Demo")
+        try:
+            snapshot.rename(pinned)
+        except FileExistsError:
+            if not pinned.is_dir():
+                raise
+    return pinned
 
 
 def latest_speech(items, chat_id, speaker_id, since_ms):
@@ -56,9 +111,9 @@ def latest_speech(items, chat_id, speaker_id, since_ms):
 
 
 class WeActFeed:
-    def __init__(self, api):
+    def __init__(self, api, since_ms=None):
         self.api = api
-        self.since_ms = time.time_ns() // 1_000_000
+        self.since_ms = time.time_ns() // 1_000_000 if since_ms is None else since_ms
         self.chat_id = None
         self.speaker_id = None
         self.last_key = None
@@ -145,7 +200,7 @@ def viewer_page(source, employee_id):
 <aside class="weact-demo-panel" aria-label="WeAct 群消息演示" data-speaker="{escape(employee_id, quote=True)}">
   <div>
     <strong>智算测试</strong>
-    <p id="weact-demo-status">正在连接 WeAct</p>
+    <p id="weact-demo-status">正在加载办公室</p>
   </div>
   <button id="weact-demo-locate" class="btn btn-ghost btn-sm" type="button" disabled>定位石萌</button>
   <p id="weact-demo-announcement" class="office-sr-only" role="status"></p>
@@ -201,7 +256,7 @@ def request_handler(office_assets, settings, feed, page):
             elif path in {"/weact-demo/speech.js", "/weact-demo/speech.css"}:
                 file = DEMO / Path(path).name
                 self.send_body(file.read_bytes(), mimetypes.guess_type(file)[0])
-            elif re.fullmatch(r"/assets/pingfang-sc-(regular|medium|semibold)\.woff2", path):
+            elif path.lstrip("/") in FONTS:
                 self.send_file(office_assets.parent / path.removeprefix("/"))
             elif path.startswith("/office-twin/"):
                 self.send_asset(path)
@@ -223,7 +278,7 @@ def request_handler(office_assets, settings, feed, page):
                 self.send_response(200)
                 self.send_header("Content-Type", mimetypes.guess_type(file)[0] or "application/octet-stream")
                 self.send_header("Content-Length", str(file.stat().st_size))
-                self.send_header("Cache-Control", "public, max-age=60")
+                self.send_header("Cache-Control", "no-cache")
                 self.end_headers()
                 with suppress(ConnectionError):
                     shutil.copyfileobj(source, self.wfile)
@@ -235,6 +290,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run the local WeAct office speech demo.")
     parser.add_argument("--port", type=int, default=5196)
     parser.add_argument("--open", action="store_true", help="Open the demo in the default browser.")
+    parser.add_argument("--since-ms", type=int, help="Keep the original feed start time when restarting the demo.")
     args = parser.parse_args()
     mimetypes.add_type("text/javascript", ".js")
     mimetypes.add_type("text/javascript", ".mjs")
@@ -247,11 +303,13 @@ def main():
     speakers = [person for person in settings["people"] if person["name"] == SPEAKER_NAME]
     if len(speakers) != 1:
         raise SystemExit("当前办公室配置中须有唯一的石萌小人。")
-    office_assets = (service / "04-output" / "office-twin").resolve(strict=True)
+    cache = DEMO.parents[2] / "Codex-Temp" / "weact-office-speech-demo" / "office-builds"
+    office_assets = pin_office_build(service / "04-output", cache) / "office-twin"
     page = viewer_page((office_assets / "viewer/index.html").read_text(encoding="utf-8"), speakers[0]["id"])
     api = deployed_api(service)
     try:
-        with ThreadingHTTPServer(("127.0.0.1", args.port), request_handler(office_assets, settings, WeActFeed(api), page)) as server:
+        feed = WeActFeed(api, args.since_ms)
+        with ThreadingHTTPServer(("127.0.0.1", args.port), request_handler(office_assets, settings, feed, page)) as server:
             address = f"http://127.0.0.1:{server.server_port}/"
             print(f"WeAct office speech demo at {address}", flush=True)
             if args.open:
