@@ -7,6 +7,7 @@ import numpy as np
 
 from geometry import Batch
 from receivers import Receiver
+from streetscape import place_streetscape
 
 
 class Kit:
@@ -272,10 +273,7 @@ def campus(out,parent):
         for off in (-.26,0,.26):
             wall.box(x,.36,z+off,3.45,.15,.22,'chalk',.035)
         ground.block(x,z,3.45,.8,.55)
-    for x,z in [(-23,25),(24,21),(-24,-22),(24,-25),(-14,38),(40,12),(-40,29)]:
-        wall.tube((x,-.4,z),(x,4.8,z),.12,.075,'metal',10)
-        wall.tube((x,4.78,z),(x,4.87,z+1.35),.09,.09,'stone',10)
-        wall.box(x,4.72,z+1.25,.38,.12,.72,'porcelain',.035)
+    out.doc['nodes'][parent]['extras'].update(place_streetscape(kit,ground))
     for i in range(9):
         wall.box(-3.5+i*.85,-.4,35.6,.40,.02,3.1,'porcelain')
     kit.finish(out,parent,'Porcelain_Campus')

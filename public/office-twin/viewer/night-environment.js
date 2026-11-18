@@ -7,19 +7,25 @@ import {createInteriorLightPlan,MAX_OFFICE_LIGHTS} from './interior-light-plan.j
 import {createNightCompositor} from './night-compositor.js';
 import {createNightFloorBake,isNightFloorReceiver} from './night-floor-bake.js';
 import {collectMonitorLighting} from './monitor-lighting.js';
-import {porcelainDaylight} from './porcelain-style.js';
+import {createStreetLightMap,porcelainDaylight} from './porcelain-style.js';
 
 // Adapted to metre-scale OfficeRoom nodes from Astra's authored studio night profile.
 // Static floors use a Cycles night bake; furniture/people keep adjustable display lighting.
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
-const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10,vegetation:11};
+const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10,vegetation:11,street_surface:12,street_lens:13};
 export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared,bakedFloor=false,vertexMonitor=false,referenceContext=false,referenceStructure=false){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
   const key=previousKey();
+  const streetReceiver=!!shared.streetLightMap && (role==='ground'||role==='street_surface');
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
+    if(streetReceiver){
+      shader.uniforms.officeStreetMap={value:shared.streetLightMap.texture};
+      shader.uniforms.officeStreetUV={value:shared.streetLightMap.transform};
+      shader.fragmentShader='uniform sampler2D officeStreetMap;uniform vec4 officeStreetUV;\n'+shader.fragmentShader;
+    }
     const themeInk = material.userData.porcelain && shared.porcelainPalette;
     if(themeInk || role==='vegetation')shader.vertexShader='attribute float _blueink;\n'+shader.vertexShader;
     if(themeInk){
@@ -71,6 +77,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         ${material.userData.porcelain?'#define OFFICE_PORCELAIN_DAY':''}
         #ifdef OFFICE_PORCELAIN_DAY
         ${porcelainDaylight}
+        ${streetReceiver&&role==='ground'?'outgoingLight*=1.-.43*texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).g;':''}
         #else
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
         bool interior=officeNightRole==6.||officeNightRole==5.||officeNightRole==9.;
@@ -195,9 +202,20 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         float sky=.28+.52*key+.15*max(n.y,0.)+.10*side;
         float contact=mix(.72,1.12,smoothstep(.01,.26,lum));
         shell=mix(bark,canopy,porcelainLeaf)*sky*contact*officeAmbient;`:''}
+        ${streetReceiver?`
+        // Reflected street light is confined to the pavement and passive street furniture.
+        vec2 street=texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).rg;
+        float pool=street.r*officeNightLamps.x;
+        ${role==='ground'?`
+        shell=(shell+vec3(.046,.039,.030)*pool*(.63+.37*lum))*(1.-.84*street.g);`:`
+        float sky=.27+.50*key+.23*max(n.y,0.);
+        shell=(vec3(.008,.012,.018)+sourceColor*vec3(.080,.10,.14))*sky*officeAmbient;
+        shell+=(vec3(.010,.008,.006)+sourceColor*vec3(.12,.08,.04))*pool*(.42+.58*max(n.y,0.));`}`:''}
         emission*=officeNightRole==4.?officeNightLamps.x:officeNightRole==5.?officeNightLamps.y:officeNightRole==7.?officeNightGains.y:officeNightGains.w;
         emission=mix(vec3(dot(emission,vec3(.2126,.7152,.0722))),emission,officeNightBlue);
+        ${role==='street_lens'?'emission=vec3(.48,.35,.23)*officeNightLamps.x;':''}
         vec3 haloEmission=officeNightRole==5.?emission*${NIGHT_LIGHTING.screenBloomGain}:emission;
+        ${role==='street_lens'?'haloEmission*=.20;':''}
         #ifdef OFFICE_NIGHT_MRT
         officeGlow=vec4(haloEmission*officeNightExposure,1.);
         #endif
@@ -205,7 +223,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV].join('|');
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,streetReceiver,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV].join('|');
   material.needsUpdate=true;
 }
 
@@ -215,6 +233,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
   Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
   shared.porcelainPalette=porcelainPalette;
   const porcelain=!!scene.getObjectByName('Porcelain_F01_shell');
+  shared.streetLightMap=porcelain?createStreetLightMap(scene.getObjectByName('ContextBuildings')?.userData):null;
   const lightPlan=createInteriorLightPlan(layout);
   const floorBake=createNightFloorBake(requestFrame);shared.floorBake=floorBake.uniforms;
   Object.assign(shared,{ambient:{value:1},lightCount:{value:lightPlan.length},
@@ -316,6 +335,6 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
       compositor.render(drawScene);return true;
     },
     state:()=>({night:dark,profile:'Astra studio / hybrid night bake v0.32.0',background:scene.background?.getHexString(),settings:{...settings},roles:{...counts},screens:screenCount,bloom:bloom.state(),compositor:compositor.state(),physicalNightBake:floorBake.state().status==='ready',floorBake:floorBake.state(),interiorAccentLights:accentRoot?.children.length??0,roomLights:lightPlan,lightingPolicy:NIGHT_LIGHTING}),
-    dispose(){if(disposed)return;disposed=true;compositor.dispose();bloom.dispose();floorBake.dispose();for(const restore of restores)restore();for(const m of materials)m.dispose();materials.clear();removeAccentLights();},
+    dispose(){if(disposed)return;disposed=true;compositor.dispose();bloom.dispose();floorBake.dispose();shared.streetLightMap?.texture.dispose();for(const restore of restores)restore();for(const m of materials)m.dispose();materials.clear();removeAccentLights();},
   };
 }

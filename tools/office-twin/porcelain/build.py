@@ -13,10 +13,11 @@ from architecture import campus, rooftop, storey
 from geometry import BLUE_INK, Glb, Source, matrix, studio_color
 from light_transport import bake
 from receivers import Receiver
+from streetscape import LAMPS, PARKING
 
 ROOT=Path(__file__).resolve().parents[3]
 PACKAGE=ROOT/'public/office-twin'
-MODEL='H1-porcelain-v0.3.1.glb'
+MODEL='H1-porcelain-v0.4.0.glb'
 BASELINE='H1-baked-v0.6.7.glb'
 BASELINE_HASH='c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545'
 LAYOUT_HASH='ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a'
@@ -163,6 +164,16 @@ def verify(source,generated):
     assert trees['extras']['night_role']=='vegetation'
     tree_primitive,=generated.doc['meshes'][trees['mesh']]['primitives']
     assert set(np.unique(generated.array(tree_primitive['attributes']['_BLUEINK'])))=={0,2}
+    campus = generated.doc['nodes'][generated.named['ContextBuildings']]
+    for role in ('street_surface', 'street_lens'):
+        index = generated.named['Porcelain_Campus_'+role]
+        node = generated.doc['nodes'][index]
+        assert index in campus['children'] and node['extras']['night_role'] == role
+        prim, = generated.doc['meshes'][node['mesh']]['primitives']
+        assert generated.doc['accessors'][prim['indices']]['count'] > 0
+    for name, count in [('streetLightPools', len(LAMPS)), ('parkedCarFootprints', len(PARKING))]:
+        areas = np.asarray(campus['extras'][name])
+        assert areas.shape == (count, 4) and np.isfinite(areas).all() and (areas[:,2:] > 0).all()
     return {'lockedNodes':locked_nodes,'lockedTriangles':triangles,'storeys':20}
 
 

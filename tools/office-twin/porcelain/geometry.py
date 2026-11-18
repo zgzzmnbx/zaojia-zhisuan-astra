@@ -19,6 +19,8 @@ PALETTE = {
     'cobalt': (40, 79, 192), 'ultra': (29, 59, 152),
     'leaf': (72, 110, 210), 'bud': (109, 144, 227), 'ink': (51, 68, 104),
     'fabric': (102, 133, 208), 'linen': (210, 219, 235),
+    'lamp_metal': (98, 112, 128), 'tyre': (49, 56, 69),
+    'auto_glass': (77, 101, 127), 'tail_lens': (150, 78, 73),
 }
 INK = {k: linear(v) for k, v in PALETTE.items()}
 # 0 is fixed porcelain, metal or neutral fabric. 1, 2 and 3 index the
@@ -84,7 +86,7 @@ class Source:
 
 class Glb:
     def __init__(self):
-        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.3.1'},
+        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.4.0'},
                     'extensionsUsed': ['KHR_materials_unlit'], 'scene': 0, 'scenes': [{'nodes': []}],
                     'samplers':[{'wrapS':33071,'wrapT':33071,'magFilter':9729,'minFilter':9987}],
                     **{k: [] for k in ['nodes','meshes','materials','textures','images','accessors','bufferViews']}}

@@ -205,11 +205,35 @@ test('manual limits exclude the back and underside and leave a complete automati
  }
 });
 import {classifyNightRole,nightSeatId,NIGHT_LIGHTING} from '../public/office-twin/viewer/night-lighting-policy.js';
+import {createStreetLightMap} from '../public/office-twin/viewer/porcelain-style.js';
 test('campus trees keep the vegetation role alongside emissive architectural accents',()=>{
  const parent={name:'ContextBuildings'};
  assert.equal(classifyNightRole({parent,userData:{night_role:'vegetation'}}),'vegetation');
  assert.equal(classifyNightRole({parent,userData:{night_role:'accent'}}),'accent');
  assert.equal(classifyNightRole({parent,userData:{}}),'context');
+});
+test('parked vehicles and lamp posts keep a separate night role from diffuser strips and building windows',()=>{
+ const parent={name:'ContextBuildings'};
+ for(const role of ['street_surface','street_lens']){
+  const source={parent,userData:{night_role:role}};
+  assert.equal(classifyNightRole(source),role);
+  assert.equal(classifyNightRole({userData:{staticBatch:true,night_role:classifyNightRole(source)}}),role);
+ }
+});
+test('street lighting fades at the kerb and car contact shadows occupy an independent channel',()=>{
+ assert.equal(createStreetLightMap({}),null);
+ const map=createStreetLightMap({streetLightPools:[[0,0,2,4]],parkedCarFootprints:[[7,3,2,1]]});
+ const {width,height,data}=map.texture.image,t=map.transform;
+ function sample(x,z){
+  const col=Math.floor((x-t.x)*t.z*width),row=Math.floor((z-t.y)*t.w*height);
+  const i=(row*width+col)*2;
+  return Array.from(data.slice(i,i+2));
+ }
+ assert.deepEqual(sample(0,0),[255,0]);
+ assert.ok(sample(1.8,0)[0]<15);
+ assert.deepEqual(sample(7,3),[0,255]);
+ assert.deepEqual(sample(4,0),[0,0]);
+ map.texture.dispose();
 });
 test('floor lighting survives primitive leaves and batches without sharing facade or furniture gains',()=>{
  for(const name of ['H1_F09_floor_slab','Core_floor','R_E_floor','CORE_SERVICE_NE_floor']){
