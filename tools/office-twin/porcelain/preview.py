@@ -31,7 +31,7 @@ def index():
 
 @app.get('/preview-id')
 def identity():
-    return {'preview':'porcelain-0.5.0','root':str(ROOT)}
+    return {'preview':'porcelain-0.6.0','root':str(ROOT)}
 
 
 app.mount('/office-twin',StaticFiles(directory=OFFICE),name='office-twin')
@@ -55,7 +55,7 @@ def main():
     parser.add_argument('--port', type=int, help='Use this fixed loopback port')
     parser.add_argument('--no-browser', action='store_true')
     args = parser.parse_args()
-    for resource in ('models/H1-porcelain-v0.5.0.glb', 'data/office_layout.json'):
+    for resource in ('models/H1-porcelain-v0.6.0.glb', 'data/office_layout.json'):
         if not (OFFICE / resource).is_file():
             sys.exit('Missing local asset: ' + resource)
     port = args.port if args.port is not None else 5278

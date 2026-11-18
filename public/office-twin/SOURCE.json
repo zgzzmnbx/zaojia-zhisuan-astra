@@ -72,13 +72,13 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "ee3dad9825166026a9c6b2c24442e49d3611d67448532178d91807be175c8cf6",
+    "viewer/index.html": "3f2ee377c9a472aa9a2102d0a58d655abd77198bd13f040037966a5867a3a022",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "1d1c8eca2bcf613ad8264b99e0c2a42763708899218b8f33c49960b30f4a1568",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
-    "viewer/night-environment.js": "bd989958678e21fe3b9ac07a82398df11e3dcfda2cbe04e7349ad8d5df3b944a",
+    "viewer/night-environment.js": "8f6a22b9e0e1919ec71cb34458bd788b542536380ce1fbd8e2adb208f32dee28",
     "viewer/night-lighting-policy.js": "44d07b207014ffa0e57edf5fb62c2f81bfbfb7a28d5dcde33711bf50cf78cc3d",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
@@ -88,7 +88,7 @@
     "viewer/porcelain-demo.css": "12524c569393958bf8149b18477cd7913e3811a98497e011330d5bfc03970058",
     "viewer/porcelain-demo.js": "942bc6a96c3878022ae329145701ec32914542952b12355b3e243a15d3a6702b",
     "viewer/porcelain-palette.js": "3fbef686772b98dd206e88ea36a84bb36a2e4025062b1508e43d9c808c48a362",
-    "viewer/porcelain-style.js": "2b7da1ab05cecb3fc3c8f2e700323a34223da5d67a973681129ce2e5f0137eb6",
+    "viewer/porcelain-style.js": "c4cc3ff6ecdecd33c659ed10709e5becd9e54db8b7edf6826534f77b8b90e5d7",
     "viewer/README.md": "36bb727daadaf810b7373b48be58d7473f277ceb9dd0c34a04f2cd325866619c",
     "viewer/release.js": "0b2f16d6d847f6198053cf6511a7bf395a4fdacaf90073a7c62af4e11fd4efa4",
     "viewer/sandbox-layout.js": "511ea27a76ac858331b6d8d6922c672e9c4e29cdfabc537778db03c60ed13b4d",
@@ -114,7 +114,7 @@
     "viewer/verify-model.mjs": "7ad800902f7e8f6b931f8bb1f3022a3d245530d4af45e7a9f479f6ffed1a6a8c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
     "viewer/miniature-focus.js": "a63322a700211665bd0fbfc100f8ec3645473e40bb8aafeb41eb6b7ce6fa6ef5",
-    "viewer/viewer.js": "8bd8c13e7cd4223783074276f94d410a21be1f208cd609d4c3364bbce159768c",
+    "viewer/viewer.js": "58bd36392807dc4cec742c60f6f3c0141fe4dddc6b48b53acdd832d8b3ea3487",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "cb0ad38ebc8595b9946b97044fb50caa77fac6cef119efc5fcc3864032180752",
@@ -179,7 +179,9 @@
     "models/H1-porcelain-v0.3.1.glb": "ae9dd77b984663f9cfaf5c8969a564fd7c2bf43058fb6c207d7ae3b4dd09c648",
     "models/H1-porcelain-v0.4.0.glb": "0f6b17221ed31c12299255fe60f92c59ced1314717c6d75a935726342be27e70",
     "viewer/street-traffic.js": "6df28907c8f7e23c0907441a3317b42cccf919b9529e5ea265b8fc2b42b57338",
-    "models/H1-porcelain-v0.5.0.glb": "010ba0b81685ba6bb9660f13ae0ec7fbac18beee905c3be346ac8c51679a9e88"
+    "models/H1-porcelain-v0.6.0.glb": "ecc1ed83139330a53c10a714f7e19f00240deac888cbc7e1d12477d373f755ee",
+    "models/H1-porcelain-v0.5.0.glb": "010ba0b81685ba6bb9660f13ae0ec7fbac18beee905c3be346ac8c51679a9e88",
+    "previews/porcelain-v0.6.0.webp": "c6bc4ce6d6ca88f2d00caebfc1f674b86e653997f65e24907c76647936cc914c"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -293,12 +295,12 @@
     }
   },
   "porcelainDemo": {
-    "version": "0.5.0",
+    "version": "0.6.0",
     "baseline": "6fc00dd",
     "sourceModel": "models/H1-baked-v0.6.7.glb",
-    "model": "models/H1-porcelain-v0.5.0.glb",
-    "modelBytes": 12701288,
-    "modelSHA256": "010ba0b81685ba6bb9660f13ae0ec7fbac18beee905c3be346ac8c51679a9e88",
+    "model": "models/H1-porcelain-v0.6.0.glb",
+    "modelBytes": 13587356,
+    "modelSHA256": "ecc1ed83139330a53c10a714f7e19f00240deac888cbc7e1d12477d373f755ee",
     "planSHA256": "ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a",
     "frozenDetailedFloor": {
       "nodes": 2405,
@@ -357,6 +359,18 @@
         "#101010"
       ],
       "night": "#85d0ff"
+    },
+    "daylight": {
+      "finish": "cel-shaded white architectural miniature",
+      "shadow": "one projected silhouette and local contact per receiver",
+      "surfaces": [
+        "exterior",
+        "roof",
+        "campus",
+        "office"
+      ],
+      "nightVertexAttribute": "_NIGHTCOLOR",
+      "fallbackPreview": "previews/porcelain-v0.6.0.webp"
     }
   }
 }

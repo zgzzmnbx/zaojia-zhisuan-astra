@@ -11,14 +11,14 @@ import numpy as np
 
 from architecture import campus, rooftop, storey
 from brand import CONTOURS, mount_sign, sign_art
-from geometry import BLUE_INK, Glb, Source, matrix, studio_color
+from geometry import BLUE_INK, ROOM_PLANES, Glb, Source, cel_color, matrix, studio_color
 from light_transport import bake
 from receivers import Receiver
 from streetscape import LAMPS, PARKING, TRAFFIC
 
 ROOT=Path(__file__).resolve().parents[3]
 PACKAGE=ROOT/'public/office-twin'
-MODEL='H1-porcelain-v0.5.0.glb'
+MODEL='H1-porcelain-v0.6.0.glb'
 BASELINE='H1-baked-v0.6.7.glb'
 BASELINE_HASH='c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545'
 LAYOUT_HASH='ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a'
@@ -96,8 +96,9 @@ def copy_office(out,source,node_id,parent,tf,atlas,day_texture,mesh_cache):
             uv=atlas.uv(world)
             if old=='V065_NATIVE_FLOOR_LIGHTING_UNLIT':
                 night_uv=source.array(attrs['TEXCOORD_0'])
-            color=studio_color(directions,'chalk')
-            color[directions[:,1]>.86]=1
+            night_color=studio_color(directions,'chalk')
+            color=cel_color(directions,'chalk',ROOM_PLANES)
+            night_color[directions[:,1]>.86]=color[directions[:,1]>.86]=1
         else:
             pigment,role=finish(node['name'],old)
             mat=out.material('Porcelain Device ScreenBlue' if role=='screen' else 'Porcelain / interior')
@@ -105,11 +106,12 @@ def copy_office(out,source,node_id,parent,tf,atlas,day_texture,mesh_cache):
             # stone and white paint visibly different responses to this rig.
             height=world[:,1]
             footing=1-.15*np.exp(-np.maximum(height,0)/.23)
-            color=studio_color(directions,pigment,footing)
+            night_color=studio_color(directions,pigment,footing)
+            color=cel_color(directions,pigment,ROOM_PLANES)
             if role=='screen':
                 t=(height-height.min())/max(float(np.ptp(height)),.01)
-                color*=.66+.34*t[:,None]
-        parts.append(out.primitive(pos,normal,indices,color,mat,uv,night_uv,BLUE_INK.get(pigment,0)))
+                night_color*=.66+.34*t[:,None]
+        parts.append(out.primitive(pos,normal,indices,color,mat,uv,night_uv,BLUE_INK.get(pigment,0),night_color))
     if parts:
         key=json.dumps(parts,sort_keys=True)
         if key not in mesh_cache:
@@ -147,6 +149,10 @@ def verify(source,generated):
             ink=generated.array(attrs['_BLUEINK'])
             assert len(ink)==len(generated.array(attrs['POSITION']))
             ink_values.update(np.unique(ink).tolist())
+            props=generated.doc['materials'][primitive['material']]['extras']
+            assert bool(props.get('porcelainNightColor'))==('_NIGHTCOLOR' in attrs)
+            if '_NIGHTCOLOR' in attrs:
+                assert generated.array(attrs['_NIGHTCOLOR']).shape==(len(ink),4)
     assert ink_values=={0,1,2,3},'Missing or unknown porcelain pigment band'
     trees=generated.doc['nodes'][generated.named['Porcelain_Campus_vegetation']]
     assert trees['extras']['night_role']=='vegetation'
@@ -169,6 +175,18 @@ def verify(source,generated):
     lo,hi=vertices[idx].min(axis=1),vertices[idx].max(axis=1)
     inside=(lo[:,0]<8.6)&(hi[:,0]>-8.6)&(lo[:,1]<2.8)&(hi[:,1]>.75)
     assert not (inside & (hi[:,2]>20.811)).any(),'Entrance fins cross the fascia'
+    facade=generated.doc['nodes'][generated.named['Porcelain_F12_shell']]
+    prim,=primitives(generated,facade)
+    attrs=prim['attributes']
+    colors=generated.array(attrs['COLOR_0'])
+    corners=colors[generated.array(prim['indices']).reshape(-1,3)]
+    assert np.all(corners==corners[:,:1,:]),'A flat facade triangle contains a daylight gradient'
+    assert not np.array_equal(colors,generated.array(attrs['_NIGHTCOLOR']))
+    context=generated.doc['nodes'][generated.named['Porcelain_Campus_context']]
+    prim,=primitives(generated,context)
+    assert generated.doc['materials'][prim['material']]['extras']['porcelainDayMap']
+    uv=generated.array(prim['attributes']['TEXCOORD_0'])
+    assert (uv==0).all(axis=1).any() and (uv>0).all(axis=1).any()
     vertices,_=shell_positions(1)
     for x in (-8.3,8.3):
         post=vertices[(abs(vertices[:,0]-x)<.35)&(abs(vertices[:,2]-23.55)<.35)]

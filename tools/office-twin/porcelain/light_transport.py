@@ -39,7 +39,12 @@ def bake(out, directory, blender):
                 offsets[scope]+=len(pos)
                 # A planar texture already integrates over the whole surface.
                 # The receiver still participates in occluding nearby solids.
-                if 'TEXCOORD_0' in a and n.get('extras',{}).get('night_role')!='brand_sign': continue
+                # Solids with a day-only equipment shadow or brand artwork
+                # still carry the baked night colour on the underlying board.
+                if 'TEXCOORD_0' in a:
+                    props=out.doc['materials'][p['material']]['extras']
+                    if n.get('extras',{}).get('night_role')!='brand_sign' and not props.get('porcelainDayMap'):
+                        continue
                 field['probes'].append(pos)
                 field['normals'].append(norm)
                 field['bindings'].append((idx,j))
@@ -67,12 +72,12 @@ def bake(out, directory, blender):
             if idx not in modified:
                 modified[idx]=[{**p,'attributes':dict(p['attributes'])} for p in out.doc['meshes'][node['mesh']]['primitives']]
             attrs=modified[idx][j]['attributes']
-            colors=geo.array(attrs['COLOR_0']).copy()
+            colors=geo.array(attrs['_NIGHTCOLOR']).copy()
             occlusion=stream[at:at+len(points),None]
             # A little cool sky survives in recesses even where the large key
             # is fully blocked. The GLB stores scene-linear vertex colors.
             colors[:,:3]=np.rint(colors[:,:3]*(1-occlusion*np.array([.89,.83,.70])))
-            attrs['COLOR_0']=out.attr(colors,5121,normalized=True)
+            attrs['_NIGHTCOLOR']=out.attr(colors,5121,normalized=True)
             at+=len(points)
     for i,parts in modified.items():
         key=json.dumps(parts,sort_keys=True)

@@ -24,6 +24,12 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
   const contact=sample=>cars?`max(${sample},movingCarContact(officeWorldPosition.xz))`:sample;
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
+    if(material.userData.porcelainDayMap){
+      shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
+        if(officeNight<.5){
+          #include <map_fragment>
+        }`);
+    }
     if(role==='brand_sign'){
       shader.uniforms.officeBrandHalo=shared.brandHalo;
       shader.fragmentShader='uniform float officeBrandHalo;\n'+shader.fragmentShader;
@@ -59,6 +65,14 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         vColor.rgb *= porcelainInk[int(_blueink)];
         #endif`);
       shader.fragmentShader = 'uniform vec3 porcelainLampTint;\n' + shader.fragmentShader;
+    }
+    if(material.userData.porcelainNightColor){
+      // Choose the original night bake before applying the selected blue ink.
+      shader.vertexShader='attribute vec4 _nightcolor;uniform float officeNight;\n'+shader.vertexShader.replace(
+        '#include <color_vertex>', `#include <color_vertex>
+        #if defined(USE_COLOR) || defined(USE_COLOR_ALPHA)
+        if(officeNight>.5)vColor.rgb=_nightcolor.rgb;
+        #endif`);
     }
     if(role==='vegetation'){
       // The tree batch carries leaf pigment on crowns and neutral pigment on bark.
@@ -99,7 +113,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         ${material.userData.porcelain?'#define OFFICE_PORCELAIN_DAY':''}
         #ifdef OFFICE_PORCELAIN_DAY
         ${porcelainDaylight}
-        ${streetReceiver&&role==='ground'?`outgoingLight*=1.-.43*${contact('texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).g')};`:''}
+        ${streetReceiver&&role==='ground'?`outgoingLight*=1.-vec3(.22,.17,.10)*${contact('texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).g')};`:''}
         #else
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
         bool interior=officeNightRole==6.||officeNightRole==5.||officeNightRole==9.;
@@ -253,7 +267,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV].join('|');
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV,!!material.userData.porcelainNightColor,!!material.userData.porcelainDayMap].join('|');
   material.needsUpdate=true;
 }
 

@@ -1,6 +1,6 @@
 import {DataTexture, LinearFilter, RGFormat, Vector4} from 'three';
 
-export const PORCELAIN_MODEL='H1-porcelain-v0.5.0.glb';
+export const PORCELAIN_MODEL='H1-porcelain-v0.6.0.glb';
 
 // Red holds lamp irradiance, green holds the contact shadows under parked cars.
 // Both are fixed in world space and stamped just once when the model is mounted.
@@ -47,8 +47,8 @@ export function createStreetLightMap(campus){
   return {texture,transform:new Vector4(minX,minZ,1/(maxX-minX),1/(maxZ-minZ))};
 }
 
-// The GLB carries softbox lighting, ambient occlusion and area-light shadows.
-// Keep the established sliders meaningful around their approved neutral settings.
+// Daylight planes and single-direction shadows are painted into the GLB.
+// Apply the user's lighting controls relative to their neutral settings.
 export const porcelainDaylight = /* glsl */`
   vec3 c=outgoingLight;
   float gain=officeDayGains.x/1.10;

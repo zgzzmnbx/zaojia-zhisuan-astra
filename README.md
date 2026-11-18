@@ -4,7 +4,7 @@
 
 [功能介绍](#主要功能) · [界面与演示](#界面与演示) · [快速开始](#快速开始) · [项目文档](#项目文档) · [问题反馈](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/issues)
 
-本分支提供[办公室白瓷沙盘 Demo v0.5.0](tools/office-twin/porcelain/README.md)。双击 **预览白瓷办公室.bat**。入口和楼顶的国家管网招牌白天为红标黑字，夜间亮起蓝光。园区有 9 盏路灯、2 辆行驶的小车和 3 辆停靠车辆。**画面设置** 中可暂停车辆、调节九楼背景虚化。点 **展开9楼** 拉出九楼，点 **整楼** 收回。
+本分支提供[办公室白瓷沙盘 Demo v0.6.0](tools/office-twin/porcelain/README.md)。双击 **预览白瓷办公室.bat**。日景采用分面着色的建筑白模，窗带与屋顶设备保留清晰的蓝色细节。点 **展开9楼** 拉出办公层，点 **整楼** 收回。**画面设置** 里可以调九楼背景虚化、暂停车辆。入口和楼顶的国家管网招牌白天为红标黑字，夜间亮起蓝光。
 
 > 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.45.0**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
 

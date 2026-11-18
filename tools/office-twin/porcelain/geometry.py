@@ -30,6 +30,27 @@ BLUE_INK = {'cobalt': 1, 'ultra': 1, 'glass': 2, 'fabric': 2,
 KEY = np.array([-.46, .73, .55])
 KEY /= np.linalg.norm(KEY)
 
+# Display-referred swatches for the daytime miniature. Compute the three lit
+# planes and the underside in linear light, then store them in glTF COLOR_0.
+CEL_INK = {k: linear(v) for k, v in {
+    **PALETTE, 'porcelain': (253, 253, 251), 'chalk': (250, 252, 254),
+    'stone': (220, 230, 244), 'metal': (151, 173, 204),
+    'joint': (181, 200, 225), 'reveal': (117, 147, 194),
+    'glass': (77, 125, 232), 'ice': (161, 199, 246),
+    'fabric': (65, 111, 215), 'cobalt': (53, 88, 205), 'ultra': (43, 71, 172),
+    'leaf': (68, 119, 224), 'bud': (77, 127, 229), 'linen': (218, 229, 245)
+}.items()}
+CEL_PLANES = linear([(174, 194, 220), (210, 222, 240), (241, 245, 249), (255, 255, 255)])
+ROOM_PLANES = linear([(157, 181, 211), (193, 209, 230), (228, 237, 247), (252, 253, 251)])
+LEAF_PLANES = linear([(146, 169, 218), (183, 204, 241), (232, 242, 254), (255, 255, 255)])
+
+
+def cel_color(normals, pigment, planes=CEL_PLANES):
+    band = np.searchsorted([-.60, .16, .69], np.asarray(normals) @ KEY)
+    if pigment in ('leaf','bud'):
+        planes = LEAF_PLANES
+    return CEL_INK[pigment] * planes[band]
+
 
 def studio_color(normals, pigment, gain=1):
     """Broad overhead softbox, cool skylight, subtle directional shape."""
@@ -86,7 +107,7 @@ class Source:
 
 class Glb:
     def __init__(self):
-        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.5.0'},
+        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.6.0'},
                     'extensionsUsed': ['KHR_materials_unlit'], 'scene': 0, 'scenes': [{'nodes': []}],
                     'samplers':[{'wrapS':33071,'wrapT':33071,'magFilter':9729,'minFilter':9987}],
                     **{k: [] for k in ['nodes','meshes','materials','textures','images','accessors','bufferViews']}}
@@ -143,11 +164,16 @@ class Glb:
             self.doc['nodes'][parent].setdefault('children', []).append(index)
         return index
 
-    def primitive(self, pos, norm, indices, colors, material, uv=None, night_uv=None, blue_ink=0):
-        rgba = np.column_stack((np.clip(np.rint(colors*255),0,255), np.full(len(pos),255)))
+    def primitive(self, pos, norm, indices, colors, material, uv=None, night_uv=None, blue_ink=0, night_colors=None):
+        def color_attribute(rgb):
+            rgba = np.column_stack((np.clip(np.rint(np.asarray(rgb)*255),0,255), np.full(len(pos),255)))
+            return self.attr(rgba,5121,normalized=True)
         attrs = {'POSITION': self.attr(pos, bounds=True), 'NORMAL': self.attr(norm),
-                 'COLOR_0': self.attr(rgba, 5121, normalized=True),
+                 'COLOR_0': color_attribute(colors),
                  '_BLUEINK': self.attr(np.broadcast_to(blue_ink, (len(pos),)))}
+        if night_colors is not None:
+            attrs['_NIGHTCOLOR'] = color_attribute(night_colors)
+            self.doc['materials'][material]['extras']['porcelainNightColor'] = True
         if uv is not None:
             attrs['TEXCOORD_0'] = self.attr(uv)
         if night_uv is not None:
@@ -195,7 +221,7 @@ class Batch:
     """Combine static details within one floor/lighting role, before delivery."""
     def __init__(self):
         self.pos, self.norm, self.col, self.indices = [], [], [], []
-        self.blue_ink = []
+        self.blue_ink, self.night_col = [], []
 
     def face(self, vertices, pigment, gain=1., normals=None):
         points = np.asarray(vertices, dtype=float)
@@ -205,7 +231,10 @@ class Batch:
             normals = np.repeat(norm[None, :], len(points), axis=0)
         start = len(self.pos)
         self.pos.extend(points); self.norm.extend(normals)
-        self.col.extend(studio_color(normals, pigment, gain))
+        # One tone across a facet. Interpolated corner occlusion used to leave
+        # a diagonal smudge across an otherwise continuous facade or canopy.
+        self.col.extend(np.broadcast_to(cel_color(np.mean(normals,axis=0),pigment),(len(points),3)))
+        self.night_col.extend(studio_color(normals, pigment, gain))
         self.blue_ink.extend([BLUE_INK.get(pigment, 0)] * len(points))
         for i in range(1, len(points)-1):
             self.indices.extend((start, start+i, start+i+1))
@@ -257,7 +286,8 @@ class Batch:
     def emit(self, out, parent, name, role, material, uv=None):
         if not self.indices: return
         pos = np.asarray(self.pos)
-        p = out.primitive(pos,self.norm,self.indices,np.asarray(self.col),material,uv(pos) if uv else None,
-                          blue_ink=self.blue_ink)
+        day_map = out.doc['materials'][material]['extras'].get('porcelainDayMap',False)
+        p = out.primitive(pos,self.norm,self.indices,self.col,material,uv(pos) if uv else None,
+                          blue_ink=self.blue_ink,night_colors=self.night_col if uv is None or day_map else None)
         mesh = out.append('meshes', {'name': name,'primitives':[p]})
         return out.node(name,parent,mesh=mesh,extras={'night_role':role,'porcelainBatch':True})

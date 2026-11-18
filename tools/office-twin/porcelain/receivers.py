@@ -1,6 +1,5 @@
-"""Bake directional penumbrae and contact shadows into horizontal receivers."""
+"""Paint one directional silhouette and a narrow contact shadow per receiver."""
 import io
-import math
 
 import cv2
 import numpy as np
@@ -11,72 +10,75 @@ class Receiver:
     def __init__(self, half, resolution, kind):
         self.half, self.size, self.kind = half, resolution, kind
         self.scale = (resolution - 1) / (2 * half)
-        self.heights = np.zeros((resolution, resolution), dtype=np.float32)
+        self.cast = np.zeros((resolution, resolution), dtype=np.uint8)
+        self.contact = np.zeros_like(self.cast)
 
     def uv(self, points):
         return .5 + points[:, [0,2]] / (2*self.half)
 
-    def caster(self, vertices, above=0.0):
-        y = float(vertices[:,1].max()-above)
-        if y < .06: return
-        xy = np.rint((vertices[:,[0,2]]+self.half)*self.scale).astype(np.int32)
-        hull = cv2.convexHull(xy)
-        x,z,w,d = cv2.boundingRect(hull)
-        x0,z0,x1,z1 = max(x,0),max(z,0),min(x+w,self.size),min(z+d,self.size)
-        if x0>=x1 or z0>=z1: return
-        roi=self.heights[z0:z1,x0:x1]
-        stamp=np.zeros_like(roi)
-        cv2.fillConvexPoly(stamp,hull-np.array([x0,z0],np.int32),y)
-        np.maximum(roi,stamp,out=roi)
+    def caster(self, vertices, above=0., grounded=None):
+        y = vertices[:,1] - above
+        top = float(y.max())
+        if top < .06:
+            return
+        foot = float(max(0.,y.min()))
+        grounded = foot < .24 if grounded is None else grounded
+        hull = cv2.convexHull(np.asarray(vertices[:,[0,2]], dtype=np.float32))
+        if grounded:
+            self.stamp(self.contact, hull)
+            foot = 0.
+        # The same upper-left light defines every shadow. Limit the length on
+        # the site so the tower's silhouette leaves its neighbours readable.
+        reach = {'site': 7.8, 'roof': 2.2, 'interior': .82, 'plant': 2.2}[self.kind]
+        direction = np.array([.42,-.34],np.float32)
+        def offset(height):
+            return direction * min(height, reach / .54)
+        sweep = cv2.convexHull(np.concatenate([hull+offset(foot), hull+offset(top)]))
+        self.stamp(self.cast, sweep)
+
+    def stamp(self, mask, hull):
+        # Sub-pixel edges survive the distant camera without staircase shadows.
+        contour = np.rint((hull+self.half)*self.scale*16).astype(np.int32)
+        cv2.fillConvexPoly(mask,contour,255,lineType=cv2.LINE_AA,shift=4)
 
     def block(self, x,z,w,d,top):
         self.caster(np.array([[x-w/2,top,z-d/2],[x+w/2,top,z-d/2],
-                             [x+w/2,top,z+d/2],[x-w/2,top,z+d/2]]))
+                              [x+w/2,top,z+d/2],[x-w/2,top,z+d/2]]),grounded=True)
 
-    def shift(self, dx, dz):
-        return cv2.warpAffine(self.heights,np.float32([[1,0,dx*self.scale],[0,1,dz*self.scale]]),
-                              (self.size,self.size),flags=cv2.INTER_LINEAR,borderMode=cv2.BORDER_CONSTANT)
+    def canopy(self, x, z, height):
+        angles = np.arange(24)*np.pi/12
+        r = height*.255
+        crown = np.column_stack((x+r*np.cos(angles), np.full(24,height*.67), z+r*np.sin(angles)))
+        self.caster(crown,grounded=False)
+        self.block(x,z,.18,.18,height*.48)
+
+    def cylinder(self,x,z,radius,height):
+        angles = np.arange(24)*np.pi/12
+        ring = np.column_stack((x+radius*np.cos(angles),np.full(24,height),z+radius*np.sin(angles)))
+        self.caster(ring,grounded=True)
 
     def image(self, layout=None, origin=None, px_per_m=None):
-        interior=self.kind=='interior'
-        # Horizon angles from the actual static casters. Several ray elevations
-        # integrate a large area light; the small-radius rays seat furniture.
-        radii=(.075,.16,.30,.52,.80,1.2,1.8,2.7,4) if interior else (.32,.75,1.4,2.5,4.5,8,14,24,40,62)
-        occlusion=np.zeros_like(self.heights)
-        for theta in np.arange(8)*math.tau/8:
-            horizon=np.zeros_like(occlusion)
-            for r in radii:
-                h=self.shift(math.cos(theta)*r,math.sin(theta)*r)
-                np.maximum(horizon,np.minimum(h/(r+.001),3.5),out=horizon)
-            occlusion+=horizon/np.sqrt(1+horizon*horizon)
-        occlusion/=8
-        shade=np.zeros_like(occlusion)
-        for angle,slope in [(2.59,.95),(2.75,1.25),(2.93,1.6),(2.68,1.95),(2.44,1.4)]:
-            blocked=np.zeros_like(shade)
-            for r in radii:
-                h=self.shift(-math.cos(angle)*r,-math.sin(angle)*r)
-                np.maximum(blocked,np.clip((h/r-slope)*1.6,0,1),out=blocked)
-            shade+=blocked/5
-        def blur(a,metres):
-            return cv2.GaussianBlur(a,(0,0),max(.45,self.scale*metres))
-        occ=.67*blur(occlusion,.09 if interior else .35)+.33*blur(occlusion,.26 if interior else 1.5)
-        penumbra=blur(shade,.18 if interior else 1.1)
-        pixels=np.full((self.size,self.size,3),[239,241,247] if interior else [242,244,249],dtype=np.float32)
+        paper, soft_edge, contact_radius = {
+            'site': ((246,249,253),.32,.38),
+            'roof': ((252,253,251),.12,.18),
+            'plant': ((255,255,255),.14,.19),
+            'interior': ((245,248,251),.09,.08)
+        }[self.kind]
+        pixels = np.full((self.size,self.size,3),paper,dtype=np.float32)
         if layout:
             def point(p):
                 return tuple(np.rint(((np.asarray(p)-origin)/px_per_m+self.half)*self.scale).astype(int))
             for room in layout['rooms']:
                 x0,y0,x1,y1=room['bounds_px']
-                rgb=(233,237,244) if room.get('kind')=='shared_office' else (237,239,246)
+                rgb=(232,240,250) if room.get('kind')=='shared_office' else (245,248,251)
                 cv2.rectangle(pixels,point((x0,y0)),point((x1,y1)),rgb,-1)
-        # Fine paving joints remain readable at close zoom. Mipmapping naturally
-        # removes them as the building recedes.
-        axis=np.linspace(-self.half,self.half,self.size,dtype=np.float32)
-        pitch=1.22 if interior else 5.4
-        line=np.abs((axis+.5*pitch)%pitch-.5*pitch)
-        seam=(np.maximum(np.exp(-(line/.019)**2)[:,None],np.exp(-(line/(.019 if interior else .055))**2)[None,:]))
-        pixels-=seam[...,None]*(4 if interior else 5)
-        pixels-=occ[...,None]*np.array([45,42,32])+penumbra[...,None]*np.array([30,29,23])
+        def soft(mask, metres):
+            return cv2.GaussianBlur(mask.astype(np.float32)/255,(0,0),max(.5,metres*self.scale))
+        # Use the stronger of the two inks at overlaps. A cluster of parts can
+        # never turn into a dirty multiply stain.
+        shadow = soft(self.cast,soft_edge)[:,:,None]*[24,21,12]
+        contact = soft(self.contact,contact_radius)[:,:,None]*[39,32,19]
+        pixels -= np.maximum(shadow,contact)
         output=io.BytesIO()
-        Image.fromarray(np.uint8(np.clip(np.rint(pixels),0,255))).save(output,format='PNG',compress_level=7)
+        Image.fromarray(np.rint(pixels).astype(np.uint8)).save(output,format='PNG',compress_level=7)
         return output.getvalue()

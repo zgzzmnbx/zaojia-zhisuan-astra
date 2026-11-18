@@ -81,6 +81,6 @@ def mount_sign(out,parent,material,art_width,name,center_x,bottom,center_z,width
     uv=np.zeros((len(pos),2),dtype=np.float32)
     uv[facing,0]=.5+(pos[facing,0]-center_x)/(ART_WIDTH*emblem_height)
     uv[facing,1]=.5-(pos[facing,1]-bottom-height*.5)/(ART_HEIGHT*emblem_height)
-    prim=out.primitive(pos,board.norm,board.indices,np.asarray(board.col),material,uv)
+    prim=out.primitive(pos,board.norm,board.indices,board.col,material,uv,night_colors=board.night_col)
     mesh=out.append('meshes',{'name':name,'primitives':[prim]})
     out.node(name,parent,mesh=mesh,extras={'night_role':'brand_sign','porcelainBatch':True})

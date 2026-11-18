@@ -161,13 +161,15 @@ def tree(batch,x,z,height,seed,receiver):
                 pigment='bud' if (j+k)%6==0 else 'leaf'
                 batch.face([rim[k],tip+[0,size,0],rim[(k+1)%5]],pigment,rng.uniform(.89,1.17))
                 batch.face([rim[(k+1)%5],tip-[0,size*.8,0],rim[k]],'leaf',.84)
-    receiver.block(x,z,height*.46,height*.46,height*.83)
+    receiver.canopy(x,z,height)
 
 
-def pavilion(wall,windows,x,z,w,d,h,kind,receiver):
+def pavilion(wall,windows,x,z,w,d,h,kind,receiver,roof_shade,roof_vertices):
     wall.box(x,-.4,z,w+.8,.78,d+.8,'stone',.12,.55)
     wall.box(x,.38,z,w,h-.38,d,'chalk',.16,.48)
+    cap_start=len(wall.pos)
     wall.box(x,h,z,w+.48,.31,d+.48,'porcelain',.085,.52)
+    roof_vertices.extend(i for i in range(cap_start,len(wall.pos)) if wall.norm[i][1]>.999)
     receiver.block(x,z,w,d,h+.3)
     floor_count=2 if h>7 else 1
     for floor in range(floor_count):
@@ -180,13 +182,16 @@ def pavilion(wall,windows,x,z,w,d,h,kind,receiver):
     if kind=='utility':
         for off in (-.28,0,.28):
             wx=x+w*off
+            roof_shade.cylinder(wx,z,1.56,2.94)
             wall.tube((wx,h+.3,z),(wx,h+3,z),1.56,1.32,'porcelain',24)
             wall.tube((wx,h+2.9,z),(wx,h+3.25,z),1.49,1.49,'stone',24)
             wall.tube((wx,h+3.245,z),(wx,h+3.26,z),1.13,1.13,'reveal',24)
         for dz in (-2.6,2.6):
+            roof_shade.caster(np.array([[x+dx,.80,z+dz+dd] for dx in (-w*.4,w*.4) for dd in (-.26,.26)]))
             wall.tube((x-w*.4,h+.89,z+dz),(x+w*.4,h+.89,z+dz),.26,.26,'metal',12)
     else:
         for off in (-.22,.22):
+            roof_shade.block(x+w*off,z,3.8,3.45,1.8)
             windows.box(x+w*off,h+.32,z,3.8,.3,3.45,'cobalt',.055)
             wall.box(x+w*off,h+.62,z,3.64,1.5,3.32,'porcelain',.09,.22)
             for slat in range(6):
@@ -253,7 +258,9 @@ def campus(out,parent):
            (-10,-53,31,19,7,'office'),(12,57,20,11,4,'office'),
            (-54,44,22,14,6,'utility'),(61,33,19,22,7,'office'),
            (-58,-52,20,15,8,'office'),(45,-64,28,15,6,'office')]
-    for args in sites: pavilion(wall,blue,*args,ground)
+    roof_shade=Receiver(86,768,'plant')
+    roof_vertices=[]
+    for args in sites: pavilion(wall,blue,*args,ground,roof_shade,roof_vertices)
     plant_court(wall,blue,ground)
     for i,(x,z) in enumerate([(-6,26),(4,27),(8,32),(-18,21),(25,6),(-34,15),(39,-3),(-10,44),(41,22),(-2,-30)]):
         pedestrian(wall,blue,x,z,i*.91,ground)
@@ -276,6 +283,15 @@ def campus(out,parent):
     out.doc['nodes'][parent]['extras'].update(place_streetscape(kit,ground,out,parent))
     for i in range(9):
         wall.box(-3.5+i*.85,-.4,35.6,.40,.02,3.1,'porcelain')
+    # Only the eight existing roof faces sample the equipment shadows. All
+    # other vertices sample blank paper at the corner of the same atlas.
+    def roof_uv(pos):
+        uv=np.zeros((len(pos),2),dtype=np.float32)
+        uv[roof_vertices]=roof_shade.uv(pos[roof_vertices])
+        return uv
+    mask=out.texture('Pavilions / equipment shadows',roof_shade.image())
+    mat=out.material('Porcelain_context',mask,{'porcelainDayMap':True})
+    kit.parts.pop('context').emit(out,parent,'Porcelain_Campus_context','context',mat,roof_uv)
     kit.finish(out,parent,'Porcelain_Campus')
     tex=out.texture('Civic square / daylight',ground.image())
     base.emit(out,parent,'ContextWeb_RoadsBases_Porcelain','ground',out.material('Porcelain Paving',tex),ground.uv)
