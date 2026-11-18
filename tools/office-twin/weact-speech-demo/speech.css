@@ -1,0 +1,93 @@
+.weact-demo-panel {
+  position: fixed;
+  z-index: 14;
+  inset-inline-start: 16px;
+  inset-block-end: 50px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--astra-line);
+  border-radius: 12px;
+  background: var(--astra-paper);
+  color: var(--astra-ink);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--astra-ink) 9%, transparent);
+}
+
+.weact-demo-panel strong {
+  display: block;
+  font-size: var(--dws-font-size-14, 14px);
+  line-height: 1.4;
+}
+
+#weact-demo-status {
+  margin-block: 3px 0;
+  color: var(--astra-muted);
+  font-size: var(--dws-font-size-12, 12px);
+  line-height: 1.45;
+}
+
+.weact-demo-panel[data-feed-state="unavailable"] #weact-demo-status {
+  color: var(--astra-accent);
+}
+
+.weact-speech-bubble {
+  position: absolute;
+  z-index: 2;
+  inset-inline-start: 50%;
+  inset-block-end: calc(100% + 12px);
+  transform: translateX(-50%);
+  display: block;
+  inline-size: max-content;
+  max-inline-size: min(280px, 46vw);
+  padding: 10px 13px;
+  border: 1px solid color-mix(in srgb, var(--astra-primary) 38%, var(--astra-line));
+  border-radius: 12px;
+  background: var(--astra-paper);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--astra-ink) 15%, transparent);
+  color: var(--astra-ink);
+  font-size: var(--dws-font-size-14, 14px);
+  font-weight: 500;
+  line-height: 1.55;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+
+.weact-speech-bubble[hidden] {
+  display: none;
+}
+
+.weact-speech-bubble::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(50% - 5px);
+  inset-block-end: -6px;
+  inline-size: 10px;
+  block-size: 10px;
+  rotate: 45deg;
+  border: inherit;
+  border-inline-start: 0;
+  border-block-start: 0;
+  background: inherit;
+}
+
+.office-person-marker:has(> .weact-speech-bubble:not([hidden])) {
+  overflow: visible;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .weact-speech-bubble:not([hidden]) {
+    animation: weact-speech-appear 180ms ease-out;
+  }
+  @keyframes weact-speech-appear {
+    from { opacity: 0; translate: 0 4px; }
+  }
+}
+
+#host-artifact,
+.office-modebar [data-host-action] {
+  display: none !important;
+}
