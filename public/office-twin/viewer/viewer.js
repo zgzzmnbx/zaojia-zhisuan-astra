@@ -86,7 +86,7 @@ export async function mountOfficeViewer() {
     target.addEventListener(type, handler, options);
     listenerRemovers.push(() => target.removeEventListener(type, handler, options));
   }
-  function active() { return !disposed && requestedVisible && inView && !pageSuspended && !document.hidden; }
+  function active() { return !disposed && requestedVisible && inView && !pageSuspended && !document.hidden && !$('#office-admin-settings')?.open; }
   function notify(type, data = {}) {
     if (embedded && window.parent !== window) window.parent.postMessage({ namespace: PROTOCOL, type, ...data }, location.origin);
   }
@@ -231,7 +231,7 @@ export async function mountOfficeViewer() {
   function setVisible(visible) {
     if (typeof visible !== 'boolean') throw new TypeError('visible must be boolean');
     const returning=visible&&!requestedVisible&&loadReport.webglRendered&&!entrance.state().running;
-    requestedVisible = visible;if(!visible)releaseOrbitHold?.();orbit?.sync();
+    requestedVisible = visible;window.dispatchEvent(new CustomEvent('office-scene-visibility',{detail:visible}));if(!visible)releaseOrbitHold?.();orbit?.sync();
     if(!visible){frameMeter.suspend();floorLabel?.restore();people?.suspend();people?.closeMenu();entrance.suspend();suspendMotion();}
     if(returning&&params.get('entrance')==='office'){setView('building',{animate:false,automatic:true});entrance.start();}
     if (!active() && frame) { cancelAnimationFrame(frame); frame = 0; }
@@ -574,6 +574,7 @@ export async function mountOfficeViewer() {
       if (event.key === 'Home') resetCamera(); else if (event.key === 'Escape') setView('building'); else zoom(event.key === '-' ? .8 : 1.25);
     }
   });
+  listen(window,'office-admin-visibility',()=>{orbit.sync();if(active()){requestFrame();}else{frameMeter.suspend();people?.suspend();suspendMotion();if(frame){cancelAnimationFrame(frame);frame=0;}}});
   listen(document, 'visibilitychange', () => { orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();suspendMotion();} if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; } });
   listen(window, 'pagehide', event => {
     if (event.persisted) {

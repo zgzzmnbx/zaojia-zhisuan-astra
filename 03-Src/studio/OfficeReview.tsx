@@ -13,9 +13,11 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   const actions=useRef({prepare,close});actions.current={prepare,close};
   const [ready,setReady]=useState(false),[error,setError]=useState(''),[generation,setGeneration]=useState(0);
   const [sceneReady,setSceneReady]=useState(0);
+  const [settingsOpen,setSettingsOpen]=useState(false);
   const [mounted,setMounted]=useState(false),[rendered,setRendered]=useState(false);
   useEffect(()=>{
     // Let the host's loading logo paint before the iframe initializes WebGL.
+    setSettingsOpen(false);
     let second=0;const first=requestAnimationFrame(()=>{second=requestAnimationFrame(()=>setMounted(true));});
     return()=>{cancelAnimationFrame(first);cancelAnimationFrame(second);};
   },[generation]);
@@ -92,6 +94,7 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
         setSceneReady(v=>v+1);return;
       }
       if(event.data?.namespace!==namespace)return;
+      if(event.data.type==='settings-visibility'&&typeof event.data.open==='boolean'){setSettingsOpen(event.data.open);return;}
       if(event.data.type==='ready'){setReady(true);setError('');}
       if(event.data.type==='action'&&visible.current){
         if(event.data.action==='prepare')actions.current.prepare();
@@ -118,9 +121,9 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'visibility',visible:active},location.origin);
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'theme',theme:{palette,scheme:dark?'dark':'light'}},location.origin);
   },[ready,active,dark,palette,sceneReady]);
-  return <div className="office-review-host" aria-busy={!rendered&&!error}>
+  return <div className="office-review-host" data-settings-open={settingsOpen&&active} aria-busy={!rendered&&!error}>
     {!rendered&&<div className="office-review-loading" role="status"><div><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><span>{error?'办公室尚未载入':'正在加载办公室沙盘…'}</span></div></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.49.1" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.50.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }

@@ -34,6 +34,7 @@ import business_settings
 import demo_cues
 import office_workstations
 import office_task_settings
+import office_chat
 import demo_settings
 demo_settings.install(engine)
 import demo_match
@@ -69,11 +70,11 @@ async def host_lifespan(_app):
         await asyncio.to_thread(gork_output.stop)
         await asyncio.to_thread(gork_web.stop)
 
-app = FastAPI(title='智算Astra', version='0.17.0', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.18.0', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','demo_cues.py','office_workstations.py','office_task_settings.py','demo_settings.py','demo_match.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_speech.py','gork_web_speech.py','gork_review.py','gork_replay.py','gork_commands.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
-for name in ('weact_read_only.py', 'professional-assets/feishu_bot_runner.py'):
+for name in ('office_chat.py', 'weact_read_only.py', 'professional-assets/feishu_bot_runner.py'):
     HOST_SOURCES[name] = hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest()
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
@@ -136,6 +137,7 @@ app.include_router(professional_host.router)
 app.include_router(business_settings.router)
 app.include_router(office_workstations.router)
 app.include_router(office_task_settings.router)
+app.include_router(office_chat.router)
 app.include_router(demo_settings.router)
 app.include_router(demo_cues.router)
 app.include_router(row_assist.router)
@@ -195,7 +197,11 @@ async def boundaries(request: Request, call_next):
                 return JSONResponse({'detail':'请先在 Astra 连接设置中明确启用外部协同，再配置平台。当前未发送消息。'},409)
             if request.url.path in {'/api/collaboration/external-dispatch/tasks','/api/collaboration/external-dispatch/web-review'} and not professional_host.config().get('external_enabled'):
                 return JSONResponse({'detail':'尚未启用外部协同，未发起派发'},409)
-            if request.url.path in {'/api/astra/documents/prepare','/api/astra/row-assist/candidates','/api/astra/row-assist/details','/api/astra/row-assist/ask'} or request.url.path.startswith(('/api/astra/workspace/', '/api/astra/weknora/', '/api/astra/gork/notifications', '/api/astra/gork/commands', '/api/knowledge/ask-stream', '/api/knowledge/requests/')) or request.url.path.endswith('/ai-matching/cancel'):
+            # These office files have independent revision locks. Saving a display preference
+            # must never occupy the business write lock used by review dispatch and callbacks.
+            office_preference = request.method == 'PUT' and request.url.path in {
+                '/api/astra/office-chat/settings', '/api/astra/office-workstations', '/api/astra/office-task-settings'}
+            if office_preference or request.url.path in {'/api/astra/documents/prepare','/api/astra/row-assist/candidates','/api/astra/row-assist/details','/api/astra/row-assist/ask'} or request.url.path.startswith(('/api/astra/workspace/', '/api/astra/weknora/', '/api/astra/gork/notifications', '/api/astra/gork/commands', '/api/knowledge/ask-stream', '/api/knowledge/requests/')) or request.url.path.endswith('/ai-matching/cancel'):
 
                 try:
                     response = await call_next(request)

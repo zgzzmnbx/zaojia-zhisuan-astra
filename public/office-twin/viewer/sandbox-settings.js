@@ -1,78 +1,86 @@
 const namespace='astra-office-settings:v1';
-const tabNames=['picture','seats','tasks'];
-
+const adminTabs=['profiles','tasks','chat','camera'];
 export function createSandboxSettings({workstations,getTasks,onSaved}){
-  const dialog=document.querySelector('#office-sandbox-settings');
-  const trigger=document.querySelector('#picture-toggle'),close=document.querySelector('#office-pref-close');
-  const tabs=[...dialog.querySelectorAll('[role=tab]')],taskPanel=document.querySelector('#office-tasks-panel');
-  const controller=new AbortController(),options={signal:controller.signal};
-  let opened=false,active='picture',frame=null,taskBusy=false,person='owner',returnTo=null;
-  function send(type,data={}){
-    frame?.contentWindow?.postMessage({namespace,type,...data},location.origin);
+  const side=document.querySelector('#office-sandbox-settings'),admin=document.querySelector('#office-admin-settings');
+  const manage=document.querySelector('#picture-toggle'),preview=document.querySelector('#office-preview-toggle');
+  const tabs=[...side.querySelectorAll('[role=tab]')],controller=new AbortController(),opts={signal:controller.signal};
+  let active='picture',frame=null,busy=false,returnTo=null,destination={tab:'tasks',person:''};
+  const sideOpen=()=>side.hasAttribute('open')||side.matches(':popover-open');
+  function send(type,data={}){frame?.contentWindow?.postMessage({namespace,type,...data},location.origin);}
+  function syncTheme(){const {astraScheme:scheme,astraPalette:palette}=document.documentElement.dataset;send('theme',{scheme,palette});}
+  function syncTasks(){if(frame)send('context',{tasks:getTasks()});}
+  const theme=new MutationObserver(syncTheme);theme.observe(document.documentElement,{attributes:true,attributeFilter:['data-astra-scheme','data-astra-palette']});
+  function changeVisibility(){
+    window.dispatchEvent(new Event('office-admin-visibility'));
+    if(parent!==window)parent.postMessage({namespace:'astra-office-selection:v1',type:'settings-visibility',open:admin.open},location.origin);
   }
-  function syncTheme(){
-    const {astraScheme:scheme,astraPalette:palette}=document.documentElement.dataset;
-    send('theme',{scheme,palette});
+  function closeSide(){
+    if(!sideOpen())return;
+    if(side.hidePopover)side.hidePopover();else side.close();
+    workstations.deactivate(true);preview.setAttribute('aria-expanded','false');
   }
-  const theme=new MutationObserver(syncTheme);
-  theme.observe(document.documentElement,{attributes:true,attributeFilter:['data-astra-scheme','data-astra-palette']});
-  function syncTasks(){if(opened&&frame)send('context',{tasks:getTasks()});}
-  function setTab(name){
-    if(!tabNames.includes(name)||taskBusy||workstations.isSaving())return;
-    if(active==='seats'&&name!=='seats')workstations.deactivate();
-    active=name;
-    for(const tab of tabs){
-      const selected=tab.dataset.pref===active;
-      tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;
-      document.getElementById(tab.getAttribute('aria-controls')).hidden=!selected;
-    }
-    if(active==='seats')void workstations.activate();
-    if(active==='tasks'&&!frame){
-      frame=document.createElement('iframe');frame.title='沙盘人员任务编辑器';
-      frame.src='/office-tasks.html?person='+encodeURIComponent(person);
-      taskPanel.append(frame);
-    }
-  }
-  function open(name=active,personId){
-    if(!opened){
-      returnTo=document.activeElement;
-      opened=true;
-      if(dialog.showPopover)dialog.showPopover();else dialog.show();
-      trigger.setAttribute('aria-expanded','true');
-    }
-    if(personId){person=personId;send('person',{person});}
-    setTab(name);
-    tabs.find(tab=>tab.dataset.pref===active)?.focus({preventScroll:true});
+  function closeAdmin(){
+    if(!admin.open)return;
+    admin.close();manage.setAttribute('aria-expanded','false');changeVisibility();
   }
   function dismiss(){
-    if(!opened||taskBusy||workstations.isSaving())return;
-    opened=false;workstations.deactivate(true);
-    frame?.remove();frame=null;taskBusy=false;
-    if(dialog.hidePopover)dialog.hidePopover();else dialog.close();
-    trigger.setAttribute('aria-expanded','false');
-    const focus=returnTo?.isConnected&&returnTo.getClientRects().length&&returnTo!==document.body?returnTo:trigger;
-    focus.focus({preventScroll:true});
+    if(busy||workstations.isSaving())return;
+    const button=admin.open?manage:preview;
+    closeSide();closeAdmin();(returnTo?.isConnected&&returnTo.getClientRects().length&&returnTo!==document.body?returnTo:button).focus({preventScroll:true});
   }
-  trigger.addEventListener('click',()=>opened?dismiss():open(),options);
-  close.addEventListener('click',dismiss,options);
-  for(const tab of tabs)tab.addEventListener('click',()=>setTab(tab.dataset.pref),options);
-  dialog.querySelector('[role=tablist]').addEventListener('keydown',e=>{
+  function setTab(name){
+    if(workstations.isSaving())return;
+    if(active==='seats'&&name!=='seats')workstations.deactivate();
+    active=name;
+    for(const t of tabs){
+      const selected=t.dataset.pref===name;t.tabIndex=selected?0:-1;t.setAttribute('aria-selected',String(selected));
+      document.getElementById(t.getAttribute('aria-controls')).hidden=!selected;
+    }
+    if(name==='seats')void workstations.activate();
+  }
+  function open(name,personId){
+    if(busy||workstations.isSaving())return;
+    if(!sideOpen()&&!admin.open)returnTo=document.activeElement;
+    if(name==='picture'||name==='seats'){
+      closeAdmin();if(!sideOpen()){if(side.showPopover)side.showPopover();else side.show();}
+      preview.setAttribute('aria-expanded','true');setTab(name);tabs.find(t=>t.dataset.pref===name)?.focus();return;
+    }
+    closeSide();
+    if(adminTabs.includes(name))destination={tab:name,person:personId||''};
+    if(!frame){
+      frame=document.createElement('iframe');frame.title='办公室沙盘设置';const url=new URL('/office-settings.html',location.origin);
+      url.searchParams.set('tab',destination.tab);if(destination.person)url.searchParams.set('person',destination.person);
+      frame.src=url.href;admin.append(frame);
+    }else if(adminTabs.includes(name))send('navigate',destination);
+    if(!admin.open){admin.showModal();changeVisibility();}
+    manage.setAttribute('aria-expanded','true');frame.focus();
+  }
+  manage.addEventListener('click',()=>open(),opts);preview.addEventListener('click',()=>sideOpen()?dismiss():open(active),opts);
+  document.querySelector('#office-pref-close').addEventListener('click',dismiss,opts);
+  for(const t of tabs)t.addEventListener('click',()=>setTab(t.dataset.pref),opts);
+  side.querySelector('[role=tablist]').addEventListener('keydown',e=>{
     const i=tabs.indexOf(e.target);if(i<0)return;
     const next={ArrowRight:(i+1)%tabs.length,ArrowLeft:(i+tabs.length-1)%tabs.length,Home:0,End:tabs.length-1}[e.key];
-    if(next===undefined||taskBusy||workstations.isSaving())return;
-    e.preventDefault();tabs[next].focus();
-  },options);
-  document.addEventListener('keydown',e=>{
-    if(opened&&e.key==='Escape'&&!e.defaultPrevented){e.preventDefault();e.stopPropagation();dismiss();}
-  },{...options,capture:true});
+    if(next===undefined||workstations.isSaving())return;e.preventDefault();setTab(tabs[next].dataset.pref);tabs[next].focus();
+  },opts);
+  side.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();dismiss();}},opts);
+  admin.addEventListener('cancel',e=>{e.preventDefault();dismiss();},opts);
   window.addEventListener('message',e=>{
-    if(!frame||e.source!==frame.contentWindow||e.origin!==location.origin||e.data?.namespace!==namespace)return;
-    if(e.data.type==='ready'){syncTheme();syncTasks();send('person',{person});}
-    if(e.data.type==='busy'){taskBusy=!!e.data.busy;close.disabled=taskBusy;tabs.forEach(t=>t.disabled=taskBusy);}
-    if(e.data.type==='saved')onSaved(e.data.value);
-    if(e.data.type==='close')dismiss();
-  },options);
+    if(!frame||e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.namespace!==namespace)return;
+    const d=e.data;
+    switch(d.type){
+      case 'ready':syncTheme();syncTasks();send('navigate',destination);break;
+      case 'busy':busy=!!d.busy;break;
+      case 'saved':onSaved(d.value);break;
+      case 'roster-saved':void workstations.refresh();break;
+      case 'chat-saved':window.dispatchEvent(new Event('office-chat-saved'));break;
+      case 'camera':window.dispatchEvent(new CustomEvent('office-camera-preference',{detail:d.value}));break;
+      case 'preview':if(d.name==='seats'||d.name==='picture')open(d.name);break;
+      case 'close':dismiss();break;
+    }
+  },opts);
+  window.addEventListener('storage',e=>{if(e.key==='astra.office.roster-revision')void workstations.refresh();},opts);
   const query=new URLSearchParams(location.search),initial=query.get('settings');
-  if(tabNames.includes(initial))open(initial,query.get('person'));
-  return {open,dismiss,syncTasks,dispose(){controller.abort();theme.disconnect();frame?.remove();frame=null;}};
+  if([...adminTabs,'picture','seats'].includes(initial))open(initial,query.get('person'));
+  return {open,dismiss,syncTasks,dispose(){controller.abort();theme.disconnect();closeAdmin();closeSide();frame?.remove();}};
 }

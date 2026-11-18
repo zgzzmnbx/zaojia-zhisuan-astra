@@ -5,6 +5,8 @@
 .office-picker-summary span{color:var(--muted);font-size:12px}
 .studio #shell.live-shell .office-workbench>.office-surface{position:absolute;inset:0;z-index:0;width:100%;height:100%;overflow:hidden}
 .office-surface[hidden]{display:none!important}
+.studio #shell.live-shell .office-workbench>.office-surface:has(.office-review-host[data-settings-open=true]){z-index:30}
+.studio #shell.live-shell .office-workbench:has(.office-review-host[data-settings-open=true]) :is(#astra-conversation,[role=separator]){visibility:hidden!important;opacity:0;pointer-events:none}
 .office-surface .office-review-host{position:relative;width:100%;height:100%;min-height:0;display:block}
 .office-surface iframe{position:absolute;inset:0;width:100%;height:100%;min-height:0}
 .office-surface .alert{position:absolute;z-index:4;left:calc(var(--office-chat-width,600px) + 12px);right:20px;top:72px;width:auto}

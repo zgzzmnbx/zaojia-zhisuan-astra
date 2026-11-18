@@ -1,8 +1,8 @@
 import {useEffect,useRef,useState} from 'react';
 import type {ReactNode} from 'react';
 import {api} from './api';
-import {officeDirectory,pendingOfficeTask,type OfficeTask,type PendingOfficeReview} from './office-review';
-import type {ReviewOptions} from './review-flow';
+import {pendingOfficeTask,type OfficeTask,type PendingOfficeReview} from './office-review';
+import {loadOfficeRoster} from './office-settings-roster';
 import './office-task-settings.css';
 
 type Person={id:string;name:string};
@@ -29,17 +29,11 @@ const dateLabel=(value?:string)=>value&&Number.isFinite(Date.parse(value))?clock
 const origin=(task:Entry)=>task.manual?'自建':task.demo?'示例':task.platformLabel||'平台复核';
 
 async function loadResources(signal:AbortSignal):Promise<Resources> {
-  const options=['default','weact_cost'].map(async profileId=>({
-    profileId,options:await api<ReviewOptions>('/api/collaboration/external-dispatch/options?profile_id='+profileId,{signal}),
-  }));
-  const [model,roster,plan,reviews,directory]=await Promise.all([
-    import(/* @vite-ignore */ modelUrl) as Promise<Model>,api<{people:Person[]}>('/api/astra/office-workstations',{signal}),
+  const [model,roster,plan,reviews]=await Promise.all([
+    import(/* @vite-ignore */ modelUrl) as Promise<Model>,loadOfficeRoster(signal),
     api<Plan>(endpoint,{signal}),api<{items:PendingOfficeReview[]}>('/api/astra/office-workstations/pending-reviews',{signal}).catch(()=>null),
-    Promise.allSettled(options),
   ]);
-  const platforms=directory.flatMap(r=>r.status==='fulfilled'?[r.value]:[]);
-  const people=model.workstationRoster(officeDirectory(platforms),roster);
-  return {model,people,plan,pending:(reviews?.items||[]).map(pendingOfficeTask),pendingError:!reviews};
+  return {model,people:roster.people,plan,pending:(reviews?.items||[]).map(pendingOfficeTask),pendingError:!reviews};
 }
 
 function TaskGroup({name,count,reveal,initiallyOpen,children}:{name:string;count:number;reveal:boolean;initiallyOpen:boolean;children:ReactNode}){
@@ -57,6 +51,15 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
   const [notice,setNotice]=useState(''),[error,setError]=useState(''),[saving,setSaving]=useState(false),[conflict,setConflict]=useState(false);
   const titleInput=useRef<HTMLInputElement>(null);
   useEffect(()=>{if(initialPerson)setPerson(initialPerson);},[initialPerson]);
+  useEffect(()=>{
+    const controller=new AbortController();
+    const refresh=()=>{loadOfficeRoster(controller.signal).then(({people})=>{
+      if(!controller.signal.aborted)setData(old=>old?{...old,people}:old);
+    }).catch(()=>{});};
+    const storage=(event:StorageEvent)=>{if(event.key==='astra.office.roster-revision')refresh();};
+    window.addEventListener('office-roster-saved',refresh);window.addEventListener('storage',storage);
+    return ()=>{controller.abort();window.removeEventListener('office-roster-saved',refresh);window.removeEventListener('storage',storage);};
+  },[]);
   useEffect(()=>{
     const controller=new AbortController();
     loadResources(controller.signal).then(value=>{if(!controller.signal.aborted){setData(value);setError('');}})

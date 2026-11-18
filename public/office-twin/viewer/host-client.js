@@ -5,6 +5,7 @@ import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
 import {bindSelectedPersonDrag,canRemoveSelectedPerson} from './selected-person-drag.js';
 import {mountDutyBoard,officeExamples,indexPersonTasks} from './duty-board.js';
 import {applyTaskPlan,planEndpoint,planNotice} from './task-plan.js';
+import {mountOfficeSpeech} from './office-speech.js';
 import {createSandboxSettings} from './sandbox-settings.js';
 import {icon} from '../astra_ui/icons.js';
 const namespace='astra-office-selection:v1';
@@ -13,7 +14,7 @@ let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null;
 let dragStart=null,chatRect=null,completedNativeDrag=null;
-let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null,dutyBoard=null,sandboxSettings=null;
+let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null,dutyBoard=null,sandboxSettings=null,speech=null;
 // A directly opened office uses saved workstation profiles. The parent owns review selection.
 let hostSnapshot=null;
 let taskSettings={revision:-1,members:{}};
@@ -139,6 +140,7 @@ export const officeClient={
     const toolbar=$('#office-tools');
     dutyBoard=mountDutyBoard($('#task-list'));
     workstations=createWorkstationSettings({panel:$('#office-workstations'),getPeople:()=>snapshot.employees,onChange:config=>{workstationConfig=config;applyHostSnapshot();},onClose:()=>sandboxSettings?.dismiss()});
+    speech=mountOfficeSpeech();
     sandboxSettings=createSandboxSettings({workstations,getTasks:()=>hostSnapshot?.tasks||[],onSaved:acceptPlan});
     for(const [action,label] of [['prepare','复核设置'],['close','返回沙盘']]){
       const button=element('button',label,'btn btn-ghost btn-sm');button.type='button';button.dataset.hostAction=action;
@@ -176,5 +178,5 @@ export const officeClient={
   subscribe(fn){listeners.add(fn);fn('snapshot',snapshot);return()=>listeners.delete(fn);},
   getState:()=>snapshot,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
-  dispose(){window.removeEventListener('message',receive);window.removeEventListener('storage',onPlanStorage);window.removeEventListener('focus',refreshPlan);selectedDrag?.dispose();artifactObserver?.disconnect();sandboxSettings?.dispose();workstations?.dispose();listeners.clear();},
+  dispose(){window.removeEventListener('message',receive);window.removeEventListener('storage',onPlanStorage);window.removeEventListener('focus',refreshPlan);selectedDrag?.dispose();artifactObserver?.disconnect();speech?.dispose();sandboxSettings?.dispose();workstations?.dispose();listeners.clear();},
 };

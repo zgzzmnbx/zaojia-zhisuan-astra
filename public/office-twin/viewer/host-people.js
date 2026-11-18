@@ -29,7 +29,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   motionInput.type='checkbox';motionInput.className='checkbox checkbox-sm';motionInput.id='office-people-motion';motionInput.checked=motionEnabled;motionLabel.htmlFor=motionInput.id;motionRow.append(motionLabel,motionInput);document.querySelector('#picture-controls').append(motionRow);
   listen(motionInput,'change',()=>{motionEnabled=motionInput.checked;clock.suspend();try{localStorage.setItem(motionKey,String(motionEnabled));}catch{}requestFrame();});
   listen(reduced,'change',()=>{clock.suspend();requestFrame();});
-  let current=null,disposed=false,signature='',rigRevision=0,business=officeClient.getState();
+  let current=null,disposed=false,signature='',rigRevision=0,business=officeClient.getState(),speaker='';
+  listen(window,'office-speaking',event=>{speaker=event.detail;requestFrame();});
   const polyfork=createPolyforkAssets(),styleKey='astra.office.people-style.v1';
   let personStyle='classic',styleTemplate=null,styleRequest=0,styleLoading=false,styleError='';
   const styleRow=el('div','','office-picture-row office-person-style'),styleLabel=el('label','人物风格'),styleSelect=el('select','','select select-sm'),styleStatus=el('small','','office-person-style-status');
@@ -205,14 +206,16 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     }
     if(arrived)paint();
     syncPositions();const boxes=[];
-    for(const item of [...actors.values()].sort((a,b)=>Number(b.person.id===current)-Number(a.person.id===current))){
+    const labelPriority=item=>item.person.id===speaker?2:Number(item.person.id===current);
+    for(const item of [...actors.values()].sort((a,b)=>labelPriority(b)-labelPriority(a))){
       const reactionAge=seconds-item.reactionAt,reaction=reactionAge<1.6?Math.sin(Math.PI*Math.max(0,reactionAge)/1.6):0;
       item.rig.pose(seconds,!!item.dragPosition,standing(item,seconds)??(item.idle||item.walk?.rise>0?item.walk:null),reaction);
       // pose() already refreshed the rig's world matrices for this frame.
       const head=item.rig.head.getWorldPosition(new THREE.Vector3()).project(camera);item.screenPoint={x:rect.left+(head.x*.5+.5)*width,y:rect.top+(-head.y*.5+.5)*height};
       projected.copy(item.group.position).project(camera);projectedTop.set(0,1.7,0).applyQuaternion(camera.quaternion).add(item.group.position).project(camera);
       item.labelPixels=Math.abs(projectedTop.y-projected.y)*height/2;
-      const level=personLabelLevel(item.labelPixels,item.labelLevel);
+      const normalLevel=personLabelLevel(item.labelPixels,item.labelLevel);
+      const level=normalLevel==='hidden'&&item.person.id===speaker?'name':normalLevel;
       if(level!==item.labelLevel){
         item.labelLevel=level;item.marker.dataset.detail=level;
         // Measure only at a label-level transition, not during every animation frame.

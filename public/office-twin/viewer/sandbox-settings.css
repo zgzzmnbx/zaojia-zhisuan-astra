@@ -18,12 +18,15 @@
 #office-sandbox-settings [role=tabpanel] {min-height:0;flex:1}
 #office-sandbox-settings #picture-panel {margin:0;padding:6px 16px 0;overflow:auto;overscroll-behavior:contain}
 #office-sandbox-settings #picture-controls {max-height:none;min-height:0;overflow:visible}
-#office-camera-controls {padding:8px 0;border-block:1px solid var(--astra-line);margin:8px 0}
-#office-camera-controls summary {cursor:pointer;font-weight:600;font-size:14px}
-#office-camera-controls [role=status] {font-size:12px;color:var(--astra-muted)}
 #office-sandbox-settings .office-picture-actions {position:sticky;bottom:0;padding:12px 0;background:var(--astra-paper)}
 #office-sandbox-settings .office-workstations {position:static;inset:auto;margin:0;width:100%;height:auto;overflow:hidden;border:0;border-radius:0;box-shadow:none}
 #office-sandbox-settings .office-workstations header {justify-content:flex-end;padding-block:3px}
 #office-sandbox-settings .workstations-fields {padding-top:10px}
-#office-tasks-panel iframe {display:block;border:0;width:100%;height:100%;background:var(--astra-paper)}
+#office-admin-settings {position:fixed;inset:0;margin:0;padding:0;width:100%;max-width:none;height:100dvh;max-height:none;overflow:hidden;border:0;background:var(--astra-soft);color:var(--astra-ink)}
+#office-admin-settings iframe {display:block;width:100%;height:100%;border:0;background:var(--astra-soft)}
+#office-admin-settings::backdrop {background:var(--astra-soft)}
+.office-person-marker:has(>.office-speech) {overflow:visible;z-index:5}
+.office-speech {position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);display:grid;gap:3px;width:max-content;max-width:min(250px,62vw);padding:8px 12px;border:1px solid var(--astra-line);border-radius:12px;background:var(--astra-paper);color:var(--astra-ink);font-size:13px;font-weight:500;text-align:start;line-height:1.45;white-space:normal;overflow-wrap:anywhere;pointer-events:none;box-shadow:0 4px 16px rgba(28,48,80,.12)}
+.office-speech>span:first-child {font-size:12px;color:var(--astra-primary);font-weight:600}
+.office-speech::after {content:"";position:absolute;width:8px;height:8px;bottom:-5px;left:calc(50% - 4px);transform:rotate(45deg);border:solid var(--astra-line);border-width:0 1px 1px 0;background:var(--astra-paper)}
 @media(max-width:620px){#office-sandbox-settings{inset:6px 6px auto auto;width:calc(100vw - 12px);height:calc(100dvh - 12px - var(--host-bottom-inset,0px))}}
