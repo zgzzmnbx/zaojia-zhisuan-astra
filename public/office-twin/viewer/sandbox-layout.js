@@ -2,14 +2,36 @@
 export function mountSandboxLayout(root=document) {
   const $=s=>root.querySelector(s), workspace=$('.office-workspace'), rail=$('#space-cards-panel');
   const toggle=$('#space-card-toggle'), controller=new AbortController(), options={signal:controller.signal};
+  const header=$('.office-rail-header'),body=$('.office-inspector-body'),detail=$('#person-detail-pane');
+  let previous=null;
   let selected='tasks';
   function open(value){workspace.dataset.cardsOpen=String(value);workspace.dataset.informationOpen='false';rail.hidden=!value;toggle.setAttribute('aria-expanded',String(value));toggle.title=value?'收起工作栏':'展开工作栏';toggle.setAttribute('aria-label',toggle.title);}
   function tab(name){if(!['tasks','people','messages','space'].includes(name))return;selected=name;for(const b of root.querySelectorAll('[data-rail-tab]')){const active=b.dataset.railTab===name;b.setAttribute('aria-pressed',String(active));b.classList.toggle('btn-primary',active);b.classList.toggle('btn-ghost',!active);$('#rail-'+b.dataset.railTab).hidden=!active;}if(name==='space')$('#tab-floors').click();open(true);}
   for(const b of root.querySelectorAll('[data-rail-tab]'))b.addEventListener('click',()=>{tab(b.dataset.railTab);if(selected==='people')$('#tab-people').click();},options);
-  toggle.addEventListener('click',()=>open(rail.hidden),options);
+  function dismissPerson(restoreFocus=false){window.dispatchEvent(new CustomEvent('office-person-dismiss',{detail:{restoreFocus}}));}
+  window.addEventListener('office-person-menu',e=>{
+    if(e.detail.open){
+      if(!previous){
+        const from=e.detail.from;
+        previous={hidden:rail.hidden,scroll:body.scrollTop,from,id:from?.closest('[data-person-id]')?.dataset.personId,locate:!!from?.closest('.duty-locate')};
+      }
+      header.hidden=true;body.hidden=true;detail.hidden=false;open(true);
+      return;
+    }
+    if(!previous)return;
+    const saved=previous;previous=null;
+    detail.hidden=true;header.hidden=false;body.hidden=false;open(!saved.hidden);body.scrollTop=saved.scroll;
+    if(e.detail.restoreFocus){
+      const row=saved.id?body.querySelector('[data-person-id="'+CSS.escape(saved.id)+'"]'):null;
+      const target=[saved.from,saved.locate?row?.querySelector('.duty-locate'):row,header.querySelector('[aria-pressed="true"]'),toggle]
+        .find(el=>el?.isConnected&&el!==document.body&&el.getClientRects().length);
+      target?.focus({preventScroll:true});
+    }
+  },options);
+  toggle.addEventListener('click',()=>{const next=rail.hidden;if(!detail.hidden)dismissPerson();open(next);},options);
   $('#space-card-close').addEventListener('click',()=>{open(false);toggle.focus();},options);
-  rail.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();open(false);toggle.focus();}},options);
-  window.addEventListener('office-panel',e=>tab(e.detail?.tab),options);
+  rail.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(!detail.hidden)dismissPerson(true);else{open(false);toggle.focus();}}},options);
+  window.addEventListener('office-panel',e=>{if(!detail.hidden)dismissPerson();tab(e.detail?.tab);},options);
   const tools=$('#office-tools'),more=$('#office-tools-toggle');
   const bar=$('.office-modebar');
   if(!('focusGroup' in HTMLElement.prototype)){

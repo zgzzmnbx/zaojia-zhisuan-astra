@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {genderLabel} from './workstation-roster.js';
+import {mountPersonDetail} from './person-detail.js?v=0.50.1';
 import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,openPersonTasks,element as el} from './host-client.js';
 import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
@@ -12,10 +12,10 @@ import {normalizeAppearance} from './people/appearances.js';
 import {personTaskSummary,taskState,taskPriority,exampleLabel,emptyDutyLabel,dutyCountLabel} from './duty-board.js';
 import {icon} from '../astra_ui/icons.js';
 
-export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{},onRebuild=()=>{}}) {
+export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,getPicture,layout,onSelect=()=>{},onRebuild=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
   const markers=document.querySelector('#people-markers'),list=document.querySelector('#people-list');
-  const card=document.querySelector('#person-card'),candidates=document.querySelector('#review-candidates');
+  const candidates=document.querySelector('#review-candidates');
   const message=document.querySelector('#review-status');
   const actors=new Map(),assets=createPersonAssets(),clock=createPersonClock(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const floor=model.getObjectByName('Floor_09'),projected=new THREE.Vector3(),projectedTop=new THREE.Vector3();let lastMotionTime=0;
@@ -95,15 +95,6 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     onRebuild();
   }
   function tasksFor(id){return business.personTasks?.get(id)||[];}
-  function taskLine(task){
-    const row=el('div','','host-task-line'),state=taskState(task);
-    const labels=[task.demo?exampleLabel(task):task.manual?'自建':task.adjusted?'沙盘已调整':'',state.platform,state.label].filter(Boolean);
-    row.append(el('strong',task.title),el('small',labels.join(' · ')));
-    if(task.artifactName&&task.artifactName!==task.title)row.append(el('p',task.artifactName));
-    if(task.adjusted&&task.dispatchId)row.append(el('small',`原始复核 · ${task.originalStatus} · ${task.originalTitle}`));
-    if(task.description||task.comment)row.append(el('p',task.description||task.comment));
-    return row;
-  }
   function paint(){
     for(const [id,item] of actors){
       const person=business.employees.find(p=>p.id===id);item.person=person;
@@ -138,15 +129,6 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       else list.insertBefore(button,next||null);
     });
     if(focus&&document.activeElement!==focus)focus.focus({preventScroll:true});
-    card.replaceChildren();
-    const item=actors.get(current);
-    if(item){
-      const person=item.person;card.append(el('h3',person.name));card.title='工位为示意位置';
-      for(const task of tasksFor(current))card.append(taskLine(task));
-      const toggle=el('button',person.selected?'移出本次复核':person.demoAssignment?'加入演示复核':'加入本次复核','btn btn-primary btn-sm');toggle.type='button';toggle.disabled=!person.draggable;
-      toggle.onclick=()=>togglePerson(person.id,!person.selected);card.append(toggle);
-      if(!person.draggable)card.append(el('p',person.id==='owner'?'请在左侧复核卡确认当前平台与成果状态。':'请先打开当前项目的复核卡。','office-description'));
-    }else card.append(el('p','点击人物查看任务','office-description'));
     candidates.replaceChildren();
     for(const person of business.employees.filter(p=>p.selected)){
       const row=el('div','','office-candidate');row.append(el('span',person.name+(person.demoAssignment?' · 演示':'')));
@@ -154,28 +136,40 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     }
     message.textContent='选人结果同步至左侧复核卡';
   }
-  const menu=el('dialog','','host-person-popover');menu.id='host-person-popover';menu.setAttribute('popover','auto');menu.setAttribute('aria-label','人物详情');document.body.append(menu);
-  function menuOpen(){return menu.showPopover?menu.matches(':popover-open'):menu.open;}
-  function closeMenu(){if(menu.hidePopover)menu.hidePopover();else if(menu.open){menu.close();window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:false}}));}}
+  const pane=document.querySelector('#person-detail-pane');
+  const detail=mountPersonDetail(pane,{
+    back:()=>closeMenu(true),
+    edit:()=>openPersonTasks(current),
+    join:()=>{const p=actors.get(current)?.person;if(p?.draggable)togglePerson(p.id,!p.selected);},
+    move:()=>{const spot=placement.meetingSpot(occupied(current));if(spot&&place(current,spot))paintMenu();},
+    home:()=>{goHome(current);closeMenu(true);},
+  });
+  function menuOpen(){return !pane.hidden;}
+  function closeMenu(restoreFocus=false){
+    if(!menuOpen())return;
+    window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:false,restoreFocus}}));
+    detail.clear();
+  }
   function paintMenu(){
     const item=actors.get(current);if(!item)return;
-    menu.replaceChildren();const heading=el('div','','host-person-popover-heading'),close=el('button','×','btn btn-ghost btn-square btn-sm');close.type='button';close.setAttribute('aria-label','关闭人物详情');close.onclick=closeMenu;
-    heading.append(el('strong',item.person.name),close);menu.append(heading);
-    const profile=el('dl','','host-person-profile');
-    for(const [label,value] of [['性别',genderLabel(item.person.gender)],['工种',item.person.trade||'待补充'],['擅长审核',item.person.expertise||'待补充'],['当前状态',dutyCountLabel(item.pending)||emptyDutyLabel(business)],['工位',item.seatId?.replace('SEAT_','')||'未分配']])profile.append(el('dt',label),el('dd',value));menu.append(profile);
-    const editTasks=el('button','编辑此人任务','btn btn-ghost btn-sm');editTasks.type='button';editTasks.onclick=()=>{closeMenu();openPersonTasks(item.person.id);};menu.append(editTasks);
-    const tasks=el('div','','host-person-projects');
-    for(const task of tasksFor(current))tasks.append(taskLine(task));
-    if(!tasks.childElementCount)tasks.append(el('p','暂无审核项目'));menu.append(tasks);
-    const add=el('button',item.person.selected?'移出本次复核':item.person.demoAssignment?'加入演示复核':'加入本次复核','btn btn-primary btn-sm');add.type='button';add.disabled=!item.person.draggable;add.onclick=()=>togglePerson(current,!item.person.selected);menu.append(add);
-    const move=el('button','移入复核区','btn btn-ghost btn-sm');move.type='button';move.disabled=!placement.meetingSpot(occupied(current));move.onclick=()=>{const spot=placement.meetingSpot(occupied(current));if(spot){place(current,spot);paintMenu();}};menu.append(move);
-    if(placements.has(current)||item.walk?.rise>0){const home=el('button','回到工位','btn btn-ghost btn-sm');home.type='button';home.title='沿通道回到工位；离开会议室时取消本次复核选择';home.onclick=()=>{goHome(current);closeMenu();};menu.append(home);}
+    detail.update({person:item.person,seatId:item.seatId,tasks:tasksFor(current),business,
+      inMeeting:!!placements.get(current)?.meeting,canMove:!!placement.meetingSpot(occupied(current)),canGoHome:placements.has(current)||item.walk?.rise>0});
   }
-  function openMenu(){paintMenu();const rail=document.querySelector('.host-browser-card').getBoundingClientRect();menu.style.setProperty('--person-detail-top',Math.min(rail.top,Math.max(12,innerHeight-280))+'px');if(menu.showPopover)menu.showPopover();else if(!menu.open){menu.show();window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:true}}));}}
-  listen(menu,'toggle',event=>window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:event.newState==='open'}})));
-  if(!menu.showPopover){listen(document,'pointerdown',e=>{if(!menu.contains(e.target))closeMenu();});listen(document,'keydown',e=>{if(e.key==='Escape')closeMenu();});}
-  listen(document,'keydown',event=>{if(event.key==='Escape'&&menuOpen()){closeMenu();event.preventDefault();event.stopImmediatePropagation();}},true);
-  function select(id,point){const item=actors.get(id);if(!item||disposed)return false;current=id;if(motionEnabled&&!reduced.matches&&clock.value()-item.reactionAt>1.6)item.reactionAt=clock.value();showPanel();syncPositions();if(item.anchor&&!point)focusPerson(item.group);paint();openMenu(point||item.screenPoint||{x:innerWidth-320,y:100});onSelect(id);requestFrame();return true;}
+  listen(window,'office-person-dismiss',event=>closeMenu(!!event.detail?.restoreFocus));
+  listen(document,'keydown',event=>{
+    if(event.key==='Escape'&&menuOpen()&&!document.querySelector('dialog[open]')&&!(CSS.supports('selector(:popover-open)')&&document.querySelector(':popover-open'))){
+      closeMenu(true);event.preventDefault();event.stopPropagation();
+    }
+  });
+  function select(id,point){
+    const item=actors.get(id);if(!item||disposed)return false;
+    const from=document.activeElement;
+    current=id;
+    if(motionEnabled&&!reduced.matches&&clock.value()-item.reactionAt>1.6)item.reactionAt=clock.value();
+    syncPositions();if(item.anchor&&!point)focusPerson(item.group);
+    paint();window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:true,from}}));
+    paintMenu();detail.focus();onSelect(id);requestFrame();return true;
+  }
   function syncPositions(){floor.updateWorldMatrix(true,false);for(const item of actors.values()){
     item.group.visible=!!item.anchor&&!item.dragOverlay;
     if(item.dragPosition)item.group.position.copy(item.dragPosition);
@@ -257,5 +251,5 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     position:id=>actors.get(id)?.group.position.clone(),
     isAnimating:()=>!disposed&&root.visible&&motionEnabled&&!reduced.matches&&actors.size>0,
     getState:()=>({placement:placement.state(),placements:Object.fromEntries(placements),count:actors.size,rigRevision,personStyle,styleLoading,styleError,personDrawCalls:[...actors.values()].reduce((n,a)=>n+a.rig.drawCalls,0),selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.group.rotation.y,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,routine:a.walk?{stage:a.walk.stage,activity:a.walk.activity,rise:a.walk.rise}:null,dragging:!!a.dragPosition,idle:a.idle,labelLevel:a.labelLevel,labelPixels:a.labelPixels,labelVisible:!a.marker.hidden}))}),
-    dispose(){disposed=true;placement.dispose();resetAll.remove();announcement.remove();++styleRequest;scene.remove(root);actors.forEach(a=>a.rig.dispose());assets.dispose();polyfork.dispose();styleRow.remove();motionRow.remove();menu.remove();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();card.replaceChildren();candidates.replaceChildren();}};
+    dispose(){disposed=true;placement.dispose();resetAll.remove();announcement.remove();++styleRequest;scene.remove(root);actors.forEach(a=>a.rig.dispose());assets.dispose();polyfork.dispose();styleRow.remove();motionRow.remove();closeMenu();detail.destroy();root.clear();actors.clear();markers.replaceChildren();list.replaceChildren();candidates.replaceChildren();}};
 }

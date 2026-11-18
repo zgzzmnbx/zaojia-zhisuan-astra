@@ -738,7 +738,7 @@ export async function mountOfficeViewer() {
     loadingStage('gpu','模型已解析，正在准备显卡资源与首帧');
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     renderReady = true;
-    people = createPeopleDemo({onRebuild:()=>nightEnvironment?.refresh(scene),scene,model,layout,viewport,listen,requestFrame,getPicture:()=>picture.getState(),onSelect:employeeId=>notify('person-selected',{employeeId,contextId:bridgeContext.id}),onCandidates:employeeIds=>notify('review-candidates-changed',{employeeIds,contextId:bridgeContext.id,demo:true}),showPanel:()=>{selectTab('people');window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));},focusPerson:group=>{
+    people = createPeopleDemo({onRebuild:()=>nightEnvironment?.refresh(scene),scene,model,layout,viewport,listen,requestFrame,getPicture:()=>picture.getState(),onSelect:employeeId=>notify('person-selected',{employeeId,contextId:bridgeContext.id}),onCandidates:employeeIds=>notify('review-candidates-changed',{employeeIds,contextId:bridgeContext.id,demo:true}),focusPerson:group=>{
       setView('exploded',{focus:group});orbit.focus(true);people.update(camera,view);
     }});
     people.syncBusiness(business);

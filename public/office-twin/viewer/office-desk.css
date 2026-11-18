@@ -382,14 +382,6 @@ body.studio .duty-locate {
   color: var(--astra-primary);
   font-size: 12px;
 }
-body.studio .host-person-popover {
-  inset: var(--person-detail-top, 75px) 16px auto auto;
-  width: min(var(--cards-width, 300px), calc(100vw - 32px));
-  max-height: calc(100dvh - var(--person-detail-top, 75px) - 16px);
-  box-sizing: border-box;
-  border-radius: 15px;
-  overscroll-behavior: contain;
-}
 .duty-quiet {
   padding-top: 4px;
 }
