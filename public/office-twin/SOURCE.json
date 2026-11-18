@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.0",
-  "hostAdapterVersion": "0.46.0",
+  "hostAdapterVersion": "0.46.1",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -69,7 +69,7 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "27e6ea01106a398a0cc11f8aac94e92b350fe4d2497f92388d75a723ecccb266",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "d1dbdba14ff9a555ae570cddd497074d35c7968f67fd6621767277e2917dde5b",
+    "viewer/index.html": "58aebcd2d9c2349adbe4bd547e3b6365d4f47ea15684886916945a2fb044bbab",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "dae491840d1c74200a5dade704e72eab3700e0849b92452064578f9779c97fec",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
@@ -118,7 +118,7 @@
     "viewer/person-pointer.js": "a2761138d34d980a2d199c2e4e933679595c4aa501ea263b67f087a97af25744",
     "viewer/seated-person.js": "c9b924b13498da9702667f403b982c661aabc437c2aea81a255ab323311daf2b",
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
-    "viewer/lighting-settings.js": "ca345c45385ccf02af172f01f801f8c06aeae3b1827d6c31fcba7323990fe7a4",
+    "viewer/lighting-settings.js": "3b89afdf60216bdd897aee10a55ec7f687a80e2762b069995e57cdb6fcb5d4a7",
     "viewer/office-entrance.js": "855da59c2752a6c75580db124894b21c81dad4b3d47ef2be0aec6f5701a87173",
     "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce",
     "viewer/floor-label.js": "206b9e971298c0307a3d2fe9ad211db349efaf567741b86f505d48688c97c545",
@@ -258,18 +258,19 @@
     "adaptation": "Original GLB files retained; local runtime skin merge and seated/walk/lifted pose adapter; original cartoon remains default."
   },
   "approvedLightingDefaults": {
-    "version": "0.44.4",
-    "source": "User current in-app browser office controls, 2026-11-17",
+    "version": "0.46.1",
+    "source": "User-confirmed office picture controls, 2026-11-18; miniature blur 20%.",
     "values": {
+      "miniatureBlur": 20,
       "windowBlueStrength": 23,
       "buildingBrightness": 110,
-      "floorBrightness": 95,
-      "officeBrightness": 120,
+      "floorBrightness": 100,
+      "officeBrightness": 116,
       "contextBrightness": 87,
       "groundBrightness": 105,
       "buildingWhite": 0,
       "contextWhite": 96,
-      "contrast": 120,
+      "contrast": 110,
       "backgroundBrightness": 78,
       "nightShell": 25,
       "nightOffice": 100,
@@ -279,12 +280,13 @@
       "nightContextWindows": 110,
       "nightScreens": 100,
       "nightBloom": 120,
-      "blue": 1,
+      "blue": 0.8,
       "exposure": 0.15,
       "backgroundColor": "#ffffff",
       "groundColor": "#edf0f2",
       "windowStyle": "astra-blue",
-      "realtimeShadows": false
+      "realtimeShadows": false,
+      "trafficMotion": null
     }
   },
   "presentation": {
@@ -320,7 +322,7 @@
       "legacyView": "office",
       "referenceCommit": "8005f19",
       "durationMs": 1050,
-      "backgroundBlurDefault": 45,
+      "backgroundBlurDefault": 20,
       "backgroundBlurRange": [
         0,
         100

@@ -528,7 +528,8 @@ test('Astra glass option preserves explicit white and shadow choices through sav
  assert.equal(LIGHTING_DEFAULTS.groundColor,'#edf0f2');
 });
 test('office lighting starts from Astra white background and independent main/context gains',()=>{
- assert.deepEqual(normalizeLighting({}),LIGHTING_DEFAULTS);assert.equal(normalizeLighting({exposure:0}).floorBrightness,95);
+ assert.deepEqual(normalizeLighting({}),LIGHTING_DEFAULTS);assert.equal(normalizeLighting({exposure:0}).floorBrightness,100);
+ assert.equal(LIGHTING_DEFAULTS.miniatureBlur,20);assert.equal(LIGHTING_DEFAULTS.contrast,110);assert.equal(LIGHTING_DEFAULTS.blue,.8);
  assert.equal(LIGHTING_DEFAULTS.backgroundColor,'#ffffff');assert.equal(LIGHTING_DEFAULTS.buildingBrightness,110);assert.equal(LIGHTING_DEFAULTS.contextBrightness,87);
  const v=normalizeLighting({officeBrightness:80,contextBrightness:140,nightScreens:0,backgroundColor:'#F5F7FA'});
  assert.equal(v.buildingBrightness,110);assert.equal(v.officeBrightness,80);assert.equal(v.contextBrightness,140);assert.equal(v.nightScreens,0);assert.equal(v.backgroundColor,'#f5f7fa');
@@ -538,10 +539,10 @@ test('office lighting starts from Astra white background and independent main/co
 test('lighting preview/reset does not save or redefine defaults; explicit saves round-trip',()=>{
  const values=new Map<string,string>(),storage={getItem:(k:string)=>values.get(k)||null,setItem:(k:string,v:string)=>values.set(k,v)};
  const baseline=JSON.stringify(LIGHTING_DEFAULTS);const preview=normalizeLighting({officeBrightness:88});
- assert.equal(readLighting(storage).officeBrightness,120);assert.equal(values.size,0);
+ assert.equal(readLighting(storage).officeBrightness,116);assert.equal(values.size,0);
  saveLighting(storage,preview);assert.equal(readLighting(storage).officeBrightness,88);
- const reset=normalizeLighting(null);assert.equal(reset.officeBrightness,120);assert.equal(readLighting(storage).officeBrightness,88);
- saveLighting(storage,reset);assert.equal(readLighting(storage).officeBrightness,120);assert.equal(JSON.stringify(LIGHTING_DEFAULTS),baseline);
+ const reset=normalizeLighting(null);assert.equal(reset.officeBrightness,116);assert.equal(readLighting(storage).officeBrightness,88);
+ saveLighting(storage,reset);assert.equal(readLighting(storage).officeBrightness,116);assert.equal(JSON.stringify(LIGHTING_DEFAULTS),baseline);
  values.set(LIGHTING_KEY,'bad JSON');assert.deepEqual(readLighting(storage),LIGHTING_DEFAULTS);
 });
 test('lighting migration retains old exposure without restoring the obsolete gray baseline',()=>{
@@ -570,7 +571,7 @@ test('structural daylight UVs survive batching and floor/wall lighting stays sep
  assert.deepEqual(batches.map(o=>o.userData.night_role).sort(),['floor','interior']);
  assert.ok(batches.every(o=>o.geometry.getAttribute('officeStructureUV').count===o.geometry.attributes.position.count));
  const settings=normalizeLighting({...LIGHTING_DEFAULTS,buildingBrightness:40,floorBrightness:130});
- assert.equal(settings.floorBrightness,130);assert.equal(settings.buildingBrightness,40);assert.equal(settings.officeBrightness,120);
+ assert.equal(settings.floorBrightness,130);assert.equal(settings.buildingBrightness,40);assert.equal(settings.officeBrightness,116);
 });
 
 
