@@ -8,6 +8,9 @@
 @media(max-width:650px){.studio #shell .four-surface-topbar{height:auto;min-height:58px;padding:8px 10px;gap:6px}.studio-identity{gap:4px;flex:1}.studio-identity strong{font-size:14px;max-width:120px}.studio #shell .four-surface-topbar .btn{padding:0 7px;font-size:13px;min-height:38px;height:38px}.four-surface-topbar .top-actions{gap:3px}.four-surface-topbar .btn>.astra-icon{display:none}.four-surface-topbar .sidebar-toggle>.astra-icon{display:inline-flex}.summary-artifact .current-project-card{padding:16px}}
 
 /* Two original status chips and two compact, labelled header shortcuts. */
+.four-surface-topbar button .astra-icon {
+  pointer-events: none;
+}
 .studio #shell .four-surface-topbar{height:auto;min-height:58px;padding-block:7px}.studio #shell .four-surface-topbar .header-icon-action{width:44px;min-width:44px;height:44px;min-height:44px;padding:0}.four-surface-topbar .header-icon-action>.astra-icon{display:inline-flex;width:18px;height:18px}.header-icon-tip{flex:0 0 auto}.header-icon-tip:focus-within:before,.header-icon-tip:focus-within:after{opacity:1;visibility:visible;--tt-pos:0rem}.header-icon-action:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 @media(max-width:760px){.studio #shell .four-surface-topbar{flex-wrap:wrap}.four-surface-topbar .studio-identity{flex:1 1 120px}.four-surface-topbar .top-actions{flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end}.four-surface-topbar .header-icon-action>.astra-icon{display:inline-flex}.studio #shell .four-surface-topbar .legacy-top-links{flex-wrap:wrap}.studio #shell .four-surface-topbar .header-icon-action{padding:0}.header-icon-tip:last-child:before{left:auto;right:0;translate:0}}
 

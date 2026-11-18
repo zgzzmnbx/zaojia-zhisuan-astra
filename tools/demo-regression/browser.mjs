@@ -85,7 +85,22 @@ async function checkRowAssistReturn(){
 }
 try{
  await enter();
- await check('D01',async()=>{await btn('系统架构图').click();await page.frameLocator('iframe[title="动态架构图（示意）"]').locator('body').waitFor();await btn('关闭系统架构').click();return '架构 iframe 加载且可关闭';});
+ await check('D01',async()=>{
+  const trigger=btn('系统架构图');
+  const icon=await trigger.locator('.astra-icon').boundingBox();
+  assert.ok(icon,'架构图标可见');
+  await page.mouse.move(icon.x+icon.width/2,icon.y+icon.height/2);
+  await page.mouse.down();
+  try{
+   const refresh=page.waitForEvent('requestfinished',r=>r.url().endsWith('/api/collaboration/feishu-app-bot/status'));
+   await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+   await refresh;
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  }finally{await page.mouse.up();}
+  await page.frameLocator('iframe[title="动态架构图（示意）"]').locator('body').waitFor();
+  await btn('关闭系统架构').click();
+  return '按住顶栏图标期间刷新平台状态，松开一次即打开架构图，架构页可关闭';
+ });
  await check('D02',async()=>{await btn('新对话').click();await page.getByRole('button',{name:'查看演示项目信息',exact:true}).waitFor({timeout:90000});assert.equal(await page.locator('.sandbox-parked-hit').innerText(),'德化-永安支线');await checkDemoMatchingSwitch();return '新对话、沙盘与历史项目正常；3.1标准答案默认开启、关闭保存及恢复开启通过';});
  await check('D03',async()=>{
   await page.getByRole('button',{name:'导入项目 从接入项目中选择 · 含 V3.1 体验',exact:true}).click();
