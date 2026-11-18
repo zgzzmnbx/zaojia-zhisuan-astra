@@ -10,13 +10,13 @@ from pathlib import Path
 import numpy as np
 
 from architecture import campus, rooftop, storey
-from geometry import Glb, Source, matrix, studio_color
+from geometry import BLUE_INK, Glb, Source, matrix, studio_color
 from light_transport import bake
 from receivers import Receiver
 
 ROOT=Path(__file__).resolve().parents[3]
 PACKAGE=ROOT/'public/office-twin'
-MODEL='H1-porcelain-v0.1.0.glb'
+MODEL='H1-porcelain-v0.2.0.glb'
 BASELINE='H1-baked-v0.6.7.glb'
 BASELINE_HASH='c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545'
 LAYOUT_HASH='ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a'
@@ -88,6 +88,7 @@ def copy_office(out,source,node_id,parent,tf,atlas,day_texture,mesh_cache):
         directions/=np.maximum(np.linalg.norm(directions,axis=1,keepdims=True),1e-8)
         old=source.doc['materials'][prim['material']]['name']
         uv=night_uv=None
+        pigment='chalk'
         if floor_surface(node):
             mat=out.material('Porcelain / room floor',day_texture,{'porcelainNightUV':True}) if old=='V065_NATIVE_FLOOR_LIGHTING_UNLIT' else out.material('Porcelain / slab',day_texture)
             uv=atlas.uv(world)
@@ -106,7 +107,7 @@ def copy_office(out,source,node_id,parent,tf,atlas,day_texture,mesh_cache):
             if role=='screen':
                 t=(height-height.min())/max(float(np.ptp(height)),.01)
                 color*=.66+.34*t[:,None]
-        parts.append(out.primitive(pos,normal,indices,color,mat,uv,night_uv))
+        parts.append(out.primitive(pos,normal,indices,color,mat,uv,night_uv,BLUE_INK.get(pigment,0)))
     if parts:
         key=json.dumps(parts,sort_keys=True)
         if key not in mesh_cache:
@@ -123,7 +124,8 @@ def native_sign(out,source,node_id,parent):
     prims=[]
     for p in primitives(source,node):
         a=p['attributes'];pos=source.array(a['POSITION']);norm=source.array(a['NORMAL'])
-        prims.append(out.primitive(pos,norm,source.array(p['indices']),studio_color(norm,'cobalt'),mat))
+        prims.append(out.primitive(pos,norm,source.array(p['indices']),studio_color(norm,'cobalt'),mat,
+                                   blue_ink=BLUE_INK['cobalt']))
     if prims:
         out.node(node['name'],parent,mesh=out.append('meshes',{'primitives':prims}),
                  extras={'night_role':'sign','source_object':node['name']})
@@ -149,6 +151,14 @@ def verify(source,generated):
         key=f'Floor_{n:02}'
         assert np.array_equal(matrix(source.doc['nodes'][source.named[key]]),
                               matrix(generated.doc['nodes'][generated.named[key]])),key
+    ink_values=set()
+    for mesh in generated.doc['meshes']:
+        for primitive in mesh['primitives']:
+            attrs=primitive['attributes']
+            ink=generated.array(attrs['_BLUEINK'])
+            assert len(ink)==len(generated.array(attrs['POSITION']))
+            ink_values.update(np.unique(ink).tolist())
+    assert ink_values=={0,1,2,3},'Missing or unknown porcelain pigment band'
     return {'lockedNodes':locked_nodes,'lockedTriangles':triangles,'storeys':20}
 
 

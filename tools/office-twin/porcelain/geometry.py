@@ -21,6 +21,10 @@ PALETTE = {
     'fabric': (102, 133, 208), 'linen': (210, 219, 235),
 }
 INK = {k: linear(v) for k, v in PALETTE.items()}
+# 0 is fixed porcelain, metal or neutral fabric. 1, 2 and 3 index the
+# accent, mid-blue and pale glass swatches in the viewer's palette.
+BLUE_INK = {'cobalt': 1, 'ultra': 1, 'glass': 2, 'fabric': 2,
+            'leaf': 2, 'bud': 2, 'ice': 3}
 KEY = np.array([-.46, .73, .55])
 KEY /= np.linalg.norm(KEY)
 
@@ -80,7 +84,7 @@ class Source:
 
 class Glb:
     def __init__(self):
-        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.1.0'},
+        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.2.0'},
                     'extensionsUsed': ['KHR_materials_unlit'], 'scene': 0, 'scenes': [{'nodes': []}],
                     'samplers':[{'wrapS':33071,'wrapT':33071,'magFilter':9729,'minFilter':9987}],
                     **{k: [] for k in ['nodes','meshes','materials','textures','images','accessors','bufferViews']}}
@@ -137,10 +141,11 @@ class Glb:
             self.doc['nodes'][parent].setdefault('children', []).append(index)
         return index
 
-    def primitive(self, pos, norm, indices, colors, material, uv=None, night_uv=None):
+    def primitive(self, pos, norm, indices, colors, material, uv=None, night_uv=None, blue_ink=0):
         rgba = np.column_stack((np.clip(np.rint(colors*255),0,255), np.full(len(pos),255)))
         attrs = {'POSITION': self.attr(pos, bounds=True), 'NORMAL': self.attr(norm),
-                 'COLOR_0': self.attr(rgba, 5121, normalized=True)}
+                 'COLOR_0': self.attr(rgba, 5121, normalized=True),
+                 '_BLUEINK': self.attr(np.broadcast_to(blue_ink, (len(pos),)))}
         if uv is not None:
             attrs['TEXCOORD_0'] = self.attr(uv)
         if night_uv is not None:
@@ -188,6 +193,7 @@ class Batch:
     """Combine static details within one floor/lighting role, before delivery."""
     def __init__(self):
         self.pos, self.norm, self.col, self.indices = [], [], [], []
+        self.blue_ink = []
 
     def face(self, vertices, pigment, gain=1., normals=None):
         points = np.asarray(vertices, dtype=float)
@@ -198,6 +204,7 @@ class Batch:
         start = len(self.pos)
         self.pos.extend(points); self.norm.extend(normals)
         self.col.extend(studio_color(normals, pigment, gain))
+        self.blue_ink.extend([BLUE_INK.get(pigment, 0)] * len(points))
         for i in range(1, len(points)-1):
             self.indices.extend((start, start+i, start+i+1))
 
@@ -248,6 +255,7 @@ class Batch:
     def emit(self, out, parent, name, role, material, uv=None):
         if not self.indices: return
         pos = np.asarray(self.pos)
-        p = out.primitive(pos,self.norm,self.indices,np.asarray(self.col),material,uv(pos) if uv else None)
+        p = out.primitive(pos,self.norm,self.indices,np.asarray(self.col),material,uv(pos) if uv else None,
+                          blue_ink=self.blue_ink)
         mesh = out.append('meshes', {'name': name,'primitives':[p]})
         out.node(name,parent,mesh=mesh,extras={'night_role':role,'porcelainBatch':True})

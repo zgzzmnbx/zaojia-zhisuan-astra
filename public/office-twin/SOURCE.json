@@ -57,6 +57,7 @@
     "models/H1-baked-v0.4.0.glb": "2edf0b4f5c24073053fd0099d62d9dc9e723f57c809194df9b6dda70524c2dee",
     "models/H1-baked-v0.6.7.glb": "c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545",
     "models/H1-porcelain-v0.1.0.glb": "391bbc34586d4599803f6e5550547173d6eb03869117632203a90d1638727be4",
+    "models/H1-porcelain-v0.2.0.glb": "edf4ed82c48782eb78ddf7ecaf261ae54771596ebc298814d6d96002c7ec42a0",
     "models/H1-realtime-v0.6.7.glb": "64cdfb8ec2befc99d5bd0638edb37d87497d278d8fdc9f7e457320c9b50c9a9e",
     "models/H1_20F_building.glb": "9ae289e0629c50930c7b862f265d9336f282298403f133e648b3abc4f11a66f6",
     "previews/building-v0.6.7-offline.png": "5ac334637559d13c376cb6638629a5ebdf30000a7fc1f72c30e7fafac6abba7a",
@@ -71,22 +72,23 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "87c0d9a54751ac417902d0042a4c50c3c22439e6303ecb8763111575251e89e7",
+    "viewer/index.html": "3299203874c4ebd289d6d66b8959f1b2be13d7b1dcb2da62f204653e4ef01534",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "1d1c8eca2bcf613ad8264b99e0c2a42763708899218b8f33c49960b30f4a1568",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
-    "viewer/night-bloom.mjs": "792856bbcc24f783acd6c8d0b13c1eb31acf795278234f37acd370f795b4e897",
-    "viewer/night-environment.js": "f753c05633377572fac0af48c4e7132df992a3d42c6fc44de7a072c23d1f124f",
+    "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
+    "viewer/night-environment.js": "ba64438af879426f64183c6cd5c6b1f8efb44bad7fe66b713264b08823661689",
     "viewer/night-lighting-policy.js": "f9dc88f2dfd4d236bb7dfa9a2342967311fcaf07b8b274facf436e5c87e429c8",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
     "viewer/office-settings-store.js": "0914f430a027598e645865ee0a07515a47e1a6e423c0840ac12f13f7fc514139",
     "viewer/people-demo.js": "6f19823d99db3b808058a55271193b0d6b117369ce544e2bcf06d8342077d77c",
     "viewer/picture-settings.js": "02b490ec248d06c52d5a616fa3321b1669ef58f6b1b74dce0671181dd41575e8",
-    "viewer/porcelain-demo.css": "52cab16541ce704cc6ee783c538deada2eb6d6f0cda457e424a9b9e47204c917",
-    "viewer/porcelain-demo.js": "27b77c12046f77086d6d500deaa2b4a4046e668ae257705c9bc00712e83be9dc",
-    "viewer/porcelain-style.js": "e42e54bd1cceb034205131b832c1019e3c7ed2bca2467b6c058fbe891d6cc890",
+    "viewer/porcelain-demo.css": "1109ad3a84dc77085b55576995d211d02a8838e70bdd5a256e38f820c60018b0",
+    "viewer/porcelain-demo.js": "942bc6a96c3878022ae329145701ec32914542952b12355b3e243a15d3a6702b",
+    "viewer/porcelain-palette.js": "3fbef686772b98dd206e88ea36a84bb36a2e4025062b1508e43d9c808c48a362",
+    "viewer/porcelain-style.js": "d6d6c2a367a3e75c873192d53bb363a7decbcfbbd749204d36a99fa2062a5243",
     "viewer/README.md": "36bb727daadaf810b7373b48be58d7473f277ceb9dd0c34a04f2cd325866619c",
     "viewer/release.js": "0b2f16d6d847f6198053cf6511a7bf395a4fdacaf90073a7c62af4e11fd4efa4",
     "viewer/sandbox-layout.js": "511ea27a76ac858331b6d8d6922c672e9c4e29cdfabc537778db03c60ed13b4d",
@@ -111,7 +113,7 @@
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
     "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "032429a962cf78c2298beb8bddddfd95928f132914ccc9240d26775d048a0fdc",
+    "viewer/viewer.js": "137eb7182b9716af43561f2020a1fa9edc55bcf8e43a35fb69944fbebcd81e6c",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
@@ -286,12 +288,12 @@
     }
   },
   "porcelainDemo": {
-    "version": "0.1.0",
+    "version": "0.2.0",
     "baseline": "6fc00dd",
     "sourceModel": "models/H1-baked-v0.6.7.glb",
-    "model": "models/H1-porcelain-v0.1.0.glb",
-    "modelBytes": 11660732,
-    "modelSHA256": "391bbc34586d4599803f6e5550547173d6eb03869117632203a90d1638727be4",
+    "model": "models/H1-porcelain-v0.2.0.glb",
+    "modelBytes": 12614940,
+    "modelSHA256": "edf4ed82c48782eb78ddf7ecaf261ae54771596ebc298814d6d96002c7ec42a0",
     "planSHA256": "ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a",
     "frozenDetailedFloor": {
       "nodes": 2405,
@@ -299,6 +301,19 @@
       "storeysChecked": 20
     },
     "generator": "tools/office-twin/porcelain/build.py",
-    "distribution": "Full assets supplied in the local demo package."
+    "distribution": "Full assets supplied in the local demo package.",
+    "themePalette": {
+      "attribute": "_BLUEINK",
+      "default": "cobalt",
+      "presets": [
+        "cobalt",
+        "glacier",
+        "sky",
+        "lagoon",
+        "ultramarine",
+        "steel",
+        "navy"
+      ]
+    }
   }
 }

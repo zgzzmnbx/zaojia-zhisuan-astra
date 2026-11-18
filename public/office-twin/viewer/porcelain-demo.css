@@ -20,3 +20,36 @@ body.porcelain-preview #shell .office-workspace > #host-artifact {
 }
 body.porcelain-preview #shell .office-workspace > .office-inspector {top:calc(78px + var(--host-artifact-height,100px))}
 body.porcelain-preview .office-modebar #theme-toggle {display:inline-flex!important}
+
+.porcelain-blue-control:not([hidden]) {
+  display:inline-flex;align-items:center;flex:none;gap:5px;padding-inline:5px;
+  border-inline-start:1px solid var(--astra-line);white-space:nowrap;
+}
+.porcelain-blue-control label {color:var(--astra-muted);font:inherit;font-size:12px}
+#office-theme-blue {
+  box-sizing:border-box;width:82px;min-height:28px;height:28px;padding:2px 6px;
+  border:1px solid var(--astra-line);border-radius:6px;background-color:var(--astra-paper);
+  appearance:auto;background-image:none;color:var(--astra-ink);font:inherit;font-size:12px;font-weight:600;cursor:pointer;
+}
+#office-theme-blue:focus-visible {outline:2px solid var(--astra-accent,currentColor);outline-offset:2px}
+.porcelain-blue-swatch {
+  display:inline-block;flex:none;width:13px;height:13px;border-radius:50%;background:var(--chip);
+  box-shadow:inset 0 0 0 1px #0002;
+}
+@supports (appearance:base-select) {
+  #office-theme-blue,#office-theme-blue::picker(select) {appearance:base-select}
+  #office-theme-blue {display:flex;align-items:center;justify-content:space-between;background-image:none}
+  #office-theme-blue::picker-icon {
+    display:block;content:"";width:5px;height:5px;margin-inline-start:2px;border:solid currentColor;
+    border-width:0 1.5px 1.5px 0;transform:translateY(-1px) rotate(45deg);
+  }
+  #office-theme-blue selectedcontent,#office-theme-blue option {display:flex;align-items:center;gap:7px}
+  #office-theme-blue::picker(select) {
+    min-width:124px;padding:4px;margin-block:4px;border:1px solid var(--astra-line);
+    border-radius:8px;background:var(--astra-paper);color:var(--astra-ink);box-shadow:0 5px 20px #15275024;
+  }
+  #office-theme-blue option {min-height:30px;padding:4px 9px;border-radius:5px;font:inherit;font-size:13px}
+  #office-theme-blue option:checked {font-weight:700;background:var(--astra-soft)}
+  #office-theme-blue option:hover {background:var(--astra-soft)}
+  #office-theme-blue option::checkmark {order:2;margin-inline-start:auto}
+}

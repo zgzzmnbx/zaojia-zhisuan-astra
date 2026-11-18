@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export const PORCELAIN_MODEL='H1-porcelain-v0.1.0.glb';
+export const PORCELAIN_MODEL='H1-porcelain-v0.2.0.glb';
 
 // The GLB carries softbox lighting, ambient occlusion and area-light shadows.
 // Keep the established sliders meaningful around their approved neutral settings.

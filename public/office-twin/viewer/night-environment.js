@@ -20,6 +20,17 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
   const key=previousKey();
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
+    const themeInk = material.userData.porcelain && shared.porcelainPalette;
+    if(themeInk){
+      shader.uniforms.porcelainInk = themeInk.inks;
+      shader.uniforms.porcelainLampTint = themeInk.lamp;
+      shader.vertexShader = 'attribute float _blueink; uniform vec3 porcelainInk[4];\n' + shader.vertexShader;
+      shader.vertexShader = shader.vertexShader.replace('#include <color_vertex>', `#include <color_vertex>
+        #if defined(USE_COLOR) || defined(USE_COLOR_ALPHA)
+        vColor.rgb *= porcelainInk[int(_blueink)];
+        #endif`);
+      shader.fragmentShader = 'uniform vec3 porcelainLampTint;\n' + shader.fragmentShader;
+    }
     if(referenceStructure){
       Object.assign(shader.uniforms,{officeEntryBake:{value:shared.structureBake.entry},officeExteriorBake:{value:shared.structureBake.exterior},officeInteriorBake:{value:shared.structureBake.interior}});
       shader.vertexShader='attribute vec3 officeStructureUV;varying vec3 vOfficeStructureUV;\n'+shader.vertexShader;
@@ -133,7 +144,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
             vec2 cell=vec2(axis/4.,officeWorldPosition.y/3.6),f=fract(cell);
             float pane=step(.24,f.x)*step(f.x,.70)*step(.30,f.y)*step(f.y,.67);
             float seed=fract(sin(dot(floor(cell),vec2(17.13,39.71)))*4375.31);
-            vec3 lamp=mix(vec3(${NIGHT_LIGHTING.contextWindowColor.join(',')}),vec3(${NIGHT_LIGHTING.contextWarmWindowColor.join(',')}),step(.91,seed));
+            vec3 lamp=mix(vec3(${NIGHT_LIGHTING.contextWindowColor.join(',')})${themeInk?'*porcelainLampTint':''},vec3(${NIGHT_LIGHTING.contextWarmWindowColor.join(',')}),step(.91,seed));
             emission=lamp*pane*step(.66,seed);
           }
         }
@@ -168,6 +179,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
             shell+=vec3(.045,.18,.34)*falloff*receivingScreen*officeNightLamps.y;
           }
         }
+        ${themeInk?'if(officeNightRole==1.||officeNightRole==2.||officeNightRole==3.||officeNightRole==5.)emission*=porcelainLampTint;':''}
         if(officeNightRole==7.){shell=vec3(0.);emission=sourceColor*.8;}
         shell*=officeNightRole==4.||officeNightRole==8.?officeNightGains.z:officeNightRole==6.||officeNightRole==5.||officeNightRole==9.||officeNightRole==10.?1.:officeNightGains.x;
         emission*=officeNightRole==4.?officeNightLamps.x:officeNightRole==5.?officeNightLamps.y:officeNightRole==7.?officeNightGains.y:officeNightGains.w;
@@ -180,13 +192,15 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,!!material.userData.porcelain,!!material.userData.porcelainNightUV].join('|');
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV].join('|');
   material.needsUpdate=true;
 }
 
-export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings,contextBake,structureBake}){
+export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings,contextBake,structureBake,porcelainPalette}){
+  // Each material references the same uniforms; changing a palette needs just one frame.
   const shared={structureBake:structureBake?.textures??{},contextBake:contextBake?.textures??{},floorGain:{value:1.45},windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
   Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
+  shared.porcelainPalette=porcelainPalette;
   const porcelain=!!scene.getObjectByName('Porcelain_F01_shell');
   const lightPlan=createInteriorLightPlan(layout);
   const floorBake=createNightFloorBake(requestFrame);shared.floorBake=floorBake.uniforms;
@@ -223,7 +237,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
       }
     }
     const nextBloom=dark+':'+settings.nightBloom;
-    if(nextBloom!==bloomKey){bloomKey=nextBloom;bloom.configure(dark,110*settings.nightBloom/100,{studio:true});}
+    if(nextBloom!==bloomKey){bloomKey=nextBloom;bloom.configure(dark,110*settings.nightBloom/100,{studio:true,tint:porcelainPalette?.haloTint});}
   }
   function removeAccentLights(){
     if(!accentRoot)return;

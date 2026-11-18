@@ -6,7 +6,7 @@ export function mountPorcelainDemo(){
     ['许工','male','blue-shirt'],['何工','female','ponytail'],
   ].map(([name,gender,appearance],i)=>({id:'porcelain-demo-'+i,name,gender,appearance,accounts:[],selectable:false}));
   document.body.classList.add('porcelain-preview');
-  document.title=new URLSearchParams(location.search).get('style')==='classic'?'H1 办公室 · 原版对照':'H1 办公室 · 白瓷与钴蓝';
+  document.title=new URLSearchParams(location.search).get('style')==='classic'?'H1 办公室 · 原版对照':'H1 办公室 · 白瓷沙盘';
   const rail=document.querySelector('#space-cards-panel'),toggle=document.querySelector('#space-card-toggle');
   if(!rail.hidden)toggle.click();
   const bar=document.querySelector('.office-modebar');

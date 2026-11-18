@@ -12,6 +12,7 @@ import {createFloorLabel} from './floor-label.js';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
 import {PORCELAIN_MODEL,createOfficeMat} from './porcelain-style.js';
+import {mountPorcelainPalette} from './porcelain-palette.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
 import {restoreCutawayBake} from './cutaway-bake-repair.js';
 import {bindPersonPointer} from './person-pointer.js';
@@ -92,7 +93,7 @@ export async function mountOfficeViewer() {
     if (embedded && window.parent !== window) window.parent.postMessage({ namespace: PROTOCOL, type, ...data }, location.origin);
   }
   function getState() {
-    return { version: VERSION, assetVersion:PORCELAIN?'porcelain-0.1.0':ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
+    return { version: VERSION, porcelainBlue:porcelainPalette?.id??null,assetVersion:PORCELAIN?'porcelain-0.2.0':ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
       officeBoard:officeBoard?.state()??null,performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, entrance:entrance.state(), theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
   }
   let loadingMessage='正在读取办公室资料', loadingTimer=null;
@@ -189,6 +190,7 @@ export async function mountOfficeViewer() {
   function fail(error) {
     if (disposed || renderStatus === 'fallback' || error?.name === 'AbortError') return;
     renderStatus = 'fallback'; renderReady = false;orbit?.sync();
+    $('#office-theme-blue').disabled=true;
     if(BAKED_MODE&&!loadReport.materialPaths)$('#material-coverage').textContent='三维初始化或模型读取未完成，无法统计材质覆盖。';
     loadReport.lastError={code:error?.code??'VIEWER_ERROR',message:String(error?.message??error),stage:loadReport.stage};stopLoading();
     nightEnvironment?.dispose(); nightEnvironment=null;
@@ -284,6 +286,7 @@ export async function mountOfficeViewer() {
     if(!loadReport.webglRendered){
       loadReport.webglRendered=true;renderStatus='ready';loadReport.stage='ready';stopLoading();
       $('#loading-tools').hidden=true;$('#preview-fallback').hidden=true;document.documentElement.dataset.viewerStatus='ready';
+      if(porcelainPalette)$('#office-theme-blue').disabled=false;
       document.querySelectorAll('[data-view], #back-building, .office-camera-tools button').forEach(button=>button.disabled=false);
       status(BAKED_MODE?materialCoverageCopy(loadReport.materialPaths).label+'已就绪':'实时三维已就绪');
       loadReport.firstRenderMs=Math.round((performance.now()-loadStarted)*10)/10;refreshDiagnostic();
@@ -471,6 +474,7 @@ export async function mountOfficeViewer() {
     if (disposed) return;
     orbit?.dispose();
     disposed = true; renderReady = false; renderStatus = 'disposed'; aborter.abort();stopLoading();
+    $('#office-theme-blue').disabled=true;
     unsubscribeBusiness();window.dispatchEvent(new Event('office-disposed'));
     nightEnvironment?.dispose(); nightEnvironment=null;
     picture.dispose();
@@ -494,6 +498,7 @@ export async function mountOfficeViewer() {
   }
 
   const picture = createPictureSettings({listen,requestFrame,getRenderer:()=>renderer});
+  const porcelainPalette = PORCELAIN ? mountPorcelainPalette($('#office-theme-blue'),listen,requestFrame) : null;
   const orbitButton=document.createElement('button');orbitButton.type='button';orbitButton.className='btn btn-ghost btn-square btn-sm';orbitButton.id='office-orbit-toggle';
   $('.office-modebar').append(orbitButton);
   const paintOrbit=state=>{
@@ -735,7 +740,7 @@ export async function mountOfficeViewer() {
     }});
     people.syncBusiness(business);
     seatLabels=createWorkstationLabels({model,layout,viewport,listen,requestFrame});
-    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,contextBake,structureBake,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
+    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,contextBake,structureBake,porcelainPalette,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});officeBoard.setView(view);
     await nightEnvironment.prepare();if(disposed)return api;
