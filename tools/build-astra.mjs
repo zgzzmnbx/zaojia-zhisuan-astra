@@ -9,7 +9,13 @@ const outDir=debug?'dist':'04-output';
 const previousAssets=snapshotBuildAssets(outDir);
 const stagingRoot=path.resolve('Codex-Temp/builds');fs.mkdirSync(stagingRoot,{recursive:true});
 const staging=fs.mkdtempSync(path.join(stagingRoot,'astra-'));
-for(const [tool,args] of [['typescript/bin/tsc',['--noEmit']],['vite/bin/vite.js',['build','--outDir',staging,'--emptyOutDir',...(debug?['--mode','frontend-debug','--config','vite.frontend-debug.config.js']:[])]]]){
+const vite='vite/bin/vite.js';
+const steps=[
+ ['typescript/bin/tsc',['--noEmit']],
+ [vite,['build','--outDir',staging,'--emptyOutDir',...(debug?['--mode','frontend-debug','--config','vite.frontend-debug.config.js']:[])]],
+];
+if(!debug)steps.push([vite,['build','--outDir',staging,'--config','vite.office-settings.config.js']]);
+for(const [tool,args] of steps){
  const run=spawnSync(process.execPath,[path.resolve('node_modules',tool),...args],{stdio:'inherit'});if(run.status!==0)process.exit(run.status??1);
 }
 
@@ -30,6 +36,7 @@ for(const name of ['WelcomeWorkspacePreview.tsx','ClassicWelcomeScreen.tsx','Wel
 for(const name of ['office-settings.html','03-Src/studio/office-settings-entry.tsx','03-Src/studio/OfficeCameraSettings.tsx','03-Src/studio/OfficeChatSettings.tsx','03-Src/studio/OfficeProfileSettings.tsx','03-Src/studio/office-settings-roster.ts','03-Src/studio/office-settings-page.css','office-tasks.html','03-Src/studio/office-task-entry.tsx','03-Src/studio/OfficeTaskSettings.tsx','03-Src/studio/office-task-settings.css','03-Src/studio/OfficeReview.tsx','03-Src/studio/office-review.ts','03-Src/studio/office-review.css','03-Src/professional/components/agent-workspace/InlineReviewSetupCard.tsx'])sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');
 // Freeze both the host adapter and private office scene assets in the release manifest.
 for(const name of fs.readdirSync('public/office-twin',{recursive:true}).map(n=>path.join('public/office-twin',n)).filter(n=>fs.statSync(n).isFile()))sources[name.replaceAll('\\','/')]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');
+for(const name of ['vite.office-settings.config.js','03-Src/studio/FloatingGork.tsx'])sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');
 const ledgerSource='03-Src/engine/backend/app/project_ledger.py';
 sources[ledgerSource]=crypto.createHash('sha256').update(fs.readFileSync(ledgerSource)).digest('hex');
 for(const name of ["03-Src/studio/LogoSettings.tsx", "03-Src/studio/PricingDetails.tsx", "03-Src/studio/TaskProgress.tsx", "03-Src/studio/brand/LoadingLogo.tsx", "03-Src/studio/brand/LoadingLogoSettings.tsx", "03-Src/studio/brand/loading-logo.css", "03-Src/studio/brand/loading-preferences.ts", "03-Src/studio/brand/loading-ring.mjs", "03-Src/studio/brand/loading-wave.mjs", "03-Src/studio/brand/logo-renderer.mjs", "03-Src/studio/brand/useLoadingMotion.ts", "03-Src/studio/data-visualization/ChartState.tsx", "03-Src/studio/knowledge-articles/KnowledgeArticlesModule.tsx", "03-Src/studio/knowledge-articles/KnowledgeNodeDetail.tsx", "03-Src/studio/task-progress.css", "tools/build-astra.mjs"])sources[name]=crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex');

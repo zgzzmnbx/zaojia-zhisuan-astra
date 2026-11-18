@@ -60,7 +60,20 @@ async function send(text){if(await btn('返回对话').isVisible())await btn('�
 async function withResponse(url,action){const [r]=await Promise.all([page.waitForResponse(r=>r.url().includes(url)&&r.request().method()==='POST',{timeout:120000}),action()]);assert.equal(r.status(),200,await r.text());return r.json();}
 async function showTable(){await btn('表格').click();await page.getByRole('tab',{name:'表2-通用工程测量费用',exact:true}).click();}
 async function checkRowAssistReturn(){
+ const quickMenu=page.locator('.quick-menu-handle:visible');
+ await quickMenu.click();
+ const grid=page.locator('#quick-menu-contents');
+ await grid.getByRole('button').first().waitFor();
+ assert.ok(await grid.locator('.quick-feature').evaluateAll(tiles=>tiles.length>0&&tiles.every(tile=>{
+  const icon=tile.querySelector('.quick-feature-icon').getBoundingClientRect();
+  const label=tile.querySelector('.quick-feature-label').getBoundingClientRect();
+  return label.top>=icon.bottom-1&&label.bottom<=tile.getBoundingClientRect().bottom+1;
+ })),'Quick menu labels must fit below their icons in the production build');
+ await page.keyboard.press('Escape');
  await btn('收起对话').click();
+ const companionLayer=page.locator('.floating-gork-layer:popover-open');
+ await companionLayer.waitFor();
+ assert.equal(await companionLayer.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)','The full-viewport companion layer must let the workbench show through');
  await withResponse('/api/astra/row-assist/candidates',()=>btn('第 6 行 AI 填价').click());
  const card=page.locator('.row-pricing-card').last();
  await card.getByText('本地依据 · 未生成模型答案',{exact:true}).waitFor();

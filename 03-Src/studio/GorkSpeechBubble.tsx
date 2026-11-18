@@ -6,11 +6,17 @@ import {createSpeechQueue,createWelcomeSpeech,welcomeSpeech,type SpeechItem,type
 import './gork-speech.css';
 
 function positionBubble(element:HTMLElement,target:HTMLElement){
- const r=target.getBoundingClientRect(),b=element.getBoundingClientRect();
+ const r=target.getBoundingClientRect(),composer=target.closest('.composer-wrap');
+ const bounds=composer?.getBoundingClientRect()??r;
+ const menu=composer?.querySelector('.composer-quick-menu.is-open .quick-menu-panel');
+ const top=menu?.getBoundingClientRect().top??bounds.top;
+ const bottom=bounds.bottom,aboveRoom=top-26,belowRoom=innerHeight-bottom-26;
+ element.style.setProperty('--speech-room',`${Math.max(32,Math.max(aboveRoom,belowRoom)-30)}px`);
+ const b=element.getBoundingClientRect();
  const left=Math.max(12,Math.min(innerWidth-b.width-12,r.left));
- const above=r.top-b.height-14>=12;
+ const above=aboveRoom>=b.height||aboveRoom>=belowRoom;
  element.style.left=`${left}px`;
- element.style.top=`${Math.max(12,Math.min(innerHeight-b.height-12,above?r.top-b.height-14:r.bottom+14))}px`;
+ element.style.top=`${Math.max(12,Math.min(innerHeight-b.height-12,above?top-b.height-14:bottom+14))}px`;
  element.style.setProperty('--speech-tail-x',`${Math.max(18,Math.min(b.width-18,r.left+r.width/2-left))}px`);
  element.dataset.side=above?'above':'below';
 }
@@ -78,7 +84,7 @@ export function GorkSpeechBubble({active:visible}:{active:boolean}){
  }
  return createPortal(<>
   <div className="gork-speech-announcement" aria-live={'ariaNotify' in document?'off':'polite'} aria-atomic="true">{item?.text||''}</div>
-  <button ref={node} type="button" popover="manual" className="studio gork-speech-bubble" aria-label={item?`智算播报：${item.text} 点击收起`:undefined} hidden={!item}
+  <button ref={node} type="button" popover="manual" className="gork-speech-bubble" aria-label={item?`智算播报：${item.text} 点击收起`:undefined} hidden={!item}
    onClick={dismiss} onPointerEnter={()=>{hovered.current=true;}} onPointerLeave={()=>{hovered.current=false;}}>
    <span>{item?.text}</span>
   </button>

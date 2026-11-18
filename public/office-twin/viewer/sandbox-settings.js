@@ -1,5 +1,5 @@
 const namespace='astra-office-settings:v1';
-const adminTabs=['profiles','tasks','chat','camera'];
+const adminTabs=['profiles','tasks','chat'];
 export function createSandboxSettings({workstations,getTasks,onSaved}){
   const side=document.querySelector('#office-sandbox-settings'),admin=document.querySelector('#office-admin-settings');
   const manage=document.querySelector('#picture-toggle'),preview=document.querySelector('#office-preview-toggle');
@@ -41,9 +41,14 @@ export function createSandboxSettings({workstations,getTasks,onSaved}){
   function open(name,personId){
     if(busy||workstations.isSaving())return;
     if(!sideOpen()&&!admin.open)returnTo=document.activeElement;
-    if(name==='picture'||name==='seats'){
+    if(name==='picture'||name==='seats'||name==='camera'){
       closeAdmin();if(!sideOpen()){if(side.showPopover)side.showPopover();else side.show();}
-      preview.setAttribute('aria-expanded','true');setTab(name);tabs.find(t=>t.dataset.pref===name)?.focus();return;
+      preview.setAttribute('aria-expanded','true');
+      if(name==='camera'){
+        setTab('picture');
+        const controls=side.querySelector('#office-camera-controls');controls.open=true;controls.querySelector('summary').focus();
+      }else{setTab(name);tabs.find(t=>t.dataset.pref===name)?.focus();}
+      return;
     }
     closeSide();
     if(adminTabs.includes(name))destination={tab:name,person:personId||''};
@@ -65,6 +70,11 @@ export function createSandboxSettings({workstations,getTasks,onSaved}){
   },opts);
   side.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();dismiss();}},opts);
   admin.addEventListener('cancel',e=>{e.preventDefault();dismiss();},opts);
+  admin.addEventListener('click',e=>{
+    if(e.target!==admin)return;
+    const bounds=admin.getBoundingClientRect();
+    if(e.clientX<bounds.left||e.clientX>bounds.right||e.clientY<bounds.top||e.clientY>bounds.bottom)dismiss();
+  },opts);
   window.addEventListener('message',e=>{
     if(!frame||e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.namespace!==namespace)return;
     const d=e.data;
@@ -75,12 +85,12 @@ export function createSandboxSettings({workstations,getTasks,onSaved}){
       case 'roster-saved':void workstations.refresh();break;
       case 'chat-saved':window.dispatchEvent(new Event('office-chat-saved'));break;
       case 'camera':window.dispatchEvent(new CustomEvent('office-camera-preference',{detail:d.value}));break;
-      case 'preview':if(d.name==='seats'||d.name==='picture')open(d.name);break;
+      case 'preview':if(['seats','picture','camera'].includes(d.name))open(d.name);break;
       case 'close':dismiss();break;
     }
   },opts);
   window.addEventListener('storage',e=>{if(e.key==='astra.office.roster-revision')void workstations.refresh();},opts);
   const query=new URLSearchParams(location.search),initial=query.get('settings');
-  if([...adminTabs,'picture','seats'].includes(initial))open(initial,query.get('person'));
+  if([...adminTabs,'picture','seats','camera'].includes(initial))open(initial,query.get('person'));
   return {open,dismiss,syncTasks,dispose(){controller.abort();theme.disconnect();closeAdmin();closeSide();frame?.remove();}};
 }

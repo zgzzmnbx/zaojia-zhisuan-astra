@@ -60,7 +60,7 @@ export function FloatingGork({stage,active,sourceActive=false,state,completion=0
  }
  if(!active)return null;
  const point=position||cornerPosition(corner,viewport.width,viewport.height,viewport,size);
- return createPortal(<div ref={layer} popover="manual" className="studio floating-gork-layer" style={{'--floating-gork-size':`${size}px`} as CSSProperties}>
+ return createPortal(<div ref={layer} popover="manual" className="floating-gork-layer" style={{'--floating-gork-size':`${size}px`} as CSSProperties}>
   <div ref={dockNode} className={`floating-gork-dock ${position?'is-dragging':''}`} data-corner={corner} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget))setMenu(false);}} style={{left:point.x,top:point.y}} onKeyDown={event=>{if(event.key==='Escape'&&menu){event.preventDefault();event.stopPropagation();setMenu(false);handle.current?.focus();}}}>
    <button ref={handle} type="button" className="floating-gork-handle" aria-label={`移动悬浮智算，当前${labels[corner]}`} aria-expanded={menu} aria-controls="floating-gork-positions" title="拖动停靠四角 · 方向键移动 · 点击选择位置"
     onPointerDown={start} onPointerMove={move} onPointerUp={finish} onPointerCancel={cancelDrag} onLostPointerCapture={()=>{if(drag.current)cancelDrag();}}

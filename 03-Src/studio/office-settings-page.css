@@ -1,21 +1,10 @@
 .office-task-page {padding:0;background:var(--canvas)}
-.office-management {max-width:1360px;margin:0 auto;min-height:100dvh}
-.management-header {display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:74px;padding:12px clamp(18px,4vw,56px);border-bottom:1px solid var(--line);background:var(--paper)}
-.management-header>div,.management-header button,.management-nav button,.channel-heading,.settings-person-select,.settings-person-select label {display:flex;align-items:center;gap:10px}
-.management-header>div>svg {color:var(--astra-primary)}
-.management-header h1 {margin:0;font-family:inherit;font-weight:600;line-height:1.25;font-size:20px}
-.management-layout {display:grid;grid-template-columns:196px minmax(0,1fr);gap:clamp(18px,3vw,40px);padding:28px clamp(18px,4vw,56px) 40px}
-.management-nav {align-self:start;position:sticky;top:18px}
-.management-nav nav,.management-preview {display:grid;gap:4px}
-.management-nav button {min-height:42px;border:0;border-radius:9px;padding:10px 13px;font:inherit;font-weight:500;color:var(--ink);background:transparent;text-align:left;cursor:pointer}
-.management-nav button:hover {background:var(--paper)}
-.management-nav button[aria-selected=true] {color:var(--astra-primary);background:color-mix(in srgb,var(--astra-primary) 12%,var(--paper));font-weight:600}
-.management-preview {margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-.management-preview>span {padding:0 13px 4px;color:var(--muted);font-size:12px}
-.management-content {min-width:0}
-.management-content>section {min-height:min(390px,60vh);border-radius:16px;border:1px solid var(--line);padding:clamp(18px,3vw,34px);background:var(--paper);box-shadow:0 3px 16px #22354b05}
-.management-content h2 {margin:0 0 20px;font-size:20px;font-weight:600}
-.management-content [hidden] {display:none!important}
+.office-management {display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box;width:min(1080px,calc(100vw - 48px));height:min(800px,calc(100dvh - 64px));margin:max(32px,calc((100dvh - 800px)/2)) auto;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink)}
+.office-management[data-embedded=true] {width:100%;height:100dvh;margin:0;border:0;border-radius:0}
+.office-settings-sidebar {min-height:0;overflow:auto;background:var(--canvas);border-right:1px solid var(--line)}
+.office-settings-sidebar .settings-navigation {border:0;overflow:visible}
+.office-settings-sidebar .office-preview-links {padding-top:10px;border-top:1px solid var(--line)}
+.channel-heading,.settings-person-select,.settings-person-select label {display:flex;align-items:center;gap:10px}
 .setting-intro,.setting-note,.settings-actions>span,.channel-heading small,.switch-row small {color:var(--muted);line-height:1.6}
 .setting-intro {margin:-8px 0 20px}
 .setting-fields {min-width:0;display:grid;gap:16px;margin:0;padding:0;border:0}
@@ -33,6 +22,10 @@
 .settings-actions>span {font-size:13px}.settings-error {color:var(--ink);border-inline-start:3px solid #cc7853;padding:10px}
 .settings-person-select {justify-content:space-between;flex-wrap:wrap}
 .profile-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.profile-grid label {display:grid;gap:6px}.profile-grid label:last-child {grid-column:1/-1}.profile-grid textarea {width:100%;height:auto;resize:vertical}
-.orbit-row {display:grid;grid-template-columns:minmax(78px,1fr) minmax(64px,2fr) 48px}.orbit-row input {width:100%;accent-color:var(--astra-primary)}.orbit-row output {text-align:right;font-variant-numeric:tabular-nums}
-@media(max-width:700px){.management-layout {display:block;padding:14px}.management-header{min-height:58px}.management-nav{position:static}.management-nav nav{display:flex;overflow-x:auto}.management-nav nav button{flex:1;justify-content:center;white-space:nowrap;padding:8px;gap:5px}.management-preview{display:flex;align-items:center;flex-wrap:wrap;gap:2px;margin:6px 0 10px;padding:0;border:0}.management-preview button{min-height:32px;font-size:13px}.management-content>section{padding:16px}.management-nav svg{width:15px}.management-header h1{font-size:18px}}
-@media(max-width:440px){.management-nav nav button{flex-direction:column;gap:4px;font-size:13px}.profile-grid{grid-template-columns:1fr}.management-header{padding-inline:12px}.management-layout{padding:10px}}
+@media(max-width:700px){
+ .office-management {width:calc(100vw - 16px);height:calc(100dvh - 24px);margin:12px auto;border-radius:14px}
+ .office-settings-sidebar {display:flex;overflow:auto;border:0;border-bottom:1px solid var(--line)}
+ .office-settings-sidebar .settings-navigation {flex-shrink:0}
+ .office-settings-sidebar .office-preview-links {border:0;border-inline-start:1px solid var(--line);padding:8px}
+}
+@media(max-width:440px){.profile-grid{grid-template-columns:1fr}}

@@ -1,13 +1,13 @@
 import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
-import {bindOfficeCamera} from './office-camera.js?v=0.49.1';
+import {bindOfficeCamera} from './office-camera.js';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
 import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
-import {createFloorLabel} from './floor-label.js?v=office-0.51.0';
+import {createFloorLabel} from './floor-label.js?v=office-0.51.1';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
 import {createStreetTraffic} from './street-traffic.js';
@@ -788,7 +788,7 @@ export async function mountOfficeViewer() {
     loadReport.gpuPrepareMs=Math.round(performance.now()-gpuStarted);
     gpuPrepared=true;
     miniatureFocus=createMiniatureFocus(renderer,scene,camera,model,floors.get(DETAILED_FLOOR));
-    floorLabel=createFloorLabel({viewport,floor:floors.get(9),neighbour:twinRoot,camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
+    floorLabel=createFloorLabel({viewport,floor:floors.get(9),camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
       beginPreview:()=>{previewCamera=cameraPose();setView('exploded',{labelPreview:true});},
       endPreview:()=>{setView('building',{labelPreview:true,cameraTarget:previewCamera,animate:active()});previewCamera=null;},
       enter:()=>{
