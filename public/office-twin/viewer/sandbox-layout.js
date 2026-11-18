@@ -12,6 +12,27 @@ export function mountSandboxLayout(root=document) {
   window.addEventListener('office-panel',e=>tab(e.detail?.tab),options);
   $('#picture-toggle').addEventListener('click',()=>tab('space'),options);
   const tools=$('#office-tools'),more=$('#office-tools-toggle');
+  const bar=$('.office-modebar');
+  if(!('focusGroup' in HTMLElement.prototype)){
+    const buttons=()=>[...bar.querySelectorAll('button:not(:disabled)')];
+    let last=null;
+    function syncTabs(){
+      const available=buttons();
+      if(!available.includes(last))last=available[0];
+      for(const b of bar.querySelectorAll('button'))b.tabIndex=b===last?0:-1;
+    }
+    bar.addEventListener('focusin',e=>{if(e.target.matches('button')){last=e.target;syncTabs();}},options);
+    bar.addEventListener('keydown',e=>{
+      const available=buttons(),i=available.indexOf(e.target);
+      if(i<0||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+      const step=(e.key==='ArrowRight'?1:-1)*(getComputedStyle(bar).direction==='rtl'?-1:1);
+      const next=e.key==='Home'?0:e.key==='End'?available.length-1:(i+step+available.length)%available.length;
+      e.preventDefault();available[next].focus();
+    },options);
+    const observer=new MutationObserver(syncTabs);
+    observer.observe(bar,{subtree:true,childList:true,attributes:true,attributeFilter:['disabled']});
+    controller.signal.addEventListener('abort',()=>observer.disconnect(),{once:true});syncTabs();
+  }
   const native=typeof tools.togglePopover==='function';
   const opened=()=>native?tools.matches(':popover-open'):!tools.hidden;
   const items=()=>[...tools.querySelectorAll('[role=menuitem]')].filter(n=>!n.disabled&&n.getClientRects().length);

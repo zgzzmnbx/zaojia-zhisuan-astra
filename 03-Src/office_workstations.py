@@ -2,7 +2,9 @@
 import json
 import os
 import re
+import sqlite3
 import tempfile
+from contextlib import closing
 from pathlib import Path
 from threading import RLock
 
@@ -18,6 +20,36 @@ APPEARANCES = {'inherit', 'blue-shirt', 'headphones', 'glasses', 'cap', 'beanie'
 
 def filename():
     return ROOT / 'config' / 'office-workstations.json'
+
+
+def pending_review_rows(database):
+    """Read each outstanding personal receipt, including those outside recent results."""
+    if not database.exists():
+        return []
+    try:
+        with closing(sqlite3.connect(database.resolve().as_uri() + '?mode=ro', uri=True, timeout=2)) as db:
+            db.row_factory = sqlite3.Row
+            if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='dispatch_reviewers'").fetchone():
+                return []
+            rows = db.execute("""
+                SELECT t.task_id AS taskId, t.platform_profile_id AS platform,
+                       r.mapping_id AS reviewerRef, r.display_name AS reviewerName,
+                       t.project_name AS projectName, t.task_name AS taskName,
+                       COALESCE(NULLIF(t.submission_file_name, ''), t.file_name, '') AS artifactName
+                  FROM tasks t JOIN dispatch_reviewers r ON r.task_id = t.task_id
+                       AND r.review_round = t.review_round
+                 WHERE t.task_kind = 'external_dispatch' AND t.status = 'pending_review' AND r.status = 'pending'
+                 ORDER BY t.created_at DESC, t.task_id, r.mapping_id
+            """)
+            return [dict(row) for row in rows]
+    except (OSError, sqlite3.Error):
+        raise HTTPException(503, '人员待办暂时无法读取') from None
+
+
+@router.get('/pending-reviews')
+def pending_reviews():
+    from app.feishu_app_bot import DB_PATH
+    return {'items': pending_review_rows(DB_PATH)}
 
 
 def seats():

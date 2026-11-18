@@ -4,9 +4,9 @@
 
 [功能介绍](#主要功能) · [界面与演示](#界面与演示) · [快速开始](#快速开始) · [项目文档](#项目文档) · [问题反馈](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/issues)
 
-工作台的 **多人复核** 使用白瓷办公室。点 **展开9楼** 拉出办公层，**画面设置** 可调整背景虚化或暂停车辆。顶部图标切换整楼、九楼、环游和工作栏。「更多操作」集中画面、工位和复核设置。右侧按人员显示当前成果的任务、状态和回执；「演示」可查看样例，「交接预演」可在会议室试用双人递卷。[办公室模型与操作](tools/office-twin/porcelain/README.md)
+工作台的 **多人复核** 使用白瓷办公室。点 **展开9楼** 拉出办公层，**画面设置** 可调整背景虚化或暂停车辆。左上角可切换楼层、缩放、环游和工作栏，「更多操作」含俯视、重置镜头和各项设置。右侧「人员」直接显示每人的当前待办，优先列出跨成果的真实待复核记录，其次是标有「示例」的旧任务和勘察测量案例；「演示」可单独查看样例，「交接预演」可在会议室试用双人递卷。[办公室模型与操作](tools/office-twin/porcelain/README.md)
 
-> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.47.0**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
+> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.47.1**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
 
 办公室沙盘“工位设置”可分别调整每个人的头发、衣服与肤色，预览后点“保存设置”写入项目 `config/office-workstations.json`；“恢复扮相配色”清除该人的颜色覆盖，保存后生效。
 

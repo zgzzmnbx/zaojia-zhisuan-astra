@@ -2,7 +2,8 @@ import {reviewPeople, nextRound, type ReviewPlatform, type ReviewRequest, type R
 import {reviewParticipants} from '../professional/components/agent-workspace/reviewProgress.ts';
 
 export type OfficePerson = {id:string; name:string; selectable:boolean; selected:boolean; accounts:{platform:string;name:string}[]};
-export type OfficeTask = {id:string; employeeId:string; title:string; artifactName?:string; status:string; personStatus?:string; roundStatus?:string; platformLabel?:string; demo:boolean; comment?:string};
+export type OfficeTask = {id:string; dispatchId?:string; employeeId:string; title:string; artifactName?:string; status:string; personStatus?:string; roundStatus?:string; platformLabel?:string; demo:boolean; comment?:string};
+export type PendingOfficeReview = {taskId:string; platform:string; reviewerRef:string; reviewerName:string; projectName:string; taskName:string; artifactName:string};
 export type OfficeSnapshot = {
   context:string; revision:number; request:ReviewRequest; people:OfficePerson[]; tasks:OfficeTask[];
   toggle:(id:string,selected:boolean)=>void;
@@ -43,8 +44,15 @@ export function officeRoster(platforms:ReviewPlatform[],busy:boolean):OfficePers
 }
 export function officeTasks(tasks:ReviewTask[],request:ReviewRequest,people:OfficePerson[]=[]):OfficeTask[] {
   return tasks.flatMap(task=>reviewParticipants(task).map((person,index)=>({
-    id:`${task.task_id}:${index}`,employeeId:isOfficeOwner(task.platform,person.name)?'owner':people.find(p=>p.accounts.some(a=>a.platform===task.platform&&a.name===person.name))?.id||`${task.platform}:${person.name}`,
+    id:`${task.task_id}:${index}`,dispatchId:task.task_id,employeeId:isOfficeOwner(task.platform,person.name)?'owner':people.find(p=>p.accounts.some(a=>a.platform===task.platform&&a.name===person.name))?.id||`${task.platform}:${person.name}`,
     title:request.projectName||request.fileName,status:`${task.platform==='default'?'飞书':'WeAct'} · ${person.status} · ${task.status_label}`,
     artifactName:request.fileName,personStatus:person.status,roundStatus:task.status_label,platformLabel:task.platform==='default'?'飞书':'WeAct',demo:false,comment:person.comment,
   })));
+}
+export function pendingOfficeTask(row:PendingOfficeReview):OfficeTask {
+  const employeeId=isOfficeOwner(row.platform,row.reviewerName)?'owner':`${row.platform}:${row.reviewerRef}`;
+  const platformLabel=row.platform==='default'?'飞书':row.platform==='weact_cost'?'WeAct':row.platform;
+  return {id:`${row.taskId}:${row.reviewerRef}`,dispatchId:row.taskId,employeeId,
+    title:row.taskName||row.projectName||row.artifactName||'成果复核',artifactName:row.artifactName,
+    status:'待复核',personStatus:'待复核',platformLabel,demo:false};
 }

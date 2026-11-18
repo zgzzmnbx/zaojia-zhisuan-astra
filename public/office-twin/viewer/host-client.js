@@ -3,7 +3,7 @@ import {workstationRoster} from './workstation-roster.js';
 import {createWorkstationSettings} from './workstation-settings.js';
 import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
 import {bindSelectedPersonDrag,canRemoveSelectedPerson} from './selected-person-drag.js';
-import {mountDutyBoard} from './duty-board.js';
+import {mountDutyBoard,officeExamples,indexPersonTasks} from './duty-board.js';
 import {icon} from '../astra_ui/icons.js';
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
@@ -16,8 +16,14 @@ let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=
 let hostSnapshot=null;
 function applyHostSnapshot(){
   if(!hostSnapshot)return;
-  sourceSnapshot={...hostSnapshot,employees:workstationRoster(hostSnapshot.employees,workstationConfig)};
-  snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
+  const employees=workstationRoster(hostSnapshot.employees,workstationConfig);
+  sourceSnapshot={...hostSnapshot,employees,tasks:[...hostSnapshot.tasks,...officeExamples(employees)]};
+  publishSnapshot();
+}
+function publishSnapshot(){
+  snapshot=demos.apply(sourceSnapshot);
+  snapshot.personTasks=indexPersonTasks(snapshot);
+  renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
 }
 const $=selector=>document.querySelector(selector);
 export function element(tag,text,className='') {
@@ -26,7 +32,7 @@ export function element(tag,text,className='') {
 function post(type,data={}){parent.postMessage({namespace,type,...data},location.origin);}
 export function togglePerson(id,selected) {
   const route=assignmentRoute(snapshot,id);if(!route)return;
-  if(route==='demo'){demos.set(id,selected);snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));return;}
+  if(route==='demo'){demos.set(id,selected);publishSnapshot();return;}
   post('toggle',{context:snapshot.context,revision:snapshot.revision,employeeId:id,selected});
 }
 export function setDraggingPerson(id) {
@@ -79,8 +85,9 @@ function renderTasks() {
   $('#host-selection').hidden=selected.length>0;
   renderDropzone();
   dutyBoard?.update(snapshot);
-  $('#event-connection').textContent=snapshot.receiptError?'任务状态暂未刷新，请在左侧重试':'';
-  $('#event-connection').closest('footer').hidden=!snapshot.receiptError;
+  const stale=snapshot.receiptError||snapshot.inboxError;
+  $('#event-connection').textContent=stale?'待办暂未刷新，正在重试':'';
+  $('#event-connection').closest('footer').hidden=!stale;
 }
 function receive(event) {
   if(window.parent===window||event.source!==parent||event.origin==='null'||event.origin!==location.origin||event.data?.namespace!==namespace)return;
@@ -103,7 +110,7 @@ function receive(event) {
   const data=event.data;
   if(!Array.isArray(data.people)||!Array.isArray(data.tasks)||typeof data.context!=='string')return;
   hostSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
-    tasks:data.tasks};
+    tasks:data.tasks,pendingTasks:Array.isArray(data.pendingTasks)?data.pendingTasks:[],inboxError:!!data.inboxError,inboxLoading:!!data.inboxLoading};
   applyHostSnapshot();
 }
 export const officeClient={

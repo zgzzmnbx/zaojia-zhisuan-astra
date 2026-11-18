@@ -1,8 +1,10 @@
 import importlib.util
 import json
+import sqlite3
 from pathlib import Path
 import tempfile
 import unittest
+from contextlib import closing
 from unittest.mock import patch
 
 from fastapi import FastAPI
@@ -14,6 +16,27 @@ spec.loader.exec_module(module)
 
 
 class WorkstationsTest(unittest.TestCase):
+    def test_pending_reviews_survive_recent_history_and_exclude_previous_rounds(self):
+        database = Path(self.temp.name) / 'reviews.sqlite3'
+        with closing(sqlite3.connect(database)) as db, db:
+            db.executescript("""
+                CREATE TABLE tasks(task_id, platform_profile_id, project_name, task_name, submission_file_name,
+                                   file_name, task_kind, status, review_round, created_at);
+                CREATE TABLE dispatch_reviewers(task_id, mapping_id, display_name, review_round, status);
+            """)
+            db.executemany("INSERT INTO tasks VALUES (?, 'default', '支线', '限价核对', '', '原表.xlsx','external_dispatch', ?, 2, ?)",
+                           [(str(i),'pending_review' if i == 0 else 'completed',i) for i in range(120)])
+            db.executemany("INSERT INTO dispatch_reviewers VALUES (?,?,?,?,?)",[
+                ('0','one','甲',2,'pending'),('0','two','乙',2,'approved'),
+                ('0','three','丙',1,'pending'),('119','four','丁',2,'pending')])
+        before = database.read_bytes()
+        self.assertEqual(module.pending_review_rows(database),[{'taskId':'0','platform':'default','reviewerRef':'one',
+            'reviewerName':'甲','projectName':'支线','taskName':'限价核对','artifactName':'原表.xlsx'}])
+        self.assertEqual(before,database.read_bytes())
+        absent = Path(self.temp.name) / 'no-database'
+        self.assertEqual(module.pending_review_rows(absent),[])
+        self.assertFalse(absent.exists())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.path = Path(self.temp.name) / 'config/office-workstations.json'

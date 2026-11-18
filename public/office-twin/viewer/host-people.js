@@ -3,13 +3,13 @@ import {genderLabel} from './workstation-roster.js';
 import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,element as el} from './host-client.js';
 import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
-import {activePersonTasks,personLabelLevel,createPersonWander} from './person-presentation.js';
+import {personLabelLevel,createPersonWander} from './person-presentation.js';
 import {createReturnWalk} from './person-navigation.js';
 import {personStyles,normalizePersonStyle,createPolyforkAssets,createPolyforkPerson} from './people/polyfork-person.js';
 import {createPersonPlacement} from './person-placement.js?v=0.44.1';
 import {assignmentRoute} from './person-assignment.js';
 import {normalizeAppearance} from './people/appearances.js';
-import {personTaskSummary,taskState} from './duty-board.js';
+import {personTaskSummary,taskState,taskPriority,exampleLabel,emptyDutyLabel,dutyCountLabel} from './duty-board.js';
 import {icon} from '../astra_ui/icons.js';
 
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{}}) {
@@ -81,42 +81,65 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       heading.append(dot,el('strong',person.name));marker.append(heading,el('small',''),el('span','','host-person-activity'));markers.append(marker);
       marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY}));
       const button=el('button','','btn btn-ghost host-person-row');button.type='button';button.dataset.personId=person.id;
-      const identity=el('span','','duty-line'),body=el('span','','duty-body');
-      identity.append(el('strong',person.name),el('span','','duty-tag'));body.append(identity,el('small','','duty-title'));
-      button.append(el('span',Array.from(person.name)[0]||'·','duty-avatar'),body,el('span','拖拽','host-drag-grip'));list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
+      const identity=el('span','','duty-line'),body=el('span','','duty-body'),source=el('span','','duty-tag');source.dataset.tone='demo';
+      identity.append(el('strong',person.name),el('span','','duty-tag duty-state'),source);
+      body.append(identity,el('span','','duty-title'),el('small','','duty-extra'));
+      const grip=el('span','','host-drag-grip');grip.title='拖动同事';grip.setAttribute('aria-hidden','true');
+      button.append(body,grip);list.append(button);draggable(button,person.id);button.addEventListener('click',()=>select(person.id));
       const seat=seats.find(s=>s.seat_id===seatId),local=floor?floor.worldToLocal(origin.clone()):origin.clone();
       if(placements.get(person.id)?.seatId!==seatId)placements.delete(person.id);
       const item={person,anchor,group,marker,button,rig,yaw,seatId,seat,local,index,held:false,idle:false,wander:null,walk:null,returnWalk:null,labelLevel:'hidden',dragPosition:null,screenPoint:null,reactionAt:-Infinity};
       actors.set(person.id,item);if(placements.has(person.id)&&!placements.get(person.id).meeting)startReturn(item);
     });
   }
-  function tasksFor(id){return business.tasks.filter(t=>t.employeeId===id);}
+  function tasksFor(id){return business.personTasks?.get(id)||[];}
+  function taskLine(task){
+    const row=el('div','','host-task-line'),state=taskState(task);
+    const labels=[task.demo?exampleLabel(task):'',state.platform,state.label].filter(Boolean);
+    row.append(el('strong',task.title),el('small',labels.join(' · ')));
+    if(task.artifactName&&task.artifactName!==task.title)row.append(el('p',task.artifactName));
+    if(task.description||task.comment)row.append(el('p',task.description||task.comment));
+    return row;
+  }
   function paint(){
     for(const [id,item] of actors){
       const person=business.employees.find(p=>p.id===id);item.person=person;
-      const tasks=tasksFor(id),{live:pending,latest:task}=personTaskSummary(tasks);item.idle=!pending.length&&!person.selected;
+      const tasks=tasksFor(id),{live:pending,current:task}=personTaskSummary(tasks);
+      item.pending=pending;item.priority=taskPriority(task);item.idle=!pending.length&&!person.selected;
       if(item.idle&&!placements.has(id)&&!item.wander&&item.seat&&floor){
         item.wander=createPersonWander(placement.graph,{x:item.local.x,z:item.local.z,yaw:item.yaw},item.index+1,occupied(id),item.seat.bounds_px);
         item.walk=item.wander?.state()??null;
       }
-      const title=task?`${task.demo?'演示 · ':''}${task.title}`:'暂无任务';
+      const title=task?`${task.demo?exampleLabel(task)+' · ':''}${task.title}`:emptyDutyLabel(business);
       item.marker.querySelector('strong').textContent=person.name;
-      item.marker.querySelector('small').textContent=pending[0]?`${pending[0].demo?'演示 · ':''}${pending[0].title}`:'暂无待办';
+      item.marker.querySelector('small').textContent=title;
       const status=task?taskState(task):null,reviewing=status?.tone==='working';
       const statusLabel=pending.length?status.label:person.selected?'已选复核':'暂无待办';
       item.marker.dataset.status=item.idle?'idle':reviewing?'reviewing':'pending';
       item.marker.title=`${person.name} · ${statusLabel} · ${title} · ${tasks.length} 项任务`;
       item.marker.setAttribute('aria-label',item.marker.title);
-      const chip=item.button.querySelector('.duty-tag');chip.hidden=!status&&!person.selected;chip.dataset.tone=status?.tone||'selected';chip.textContent=status?.label||'已选';
-      item.button.querySelector('.duty-title').textContent=task?title:business.receiptError?'任务状态待刷新':'当前成果暂无任务';
+      const chip=item.button.querySelector('.duty-state');chip.hidden=!status&&!person.selected;chip.dataset.tone=status?.tone||'selected';chip.textContent=status?.label||'已选';
+      const source=item.button.querySelector('[data-tone="demo"]');source.hidden=!task?.demo;source.textContent=task?.demo?exampleLabel(task):'';
+      const line=item.button.querySelector('.duty-title');line.textContent=task?.title||emptyDutyLabel(business);line.title=line.textContent;
+      item.button.dataset.idle=String(!task);
+      const extra=item.button.querySelector('.duty-extra');extra.hidden=pending.length<2;extra.textContent=pending.length>1?dutyCountLabel(pending):'';
       item.marker.dataset.draggable='true';
       for(const node of [item.marker,item.button]){const grip=node.querySelector('.host-drag-grip');if(grip)grip.hidden=!person.draggable;node.draggable=node===item.button&&person.draggable;node.classList.toggle('selected',person.selected);node.setAttribute('aria-pressed',String(current===id));}
     }
+    const focus=list.contains(document.activeElement)?document.activeElement:null;
+    const ordered=[...actors.values()].sort((a,b)=>a.priority-b.priority);
+    ordered.forEach(({button},index)=>{
+      const next=list.children[index];
+      if(next===button)return;
+      if(list.moveBefore&&list.isConnected)list.moveBefore(button,next||null);
+      else list.insertBefore(button,next||null);
+    });
+    if(focus&&document.activeElement!==focus)focus.focus({preventScroll:true});
     card.replaceChildren();
     const item=actors.get(current);
     if(item){
       const person=item.person;card.append(el('h3',person.name));card.title='工位为示意位置';
-      for(const task of tasksFor(current)){const row=el('div','','host-task-line');row.append(el('strong',task.title),el('small',`${task.demo?'演示 · ':''}${task.status}`));if(task.comment)row.append(el('p',task.comment));card.append(row);}
+      for(const task of tasksFor(current))card.append(taskLine(task));
       const toggle=el('button',person.selected?'移出本次复核':person.demoAssignment?'加入演示复核':'加入本次复核','btn btn-primary btn-sm');toggle.type='button';toggle.disabled=!person.draggable;
       toggle.onclick=()=>togglePerson(person.id,!person.selected);card.append(toggle);
       if(!person.draggable)card.append(el('p',person.id==='owner'?'请在左侧复核卡确认当前平台与成果状态。':'请先打开当前项目的复核卡。','office-description'));
@@ -136,9 +159,9 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     menu.replaceChildren();const heading=el('div','','host-person-popover-heading'),close=el('button','×','btn btn-ghost btn-square btn-sm');close.type='button';close.setAttribute('aria-label','关闭人物详情');close.onclick=closeMenu;
     heading.append(el('strong',item.person.name),close);menu.append(heading);
     const profile=el('dl','','host-person-profile');
-    for(const [label,value] of [['性别',genderLabel(item.person.gender)],['工种',item.person.trade||'待补充'],['擅长审核',item.person.expertise||'待补充'],['当前状态',item.idle?'空闲':`${activePersonTasks(tasksFor(current),current).length} 项待办`],['工位',item.seatId?.replace('SEAT_','')||'未分配']])profile.append(el('dt',label),el('dd',value));menu.append(profile);
+    for(const [label,value] of [['性别',genderLabel(item.person.gender)],['工种',item.person.trade||'待补充'],['擅长审核',item.person.expertise||'待补充'],['当前状态',dutyCountLabel(item.pending)||emptyDutyLabel(business)],['工位',item.seatId?.replace('SEAT_','')||'未分配']])profile.append(el('dt',label),el('dd',value));menu.append(profile);
     const tasks=el('div','','host-person-projects');
-    for(const task of tasksFor(current)){const row=el('div','','host-task-line');row.append(el('strong',task.title),el('small',`${task.demo?'演示 · ':''}${task.status}`));if(task.comment)row.append(el('p',task.comment));tasks.append(row);}
+    for(const task of tasksFor(current))tasks.append(taskLine(task));
     if(!tasks.childElementCount)tasks.append(el('p','暂无审核项目'));menu.append(tasks);
     const add=el('button',item.person.selected?'移出本次复核':item.person.demoAssignment?'加入演示复核':'加入本次复核','btn btn-primary btn-sm');add.type='button';add.disabled=!item.person.draggable;add.onclick=()=>togglePerson(current,!item.person.selected);menu.append(add);
     const move=el('button','移入复核区','btn btn-ghost btn-sm');move.type='button';move.disabled=!placement.meetingSpot(occupied(current));move.onclick=()=>{const spot=placement.meetingSpot(occupied(current));if(spot){place(current,spot);paintMenu();}};menu.append(move);
@@ -192,7 +215,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
         // Measure only at a label-level transition, not during every animation frame.
         if(level!=='hidden'){item.marker.hidden=false;item.labelWidth=item.marker.offsetWidth;item.labelHeight=item.marker.offsetHeight;}
       }
-      const active=activePersonTasks(tasksFor(item.person.id),item.person.id),activity=item.dragPosition?'拖动中':placements.has(item.person.id)?(placements.get(item.person.id).meeting?'位于多人复核区':item.walk?.moving?'返回工位':'准备返回工位'):item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
+      const active=item.pending,activity=item.dragPosition?'拖动中':placements.has(item.person.id)?(placements.get(item.person.id).meeting?'位于多人复核区':item.walk?.moving?'返回工位':'准备返回工位'):item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.personStatus||active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
       const status=item.marker.querySelector('.host-person-activity');if(status.textContent!==activity)status.textContent=activity;
       const pos=item.group.position.clone().add(new THREE.Vector3(0,1.9,0)).project(camera);
       const x=(head.x*.5+.5)*width,y=(-head.y*.5+.5)*height-item.labelPixels*.15-(level==='detail'?43:24);

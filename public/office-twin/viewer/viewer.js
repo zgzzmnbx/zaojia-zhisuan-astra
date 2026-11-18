@@ -209,7 +209,7 @@ export async function mountOfficeViewer() {
     $('#fallback-message').textContent = `加载中断：${loadReport.lastError.message}。当前显示白瓷沙盘预览图，可点“重新加载”重试。`;
     $('#loading-tools').hidden=false;$('#load-diagnostics').open=true;refreshDiagnostic();
     $('#canvas-host').hidden = true;
-    document.querySelectorAll('[data-view], #back-building, .office-camera-tools button').forEach(button => button.disabled = true);
+    document.querySelectorAll('[data-view], #back-building, [data-camera]').forEach(button => button.disabled = true);
     paintState();
     document.documentElement.dataset.viewerStatus = 'fallback';
     status('加载未完成 · '+loadReport.lastError.code);
@@ -310,7 +310,7 @@ export async function mountOfficeViewer() {
       loadReport.webglRendered=true;renderStatus='ready';loadReport.stage='ready';stopLoading();
       $('#loading-tools').hidden=true;$('#preview-fallback').hidden=true;document.documentElement.dataset.viewerStatus='ready';
       if(porcelainPalette)$('#office-theme-blue').disabled=false;
-      document.querySelectorAll('[data-view], #back-building, .office-camera-tools button').forEach(button=>button.disabled=false);
+      document.querySelectorAll('[data-view], #back-building, [data-camera]').forEach(button=>button.disabled=false);
       status('白瓷办公室已就绪');
       loadReport.firstRenderMs=Math.round((performance.now()-loadStarted)*10)/10;refreshDiagnostic();
       console.info('Office viewer load report',structuredClone(loadReport));
@@ -518,7 +518,7 @@ export async function mountOfficeViewer() {
   const picture = createPictureSettings({listen,requestFrame,getRenderer:()=>renderer,allowTraffic:true,motionPreference});
   const porcelainPalette = mountPorcelainPalette($('#office-theme-blue'),listen,requestFrame);
   const orbitButton=document.createElement('button');orbitButton.type='button';orbitButton.className='btn btn-ghost btn-square btn-sm';orbitButton.id='office-orbit-toggle';
-  $('.office-modebar').append(orbitButton);
+  $('#space-card-toggle').before(orbitButton);
   const paintOrbit=state=>{
     if(!state.running)wasOrbitRunning=false;
     const paused=state.paused||!state.enabled;

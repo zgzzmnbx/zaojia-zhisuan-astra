@@ -806,7 +806,30 @@ test('return walker waits for a blocked doorway and retries after it clears',()=
  for(let i=0;i<1500&&!walk.state().done;i++)walk.step(.05,true,[]);assert.equal(walk.state().done,true);
 });
 import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches.js';
-import {personTaskSummary,taskState} from '../public/office-twin/viewer/duty-board.js';
+import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority} from '../public/office-twin/viewer/duty-board.js';
+import {pendingOfficeTask} from '../03-Src/studio/office-review.ts';
+
+test('legacy and survey examples remain assigned to the same people across roster reordering',()=>{
+  const people=['石萌','刘君','安冉','康亚光','李洪全','王军','钱冬冬','鹿学文','李雨霏','陈希','朱琳'].map((name,i)=>({id:String(i),name}));
+  const examples=officeExamples(people);
+  assert.deepEqual(officeExamples([...people].reverse()),examples);
+  assert.equal(examples.filter(t=>t.example==='legacy').length,6);
+  assert.equal(examples.filter(t=>t.example==='survey').length,5);
+  assert.ok(examples.every(t=>t.demo));
+  assert.deepEqual(examples.filter(t=>t.employeeId==='7').map(t=>t.status),['审核中','待复核']);
+  assert.ok(!examples.some(t=>t.employeeId==='10'));
+});
+test('personal inbox keeps other results and shares a single entry per current dispatch and person',()=>{
+  const base={platform:'default',reviewerName:'大尾巴',projectName:'工程',taskName:'复核甲',artifactName:'甲.xlsx',reviewerRef:'P1',taskId:'r1'};
+  const current={...pendingOfficeTask(base),id:'r1:0'};
+  const other=pendingOfficeTask({...base,taskId:'r2',taskName:'复核乙',platform:'weact_cost',reviewerName:'石萌'});
+  const sample={employeeId:'owner',title:'示例',status:'待复核',demo:true,example:'survey'};
+  const outside=pendingOfficeTask({...base,taskId:'r3',reviewerName:'同事'});
+  const index=indexPersonTasks({tasks:[sample,current],pendingTasks:[pendingOfficeTask(base),other,outside]});
+  assert.deepEqual(index.get('owner').map(t=>t.title),['复核甲','复核乙','示例']);
+  assert.equal(index.get('default:P1')[0].title,'复核甲');
+  assert.ok(taskPriority(other)<taskPriority(sample) && taskPriority(sample)<taskPriority(null));
+});
 
 test('office task states use the individual receipt in both structured and older bridge snapshots',()=>{
   assert.deepEqual(taskState({status:'飞书 · 已通过 · 等待其他人复核'}),{platform:'飞书',label:'已通过',tone:'closed',done:true});

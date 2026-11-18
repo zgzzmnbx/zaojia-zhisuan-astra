@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState,useSyncExternalStore} from 'react';
 import {api} from './api';
-import {officeRoster,officeTasks,type OfficeBridge,type OfficePerson,type OfficeTask} from './office-review';
+import {officeRoster,officeTasks,pendingOfficeTask,type PendingOfficeReview,type OfficeBridge,type OfficePerson,type OfficeTask} from './office-review';
 import type {ReviewOptions,ReviewPlatform,ReviewTask} from './review-flow';
 import {latestReviewTasksByPlatform} from '../professional/components/agent-workspace/reviewProgress';
 import './office-review.css';
@@ -23,12 +23,26 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
     return()=>{cancelAnimationFrame(first);cancelAnimationFrame(second);};
   },[generation]);
   const [receiptError,setReceiptError]=useState(false);
+  const [inbox,setInbox]=useState<{tasks:OfficeTask[];error:boolean;loaded:boolean}>({tasks:[],error:false,loaded:false});
   const [directory,setDirectory]=useState<OfficePerson[]>([]);
   const [receipt,setReceipt]=useState<{context:string;tasks:OfficeTask[]}|null>(null);
   const snapshot=useSyncExternalStore(bridge.subscribe,bridge.getSnapshot);
   const current=snapshot?.context.startsWith(context+':')?snapshot:null;
   const latest=useRef(current);latest.current=current;
   const visible=useRef(active);visible.current=active;
+  useEffect(()=>{
+    if(!active)return;
+    const controller=new AbortController();
+    let timer:ReturnType<typeof setTimeout>;
+    async function refresh(){
+      try{
+        const data=await api<{items:PendingOfficeReview[]}>('/api/astra/office-workstations/pending-reviews',{signal:controller.signal});
+        if(!controller.signal.aborted)setInbox({tasks:data.items.map(pendingOfficeTask),error:false,loaded:true});
+      }catch{if(!controller.signal.aborted)setInbox(previous=>({...previous,error:true}));}
+      if(!controller.signal.aborted)timer=setTimeout(refresh,15000);
+    }
+    void refresh();return()=>{controller.abort();clearTimeout(timer);};
+  },[active]);
   useEffect(()=>{
     if(!active||!current)return;
     const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;
@@ -111,8 +125,8 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   useEffect(()=>{
     if(!ready)return;
     send('snapshot',{context:current?.context||context,revision:current?.revision||0,people:current?.people.length?current.people:directory,
-      tasks:receipt&&current&&receipt.context===current.context?receipt.tasks:current?.tasks||[],title:current?.request.fileName||'当前尚无可复核成果',enabled:!!current,receiptError});
-  },[ready,current,directory,context,receipt,receiptError]);
+      tasks:receipt&&current&&receipt.context===current.context?receipt.tasks:current?.tasks||[],pendingTasks:inbox.tasks,inboxError:inbox.error,inboxLoading:!inbox.loaded&&!inbox.error,title:current?.request.fileName||'当前尚无可复核成果',enabled:!!current,receiptError});
+  },[ready,current,directory,context,receipt,receiptError,inbox]);
   useEffect(()=>{
     if(!ready)return;
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'visibility',visible:active},location.origin);
@@ -121,6 +135,6 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   return <div className="office-review-host" aria-busy={!rendered&&!error}>
     {!rendered&&<div className="office-review-loading" role="status"><div><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><span>{error?'办公室尚未载入':'正在加载办公室沙盘…'}</span></div></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.47.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.47.1" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }

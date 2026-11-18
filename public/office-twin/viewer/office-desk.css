@@ -19,13 +19,13 @@ body.studio .office-modebar #view-controls {
   display: inline-flex;
   flex-wrap: nowrap;
   gap: 2px;
-  margin: 0 3px 0 0;
-  padding-right: 6px;
-  border-right: 1px solid var(--astra-line);
+  margin: 0;
 }
+body.studio .office-zoom-tools { display: inline-flex; gap: 2px; }
+.office-tool-divider { height: 18px; margin: 0 1px; border-inline-start: 1px solid var(--astra-line); }
 body.studio
   .office-modebar
-  :is(#view-controls button, #space-card-toggle, #office-orbit-toggle, #office-tools-toggle) {
+  :is(#view-controls button, .office-zoom-tools button, #space-card-toggle, #office-orbit-toggle, #office-tools-toggle) {
   width: 34px;
   min-width: 34px;
   min-height: 34px;
@@ -46,12 +46,12 @@ body.studio .office-modebar #space-card-toggle {
 body.studio .office-modebar #office-tools-toggle {
   order: 3;
 }
-body.studio .office-modebar :is(#view-controls button, #space-card-toggle, #office-tools-toggle) .astra-icon {
+body.studio .office-modebar :is(#view-controls button, .office-zoom-tools button, #space-card-toggle, #office-tools-toggle) .astra-icon {
   display: inline-flex !important;
 }
 body.studio
   .office-modebar
-  :is(#view-controls button, #space-card-toggle, #office-orbit-toggle, #office-tools-toggle)
+  :is(#view-controls button, .office-zoom-tools button, #space-card-toggle, #office-orbit-toggle, #office-tools-toggle)
   svg {
   display: block;
   width: 20px;
@@ -451,7 +451,16 @@ html[data-astra-scheme='dark']
   body.studio.office-embed .office-workspace {
     --cards-width: clamp(292px, 22vw, 332px);
   }
-  body.studio.office-embed .office-camera-tools {
-    right: calc(var(--cards-width) + 26px);
-  }
 }
+body.studio #people-list .host-person-row { align-items: center; white-space: normal; }
+body.studio #people-list .duty-body { display: grid; gap: 4px; text-align: start; }
+body.studio #people-list .duty-line { justify-content: flex-start; gap: 6px; }
+body.studio #people-list .duty-line strong { flex: none; }
+body.studio #people-list .duty-title { display: block; }
+body.studio #people-list .duty-extra { color: var(--astra-muted); }
+body.studio #people-list .host-person-row[data-idle='true'] .duty-title { color: var(--astra-muted); }
+body.studio #people-list .host-drag-grip {
+  flex: 0 0 10px; height: 16px; color: var(--astra-muted);
+  background: radial-gradient(circle, currentColor 1px, transparent 1.4px) 0 0 / 5px 5px;
+}
+body.studio #people-list [hidden] { display: none !important; }
