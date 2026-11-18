@@ -5,6 +5,7 @@ from collections import defaultdict
 
 import numpy as np
 
+from brand import mount_eave_letters
 from geometry import Batch
 from receivers import Receiver
 from streetscape import place_streetscape
@@ -82,7 +83,7 @@ def storey(out,parent,n,height):
     kit.finish(out,parent,f'Porcelain_F{n:02}')
 
 
-def rooftop(out,parent,top):
+def rooftop(out,parent,top,source,emblem):
     kit=Kit(); wall,blue=kit.parts['shell'],kit.parts['accent']
     roof=Receiver(22,512,'roof')
     # Surveyed rooms end at 9F; all equipment on this independent roof is illustrative.
@@ -91,8 +92,7 @@ def rooftop(out,parent,top):
     deck.col=[np.ones(3) for _ in deck.pos]
     for side in range(4):
         strip(wall,side,0,top,39.1,.58,.28,'porcelain',19.49,.05)
-    # The separate fascia still casts its shadow into the roof texture.
-    roof.block(-2,17.88,25.6,.59,4.91)
+    mount_eave_letters(out,parent,source,emblem,top,wall,roof)
     wall.box(-7,top,-4,14.2,4.2,9.2,'chalk',.16,.55)
     wall.box(-7,top+4.17,-4,14.8,.28,9.8,'porcelain',.08,.58)
     roof.block(-7,-4,14.75,9.8,4.47)

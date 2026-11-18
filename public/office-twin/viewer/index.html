@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="./office-events.css?v=0.7.0">
   <link rel="stylesheet" href="./astra-review.css?v=0.45.0">
   <link rel="stylesheet" href="./porcelain.css?v=0.46.0">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=office-0.46.0","./porcelain-style.js":"./porcelain-style.js?v=office-0.46.0","./porcelain-palette.js":"./porcelain-palette.js?v=office-0.46.0","./night-bloom.mjs?v=0.6.3":"./night-bloom.mjs?v=office-0.46.0","./night-floor-bake.js":"./night-floor-bake.js?v=office-0.46.0","./model-transport.js?v=0.7.0":"./model-transport.js?v=office-0.46.0","./lighting-settings.js":"./lighting-settings.js?v=office-0.46.1","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=office-0.46.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.45.0","./host-client.js":"./host-client.js?v=office-0.46.0","./host-people.js":"./host-people.js?v=0.45.0","./seated-person.js":"./seated-person.js?v=0.45.0","./person-presentation.js":"./person-presentation.js?v=0.45.0","./person-pointer.js":"./person-pointer.js?v=0.45.0","./scene-state.js?v=0.6.7":"./scene-state.js?v=office-0.46.0","./office-entrance.js":"./office-entrance.js?v=office-0.46.0","./office-camera-limits.js":"./office-camera-limits.js?v=office-0.46.0","./floor-picking.js?v=0.39.1":"./floor-picking.js?v=office-0.46.0","./miniature-focus.js":"./miniature-focus.js?v=office-0.46.2","./night-compositor.js":"./night-compositor.js?v=office-0.46.0","./picture-settings.js?v=0.6.7":"./picture-settings.js?v=office-0.46.0","./night-lighting-policy.js":"./night-lighting-policy.js?v=office-0.46.0","./night-lighting-policy.js?v=0.6.3":"./night-lighting-policy.js?v=office-0.46.0","./static-batches.js?v=0.44.2":"./static-batches.js?v=office-0.46.0","./street-traffic.js":"./street-traffic.js?v=office-0.46.0","./release.js?v=0.7.0":"./release.js?v=office-0.46.0"}}</script>
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=office-0.46.3","./porcelain-style.js":"./porcelain-style.js?v=office-0.46.0","./porcelain-palette.js":"./porcelain-palette.js?v=office-0.46.0","./night-bloom.mjs?v=0.6.3":"./night-bloom.mjs?v=office-0.46.0","./night-floor-bake.js":"./night-floor-bake.js?v=office-0.46.0","./model-transport.js?v=0.7.0":"./model-transport.js?v=office-0.46.0","./lighting-settings.js":"./lighting-settings.js?v=office-0.46.1","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=office-0.46.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.45.0","./host-client.js":"./host-client.js?v=office-0.46.0","./host-people.js":"./host-people.js?v=0.45.0","./seated-person.js":"./seated-person.js?v=0.45.0","./person-presentation.js":"./person-presentation.js?v=0.45.0","./person-pointer.js":"./person-pointer.js?v=0.45.0","./scene-state.js?v=0.6.7":"./scene-state.js?v=office-0.46.0","./office-entrance.js":"./office-entrance.js?v=office-0.46.0","./office-camera-limits.js":"./office-camera-limits.js?v=office-0.46.0","./floor-picking.js?v=0.39.1":"./floor-picking.js?v=office-0.46.0","./miniature-focus.js":"./miniature-focus.js?v=office-0.46.2","./night-compositor.js":"./night-compositor.js?v=office-0.46.0","./picture-settings.js?v=0.6.7":"./picture-settings.js?v=office-0.46.0","./night-lighting-policy.js":"./night-lighting-policy.js?v=office-0.46.0","./night-lighting-policy.js?v=0.6.3":"./night-lighting-policy.js?v=office-0.46.0","./static-batches.js?v=0.44.2":"./static-batches.js?v=office-0.46.0","./street-traffic.js":"./street-traffic.js?v=office-0.46.0","./release.js?v=0.7.0":"./release.js?v=office-0.46.3"}}</script>
 </head>
 <body class="studio">
 <div id="shell" class="live-shell office-shell">
@@ -25,7 +25,7 @@
       <a id="office-settings-link" class="btn btn-ghost btn-sm" href="./settings.html">设置</a>
       <span id="connection-state" class="badge badge-ghost office-desktop">业务未接入</span>
       <button id="theme-toggle" class="btn btn-ghost btn-square" aria-label="切换深色主题" title="切换明暗主题"><span class="astra-icon" data-icon="moon"></span></button>
-      <a id="model-download" class="btn btn-ghost btn-square" href="../models/H1-porcelain-v0.6.0.glb" download aria-label="下载白瓷办公室模型" title="下载白瓷办公室模型"><span class="astra-icon" data-icon="download"></span></a>
+      <a id="model-download" class="btn btn-ghost btn-square" href="../models/H1-porcelain-v0.6.1.glb" download aria-label="下载白瓷办公室模型" title="下载白瓷办公室模型"><span class="astra-icon" data-icon="download"></span></a>
     </div>
   </header>
 
@@ -50,7 +50,7 @@
 
       <div id="viewport" class="office-viewport" tabindex="0" aria-label="三维建筑，可拖动旋转，滚轮缩放，右键平移">
         <figure id="preview-fallback" class="office-fallback">
-          <img alt="H1 办公楼模型静态预览" id="fallback-image" src="../previews/porcelain-v0.6.0.webp">
+          <img alt="H1 办公楼模型静态预览" id="fallback-image" src="../previews/porcelain-v0.6.1.webp">
           <figcaption id="fallback-message">正在加载办公室三维模型。</figcaption>
         </figure>
         <div id="loading-tools" class="office-loading-tools" aria-label="模型加载状态与恢复">
@@ -162,7 +162,7 @@
   officeClient.start();
   window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
   window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
-  import('./viewer.js?v='+VERSION+'&ui=office-0.46.2').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+  import('./viewer.js?v='+VERSION+'&ui=office-0.46.3').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
     document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
     document.querySelector('#render-status').textContent='静态预览';
     document.documentElement.dataset.viewerStatus='module-error';

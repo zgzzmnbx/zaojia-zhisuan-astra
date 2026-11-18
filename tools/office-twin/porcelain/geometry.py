@@ -107,7 +107,7 @@ class Source:
 
 class Glb:
     def __init__(self):
-        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.6.0'},
+        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.6.1'},
                     'extensionsUsed': ['KHR_materials_unlit'], 'scene': 0, 'scenes': [{'nodes': []}],
                     'samplers':[{'wrapS':33071,'wrapT':33071,'magFilter':9729,'minFilter':9987}],
                     **{k: [] for k in ['nodes','meshes','materials','textures','images','accessors','bufferViews']}}

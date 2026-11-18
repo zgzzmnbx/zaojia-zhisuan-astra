@@ -2,8 +2,8 @@
   "upstream": "办公室数字孪生",
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
-  "modelVersion": "0.6.0",
-  "hostAdapterVersion": "0.46.2",
+  "modelVersion": "0.6.1",
+  "hostAdapterVersion": "0.46.3",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -69,13 +69,13 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "27e6ea01106a398a0cc11f8aac94e92b350fe4d2497f92388d75a723ecccb266",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "6879c4b5e4d7d5a2811c6243fa9f46de025783bede7a53d010e7714b0deeb788",
+    "viewer/index.html": "6c479827c5997f3faf1be9d93e59c0af9c122f604a5cab712120171437bcce7c",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "dae491840d1c74200a5dade704e72eab3700e0849b92452064578f9779c97fec",
     "viewer/navigation-motion.js": "25851e9be64d8fb8eda6191c528c78d3f52e2428388168a4d52a6f6b8f5c5889",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
-    "viewer/night-environment.js": "a4e52375624921b666acb7121314c3262483d6f6c9e7d31b1ad4b5b29b8b6add",
+    "viewer/night-environment.js": "5ec0e7bd988cc16dd3974123dc5ddd60119c123c19ac42f911dab6ba9eacace6",
     "viewer/night-lighting-policy.js": "44d07b207014ffa0e57edf5fb62c2f81bfbfb7a28d5dcde33711bf50cf78cc3d",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
@@ -85,7 +85,7 @@
     "viewer/porcelain-palette.js": "3fbef686772b98dd206e88ea36a84bb36a2e4025062b1508e43d9c808c48a362",
     "viewer/porcelain-style.js": "47859425979cbc6cfcee4392c7223b9de0c4903d564593be625a87aff9c34977",
     "viewer/README.md": "4d8bf3c34af4f3bc523f86af4dadc92b41982dd35837ede80f78c90d08296b02",
-    "viewer/release.js": "5c593734cd3497a8ecc03d1e86105b412e9e268f5de08ed0a704b712a90fbcb0",
+    "viewer/release.js": "884ed3363adf796111eac702b338a9f1564dbf657d9bf87cfe467383050850dc",
     "viewer/sandbox-layout.js": "511ea27a76ac858331b6d8d6922c672e9c4e29cdfabc537778db03c60ed13b4d",
     "viewer/scene-state.js": "813cfe3407a224ac6abe640ccb57a6bf08b4b70256e49b3e7b629236be9e1729",
     "viewer/settings.css": "a06b6b684311050d0d2301bb75d32c36dd05b6a6677f8aa913bbc658314ff317",
@@ -172,9 +172,9 @@
     "viewer/person-navigation.js": "722fd8b1a71734c6c7dbc4f12147b47c94e893b7d6a4c271205d8e0602298f33",
     "viewer/people/person-colors.js": "3a0bbd2ebf089fe16a31877875fbafa9826bbc76ae85e58d60911c07e31311aa",
     "viewer/street-traffic.js": "daf0c768917d2f686418a84530f94c1d3afe910a9d361c46e1eb339b0078b193",
-    "models/H1-porcelain-v0.6.0.glb": "ecc1ed83139330a53c10a714f7e19f00240deac888cbc7e1d12477d373f755ee",
-    "previews/porcelain-v0.6.0.webp": "c6bc4ce6d6ca88f2d00caebfc1f674b86e653997f65e24907c76647936cc914c",
-    "viewer/porcelain.css": "9180127bd27328b2ed08299490d7714b66f8c8c093a29e5855243db29ef5066a"
+    "viewer/porcelain.css": "9180127bd27328b2ed08299490d7714b66f8c8c093a29e5855243db29ef5066a",
+    "models/H1-porcelain-v0.6.1.glb": "e66fd1bbc0e7bb0c752091ec663a533522c35fee64d3099bb5faaee63738be45",
+    "previews/porcelain-v0.6.1.webp": "529a31eba22ab9baa78efc9ecb5dde0e34cace9e00c0a34a7b7071ba5970b023"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -290,12 +290,12 @@
     }
   },
   "presentation": {
-    "version": "0.6.0",
+    "version": "0.6.1",
     "baseline": "6fc00dd",
     "sourceModel": "models/H1-baked-v0.6.7.glb",
-    "model": "models/H1-porcelain-v0.6.0.glb",
-    "modelBytes": 13587356,
-    "modelSHA256": "ecc1ed83139330a53c10a714f7e19f00240deac888cbc7e1d12477d373f755ee",
+    "model": "models/H1-porcelain-v0.6.1.glb",
+    "modelBytes": 14191948,
+    "modelSHA256": "e66fd1bbc0e7bb0c752091ec663a533522c35fee64d3099bb5faaee63738be45",
     "planSHA256": "ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a",
     "frozenDetailedFloor": {
       "nodes": 2405,
@@ -356,7 +356,19 @@
         "#c00000",
         "#101010"
       ],
-      "night": "#85d0ff"
+      "night": "#85d0ff",
+      "roof": {
+        "mount": "Freestanding emblem and four original wordmark characters on the front parapet",
+        "emblemHeightMetres": 2.48,
+        "returnDepthMetres": 0.13,
+        "supports": 5,
+        "frontColors": [
+          "#c00000",
+          "#141619"
+        ],
+        "night": "#85d0ff"
+      },
+      "entrance": "Existing illustrated entrance fascia"
     },
     "daylight": {
       "finish": "cel-shaded white architectural miniature",
@@ -368,8 +380,8 @@
         "office"
       ],
       "nightVertexAttribute": "_NIGHTCOLOR",
-      "fallbackPreview": "previews/porcelain-v0.6.0.webp"
+      "fallbackPreview": "previews/porcelain-v0.6.1.webp"
     },
-    "poster": "previews/porcelain-v0.6.0.webp"
+    "poster": "previews/porcelain-v0.6.1.webp"
   }
 }

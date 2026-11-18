@@ -18,7 +18,7 @@ from streetscape import LAMPS, PARKING, TRAFFIC
 
 ROOT=Path(__file__).resolve().parents[3]
 PACKAGE=ROOT/'public/office-twin'
-MODEL='H1-porcelain-v0.6.0.glb'
+MODEL='H1-porcelain-v0.6.1.glb'
 BASELINE='H1-baked-v0.6.7.glb'
 BASELINE_HASH='c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545'
 LAYOUT_HASH='ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a'
@@ -166,7 +166,15 @@ def verify(source,generated):
         prim,=generated.doc['meshes'][node['mesh']]['primitives']
         mat=generated.doc['materials'][prim['material']]
         assert node['extras']['night_role']=='brand_sign' and mat.get('alphaMode','OPAQUE')=='OPAQUE'
-        assert 'baseColorTexture' in mat['pbrMetallicRoughness'] and 'emissiveTexture' not in mat
+        assert 'emissiveTexture' not in mat
+        if floor==2:
+            assert 'baseColorTexture' in mat['pbrMetallicRoughness']
+        else:
+            assert 'baseColorTexture' not in mat['pbrMetallicRoughness']
+            pos=generated.array(prim['attributes']['POSITION'])
+            np.testing.assert_allclose(pos[:,2].min(),19.41,atol=.001)
+            np.testing.assert_allclose(pos[:,2].max(),19.54,atol=.001)
+            assert 2.48 <= np.ptp(pos[:,1]) < 2.50 and 15 < np.ptp(pos[:,0]) < 17
     def shell_positions(floor):
         n=generated.doc['nodes'][generated.named[f'Porcelain_F{floor:02}_shell']]
         p,=primitives(generated,n)
@@ -235,6 +243,7 @@ def main():
         day_texture=out.texture('Office / contact and directional daylight',image)
         mesh_cache={}
         graphic,art_width=sign_art(source,ROOT/CONTOURS)
+        emblem=Source((ROOT/CONTOURS).with_name('管网Logo-原色.glb'))
         brand_material=out.material('Porcelain / PipeChina fascia',out.texture('PipeChina / emblem and lettering',graphic))
         for n in range(1,21):
             name=f'Floor_{n:02}'
@@ -249,8 +258,7 @@ def main():
                 for root in (SLAB,OFFICE):
                     copy_office(out,source,source.named[root],floor,np.eye(4),atlas,day_texture,mesh_cache)
             if n==20:
-                rooftop(out,facade,h)
-                mount_sign(out,facade,brand_material,art_width,'PipeChina_Roof',-2,h,17.88,25.6,4.91,.59,.12)
+                rooftop(out,facade,h,source,emblem)
         campus(out,grounds)
         program_files=Path(os.environ.get('ProgramFiles','C:/Program Files'))
         available=sorted((program_files/'Blender Foundation').glob('Blender */blender.exe'),reverse=True)

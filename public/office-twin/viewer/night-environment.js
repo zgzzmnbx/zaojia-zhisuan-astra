@@ -19,6 +19,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
   const key=previousKey();
+  const solidBrand = role === 'brand_sign' && !material.map;
   const streetReceiver=!!shared.streetLightMap && (role==='ground'||role==='street_surface');
   const cars=role==='ground'&&shared.streetTraffic;
   const contact=sample=>cars?`max(${sample},movingCarContact(officeWorldPosition.xz))`:sample;
@@ -30,7 +31,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
           #include <map_fragment>
         }`);
     }
-    if(role==='brand_sign'){
+    if(role==='brand_sign' && !solidBrand){
       shader.uniforms.officeBrandHalo=shared.brandHalo;
       shader.fragmentShader='uniform float officeBrandHalo;\n'+shader.fragmentShader;
     }
@@ -112,7 +113,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       if(officeNight<.5){
         ${material.userData.porcelain?'#define OFFICE_PORCELAIN_DAY':''}
         #ifdef OFFICE_PORCELAIN_DAY
-        ${porcelainDaylight}
+        ${solidBrand ? 'outgoingLight = diffuseColor.rgb / 1.10957;' : porcelainDaylight}
         ${streetReceiver&&role==='ground'?`outgoingLight*=1.-vec3(.22,.17,.10)*${contact('texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).g')};`:''}
         #else
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
@@ -251,7 +252,12 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         emission=mix(vec3(dot(emission,vec3(.2126,.7152,.0722))),emission,officeNightBlue);
         ${role==='street_lens'?'emission=vec3(.48,.35,.23)*officeNightLamps.x;':''}
         vec3 haloEmission=officeNightRole==5.?emission*${NIGHT_LIGHTING.screenBloomGain}:emission;
-        ${role==='brand_sign'?`
+        ${solidBrand ? `
+        // Freestanding strokes emit the fixed corporate blue from their
+        // actual surface. Their open counters reveal the scene behind them.
+        shell=vec3(0.);
+        emission=vec3(${brandBlue.join(',')});
+        haloEmission=emission*.28;` : role==='brand_sign'?`
         vec4 brand=texture2D(map,vMapUv);
         float ink=clamp((1.-brand.g)/.995,0.,1.);
         float spill=max(0.,(brand.a*255.-128.)/127.);
@@ -267,7 +273,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV,!!material.userData.porcelainNightColor,!!material.userData.porcelainDayMap].join('|');
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,solidBrand,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV,!!material.userData.porcelainNightColor,!!material.userData.porcelainDayMap].join('|');
   material.needsUpdate=true;
 }
 

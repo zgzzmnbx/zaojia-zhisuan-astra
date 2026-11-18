@@ -6,7 +6,7 @@
 
 工作台的 **多人复核** 使用白瓷办公室。点 **展开9楼** 拉出办公层，**画面设置** 可调整背景虚化或暂停车辆。员工、工位及配色沿用项目设置，复核候选和回执由当前成果提供。[办公室模型与操作](tools/office-twin/porcelain/README.md)
 
-> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.46.2**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
+> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.46.3**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
 
 办公室沙盘“工位设置”可分别调整每个人的头发、衣服与肤色，预览后点“保存设置”写入项目 `config/office-workstations.json`；“恢复扮相配色”清除该人的颜色覆盖，保存后生效。
 
