@@ -22,6 +22,7 @@ export function classifyNightRole(object,material=object.material){
   if(object.userData?.staticBatch)return explicit;
   if(['window','accent','sign','context','screen','interior_light','vegetation','street_surface','street_lens','brand_sign'].includes(explicit))return explicit;
   for(let node=object;node;node=node.parent){
+    if(node.userData?.entity_type==='building_shell'&&explicit==='shell')return 'shell';
     if(/ContextWeb_RoadsBases|AstraContext_ContinuousBaseplate/.test(node.name||''))return 'ground';
     if(/ContextWeb_Buildings|ContextBuildings|Context_Building|Context_Setback/.test(node.name||''))return 'context';
     if(node.userData?.demoPersonId)return 'person';

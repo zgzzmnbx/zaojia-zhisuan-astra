@@ -12,7 +12,7 @@ export function cacheStaticTransforms(root){
 
 function boundaryFor(object,root){
   let boundary=object.parent;
-  while(boundary?.parent&&boundary!==root&&boundary.userData.entity_type!=='room'&&!/^(?:Room_|Layout_|Floor_\d+$|Facade_\d+$|ContextBuildings$|H1_F09_Office$)/.test(boundary.name))boundary=boundary.parent;
+  while(boundary?.parent&&boundary!==root&&!['room','building_shell'].includes(boundary.userData.entity_type)&&!/^(?:Room_|Layout_|Floor_\d+$|Facade_\d+$|ContextBuildings$|H1_F09_Office$)/.test(boundary.name))boundary=boundary.parent;
   return boundary;
 }
 
@@ -28,9 +28,9 @@ export function batchStaticGeometry(root){
     if(object.userData.astraContextBake||!object.isMesh||object.isSkinnedMesh||object.isInstancedMesh||!object.visible||object.children.length||!g||!m||Array.isArray(m)||m.transparent||m.opacity!==1||object.morphTargetInfluences?.length||g.drawRange.start!==0||g.drawRange.count!==Infinity||object.matrixWorld.determinant()<=0)return;
     for(let parent=object.parent;parent;parent=parent.parent)if(!parent.visible)return;
     const role=classifyNightRole(object,m);
-    if(['window','sign','accent','interior_light','person'].includes(role))return;
     const boundary=boundaryFor(object,root);
     if(!boundary)return;
+    if(boundary.userData.entity_type!=='building_shell'&&['window','sign','accent','interior_light','person'].includes(role))return;
     const seat=nightSeatId(object)||'';
     const format=Object.entries(g.attributes).map(([k,a])=>`${k}:${a.itemSize}:${a.normalized}:${a.array.constructor.name}`).sort().join(',');
     // Only real office seats with known screen bindings may share a room batch.

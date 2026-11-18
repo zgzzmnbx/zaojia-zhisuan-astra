@@ -1,6 +1,8 @@
-# H1 办公室 · 白瓷与七种主题蓝
+# 天津运营中心 H1 / H3 · 白瓷与七种主题蓝
 
 从 Astra 工作台打开 **多人复核**。左上角的大楼和叠层图标切换整楼与展开九楼，旁边的放大镜调整缩放。打开 **更多操作** 可俯视或重置视角。点左上角齿轮进入 **办公室沙盘设置**。滑杆图标打开右侧 **现场调节**，可以一边调工位、外观，一边查看模型。
+
+**整楼** 同时显示 H1 和 H3。两栋楼共用 20 层的外立面、入口雨棚、檐口字和屋顶设备，屋面分别标有 H1、H3。H3 在 H1 右后方，位置及周边 12 栋低层配楼、两处过街点按示意布置。H3 为外壳，办公平面、工位和交互都在 H1 九楼。
 
 工位及人物来自项目的员工配置。当前成果、可发送的复核对象、选人状态和回执由工作台传入。直接打开查看器可以查看项目已保存的员工与工位。离线建模与几何核对使用上游楼层作参照。
 
@@ -100,6 +102,8 @@ v0.2.0 的单个 GLB 为 **12.61 MB**。与 v0.1.0 比对，全场 2,504 个节�
 
 另测 SwiftShader 软件渲染，白瓷 v0.1.0整楼约 5.5–6.5 FPS，九楼约 5.8–6.4 FPS。正式宿主入口在隔离构建中以模拟人员及成果检查，网页完成房间和人员选择、演示复核、返岗、工位列表、新旧版同视图切换、日夜切换及隐藏停算。实测可直接拖起人物放入会议室地面或成果卡，全部复位后清除相应人选。本分支通过 523 项前端测试及正式构建。真实平台投递和接收端回执仍待现场验收。
 
+H3 在离线烘焙后引用 H1 的 47 个外观网格。浏览器将静止的 H3 按材质合并，本机整楼日景中 H3 使用 7 次绘制调用。新模型为 17.31 MB。
+
 ## 模型复核与重建
 
 在项目或解压目录根部执行下列命令。核对与重建使用 Python、NumPy、Pillow 和 OpenCV。完整重建还需 Blender，本轮使用 Blender 5.2.2 LTS。Blender 的可执行文件可用 `--blender` 显式指定。
@@ -109,4 +113,4 @@ python tools/office-twin/porcelain/build.py --verify-only
 python tools/office-twin/porcelain/build.py
 ```
 
-生成器在临时文件中完成烘焙，通过几何核对后写入 `public/office-twin/models/H1-porcelain-v0.6.1.glb`。原始及生成模型、平面和预览图片随本地交付包提供。版本及文件指纹记录在 `public/office-twin/SOURCE.json`。Astra 开发基线为 `6fc00dd`，原型留存在 `codex/office-porcelain-demo-20261118`。改写前的源码已推至 [GitHub 备份分支](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/backup-office-before-porcelain-20261118)。
+生成器在临时文件中完成烘焙，通过几何核对后写入 `public/office-twin/models/H1-H3-porcelain-v0.7.0.glb`。原始及生成模型、平面和预览图片随本地交付包提供。版本及文件指纹记录在 `public/office-twin/SOURCE.json`。Astra 开发基线为 `6fc00dd`，原型留存在 `codex/office-porcelain-demo-20261118`。改写前的源码已推至 [GitHub 备份分支](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/backup-office-before-porcelain-20261118)。

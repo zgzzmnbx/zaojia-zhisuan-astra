@@ -11,6 +11,7 @@ import numpy as np
 
 from architecture import campus, rooftop, storey
 from brand import CONTOURS, mount_sign, sign_art
+from campus_plan import H3_X, H3_Z, PAVILIONS, add_h3, roof_identifier
 from geometry import BLUE_INK, ROOM_PLANES, Glb, Source, cel_color, matrix, studio_color
 from light_transport import bake
 from receivers import Receiver
@@ -18,7 +19,7 @@ from streetscape import LAMPS, PARKING, TRAFFIC
 
 ROOT=Path(__file__).resolve().parents[3]
 PACKAGE=ROOT/'public/office-twin'
-MODEL='H1-porcelain-v0.6.1.glb'
+MODEL='H1-H3-porcelain-v0.7.0.glb'
 BASELINE='H1-baked-v0.6.7.glb'
 BASELINE_HASH='c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545'
 LAYOUT_HASH='ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a'
@@ -213,7 +214,28 @@ def verify(source,generated):
     for name, count in [('streetLightPools', len(LAMPS)), ('parkedCarFootprints', len(PARKING))]:
         areas = np.asarray(campus['extras'][name])
         assert areas.shape == (count, 4) and np.isfinite(areas).all() and (areas[:,2:] > 0).all()
-    return {'lockedNodes':locked_nodes,'lockedTriangles':triangles,'storeys':20}
+    h3=generated.doc['nodes'][generated.named['H3_Building']]
+    assert generated.named['H3_Building'] in campus['children']
+    assert h3['translation']==[H3_X,0,H3_Z] and len(h3['children'])==20
+    shared=0
+    for n in range(1,21):
+        original=generated.doc['nodes'][generated.named[f'Floor_{n:02}']]
+        shell=generated.doc['nodes'][generated.named[f'H3_Storey_{n:02}']]
+        assert np.array_equal(matrix(original),matrix(shell))
+        for node,_ in generated.walk(generated.named[f'Facade_{n:02}']):
+            if 'mesh' not in node or node['name']=='H1_roof_number':continue
+            other=generated.doc['nodes'][generated.named['H3_'+node['name']]]
+            assert other['mesh']==node['mesh'] and np.array_equal(matrix(other),matrix(node))
+            assert other['extras'].get('night_role')==node['extras'].get('night_role')
+            shared+=1
+    for node,_ in generated.walk(generated.named['H3_Building']):
+        assert set(node.get('extras',{})).isdisjoint({'room_id','seat_id','floor_number','person_id'})
+        assert node['name'].startswith('H3_') and 'Office' not in node['name']
+    for code in ('H1','H3'):
+        assert code+'_roof_number' in generated.named
+    assert any(m.get('extras',{}).get('porcelainRoadAtlas') for m in generated.doc['materials'])
+    return {'lockedNodes':locked_nodes,'lockedTriangles':triangles,'storeys':20,'H3SharedExteriorMeshes':shared,
+            'H3Storeys':20,'pavilions':len(PAVILIONS),'streetLamps':len(LAMPS)}
 
 
 def main():
@@ -245,11 +267,13 @@ def main():
         graphic,art_width=sign_art(source,ROOT/CONTOURS)
         emblem=Source((ROOT/CONTOURS).with_name('管网Logo-原色.glb'))
         brand_material=out.material('Porcelain / PipeChina fascia',out.texture('PipeChina / emblem and lettering',graphic))
+        floors=[]
         for n in range(1,21):
             name=f'Floor_{n:02}'
             original=source.doc['nodes'][source.named[name]]
             floor=out.node(name,building,**{k:v for k,v in original.items() if k not in ('children','mesh','name')})
             facade=out.node(f'Facade_{n:02}',floor,extras={'floor_number':n,'entity_type':'facade'})
+            floors.append((floor,facade))
             h=4.8 if n==1 else 4.2 if n==2 else 3.6
             storey(out,facade,n,h)
             if n==2:
@@ -269,6 +293,8 @@ def main():
         with tempfile.TemporaryDirectory(prefix='porcelain-bake-',dir=staging) as tmp:
             tmp=Path(tmp)
             bake(out,tmp,blender)
+            add_h3(out,grounds,floors)
+            roof_identifier(out,floors[-1][1],'H1',3.6)
             out.compact()
             candidate=tmp/MODEL
             out.write(candidate)

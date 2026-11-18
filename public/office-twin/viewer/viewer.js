@@ -7,7 +7,7 @@ import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
-import {createFloorLabel} from './floor-label.js';
+import {createFloorLabel} from './floor-label.js?v=office-0.51.0';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
 import {createStreetTraffic} from './street-traffic.js';
@@ -37,6 +37,7 @@ import { resolveView, VIEW_COPY, FLOOR_COUNT, DETAILED_FLOOR, PROTOCOL,
 const MODEL_URL = new URL('../models/'+OFFICE_MODEL, import.meta.url);
 const DATA_ROOT = new URL('../data/', import.meta.url);
 const VIEW_DIRECTION = new THREE.Vector3(1.1, .83, 1.5).normalize();
+const CAMPUS_DIRECTION = new THREE.Vector3(.72, 1.12, 1.48).normalize();
 const ROOM_DIRECTION = new THREE.Vector3(.9, 1.25, 1.25).normalize();
 const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -62,7 +63,7 @@ export async function mountOfficeViewer() {
   let gpuPrepared=false,lastFrameTime=null;
   let streetTraffic=null,trafficWake=0,trafficAdvancing=false;
   let miniatureFocus=null,openness=null,interiorLabels=false;
-  let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
+  let renderer, scene, camera, controls, model, buildingRoot, contextRoot, twinRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
   let people, nightEnvironment, orbit, releaseOrbitHold;
   let floorLabel,previewCamera,officeBoard,seatLabels;
@@ -80,6 +81,7 @@ export async function mountOfficeViewer() {
   let layout, buildingMetadata, officeMetadata, furnitureIntegration;
   let officeName='H1 办公室';
   let fitHeight = 100, selectedFloor = null, selectedRoom = null;
+  let campusProjection=null;
   const floors = new Map(), rooms = new Map(), movingFloors = [];
 
   function listen(target, type, handler, options) {
@@ -116,7 +118,7 @@ export async function mountOfficeViewer() {
   }
   function paintState() {
     const copy = VIEW_COPY[view];
-    $('#scene-label').textContent = renderStatus === 'fallback' ? 'H1 · 整楼静态预览' : `白瓷 · ${copy.label}`;
+    $('#scene-label').textContent = renderStatus === 'fallback' ? 'H1 / H3 · 园区预览' : `白瓷 · ${copy.label}`;
     $('#view-description').textContent = renderStatus === 'fallback' ? '当前显示整楼静态预览，可在工作栏查看空间资料。' : copy.description;
     document.querySelectorAll('[data-view]').forEach(button => {
       const chosen = button.dataset.view === view;
@@ -136,12 +138,12 @@ export async function mountOfficeViewer() {
     $('#room-label').hidden = !selectedRoom || renderStatus === 'fallback';
     const room = layout?.rooms?.find(item => item.id === selectedRoom);
     if (room) $('#room-label').textContent = room.label;
-    $('#selection-name').textContent = room ? `9 楼 · ${room.label}` : selectedFloor ? `${officeName} · ${selectedFloor} 楼` : `${officeName} · 整栋建筑`;
-    $('#selection-basis').textContent = selectedFloor === 9 ? '已有 9 楼平面图描摹' : selectedFloor ? '楼层外壳示意' : '白瓷楼体设计 + 原始九楼平面图';
+    $('#selection-name').textContent = room ? `9 楼 · ${room.label}` : selectedFloor ? `${officeName} · ${selectedFloor} 楼` : '天津运营中心 · H1 / H3';
+    $('#selection-basis').textContent = selectedFloor === 9 ? '已有 9 楼平面图描摹' : selectedFloor ? '楼层外壳示意' : 'H1 九楼平面图、园区示意布局';
     const seats = room ? layout?.workstations?.filter(item => item.room_id === room.id && item.assignable!==false).length : 0;
     const floorRecord = buildingMetadata?.floors?.find(item => item.floor_number === selectedFloor);
     const elevation = selectedFloor ? (Number.isFinite(floorRecord?.elevation_m) ? floorRecord.elevation_m : floorElevation(selectedFloor)) : null;
-    $('#selection-detail').textContent = room ? `${seats || 0} 个已建工位 · 员工未绑定` : selectedFloor === 9 ? `${officeMetadata?.workstation_count ?? layout?.workstations?.length ?? '—'} 个已建工位 · 员工未绑定` : selectedFloor ? `基底标高约 ${elevation.toFixed(1)} 米 · 内部未建模` : '20 层参数化外壳';
+    $('#selection-detail').textContent = room ? `${seats || 0} 个已建工位 · 员工未绑定` : selectedFloor === 9 ? `${officeMetadata?.workstation_count ?? layout?.workstations?.length ?? '—'} 个已建工位 · 员工未绑定` : selectedFloor ? `基底标高约 ${elevation.toFixed(1)} 米 · 内部未建模` : '双楼各 20 层 · 造价中心在 H1 九楼';
     document.documentElement.dataset.viewerView = view;
   }
   function selectTab(name) {
@@ -204,7 +206,7 @@ export async function mountOfficeViewer() {
     scene?.traverse(object => object.shadow?.dispose());
     renderer?.dispose(); renderer?.forceContextLoss(); renderer?.domElement.remove();
     floors.clear(); rooms.clear(); movingFloors.length=0;
-    controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; officeRoot = null; facade9 = null;
+    controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; twinRoot = null; officeRoot = null; facade9 = null;
     $('#preview-fallback').hidden = false;
     $('#fallback-message').textContent = `加载中断：${loadReport.lastError.message}。当前显示白瓷沙盘预览图，可点“重新加载”重试。`;
     $('#loading-tools').hidden=false;$('#load-diagnostics').open=true;refreshDiagnostic();
@@ -325,7 +327,28 @@ export async function mountOfficeViewer() {
     else frameMeter.idle();
   }
   let hostLeft=0;
-  listen(window,'office-host-layout',event=>{hostLeft=event.detail.left;resize();});
+  listen(window,'office-host-layout',event=>{hostLeft=event.detail.left;resizeLayout();});
+  function panelInsets() {
+    const left=parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft;
+    const rail=$('#space-cards-panel'),artifact=$('#host-artifact');
+    let right=artifact?.offsetWidth||!rail?.hidden?300:0;
+    if(twinRoot&&view==='building')right=Math.max(rail?.offsetWidth||0,artifact?.offsetWidth||0);
+    if(getWorkstationEditState().open)right=($('#office-workstations')?.getBoundingClientRect().width||380)+24;
+    return {left,right};
+  }
+  function campusHeight(size){
+    const {left,right}=panelInsets(),width=viewport.clientWidth;
+    const available=Math.max(width*.18,width-left-right-32);
+    return Math.max(6,size.y,size.x*viewport.clientHeight/Math.max(1,available))*1.12;
+  }
+  function resizeLayout(){
+    if(campusProjection&&view==='building'&&viewport.clientWidth&&viewport.clientHeight){
+      const height=campusHeight(campusProjection);
+      if(transition?.camera)transition.camera.to.height=height;
+      else fitHeight=height;
+    }
+    resize();
+  }
   function resize() {
     if (!renderer || disposed) return;
     const width = viewport.clientWidth, height = viewport.clientHeight;
@@ -334,10 +357,7 @@ export async function mountOfficeViewer() {
     const aspect = width/height;
     camera.left = -fitHeight*aspect/2; camera.right = fitHeight*aspect/2;
     camera.top = fitHeight/2; camera.bottom = -fitHeight/2;
-    const visibleRail=!document.querySelector('#space-cards-panel')?.hidden;
-    const artifact=document.querySelector('#host-artifact');
-    const right=getWorkstationEditState().open?(document.querySelector('#office-workstations')?.getBoundingClientRect().width||380)+24:(artifact?.offsetWidth||visibleRail?300:0);
-    const left=parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft;
+    const {left,right}=panelInsets();
     camera.setViewOffset(width,height,-(left-right)/2,0,width,height);
     camera.updateProjectionMatrix(); requestFrame();
   }
@@ -353,27 +373,41 @@ export async function mountOfficeViewer() {
   }
   function fitObject(object, direction = VIEW_DIRECTION) {
     if (!renderReady || !object) return;
-    let bounds;
+    let bounds, towerBoxes;
     if(object===model&&contextRoot?.visible&&useHeroPriorityFraming(view)){
-      const hero=visibleBounds(buildingRoot),context=visibleBounds(contextRoot);
+      const hero=visibleBounds(buildingRoot);
       if(hero.isEmpty())return;
-      const fit=heroPriorityBounds({min:hero.min.toArray(),max:hero.max.toArray()},context.isEmpty()?null:{min:context.min.toArray(),max:context.max.toArray()});
-      bounds=new THREE.Box3(new THREE.Vector3(...fit.min),new THREE.Vector3(...fit.max));
+      if(twinRoot&&view==='building'){
+        if(direction===VIEW_DIRECTION)direction=CAMPUS_DIRECTION;
+        const padding=new THREE.Vector3(7,2,10);
+        towerBoxes=[hero,visibleBounds(twinRoot)].map(box=>box.expandByVector(padding));
+        bounds=towerBoxes[0].clone().union(towerBoxes[1]);
+      }else{
+        const context=visibleBounds(contextRoot);
+        const fit=heroPriorityBounds({min:hero.min.toArray(),max:hero.max.toArray()},context.isEmpty()?null:{min:context.min.toArray(),max:context.max.toArray()});
+        bounds=new THREE.Box3(new THREE.Vector3(...fit.min),new THREE.Vector3(...fit.max));
+      }
     }else bounds=visibleBounds(object);
     if (bounds.isEmpty()) return;
     const center = bounds.getCenter(new THREE.Vector3());
+    if(towerBoxes)center.y-=5.5; // Include the entry squares and their shared street in the overview.
     const distance = Math.max(30, bounds.getSize(new THREE.Vector3()).length()*2);
     controls.target.copy(center);
     camera.position.copy(center).addScaledVector(direction, distance);
     camera.up.set(0, 1, 0);
     camera.lookAt(center); camera.updateMatrixWorld(true);
     const projected = new THREE.Box3();
-    for (const x of [bounds.min.x, bounds.max.x]) for (const y of [bounds.min.y, bounds.max.y]) for (const z of [bounds.min.z, bounds.max.z]) projected.expandByPoint(new THREE.Vector3(x,y,z).applyMatrix4(camera.matrixWorldInverse));
+    for(const box of towerBoxes??[bounds]){
+      for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z])
+        projected.expandByPoint(new THREE.Vector3(x,y,z).applyMatrix4(camera.matrixWorldInverse));
+    }
     const size = projected.getSize(new THREE.Vector3());
-    const clearance=getWorkstationEditState().open?(parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft)+(document.querySelector('#office-workstations')?.getBoundingClientRect().width||380)+48:0;
+    const {left,right}=panelInsets();
+    const clearance=getWorkstationEditState().open?left+right+24:0;
     const aspect = Math.max(.1, (viewport.clientWidth-clearance)/Math.max(1, viewport.clientHeight));
     const margin=view==='building'&&object===model?1.01:1.18;
-    fitHeight = Math.max(6, size.y, size.x/aspect) * margin;
+    campusProjection=towerBoxes?size:null;
+    fitHeight = campusProjection?campusHeight(size):Math.max(6, size.y, size.x/aspect)*margin;
     // Preserve the established expanded tray framing at every viewport size.
     if(view==='exploded'&&object===officeRoot)fitHeight*=1.3;
     camera.zoom = 1; camera.far = Math.max(600, distance*4);
@@ -509,7 +543,7 @@ export async function mountOfficeViewer() {
     renderer?.dispose(); renderer?.forceContextLoss();
     renderer?.domElement.remove();
     floors.clear(); rooms.clear(); movingFloors.length=0;
-    controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; officeRoot = null; facade9 = null;
+    controls = null; renderer = null; scene = null; model = null; buildingRoot = null; contextRoot = null; twinRoot = null; officeRoot = null; facade9 = null;
     $('#preview-fallback').hidden = false; $('#fallback-message').textContent = '三维资源已释放。刷新页面可重新打开。';
     status('已关闭'); document.documentElement.dataset.viewerStatus = 'disposed';
     notify('disposed');
@@ -683,6 +717,7 @@ export async function mountOfficeViewer() {
     model = gltf.scene;
     buildingRoot = model.getObjectByName('H1_Building');
     contextRoot = model.getObjectByName('ContextBuildings');
+    twinRoot = contextRoot?.getObjectByName('H3_Building');
     officeRoot = model.getObjectByName('H1_F09_Office');
     facade9 = model.getObjectByName('Facade_09');
     for (let number=1; number<=FLOOR_COUNT; number++) {
@@ -753,7 +788,7 @@ export async function mountOfficeViewer() {
     loadReport.gpuPrepareMs=Math.round(performance.now()-gpuStarted);
     gpuPrepared=true;
     miniatureFocus=createMiniatureFocus(renderer,scene,camera,model,floors.get(DETAILED_FLOOR));
-    floorLabel=createFloorLabel({viewport,floor:floors.get(9),camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
+    floorLabel=createFloorLabel({viewport,floor:floors.get(9),neighbour:twinRoot,camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
       beginPreview:()=>{previewCamera=cameraPose();setView('exploded',{labelPreview:true});},
       endPreview:()=>{setView('building',{labelPreview:true,cameraTarget:previewCamera,animate:active()});previewCamera=null;},
       enter:()=>{
@@ -761,7 +796,8 @@ export async function mountOfficeViewer() {
         if(view!=='exploded')setView('exploded');
         else {entrance.cancel();requestFrame();}
       }});
-    resizeObserver = new ResizeObserver(resize); resizeObserver.observe(viewport);
+    resizeObserver = new ResizeObserver(resizeLayout);
+    for(const panel of [viewport,$('#space-cards-panel'),$('#host-artifact')])if(panel)resizeObserver.observe(panel);
     intersectionObserver = new IntersectionObserver(entries => {
       inView = entries.some(entry => entry.isIntersecting);if(!inView)releaseOrbitHold?.();orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();suspendMotion();}
       if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; }
@@ -780,7 +816,8 @@ export async function mountOfficeViewer() {
       const pointer = new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1, -(event.clientY-rect.top)/rect.height*2+1);
       const ray = new THREE.Raycaster(); ray.setFromCamera(pointer,camera);
       if (view === 'building') {
-        const number=firstVisibleFloorHit(ray.intersectObject(buildingRoot,true),floors);
+        const hit=ray.intersectObjects(twinRoot?[buildingRoot,twinRoot]:[buildingRoot],true).find(visibleSceneHit);
+        const number=hit?firstVisibleFloorHit([hit],floors):null;
         if(number!==null)selectFloor(number);
         return;
       }

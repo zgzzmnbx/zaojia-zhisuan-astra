@@ -6,6 +6,7 @@ from collections import defaultdict
 import numpy as np
 
 from brand import mount_eave_letters
+from campus_plan import H3_X, H3_Z, PAVILIONS, paving
 from geometry import Batch
 from receivers import Receiver
 from streetscape import place_streetscape
@@ -179,7 +180,14 @@ def pavilion(wall,windows,x,z,w,d,h,kind,receiver,roof_shade,roof_vertices):
                 windows.box(x+w*(i-1)*.29,y,z+side*(d/2+.035),w*.237,.80,.085,'glass')
             for i in (-1,1):
                 windows.box(x+side*(w/2+.03),y,z+i*d*.22,.085,.80,d*.29,'ice')
-    if kind=='utility':
+    if kind=='studio':
+        # A low clerestory differentiates the two workshops from the plant rooms.
+        roof_shade.block(x,z,w*.68,d*.24,1.65)
+        windows.box(x,h+.32,z,w*.68,.93,d*.23,'ice',.04)
+        wall.box(x,h+1.25,z,w*.71,.58,d*.26,'porcelain',.10)
+        for offset in (-.24,0,.24):
+            wall.box(x+w*offset,h+.32,z,.26,.94,d*.24,'chalk')
+    elif kind=='utility':
         for off in (-.28,0,.28):
             wx=x+w*off
             roof_shade.cylinder(wx,z,1.56,2.94)
@@ -214,7 +222,7 @@ def pedestrian(wall,blue,x,z,angle,receiver):
 def plant_court(wall,blue,ground):
     # A service court with two vessels, bent process lines and an open gantry.
     # Its exposed frame gives the foreground a finer scale than the office tower.
-    x,z=40,17
+    x,z=83,8
     wall.box(x,-.40,z,15.4,.37,11.2,'chalk',.07,.26)
     for ox,h,r in [(-3.6,7.5,1.30),(1.1,5.7,1.55)]:
         xx=x+ox
@@ -243,47 +251,46 @@ def plant_court(wall,blue,ground):
 
 def campus(out,parent):
     kit=Kit(); wall=kit.parts['context']; blue=kit.parts['accent']
-    ground=Receiver(112,1024,'site')
+    ground=Receiver(140,1536,'site')
     ground.block(0,0,42,42,76)
+    ground.block(H3_X,H3_Z,42,42,76)
     base=Batch()
     base.face([(-460,-.41,-460),(-460,-.41,460),(460,-.41,460),(460,-.41,-460)],'porcelain')
     base.col=[np.ones(3) for _ in base.pos]
     # A sunken joint and curb define the central civic square without blocking
     # the ground's continuous daylight bake.
     for side in range(4):
-        strip(wall,side,0,-.405,65,.16,.28,'stone',32.3,.025)
-        for offset in (-50,50):
-            strip(wall,side,offset,-.40,17,.025,.18,'chalk',37.2)
-    sites=[(-49,-8,19,29,10,'office'),(48,-22,25,21,11,'utility'),
-           (-10,-53,31,19,7,'office'),(12,57,20,11,4,'office'),
-           (-54,44,22,14,6,'utility'),(61,33,19,22,7,'office'),
-           (-58,-52,20,15,8,'office'),(45,-64,28,15,6,'office')]
-    roof_shade=Receiver(86,768,'plant')
+        if side==0:
+            for offset in (-21,21):strip(wall,side,offset,-.405,23,.16,.28,'stone',32.3,.025)
+        else:
+            strip(wall,side,0,-.405,65,.16,.28,'stone',32.3,.025)
+    roof_shade=Receiver(140,1024,'plant')
     roof_vertices=[]
-    for args in sites: pavilion(wall,blue,*args,ground,roof_shade,roof_vertices)
+    for args in PAVILIONS: pavilion(wall,blue,*args,ground,roof_shade,roof_vertices)
     plant_court(wall,blue,ground)
-    for i,(x,z) in enumerate([(-6,26),(4,27),(8,32),(-18,21),(25,6),(-34,15),(39,-3),(-10,44),(41,22),(-2,-30)]):
+    for i,(x,z) in enumerate([(-6,26),(4,27),(8,32),(-18,21),(25,6),(-34,15),(33,-3),(-10,46),(34,20),(-2,-30),
+                              (61,-20),(67,-19),(73,-22)]):
         pedestrian(wall,blue,x,z,i*.91,ground)
     # Cobalt silk-finish trees line the approaches, with clear pavement at the entry.
     points=[(-27,-25),(-27,-13),(-27,3),(-27,19),(-24,28),(-12,29),(14,29),(25,28),
-            (28,12),(28,-2),(28,-17),(-58,20),(-43,27),(41,8),(55,10),
-            (22,47),(-18,46),(-37,-35),(26,-43),(-4,-37),(7,-37),(64,-2),(-65,-30)]
+            (28,12),(28,-2),(28,-17),(-58,20),(-43,27),(47,8),(51,14),
+            (20,49),(-18,48),(-37,-35),(26,-43),(-4,-37),(7,-37),(64,-2),(-65,-30),
+            (48,-22),(79,-21),(88,-29),(88,-47),(88,-63),(36,-45),(36,-63),
+            (47,-74),(70,-74),(78,-3),(50,21),(76,27),(104,20),(105,-65),(18,-70)]
     vegetation=kit.parts['vegetation']
     for i,(x,z) in enumerate(points):
         h=4.05+(i*7%11)*.16
         wall.box(x,-.39,z,2.24,.42,2.24,'porcelain',.08,.2)
         wall.box(x,.03,z,1.78,.07,1.78,'joint',.025,.14)
         tree(vegetation,x,z,h,470+i,ground)
-    for x,z in [(-18,24),(17,24),(-24,-2),(24,-12),(-41,22),(42,11),(-8,34)]:
+    for x,z in [(-18,24),(17,24),(-24,-2),(24,-12),(-41,22),(46,11),(-8,32),(51,-20),(76,-19)]:
         for dx in (-1.22,1.22):
             wall.box(x+dx,-.39,z,.24,.77,.86,'stone')
         for off in (-.26,0,.26):
             wall.box(x,.36,z+off,3.45,.15,.22,'chalk',.035)
         ground.block(x,z,3.45,.8,.55)
     out.doc['nodes'][parent]['extras'].update(place_streetscape(kit,ground,out,parent))
-    for i in range(9):
-        wall.box(-3.5+i*.85,-.4,35.6,.40,.02,3.1,'porcelain')
-    # Only the eight existing roof faces sample the equipment shadows. All
+    # Only pavilion roof faces sample the equipment shadows. All
     # other vertices sample blank paper at the corner of the same atlas.
     def roof_uv(pos):
         uv=np.zeros((len(pos),2),dtype=np.float32)
@@ -293,5 +300,5 @@ def campus(out,parent):
     mat=out.material('Porcelain_context',mask,{'porcelainDayMap':True})
     kit.parts.pop('context').emit(out,parent,'Porcelain_Campus_context','context',mat,roof_uv)
     kit.finish(out,parent,'Porcelain_Campus')
-    tex=out.texture('Civic square / daylight',ground.image())
-    base.emit(out,parent,'ContextWeb_RoadsBases_Porcelain','ground',out.material('Porcelain Paving',tex),ground.uv)
+    tex=out.texture('Campus drives and squares / daylight',ground.image(pavement=paving(ground)))
+    base.emit(out,parent,'ContextWeb_RoadsBases_Porcelain','ground',out.material('Porcelain Paving',tex,{'porcelainRoadAtlas':True}),ground.uv)

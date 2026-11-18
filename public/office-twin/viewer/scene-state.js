@@ -33,6 +33,6 @@ export function isTrustedHostMessage(event, parentWindow, ownOrigin) {
 }
 
 export const VIEW_COPY = Object.freeze({
-  building: { label: 'H1 · 20 层', description: '20 层建筑示意；9 楼采用已描摹的办公室平面。' },
+  building: { label: 'H1 / H3 · 各 20 层', description: '天津运营中心 H1 与 H3 各 20 层，造价中心位于 H1 九楼。' },
   exploded: { label: '展开9楼', description: '拖动旋转，滚轮缩放。选择房间或人物可以聚焦。' },
 });

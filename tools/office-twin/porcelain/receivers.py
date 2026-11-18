@@ -57,14 +57,14 @@ class Receiver:
         ring = np.column_stack((x+radius*np.cos(angles),np.full(24,height),z+radius*np.sin(angles)))
         self.caster(ring,grounded=True)
 
-    def image(self, layout=None, origin=None, px_per_m=None):
+    def image(self, layout=None, origin=None, px_per_m=None, pavement=None):
         paper, soft_edge, contact_radius = {
             'site': ((246,249,253),.32,.38),
             'roof': ((252,253,251),.12,.18),
             'plant': ((255,255,255),.14,.19),
             'interior': ((245,248,251),.09,.08)
         }[self.kind]
-        pixels = np.full((self.size,self.size,3),paper,dtype=np.float32)
+        pixels = pavement[0].astype(np.float32) if pavement is not None else np.full((self.size,self.size,3),paper,dtype=np.float32)
         if layout:
             def point(p):
                 return tuple(np.rint(((np.asarray(p)-origin)/px_per_m+self.half)*self.scale).astype(int))
@@ -80,5 +80,7 @@ class Receiver:
         contact = soft(self.contact,contact_radius)[:,:,None]*[39,32,19]
         pixels -= np.maximum(shadow,contact)
         output=io.BytesIO()
-        Image.fromarray(np.rint(pixels).astype(np.uint8)).save(output,format='PNG',compress_level=7)
+        rgb=np.rint(pixels).astype(np.uint8)
+        image=rgb if pavement is None else np.dstack((rgb,pavement[1]))
+        Image.fromarray(image).save(output,format='PNG',compress_level=7)
         return output.getvalue()

@@ -22,6 +22,8 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
   const wingTint=material.userData.officeWingGlow;
   const dollSurface=material.userData.officeDollSurface;
   const solidBrand = role === 'brand_sign' && !material.map;
+  const roadAtlas = role === 'ground' && !!material.userData.porcelainRoadAtlas;
+  const roofNumber = !!material.userData.porcelainRoofNumber;
   const streetReceiver=!!shared.streetLightMap && (role==='ground'||role==='street_surface');
   const cars=role==='ground'&&shared.streetTraffic;
   const contact=sample=>cars?`max(${sample},movingCarContact(officeWorldPosition.xz))`:sample;
@@ -205,6 +207,8 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
             emission=lamp*pane*step(.66,seed);
           }
         }
+        ${roadAtlas?`float roadMark=(diffuseColor.a*255.-128.)/127.;
+        shell+=vec3(.006,.010,.016)*smoothstep(.10,.46,roadMark)+vec3(.027,.038,.052)*smoothstep(.58,.94,roadMark);`:''}
         if(officeBloomOnly<.5 && (officeNightRole==6. || officeNightRole==5. || officeNightRole==9. || officeNightRole==10.)){
           // A dark, cool ambient floor, not a uniformly illuminated daytime albedo.
           float up=max(n.y,0.);
@@ -238,6 +242,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         }
         ${themeInk?'if(officeNightRole==1.||officeNightRole==2.||officeNightRole==3.||officeNightRole==5.)emission*=porcelainLampTint;':''}
         if(officeNightRole==7.){shell=vec3(0.);emission=sourceColor*.8;}
+        ${roofNumber?'shell=vec3(.21,.31,.43)*officeAmbient;':''}
         shell*=officeNightRole==4.||officeNightRole==8.?officeNightGains.z:officeNightRole==6.||officeNightRole==5.||officeNightRole==9.||officeNightRole==10.?1.:officeNightGains.x;
         ${role==='vegetation'?`
         vec3 canopy=vec3(.032,.066,.058)+.09*min(sourceColor,vec3(.45));
@@ -281,7 +286,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,!!wingTint,!!dollSurface,solidBrand,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV,!!material.userData.porcelainNightColor,!!material.userData.porcelainDayMap].join('|');
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,!!wingTint,!!dollSurface,solidBrand,roadAtlas,roofNumber,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV,!!material.userData.porcelainNightColor,!!material.userData.porcelainDayMap].join('|');
   material.needsUpdate=true;
 }
 

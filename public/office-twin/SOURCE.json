@@ -2,8 +2,8 @@
   "upstream": "办公室数字孪生",
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
-  "modelVersion": "0.6.1",
-  "hostAdapterVersion": "0.50.1",
+  "modelVersion": "0.7.0",
+  "hostAdapterVersion": "0.51.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -69,14 +69,14 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "5acdaaf8c6fbc5d1fdaead3a9b20ed978433e0a45d3ed6a9984b08e896f17e94",
     "viewer/host-people.js": "81ee83d0f1efdc9d4da4ae31288dfe9b634f79a5898a2fe9406841e6d4b8195d",
-    "viewer/index.html": "4f3ab6c381c045403836825b8dcfc04032ba22d42e2907bd34f832b92729b150",
+    "viewer/index.html": "1430489c4f10f5db4940e8f3bbf460359e6798ec6d33faf22c5759034c9d4ce3",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "dae491840d1c74200a5dade704e72eab3700e0849b92452064578f9779c97fec",
     "viewer/navigation-motion.js": "25851e9be64d8fb8eda6191c528c78d3f52e2428388168a4d52a6f6b8f5c5889",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
-    "viewer/night-environment.js": "750557b023d35c86ffcea06738574f860e88e52c92e27924fc27a9c15ab105f0",
-    "viewer/night-lighting-policy.js": "44d07b207014ffa0e57edf5fb62c2f81bfbfb7a28d5dcde33711bf50cf78cc3d",
+    "viewer/night-environment.js": "4a55ed3dd9765aa023f88804845c2371565616fe83440f959de8a50af4ebaca9",
+    "viewer/night-lighting-policy.js": "1e6f6e92b631358c83fb6efe5e255e0a365729d3f290b9e325f2846cb287b54c",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
     "viewer/office-settings-store.js": "0914f430a027598e645865ee0a07515a47e1a6e423c0840ac12f13f7fc514139",
@@ -85,9 +85,9 @@
     "viewer/porcelain-palette.js": "3fbef686772b98dd206e88ea36a84bb36a2e4025062b1508e43d9c808c48a362",
     "viewer/porcelain-style.js": "47859425979cbc6cfcee4392c7223b9de0c4903d564593be625a87aff9c34977",
     "viewer/README.md": "4d8bf3c34af4f3bc523f86af4dadc92b41982dd35837ede80f78c90d08296b02",
-    "viewer/release.js": "884ed3363adf796111eac702b338a9f1564dbf657d9bf87cfe467383050850dc",
+    "viewer/release.js": "145dcf436e48905ad1bfb833b6e0aace953a0a719cc1840b9a1e7a3dbb6f1ad9",
     "viewer/sandbox-layout.js": "6e8637ea50073eebd7f86dbd8cd88cd1b41b91602464650421fce1c968431233",
-    "viewer/scene-state.js": "813cfe3407a224ac6abe640ccb57a6bf08b4b70256e49b3e7b629236be9e1729",
+    "viewer/scene-state.js": "eacf5db11b1facc3ef579ebed23bb1a3d994bcfb555aa37a71e84334be046d04",
     "viewer/settings.css": "a06b6b684311050d0d2301bb75d32c36dd05b6a6677f8aa913bbc658314ff317",
     "viewer/settings.html": "3f2c0d6d8242ea1111b3bdd3e7fcdfc39cf87988ea6c52dc52827e82081b5125",
     "viewer/settings.js": "d3b59465951053eac2d68caae772b4cce5f79cea88143e2c6dd8c03635286686",
@@ -109,7 +109,7 @@
     "viewer/verify-model.mjs": "7ad800902f7e8f6b931f8bb1f3022a3d245530d4af45e7a9f479f6ffed1a6a8c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
     "viewer/miniature-focus.js": "f1fb2ee52cb9d4a1a3d8a3f7ee2131e44cf4b906c1e818df28cb3468323ce7b7",
-    "viewer/viewer.js": "03a7163000e3a5b12e33fdaf46bfc0f4cdf2a40798b48c04346cc918d4511774",
+    "viewer/viewer.js": "cab7eaa27e1eae1f3bd929845a99961dc573b814910b0145fcdf026e0bc878ff",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "61af2411ddc2e77c6ffbc864442fb4dbee8d069d46402b62d4f85a126c85bd47",
@@ -121,13 +121,13 @@
     "viewer/lighting-settings.js": "3b89afdf60216bdd897aee10a55ec7f687a80e2762b069995e57cdb6fcb5d4a7",
     "viewer/office-entrance.js": "855da59c2752a6c75580db124894b21c81dad4b3d47ef2be0aec6f5701a87173",
     "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce",
-    "viewer/floor-label.js": "206b9e971298c0307a3d2fe9ad211db349efaf567741b86f505d48688c97c545",
+    "viewer/floor-label.js": "0a4d87309176f317631b53436d422510826ea29d5669e34613bca9b6b9b9ca49",
     "viewer/vendor/interestfor/COPYRIGHT": "21426e2911f3b74fc0a5dd504e4eccdd01a3246ff99c92f5d3280886b596d6f4",
     "viewer/vendor/interestfor/interestfor.min.js": "0d00d93bd0f3acb4a8bcd1470e8e034e29f39ec1d740b29673c91a2f6f1cd171",
     "viewer/vendor/interestfor/LICENSE": "54c3dd9f65fffc74f4cc1295e6cd23c4378d588d9073b6363e199547043f0747",
     "viewer/vendor/interestfor/README.md": "b5f53ad0b353ec355bee3d3883be3277da55ebe4811f24969ee64d24ab0f78b2",
     "viewer/interior-light-plan.js": "023dd9b45c479f079be5f6fef8af4748838a2658b6f1df2baf4a8e60c7dc9e43",
-    "viewer/static-batches.js": "4a740421643367a496e8a8e204825156a7220d416b95b5f9db73b9c59f17df98",
+    "viewer/static-batches.js": "c191adec30ee7d66f95279fbbb2c37f4f1a1450f6175ff5961c74cd21f0b97a6",
     "viewer/frame-meter.js": "b71f1bafc6a9c5ac3267236181db62c4e16f83c57f497aff85938a15d53a2482",
     "viewer/office-board.js": "3ebbfaf24823d1d3172a2ffe7aad499d981944e9cb71ba03cc6ae7f51c04bdc3",
     "viewer/astra-lighting-profile.js": "96822d582e7db38fc0fd8734650107af05e769a64fb0e1d0d18db31c2e1805c5",
@@ -187,7 +187,9 @@
     "viewer/office-camera.js": "01814984ab74f0cdad4065e262764bed21cc13300ef088b33c9e7e2f350f5ff7",
     "viewer/office-speech.js": "6c7dd086350f935356842b12bde577fdfc4456ef235bb30634787e0cc69d2a52",
     "viewer/person-detail.js": "0d190a787c7595b7d7ac2475d1712a7d25269e2aade0821e1d5b59c9f0b05162",
-    "viewer/person-detail.css": "014b21ae34857eb9ae5c217f2a27b82886040b6a498be72d39a6494787476114"
+    "viewer/person-detail.css": "014b21ae34857eb9ae5c217f2a27b82886040b6a498be72d39a6494787476114",
+    "models/H1-H3-porcelain-v0.7.0.glb": "04ea36ee35f27be4ced6c310e7c7faa60b961418017a7f0c2d10e7634c9369bd",
+    "previews/porcelain-campus-v0.7.0.webp": "9c19f7c8bc328ae5c906e083de01b96fb8e4812a5ea5e1149727402b9b2bd097"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -303,12 +305,12 @@
     }
   },
   "presentation": {
-    "version": "0.6.1",
+    "version": "0.7.0",
     "baseline": "6fc00dd",
     "sourceModel": "models/H1-baked-v0.6.7.glb",
-    "model": "models/H1-porcelain-v0.6.1.glb",
-    "modelBytes": 14191948,
-    "modelSHA256": "e66fd1bbc0e7bb0c752091ec663a533522c35fee64d3099bb5faaee63738be45",
+    "model": "models/H1-H3-porcelain-v0.7.0.glb",
+    "modelBytes": 17309984,
+    "modelSHA256": "04ea36ee35f27be4ced6c310e7c7faa60b961418017a7f0c2d10e7634c9369bd",
     "planSHA256": "ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a",
     "frozenDetailedFloor": {
       "nodes": 2405,
@@ -348,12 +350,12 @@
     "nightVegetation": {
       "role": "vegetation",
       "emissive": false,
-      "trees": 23,
+      "trees": 38,
       "batches": 1
     },
     "streetscape": {
       "parkedCars": 3,
-      "lampPosts": 9,
+      "lampPosts": 14,
       "surfaceRole": "street_surface",
       "diffuserRole": "street_lens",
       "illuminationMapSize": 256,
@@ -393,8 +395,24 @@
         "office"
       ],
       "nightVertexAttribute": "_NIGHTCOLOR",
-      "fallbackPreview": "previews/porcelain-v0.6.1.webp"
+      "fallbackPreview": "previews/porcelain-campus-v0.7.0.webp"
     },
-    "poster": "previews/porcelain-v0.6.1.webp"
+    "poster": "previews/porcelain-campus-v0.7.0.webp",
+    "campus": {
+      "H1": "Interactive original office on floor 9",
+      "H3": {
+        "kind": "exterior only",
+        "storeys": 20,
+        "translationMetres": [
+          64,
+          0,
+          -48
+        ],
+        "sharedExteriorMeshes": 47
+      },
+      "pavilions": 12,
+      "crossings": 2,
+      "layout": "Illustrative site placement and roads"
+    }
   }
 }

@@ -313,6 +313,13 @@ test('batch lighting keeps the interpreted interior role instead of stale source
  assert.equal(classifyNightRole(source),'interior');
  assert.equal(classifyNightRole({name:'batch',userData:{staticBatch:true,night_role:classifyNightRole(source)}}),'interior');
 });
+test('the H3 exterior keeps tower lighting inside the campus context',()=>{
+ const campus={name:'ContextBuildings'};
+ const wing={name:'H3_Building',userData:{entity_type:'building_shell'},parent:campus};
+ assert.equal(classifyNightRole({name:'wall',userData:{night_role:'shell'},parent:wing}),'shell');
+ assert.equal(classifyNightRole({name:'window',userData:{night_role:'window'},parent:wing}),'window');
+ assert.equal(classifyNightRole({name:'pavilion',userData:{},parent:campus}),'context');
+});
 test('night light identifies actual glTF screen material without lighting the bezel or stand',()=>{
  const parent={name:'Furniture_SEAT_NW_01_MONITOR',userData:{seat_id:'SEAT_NW_01'},parent:{name:'H1_F09_Office'}};
  const leaf={name:'Desktop_v062_MonitorShared_3',parent,material:{name:'Device_v062_ScreenBlue'}};

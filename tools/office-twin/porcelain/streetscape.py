@@ -7,17 +7,18 @@ from geometry import Batch
 
 
 PAVEMENT = -.41
-# x, z and bearing of the lantern arm. The last two serve the south and east curb.
+# x, z and bearing of each lantern arm, beside the two squares and connecting drives.
 LAMPS = [
     (-23,25,0), (24,21,180), (-24,-22,-90), (24,-25,90),
-    (-14,38,-90), (40,12,-90), (-40,29,0), (11,31.0,90), (31.2,-4.5,0),
+    (-14,32.3,90), (34,12,0), (-40,29,0), (11,31.0,90), (31.2,-4.5,0),
+    (49,-17.8,90), (78,-17.8,90), (90,-33,0), (90,24,0), (45.8,22,180),
 ]
-# The long axis follows the curb. The pedestrian crossing is at x=0, z=35.6.
+# The moving vehicles follow the two lanes of the southern boulevard.
 TRAFFIC = [('saloon', -13.4,35.6,'porcelain'), ('hatch', 14.8,35.6,'fabric')]
 PARKING = [
     ('estate', 35.0,-5.2,-90,'stone'),
     ('hatch', -35.0,-8.4,90,'metal'),
-    ('saloon', 12.4,-35.2,180,'ultra'),
+    ('saloon', 110.6,-29.9,90,'ultra'),
 ]
 # length, width, roof height, rear sill, rear roof edge, front roof edge, front sill
 PROFILES = {
