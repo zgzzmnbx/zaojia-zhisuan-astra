@@ -1,4 +1,4 @@
-"""Static street furniture and parked vehicles. Dimensions and placements are in metres."""
+"""Street furniture, parked vehicles and the two independently movable cars, in metres."""
 import math
 
 import numpy as np
@@ -13,9 +13,8 @@ LAMPS = [
     (-14,38,-90), (40,12,-90), (-40,29,0), (11,31.0,90), (31.2,-4.5,0),
 ]
 # The long axis follows the curb. The pedestrian crossing is at x=0, z=35.6.
+TRAFFIC = [('saloon', -13.4,35.6,'porcelain'), ('hatch', 14.8,35.6,'fabric')]
 PARKING = [
-    ('saloon', -13.4,35.4,0,'porcelain'),
-    ('hatch', 14.8,35.4,0,'fabric'),
     ('estate', 35.0,-5.2,-90,'stone'),
     ('hatch', -35.0,-8.4,90,'metal'),
     ('saloon', 12.4,-35.2,180,'ultra'),
@@ -161,7 +160,7 @@ def car(batch, kind, paint):
     batch.box(h*.995,.395,0,.036,.088,w*.89,'tyre')
 
 
-def place_streetscape(kit, ground):
+def place_streetscape(kit, ground, out, parent):
     surface=kit.parts['street_surface']
     lenses=kit.parts['street_lens']
     pools=[]
@@ -174,6 +173,14 @@ def place_streetscape(kit, ground):
         pools.append([round(centre[0],3),round(centre[2],3),rx,rz])
         ground.block(x,z,.18,.18,4.45+PAVEMENT)
     footprints=[]
+    for kind,x,z,paint in TRAFFIC:
+        moving=Batch()
+        car(moving,kind,paint)
+        index=moving.emit(out,parent,'Porcelain_Traffic_'+kind,'street_surface',out.material('Porcelain_street_surface'))
+        node=out.doc['nodes'][index]
+        node['translation']=[x,PAVEMENT,z]
+        length,width=PROFILES[kind][:2]
+        node['extras']['trafficVehicle']={'halfSize':[length/2,width/2]}
     for kind,x,z,bearing,paint in PARKING:
         batch=PlacedBatch(surface,x,z,bearing)
         car(batch,kind,paint)

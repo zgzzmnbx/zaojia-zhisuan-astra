@@ -17,6 +17,8 @@ def bake(out, directory, blender):
 
     def visit(idx, transform, scope='site'):
         n=out.doc['nodes'][idx]
+        if n.get('extras',{}).get('trafficVehicle'):
+            return  # Road traffic receives its live contact shadow in the viewer.
         name=n['name']
         if name=='H1_F09_Office' or name=='H1_F09_floor_slab':
             scope='rooms'
@@ -37,7 +39,7 @@ def bake(out, directory, blender):
                 offsets[scope]+=len(pos)
                 # A planar texture already integrates over the whole surface.
                 # The receiver still participates in occluding nearby solids.
-                if 'TEXCOORD_0' in a: continue
+                if 'TEXCOORD_0' in a and n.get('extras',{}).get('night_role')!='brand_sign': continue
                 field['probes'].append(pos)
                 field['normals'].append(norm)
                 field['bindings'].append((idx,j))

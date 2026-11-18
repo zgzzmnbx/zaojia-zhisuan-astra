@@ -86,7 +86,7 @@ class Source:
 
 class Glb:
     def __init__(self):
-        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.4.0'},
+        self.doc = {'asset': {'version': '2.0', 'generator': 'Astra / Porcelain Office 0.5.0'},
                     'extensionsUsed': ['KHR_materials_unlit'], 'scene': 0, 'scenes': [{'nodes': []}],
                     'samplers':[{'wrapS':33071,'wrapT':33071,'magFilter':9729,'minFilter':9987}],
                     **{k: [] for k in ['nodes','meshes','materials','textures','images','accessors','bufferViews']}}
@@ -260,4 +260,4 @@ class Batch:
         p = out.primitive(pos,self.norm,self.indices,np.asarray(self.col),material,uv(pos) if uv else None,
                           blue_ink=self.blue_ink)
         mesh = out.append('meshes', {'name': name,'primitives':[p]})
-        out.node(name,parent,mesh=mesh,extras={'night_role':role,'porcelainBatch':True})
+        return out.node(name,parent,mesh=mesh,extras={'night_role':role,'porcelainBatch':True})

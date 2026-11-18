@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {ASTRA_GLASS} from './astra-lighting-profile.js';
+import {ASTRA_GLASS,ASTRA_STUDIO} from './astra-lighting-profile.js';
 import {createNightBloom} from './night-bloom.mjs?v=0.6.3';
 import {classifyNightRole, nightSeatId, NIGHT_LIGHTING} from './night-lighting-policy.js?v=0.6.3';
 import {LIGHTING_DEFAULTS,normalizeLighting} from './lighting-settings.js';
@@ -13,18 +13,40 @@ import {createStreetLightMap,porcelainDaylight} from './porcelain-style.js';
 // Static floors use a Cycles night bake; furniture/people keep adjustable display lighting.
 export const NIGHT_BACKGROUND='#040813';
 export const nightRole=classifyNightRole;
-const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10,vegetation:11,street_surface:12,street_lens:13};
+const ROLE={shell:0,window:1,accent:2,sign:3,context:4,screen:5,interior:6,interior_light:7,ground:8,person:9,floor:10,vegetation:11,street_surface:12,street_lens:13,brand_sign:14};
+const brandBlue=new THREE.Color(ASTRA_STUDIO.nightLogoColor).toArray();
 export function attachNightShader(material,role,shared,monitor=null,roomLighting=shared,bakedFloor=false,vertexMonitor=false,referenceContext=false,referenceStructure=false){
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
   const key=previousKey();
   const streetReceiver=!!shared.streetLightMap && (role==='ground'||role==='street_surface');
+  const cars=role==='ground'&&shared.streetTraffic;
+  const contact=sample=>cars?`max(${sample},movingCarContact(officeWorldPosition.xz))`:sample;
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
+    if(role==='brand_sign'){
+      shader.uniforms.officeBrandHalo=shared.brandHalo;
+      shader.fragmentShader='uniform float officeBrandHalo;\n'+shader.fragmentShader;
+    }
     if(streetReceiver){
       shader.uniforms.officeStreetMap={value:shared.streetLightMap.texture};
       shader.uniforms.officeStreetUV={value:shared.streetLightMap.transform};
       shader.fragmentShader='uniform sampler2D officeStreetMap;uniform vec4 officeStreetUV;\n'+shader.fragmentShader;
+    }
+    if(cars){
+      shader.uniforms.officeCarPose=cars.poses;shader.uniforms.officeCarSize=cars.sizes;
+      shader.fragmentShader=`uniform vec4 officeCarPose[${cars.count}];uniform vec2 officeCarSize[${cars.count}];
+        float movingCarContact(vec2 point){
+          float shade=0.;
+          for(int i=0;i<${cars.count};i++){
+            vec4 car=officeCarPose[i];vec2 d=point-car.xy;
+            if(max(abs(d.x),abs(d.y))>3.8)continue;
+            vec2 local=vec2(dot(d,car.zw),dot(d,vec2(-car.w,car.z)));
+            vec2 edge=max(abs(local)-officeCarSize[i]+.35,vec2(0.));
+            shade=max(shade,exp(-dot(edge,edge)/.28));
+          }
+          return shade;
+        }\n`+shader.fragmentShader;
     }
     const themeInk = material.userData.porcelain && shared.porcelainPalette;
     if(themeInk || role==='vegetation')shader.vertexShader='attribute float _blueink;\n'+shader.vertexShader;
@@ -77,7 +99,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         ${material.userData.porcelain?'#define OFFICE_PORCELAIN_DAY':''}
         #ifdef OFFICE_PORCELAIN_DAY
         ${porcelainDaylight}
-        ${streetReceiver&&role==='ground'?'outgoingLight*=1.-.43*texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).g;':''}
+        ${streetReceiver&&role==='ground'?`outgoingLight*=1.-.43*${contact('texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).g')};`:''}
         #else
         bool context=officeNightRole==4.,ground=officeNightRole==8.;
         bool interior=officeNightRole==6.||officeNightRole==5.||officeNightRole==9.;
@@ -207,7 +229,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         vec2 street=texture2D(officeStreetMap,(officeWorldPosition.xz-officeStreetUV.xy)*officeStreetUV.zw).rg;
         float pool=street.r*officeNightLamps.x;
         ${role==='ground'?`
-        shell=(shell+vec3(.046,.039,.030)*pool*(.63+.37*lum))*(1.-.84*street.g);`:`
+        shell=(shell+vec3(.046,.039,.030)*pool*(.63+.37*lum))*(1.-.84*${contact('street.g')});`:`
         float sky=.27+.50*key+.23*max(n.y,0.);
         shell=(vec3(.008,.012,.018)+sourceColor*vec3(.080,.10,.14))*sky*officeAmbient;
         shell+=(vec3(.010,.008,.006)+sourceColor*vec3(.12,.08,.04))*pool*(.42+.58*max(n.y,0.));`}`:''}
@@ -215,6 +237,14 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         emission=mix(vec3(dot(emission,vec3(.2126,.7152,.0722))),emission,officeNightBlue);
         ${role==='street_lens'?'emission=vec3(.48,.35,.23)*officeNightLamps.x;':''}
         vec3 haloEmission=officeNightRole==5.?emission*${NIGHT_LIGHTING.screenBloomGain}:emission;
+        ${role==='brand_sign'?`
+        vec4 brand=texture2D(map,vMapUv);
+        float ink=clamp((1.-brand.g)/.995,0.,1.);
+        float spill=max(0.,(brand.a*255.-128.)/127.);
+        emission=vec3(${brandBlue.join(',')})*(ink+(1.-ink)*spill*spill*officeBrandHalo*.58);
+        // The halo is registered to the lettering and keeps the default logo hue
+        // even when the rest of the scene uses a different bloom tint.
+        haloEmission=vec3(0.);`:''}
         ${role==='street_lens'?'haloEmission*=.20;':''}
         #ifdef OFFICE_NIGHT_MRT
         officeGlow=vec4(haloEmission*officeNightExposure,1.);
@@ -223,15 +253,17 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,streetReceiver,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV].join('|');
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV].join('|');
   material.needsUpdate=true;
 }
 
-export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings,contextBake,structureBake,porcelainPalette}){
+export function createNightEnvironment({scene,renderer,camera,layout,requestFrame,getExposure,getBlue,getSettings,contextBake,structureBake,porcelainPalette,streetTraffic}){
   // Each material references the same uniforms; changing a palette needs just one frame.
   const shared={structureBake:structureBake?.textures??{},contextBake:contextBake?.textures??{},floorGain:{value:1.45},windowBlue:{value:1},windowStrength:{value:.55},groundTint:{value:new THREE.Color()},night:{value:0},bloomOnly:{value:0},exposure:{value:1},blue:{value:1},floorInverse:{value:new THREE.Matrix4()}};
   Object.assign(shared,{dayGains:{value:new THREE.Vector4()},white:{value:new THREE.Vector2()},contrast:{value:1},nightGains:{value:new THREE.Vector4()},lamps:{value:new THREE.Vector2()}});
   shared.porcelainPalette=porcelainPalette;
+  shared.streetTraffic=streetTraffic;
+  shared.brandHalo={value:1};
   const porcelain=!!scene.getObjectByName('Porcelain_F01_shell');
   shared.streetLightMap=porcelain?createStreetLightMap(scene.getObjectByName('ContextBuildings')?.userData):null;
   const lightPlan=createInteriorLightPlan(layout);
@@ -260,6 +292,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
     shared.nightGains.value.set(settings.nightShell,settings.nightOffice,settings.nightContext,settings.nightWindows).multiplyScalar(.01);
     shared.lamps.value.set(settings.nightContextWindows,settings.nightScreens).multiplyScalar(.01);
     shared.ambient.value=settings.nightAmbient/100;
+    shared.brandHalo.value=settings.nightBloom/100;
     const nextBackground=dark?'night':settings.backgroundColor+':'+settings.backgroundBrightness;
     if(nextBackground!==backgroundKey){
       backgroundKey=nextBackground;scene.background=new THREE.Color(dark?NIGHT_BACKGROUND:settings.backgroundColor);

@@ -1,6 +1,6 @@
 import {DataTexture, LinearFilter, RGFormat, Vector4} from 'three';
 
-export const PORCELAIN_MODEL='H1-porcelain-v0.4.0.glb';
+export const PORCELAIN_MODEL='H1-porcelain-v0.5.0.glb';
 
 // Red holds lamp irradiance, green holds the contact shadows under parked cars.
 // Both are fixed in world space and stamped just once when the model is mounted.
@@ -64,6 +64,7 @@ export const porcelainDaylight = /* glsl */`
     c*=1.-.25*clamp(strength-1.,0.,1.);
   }
   float white=campus?(officeWhite.y-.96)*.33:officeWhite.x;
+  if(officeNightRole==14.)white=0.;
   c=mix(c,vec3(dot(c,vec3(.2126,.7152,.0722))),white*.55);
   c=pow(max(c,vec3(.0001)),vec3(officeContrast/1.20));
   outgoingLight=c*gain/1.10957;

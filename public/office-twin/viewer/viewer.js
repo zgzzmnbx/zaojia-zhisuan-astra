@@ -12,6 +12,7 @@ import {createFloorLabel} from './floor-label.js';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
 import {PORCELAIN_MODEL} from './porcelain-style.js';
+import {createStreetTraffic} from './street-traffic.js';
 import {createMiniatureFocus} from './miniature-focus.js';
 import {mountPorcelainPalette} from './porcelain-palette.js';
 import {createOfficeBoard,hideBoardCore} from './office-board.js';
@@ -63,6 +64,7 @@ export async function mountOfficeViewer() {
   let disposed = false, requestedVisible = true, inView = true, pageSuspended = false;
   let renderReady = false, renderStatus = 'loading', frame = 0, transition = null;
   let gpuPrepared=false,lastFrameTime=null;
+  let streetTraffic=null,trafficWake=0,trafficAdvancing=false;
   let contextBake=null,structureBake=null,miniatureFocus=null,openness=null,interiorLabels=false;
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
@@ -94,7 +96,7 @@ export async function mountOfficeViewer() {
     if (embedded && window.parent !== window) window.parent.postMessage({ namespace: PROTOCOL, type, ...data }, location.origin);
   }
   function getState() {
-    return { version: VERSION, presentationVersion:'porcelain-0.4.0', assemblyOpenness:openness, miniatureFocus:miniatureFocus?.state()??null, porcelainBlue:porcelainPalette?.id??null,assetVersion:PORCELAIN?'porcelain-0.4.0':ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
+    return { version: VERSION, presentationVersion:'porcelain-0.5.0', assemblyOpenness:openness,traffic:{running:!!streetTraffic&&picture.trafficEnabled()&&active(),positions:streetTraffic?.positions()??[]}, miniatureFocus:miniatureFocus?.state()??null, porcelainBlue:porcelainPalette?.id??null,assetVersion:PORCELAIN?'porcelain-0.5.0':ASSET_VERSION+(BAKED_MODE?'-baked':'-realtime'), eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:PORCELAIN?'porcelain':BAKED_MODE?'baked':'realtime', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
       officeBoard:officeBoard?.state()??null,performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, entrance:entrance.state(), theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
   }
   let loadingMessage='正在读取办公室资料', loadingTimer=null;
@@ -190,7 +192,7 @@ export async function mountOfficeViewer() {
   }
   function fail(error) {
     if (disposed || renderStatus === 'fallback' || error?.name === 'AbortError') return;
-    renderStatus = 'fallback'; renderReady = false;orbit?.sync();
+    renderStatus = 'fallback'; renderReady = false;suspendMotion();orbit?.sync();
     $('#office-theme-blue').disabled=true;
     if(BAKED_MODE&&!loadReport.materialPaths)$('#material-coverage').textContent='三维初始化或模型读取未完成，无法统计材质覆盖。';
     loadReport.lastError={code:error?.code??'VIEWER_ERROR',message:String(error?.message??error),stage:loadReport.stage};stopLoading();
@@ -235,13 +237,19 @@ export async function mountOfficeViewer() {
     if (typeof visible !== 'boolean') throw new TypeError('visible must be boolean');
     const returning=visible&&!requestedVisible&&loadReport.webglRendered&&!entrance.state().running;
     requestedVisible = visible;if(!visible)releaseOrbitHold?.();orbit?.sync();
-    if(!visible){frameMeter.suspend();floorLabel?.restore();people?.suspend();people?.closeMenu();entrance.suspend();lastFrameTime=null;}
+    if(!visible){frameMeter.suspend();floorLabel?.restore();people?.suspend();people?.closeMenu();entrance.suspend();suspendMotion();}
     if(returning&&params.get('entrance')==='office'){setView('building',{animate:false,automatic:true});entrance.start();}
     if (!active() && frame) { cancelAnimationFrame(frame); frame = 0; }
     if (active()) requestFrame();
     return getState();
   }
-  function requestFrame() { if (active() && renderReady && gpuPrepared && !frame) frame = requestAnimationFrame(tick); }
+  function suspendMotion(){
+    clearTimeout(trafficWake);trafficWake=0;trafficAdvancing=false;lastFrameTime=null;
+  }
+  function requestFrame() {
+    clearTimeout(trafficWake);trafficWake=0;
+    if (active() && renderReady && gpuPrepared && !frame) frame = requestAnimationFrame(tick);
+  }
   function tick(now) {
     frame = 0;
     if (!active() || !renderReady) return;
@@ -270,6 +278,9 @@ export async function mountOfficeViewer() {
     controls.autoRotate=motion.full;
     const controlsChanged = transition?.camera ? false : controls.update(motion.delta||1/60);
     camera.updateMatrixWorld();
+    const runTraffic=!!streetTraffic && picture.trafficEnabled();
+    if(runTraffic)streetTraffic.step(trafficAdvancing?delta/1000:0);
+    trafficAdvancing=runTraffic;
     if (roomOutline) roomOutline.update();
     const detailView = interiorLabels ? 'exploded' : 'building';
     people?.update(camera,detailView,now);seatLabels?.update(camera,detailView);
@@ -304,6 +315,7 @@ export async function mountOfficeViewer() {
     const next=entrance.step(now,!!transition,motionPreference.matches);
     if(next)setView(next,{automatic:true});
     if (transition || entrance.state().running || moving || controlsChanged || people?.isAnimating() || orbit.state().running) requestFrame();
+    else if(runTraffic)trafficWake=setTimeout(requestFrame,30);
     else frameMeter.idle();
   }
   let hostLeft=0;
@@ -470,6 +482,7 @@ export async function mountOfficeViewer() {
     for (const item of [...textures, ...materials, ...geometries]) item.dispose();
   }
   function dispose() {
+    suspendMotion();
     if (disposed) return;
     orbit?.dispose();
     disposed = true; renderReady = false; renderStatus = 'disposed'; aborter.abort();stopLoading();
@@ -496,7 +509,7 @@ export async function mountOfficeViewer() {
     notify('disposed');
   }
 
-  const picture = createPictureSettings({listen,requestFrame,getRenderer:()=>renderer});
+  const picture = createPictureSettings({listen,requestFrame,getRenderer:()=>renderer,allowTraffic:PORCELAIN,motionPreference});
   const porcelainPalette = PORCELAIN ? mountPorcelainPalette($('#office-theme-blue'),listen,requestFrame) : null;
   const orbitButton=document.createElement('button');orbitButton.type='button';orbitButton.className='btn btn-ghost btn-square btn-sm';orbitButton.id='office-orbit-toggle';
   $('.office-modebar').append(orbitButton);
@@ -569,10 +582,10 @@ export async function mountOfficeViewer() {
       if (event.key === 'Home') resetCamera(); else if (event.key === 'Escape') setView('building'); else zoom(event.key === '-' ? .8 : 1.25);
     }
   });
-  listen(document, 'visibilitychange', () => { orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();lastFrameTime=null;} if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; } });
+  listen(document, 'visibilitychange', () => { orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();suspendMotion();} if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; } });
   listen(window, 'pagehide', event => {
     if (event.persisted) {
-      pageSuspended = true;frameMeter.suspend();orbit.sync();
+      pageSuspended = true;frameMeter.suspend();suspendMotion();orbit.sync();
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
     } else dispose();
@@ -716,6 +729,7 @@ export async function mountOfficeViewer() {
     if(disposed){structureBake?.dispose();structureBake=null;return api;}
     staticBatches=batchStaticGeometry(model);
     cacheStaticTransforms(model);
+    if(PORCELAIN)streetTraffic=createStreetTraffic(contextRoot);
     await yieldToBrowser();if(disposed)return api;
     picture.attach({key,fill,ambient,rim},model);
     await yieldToBrowser();if(disposed)return api;
@@ -741,7 +755,7 @@ export async function mountOfficeViewer() {
     }});
     people.syncBusiness(business);
     seatLabels=createWorkstationLabels({model,layout,viewport,listen,requestFrame});
-    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,contextBake,structureBake,porcelainPalette,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
+    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,contextBake,structureBake,porcelainPalette,streetTraffic,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});officeBoard.setView(view);
     await nightEnvironment.prepare();if(disposed)return api;
@@ -761,7 +775,7 @@ export async function mountOfficeViewer() {
       }});
     resizeObserver = new ResizeObserver(resize); resizeObserver.observe(viewport);
     intersectionObserver = new IntersectionObserver(entries => {
-      inView = entries.some(entry => entry.isIntersecting);if(!inView)releaseOrbitHold?.();orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();lastFrameTime=null;}
+      inView = entries.some(entry => entry.isIntersecting);if(!inView)releaseOrbitHold?.();orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();suspendMotion();}
       if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; }
     });
     intersectionObserver.observe(viewport);

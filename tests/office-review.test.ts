@@ -206,6 +206,30 @@ test('manual limits exclude the back and underside and leave a complete automati
 });
 import {classifyNightRole,nightSeatId,NIGHT_LIGHTING} from '../public/office-twin/viewer/night-lighting-policy.js';
 import {createStreetLightMap} from '../public/office-twin/viewer/porcelain-style.js';
+import {createStreetTraffic} from '../public/office-twin/viewer/street-traffic.js';
+test('forecourt traffic follows the turnarounds, slows at the crossing and keeps its two cars apart',()=>{
+ const root=new THREE.Group();
+ for(const x of [-13.4,14.8]){
+  const car=new THREE.Group();car.position.set(x,-.41,35.6);car.userData.trafficVehicle={halfSize:[2.32,.92]};root.add(car);
+ }
+ const traffic=createStreetTraffic(root),speeds={crossing:[],cruising:[]};
+ const clearDistance=root.children.reduce((d,car)=>d+Math.hypot(...car.userData.trafficVehicle.halfSize),0);
+ for(let tick=0;tick<2100;tick++){
+  const before=root.children[0].position.clone();traffic.step(.05);
+  const [car,other]=root.children, p=car.position,speed=p.distanceTo(before)/.05;
+  assert.ok(p.distanceTo(other.position)>clearDistance && speed<2.42);
+  assert.ok(p.y===-.41 && p.z>35 && p.z<48);
+  if(p.z<36&&Math.abs(p.x)<3)speeds.crossing.push(speed);
+  if(p.z<36&&p.x>13&&p.x<19)speeds.cruising.push(speed);
+ }
+ assert.ok(speeds.crossing.length>0 && Math.max(...speeds.crossing)<1);
+ assert.ok(speeds.cruising.length>0 && Math.min(...speeds.cruising)>2.3);
+});
+test('both porcelain signs retain the night brand role throughout batching',()=>{
+ for(const name of ['PipeChina_Entrance','PipeChina_Roof']){
+  assert.equal(classifyNightRole({name,userData:{night_role:'brand_sign'}}),'brand_sign');
+ }
+});
 test('campus trees keep the vegetation role alongside emissive architectural accents',()=>{
  const parent={name:'ContextBuildings'};
  assert.equal(classifyNightRole({parent,userData:{night_role:'vegetation'}}),'vegetation');

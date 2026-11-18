@@ -5,7 +5,7 @@ export const BAKED_MODE = new URLSearchParams(location.search).get('render') !==
 export {LIGHTING_SPECS as SPECS,LIGHTING_DEFAULTS as DEFAULTS,normalizeLighting as normalizePicture} from './lighting-settings.js';
 import {LIGHTING_SPECS as SPECS,LIGHTING_DEFAULTS as DEFAULTS,normalizeLighting as normalizePicture,readLighting,saveLighting,LIGHTING_KEY,LIGHTING_DEFAULTS_VERSION} from './lighting-settings.js';
 
-export function createPictureSettings({listen, requestFrame, getRenderer}) {
+export function createPictureSettings({listen, requestFrame, getRenderer,allowTraffic=false,motionPreference}) {
   const root = document.querySelector('#picture-controls');
   const message = document.querySelector('#picture-status');
   let current = {...DEFAULTS}, lights = null, materials = [];
@@ -44,10 +44,20 @@ export function createPictureSettings({listen, requestFrame, getRenderer}) {
   const groundInput=document.createElement('input');Object.assign(groundInput,{type:'color',id:'picture-groundColor',name:'groundColor'});groundRow.append(groundLabel,groundInput);root.append(groundRow);
   listen(groundInput,'input',()=>{current=normalizePicture({...current,groundColor:groundInput.value});paint();apply();});
   const shadowRow=document.createElement('label');shadowRow.className='office-shadow-option';shadowRow.htmlFor='picture-realtimeShadows';
+  const trafficEnabled=()=>allowTraffic&&(current.trafficMotion??!motionPreference?.matches);
+  let trafficInput;
+  if(allowTraffic){
+    const row=document.createElement('label');row.className='office-shadow-option';
+    trafficInput=document.createElement('input');trafficInput.type='checkbox';trafficInput.className='checkbox checkbox-sm';
+    trafficInput.id='picture-traffic-motion';row.htmlFor=trafficInput.id;row.append(trafficInput,'园区车辆行驶');root.append(row);
+    listen(trafficInput,'change',()=>{current=normalizePicture({...current,trafficMotion:trafficInput.checked});paint();requestFrame();});
+    if(motionPreference)listen(motionPreference,'change',paint);
+  }
   const shadowInput=document.createElement('input');Object.assign(shadowInput,{type:'checkbox',id:'picture-realtimeShadows',name:'realtimeShadows',className:'checkbox checkbox-sm'});const shadowLabel=document.createElement('span');shadowLabel.textContent='实时阴影';shadowRow.append(shadowInput,shadowLabel);root.append(shadowRow);
   listen(shadowInput,'change',()=>{current=normalizePicture({...current,realtimeShadows:shadowInput.checked});paint();apply();});
   const actions=document.querySelector('.office-picture-actions'),saveButton=document.createElement('button');saveButton.type='button';saveButton.id='picture-save';saveButton.className='btn btn-primary btn-sm';saveButton.textContent='保存参数';actions.append(saveButton);listen(saveButton,'click',save);
   function paint() {
+    if(trafficInput)trafficInput.checked=trafficEnabled();
     colorInput.value=current.backgroundColor;
     groundInput.value=current.groundColor;shadowInput.checked=current.realtimeShadows;
     for(const input of windowInputs)input.checked=input.value===current.windowStyle;
@@ -77,10 +87,10 @@ export function createPictureSettings({listen, requestFrame, getRenderer}) {
   }
   listen(document.querySelector('#picture-reset'),'click',()=>{current={...DEFAULTS};paint();apply();});
   const panel=document.querySelector('#picture-panel'),toggle=document.querySelector('#picture-toggle');
-  listen(toggle,'click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));});
+  listen(toggle,'click',()=>{panel.hidden=!panel.hidden;if(!panel.hidden)paint();toggle.setAttribute('aria-expanded',String(!panel.hidden));});
   paint();
   return {
-    getState:()=>({...current}),
+    trafficEnabled,getState:()=>({...current}),
     getRecord:()=>({defaults:LIGHTING_DEFAULTS_VERSION,values:{...current},dirty:JSON.stringify(current)!==saved}),
     setTheme(value){scheme=value;paint();},
     bakedMaterialCount:()=>materials.filter(item=>item.baked).length,

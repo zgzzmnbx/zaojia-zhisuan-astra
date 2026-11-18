@@ -10,14 +10,15 @@ from pathlib import Path
 import numpy as np
 
 from architecture import campus, rooftop, storey
+from brand import CONTOURS, mount_sign, sign_art
 from geometry import BLUE_INK, Glb, Source, matrix, studio_color
 from light_transport import bake
 from receivers import Receiver
-from streetscape import LAMPS, PARKING
+from streetscape import LAMPS, PARKING, TRAFFIC
 
 ROOT=Path(__file__).resolve().parents[3]
 PACKAGE=ROOT/'public/office-twin'
-MODEL='H1-porcelain-v0.4.0.glb'
+MODEL='H1-porcelain-v0.5.0.glb'
 BASELINE='H1-baked-v0.6.7.glb'
 BASELINE_HASH='c805ae3f8074f3c9cba9c36249401c97bd4a9b13c5d57ce236fc66a5032a2545'
 LAYOUT_HASH='ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a'
@@ -119,19 +120,6 @@ def copy_office(out,source,node_id,parent,tf,atlas,day_texture,mesh_cache):
     return target
 
 
-def native_sign(out,source,node_id,parent):
-    node=source.doc['nodes'][node_id]
-    mat=out.material('Porcelain / enamel lettering')
-    prims=[]
-    for p in primitives(source,node):
-        a=p['attributes'];pos=source.array(a['POSITION']);norm=source.array(a['NORMAL'])
-        prims.append(out.primitive(pos,norm,source.array(p['indices']),studio_color(norm,'cobalt'),mat,
-                                   blue_ink=BLUE_INK['cobalt']))
-    if prims:
-        out.node(node['name'],parent,mesh=out.append('meshes',{'primitives':prims}),
-                 extras={'night_role':'sign','source_object':node['name']})
-
-
 def verify(source,generated):
     locked_nodes=0; triangles=0
     for root in [OFFICE,SLAB]:
@@ -165,6 +153,31 @@ def verify(source,generated):
     tree_primitive,=generated.doc['meshes'][trees['mesh']]['primitives']
     assert set(np.unique(generated.array(tree_primitive['attributes']['_BLUEINK'])))=={0,2}
     campus = generated.doc['nodes'][generated.named['ContextBuildings']]
+    for name,floor in [('PipeChina_Entrance',2),('PipeChina_Roof',20)]:
+        idx=generated.named[name]
+        node=generated.doc['nodes'][idx]
+        assert idx in generated.doc['nodes'][generated.named[f'Facade_{floor:02}']]['children']
+        prim,=generated.doc['meshes'][node['mesh']]['primitives']
+        mat=generated.doc['materials'][prim['material']]
+        assert node['extras']['night_role']=='brand_sign' and mat.get('alphaMode','OPAQUE')=='OPAQUE'
+        assert 'baseColorTexture' in mat['pbrMetallicRoughness'] and 'emissiveTexture' not in mat
+    def shell_positions(floor):
+        n=generated.doc['nodes'][generated.named[f'Porcelain_F{floor:02}_shell']]
+        p,=primitives(generated,n)
+        return generated.array(p['attributes']['POSITION']),generated.array(p['indices']).reshape(-1,3)
+    vertices,idx=shell_positions(2)
+    lo,hi=vertices[idx].min(axis=1),vertices[idx].max(axis=1)
+    inside=(lo[:,0]<8.6)&(hi[:,0]>-8.6)&(lo[:,1]<2.8)&(hi[:,1]>.75)
+    assert not (inside & (hi[:,2]>20.811)).any(),'Entrance fins cross the fascia'
+    vertices,_=shell_positions(1)
+    for x in (-8.3,8.3):
+        post=vertices[(abs(vertices[:,0]-x)<.35)&(abs(vertices[:,2]-23.55)<.35)]
+        assert 4.42<=post[:,1].max()<4.75,'Canopy post must terminate inside the slab'
+    for kind,x,z,_ in TRAFFIC:
+        idx=generated.named['Porcelain_Traffic_'+kind]
+        node=generated.doc['nodes'][idx]
+        assert idx in campus['children'] and node['extras']['trafficVehicle']['halfSize']
+        assert node['translation'][::2]==[x,z]
     for role in ('street_surface', 'street_lens'):
         index = generated.named['Porcelain_Campus_'+role]
         node = generated.doc['nodes'][index]
@@ -203,6 +216,8 @@ def main():
         atlas,image=plan_receiver(source,layout,meta)
         day_texture=out.texture('Office / contact and directional daylight',image)
         mesh_cache={}
+        graphic,art_width=sign_art(source,ROOT/CONTOURS)
+        brand_material=out.material('Porcelain / PipeChina fascia',out.texture('PipeChina / emblem and lettering',graphic))
         for n in range(1,21):
             name=f'Floor_{n:02}'
             original=source.doc['nodes'][source.named[name]]
@@ -210,14 +225,14 @@ def main():
             facade=out.node(f'Facade_{n:02}',floor,extras={'floor_number':n,'entity_type':'facade'})
             h=4.8 if n==1 else 4.2 if n==2 else 3.6
             storey(out,facade,n,h)
+            if n==2:
+                mount_sign(out,facade,brand_material,art_width,'PipeChina_Entrance',0,.15,20.56,18.6,2.92,.48,.08)
             if n==9:
                 for root in (SLAB,OFFICE):
                     copy_office(out,source,source.named[root],floor,np.eye(4),atlas,day_texture,mesh_cache)
             if n==20:
                 rooftop(out,facade,h)
-                for child in original['children']:
-                    if source.doc['nodes'][child]['name'].startswith('V064_Brand_Roof_PipeChina_'):
-                        native_sign(out,source,child,facade)
+                mount_sign(out,facade,brand_material,art_width,'PipeChina_Roof',-2,h,17.88,25.6,4.91,.59,.12)
         campus(out,grounds)
         program_files=Path(os.environ.get('ProgramFiles','C:/Program Files'))
         available=sorted((program_files/'Blender Foundation').glob('Blender */blender.exe'),reverse=True)

@@ -72,23 +72,23 @@
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
     "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "4c95ce8bf13d7776b3356a7a0a3d077fe3421aff81e65e6c5f5c379dd9111223",
+    "viewer/index.html": "ee3dad9825166026a9c6b2c24442e49d3611d67448532178d91807be175c8cf6",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "1d1c8eca2bcf613ad8264b99e0c2a42763708899218b8f33c49960b30f4a1568",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
     "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
-    "viewer/night-environment.js": "6c30e7a31a59766997a9916dbac9b95b57d866a437824e03b2ecc69d7db13cbb",
-    "viewer/night-lighting-policy.js": "7a24ff05f99dc70b8420389613f1106f847bb71dd46f6dca8834dac6aaaabe97",
+    "viewer/night-environment.js": "bd989958678e21fe3b9ac07a82398df11e3dcfda2cbe04e7349ad8d5df3b944a",
+    "viewer/night-lighting-policy.js": "44d07b207014ffa0e57edf5fb62c2f81bfbfb7a28d5dcde33711bf50cf78cc3d",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
     "viewer/office-settings-store.js": "0914f430a027598e645865ee0a07515a47e1a6e423c0840ac12f13f7fc514139",
     "viewer/people-demo.js": "6f19823d99db3b808058a55271193b0d6b117369ce544e2bcf06d8342077d77c",
-    "viewer/picture-settings.js": "cb98601c53819825d1f9e5644adf40afa96c5916db4163c6190a0534292e1407",
+    "viewer/picture-settings.js": "11b29eaffc3b6906f8ed3055d746f385faf30ef2fda9681118ca95306e9eb30f",
     "viewer/porcelain-demo.css": "12524c569393958bf8149b18477cd7913e3811a98497e011330d5bfc03970058",
     "viewer/porcelain-demo.js": "942bc6a96c3878022ae329145701ec32914542952b12355b3e243a15d3a6702b",
     "viewer/porcelain-palette.js": "3fbef686772b98dd206e88ea36a84bb36a2e4025062b1508e43d9c808c48a362",
-    "viewer/porcelain-style.js": "9f1974b3113fc11d58537b94fb7e5806b4f45fc219a3d2578400a5e4fce60b80",
+    "viewer/porcelain-style.js": "2b7da1ab05cecb3fc3c8f2e700323a34223da5d67a973681129ce2e5f0137eb6",
     "viewer/README.md": "36bb727daadaf810b7373b48be58d7473f277ceb9dd0c34a04f2cd325866619c",
     "viewer/release.js": "0b2f16d6d847f6198053cf6511a7bf395a4fdacaf90073a7c62af4e11fd4efa4",
     "viewer/sandbox-layout.js": "511ea27a76ac858331b6d8d6922c672e9c4e29cdfabc537778db03c60ed13b4d",
@@ -114,7 +114,7 @@
     "viewer/verify-model.mjs": "7ad800902f7e8f6b931f8bb1f3022a3d245530d4af45e7a9f479f6ffed1a6a8c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
     "viewer/miniature-focus.js": "a63322a700211665bd0fbfc100f8ec3645473e40bb8aafeb41eb6b7ce6fa6ef5",
-    "viewer/viewer.js": "cc27e6021222b844cb10d56dd374cb61ae2299f2d02fc05a55e49838bcef4a79",
+    "viewer/viewer.js": "8bd8c13e7cd4223783074276f94d410a21be1f208cd609d4c3364bbce159768c",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "cb0ad38ebc8595b9946b97044fb50caa77fac6cef119efc5fcc3864032180752",
@@ -123,7 +123,7 @@
     "viewer/person-pointer.js": "a2761138d34d980a2d199c2e4e933679595c4aa501ea263b67f087a97af25744",
     "viewer/seated-person.js": "c9b924b13498da9702667f403b982c661aabc437c2aea81a255ab323311daf2b",
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
-    "viewer/lighting-settings.js": "9aa25fa01588886fef2e85aa29be6e83f613f4c86179f040c0cfde9cc965e6eb",
+    "viewer/lighting-settings.js": "4b4bc9900de5d20d25a2cd130ac3d6a8a54a647381275384b001761bba91ebb5",
     "viewer/office-entrance.js": "a80ac42d654cd624295786524d5a048593284c7bd663a903dabca7fda65528d7",
     "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce",
     "viewer/floor-label.js": "206b9e971298c0307a3d2fe9ad211db349efaf567741b86f505d48688c97c545",
@@ -132,10 +132,10 @@
     "viewer/vendor/interestfor/LICENSE": "54c3dd9f65fffc74f4cc1295e6cd23c4378d588d9073b6363e199547043f0747",
     "viewer/vendor/interestfor/README.md": "b5f53ad0b353ec355bee3d3883be3277da55ebe4811f24969ee64d24ab0f78b2",
     "viewer/interior-light-plan.js": "023dd9b45c479f079be5f6fef8af4748838a2658b6f1df2baf4a8e60c7dc9e43",
-    "viewer/static-batches.js": "2a4ee7e93e11bfc03b235eb737f194af669a14cba18e3ed54eaf442a1cc57be4",
+    "viewer/static-batches.js": "4a740421643367a496e8a8e204825156a7220d416b95b5f9db73b9c59f17df98",
     "viewer/frame-meter.js": "b71f1bafc6a9c5ac3267236181db62c4e16f83c57f497aff85938a15d53a2482",
     "viewer/office-board.js": "3ebbfaf24823d1d3172a2ffe7aad499d981944e9cb71ba03cc6ae7f51c04bdc3",
-    "viewer/astra-lighting-profile.js": "bc772f425796bcc8c106dbcf8fb05cd81fca98b0373cf15b8ac23aa21ce29f5e",
+    "viewer/astra-lighting-profile.js": "96822d582e7db38fc0fd8734650107af05e769a64fb0e1d0d18db31c2e1805c5",
     "viewer/cutaway-bake-repair.js": "1c4f17984edd5df399f1cf91b34ce6d81f316627167683afe8215ecc9588e067",
     "models/cabinet-cutaway-v0314.png": "452211e37572799ac6e3b1f745b1c3ebb501ea116a8a6cae5b818fa92bee29f5",
     "models/column-cutaway-v0314.png": "babefadc41456ae01bc6c1da936bb0600c13f1b4c830456337248ef1694a8d74",
@@ -177,7 +177,9 @@
     "viewer/person-navigation.js": "722fd8b1a71734c6c7dbc4f12147b47c94e893b7d6a4c271205d8e0602298f33",
     "viewer/people/person-colors.js": "3a0bbd2ebf089fe16a31877875fbafa9826bbc76ae85e58d60911c07e31311aa",
     "models/H1-porcelain-v0.3.1.glb": "ae9dd77b984663f9cfaf5c8969a564fd7c2bf43058fb6c207d7ae3b4dd09c648",
-    "models/H1-porcelain-v0.4.0.glb": "0f6b17221ed31c12299255fe60f92c59ced1314717c6d75a935726342be27e70"
+    "models/H1-porcelain-v0.4.0.glb": "0f6b17221ed31c12299255fe60f92c59ced1314717c6d75a935726342be27e70",
+    "viewer/street-traffic.js": "6df28907c8f7e23c0907441a3317b42cccf919b9529e5ea265b8fc2b42b57338",
+    "models/H1-porcelain-v0.5.0.glb": "010ba0b81685ba6bb9660f13ae0ec7fbac18beee905c3be346ac8c51679a9e88"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -291,12 +293,12 @@
     }
   },
   "porcelainDemo": {
-    "version": "0.4.0",
+    "version": "0.5.0",
     "baseline": "6fc00dd",
     "sourceModel": "models/H1-baked-v0.6.7.glb",
-    "model": "models/H1-porcelain-v0.4.0.glb",
-    "modelBytes": 13115492,
-    "modelSHA256": "0f6b17221ed31c12299255fe60f92c59ced1314717c6d75a935726342be27e70",
+    "model": "models/H1-porcelain-v0.5.0.glb",
+    "modelBytes": 12701288,
+    "modelSHA256": "010ba0b81685ba6bb9660f13ae0ec7fbac18beee905c3be346ac8c51679a9e88",
     "planSHA256": "ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a",
     "frozenDetailedFloor": {
       "nodes": 2405,
@@ -337,11 +339,24 @@
       "batches": 1
     },
     "streetscape": {
-      "parkedCars": 5,
+      "parkedCars": 3,
       "lampPosts": 9,
       "surfaceRole": "street_surface",
       "diffuserRole": "street_lens",
-      "illuminationMapSize": 256
+      "illuminationMapSize": 256,
+      "movingCars": 2
+    },
+    "brandSigns": {
+      "locations": [
+        "entrance",
+        "roof"
+      ],
+      "art": "PipeChina red contours and native wordmark",
+      "day": [
+        "#c00000",
+        "#101010"
+      ],
+      "night": "#85d0ff"
     }
   }
 }

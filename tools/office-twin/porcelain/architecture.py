@@ -57,8 +57,11 @@ def storey(out,parent,n,height):
                 strip(wall,side,cx+length*(f-.5),wy,.095,wh,.18,'stone',edge-.02)
         # High white fins catch a narrow highlight; the inset at 9F belongs
         # solely to the removable facade and cannot obscure the floor plan.
-        for x in ([-7.9,8.2] if side%2==0 else [-8.8,4.0]):
-            strip(wall,side,x,.42,.37,height-.48,.48,'porcelain',edge+.02,.035)
+        # The entrance fascia spans this bay. Vertical fins end on adjacent
+        # floors, leaving the full front of the sign and both ends clear.
+        if n!=2 or side!=0:
+            for x in ([-7.9,8.2] if side%2==0 else [-8.8,4.0]):
+                strip(wall,side,x,.42,.37,height-.48,.48,'porcelain',edge+.02,.035)
         if 3<=n<=18:
             for x in (-.40,.40):
                 strip(wall,side,-19.05+inset+x,.43,.14,height-.55,.25,'stone',edge-.015)
@@ -69,15 +72,13 @@ def storey(out,parent,n,height):
     if n==1:
         # Suspended entry blade, twelve inset glass door panels and solid jambs.
         for dx in (-8.3,8.3):
-            wall.box(dx,0,23.55,.38,4.76,.40,'metal',.035)
+            wall.box(dx,0,23.55,.38,4.45,.40,'metal',.035)
         wall.box(0,4.42,23.15,18.6,.33,6.5,'porcelain',.10,.42)
         accent.box(0,4.30,23.28,18.12,.13,6.05,'cobalt',.035,.24)
         for i in range(8):
             glass.box(-6.38+i*1.82,.27,20.62,1.71,3.62,.12,'ice')
         for i in range(3):
             wall.box(0,-.29+i*.12,23.75-i*.37,19.7-i*.52,.12,6.4-i*.35,'chalk',.02)
-    if n==2:
-        wall.box(0,.15,20.56,18.6,2.92,.48,'porcelain',.08)
     kit.finish(out,parent,f'Porcelain_F{n:02}')
 
 
@@ -90,8 +91,7 @@ def rooftop(out,parent,top):
     deck.col=[np.ones(3) for _ in deck.pos]
     for side in range(4):
         strip(wall,side,0,top,39.1,.58,.28,'porcelain',19.49,.05)
-    # The front parapet carries the original building wordmark mesh.
-    wall.box(-2,top,17.88,25.6,4.91,.59,'porcelain',.12,.23)
+    # The separate fascia still casts its shadow into the roof texture.
     roof.block(-2,17.88,25.6,.59,4.91)
     wall.box(-7,top,-4,14.2,4.2,9.2,'chalk',.16,.55)
     wall.box(-7,top+4.17,-4,14.8,.28,9.8,'porcelain',.08,.58)
@@ -273,7 +273,7 @@ def campus(out,parent):
         for off in (-.26,0,.26):
             wall.box(x,.36,z+off,3.45,.15,.22,'chalk',.035)
         ground.block(x,z,3.45,.8,.55)
-    out.doc['nodes'][parent]['extras'].update(place_streetscape(kit,ground))
+    out.doc['nodes'][parent]['extras'].update(place_streetscape(kit,ground,out,parent))
     for i in range(9):
         wall.box(-3.5+i*.85,-.4,35.6,.40,.02,3.1,'porcelain')
     kit.finish(out,parent,'Porcelain_Campus')
