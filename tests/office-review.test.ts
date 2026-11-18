@@ -789,14 +789,23 @@ test('outside clicks step back one level and ignore invisible or clipped geometr
  mesh.material.clippingPlanes=[new THREE.Plane(new THREE.Vector3(0,1,0),0)];assert.equal(outsideView('office',[hit]),'building');
  mesh.geometry.dispose();mesh.material.dispose();
 });
-test('office idle deadline restarts on input, honors saved delay and resumes focused views',()=>{
+test('office orbit starts zero-delay motion on the next frame and waits exactly the selected positive delay',()=>{
  let now=0,id=0,allowed=true;const timers=new Map<number,{at:number,fn:()=>void}>();
  const orbit=createOfficeOrbit({canRun:()=>allowed,requestFrame(){},clock:{set(fn:()=>void,ms:number){timers.set(++id,{at:now+ms,fn});return id;},clear(key:number){timers.delete(key);}}});
  const advance=(ms:number)=>{now+=ms;for(const [key,t] of [...timers])if(t.at<=now){timers.delete(key);t.fn();}};
- orbit.configure({enabled:true,delay:0});advance(4999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
- orbit.focus(true);advance(4000);orbit.activity();advance(4999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
- orbit.configure({enabled:true,delay:10});advance(9999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);
- allowed=false;orbit.sync();advance(60000);assert.equal(orbit.state().running,false);allowed=true;orbit.sync();advance(10000);assert.equal(orbit.state().running,true);
+ orbit.configure({enabled:true,delay:30});advance(1000);
+ orbit.configure({enabled:true,delay:0});advance(0);
+ assert.equal(orbit.state().idleDelay,0);assert.ok(orbit.step(now).angle>0);
+ orbit.hold(true);advance(60000);assert.equal(orbit.state().running,false);
+ orbit.hold(false);advance(0);assert.ok(orbit.step(now).angle>0);
+ orbit.focus(true);orbit.activity();advance(0);assert.equal(orbit.state().focused,false);assert.equal(orbit.state().running,true);
+ for(const delay of [2,5,10,15,30,60]){
+  orbit.configure({enabled:true,delay});assert.equal(orbit.state().idleDelay,delay);
+  advance(300);orbit.activity();advance(delay*1000-1);assert.equal(orbit.state().running,false);
+  advance(1);assert.equal(orbit.state().running,true);
+ }
+ allowed=false;orbit.sync();orbit.configure({enabled:true,delay:0});advance(60000);assert.equal(orbit.state().running,false);
+ allowed=true;orbit.sync();advance(0);assert.equal(orbit.state().running,true);
  orbit.toggle();advance(60000);assert.equal(orbit.state().running,false);orbit.dispose();assert.equal(timers.size,0);
 });
 
@@ -807,7 +816,7 @@ test('office orbit releases host drops, lost capture and interrupted gestures wi
  const advance=(ms=5000)=>{now+=ms;for(const [key,t] of [...timers])if(t.at<=now){timers.delete(key);t.fn();}};
  const emit=(target:EventTarget,type:string,data={})=>target.dispatchEvent(Object.assign(new Event(type),data));
  const reset=bindOfficeOrbitHold({listen:(target:EventTarget,type:string,fn:EventListener)=>target.addEventListener(type,fn),document,window,orbit});
- orbit.configure({enabled:true,delay:0});advance();assert.equal(orbit.state().running,true);
+ orbit.configure({enabled:true,delay:5});advance();assert.equal(orbit.state().running,true);
  const down=(pointerId=1)=>{emit(document,'pointerdown',{pointerId});advance(20000);assert.equal(orbit.state().running,false);};
  const resumed=()=>{advance(4999);assert.equal(orbit.state().running,false);advance(1);assert.equal(orbit.state().running,true);};
  for(const [type,data] of [['pointerup',{pointerId:1}],['pointercancel',{pointerId:1}],['lostpointercapture',{pointerId:1}],['office-chat-pointer',{detail:{phase:'up'}}],['office-chat-pointer',{detail:{phase:'cancel'}}],['blur',{}],['pagehide',{}],['pointermove',{pointerId:1,pointerType:'mouse',buttons:0}]] as const){down();emit(window,type,data);resumed();}
