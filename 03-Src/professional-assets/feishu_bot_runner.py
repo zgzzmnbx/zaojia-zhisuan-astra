@@ -25,6 +25,7 @@ from app.feishu_app_bot import (
 )
 from app import external_task_dispatch
 from app.feishu_reliability import MessageQueue
+from weact_read_only import is_read_only_chat
 
 
 WS_RECONNECT_JITTER_SECONDS = 1
@@ -453,6 +454,8 @@ def main() -> int:
 
         try:
             envelope = parse_message_envelope(data)
+            if is_read_only_chat(envelope.chat_id):
+                return
             is_private = envelope.chat_type in {"p2p", "private", "single"}
             external_submission_task = None
             if len(envelope.files) == 1 and Path(envelope.files[0][1]).suffix.lower() == ".xlsx":
@@ -647,6 +650,10 @@ def main() -> int:
 
     def handle_card_action(data) -> P2CardActionTriggerResponse:
         event = getattr(data, "event", None)
+        context = getattr(event, "context", None)
+        callback_chat_id = getattr(context, "open_chat_id", None)
+        if is_read_only_chat(callback_chat_id):
+            return P2CardActionTriggerResponse()
         action = getattr(event, "action", None)
         operator = getattr(event, "operator", None)
         value = getattr(action, "value", None) or {}
@@ -701,6 +708,10 @@ def main() -> int:
             )
 
         try:
+            if profile_id == WEACT_PROFILE_ID and not callback_chat_id and task_id:
+                task = dispatch_store.get_task(task_id)
+                if task and is_read_only_chat(task.get("target_chat_id")):
+                    return P2CardActionTriggerResponse()
             if action_name == "submit_external_review":
                 review_task, created = dispatch_store.open_submission_window(
                     task_id, operator_open_id=operator_open_id, platform_profile_id=profile_id,
@@ -782,6 +793,8 @@ def main() -> int:
         # never the SDK object itself. Dicts remain supported for legacy callers.
         raw = data if isinstance(data, dict) else json.loads(lark.JSON.marshal(data))
         envelope = parse_message_envelope(raw)
+        if is_read_only_chat(envelope.chat_id):
+            return
         message_queue.enqueue(raw, envelope, utc_now())
 
     handler = (

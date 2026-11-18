@@ -196,6 +196,8 @@ def install(engine,paths):
     settlement_audit_api.SETTLEMENT_REFERENCE_TEMPLATE=ROOT/"03-Src/professional-assets/settlement-reference.xlsx"
     settlement_audit_api.MAX_SETTLEMENT_FILE_BYTES=30*1024*1024
     from app import feishu_app_bot,feishu_robot_settings
+    import weact_read_only
+    weact_read_only.install(feishu_app_bot.FeishuApi)
     original_defaults=feishu_app_bot.load_bot_defaults
     def bot_defaults():
         return {**original_defaults(),'apiBaseUrl':'http://127.0.0.1:5189','maxFileSizeMb':30,'expectedProfiles':{}}

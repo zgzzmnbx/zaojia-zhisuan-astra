@@ -68,10 +68,12 @@ async def host_lifespan(_app):
         await asyncio.to_thread(gork_output.stop)
         await asyncio.to_thread(gork_web.stop)
 
-app = FastAPI(title='智算Astra', version='0.16.1', docs_url=None, redoc_url=None, lifespan=host_lifespan)
+app = FastAPI(title='智算Astra', version='0.16.2', docs_url=None, redoc_url=None, lifespan=host_lifespan)
 import hashlib
 HOST_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 HOST_SOURCES={name:hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest() for name in ['server.py','excel_recalculation.py','runtime_console.py','documents.py','gongwen_worker.py','report_cover.py','collaboration_lifecycle.py','weknora.py','weknora_wiki.py','professional_host.py','knowledge_host.py','demo_cues.py','office_workstations.py','demo_settings.py','demo_match.py','business_settings.py','row_assist.py','model_adapter.py','report_markdown.py','gork_notifications.py','gork_speech.py','gork_web_speech.py','gork_review.py','gork_replay.py','gork_commands.py','gork_project.py','gork_amount.py','gork_config.py','gork_stages.py','vendor/gork-output/external_client.py']}
+for name in ('weact_read_only.py', 'professional-assets/feishu_bot_runner.py'):
+    HOST_SOURCES[name] = hashlib.sha256((ROOT/'03-Src'/name).read_bytes()).hexdigest()
 UUID = re.compile(r'^[a-f0-9]{32}$')
 MAX_UPLOAD = 30 * 1024 * 1024
 write_lock = asyncio.Lock()
