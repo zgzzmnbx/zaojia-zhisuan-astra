@@ -1,6 +1,6 @@
 // Display-only state. Completed assignments remain visible in the detail card.
-const finished=new Set(['已通过','已完成','已退回','已取消','completed','approved','rejected','cancelled','canceled']);
-export function activePersonTasks(tasks,id){return tasks.filter(t=>t.employeeId===id&&!finished.has(t.status));}
+import {taskState} from './duty-board.js';
+export function activePersonTasks(tasks,id){return tasks.filter(t=>t.employeeId===id&&!taskState(t).done);}
 export function personLabelLevel(pixels,previous='hidden'){
   if(!Number.isFinite(pixels)||pixels<13)return 'hidden';
   if(previous==='hidden'&&pixels<17)return 'hidden';

@@ -806,6 +806,21 @@ test('return walker waits for a blocked doorway and retries after it clears',()=
  for(let i=0;i<1500&&!walk.state().done;i++)walk.step(.05,true,[]);assert.equal(walk.state().done,true);
 });
 import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches.js';
+import {personTaskSummary,taskState} from '../public/office-twin/viewer/duty-board.js';
+
+test('office task states use the individual receipt in both structured and older bridge snapshots',()=>{
+  assert.deepEqual(taskState({status:'飞书 · 已通过 · 等待其他人复核'}),{platform:'飞书',label:'已通过',tone:'closed',done:true});
+  assert.equal(taskState({status:'WeAct · 待复核 · 已取消'}).done,true);
+  assert.equal(taskState({personStatus:'已退回',platformLabel:'飞书',roundStatus:'进行中'}).tone,'returned');
+  assert.equal(taskState({status:'in_progress'}).tone,'working');
+});
+test('current task gives an active genuine assignment precedence over a completed receipt or a demonstration',()=>{
+  const tasks=[{status:'已完成'},{demo:true,status:'审核中'},{status:'待复核'}];
+  assert.equal(personTaskSummary(tasks).current,tasks[2]);
+  assert.deepEqual(personTaskSummary(tasks).live,[tasks[1],tasks[2]]);
+  assert.equal(personTaskSummary([tasks[0]]).current,undefined);
+  assert.equal(personTaskSummary([]).latest,undefined);
+});
 test('static world matrices stay cached during camera motion, but floor transitions and actors still update',()=>{
  const scene=new THREE.Scene();scene.updateMatrix();scene.matrixAutoUpdate=false;
  const model=new THREE.Group(),floor=new THREE.Group(),desk=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()),person=new THREE.Group();scene.add(model,person);model.add(floor);floor.add(desk);floor.position.y=30;desk.position.x=2;cacheStaticTransforms(model);scene.updateMatrixWorld();

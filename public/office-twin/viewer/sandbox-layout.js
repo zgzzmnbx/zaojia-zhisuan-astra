@@ -3,7 +3,7 @@ export function mountSandboxLayout(root=document) {
   const $=s=>root.querySelector(s), workspace=$('.office-workspace'), rail=$('#space-cards-panel');
   const toggle=$('#space-card-toggle'), controller=new AbortController(), options={signal:controller.signal};
   let selected='tasks';
-  function open(value){workspace.dataset.cardsOpen=String(value);workspace.dataset.informationOpen='false';rail.hidden=!value;toggle.setAttribute('aria-expanded',String(value));toggle.textContent=value?'收起工作栏':'工作栏';}
+  function open(value){workspace.dataset.cardsOpen=String(value);workspace.dataset.informationOpen='false';rail.hidden=!value;toggle.setAttribute('aria-expanded',String(value));toggle.title=value?'收起工作栏':'展开工作栏';toggle.setAttribute('aria-label',toggle.title);}
   function tab(name){if(!['tasks','people','messages','space'].includes(name))return;selected=name;for(const b of root.querySelectorAll('[data-rail-tab]')){const active=b.dataset.railTab===name;b.setAttribute('aria-pressed',String(active));b.classList.toggle('btn-primary',active);b.classList.toggle('btn-ghost',!active);$('#rail-'+b.dataset.railTab).hidden=!active;}if(name==='space')$('#tab-floors').click();open(true);}
   for(const b of root.querySelectorAll('[data-rail-tab]'))b.addEventListener('click',()=>{tab(b.dataset.railTab);if(selected==='people')$('#tab-people').click();},options);
   toggle.addEventListener('click',()=>open(rail.hidden),options);
@@ -11,6 +11,40 @@ export function mountSandboxLayout(root=document) {
   rail.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();open(false);toggle.focus();}},options);
   window.addEventListener('office-panel',e=>tab(e.detail?.tab),options);
   $('#picture-toggle').addEventListener('click',()=>tab('space'),options);
+  const tools=$('#office-tools'),more=$('#office-tools-toggle');
+  const native=typeof tools.togglePopover==='function';
+  const opened=()=>native?tools.matches(':popover-open'):!tools.hidden;
+  const items=()=>[...tools.querySelectorAll('[role=menuitem]')].filter(n=>!n.disabled&&n.getClientRects().length);
+  function position(){
+    const r=more.getBoundingClientRect(),w=tools.offsetWidth,h=tools.offsetHeight;
+    tools.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+'px';
+    tools.style.top=Math.max(8,Math.min(r.bottom+7,innerHeight-h-8))+'px';
+  }
+  let lastOnOpen=false;
+  function openedMenu(){
+    more.setAttribute('aria-expanded',String(opened()));if(!opened())return;
+    position();const actions=items();actions.forEach(action=>action.tabIndex=-1);
+    (lastOnOpen?actions.at(-1):actions[0])?.focus();lastOnOpen=false;
+  }
+  function show(value,restore=false){
+    if(native)tools.togglePopover(value);else{tools.hidden=!value;openedMenu();}
+    if(restore)more.focus();
+  }
+  if(native)tools.addEventListener('toggle',openedMenu,options);
+  else {tools.hidden=true;more.addEventListener('click',()=>show(!opened()),options);}
+  more.addEventListener('keydown',e=>{if(['ArrowDown','ArrowUp'].includes(e.key)){e.preventDefault();lastOnOpen=e.key==='ArrowUp';show(true);}},options);
+  tools.addEventListener('keydown',e=>{
+    const actions=items(),index=actions.indexOf(document.activeElement);
+    if(!actions.length)return;
+    if(e.key==='Escape'){e.preventDefault();e.stopPropagation();show(false,true);return;}
+    if(e.key==='Tab'){show(false,true);return;}
+    const next={ArrowDown:(index+1)%actions.length,ArrowUp:(index-1+actions.length)%actions.length,Home:0,End:actions.length-1}[e.key];
+    if(next!==undefined){e.preventDefault();actions[next].focus();}
+  },options);
+  tools.addEventListener('click',e=>{if(e.target.closest('[role=menuitem]'))show(false,true);},{...options,capture:true});
+  root.addEventListener('pointerdown',e=>{if(!native&&opened()&&!tools.contains(e.target)&&!more.contains(e.target))show(false);},options);
+  window.addEventListener('resize',()=>{if(opened())position();},options);
+  window.addEventListener('office-host-layout',()=>{if(opened())position();},options);
   const form=$('#local-note-form'),input=$('#local-note-input'),list=$('#local-notes'),clear=$('#clear-local-notes');
   form.addEventListener('submit',e=>{e.preventDefault();if(!input.value.trim())return;list.querySelector('.office-empty-note')?.remove();const p=root.createElement('p');p.textContent=input.value.trim();list.append(p);input.value='';clear.disabled=false;$('#local-note-status').textContent='已保存本页备注';},options);
   clear.addEventListener('click',()=>{list.replaceChildren();clear.disabled=true;},options);

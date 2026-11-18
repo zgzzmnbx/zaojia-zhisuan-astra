@@ -1,4 +1,5 @@
 import {profile,genderLabel} from './workstation-roster.js';
+import {icon} from '../astra_ui/icons.js';
 import {colorFields,personColorDefaults,normalizePersonColors} from './people/person-colors.js';
 import {appearances} from './people/appearances.js';
 import {createAppearancePreview} from './people/appearance-preview.js';
@@ -14,7 +15,7 @@ async function request(payload){
 }
 export function createWorkstationSettings({toolbar,getPeople,onChange}){
   let config=null,draft=[],current='',saving=false,loading=false,opened=false,epoch=0;
-  const open=el('button','工位设置','btn btn-ghost btn-sm');open.type='button';toolbar.append(open);
+  const open=el('button','工位设置','btn btn-ghost btn-sm');open.type='button';open.setAttribute('role','menuitem');open.tabIndex=-1;open.insertAdjacentHTML('afterbegin',icon('squares-four'));toolbar.append(open);
   const dialog=el('dialog','','office-workstations');dialog.id='office-workstations';dialog.setAttribute('popover','manual');dialog.setAttribute('aria-labelledby','workstations-title');
   const form=el('form'),header=el('header'),title=el('h2','工位设置');title.id='workstations-title';
   const close=el('button','×','btn btn-ghost btn-square');close.type='button';close.setAttribute('aria-label','关闭工位设置');const all=el('button','全部工位','btn btn-ghost btn-sm');all.type='button';all.onclick=()=>publish('all');header.append(title,all,close);

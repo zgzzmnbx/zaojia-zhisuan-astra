@@ -2,7 +2,7 @@ import {reviewPeople, nextRound, type ReviewPlatform, type ReviewRequest, type R
 import {reviewParticipants} from '../professional/components/agent-workspace/reviewProgress.ts';
 
 export type OfficePerson = {id:string; name:string; selectable:boolean; selected:boolean; accounts:{platform:string;name:string}[]};
-export type OfficeTask = {id:string; employeeId:string; title:string; status:string; demo:boolean; comment?:string};
+export type OfficeTask = {id:string; employeeId:string; title:string; artifactName?:string; status:string; personStatus?:string; roundStatus?:string; platformLabel?:string; demo:boolean; comment?:string};
 export type OfficeSnapshot = {
   context:string; revision:number; request:ReviewRequest; people:OfficePerson[]; tasks:OfficeTask[];
   toggle:(id:string,selected:boolean)=>void;
@@ -45,6 +45,6 @@ export function officeTasks(tasks:ReviewTask[],request:ReviewRequest,people:Offi
   return tasks.flatMap(task=>reviewParticipants(task).map((person,index)=>({
     id:`${task.task_id}:${index}`,employeeId:isOfficeOwner(task.platform,person.name)?'owner':people.find(p=>p.accounts.some(a=>a.platform===task.platform&&a.name===person.name))?.id||`${task.platform}:${person.name}`,
     title:request.projectName||request.fileName,status:`${task.platform==='default'?'飞书':'WeAct'} · ${person.status} · ${task.status_label}`,
-    demo:false,comment:person.comment,
+    artifactName:request.fileName,personStatus:person.status,roundStatus:task.status_label,platformLabel:task.platform==='default'?'飞书':'WeAct',demo:false,comment:person.comment,
   })));
 }

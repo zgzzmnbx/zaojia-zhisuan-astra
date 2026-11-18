@@ -11,7 +11,8 @@
   <link rel="stylesheet" href="./office-events.css?v=0.7.0">
   <link rel="stylesheet" href="./astra-review.css?v=0.45.0">
   <link rel="stylesheet" href="./porcelain.css?v=0.46.0">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=office-0.46.3","./porcelain-style.js":"./porcelain-style.js?v=office-0.46.0","./porcelain-palette.js":"./porcelain-palette.js?v=office-0.46.0","./night-bloom.mjs?v=0.6.3":"./night-bloom.mjs?v=office-0.46.0","./night-floor-bake.js":"./night-floor-bake.js?v=office-0.46.0","./model-transport.js?v=0.7.0":"./model-transport.js?v=office-0.46.0","./lighting-settings.js":"./lighting-settings.js?v=office-0.46.1","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=office-0.46.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.45.0","./host-client.js":"./host-client.js?v=office-0.46.0","./host-people.js":"./host-people.js?v=0.45.0","./seated-person.js":"./seated-person.js?v=0.45.0","./person-presentation.js":"./person-presentation.js?v=0.45.0","./person-pointer.js":"./person-pointer.js?v=0.45.0","./scene-state.js?v=0.6.7":"./scene-state.js?v=office-0.46.0","./office-entrance.js":"./office-entrance.js?v=office-0.46.0","./office-camera-limits.js":"./office-camera-limits.js?v=office-0.46.0","./floor-picking.js?v=0.39.1":"./floor-picking.js?v=office-0.46.0","./miniature-focus.js":"./miniature-focus.js?v=office-0.46.2","./night-compositor.js":"./night-compositor.js?v=office-0.46.0","./picture-settings.js?v=0.6.7":"./picture-settings.js?v=office-0.46.0","./night-lighting-policy.js":"./night-lighting-policy.js?v=office-0.46.0","./night-lighting-policy.js?v=0.6.3":"./night-lighting-policy.js?v=office-0.46.0","./static-batches.js?v=0.44.2":"./static-batches.js?v=office-0.46.0","./street-traffic.js":"./street-traffic.js?v=office-0.46.0","./release.js?v=0.7.0":"./release.js?v=office-0.46.3"}}</script>
+  <link rel="stylesheet" href="./office-desk.css?v=0.47.0">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","./people/appearance-preview.js":"./people/appearance-preview.js?v=0.45.0","./people/person-colors.js":"./people/person-colors.js?v=0.45.0","./workstation-roster.js":"./workstation-roster.js?v=0.45.0","./monitor-lighting.js":"./monitor-lighting.js?v=0.45.0","./people/appearances.js":"./people/appearances.js?v=0.45.0","./people/polyfork-person.js":"./people/polyfork-person.js?v=0.45.0","./night-environment.js?v=0.6.7":"./night-environment.js?v=office-0.46.3","./porcelain-style.js":"./porcelain-style.js?v=office-0.46.0","./porcelain-palette.js":"./porcelain-palette.js?v=office-0.46.0","./night-bloom.mjs?v=0.6.3":"./night-bloom.mjs?v=office-0.46.0","./night-floor-bake.js":"./night-floor-bake.js?v=office-0.46.0","./model-transport.js?v=0.7.0":"./model-transport.js?v=office-0.46.0","./lighting-settings.js":"./lighting-settings.js?v=office-0.46.1","./astra-lighting-profile.js":"./astra-lighting-profile.js?v=office-0.46.0","three/addons/":"./vendor/addons/","./office-orbit.js":"./office-orbit.js?v=0.45.0","./workstation-settings.js":"./workstation-settings.js?v=0.47.0","./host-client.js":"./host-client.js?v=0.47.0","./host-people.js":"./host-people.js?v=0.47.0","./seated-person.js":"./seated-person.js?v=0.47.0","./person-presentation.js":"./person-presentation.js?v=0.47.0","./person-pointer.js":"./person-pointer.js?v=0.45.0","./scene-state.js?v=0.6.7":"./scene-state.js?v=office-0.46.0","./office-entrance.js":"./office-entrance.js?v=office-0.46.0","./office-camera-limits.js":"./office-camera-limits.js?v=office-0.46.0","./floor-picking.js?v=0.39.1":"./floor-picking.js?v=office-0.46.0","./miniature-focus.js":"./miniature-focus.js?v=office-0.46.2","./night-compositor.js":"./night-compositor.js?v=office-0.46.0","./picture-settings.js?v=0.6.7":"./picture-settings.js?v=office-0.46.0","./night-lighting-policy.js":"./night-lighting-policy.js?v=office-0.46.0","./night-lighting-policy.js?v=0.6.3":"./night-lighting-policy.js?v=office-0.46.0","./static-batches.js?v=0.44.2":"./static-batches.js?v=office-0.46.0","./street-traffic.js":"./street-traffic.js?v=office-0.46.0","./release.js?v=0.7.0":"./release.js?v=office-0.46.3"}}</script>
 </head>
 <body class="studio">
 <div id="shell" class="live-shell office-shell">
@@ -34,18 +35,16 @@
     <section class="rw-window rw-inline office-scene" aria-label="建筑三维预览">
       <nav class="rw-tabs office-modebar" aria-label="办公室工具栏">
         <div class="join" id="view-controls">
-          <button class="btn btn-sm join-item btn-primary" data-view="building" aria-pressed="true" disabled><span class="astra-icon" data-icon="buildings"></span>整楼</button>
-          <button class="btn btn-sm join-item btn-ghost" data-view="exploded" aria-pressed="false" disabled><span class="astra-icon" data-icon="layers"></span>展开9楼</button>
+          <button class="btn btn-sm join-item btn-primary" data-view="building" aria-label="整楼" title="整楼" aria-pressed="true" disabled><span class="astra-icon" data-icon="buildings"></span></button>
+          <button class="btn btn-sm join-item btn-ghost" data-view="exploded" aria-label="展开9楼" title="展开9楼" aria-pressed="false" disabled><span class="astra-icon" data-icon="layers"></span></button>
         </div>
-        <div class="porcelain-blue-control" hidden>
-          <label for="office-theme-blue">主题蓝</label>
-          <select id="office-theme-blue" name="office-theme-blue" class="select select-sm" disabled>
-            <button type="button"><selectedcontent></selectedcontent></button>
-          </select>
+        <button id="space-card-toggle" class="btn btn-ghost btn-sm" aria-controls="space-cards-panel" aria-expanded="true" aria-label="收起工作栏" title="收起工作栏"><span class="astra-icon" data-icon="list-bullets"></span></button>
+        <button id="office-tools-toggle" class="btn btn-ghost btn-sm" type="button" popovertarget="office-tools" aria-controls="office-tools" aria-haspopup="menu" aria-expanded="false" aria-label="更多操作" title="更多操作"><span class="astra-icon" data-icon="dots-three"></span></button>
+        <div id="office-tools" popover="auto" role="menu" aria-label="办公室操作">
+          <button id="picture-toggle" class="btn btn-ghost btn-sm" type="button" role="menuitem" aria-expanded="false" aria-controls="picture-panel"><span class="astra-icon" data-icon="sliders-horizontal"></span>画面设置</button>
+          <a class="btn btn-ghost btn-sm" role="menuitem" href="./handoff-preview.html" target="_blank" rel="noopener"><span class="astra-icon" data-icon="users-three"></span>交接预演</a>
+          <button id="back-building" class="btn btn-ghost btn-sm" role="menuitem" disabled><span class="astra-icon" data-icon="home"></span>返回整楼</button>
         </div>
-        <button id="picture-toggle" class="btn btn-ghost btn-sm" type="button" aria-expanded="false" aria-controls="picture-panel">画面设置</button>
-        <button id="space-card-toggle" class="btn btn-ghost btn-sm" aria-controls="space-cards-panel" aria-expanded="true">收起工作栏</button>
-        <button id="back-building" class="btn btn-ghost btn-sm" disabled><span class="astra-icon" data-icon="home"></span><span class="office-desktop">返回整楼</span></button>
       </nav>
 
       <div id="viewport" class="office-viewport" tabindex="0" aria-label="三维建筑，可拖动旋转，滚轮缩放，右键平移">
@@ -113,6 +112,12 @@
           <dl><dt>位置</dt><dd id="selection-name">H1 整栋建筑</dd><dt>依据</dt><dd id="selection-basis">实景照片 + 9 楼平面图</dd><dt>模型</dt><dd id="selection-detail">20 层参数化外壳</dd></dl>
         </section>
         <section id="picture-panel" class="office-picture" hidden aria-label="画面设置">
+          <div class="porcelain-blue-control" hidden>
+            <label for="office-theme-blue">主题蓝</label>
+            <select id="office-theme-blue" name="office-theme-blue" class="select select-sm" disabled>
+              <button type="button"><selectedcontent></selectedcontent></button>
+            </select>
+          </div>
           <fieldset id="picture-controls"><legend>画面设置 <span id="picture-info" title="画面调节说明" aria-label="画面调节说明">ⓘ</span></legend></fieldset>
           <p id="material-coverage" class="office-description">正在检查模型材质覆盖。</p>
           <div class="office-picture-actions"><span id="picture-status" role="status">本机偏好</span><button id="picture-reset" type="button" class="btn btn-ghost btn-sm">恢复默认</button></div>
@@ -155,14 +160,14 @@
   import {VERSION} from './release.js?v=0.7.0';
   document.querySelector('#viewer-version').textContent='v'+VERSION;
   document.querySelector('#viewer-version').setAttribute('aria-label','当前网页版本 v'+VERSION);
-  import {mountSandboxLayout} from './sandbox-layout.js?v=0.7.0';
+  import {mountSandboxLayout} from './sandbox-layout.js?v=0.47.0';
   import {officeClient} from './office-client.js';
   const rail = mountSandboxLayout();
   const desk = {dispose(){}};
   officeClient.start();
   window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
   window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
-  import('./viewer.js?v='+VERSION+'&ui=office-0.46.3').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+  import('./viewer.js?v='+VERSION+'&ui=office-0.47.0').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
     document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
     document.querySelector('#render-status').textContent='静态预览';
     document.documentElement.dataset.viewerStatus='module-error';

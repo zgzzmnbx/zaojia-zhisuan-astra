@@ -3,13 +3,15 @@ import {workstationRoster} from './workstation-roster.js';
 import {createWorkstationSettings} from './workstation-settings.js';
 import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
 import {bindSelectedPersonDrag,canRemoveSelectedPerson} from './selected-person-drag.js';
+import {mountDutyBoard} from './duty-board.js';
+import {icon} from '../astra_ui/icons.js';
 const namespace='astra-office-selection:v1';
 const listeners=new Set();
 let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正在读取当前成果',enabled:false};
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 let dragStart=null,chatRect=null,completedNativeDrag=null;
-let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null;
+let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null,dutyBoard=null;
 // A directly opened office uses saved workstation profiles. The parent owns review selection.
 let hostSnapshot=null;
 function applyHostSnapshot(){
@@ -17,7 +19,6 @@ function applyHostSnapshot(){
   sourceSnapshot={...hostSnapshot,employees:workstationRoster(hostSnapshot.employees,workstationConfig)};
   snapshot=demos.apply(sourceSnapshot);renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
 }
-const samples=['某支线工程控制价复核','某站场改造结算复核','某研发基地勘察测量复核','某数字化项目投资复核'];
 const $=selector=>document.querySelector(selector);
 export function element(tag,text,className='') {
   const node=document.createElement(tag);node.textContent=text;node.className=className;return node;
@@ -77,14 +78,7 @@ function renderTasks() {
   $('#host-artifact').setAttribute('aria-label',`当前成果，${snapshot.title}，${$('#host-selection').textContent}`);
   $('#host-selection').hidden=selected.length>0;
   renderDropzone();
-  const list=$('#task-list');list.replaceChildren();
-  for(const person of snapshot.employees) {
-    const tasks=snapshot.tasks.filter(t=>t.employeeId===person.id);
-    const row=element('article','','host-task-row');row.append(element('strong',person.name));
-    for(const task of tasks){const line=element('div','','host-task-line');line.append(element('span',task.title),element('small',`${task.demo?'演示 · ':''}${task.status}`));row.append(line);}
-    if(!tasks.length)row.append(element('small','暂无审核任务','host-idle-status'));
-    list.append(row);
-  }
+  dutyBoard?.update(snapshot);
   $('#event-connection').textContent=snapshot.receiptError?'任务状态暂未刷新，请在左侧重试':'';
   $('#event-connection').closest('footer').hidden=!snapshot.receiptError;
 }
@@ -109,23 +103,26 @@ function receive(event) {
   const data=event.data;
   if(!Array.isArray(data.people)||!Array.isArray(data.tasks)||typeof data.context!=='string')return;
   hostSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
-    tasks:[...data.tasks,...data.people.flatMap((person,index)=>
-      data.tasks.some(t=>t.employeeId===person.id)||(index>0&&index>=data.people.length-2)?[]:
-      [{id:`sample:${person.id}`,employeeId:person.id,title:samples[index%samples.length],status:index%3===0?'待复核':'审核中',demo:true}])]};
+    tasks:data.tasks};
   applyHostSnapshot();
 }
 export const officeClient={
   start(){
     if(started)return;started=true;
     if(window.parent===window)hostSnapshot={...snapshot,title:'办公室',enabled:false};
-    const toolbar=$('.office-modebar');
+    const toolbar=$('#office-tools');
+    dutyBoard=mountDutyBoard($('#task-list'));
     workstations=createWorkstationSettings({toolbar,getPeople:()=>snapshot.employees,onChange:config=>{workstationConfig=config;applyHostSnapshot();}});
     for(const [action,label] of [['prepare','复核设置'],['close','返回沙盘']]){
       const button=element('button',label,'btn btn-ghost btn-sm');button.type='button';button.dataset.hostAction=action;
+      button.setAttribute('role','menuitem');button.tabIndex=-1;
+      button.insertAdjacentHTML('afterbegin',icon(action==='prepare'?'list-checks':'arrow-line-left'));
       button.onclick=()=>post('action',{action});toolbar.append(button);
     }
     const artifact=element('article','','host-artifact');artifact.id='host-artifact';
-    artifact.append(element('small','当前成果'),Object.assign(element('strong',snapshot.title),{id:'host-artifact-title'}),Object.assign(element('span','尚未选择复核人员'),{id:'host-selection'}));
+    const artifactLabel=element('small','当前成果','duty-artifact-label');
+    artifactLabel.insertAdjacentHTML('afterbegin',icon('file-text'));
+    artifact.append(artifactLabel,Object.assign(element('strong',snapshot.title),{id:'host-artifact-title'}),Object.assign(element('span','尚未选择复核人员'),{id:'host-selection'}));
     const dropzone=element('div','','host-dropzone');dropzone.id='host-dropzone';dropzone.tabIndex=-1;
     const tags=element('ul','','host-selected-people');tags.id='host-selected-people';tags.hidden=true;tags.setAttribute('aria-label','已选复核人员');tags.setAttribute('aria-live','polite');
     const hint=element('span','把小人拖到这里');hint.id='host-drop-hint';dropzone.append(tags,hint);artifact.append(dropzone);
@@ -147,7 +144,7 @@ export const officeClient={
     for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version','#review-status','#people-panel>.office-description'])$(selector)?.setAttribute('hidden','');
     $('label[for="task-person-filter"]')?.setAttribute('hidden','');
     document.documentElement.dataset.hostReady='true';
-    window.addEventListener('message',receive);post('ready');
+    renderTasks();window.addEventListener('message',receive);post('ready');
   },
   subscribe(fn){listeners.add(fn);fn('snapshot',snapshot);return()=>listeners.delete(fn);},
   getState:()=>snapshot,

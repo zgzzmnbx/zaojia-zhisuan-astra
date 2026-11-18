@@ -28,7 +28,7 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
     q.setFromUnitVectors(down,shoulder.clone().addScaledVector(axis,d).sub(elbow).normalize());
     arm.el.quaternion.copy(arm.sh.quaternion).invert().multiply(q);
   }
-  function pose(seconds,lifted=false,walking=null,reaction=0){
+  function pose(seconds,lifted=false,walking=null,reaction=0,propHand=null){
     const blend=lifted?0:THREE.MathUtils.clamp(walking?.rise??(walking?1:0),0,1),stand=blend*blend*(3-2*blend),swing=walking?.moving?Math.sin(walking.phase*5.4):0;
     const state=lifted?{mode:'lifted',breath:0,headPitch:.08,headYaw:0}:stand>0?{mode:walking.moving?'walking':walking.stage==='rising'?'rising':walking.stage==='sitting'?'sitting':walking.activity||'idle',breath:0,headPitch:0,headYaw:.025*Math.sin(seconds*.5)}:seatedMotion(seconds,index*1.71);
     if(walking&&!stand&&!lifted){state.mode='resting';state.leftTap=state.rightTap=0;}
@@ -54,6 +54,7 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
       p.lerp(new THREE.Vector3(side*(.22+stretch*.10),.64+stretch*.53,.045-side*swing*.13),stand);
       if(think&&side>0)p.lerp(new THREE.Vector3(.12,1.15,.24),think*.8);
       if(respond&&side>0)p.lerp(new THREE.Vector3(.26,seatHeight+.48,.20),respond);
+      if(propHand?.side===side)p.set(propHand.x,propHand.y,propHand.z);
       reach(arm,side,p.divideScalar(scale));
     }
     const blink=Math.pow(Math.max(0,Math.cos(seconds*1.6+index)),36);

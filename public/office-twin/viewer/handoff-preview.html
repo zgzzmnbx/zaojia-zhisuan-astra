@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>资料交接预演 · Astra 办公室</title>
+    <link rel="stylesheet" href="../astra_ui/astra-ui.css" />
+    <link rel="icon" href="data:," />
+    <script type="importmap">
+      {"imports": {"three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/"}}
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #eff4fa;
+        color: #172841;
+        font:
+          14px/1.5 'PingFang SC',
+          'Microsoft YaHei',
+          sans-serif;
+      }
+      main,
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        display: block;
+        touch-action: none;
+      }
+      header,
+      aside {
+        position: fixed;
+        border: 1px solid #dbe3ed;
+        border-radius: 15px;
+        background: #fffffff2;
+        box-shadow: 0 7px 26px #19395214;
+      }
+      header {
+        top: 16px;
+        left: 16px;
+        padding: 8px 13px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      header strong {
+        font-size: 15px;
+      }
+      .tag {
+        padding: 2px 8px;
+        border-radius: 20px;
+        color: #27649b;
+        background: #e7f2fd;
+        font-size: 12px;
+      }
+      aside {
+        top: 16px;
+        right: 16px;
+        width: 238px;
+        max-width: 40vw;
+        padding: 16px;
+      }
+      h1 {
+        font-size: 19px;
+        margin: 4px 0 11px;
+      }
+      .role {
+        display: flex;
+        justify-content: space-between;
+        border-block-start: 1px solid #e9eff5;
+        padding: 9px 0;
+        gap: 6px;
+      }
+      .role span {
+        color: #52677e;
+      }
+      .role strong {
+        font-size: 13px;
+      }
+      .role strong[data-current='true'] {
+        color: #13765c;
+      }
+      p {
+        font-size: 13px;
+        color: #52677e;
+        margin: 10px 0 14px;
+      }
+      button {
+        font: inherit;
+      }
+      #run {
+        width: 100%;
+        border: 0;
+        border-radius: 9px;
+        background: #1869ae;
+        color: white;
+        padding: 8px;
+        cursor: pointer;
+      }
+      #run:disabled {
+        opacity: 0.55;
+      }
+      .label {
+        pointer-events: none;
+        position: absolute;
+        transform: translate(-50%, -110%);
+        background: white;
+        color: #244260;
+        border: 1px solid #b9ccdf;
+        border-radius: 20px;
+        padding: 2px 9px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      #hint {
+        display: none;
+      }
+      @media (max-width: 640px) {
+        aside {
+          top: auto;
+          bottom: 12px;
+          max-width: none;
+          right: 12px;
+          width: 215px;
+        }
+        header {
+          top: 12px;
+          left: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="stage" aria-label="可旋转的大会议室三维预演"></main>
+    <header><strong>九楼 · 大会议室</strong><span class="tag">交互预演</span></header>
+    <aside>
+      <span class="tag">示例材料</span>
+      <h1>资料交接</h1>
+      <div class="role"><span>编制人</span><strong id="from">持有资料夹</strong></div>
+      <div class="role"><span>复核人</span><strong id="to">等待交接</strong></div>
+      <p role="status" id="step">正在加载九楼会议室…</p>
+      <button id="run" type="button" disabled>演示交接</button>
+    </aside>
+    <script type="module" src="./handoff-preview.js?v=0.47.0"></script>
+  </body>
+</html>
