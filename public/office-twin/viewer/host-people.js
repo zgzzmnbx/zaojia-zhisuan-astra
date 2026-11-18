@@ -12,7 +12,7 @@ import {normalizeAppearance} from './people/appearances.js';
 import {personTaskSummary,taskState,taskPriority,exampleLabel,emptyDutyLabel,dutyCountLabel} from './duty-board.js';
 import {icon} from '../astra_ui/icons.js';
 
-export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{}}) {
+export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,showPanel,getPicture,layout,onSelect=()=>{},onRebuild=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
   const markers=document.querySelector('#people-markers'),list=document.querySelector('#people-list');
   const card=document.querySelector('#person-card'),candidates=document.querySelector('#review-candidates');
@@ -91,6 +91,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const item={person,anchor,group,marker,button,rig,yaw,seatId,seat,local,index,held:false,idle:false,wander:null,walk:null,returnWalk:null,labelLevel:'hidden',dragPosition:null,screenPoint:null,reactionAt:-Infinity};
       actors.set(person.id,item);if(placements.has(person.id)&&!placements.get(person.id).meeting)startReturn(item);
     });
+    onRebuild();
   }
   function tasksFor(id){return business.personTasks?.get(id)||[];}
   function taskLine(task){

@@ -69,8 +69,7 @@ export async function mountOfficeViewer() {
   let business=officeClient.getState(),bridgeContext={id:null,revision:0};
   const unsubscribeBusiness=officeClient.subscribe((kind,value)=>{
     if(kind==='snapshot'){
-      business=value;officeBoard?.sync(value);const before=people?.getState().rigRevision;people?.syncBusiness(value);
-      if(people&&people.getState().rigRevision!==before)nightEnvironment?.refresh(scene);
+      business=value;officeBoard?.sync(value);people?.syncBusiness(value);
     }
     if(kind==='event'){people?.react(value);notify('employee-event',{seq:value.seq,employeeId:value.event.employeeId,eventType:value.event.type,contextId:bridgeContext.id});}
   });
@@ -738,7 +737,7 @@ export async function mountOfficeViewer() {
     loadingStage('gpu','模型已解析，正在准备显卡资源与首帧');
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     renderReady = true;
-    people = createPeopleDemo({scene,model,layout,viewport,listen,requestFrame,getPicture:()=>picture.getState(),onSelect:employeeId=>notify('person-selected',{employeeId,contextId:bridgeContext.id}),onCandidates:employeeIds=>notify('review-candidates-changed',{employeeIds,contextId:bridgeContext.id,demo:true}),showPanel:()=>{selectTab('people');window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));},focusPerson:group=>{
+    people = createPeopleDemo({onRebuild:()=>nightEnvironment?.refresh(scene),scene,model,layout,viewport,listen,requestFrame,getPicture:()=>picture.getState(),onSelect:employeeId=>notify('person-selected',{employeeId,contextId:bridgeContext.id}),onCandidates:employeeIds=>notify('review-candidates-changed',{employeeIds,contextId:bridgeContext.id,demo:true}),showPanel:()=>{selectTab('people');window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));},focusPerson:group=>{
       setView('exploded',{focus:group});orbit.focus(true);people.update(camera,view);
     }});
     people.syncBusiness(business);

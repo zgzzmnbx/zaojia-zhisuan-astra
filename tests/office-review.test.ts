@@ -427,7 +427,9 @@ test('all my-office appearances retain the batched rig, proportions and existing
  const signatures=new Set();let proportions=null;
  for(const appearance of appearances){
   const rig=createSeatedPerson(null,0,{appearance:appearance.id});
-  if(proportions)assert.deepEqual(rig.proportions,proportions);else proportions=rig.proportions;
+  if(!appearance.wing){
+   if(proportions)assert.deepEqual(rig.proportions,proportions);else proportions=rig.proportions;
+  }
   assert.ok(rig.drawCalls<=20,appearance.id);
   const meshes=[];rig.group.traverse(o=>{if(o.isMesh)meshes.push(o);});
   signatures.add(meshes.map(m=>`${m.geometry.attributes.position.count}:${m.geometry.attributes.color.array.slice(0,6)}`).join('|'));
@@ -439,6 +441,26 @@ test('all my-office appearances retain the batched rig, proportions and existing
   rig.pose(0);assert.equal(rig.handPositions().every(p=>p.every(Number.isFinite)),true);rig.dispose();
  }
  assert.equal(signatures.size,appearances.length);
+});
+
+test('winged office dolls have compact seated wings and separate night inlays',()=>{
+ const expected=['wing-dawn','wing-herald','wing-tide','wing-frost','wing-ember'];
+ assert.deepEqual(appearances.filter(a=>a.wing).map(a=>a.id),expected);
+ const office=createSeatedPerson(null,0);
+ for(const id of expected){
+  const doll=createSeatedPerson(null,0,{appearance:id});
+  assert.ok(doll.proportions.headRadius>office.proportions.headRadius);
+  assert.ok(doll.proportions.thigh<office.proportions.thigh);
+  const wing=doll.group.getObjectByName('wing-right');
+  assert.ok(wing);const folded=wing.rotation.y;
+  doll.pose(2,false,{rise:1,moving:true,phase:1});
+  assert.ok(folded>wing.rotation.y+.4);
+  const lights=[];
+  doll.group.traverse(mesh=>{if(mesh.material?.userData.officeWingGlow)lights.push(mesh.material);});
+  assert.equal(lights.length,1);assert.equal(lights[0].emissive.getHex(),0);
+  doll.dispose();
+ }
+ office.dispose();
 });
 
 test('reference character keeps short proportions at every seat height and pickup releases exactly',()=>{

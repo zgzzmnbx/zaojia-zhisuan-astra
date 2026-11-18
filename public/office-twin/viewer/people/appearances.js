@@ -20,6 +20,11 @@ export const appearances=[
   {id:'long-black-lilac',label:'黑长直 · 浅紫连衣裙',shirt:'#DCD6EE',hair:'#4B505B',style:'long-straight',outfit:'dress',shoes:'#E7E5E0',pants:'#A8B8C9'},
   {id:'long-wavy',label:'大波浪 · 奶油连衣裙',shirt:'#EFE4D1',hair:'#7B655A',style:'long-wavy',outfit:'dress',shoes:'#E7E5E0',pants:'#A8B8C9'},
   {id:'long-wavy-rose',label:'大波浪 · 豆沙连衣裙',shirt:'#E4C3CE',hair:'#62565F',style:'long-wavy',outfit:'dress',shoes:'#E7E5E0',pants:'#A8B8C9'},
+  {id:'wing-dawn',label:'晨祷花羽',wing:'dawn',look:'toy',hair:'#E9BD83',shirt:'#FFF1D6',iris:'#B18A53',style:'long-wavy',outfit:'dress',pants:'#594852',shoes:'#E9DBC3'},
+  {id:'wing-herald',label:'蝶信司仪',wing:'herald',look:'toy',hair:'#EFCC9E',shirt:'#F6E9DC',iris:'#9F7649',style:'bob',outfit:'dress',pants:'#594852',shoes:'#EFDBBC'},
+  {id:'wing-tide',label:'碧潮蝶翼',wing:'tide',look:'toy',hair:'#9CBEB0',shirt:'#397D82',iris:'#479B94',style:'bob',outfit:'dress',pants:'#594852',shoes:'#578E91'},
+  {id:'wing-frost',label:'霜月银翎',wing:'frost',look:'toy',hair:'#B4B1CF',shirt:'#C5C2E0',iris:'#8D86AF',style:'bob',outfit:'dress',pants:'#594852',shoes:'#B4B7C8'},
+  {id:'wing-ember',label:'绯烬龙翼',wing:'ember',look:'toy',hair:'#803D48',shirt:'#864252',iris:'#BB7951',style:'plain',outfit:'suit',pants:'#594852',shoes:'#5B404A'},
 ];
 export const normalizeAppearance=id=>appearances.some(a=>a.id===id)?id:'inherit';
 export const appearanceConfig=id=>appearances.find(a=>a.id===id&&a.id!=='inherit');

@@ -7,6 +7,7 @@ export function batchRig(root, P){
   root.updateMatrixWorld(true);
   const animated=new Set([root,P.spine,P.torso,P.head,...[P.legL,P.legR].flatMap(l=>[l.hip,l.knee]),...[P.armL,P.armR].flatMap(a=>[a.sh,a.el,a.hand]),...P.blink.flatMap(e=>[e.ball,e.lash]).filter(Boolean)]);
   if(P.skirt)animated.add(P.skirt);
+  P.wings?.forEach(wing=>animated.add(wing));
   const bones=[],mapping=new Map(),group=new THREE.Group(),buckets=new Map();
   function boneFor(node){
     if(mapping.has(node))return mapping.get(node);
@@ -23,10 +24,20 @@ export function batchRig(root, P){
     const index=bones.indexOf(mapping.get(joint)),g=mesh.geometry.clone().applyMatrix4(mesh.matrixWorld),m=mesh.material,n=g.attributes.position.count;
     if(!g.index)g.setIndex(Array.from({length:n},(_,i)=>i));
     if(!g.attributes.uv)g.setAttribute('uv',new THREE.Float32BufferAttribute(new Float32Array(n*2),2));
+    // Mirrored wing geometry is baked into a common, positive-scale skin.
+    if(P.wings&&mesh.matrixWorld.determinant()<0){
+      const index=g.index.array;
+      for(let i=0;i<index.length;i+=3)[index[i+1],index[i+2]]=[index[i+2],index[i+1]];
+    }
+    const pigment=g.getAttribute('color');
     const colours=new Float32Array(n*3),indices=new Uint16Array(n*4),weights=new Float32Array(n*4);
-    for(let i=0;i<n;i++){m.color.toArray(colours,i*3);indices[i*4]=index;weights[i*4]=1;}
+    for(let i=0;i<n;i++){
+      m.color.toArray(colours,i*3);
+      if(pigment){colours[i*3]*=pigment.getX(i);colours[i*3+1]*=pigment.getY(i);colours[i*3+2]*=pigment.getZ(i);}
+      indices[i*4]=index;weights[i*4]=1;
+    }
     g.setAttribute('color',new THREE.BufferAttribute(colours,3));g.setAttribute('skinIndex',new THREE.BufferAttribute(indices,4));g.setAttribute('skinWeight',new THREE.BufferAttribute(weights,4));
-    const key=[m.type,m.roughness,m.metalness,m.sheen,m.clearcoat,m.side,m.transparent,m.opacity,m.depthWrite].join('|');
+    const key=[m.type,m.roughness,m.metalness,m.sheen,m.clearcoat,m.side,m.transparent,m.opacity,m.depthWrite,m.flatShading,m.userData.officeWingGlow].join('|');
     if(!buckets.has(key)){const material=m.clone();material.color.set(0xffffff);material.vertexColors=true;buckets.set(key,{material,geometries:[]});}
     buckets.get(key).geometries.push(g);
   });
@@ -42,7 +53,16 @@ export function batchRig(root, P){
   const geometries=new Set(),materials=new Set();root.traverse(o=>{if(o.isMesh){geometries.add(o.geometry);materials.add(o.material);}});
   geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());
   const rig={D:P.D,head:mapping.get(P.head),spine:mapping.get(P.spine),torso:mapping.get(P.torso),blink:P.blink.map(e=>({ball:mapping.get(e.ball),lash:mapping.get(e.lash)}))};
+  if(P.wings)rig.wings=P.wings.map(wing=>{
+    const bone=mapping.get(wing);bone.name=wing.name;return bone;
+  });
   if(P.skirt){rig.skirt=mapping.get(P.skirt);rig.skirt.name='dress-skirt';}
   for(const name of ['armL','armR','legL','legR'])rig[name]=Object.fromEntries(Object.entries(P[name]).map(([key,value])=>[key,mapping.get(value)]));
-  return {group,root:mapping.get(root),rig,meshes,skeleton,dispose(){meshes.forEach(m=>{m.geometry.dispose();m.material.dispose();});skeleton.dispose();}};
+  const ownedMaterials=meshes.map(mesh=>mesh.material);
+  return {group,root:mapping.get(root),rig,meshes,skeleton,dispose(){
+    meshes.forEach(m=>m.geometry.dispose());
+    // The night renderer may have lent each mesh a different material.
+    ownedMaterials.forEach(material=>material.dispose());
+    skeleton.dispose();
+  }};
 }

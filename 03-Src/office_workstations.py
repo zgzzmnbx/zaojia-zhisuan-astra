@@ -15,7 +15,8 @@ router = APIRouter(prefix='/api/astra/office-workstations')
 _lock = RLock()
 APPEARANCES = {'inherit', 'blue-shirt', 'headphones', 'glasses', 'cap', 'beanie',
                'ponytail', 'bun', 'bob', 'curly', 'spiky', 'suit', 'red-shirt',
-               'long-black', 'long-black-lilac', 'long-wavy', 'long-wavy-rose'}
+               'long-black', 'long-black-lilac', 'long-wavy', 'long-wavy-rose',
+               'wing-dawn', 'wing-herald', 'wing-tide', 'wing-frost', 'wing-ember'}
 
 
 def filename():

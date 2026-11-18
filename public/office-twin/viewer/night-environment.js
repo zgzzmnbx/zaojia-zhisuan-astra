@@ -19,12 +19,18 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);
   const key=previousKey();
+  const wingTint=material.userData.officeWingGlow;
+  const dollSurface=material.userData.officeDollSurface;
   const solidBrand = role === 'brand_sign' && !material.map;
   const streetReceiver=!!shared.streetLightMap && (role==='ground'||role==='street_surface');
   const cars=role==='ground'&&shared.streetTraffic;
   const contact=sample=>cars?`max(${sample},movingCarContact(officeWorldPosition.xz))`:sample;
   material.onBeforeCompile=(shader,renderer)=>{
     previous.call(material,shader,renderer);
+    if(wingTint){
+      shader.uniforms.officeWingTint={value:new THREE.Color(wingTint)};
+      shader.fragmentShader='uniform vec3 officeWingTint;\n'+shader.fragmentShader;
+    }
     if(material.userData.porcelainDayMap){
       shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
         if(officeNight<.5){
@@ -266,6 +272,8 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
         // even when the rest of the scene uses a different bloom tint.
         haloEmission=vec3(0.);`:''}
         ${role==='street_lens'?'haloEmission*=.20;':''}
+        ${wingTint?'emission=officeWingTint*1.55;haloEmission=emission*.34;':''}
+        ${dollSurface?'shell+=sourceColor*(.054+.075*max(n.y,0.)+.05*key)*officeAmbient;':''}
         #ifdef OFFICE_NIGHT_MRT
         officeGlow=vec4(haloEmission*officeNightExposure,1.);
         #endif
@@ -273,7 +281,7 @@ export function attachNightShader(material,role,shared,monitor=null,roomLighting
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,solidBrand,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV,!!material.userData.porcelainNightColor,!!material.userData.porcelainDayMap].join('|');
+  material.customProgramCacheKey=()=>[key,'office-studio-v0330',role,!!wingTint,!!dollSurface,solidBrand,vertexMonitor,referenceContext,referenceStructure,streetReceiver,cars?.count??0,!!material.userData.porcelain,!!shared.porcelainPalette,!!material.userData.porcelainNightUV,!!material.userData.porcelainNightColor,!!material.userData.porcelainDayMap].join('|');
   material.needsUpdate=true;
 }
 

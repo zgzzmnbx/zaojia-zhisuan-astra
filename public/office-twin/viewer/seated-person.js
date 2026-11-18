@@ -13,6 +13,9 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
   const original=makeChibi({look:'pixar',name:name||String(index),shirt:personPalette.shirts[index%3],pants:personPalette.pants,shoes:personPalette.shoes,hair:'#697781',skin:personPalette.skin,style:gender==='female'?['bob','ponytail','bun'][index%3]:['plain','spiky','curly'][index%3],outfit:index%3===0?'shirt':'hoodie',...appearanceConfig(appearance),...normalizePersonColors(colors)});
   const batched=batchRig(original.root,original.P),{group,root,rig:P,meshes,skeleton}=batched,D=P.D,scale=.86;
   group.scale.setScalar(scale);
+  if(P.wings)for(const mesh of meshes){
+    if(!mesh.material.userData.officeWingGlow)mesh.material.userData.officeDollSurface=true;
+  }
   const seatOffset=seatHeight/scale+D.legR-D.hipY;
   const down=new THREE.Vector3(0,-1,0),target=new THREE.Vector3(),shoulder=new THREE.Vector3(),axis=new THREE.Vector3(),bend=new THREE.Vector3(),elbow=new THREE.Vector3(),q=new THREE.Quaternion();
   const localPosition=object=>{group.updateMatrixWorld(true);return group.worldToLocal(object.getWorldPosition(new THREE.Vector3())).multiplyScalar(scale).toArray();};
@@ -37,6 +40,14 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
     root.position.z=lifted?0:.10*(1-stand);
     P.spine.rotation.set((lifted?0:.16*(1-stand))+Math.sin(blend*Math.PI)*.12,0,0);
     P.torso.scale.y=1+(state.breath||0)*.3;
+    if(P.wings){
+      // Tuck behind the chair for desk work and narrow the outline while carried.
+      const fold=lifted?.72:1-stand;
+      P.wings.forEach((wing,i)=>{
+        wing.rotation.y=(i===0?-1:1)*(.10+.63*fold);
+        wing.scale.set(1-.27*fold,1-.16*fold,1);
+      });
+    }
     if(P.skirt)P.skirt.rotation.set(lifted?0:-1.12*(1-stand),0,swing*.035*stand);
     P.head.rotation.set(state.headPitch+respond*.12+(think?.08*think:0),state.headYaw+respond*.25,0);
     if(activity==='look')P.head.rotation.set(-.08,.28*Math.sin(t*.6),0);
@@ -52,6 +63,12 @@ export function createSeatedPerson(assets,index,{seatHeight=.46,keyboard=[0,.77,
       if(lifted){arm.sh.rotation.set(.06,0,side*.12);arm.el.rotation.set(-.12,0,0);continue;}
       const p=new THREE.Vector3(keyboard[0]+side*.095,keyboard[1]+(side<0?state.leftTap||0:state.rightTap||0),keyboard[2]);
       p.lerp(new THREE.Vector3(side*(.22+stretch*.10),.64+stretch*.53,.045-side*swing*.13),stand);
+      if(P.wings&&stand>.98&&activity==='look'&&!walking?.moving){
+        if(appearance==='wing-dawn')p.set(side*.095,.68,.20);
+        if(appearance==='wing-herald'&&side<0)p.set(-.30,.84,.12);
+        if(appearance==='wing-tide'&&side<0)p.set(-.28,.70,.21);
+        if(appearance==='wing-frost'&&side>0)p.set(.10,.73,.16);
+      }
       if(think&&side>0)p.lerp(new THREE.Vector3(.12,1.15,.24),think*.8);
       if(respond&&side>0)p.lerp(new THREE.Vector3(.26,seatHeight+.48,.20),respond);
       if(propHand?.side===side)p.set(propHand.x,propHand.y,propHand.z);

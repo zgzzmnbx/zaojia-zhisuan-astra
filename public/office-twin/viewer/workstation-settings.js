@@ -30,7 +30,13 @@ export function createWorkstationSettings({toolbar,getPeople,onChange}){
     if(key==='name'||key==='seatId')input.required=true;
     if(key==='name')input.autofocus=true;
     if(key==='gender')for(const value of ['unspecified','male','female']){const option=el('option',genderLabel(value));option.value=value;input.append(option);}
-    if(key==='appearance')for(const {id,label} of appearances){const option=el('option',label);option.value=id;input.append(option);}
+    if(key==='appearance'){
+      const hidden=document.createElement('optgroup');hidden.label='隐藏款';
+      for(const {id,label,wing} of appearances){
+        const option=el('option',label);option.value=id;(wing?hidden:input).append(option);
+      }
+      input.append(hidden);
+    }
     input.addEventListener('input',()=>{
       const person=draft.find(p=>p.id===current);if(!person)return;
       person[key]=input.value;status.textContent='有未保存的修改';input.setCustomValidity('');

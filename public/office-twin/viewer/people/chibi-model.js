@@ -6,6 +6,8 @@
 // Rig: root -> legs (hip -> knee -> shoe) and spine (pivots at the hips, leans) -> torso, arms (shoulder -> elbow -> hand), head.
 // Arms reach targets with two-bone IK, so typing, sipping and thinking land on the desk, mouth and chin for either look.
 import * as THREE from 'three';
+import {addDollFace, dressDoll, paintDollCheeks} from './doll-details.js';
+import {addDollWings} from './doll-wings.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 const DIMS = {
@@ -136,11 +138,14 @@ export function makeChibi(cfg = {}, scale = 1) {
 
   /* spine: everything above the hips leans together */
   const spine = new THREE.Group(); spine.position.y = D.hipY; root.add(spine); P.spine = spine;
-  const prof = D.torso.map(([x, y]) => new THREE.Vector2(x, y));
+  const silhouette = cfg.wing ? [[0,-.06],[.192,-.06],[.205,.015],[.171,.12],[.179,.22],[.207,.31],[.196,.375],[.109,.44],[0,.46]] : D.torso;
+  const prof = silhouette.map(([x, y]) => new THREE.Vector2(x, y));
   const torso = add(spine, new THREE.LatheGeometry(prof, 36), top, 0, 0, 0, 1, 1, 0.82); P.torso = torso;
   const H = D.torso[D.torso.length - 1][1], tr = D.torso[2][0];
   const outfit = cfg.outfit || (seed % 2 ? 'hoodie' : 'shirt');
-  if (outfit === 'hoodie') {
+  if (cfg.wing && outfit==='dress') {
+    add(torso,new THREE.TorusGeometry(.105,.018,7,28),topDark,0,.415,0).rotation.x=Math.PI/2;
+  } else if (outfit === 'hoodie') {
     add(torso, new THREE.TorusGeometry(tr * 0.93, 0.026, 8, 36), topDark, 0, -0.03, 0).rotation.x = Math.PI / 2;
     add(torso, new RoundedBoxGeometry(tr * 1.0, H * 0.2, 0.05, 2, 0.02), topDark, 0, H * 0.24, tr * 0.86);
     add(torso, new THREE.TorusGeometry(H * 0.21, 0.055, 10, 28), topDark, 0, H * 0.93, -0.02).rotation.x = Math.PI / 2 - 0.25;
@@ -195,6 +200,7 @@ export function makeChibi(cfg = {}, scale = 1) {
     sp.setZ(i, sp.getZ(i) * D.sz * (sp.getZ(i) > 0 ? shapeZ(t) : 1));
   }
   skull.computeVertexNormals();
+  if (cfg.wing) paintDollCheeks(skull,D);
   add(head, skull, skin);
   const surf = (x, y) => { const t = y / (R * D.sy); return R * D.sz * shapeZ(t) * Math.sqrt(Math.max(0, 1 - (x / (R * D.sx * shapeX(t))) ** 2 - t ** 2)); };
   const earM = new THREE.MeshPhysicalMaterial({ color: darken(skinC, 0.94), roughness: 0.55, sheen: 0.4, sheenColor: new THREE.Color('#FF9E80') });
@@ -203,6 +209,9 @@ export function makeChibi(cfg = {}, scale = 1) {
     add(head, sph(R * (toy ? 0.17 : 0.2), 16, 12), skin, ex, -R * 0.1, -R * 0.02, 0.45, 1, 0.75);
     if (!toy) add(head, sph(R * 0.12, 12, 10), earM, ex + sx * R * 0.05, -R * 0.1, -R * 0.0, 0.3, 0.8, 0.55);
   }
+  if (cfg.wing) {
+    addDollFace(head,R,surf,cfg);
+  } else {
   const lashM = plainMat('#2A1D18', { roughness: 0.5 });
   const browM = plainMat(darken(hairC, 0.8), { roughness: 0.6 });
   const iris = plainMat(cfg.iris || IRIS[seed % IRIS.length], { roughness: 0.25 });
@@ -251,6 +260,8 @@ export function makeChibi(cfg = {}, scale = 1) {
     const b = new THREE.Mesh(sph(R * 0.14, 14, 10), blushM); b.scale.set(1.5, 0.75, 0.3); b.position.set(bx, by, surf(bx, by) + R * 0.02); b.rotation.y = sx * 0.55; head.add(b);
   }
 
+  }
+
   /* hair: one sculpted shell plus tails, buns, spikes and a stray strand */
   const style = HAIR[cfg.style] ? cfg.style : 'plain', Hs = HAIR[style];
   const line = toy ? [Hs.line[0] + 0.2, Hs.line[1] + 0.06, Hs.line[2]] : Hs.line;
@@ -282,7 +293,7 @@ export function makeChibi(cfg = {}, scale = 1) {
     add(head, new THREE.TorusGeometry(R * 0.3, R * 0.09, 10, 26), hair, 0, R * 1.04, -R * 0.35, 1, 1, 0.9).rotation.x = Math.PI / 2 - 0.35;
     add(head, new THREE.TorusGeometry(R * 0.25, R * 0.05, 8, 22), topDark, 0, R * 0.84, -R * 0.26).rotation.x = Math.PI / 2 - 0.35;
   }
-  if (seed % 3 === 0 && !style.startsWith('long-') && style !== 'spiky' && style !== 'bun' && cfg.acc !== 'beanie' && cfg.acc !== 'cap') add(head, sweep([[R * 0.05, R * 1.0, R * 0.05], [R * 0.12, R * 1.28, R * 0.2], [0, R * 1.42, R * 0.4], [-R * 0.15, R * 1.35, R * 0.5]], (t) => R * 0.06 * (1 - t) + 0.002, 16, 8), hair);
+  if (!cfg.wing && seed % 3 === 0 && !style.startsWith('long-') && style !== 'spiky' && style !== 'bun' && cfg.acc !== 'beanie' && cfg.acc !== 'cap') add(head, sweep([[R * 0.05, R * 1.0, R * 0.05], [R * 0.12, R * 1.28, R * 0.2], [0, R * 1.42, R * 0.4], [-R * 0.15, R * 1.35, R * 0.5]], (t) => R * 0.06 * (1 - t) + 0.002, 16, 8), hair);
 
   /* accessories */
   const acc = cfg.acc;
@@ -316,5 +327,6 @@ export function makeChibi(cfg = {}, scale = 1) {
     add(capG, sph(R * 0.08, 10, 8), cm, 0, HR * 1.08 * D.sy * 0.86, 0);
   }
 
+  if (cfg.wing) { dressDoll(P,cfg); addDollWings(P,cfg.wing); }
   return {root, P};
 }
