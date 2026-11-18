@@ -11,7 +11,7 @@ const namespace='astra-office-selection:v1';
 const listeners=new Set();
 let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正在读取当前成果',enabled:false};
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
-let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
+let started=false,draggingPerson=null;
 let dragStart=null,chatRect=null,completedNativeDrag=null;
 let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null,dutyBoard=null,sandboxSettings=null;
 // A directly opened office uses saved workstation profiles. The parent owns review selection.
@@ -110,7 +110,6 @@ function renderTasks() {
 }
 function receive(event) {
   if(window.parent===window||event.source!==parent||event.origin==='null'||event.origin!==location.origin||event.data?.namespace!==namespace)return;
-  if(event.data.type==='motion'){motionSettings=event.data;window.dispatchEvent(new CustomEvent('office-host-motion',{detail:motionSettings}));return;}
   if(event.data.type==='layout'){
     const left=Number(event.data.left);if(!Number.isFinite(left)||left<0)return;
     document.documentElement.style.setProperty('--host-chat-width',`${left}px`);
@@ -176,7 +175,6 @@ export const officeClient={
   },
   subscribe(fn){listeners.add(fn);fn('snapshot',snapshot);return()=>listeners.delete(fn);},
   getState:()=>snapshot,
-  getMotion:()=>motionSettings,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
   dispose(){window.removeEventListener('message',receive);window.removeEventListener('storage',onPlanStorage);window.removeEventListener('focus',refreshPlan);selectedDrag?.dispose();artifactObserver?.disconnect();sandboxSettings?.dispose();workstations?.dispose();listeners.clear();},
 };

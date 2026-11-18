@@ -6,7 +6,7 @@
 
 工作台的 **多人复核** 使用白瓷办公室。点 **展开9楼** 拉出办公层，**沙盘设置 → 画面** 可调整背景虚化或暂停车辆。左上角可切换楼层、缩放、环游和工作栏，「更多操作」可俯视和重置镜头。右侧「人员」直接显示每人的当前待办，优先列出跨成果的真实待复核记录，其次是标有「示例」的旧任务和勘察测量案例；「演示」可单独查看样例，「交接预演」可在会议室试用双人递卷。[办公室模型与操作](tools/office-twin/porcelain/README.md)
 
-> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.49.0**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
+> 当前开发分支为 [`codex/conveyor-integrated-white`](https://github.com/zgzzmnbx/zaojia-zhisuan-astra/tree/codex/conveyor-integrated-white)，前端版本 **v0.49.1**。`main` 保留独立的历史代码基线；请按下方命令选择开发分支。版本号表示源码状态，模型、Office、协同平台及 Watch 的实际验收范围见对应记录。
 
 隐藏款在 **多人复核 → 沙盘设置 → 人员与工位 → 人物扮相 → 隐藏款** 中选择，点 **保存设置** 应用到当前同事。五款在座位上收翼，沙盘切到夜景时各自的翼纹点亮。[五款日夜图与三维模型](05-视觉识别/02-3D场景/办公室隐藏款-v1.0.0/README.md)
 

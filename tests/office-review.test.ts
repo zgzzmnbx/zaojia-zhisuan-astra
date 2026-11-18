@@ -831,6 +831,24 @@ import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches
 import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority} from '../public/office-twin/viewer/duty-board.js';
 import {pendingOfficeTask} from '../03-Src/studio/office-review.ts';
 import {applyTaskPlan,emptyMember,memberEntries,olderProjectReviewKeys} from '../public/office-twin/viewer/task-plan.js';
+import {officeCameraKey,readOfficeCamera} from '../public/office-twin/viewer/office-camera.js';
+
+test('office orbit inherits once, then reads and writes only its own preferences',()=>{
+  const saved=new Map<string,string>();
+  const storage={getItem:(key:string)=>saved.get(key)||null,setItem:(key:string,value:string)=>saved.set(key,value)};
+  const legacy='astra.appearance.v1',parameters='astra.sandbox.saved-parameters.v1';
+  saved.set(legacy,JSON.stringify({sandboxAutoOrbit:false,sandboxOrbitDelay:15}));
+  saved.set(parameters,JSON.stringify({version:1,baked:{orbitMotion:{speed:150,acceleration:175}},visual:{},display:{autoOrbit:true,orbitDelay:30}}));
+  const legacyValues=[saved.get(legacy),saved.get(parameters)];
+  const settings=readOfficeCamera(storage);
+  assert.deepEqual(settings,{enabled:false,delay:15,motion:{speed:150,acceleration:175}});
+  assert.deepEqual([saved.get(legacy),saved.get(parameters)],legacyValues);
+  saved.set(legacy,'{}');
+  assert.deepEqual(readOfficeCamera(storage),settings);
+  saved.set(officeCameraKey,JSON.stringify({...settings,delay:5}));
+  assert.equal(readOfficeCamera(storage).delay,5);
+  assert.equal(saved.get(legacy),'{}');
+});
 
 test('sandbox changes apply by person and review round without editing shared receipts',()=>{
   const receipt={id:'a',dispatchId:'one',employeeId:'owner',status:'待复核',title:'原任务',reviewRound:1,demo:false};

@@ -3,7 +3,7 @@
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
   "modelVersion": "0.6.1",
-  "hostAdapterVersion": "0.49.0",
+  "hostAdapterVersion": "0.49.1",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -67,9 +67,9 @@
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
     "viewer/floor-picking.js": "47e9cf16ebcceb8615cb180392722b204e2ba4096ce3e3bd031a92e69f4589f8",
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
-    "viewer/host-client.js": "294c7e6bd53848376985600d24d5c77e8854e6a5d6cde0f6b5ec982ab2dd512a",
+    "viewer/host-client.js": "08226c9eeff47615e4e798211dd85db85d91b03bbc812a60a60b44a472d3dfcb",
     "viewer/host-people.js": "e1bec39a2f9e1ccc491272ebf422471d63b27c00dd283c278ef49f7fc259108a",
-    "viewer/index.html": "0d859ce8a2a52bad7422c38a26f60a95f1ffc785f19bdfdb2dcfa55259b83035",
+    "viewer/index.html": "314d300a403a9184b387e0084b3d9cf42a4f2b09b79a168ff339f1836add2f84",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
     "viewer/model-transport.js": "dae491840d1c74200a5dade704e72eab3700e0849b92452064578f9779c97fec",
     "viewer/navigation-motion.js": "25851e9be64d8fb8eda6191c528c78d3f52e2428388168a4d52a6f6b8f5c5889",
@@ -109,7 +109,7 @@
     "viewer/verify-model.mjs": "7ad800902f7e8f6b931f8bb1f3022a3d245530d4af45e7a9f479f6ffed1a6a8c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
     "viewer/miniature-focus.js": "f1fb2ee52cb9d4a1a3d8a3f7ee2131e44cf4b906c1e818df28cb3468323ce7b7",
-    "viewer/viewer.js": "ea7652dbc7a651b41e432214daf0b6e4877134f709c0b3b842ad5bbc4e582089",
+    "viewer/viewer.js": "d87ea53a1dcd90eaae9a74b0778d1e2caf2b8e28b8abc2aa51c6fc6377f02e67",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
     "viewer/office-camera-limits.js": "61af2411ddc2e77c6ffbc864442fb4dbee8d069d46402b62d4f85a126c85bd47",
@@ -183,7 +183,8 @@
     "viewer/people/doll-wings.js": "eef92627915b491a76ee2aa09df13c37b60e861bc3e867101cdc0afd8654e516",
     "viewer/task-plan.js": "04407b5d19b41b1b554a44b0d8a51463ac5d7f17671e0bba2a8c77cc24c47c3f",
     "viewer/sandbox-settings.js": "9444ebcb53276c163a5b67660a090dbc712bf4ca1d48321ec9fa76f0cd47b1c3",
-    "viewer/sandbox-settings.css": "545c8878f30ee377465a4e3466b3a7071337c5440df294e0dff359f846975806"
+    "viewer/sandbox-settings.css": "6061f2775fcbbbe78fd9087e253510fb8b8493c222e5371846674e8cec9f8e60",
+    "viewer/office-camera.js": "580e012688f27ce6fbb0177ae250c0f6e2f700935855f238b5a123f1cc395cab"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {

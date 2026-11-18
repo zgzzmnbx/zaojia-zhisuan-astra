@@ -4,9 +4,6 @@ import {officeDirectory,officeTasks,pendingOfficeTask,type PendingOfficeReview,t
 import type {ReviewOptions,ReviewTask} from './review-flow';
 import {latestReviewTasksByPlatform} from '../professional/components/agent-workspace/reviewProgress';
 import './office-review.css';
-import {appearanceKey,normalizeAppearance,readAppearance} from './appearance';
-import {readBakedSettings} from './project-sandbox/baked-settings';
-import {sandboxParametersKey} from './project-sandbox/parameter-storage';
 import {LoadingLogo} from './brand/LoadingLogo';
 import {mountOfficeDropTarget} from './office-review-drop';
 
@@ -66,17 +63,6 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
       });
     return()=>controller.abort();
   },[context]);
-  useEffect(()=>{
-    if(!ready)return;
-    const sync=()=>{
-      let appearance=readAppearance();
-      try{const raw=localStorage.getItem(appearanceKey);if(raw)appearance=normalizeAppearance(JSON.parse(raw));}catch{}
-      const baked=readBakedSettings();
-      send('motion',{enabled:appearance.sandboxAutoOrbit,delay:appearance.sandboxOrbitDelay,motion:'orbitMotion' in baked?baked.orbitMotion:{speed:100,acceleration:100}});
-    };
-    sync();const update=(event:StorageEvent)=>{if(!event.key||[appearanceKey,sandboxParametersKey].includes(event.key))sync();};
-    window.addEventListener('storage',update);return()=>window.removeEventListener('storage',update);
-  },[ready,sceneReady,active]);
   function send(type:string,data:Record<string,unknown>={}) {frame.current?.contentWindow?.postMessage({namespace,type,...data},location.origin);}
   useEffect(()=>{
     const chat=document.querySelector<HTMLElement>('#astra-conversation');
@@ -135,6 +121,6 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   return <div className="office-review-host" aria-busy={!rendered&&!error}>
     {!rendered&&<div className="office-review-loading" role="status"><div><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><span>{error?'办公室尚未载入':'正在加载办公室沙盘…'}</span></div></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.49.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.49.1" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }

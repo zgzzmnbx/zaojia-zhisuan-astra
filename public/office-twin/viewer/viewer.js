@@ -1,5 +1,6 @@
 import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
+import {bindOfficeCamera} from './office-camera.js?v=0.49.1';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
 import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
@@ -528,7 +529,7 @@ export async function mountOfficeViewer() {
     orbitButton.querySelector('svg').style.pointerEvents='none';
   };
   orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!entrance.state().running&&!motionPreference.matches&&!transition});
-  orbit.configure(officeClient.getMotion());
+  bindOfficeCamera({listen,configure:value=>orbit.configure(value)});
   function editWorkstations(event){
     const state=event.detail;people?.closeMenu();orbit.sync();resize();
     if(state.open&&(state.action==='all'||state.action==='focus'||view!=='exploded')){
@@ -538,7 +539,6 @@ export async function mountOfficeViewer() {
     requestFrame();
   }
   listen(window,'office-workstations-change',editWorkstations);
-  listen(window,'office-host-motion',event=>orbit.configure(event.detail));
   listen(window,'office-person-menu',event=>orbit.focus(event.detail.open));
   listen(orbitButton,'click',()=>{entrance.cancel();orbit.toggle();});
   releaseOrbitHold=bindOfficeOrbitHold({listen,document,window,orbit});
