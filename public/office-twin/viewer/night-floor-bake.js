@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 export function isNightFloorReceiver(object,material){
- if(material?.name!=='V065_NATIVE_FLOOR_LIGHTING_UNLIT'||!material.map)return false;
+ if(!material?.map||(!material.userData?.porcelainNightUV&&material.name!=='V065_NATIVE_FLOOR_LIGHTING_UNLIT'))return false;
  for(let n=object;n;n=n.parent)if(n.name==='H1_F09_Office')return true;
  return false;
 }

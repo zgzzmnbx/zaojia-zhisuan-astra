@@ -2,8 +2,8 @@
   "upstream": "办公室数字孪生",
   "upstreamVersion": "0.7.0",
   "upstreamCommit": "d1704ec",
-  "modelVersion": "0.6.7",
-  "hostAdapterVersion": "0.45.0",
+  "modelVersion": "0.6.0",
+  "hostAdapterVersion": "0.46.0",
   "contract": "astra-office-selection:v1",
   "privateAssets": [
     "models",
@@ -65,27 +65,29 @@
     "viewer/baked-material.js": "84faacb5245563cd4da182a66fece0d0f026442ddd5408caa63430479052af95",
     "viewer/context-view-policy.js": "325fd9916b23143130a8207bb2f9889ebbbe865b20f641c197d4c47a57f1b003",
     "viewer/event-workbench.js": "68372a365e197fee54cc87be77ee1ce6810ef1170cb3e37fa549f10f134b422c",
-    "viewer/floor-picking.js": "f387b84ba8aeb6522ff3644af5f60a7c79df842b1900270df0332488fb2cee47",
+    "viewer/floor-picking.js": "47e9cf16ebcceb8615cb180392722b204e2ba4096ce3e3bd031a92e69f4589f8",
     "viewer/hero-framing.js": "fe1965d407da693322c7ccadfcb9c2a326372cde95d62ccfb1b2216a853dbaf0",
-    "viewer/host-client.js": "5851ee2e2f2f18fb55e251d1f9c4d4491afd3562a73e433a8306dfc0ea774831",
+    "viewer/host-client.js": "27e6ea01106a398a0cc11f8aac94e92b350fe4d2497f92388d75a723ecccb266",
     "viewer/host-people.js": "5cc4383714ae343dd974db3066c680817155f1b75c8de054252edb91271d09bb",
-    "viewer/index.html": "006950cb1cc3c1c0663feb26b0b9046c7855ce1db8df3c40e2b098123387ccea",
+    "viewer/index.html": "d1dbdba14ff9a555ae570cddd497074d35c7968f67fd6621767277e2917dde5b",
     "viewer/material-provenance.js": "cd91c0f20248e8827e5a133a2e233fd07c8a20db66ac0bcc1bb1135a5f1816a2",
-    "viewer/model-transport.js": "3c39b5810bc22ea257faf267fedc5fe3595b9bee8a05352f2e544670196e3ecf",
+    "viewer/model-transport.js": "dae491840d1c74200a5dade704e72eab3700e0849b92452064578f9779c97fec",
     "viewer/navigation-motion.js": "80a81b7c7c45474f3bceec3bc2beaa361664ba071129dea970d79a21ac8410ba",
     "viewer/night-bloom-mask.mjs": "38303d260384710ae1a03f5d5515808596beaf53e83321c8368932b2e79e8ba6",
-    "viewer/night-bloom.mjs": "792856bbcc24f783acd6c8d0b13c1eb31acf795278234f37acd370f795b4e897",
-    "viewer/night-environment.js": "0d443466e46fb3952de9f2ce0c5364853006d8947bac48975ad01041227e35f6",
-    "viewer/night-lighting-policy.js": "f9dc88f2dfd4d236bb7dfa9a2342967311fcaf07b8b274facf436e5c87e429c8",
+    "viewer/night-bloom.mjs": "38475fe5da72e9af4c06f660dd2c8bab584ae455d93cb577840369745deb2d39",
+    "viewer/night-environment.js": "a4e52375624921b666acb7121314c3262483d6f6c9e7d31b1ad4b5b29b8b6add",
+    "viewer/night-lighting-policy.js": "44d07b207014ffa0e57edf5fb62c2f81bfbfb7a28d5dcde33711bf50cf78cc3d",
     "viewer/office-client.js": "17e98b68d33f9c74f7fceb71ccaafd4d100ae060bacbb20fa3e7337181300344",
     "viewer/office-events.css": "7a59e8b596661c7af3547128938af3ea73cd061adc67f594b208b3e67328c0be",
     "viewer/office-settings-store.js": "0914f430a027598e645865ee0a07515a47e1a6e423c0840ac12f13f7fc514139",
     "viewer/people-demo.js": "6f19823d99db3b808058a55271193b0d6b117369ce544e2bcf06d8342077d77c",
-    "viewer/picture-settings.js": "02b490ec248d06c52d5a616fa3321b1669ef58f6b1b74dce0671181dd41575e8",
-    "viewer/README.md": "36bb727daadaf810b7373b48be58d7473f277ceb9dd0c34a04f2cd325866619c",
-    "viewer/release.js": "0b2f16d6d847f6198053cf6511a7bf395a4fdacaf90073a7c62af4e11fd4efa4",
+    "viewer/picture-settings.js": "80ea2f3612f4b425184f01e3cde2f97ac1251011da89e64be0e59024b7585edf",
+    "viewer/porcelain-palette.js": "3fbef686772b98dd206e88ea36a84bb36a2e4025062b1508e43d9c808c48a362",
+    "viewer/porcelain-style.js": "47859425979cbc6cfcee4392c7223b9de0c4903d564593be625a87aff9c34977",
+    "viewer/README.md": "4d8bf3c34af4f3bc523f86af4dadc92b41982dd35837ede80f78c90d08296b02",
+    "viewer/release.js": "5c593734cd3497a8ecc03d1e86105b412e9e268f5de08ed0a704b712a90fbcb0",
     "viewer/sandbox-layout.js": "511ea27a76ac858331b6d8d6922c672e9c4e29cdfabc537778db03c60ed13b4d",
-    "viewer/scene-state.js": "b600f94134352e4f7d581250c540c2c265efae531b3f0d8d164e9458233b867f",
+    "viewer/scene-state.js": "813cfe3407a224ac6abe640ccb57a6bf08b4b70256e49b3e7b629236be9e1729",
     "viewer/settings.css": "a06b6b684311050d0d2301bb75d32c36dd05b6a6677f8aa913bbc658314ff317",
     "viewer/settings.html": "3f2c0d6d8242ea1111b3bdd3e7fcdfc39cf87988ea6c52dc52827e82081b5125",
     "viewer/settings.js": "d3b59465951053eac2d68caae772b4cce5f79cea88143e2c6dd8c03635286686",
@@ -104,19 +106,20 @@
     "viewer/vendor/three.core.js": "9edde002b066a9a05676a6127f67735b62baf399bdea529f2f7e31657da769e6",
     "viewer/vendor/three.module.js": "9052042d676cb0fdc1ddfefe193053f34b7ac0513a616fdac4535d49987812ea",
     "viewer/vendor/upstream-package.json": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de",
-    "viewer/verify-model.mjs": "a38435922388240d2b583599ab5583579c47797bafa329c565e8ecd87ab8e50c",
+    "viewer/verify-model.mjs": "7ad800902f7e8f6b931f8bb1f3022a3d245530d4af45e7a9f479f6ffed1a6a8c",
     "viewer/viewer.css": "46ea3b6c4133a7252df16a92d6a9aba9ff5e95025cd381ad08b0a632dd276200",
-    "viewer/viewer.js": "772510499d682581e151ac734e0214c748be1c6eb4af5270f36fe44eae0fe36f",
+    "viewer/miniature-focus.js": "e3a238c6175eb1d1ddf6d90b097a555993ab3d0046719657e0e2da5950e15ee3",
+    "viewer/viewer.js": "a0548a29dd06039491a2f53974f89cacc8604181eed396eba473ae2baf01aebf",
     "viewer/astra-idle-orbit.js": "c20ba600d97e7b0ecec96a1331b807ae65b9ad9934c49e6c51caba9b1ae75f8e",
     "viewer/astra-orbit-motion.js": "2253b9e6d11f5dfba8d0f716e7356b4278cd959d2785b72056851e9e01bbd858",
-    "viewer/office-camera-limits.js": "5958624df13f125db4b5d1ae81336db34221c1748b6a5112e5cf79bbf1fc4a7b",
+    "viewer/office-camera-limits.js": "61af2411ddc2e77c6ffbc864442fb4dbee8d069d46402b62d4f85a126c85bd47",
     "viewer/office-orbit.js": "8d08414481807494909b67c9ddae399cf682e11e30859fdde5f98a72a11ccc65",
     "viewer/person-motion.js": "4b73139cbdf18ed1639623c6d07818087c69b35943d69f0265731904cc8a7a9d",
     "viewer/person-pointer.js": "a2761138d34d980a2d199c2e4e933679595c4aa501ea263b67f087a97af25744",
     "viewer/seated-person.js": "c9b924b13498da9702667f403b982c661aabc437c2aea81a255ab323311daf2b",
     "viewer/person-assignment.js": "f64470a07a884201abc2e69451fa69981ee3f54a424fa56a81cf0dde6cefc020",
-    "viewer/lighting-settings.js": "cc0668c5f21468c8f8499dbdb95eb80534397be32e42dc5e59c715dbad01a29e",
-    "viewer/office-entrance.js": "0f89c55accf6a8739ccb8b225cc647626984868dcc031b15530ec00b4bf54f01",
+    "viewer/lighting-settings.js": "ca345c45385ccf02af172f01f801f8c06aeae3b1827d6c31fcba7323990fe7a4",
+    "viewer/office-entrance.js": "855da59c2752a6c75580db124894b21c81dad4b3d47ef2be0aec6f5701a87173",
     "viewer/prepare-renderer.js": "353c098bb56f9cd0b5610c75b5e93936b2eccba6395cd15a7debd80953e8c1ce",
     "viewer/floor-label.js": "206b9e971298c0307a3d2fe9ad211db349efaf567741b86f505d48688c97c545",
     "viewer/vendor/interestfor/COPYRIGHT": "21426e2911f3b74fc0a5dd504e4eccdd01a3246ff99c92f5d3280886b596d6f4",
@@ -124,16 +127,16 @@
     "viewer/vendor/interestfor/LICENSE": "54c3dd9f65fffc74f4cc1295e6cd23c4378d588d9073b6363e199547043f0747",
     "viewer/vendor/interestfor/README.md": "b5f53ad0b353ec355bee3d3883be3277da55ebe4811f24969ee64d24ab0f78b2",
     "viewer/interior-light-plan.js": "023dd9b45c479f079be5f6fef8af4748838a2658b6f1df2baf4a8e60c7dc9e43",
-    "viewer/static-batches.js": "2a4ee7e93e11bfc03b235eb737f194af669a14cba18e3ed54eaf442a1cc57be4",
+    "viewer/static-batches.js": "4a740421643367a496e8a8e204825156a7220d416b95b5f9db73b9c59f17df98",
     "viewer/frame-meter.js": "b71f1bafc6a9c5ac3267236181db62c4e16f83c57f497aff85938a15d53a2482",
     "viewer/office-board.js": "3ebbfaf24823d1d3172a2ffe7aad499d981944e9cb71ba03cc6ae7f51c04bdc3",
-    "viewer/astra-lighting-profile.js": "bc772f425796bcc8c106dbcf8fb05cd81fca98b0373cf15b8ac23aa21ce29f5e",
+    "viewer/astra-lighting-profile.js": "96822d582e7db38fc0fd8734650107af05e769a64fb0e1d0d18db31c2e1805c5",
     "viewer/cutaway-bake-repair.js": "1c4f17984edd5df399f1cf91b34ce6d81f316627167683afe8215ecc9588e067",
     "models/cabinet-cutaway-v0314.png": "452211e37572799ac6e3b1f745b1c3ebb501ea116a8a6cae5b818fa92bee29f5",
     "models/column-cutaway-v0314.png": "babefadc41456ae01bc6c1da936bb0600c13f1b4c830456337248ef1694a8d74",
     "models/wall-cutaway-v0314.png": "17c34caec900817098e47472923e6ab5839f1b166db72842b42bdad822c64b8b",
-    "viewer/night-compositor.js": "e77b391b1317f08e4ee1ba8885e554e0974914d293ffd79a26ece9022b30dd77",
-    "viewer/night-floor-bake.js": "a72c5ff96af7fbcb6283c35afcfe1c8cbcfae776adbd24eaa7d5f94f5e954b0c",
+    "viewer/night-compositor.js": "cf9cdcde8b5305364c8a41c254fb94637d5ee93e48578beedeac7f0528e53412",
+    "viewer/night-floor-bake.js": "a1285ab3f00add2747a12f2f1e63bb07d8469a2c417fbd3580b2a57ac60df18f",
     "models/floor-night-v0320.png": "09613a582ff7977b28adf961abd88c2da00b6ec380054f60b55a4b8df6a8e2dc",
     "viewer/monitor-lighting.js": "b08fc655df9c32e6da301bae841435a518e58faeee749047b91478771d9acbe7",
     "viewer/astra-context-bake.js": "6e79d00d4ee9e341ae4bd16b17d5b4a7fb3f2bf3944798ccdcdf231ce722898a",
@@ -167,7 +170,11 @@
     "viewer/people/appearances.js": "5c3cae4f81eb7caa98a20c058baef995cd0299da8de349ab7fc8e760d490fe22",
     "viewer/people/appearance-preview.js": "a9aed1bf99cac282fc07f1324aef7c5a27483c21fc1ee3b2b8b51709ea34d132",
     "viewer/person-navigation.js": "722fd8b1a71734c6c7dbc4f12147b47c94e893b7d6a4c271205d8e0602298f33",
-    "viewer/people/person-colors.js": "3a0bbd2ebf089fe16a31877875fbafa9826bbc76ae85e58d60911c07e31311aa"
+    "viewer/people/person-colors.js": "3a0bbd2ebf089fe16a31877875fbafa9826bbc76ae85e58d60911c07e31311aa",
+    "viewer/street-traffic.js": "daf0c768917d2f686418a84530f94c1d3afe910a9d361c46e1eb339b0078b193",
+    "models/H1-porcelain-v0.6.0.glb": "ecc1ed83139330a53c10a714f7e19f00240deac888cbc7e1d12477d373f755ee",
+    "previews/porcelain-v0.6.0.webp": "c6bc4ce6d6ca88f2d00caebfc1f674b86e653997f65e24907c76647936cc914c",
+    "viewer/porcelain.css": "9180127bd27328b2ed08299490d7714b66f8c8c093a29e5855243db29ef5066a"
   },
   "motionSource": "03-Src/studio/project-sandbox/{orbit-motion,idle-orbit}.ts; generated with tools/sync-office-motion.mjs",
   "cutawayRepair": {
@@ -279,5 +286,85 @@
       "windowStyle": "astra-blue",
       "realtimeShadows": false
     }
+  },
+  "presentation": {
+    "version": "0.6.0",
+    "baseline": "6fc00dd",
+    "sourceModel": "models/H1-baked-v0.6.7.glb",
+    "model": "models/H1-porcelain-v0.6.0.glb",
+    "modelBytes": 13587356,
+    "modelSHA256": "ecc1ed83139330a53c10a714f7e19f00240deac888cbc7e1d12477d373f755ee",
+    "planSHA256": "ca0621dd6d14a578ef01b49757341a955b0e06dc83139d655b6763f8e1e61e3a",
+    "frozenDetailedFloor": {
+      "nodes": 2405,
+      "triangles": 155460,
+      "storeysChecked": 20
+    },
+    "generator": "tools/office-twin/porcelain/build.py",
+    "distribution": "Astra workspace and local release bundle",
+    "themePalette": {
+      "attribute": "_BLUEINK",
+      "default": "cobalt",
+      "presets": [
+        "cobalt",
+        "glacier",
+        "sky",
+        "lagoon",
+        "ultramarine",
+        "steel",
+        "navy"
+      ]
+    },
+    "expandedFloor": {
+      "view": "exploded",
+      "legacyView": "office",
+      "referenceCommit": "8005f19",
+      "durationMs": 1050,
+      "backgroundBlurDefault": 45,
+      "backgroundBlurRange": [
+        0,
+        100
+      ],
+      "fullResolutionOcclusion": true
+    },
+    "nightVegetation": {
+      "role": "vegetation",
+      "emissive": false,
+      "trees": 23,
+      "batches": 1
+    },
+    "streetscape": {
+      "parkedCars": 3,
+      "lampPosts": 9,
+      "surfaceRole": "street_surface",
+      "diffuserRole": "street_lens",
+      "illuminationMapSize": 256,
+      "movingCars": 2
+    },
+    "brandSigns": {
+      "locations": [
+        "entrance",
+        "roof"
+      ],
+      "art": "PipeChina red contours and native wordmark",
+      "day": [
+        "#c00000",
+        "#101010"
+      ],
+      "night": "#85d0ff"
+    },
+    "daylight": {
+      "finish": "cel-shaded white architectural miniature",
+      "shadow": "one projected silhouette and local contact per receiver",
+      "surfaces": [
+        "exterior",
+        "roof",
+        "campus",
+        "office"
+      ],
+      "nightVertexAttribute": "_NIGHTCOLOR",
+      "fallbackPreview": "previews/porcelain-v0.6.0.webp"
+    },
+    "poster": "previews/porcelain-v0.6.0.webp"
   }
 }

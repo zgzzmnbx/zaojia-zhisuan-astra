@@ -10,12 +10,11 @@ export function createOfficeEntrance(enabled=false) {
     step(now,moving,reduced=false){
       if(!running())return null;
       const delta=last===null?0:Math.max(0,Math.min(100,now-last));last=now;
-      if(reduced){phase='complete';return 'office';}
+      if(reduced){phase='complete';return 'exploded';}
       if(moving)return null;
       elapsed+=delta;
       if(phase==='building'&&elapsed>=850){phase='exploded';elapsed=0;return 'exploded';}
-      if(phase==='exploded'&&elapsed>=650){phase='office';elapsed=0;return 'office';}
-      if(phase==='office'){phase='complete';elapsed=0;}
+      if(phase==='exploded'){phase='complete';elapsed=0;}
       return null;
     },
   };

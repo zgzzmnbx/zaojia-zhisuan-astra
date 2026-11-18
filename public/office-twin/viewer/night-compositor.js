@@ -22,12 +22,13 @@ export function createNightCompositor(renderer,scene,camera,bloom){
  }});}
  function release(){target?.dispose();target=null;}
  return {
-  render(){
+  render(drawScene = () => renderer.render(scene,camera)){
    prepare();renderer.getDrawingBufferSize(size);
    if(!target||target.width!==size.x||target.height!==size.y){release();target=new WebGLRenderTarget(size.x,size.y,{count:2,type:HalfFloatType,samples:Math.min(4,renderer.capabilities.maxSamples)});}
    const previous=renderer.getRenderTarget(),auto=renderer.autoClear;
    try{
-    renderer.setRenderTarget(target);renderer.autoClear=true;renderer.render(scene,camera);
+    renderer.setRenderTarget(target);renderer.autoClear=true;
+    drawScene(true);
     renderer.setRenderTarget(previous);renderer.autoClear=true;quad.material.uniforms.map.value=target.textures[0];quad.render(renderer);
     bloom.render(target.textures[1]);frames++;
    }finally{renderer.setRenderTarget(previous);renderer.autoClear=auto;}

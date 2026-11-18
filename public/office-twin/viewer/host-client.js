@@ -9,7 +9,9 @@ let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null,motionSettings={enabled:false,delay:0,motion:{speed:100,acceleration:100}};
 let dragStart=null,chatRect=null,completedNativeDrag=null;
-let artifactObserver=null,workstations=null,workstationConfig=null,hostSnapshot=null,selectedDrag=null;
+let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null;
+// A directly opened office uses saved workstation profiles. The parent owns review selection.
+let hostSnapshot=null;
 function applyHostSnapshot(){
   if(!hostSnapshot)return;
   sourceSnapshot={...hostSnapshot,employees:workstationRoster(hostSnapshot.employees,workstationConfig)};
@@ -87,7 +89,7 @@ function renderTasks() {
   $('#event-connection').closest('footer').hidden=!snapshot.receiptError;
 }
 function receive(event) {
-  if(event.source!==parent||event.origin==='null'||event.origin!==location.origin||event.data?.namespace!==namespace)return;
+  if(window.parent===window||event.source!==parent||event.origin==='null'||event.origin!==location.origin||event.data?.namespace!==namespace)return;
   if(event.data.type==='motion'){motionSettings=event.data;window.dispatchEvent(new CustomEvent('office-host-motion',{detail:motionSettings}));return;}
   if(event.data.type==='layout'){
     const left=Number(event.data.left);if(!Number.isFinite(left)||left<0)return;
@@ -115,6 +117,7 @@ function receive(event) {
 export const officeClient={
   start(){
     if(started)return;started=true;
+    if(window.parent===window)hostSnapshot={...snapshot,title:'办公室',enabled:false};
     const toolbar=$('.office-modebar');
     workstations=createWorkstationSettings({toolbar,getPeople:()=>snapshot.employees,onChange:config=>{workstationConfig=config;applyHostSnapshot();}});
     for(const [action,label] of [['prepare','复核设置'],['close','返回沙盘']]){
@@ -141,7 +144,7 @@ export const officeClient={
       workspace.style.setProperty('--host-artifact-height',`${artifact.getBoundingClientRect().height}px`);
     });
     artifactObserver.observe(artifact);
-    for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#render-compare','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version','#review-status','#people-panel>.office-description'])$(selector)?.setAttribute('hidden','');
+    for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version','#review-status','#people-panel>.office-description'])$(selector)?.setAttribute('hidden','');
     $('label[for="task-person-filter"]')?.setAttribute('hidden','');
     document.documentElement.dataset.hostReady='true';
     window.addEventListener('message',receive);post('ready');

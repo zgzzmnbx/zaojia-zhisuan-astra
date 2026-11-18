@@ -1,5 +1,4 @@
-/** Single runtime release identity. Final asset bytes/hashes belong in display_assets.json. */
+// The viewer protocol and office model have independent release identities.
 export const VERSION='0.7.0';
-export const ASSET_VERSION='0.6.7';
-export const BAKED_MODEL=`H1-baked-v${ASSET_VERSION}.glb`;
-export const REALTIME_MODEL=`H1-realtime-v${ASSET_VERSION}.glb`;
+export const PRESENTATION_VERSION='porcelain-0.6.0';
+export const OFFICE_MODEL='H1-porcelain-v0.6.0.glb';

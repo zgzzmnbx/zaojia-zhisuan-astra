@@ -102,7 +102,19 @@ test('night surfaces stay dark without lamps and room lights remain inside plan 
  assert.ok(plan.length<=MAX_OFFICE_LIGHTS);assert.deepEqual(createInteriorLightPlan(null),[]);
 });
 import {createOfficeEntrance} from '../public/office-twin/viewer/office-entrance.js';
+import {VIEW_MODES,resolveView,floorPresentation} from '../public/office-twin/viewer/scene-state.js';
 import assert from 'node:assert/strict';
+test('old office links expand the ninth floor with the full building in view',()=>{
+ assert.deepEqual(VIEW_MODES,['building','exploded']);
+ assert.equal(resolveView('office'),'exploded');assert.equal(resolveView('unknown'),null);
+ for(let floor=1;floor<=20;floor++){
+  const expanded=floorPresentation(floor,'exploded');
+  assert.deepEqual(floorPresentation(floor,'office'),expanded);
+  assert.equal(expanded.visible,true);assert.equal(expanded.showFacade,floor!==9);
+  assert.equal(expanded.offsetZ,floor===9?32:0);
+  assert.deepEqual(floorPresentation(floor,'building'),{visible:true,offsetY:0,offsetZ:0,showFacade:true});
+ }
+});
 test('office entrance waits for presented frames and transition completion; hiding never skips ahead',()=>{
  const entry=createOfficeEntrance(true);let now=0;
  assert.equal(entry.step(now,false),null);entry.start();entry.step(now,false);
@@ -110,10 +122,9 @@ test('office entrance waits for presented frames and transition completion; hidi
  assert.deepEqual(advance(17),['exploded']);
  assert.deepEqual(advance(40,true),[]);
  entry.suspend();now+=60000;assert.equal(entry.step(now,false),null);
- assert.deepEqual(advance(13),['office']);assert.equal(entry.state().running,true);
- advance(30,true);assert.equal(entry.state().phase,'office');advance(1);assert.equal(entry.state().running,false);
+ assert.deepEqual(advance(100),[]);assert.equal(entry.state().phase,'complete');
  entry.start();entry.cancel();assert.deepEqual(advance(100),[]);
- entry.start();assert.equal(entry.step(now,false,true),'office');assert.equal(entry.state().running,false);
+ entry.start();assert.equal(entry.step(now,false,true),'exploded');assert.equal(entry.state().running,false);
 });
 import {createOfficeBridge,officeRoster,officeTasks} from '../03-Src/studio/office-review.ts';
 import type {ReviewPlatform,ReviewRequest,ReviewTask} from '../03-Src/studio/review-flow.ts';
@@ -194,6 +205,60 @@ test('manual limits exclude the back and underside and leave a complete automati
  }
 });
 import {classifyNightRole,nightSeatId,NIGHT_LIGHTING} from '../public/office-twin/viewer/night-lighting-policy.js';
+import {createStreetLightMap} from '../public/office-twin/viewer/porcelain-style.js';
+import {createStreetTraffic} from '../public/office-twin/viewer/street-traffic.js';
+test('forecourt traffic follows the turnarounds, slows at the crossing and keeps its two cars apart',()=>{
+ const root=new THREE.Group();
+ for(const x of [-13.4,14.8]){
+  const car=new THREE.Group();car.position.set(x,-.41,35.6);car.userData.trafficVehicle={halfSize:[2.32,.92]};root.add(car);
+ }
+ const traffic=createStreetTraffic(root),speeds={crossing:[],cruising:[]};
+ const clearDistance=root.children.reduce((d,car)=>d+Math.hypot(...car.userData.trafficVehicle.halfSize),0);
+ for(let tick=0;tick<2100;tick++){
+  const before=root.children[0].position.clone();traffic.step(.05);
+  const [car,other]=root.children, p=car.position,speed=p.distanceTo(before)/.05;
+  assert.ok(p.distanceTo(other.position)>clearDistance && speed<2.42);
+  assert.ok(p.y===-.41 && p.z>35 && p.z<48);
+  if(p.z<36&&Math.abs(p.x)<3)speeds.crossing.push(speed);
+  if(p.z<36&&p.x>13&&p.x<19)speeds.cruising.push(speed);
+ }
+ assert.ok(speeds.crossing.length>0 && Math.max(...speeds.crossing)<1);
+ assert.ok(speeds.cruising.length>0 && Math.min(...speeds.cruising)>2.3);
+});
+test('both porcelain signs retain the night brand role throughout batching',()=>{
+ for(const name of ['PipeChina_Entrance','PipeChina_Roof']){
+  assert.equal(classifyNightRole({name,userData:{night_role:'brand_sign'}}),'brand_sign');
+ }
+});
+test('campus trees keep the vegetation role alongside emissive architectural accents',()=>{
+ const parent={name:'ContextBuildings'};
+ assert.equal(classifyNightRole({parent,userData:{night_role:'vegetation'}}),'vegetation');
+ assert.equal(classifyNightRole({parent,userData:{night_role:'accent'}}),'accent');
+ assert.equal(classifyNightRole({parent,userData:{}}),'context');
+});
+test('parked vehicles and lamp posts keep a separate night role from diffuser strips and building windows',()=>{
+ const parent={name:'ContextBuildings'};
+ for(const role of ['street_surface','street_lens']){
+  const source={parent,userData:{night_role:role}};
+  assert.equal(classifyNightRole(source),role);
+  assert.equal(classifyNightRole({userData:{staticBatch:true,night_role:classifyNightRole(source)}}),role);
+ }
+});
+test('street lighting fades at the kerb and car contact shadows occupy an independent channel',()=>{
+ assert.equal(createStreetLightMap({}),null);
+ const map=createStreetLightMap({streetLightPools:[[0,0,2,4]],parkedCarFootprints:[[7,3,2,1]]});
+ const {width,height,data}=map.texture.image,t=map.transform;
+ function sample(x,z){
+  const col=Math.floor((x-t.x)*t.z*width),row=Math.floor((z-t.y)*t.w*height);
+  const i=(row*width+col)*2;
+  return Array.from(data.slice(i,i+2));
+ }
+ assert.deepEqual(sample(0,0),[255,0]);
+ assert.ok(sample(1.8,0)[0]<15);
+ assert.deepEqual(sample(7,3),[0,255]);
+ assert.deepEqual(sample(4,0),[0,0]);
+ map.texture.dispose();
+});
 test('floor lighting survives primitive leaves and batches without sharing facade or furniture gains',()=>{
  for(const name of ['H1_F09_floor_slab','Core_floor','R_E_floor','CORE_SERVICE_NE_floor']){
   const source={name:'mesh_primitive',parent:{name,parent:{name:'H1_F09_Office'}}};
@@ -429,6 +494,9 @@ test('physical night bake is limited to the authored office floor atlas',()=>{
  assert.equal(isNightFloorReceiver({name:'H1_F09_floor_slab',parent:{name:'Floor_09'}},material),false);
  assert.equal(isNightFloorReceiver({parent:room},{name:'BAKED_furniture_AgX',map:{}}),false);
  assert.equal(isNightFloorReceiver({parent:room},{name:material.name}),false);
+ const porcelain={map:{},userData:{porcelainNightUV:true}};
+ assert.equal(isNightFloorReceiver({name:'StaticBatch',parent:room},porcelain),true);
+ assert.equal(isNightFloorReceiver({name:'Roof',parent:{name:'Floor_20'}},porcelain),false);
 });
 test('cutaway repair isolates shared materials and preserves geometry, UVs and normal shadows',()=>{
  const root=new THREE.Group(),source=new THREE.MeshBasicMaterial();source.name='BAKED_furniture_AgX';
@@ -650,10 +718,10 @@ test('outside clicks step back one level and ignore invisible or clipped geometr
  const root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());root.add(mesh);
  const hit={object:mesh,point:new THREE.Vector3(0,-1,0)};
  assert.equal(outsideView('office',[hit]),null);assert.equal(outsideView('exploded',[hit]),null);
- assert.equal(outsideView('office',[]),'exploded');assert.equal(outsideView('exploded',[]),'building');assert.equal(outsideView('building',[]),null);
- root.visible=false;assert.equal(outsideView('office',[hit]),'exploded');root.visible=true;
+ assert.equal(outsideView('office',[]),'building');assert.equal(outsideView('exploded',[]),'building');assert.equal(outsideView('building',[]),null);
+ root.visible=false;assert.equal(outsideView('office',[hit]),'building');root.visible=true;
  mesh.material.opacity=0;assert.equal(outsideView('exploded',[hit]),'building');mesh.material.opacity=1;
- mesh.material.clippingPlanes=[new THREE.Plane(new THREE.Vector3(0,1,0),0)];assert.equal(outsideView('office',[hit]),'exploded');
+ mesh.material.clippingPlanes=[new THREE.Plane(new THREE.Vector3(0,1,0),0)];assert.equal(outsideView('office',[hit]),'building');
  mesh.geometry.dispose();mesh.material.dispose();
 });
 test('office idle deadline restarts on input, honors saved delay and resumes focused views',()=>{

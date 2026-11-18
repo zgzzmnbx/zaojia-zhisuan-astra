@@ -6,6 +6,7 @@ import {ASTRA_STUDIO} from './astra-lighting-profile.js';
 export const LIGHTING_DEFAULTS_VERSION='astra-office-user-approved-0.44.4-2026-11-17';
 export const LIGHTING_KEY='astra.office.saved-lighting.v1';
 export const LIGHTING_SPECS=Object.freeze([
+  {key:'miniatureBlur',label:'九楼背景虚化',min:0,max:100,step:1,value:45},
   {key:'windowBlueStrength',label:'玻璃蓝色浓度',min:0,max:100,step:1,value:23,group:'day'},
   {key:'buildingBrightness',label:'主楼外墙亮度',min:40,max:180,step:1,value:110,group:'day'},
   {key:'floorBrightness',label:'楼层地板亮度',min:40,max:180,step:1,value:95,group:'day'},
@@ -27,7 +28,7 @@ export const LIGHTING_SPECS=Object.freeze([
   {key:'blue',label:'蓝色点缀',min:0,max:1,step:.05,value:1,unit:'ratio'},
   {key:'exposure',label:'整体曝光',min:-1.5,max:1.5,step:.05,value:0.15,unit:'EV'},
 ]);
-export const LIGHTING_DEFAULTS=Object.freeze({...Object.fromEntries(LIGHTING_SPECS.map(s=>[s.key,s.value])),backgroundColor:ASTRA_STUDIO.backgroundColor,groundColor:'#edf0f2',windowStyle:'astra-blue',realtimeShadows:ASTRA_STUDIO.shadows});
+export const LIGHTING_DEFAULTS=Object.freeze({...Object.fromEntries(LIGHTING_SPECS.map(s=>[s.key,s.value])),backgroundColor:ASTRA_STUDIO.backgroundColor,groundColor:'#edf0f2',windowStyle:'astra-blue',realtimeShadows:ASTRA_STUDIO.shadows,trafficMotion:null});
 export function normalizeLighting(raw){
   const result={...LIGHTING_DEFAULTS};
   if(!raw||typeof raw!=='object'||Array.isArray(raw))return result;
@@ -38,6 +39,7 @@ export function normalizeLighting(raw){
   if(typeof raw.groundColor==='string'&&/^#[0-9a-f]{6}$/i.test(raw.groundColor))result.groundColor=raw.groundColor.toLowerCase();
   if(['white','astra-blue'].includes(raw.windowStyle))result.windowStyle=raw.windowStyle;
   if(typeof raw.realtimeShadows==='boolean')result.realtimeShadows=raw.realtimeShadows;
+  if(typeof raw.trafficMotion==='boolean')result.trafficMotion=raw.trafficMotion;
   return result;
 }
 export function readLighting(storage){

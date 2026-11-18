@@ -10,5 +10,6 @@ export const ASTRA_GLASS=Object.freeze({
 export const ASTRA_STUDIO=Object.freeze({
   modelBrightness:145,backgroundBrightness:105,backgroundColor:'#ffffff',groundColor:'#f5f7fa',
   nightShell:25,nightCore:120,nightHalo:120,nightContext:110,
+  nightLogoColor:'#85d0ff',
   bloomTint:Object.freeze([.055,.36,1]),bloomTintMix:.72,shadows:false,
 });

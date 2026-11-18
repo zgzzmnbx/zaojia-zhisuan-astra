@@ -1,11 +1,10 @@
-import {BAKED_MODEL} from './release.js?v=0.7.0';
 /** v0.6.4-r2: lossless streaming transport with bounded concurrency and visible failure. */
 const digestHex=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
 const transportError=(message,code,retryable=false)=>Object.assign(new Error(message),{code,retryable});
 const abortError=()=>new DOMException('读取已取消','AbortError');
 const sleep=(ms,signal)=>new Promise((resolve,reject)=>{if(signal?.aborted)return reject(abortError());const done=()=>{clearTimeout(timer);signal?.removeEventListener('abort',cancel);};const cancel=()=>{done();reject(abortError());};const timer=setTimeout(()=>{done();resolve();},ms);signal?.addEventListener('abort',cancel,{once:true});});
 
-async function readRequest(url,{signal,expectedBytes,onChunk,onState,fetchFn,idleTimeoutMs,maxRequestMs,retries,retryDelayMs}){
+async function readRequest(url,{signal,expectedBytes,onChunk,onLength,onState,fetchFn,idleTimeoutMs,maxRequestMs,retries,retryDelayMs}){
   for(let attempt=0;attempt<=retries;attempt++){
     if(signal?.aborted)throw abortError();
     const controller=new AbortController();let idleTimer,totalTimer,timeoutFailure,reader;
@@ -15,6 +14,8 @@ async function readRequest(url,{signal,expectedBytes,onChunk,onState,fetchFn,idl
     armIdle();totalTimer=setTimeout(timeout,maxRequestMs);onChunk?.(0);onState?.({phase:attempt?'retry':'request',file:url.pathname.split('/').pop(),attempt:attempt+1,maxAttempts:retries+1});
     try{
       const response=await fetchFn(url,{signal:controller.signal,credentials:'same-origin'});
+      const length=Number(response.headers?.get('content-length'));
+      if(Number.isSafeInteger(length)&&length>0&&!response.headers?.get('content-encoding'))onLength?.(length);
       if(!response.ok){const auth=[401,403].includes(response.status);throw transportError(auth?'登录权限已失效，请重新登录本站':`模型请求失败（HTTP ${response.status}）`,auth?'MODEL_AUTH':'MODEL_HTTP',[408,429].includes(response.status)||response.status>=500);}
       if((response.headers?.get('content-type')||'').includes('text/html'))throw transportError('模型请求返回登录页面，请重新登录本站','MODEL_AUTH');
       let count=0;const chunks=[];const output=expectedBytes?new Uint8Array(expectedBytes):null;
@@ -45,7 +46,9 @@ export async function loadModelBytes(url,{signal,onProgress,onState,fetchFn=fetc
   const source=new URL(url);const config={signal,fetchFn,idleTimeoutMs,maxRequestMs,retries,retryDelayMs,onState};
   onState?.({phase:'manifest',file:source.pathname.split('/').pop()});
   if(!source.pathname.endsWith('.parts.json')){
-    const b=await readRequest(source,{...config,onChunk:n=>onProgress?.(n,source.pathname.includes('realtime')?6312932:43100924)});onProgress?.(b.byteLength,b.byteLength);return b;
+    let total=0;
+    const b=await readRequest(source,{...config,onLength:n=>{total=n;},onChunk:n=>onProgress?.(n,total)});
+    onProgress?.(b.byteLength,b.byteLength);return b;
   }
   const raw=await readRequest(source,config);let manifest;
   try{manifest=JSON.parse(new TextDecoder().decode(raw));}catch{throw transportError('模型清单读取失败，请刷新后重试','MODEL_MANIFEST');}
@@ -77,7 +80,7 @@ export async function loadModelBytes(url,{signal,onProgress,onState,fetchFn=fetc
 
 export function bindModelDownload(anchor,url,{signal}={}){
   const source=new URL(url);if(!source.pathname.endsWith('.parts.json'))return;
-  const name=BAKED_MODEL;anchor.download=name;anchor.title='下载完整模型（自动无损合并）';anchor.setAttribute('aria-label',anchor.title);let busy=false;
+  const name=decodeURIComponent(source.pathname.split('/').pop()).replace(/(?:\.glb)?\.parts\.json$/i,'.glb');anchor.download=name;anchor.title='下载完整模型（自动无损合并）';anchor.setAttribute('aria-label',anchor.title);let busy=false;
   anchor.addEventListener('click',async event=>{event.preventDefault();if(busy)return;busy=true;anchor.setAttribute('aria-busy','true');
     try{const bytes=await loadModelBytes(source,{signal,onProgress:(n,total)=>{anchor.title=`正在准备模型下载 ${Math.round(n/total*100)}%`;}});const objectURL=URL.createObjectURL(new Blob([bytes],{type:'model/gltf-binary'}));const link=document.createElement('a');link.href=objectURL;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectURL),60000);}
     catch(error){if(!signal?.aborted)window.alert(`下载未完成：${error.message}`);}
