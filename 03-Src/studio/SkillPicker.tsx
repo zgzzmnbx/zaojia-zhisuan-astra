@@ -1,6 +1,7 @@
 import {useEffect,useId,useRef,useState} from 'react';
 import {api} from './api';
 import {Icon} from './ui';
+import {skillIconName} from '../icon-catalog.js';
 import {skillShortName,type SkillDetail,type SkillSnapshot} from './professional-skills';
 import type {useProfessionalSkills} from './useProfessionalSkills';
 import './skill-picker.css';
@@ -21,13 +22,15 @@ export function SkillPicker({skills,task,taskLocked,busy,manage}:{skills:ReturnT
    {skills.loading?<p role="status">正在读取能力包…</p>:skills.error?<div role="alert"><p>{skills.error}</p><button className="btn btn-outline btn-sm" onClick={()=>void skills.reload()}>重试</button></div>:skills.catalog.items.length===0?<p role="status">暂无可用能力包</p>:skills.catalog.items.map(item=><button type="button" className="studio-skill-option" key={item.id} onClick={()=>setDetailId(item.id)} aria-label={`查看${item.display_name}`}><span className="studio-skill-option-icon"><Icon name="grid"/></span><span><strong title={item.display_name}>{skillShortName(item)}skill</strong><small><span data-available={item.can_create_task}>{item.status_label}</span><span>v{item.version}</span>{shown?.id===item.id&&<span className="studio-skill-current">{taskLocked?'当前任务':'已选择'}</span>}</small></span><Icon name="chevron"/></button>)}
   </div><footer><span>{taskLocked?'当前任务沿用原能力快照':'所选能力用于新建编制任务'}</span><button className="btn btn-ghost btn-sm" onClick={()=>{close();manage()}}>能力治理<Icon name="arrow-right"/></button></footer></>:<div className="studio-skill-detail">
    {detailError?<div role="alert"><p>{detailError}</p><button className="btn btn-outline btn-sm" onClick={()=>setRetry(x=>x+1)}>重试</button></div>:!detail?<p role="status">正在读取能力详情…</p>:<><div className="studio-skill-detail-title"><h3>{detail.display_name}</h3><span>{detail.status_label} · v{detail.version}</span></div><p>{detail.description}</p>
-    {!!detail.capabilities.length&&<div className="studio-skill-capabilities">{detail.capabilities.map(x=><span className="badge badge-outline" key={x}>{x}</span>)}</div>}
+    {!!detail.capabilities.length&&<div className="studio-skill-capabilities">{detail.capabilities.map(label=><span className="badge badge-outline" key={label}><Icon name={skillIconName(label)}/>{label}</span>)}</div>}
     {!!detail.sub_skills?.length&&<section className="studio-skill-contents" aria-label="包内能力">
      <div className="studio-skill-contents-heading"><strong>包内能力</strong><span>{detail.sub_skills.length} 项</span></div>
-     <ul className="studio-skill-grid">{detail.sub_skills.map(x=><li className="studio-subskill" key={x.name}>
-      <div className="studio-subskill-heading"><strong>{x.name.replace(/\s*Skill$/i,'')}</strong>{x.type&&<span className="studio-subskill-tag" data-professional={x.type==='professional'}>{x.type==='professional'?'专业':'通用'}</span>}</div>
+     <ul className="studio-skill-grid">{detail.sub_skills.map(x=>{
+      const label=x.name.replace(/\s*Skill$/i,'');
+      return <li className="studio-subskill" key={x.name}>
+      <div className="studio-subskill-heading"><Icon name={skillIconName(label)}/><strong>{label}</strong>{x.type&&<span className="studio-subskill-tag" data-professional={x.type==='professional'}>{x.type==='professional'?'专业':'通用'}</span>}</div>
       <p>{x.description}</p>{x.status!=='available'&&<span className="studio-subskill-status">{x.status==='planned'?'规划中':x.status==='coming_soon'?'即将开放':x.status==='beta'?'试用中':'暂未就绪'}</span>}
-     </li>)}</ul>
+     </li>})}</ul>
     </section>}
     {!!detail.applicability?.includes?.length&&<ul className="studio-skill-scope">{detail.applicability.includes.map(x=><li key={x}>{x}</li>)}</ul>}
     <button className="btn btn-primary btn-sm studio-skill-use" disabled={busy||skills.loading||!!skills.error||taskLocked||!selectedDetail?.can_create_task||!detail.can_create_task} onClick={()=>{if(selectedDetail){skills.select(selectedDetail);close()}}}>{taskLocked?'当前任务能力已锁定':!detail.can_create_task?detail.status_label:'使用此能力'}</button>

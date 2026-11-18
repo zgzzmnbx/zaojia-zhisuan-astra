@@ -9,7 +9,7 @@ import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {icon} from '../03-Src/icons.js';
 import {glyphs} from '../03-Src/vendor/phosphor-duotone/glyphs.js';
-import {generalIconNames,capabilityIconNames,compatibilityIconNames,viewIconName} from '../03-Src/icon-catalog.js';
+import {generalIconNames,capabilityIconNames,compatibilityIconNames,skillIconName,viewIconName} from '../03-Src/icon-catalog.js';
 const root=fileURLToPath(new URL('../',import.meta.url)),require=createRequire(import.meta.url);
 const source=fs.readFileSync(path.join(root,'03-Src/PhosphorIcons.tsx'),'utf8');
 const compiled=transpileModule(source,{compilerOptions:{module:ModuleKind.ESNext,jsx:JsxEmit.ReactJSX}}).outputText
@@ -27,6 +27,20 @@ test('every actual studio literal and catalog intent resolves without an AI fall
  assert.equal(viewIconName('analysis'),capabilityIconNames.analysis);
  assert.equal(viewIconName('report'),capabilityIconNames.report);
  assert.notEqual(generalIconNames.report,generalIconNames['risk-report']);
+});
+test('bundled skill cards and capability badges resolve to local semantic glyphs',()=>{
+ const registry=path.join(root,'03-Src/engine/business-skills');
+ const labels=['三数字匹配','工作量抓取','经验池预警','知识库问答','知识记忆','Word 报告','智能协同'];
+ for(const pack of ['survey-measurement-limit-price','general-service-cost-estimation']){
+  const manifest=JSON.parse(fs.readFileSync(path.join(registry,pack,'manifest.json'),'utf8'));
+  labels.push(...manifest.subSkills.map(skill=>skill.name.replace(/\s*Skill$/i,'')));
+ }
+ for(const label of labels){
+  const glyph=skillIconName(label);
+  assert.notEqual(glyph,capabilityIconNames.skills,label);
+  assert.ok(Object.hasOwn(glyphs,glyph),label);
+ }
+ assert.equal(skillIconName('新能力'),capabilityIconNames.skills);
 });
 test('shared SVG markup is decorative, locally bundled and attribute-safe',()=>{
  const markup=icon('report','x" onload="bad');assert.match(markup,/aria-hidden="true"/);assert.match(markup,/focusable="false"/);assert.match(markup,/&quot;/);assert.doesNotMatch(markup,/class="[^>]*" onload=/);

@@ -197,3 +197,36 @@ export const capabilityIconNames = {
 };
 
 export function viewIconName(view){return capabilityIconNames[view]||({connections:"link",example:"sheet",insights:"chart",sources:"book",tools:"tools",project:"folder",originalqa:"book"})[view]||"file";}
+
+// The skill registry identifies these entries by display name.
+const skillIcons = new Map([
+  ["三数字匹配", capabilityIconNames.match],
+  ["工作量抓取", capabilityIconNames.workload],
+  ["经验池预警", capabilityIconNames.warning],
+  ["知识库问答", capabilityIconNames.knowledge],
+  ["知识记忆", capabilityIconNames.memory],
+  ["Word 报告", capabilityIconNames.word],
+  ["智能协同", capabilityIconNames.collaboration],
+  ["控制价 Excel 智能识别", "file-xls"],
+  ["勘察测量结构化计价", "scales"],
+  ["造价规则匹配", capabilityIconNames.match],
+  ["工作量表智能识别", "table"],
+  ["造价经验风险复核", capabilityIconNames.risk],
+  ["造价待复核处理", "clipboard-text"],
+  ["造价依据问答", capabilityIconNames.knowledge],
+  ["项目知识沉淀", capabilityIconNames.memory],
+  ["造价成果报告生成", capabilityIconNames.report],
+  ["造价成果协同复核", capabilityIconNames.collaboration],
+  ["服务类输入模板", "columns"],
+  ["服务类别智能识别", "scan"],
+  ["服务类计价依据管理", "database"],
+  ["服务费用规则计算", "scales"],
+  ["服务类人工复核", "user-check"],
+  ["造价成果表格与报告生成", capabilityIconNames.report],
+  ["服务类回归验证", "list-checks"],
+  ["最小业务闭环编排", "tree-structure"],
+]);
+
+export function skillIconName(label) {
+  return skillIcons.get(label) ?? capabilityIconNames.skills;
+}
