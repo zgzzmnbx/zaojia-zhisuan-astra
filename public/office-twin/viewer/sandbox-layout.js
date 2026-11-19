@@ -61,7 +61,7 @@ export function mountSandboxLayout(root=document) {
   },options);
   toggle.addEventListener('click',()=>{const next=rail.hidden;if(!detail.hidden)dismissPerson();open(next);},options);
   $('#space-card-close').addEventListener('click',()=>{open(false);toggle.focus();},options);
-  rail.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(!detail.hidden)dismissPerson(true);else{open(false);toggle.focus();}}},options);
+  rail.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(!detail.hidden)dismissPerson(true);else if(root.documentElement.hasAttribute('data-hub-left'))tablist.querySelector('[aria-selected=true]')?.focus();else{open(false);toggle.focus();}}},options);
   window.addEventListener('office-panel',e=>{if(!detail.hidden)dismissPerson();tab(e.detail?.tab);},options);
   const tools=$('#office-tools'),more=$('#office-tools-toggle');
   const bar=$('.office-modebar');
@@ -122,5 +122,34 @@ export function mountSandboxLayout(root=document) {
   form.addEventListener('submit',e=>{e.preventDefault();if(!input.value.trim())return;list.querySelector('.office-empty-note')?.remove();const p=root.createElement('p');p.textContent=input.value.trim();list.append(p);input.value='';clear.disabled=false;$('#local-note-status').textContent='已保存本页备注';},options);
   clear.addEventListener('click',()=>{list.replaceChildren();clear.disabled=true;},options);
   tab('people');
+  if(new URLSearchParams(location.search).get('desk')==='hub'){
+    open(false);
+    let leftOpen=false;
+    function syncQuick(){
+      if(!leftOpen)return;
+      const expanded=!!root.querySelector('.hub-quick')?.open;
+      toggle.setAttribute('aria-expanded',String(expanded));toggle.title=expanded?'收起快速查看':'快速查看';toggle.setAttribute('aria-label',toggle.title);
+    }
+    root.addEventListener('toggle',e=>{if(e.target.id==='office-hub-quick')syncQuick();},{...options,capture:true});
+    window.addEventListener('office-host-layout',e=>{
+      const r=e.detail.hubRect,valid=r&&['left','top','right','bottom'].every(k=>Number.isFinite(r[k]))&&r.right>r.left&&r.bottom>r.top;
+      if(valid){
+        for(const [name,value] of Object.entries({left:r.left,top:r.top,width:r.right-r.left,height:r.bottom-r.top}))workspace.style.setProperty('--hub-'+name,value+'px');
+      }
+      document.documentElement.toggleAttribute('data-hub-left',!!valid);
+      if(leftOpen===!!valid)return;
+      leftOpen=!!valid;
+      if(!detail.hidden)dismissPerson();
+      open(leftOpen);
+      toggle.setAttribute('aria-controls',leftOpen?'office-hub-quick':'space-cards-panel');
+      syncQuick();
+    },options);
+    // The roster stays available in the left hub. The toolbar toggles the compact right lookup.
+    toggle.addEventListener('click',e=>{
+      if(!leftOpen)return;
+      e.stopImmediatePropagation();
+      const quick=root.querySelector('.hub-quick');if(quick)quick.open=!quick.open;
+    },{...options,capture:true});
+  }
   return {dispose(){controller.abort();}};
 }

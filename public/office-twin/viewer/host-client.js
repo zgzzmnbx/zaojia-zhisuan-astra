@@ -1,4 +1,5 @@
 // Astra owns all review writes. This adapter receives display snapshots only.
+import {managedHub,mountWorkHub} from './work-hub.js';
 import {workstationRoster} from './workstation-roster.js';
 import {createWorkstationSettings} from './workstation-settings.js';
 import {assignmentRoute,createDemoAssignments} from './person-assignment.js';
@@ -15,6 +16,9 @@ let snapshot={employees:[],tasks:[],messages:[],context:'',revision:0,title:'正
 let sourceSnapshot=snapshot;const demos=createDemoAssignments();
 let started=false,draggingPerson=null;
 let dragStart=null,chatRect=null,completedNativeDrag=null;
+let hub=null;
+export function dropOnOfficeRoute(route,start){hub?.accept(route,start);}
+export function pickForReview(id){hub?.pickForReview(id);}
 let artifactObserver=null,workstations=null,workstationConfig=null,selectedDrag=null,dutyBoard=null,sandboxSettings=null,speech=null;
 // A directly opened office uses saved workstation profiles. The parent owns review selection.
 let hostSnapshot=null;
@@ -32,6 +36,7 @@ async function refreshPlan(){
 }
 function onPlanStorage(event){if(event.key===planNotice)void refreshPlan();}
 export function openPersonTasks(personId='',createTask=false){
+  if(hub&&createTask){hub.assign(personId);return;}
   sandboxSettings?.open('tasks',personId||'owner',createTask);
 }
 function applyHostSnapshot(){
@@ -43,6 +48,10 @@ function applyHostSnapshot(){
 }
 function publishSnapshot(){
   snapshot=demos.apply(sourceSnapshot);
+  if(managedHub){
+    snapshot.managedHub=true;
+    snapshot.employees=snapshot.employees.map(p=>({...p,draggable:true}));
+  }
   snapshot.personTasks=applyTaskPlan(indexPersonTasks(snapshot),taskSettings.members);
   renderTasks();listeners.forEach(fn=>fn('snapshot',snapshot));
 }
@@ -105,7 +114,7 @@ function renderTasks() {
   $('#host-artifact').setAttribute('aria-label',`当前成果，${snapshot.title}，${$('#host-selection').textContent}`);
   $('#host-selection').hidden=selected.length>0;
   renderDropzone();
-  dutyBoard?.update(snapshot);
+  dutyBoard?.update(snapshot);hub?.render();
   const stale=snapshot.receiptError||snapshot.inboxError;
   $('#event-connection').textContent=stale?'待办暂未刷新，正在重试':'';
   $('#event-connection').closest('footer').hidden=!stale;
@@ -118,7 +127,7 @@ function receive(event) {
     const bottomInset=Number(event.data.bottomInset);
     document.documentElement.style.setProperty('--host-bottom-inset',`${Number.isFinite(bottomInset)?Math.max(0,bottomInset):0}px`);
     const r=event.data.chatRect;chatRect=r&&['left','top','right','bottom'].every(k=>Number.isFinite(r[k]))?r:null;
-    window.dispatchEvent(new CustomEvent('office-host-layout',{detail:{left}}));return;
+    window.dispatchEvent(new CustomEvent('office-host-layout',{detail:{left,hubRect:event.data.hubRect}}));return;
   }
   if(['chat-drop','chat-pointer'].includes(event.data.type)){
     const data=event.data,start=dragStart||(data.type==='chat-drop'&&completedNativeDrag?.expires>performance.now()?completedNativeDrag:null);
@@ -130,6 +139,7 @@ function receive(event) {
   const data=event.data;
   if(!Array.isArray(data.people)||!Array.isArray(data.tasks)||typeof data.context!=='string')return;
   hostSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
+    channels:Array.isArray(data.channels)?data.channels:[],
     projectName:typeof data.projectName==='string'?data.projectName:'',
     tasks:data.tasks,pendingTasks:Array.isArray(data.pendingTasks)?data.pendingTasks:[],inboxError:!!data.inboxError,inboxLoading:!!data.inboxLoading};
   applyHostSnapshot();
@@ -158,16 +168,17 @@ export const officeClient={
     const tags=element('ul','','host-selected-people');tags.id='host-selected-people';tags.hidden=true;tags.setAttribute('aria-label','已选复核人员');tags.setAttribute('aria-live','polite');
     const hint=element('span','把小人拖到这里');hint.id='host-drop-hint';dropzone.append(tags,hint);artifact.append(dropzone);
     selectedDrag=bindSelectedPersonDrag({tags,zone:dropzone,getSnapshot:()=>snapshot,remove:id=>togglePerson(id,false)});
-    const acceptDrag=event=>{if(draggingPerson&&event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');hint.textContent=`松开，加入 ${draggingPerson.name}`;}};
+    const acceptDrag=event=>{if(!managedHub&&draggingPerson&&event.dataTransfer.types.includes('text/plain')){event.preventDefault();event.dataTransfer.dropEffect='copy';artifact.classList.add('is-dragover');hint.textContent=`松开，加入 ${draggingPerson.name}`;}};
     artifact.addEventListener('dragenter',acceptDrag);artifact.addEventListener('dragover',acceptDrag);
     artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)hint.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
-    artifact.addEventListener('drop',event=>{event.preventDefault();const id=event.dataTransfer.getData('text/plain');if(draggingPerson?.id===id)togglePerson(id,true);setDraggingPerson(null);});
+    artifact.addEventListener('drop',event=>{if(managedHub)return;event.preventDefault();const id=event.dataTransfer.getData('text/plain');if(draggingPerson?.id===id)togglePerson(id,true);setDraggingPerson(null);});
     const rail=$('.office-inspector'),browser=element('article','','host-browser-card');
     browser.setAttribute('aria-label','人员、任务与空间');
     while(rail.firstChild)browser.append(rail.firstChild);
     rail.append(browser);
     const workspace=rail.parentElement;
     workspace.insertBefore(artifact,rail);
+    if(managedHub)hub=mountWorkHub({artifact,getState:()=>snapshot,getDrag:()=>dragStart,post,onSaved:acceptPlan});
     artifactObserver=new ResizeObserver(()=>{
       workspace.style.setProperty('--host-artifact-height',`${artifact.getBoundingClientRect().height}px`);
     });
@@ -180,5 +191,5 @@ export const officeClient={
   subscribe(fn){listeners.add(fn);fn('snapshot',snapshot);return()=>listeners.delete(fn);},
   getState:()=>snapshot,
   send:async()=>{throw new Error('请使用 Astra 左侧复核卡发送。');},
-  dispose(){window.removeEventListener('message',receive);window.removeEventListener('storage',onPlanStorage);window.removeEventListener('focus',refreshPlan);selectedDrag?.dispose();artifactObserver?.disconnect();speech?.dispose();sandboxSettings?.dispose();workstations?.dispose();listeners.clear();},
+  dispose(){hub?.dispose();window.removeEventListener('message',receive);window.removeEventListener('storage',onPlanStorage);window.removeEventListener('focus',refreshPlan);selectedDrag?.dispose();artifactObserver?.disconnect();speech?.dispose();sandboxSettings?.dispose();workstations?.dispose();listeners.clear();},
 };

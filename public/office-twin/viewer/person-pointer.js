@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {officeClient,setDraggingPerson,togglePerson,overHostChat,moveHostDrag,notifyHostDrop} from './host-client.js';
+import {officeClient,setDraggingPerson,togglePerson,overHostChat,moveHostDrag,notifyHostDrop,dropOnOfficeRoute} from './host-client.js';
 import {assignmentRoute} from './person-assignment.js';
 
 export function canDropPerson(start,snapshot,id){
@@ -78,7 +78,10 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
     const overFloor=node===canvas||!!node?.closest('#people-markers');
     const destination=canInteract()&&g.dragging&&!over&&!chat&&overFloor&&canPlacePerson(g.start,officeClient.getState(),g.id)?people.dropTarget?.(rayAt(event.clientX,event.clientY),g.id):null;
     finish(false);event.stopImmediatePropagation();suppressClick=g.dragging;
-    if(accepted){togglePerson(g.id,true);if(chat)notifyHostDrop(g.id);}
+    if(over&&target?.dataset.managedDock==='true'&&g.dragging){
+      const route=node?.closest('[data-office-route]')?.dataset.officeRoute;
+      if(route&&canInteract())dropOnOfficeRoute(route,{...g.start,employeeId:g.id});
+    }else if(accepted){togglePerson(g.id,true);if(chat)notifyHostDrop(g.id);}
     else if(destination?.valid)people.place(g.id,destination);
     else if(!g.dragging)pendingClick={id:g.id,point:{x:event.clientX,y:event.clientY}};
   }

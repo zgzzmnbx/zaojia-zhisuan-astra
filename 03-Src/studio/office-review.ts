@@ -4,9 +4,15 @@ import {reviewParticipants} from '../professional/components/agent-workspace/rev
 export type OfficePerson = {id:string; name:string; selectable:boolean; selected:boolean; accounts:{platform:string;name:string}[]};
 export type OfficeTask = {id:string; dispatchId?:string; employeeId:string; employeeName?:string; title:string; projectName?:string; reviewRound?:number; createdAt?:string; artifactName?:string; status:string; personStatus?:string; roundStatus?:string; platformLabel?:string; demo:boolean; comment?:string};
 export type PendingOfficeReview = {taskId:string; platform:string; reviewerRef:string; reviewerName:string; projectName:string; taskName:string; artifactName:string; reviewRound?:number; createdAt?:string};
+export type OfficeReviewChannel = {
+  id:string; label:string; reason:string;
+  members:{id:string; name:string; selected:boolean}[];
+};
 export type OfficeSnapshot = {
   context:string; revision:number; request:ReviewRequest; people:OfficePerson[]; tasks:OfficeTask[];
   toggle:(id:string,selected:boolean)=>void;
+  channels?:OfficeReviewChannel[];
+  toggleChannel?:(profile:string,id:string,selected:boolean)=>void;
 };
 export function createOfficeBridge() {
   let snapshot:OfficeSnapshot|null=null;
@@ -30,6 +36,37 @@ export function officeDirectory(records:{profileId:string;options:ReviewOptions}
 // only the stable person_ref returned by the current, validated platform directory.
 export function isOfficeOwner(platform:string,name:string) {
   return (platform==='default'&&name==='大尾巴')||(platform==='weact_cost'&&name==='石萌');
+}
+function channelMemberId(profile:string,person:{person_ref:string;display_name:string}) {
+  return isOfficeOwner(profile,person.display_name)?'owner':`${profile}:${person.person_ref}`;
+}
+export function officeChannel(platform:ReviewPlatform,busy:boolean):OfficeReviewChannel {
+  const group=platform.options?.directory.groups.find(g=>g.group_ref===platform.group);
+  let reason='';
+  if(busy||platform.loading)reason='正在更新复核卡';
+  else if(!platform.configurationOk||!platform.options)reason='请在协同设置中启用平台';
+  else if(platform.task&&!nextRound(platform.task))reason='本轮复核进行中';
+  else if(!platform.enabled&&platform.selectedReviewers.length)reason='请在复核卡重新启用已有名单';
+  else if(!platform.deliveryChannels.length)reason='请先选择发送方式';
+  else if(platform.deliveryChannels.includes('group')&&(!group?.authorized||!group.members_available||group.member_count>10))reason='请先在复核卡选择可用工作群';
+  else if(platform.deliveryChannels.includes('direct')&&platform.options.direct_delivery.status!=='available')reason='个人私聊尚未核验';
+  return {id:platform.profileId,label:platform.label,reason,members:reviewPeople(platform).map(person=>({
+    id:channelMemberId(platform.profileId,person),name:person.display_name,
+    selected:platform.enabled&&platform.selectedReviewers.includes(person.person_ref)
+  }))};
+}
+/** Both entry points edit the same platform's recipient references. */
+export function selectReviewer(p:ReviewPlatform,ref:string,checked:boolean):ReviewPlatform {
+  return {...p,selectedReviewers:checked?[...new Set([...p.selectedReviewers,ref])].slice(0,10):p.selectedReviewers.filter(r=>r!==ref)};
+}
+export function selectOfficeReviewer(p:ReviewPlatform,employeeId:string,checked:boolean):ReviewPlatform {
+  if(officeChannel(p,false).reason)return p;
+  const matches=reviewPeople(p).filter(person=>channelMemberId(p.profileId,person)===employeeId);
+  if(matches.length!==1)return p;
+  const ref=matches[0].person_ref;
+  if(checked&&!p.selectedReviewers.includes(ref)&&p.selectedReviewers.length>=10)return p;
+  if((p.enabled||!checked)&&p.selectedReviewers.includes(ref)===checked)return p;
+  return {...selectReviewer(p,ref,checked),enabled:checked||p.enabled};
 }
 export function officeRoster(platforms:ReviewPlatform[],busy:boolean):OfficePerson[] {
   const people=new Map<string,OfficePerson>();

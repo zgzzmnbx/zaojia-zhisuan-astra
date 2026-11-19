@@ -8,12 +8,12 @@ import {PageLoading} from './brand/PageLoading';
 import {mountOfficeDropTarget} from './office-review-drop';
 
 const namespace='astra-office-selection:v1';
-export default function OfficeReview({bridge,active,dark,palette,context,prepare,chatVisible,close}:{bridge:OfficeBridge;active:boolean;dark:boolean;palette:string;context:string;prepare:()=>void;chatVisible:boolean;close:()=>void}) {
+export default function OfficeReview({bridge,active,dark,palette,context,prepare,chatVisible,pane,close}:{bridge:OfficeBridge;active:boolean;dark:boolean;palette:string;context:string;prepare:()=>void;chatVisible:boolean;pane:'hub'|'chat';close:()=>void}) {
   const frame=useRef<HTMLIFrameElement>(null);
   const host=useRef<HTMLDivElement>(null);
   const actions=useRef({prepare,close});actions.current={prepare,close};
   const [ready,setReady]=useState(false),[error,setError]=useState(''),[generation,setGeneration]=useState(0);
-  const [sceneReady,setSceneReady]=useState(0);
+  const [sceneReady,setSceneReady]=useState(0),[handshake,setHandshake]=useState(0);
   const [settingsOpen,setSettingsOpen]=useState(false);
   const [mounted,setMounted]=useState(false),[rendered,setRendered]=useState(false);
   useEffect(()=>{
@@ -69,9 +69,9 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   function send(type:string,data:Record<string,unknown>={}) {frame.current?.contentWindow?.postMessage({namespace,type,...data},location.origin);}
   useEffect(()=>{
     const chat=document.querySelector<HTMLElement>('#astra-conversation');
-    if(!ready||!active||!chatVisible||!frame.current||!chat)return;
+    if(!ready||!active||!chatVisible||pane!=='chat'||!frame.current||!chat)return;
     return mountOfficeDropTarget({frame:frame.current,chat,current:()=>latest.current,active:()=>visible.current});
-  },[ready,active,chatVisible,generation,current?.context,current?.revision]);
+  },[ready,active,chatVisible,pane,generation,current?.context,current?.revision]);
   useLayoutEffect(()=>{
     const panel=host.current;if(!panel||!active)return;
     const chat=document.querySelector('#astra-conversation');
@@ -79,12 +79,15 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
       const f=panel.getBoundingClientRect(),r=chatVisible?chat?.getBoundingClientRect():null;
       const left=r&&r.width?Math.max(0,Math.min(f.width,r.right-f.left+16)):0;
       panel.style.setProperty('--office-chat-width',`${left}px`);
-      if(ready)send('layout',{left,bottomInset:Math.max(0,f.bottom-window.innerHeight),chatRect:r?{left:r.left-f.left,top:r.top-f.top,right:r.right-f.left,bottom:r.bottom-f.top}:null});
+      const rect=r&&r.width?{left:r.left-f.left,top:r.top-f.top,right:r.right-f.left,bottom:r.bottom-f.top}:null;
+      const switcher=chat?.querySelector('.office-hub-switch')?.getBoundingClientRect();
+      if(ready)send('layout',{left,bottomInset:Math.max(0,f.bottom-window.innerHeight),chatRect:pane==='chat'?rect:null,
+        hubRect:pane==='hub'&&rect?{...rect,top:(switcher?.bottom??r!.top)-f.top}:null});
     };
     const observer=new ResizeObserver(measure);if(chat)observer.observe(chat);observer.observe(panel);
     window.addEventListener('resize',measure);window.addEventListener('scroll',measure,true);
     measure();return()=>{observer.disconnect();window.removeEventListener('resize',measure);window.removeEventListener('scroll',measure,true);};
-  },[ready,active,chatVisible]);
+  },[ready,active,chatVisible,pane,handshake]);
   useEffect(()=>{
     const receive=(event:MessageEvent)=>{
       if(event.source!==frame.current?.contentWindow||event.origin==='null'||event.origin!==location.origin)return;
@@ -95,10 +98,15 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
       }
       if(event.data?.namespace!==namespace)return;
       if(event.data.type==='settings-visibility'&&typeof event.data.open==='boolean'){setSettingsOpen(event.data.open);return;}
-      if(event.data.type==='ready'){setReady(true);setError('');}
+      if(event.data.type==='ready'){setReady(true);setHandshake(n=>n+1);setError('');}
       if(event.data.type==='action'&&visible.current){
         if(event.data.action==='prepare')actions.current.prepare();
         if(event.data.action==='close')actions.current.close();
+      }
+      if(event.data.type==='channel-toggle'){
+        const d=event.data,value=latest.current;
+        if(!visible.current||!value||bridge.getSnapshot()!==value||d.context!==value.context||d.revision!==value.revision||typeof d.selected!=='boolean')return;
+        value.toggleChannel?.(d.profileId,d.employeeId,d.selected);
       }
       if(event.data.type==='toggle'){
         const value=latest.current;
@@ -114,17 +122,18 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   useEffect(()=>{
     if(!ready)return;
     send('snapshot',{context:current?.context||context,revision:current?.revision||0,people:current?.people.length?current.people:directory,
-      projectName:current?.request.projectName || '',
+      channels:current?.channels||[],projectName:current?.request.projectName || '',
       tasks:receipt&&current&&receipt.context===current.context?receipt.tasks:current?.tasks||[],pendingTasks:inbox.tasks,inboxError:inbox.error,inboxLoading:!inbox.loaded&&!inbox.error,title:current?.request.fileName||'当前尚无可复核成果',enabled:!!current,receiptError});
-  },[ready,current,directory,context,receipt,receiptError,inbox]);
+  },[ready,handshake,current,directory,context,receipt,receiptError,inbox]);
   useEffect(()=>{
     if(!ready)return;
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'visibility',visible:active},location.origin);
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'theme',theme:{palette,scheme:dark?'dark':'light'}},location.origin);
-  },[ready,active,dark,palette,sceneReady]);
+  },[ready,active,dark,palette,sceneReady,handshake]);
   return <div ref={host} className="office-review-host" data-settings-open={settingsOpen&&active} aria-busy={!rendered&&!error}>
+    <link rel="stylesheet" href="/office-twin/viewer/work-hub-host.css?v=0.54.0"/>
     {!rendered&&<div className="office-review-loading" role="status"><PageLoading active={active} paused={!!error} label={error?'办公室尚未载入':'正在加载办公室沙盘…'}/></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.53.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&desk=hub&ui=office-0.54.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }

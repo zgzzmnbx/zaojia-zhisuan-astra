@@ -185,6 +185,10 @@ export function mountPersonDetail(pane, actions) {
     join.disabled = !person.draggable;
     join.title = join.disabled ? '请在 Astra 复核卡中确认当前成果与复核平台' : '';
     join.replaceChildren(glyph(person.selected?'user-check':'user'),document.createTextNode(person.selected?'移出本次复核':person.demoAssignment?'加入演示复核':'加入本次复核'));
+    if(business.managedHub){
+      join.disabled=!business.enabled;join.title='在右侧选择接收平台';
+      join.replaceChildren(glyph('user'),document.createTextNode('选择复核平台'));
+    }
     move.disabled = !canMove || inMeeting;
     move.hidden = inMeeting;
     home.hidden = !canGoHome;

@@ -1,6 +1,6 @@
 import {signalDemoCue} from './demo-cues';
 import {lazy,Suspense,useEffect,useId,useRef,useState} from 'react';
-import {officeRoster,officeTasks,isOfficeOwner,type OfficeBridge} from './office-review';
+import {officeRoster,officeTasks,officeChannel,selectReviewer,selectOfficeReviewer,isOfficeOwner,type OfficeBridge} from './office-review';
 import {Icon} from './ui';
 import InlineReviewSetupCard from '../professional/components/agent-workspace/InlineReviewSetupCard';
 import InlineReviewProgressCard from '../professional/components/agent-workspace/InlineReviewProgressCard';
@@ -15,7 +15,6 @@ const profiles=[['default','飞书'],['weact_cost','WeAct']] as const;
 function defaultDeadline(){const d=new Date(Date.now()+86400000);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16);}
 export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readOnly=false,onOpenFlow,officeBridge,officeContext=''}:{officeBridge?:OfficeBridge;officeContext?:string;onOpenFlow?:()=>void;request:ReviewRequest;readOnly?:boolean;busy:boolean;onBusy:(label:string)=>void;onSettings:()=>void;onClose:()=>void}){
  const [flowOpen,setFlowOpen]=useState(false);
- const [officeList,setOfficeList]=useState(false);
  const [platforms,setPlatforms]=useState<ReviewPlatform[]>([]),[loading,setLoading]=useState(true),[sending,setSending]=useState(false),[feedback,setFeedback]=useState(''),[error,setError]=useState('');
  const [confirmed,setConfirmed]=useState(false),[round,setRound]=useState(false),[deadline,setDeadline]=useState(defaultDeadline),[instructions,setInstructions]=useState('请复核当前成果、匹配依据和风险项；在复核卡中填写意见后通过或退回。');
  const [tasks,setTasks]=useState<ReviewTask[]>([]),[fetchedAt,setFetchedAt]=useState(''),[external,setExternal]=useState(false);
@@ -81,7 +80,12 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readO
  const officeLive=useRef({platforms,busy,loading,sending,readOnly});officeLive.current={platforms,busy,loading,sending,readOnly};
  useEffect(()=>{
   if(!officeBridge||readOnly||request.kind!=='setup')return;
-  officeBridge.publish({context:officeContext,request,people:officeRoster(platforms,busy||loading||sending),tasks:officeTasks(tasks,request,officeRoster(platforms,true)),toggle:(id,checked)=>{
+  officeBridge.publish({context:officeContext,request,channels:platforms.map(p=>officeChannel(p,busy||loading||sending)),toggleChannel:(profile,id,selected)=>{
+   const live=officeLive.current;
+   if(!editable.current||!alive.current||lock.current||live.busy||live.loading||live.sending||live.readOnly)return;
+   const platform=live.platforms.find(p=>p.profileId===profile);
+   if(platform&&selectOfficeReviewer(platform,id,selected)!==platform)edit(profile,p=>selectOfficeReviewer(p,id,selected));
+  },people:officeRoster(platforms,busy||loading||sending),tasks:officeTasks(tasks,request,officeRoster(platforms,true)),toggle:(id,checked)=>{
    const live=officeLive.current;
    if(id!=='owner'||live.busy||live.loading||live.sending||live.readOnly||lock.current||!alive.current)return;
    for(const p of live.platforms){
@@ -94,10 +98,10 @@ export function ReviewConversation({request,busy,onBusy,onSettings,onClose,readO
  },[officeBridge,officeContext,readOnly,request,platforms,tasks,busy,loading,sending]);
  useEffect(()=>()=>officeBridge?.clear(officeContext),[officeBridge,officeContext]);
  const display=platforms.map(p=>({...p,directDeliveryAvailable:p.options?.direct_delivery.status==='available',groups:p.options?.directory.groups||[],people:reviewPeople(p)}));
- const setupCard=!readOnly&&(request.kind==='setup'?<InlineReviewSetupCard reviewerPicker={officeBridge&&!officeList?<div className="office-picker-summary"><p>{platforms.filter(p=>p.enabled).map(p=>`${p.label} · ${reviewPeople(p).filter(person=>p.selectedReviewers.includes(person.person_ref)).map(person=>person.display_name).join('、')||'待选人'}`).join(' / ')}</p><span>点击人物选入，或拖到左侧对话、右侧成果卡。</span><button type="button" className="btn btn-ghost btn-sm" onClick={()=>setOfficeList(true)}>使用列表选人</button></div>:undefined} fileName={request.fileName} jobId={request.jobId} reviewRows={request.reviewRows} platforms={display} deadline={deadline} instructions={instructions} audienceConfirmed={confirmed} feedback={feedback} loading={loading} sending={sending||busy} newRoundConfirmationOpen={round}
+ const setupCard=!readOnly&&(request.kind==='setup'?<InlineReviewSetupCard fileName={request.fileName} jobId={request.jobId} reviewRows={request.reviewRows} platforms={display} deadline={deadline} instructions={instructions} audienceConfirmed={confirmed} feedback={feedback} loading={loading} sending={sending||busy} newRoundConfirmationOpen={round}
    onPlatformEnabledChange={(id,value)=>edit(id,p=>({...p,enabled:value,expanded:value||p.expanded}))} onPlatformExpandedChange={(id,value)=>setPlatforms(all=>all.map(p=>p.profileId===id?{...p,expanded:value}:p))}
    onDeliveryChannelChange={(id,channel,checked)=>edit(id,p=>({...p,deliveryChannels:checked?[...new Set([...p.deliveryChannels,channel])]:p.deliveryChannels.filter(c=>c!==channel),selectedReviewers:[]}))}
-   onGroupChange={(id,group)=>edit(id,p=>({...p,group,selectedReviewers:[]}))} onReviewerChange={(id,ref,checked)=>edit(id,p=>({...p,selectedReviewers:checked?[...new Set([...p.selectedReviewers,ref])].slice(0,10):p.selectedReviewers.filter(r=>r!==ref)}))}
+   onGroupChange={(id,group)=>edit(id,p=>({...p,group,selectedReviewers:[]}))} onReviewerChange={(id,ref,checked)=>edit(id,p=>selectReviewer(p,ref,checked))}
    onDeadlineChange={value=>{setDeadline(value);setConfirmed(false);setRound(false);}} onInstructionsChange={value=>{setInstructions(value);setConfirmed(false);setRound(false);}}
    onAudienceConfirmedChange={setConfirmed} onRefresh={()=>void load(true)} onCancel={onClose} onSubmit={()=>void send()} onRetry={id=>void retry(id)} onOpenNewRoundConfirmation={()=>setRound(true)} onCloseNewRoundConfirmation={()=>setRound(false)} onConfirmNewRound={()=>void send(true)}/>:null);
  const workflow=<Suspense fallback={<div className="rw-inline-loading" role="status">正在载入复核流程…</div>}><ReviewWorkflow embedded={!flowOpen} onExpand={()=>{onOpenFlow?.();setFlowOpen(true);}} request={request} tasks={tasks} platforms={platforms} setup={setupCard?setupCard.props:undefined} loading={loading} error={error} refresh={()=>void load()} close={()=>setFlowOpen(false)}/></Suspense>;

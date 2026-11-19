@@ -14,7 +14,11 @@ export function taskKey(task) {
 
 // A projected entry never mutates its host receipt, the office board or the review selection.
 export function memberEntries(tasks,personId,member=emptyMember()) {
-  const manual=member.tasks.map(t=>({...t,manual:true,employeeId:personId,demo:false}));
+  // Use the existing editable note so earlier office releases can still read the worklist.
+  const manual=member.tasks.map(t=>{
+    const project=t.description?.match(/^所属项目：([^\r\n]+)/u)?.[1]?.trim();
+    return {...t,...(project?{projectName:project}:{}),manual:true,employeeId:personId,demo:false};
+  });
   return [...manual,...tasks].map(original=>{
     const key=taskKey(original);
     const patch=member.adjustments[key] || {};

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {mountPersonDetail} from './person-detail.js?v=0.50.1';
-import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,openPersonTasks,element as el} from './host-client.js';
+import {officeClient,togglePerson,setDraggingPerson,endPersonDrag,openPersonTasks,pickForReview,element as el} from './host-client.js';
 import {createPersonAssets,createSeatedPerson} from './seated-person.js';
 import {createPersonClock,seatFacing} from './person-motion.js';
 import {personLabelLevel,createPersonWander} from './person-presentation.js';
@@ -16,7 +16,7 @@ import {icon} from '../astra_ui/icons.js';
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,getPicture,layout,onSelect=()=>{},onRebuild=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
   const markers=document.querySelector('#people-markers'),list=document.querySelector('#people-list');
-  const directory=mountPeopleDirectory(list,{select,bindDrag:draggable,assign:id=>openPersonTasks(id,true),toggle:togglePerson});
+  const directory=mountPeopleDirectory(list,{select,bindDrag:draggable,assign:id=>openPersonTasks(id,true),toggle:togglePerson,pickForReview});
   const candidates=document.querySelector('#review-candidates');
   const message=document.querySelector('#review-status');
   const actors=new Map(),assets=createPersonAssets(),clock=createPersonClock(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -124,7 +124,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   const detail=mountPersonDetail(pane,{
     back:()=>closeMenu(true),
     edit:()=>openPersonTasks(current),
-    join:()=>{const p=business.employees.find(person=>person.id===current);if(p?.draggable)togglePerson(p.id,!p.selected);},
+    join:()=>{if(business.managedHub){pickForReview(current);return;}const p=business.employees.find(person=>person.id===current);if(p?.draggable)togglePerson(p.id,!p.selected);},
     move:()=>{const spot=placement.meetingSpot(occupied(current));if(spot&&place(current,spot))paintMenu();},
     home:()=>{goHome(current);closeMenu(true);},
   });
@@ -155,7 +155,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       if(motionEnabled&&!reduced.matches&&clock.value()-item.reactionAt>1.6)item.reactionAt=clock.value();
       syncPositions();if(!point)focusPerson(item.group);
     }else window.officeTwin?.setView('exploded');
-    paint();window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:true,from}}));
+    paint();window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:true,from,id}}));
     paintMenu();detail.focus();onSelect(id);requestFrame();return true;
   }
   function syncPositions(){floor.updateWorldMatrix(true,false);for(const item of actors.values()){

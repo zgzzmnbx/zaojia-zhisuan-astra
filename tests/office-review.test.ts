@@ -161,7 +161,7 @@ test('office entrance waits for presented frames and transition completion; hidi
  entry.start();entry.cancel();assert.deepEqual(advance(100),[]);
  entry.start();assert.equal(entry.step(now,false,true),'exploded');assert.equal(entry.state().running,false);
 });
-import {createOfficeBridge,officeRoster,officeTasks} from '../03-Src/studio/office-review.ts';
+import {createOfficeBridge,officeRoster,officeTasks,officeChannel,selectReviewer,selectOfficeReviewer} from '../03-Src/studio/office-review.ts';
 import type {ReviewPlatform,ReviewRequest,ReviewTask} from '../03-Src/studio/review-flow.ts';
 const request:ReviewRequest={kind:'setup',jobId:'a',fileName:'成果.xlsx',projectName:'当前项目',reviewRows:2,version:1};
 function platform(id='default'):ReviewPlatform{return {profileId:id,label:id,configurationOk:true,enabled:true,expanded:true,deliveryChannels:['direct'],group:'',selectedReviewers:[],task:null,loading:false,feedback:'',options:{active_profile:id,platforms:[{profile_id:id,configuration_ok:true}],direct_delivery:{status:'available'},directory:{groups:[],people:[{person_ref:id+'-self',display_name:id==='default'?'大尾巴':'石萌'},{person_ref:id+'-other',display_name:'同事'}]}}};}
@@ -907,6 +907,36 @@ test('allocation directory searches across a person’s projects and keeps their
 });
 import {officeTaskGroups} from '../public/office-twin/viewer/task-board.js';
 import {pendingOfficeTask} from '../03-Src/studio/office-review.ts';
+
+test('manual and scene gestures share one platform list and preserve other members',()=>{
+ const feishu=selectReviewer(platform(),'default-other',true);
+ const both=selectOfficeReviewer(feishu,'owner',true);
+ assert.deepEqual(both.selectedReviewers,['default-other','default-self']);
+ assert.equal(selectOfficeReviewer(both,'owner',true),both);
+ assert.deepEqual(selectReviewer(both,'default-self',false).selectedReviewers,['default-other']);
+ const weact=selectOfficeReviewer(platform('weact_cost'),'owner',true);
+ assert.equal(officeChannel(weact,false).members.find(m=>m.id==='owner')?.selected,true);
+ assert.deepEqual(selectOfficeReviewer(both,'owner',false).selectedReviewers,['default-other']);
+ assert.deepEqual(weact.selectedReviewers,['weact_cost-self']);
+ assert.equal(selectOfficeReviewer(weact,'default:default-other',true),weact);
+ const inactive={...platform(),enabled:false};
+ assert.equal(selectOfficeReviewer(inactive,'owner',true).enabled,true);
+});
+test('a scene target must resolve uniquely in the current platform and group under the original limit',()=>{
+ const p=platform();p.group='group';p.deliveryChannels=['group'];
+ p.options!.directory.groups=[{group_ref:'group',name:'已选工作群',authorized:true,members_available:true,member_count:1,people:[p.options!.directory.people[1]]}];
+ assert.equal(selectOfficeReviewer(p,'owner',true),p);
+ assert.equal(selectOfficeReviewer(p,'local:同事',true),p);
+ const selected=selectOfficeReviewer(p,'default:default-other',true);
+ assert.deepEqual(selected.selectedReviewers,['default-other']);
+ const full={...p,selectedReviewers:Array.from({length:10},(_,i)=>String(i))};
+ assert.equal(selectOfficeReviewer(full,'default:default-other',true),full);
+ p.options!.directory.groups[0].authorized=false;
+ assert.equal(selectOfficeReviewer(p,'default:default-other',true),p);
+ const ambiguous=platform();ambiguous.options!.directory.people.push({person_ref:'another-ref',display_name:'大尾巴'});
+ assert.equal(selectOfficeReviewer(ambiguous,'owner',true),ambiguous);
+ assert.ok(officeChannel(ambiguous,true).reason);
+});
 import {applyTaskPlan,emptyMember,memberEntries,olderProjectReviewKeys} from '../public/office-twin/viewer/task-plan.js';
 import {officeCameraKey,readOfficeCamera} from '../public/office-twin/viewer/office-camera.js';
 

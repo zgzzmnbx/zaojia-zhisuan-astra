@@ -166,7 +166,7 @@ export function directoryWork(person, tasks, scope, query) {
     closed:tasks.length-live.length, matches:profileMatch || matched.length>0};
 }
 
-export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle}) {
+export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle, pickForReview}) {
   const rows = new Map();
   let snapshot, selectedId;
   const search = node('label','directory-search');
@@ -208,6 +208,7 @@ export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle}) {
     const review = node('button','btn btn-ghost btn-xs directory-review');
     review.type='button';
     review.onclick=()=>{
+      if(snapshot.managedHub){pickForReview(id);return;}
       const person=snapshot.employees.find(p=>p.id===id);
       if(person?.draggable)toggle(id,!person.selected);
     };
@@ -256,6 +257,14 @@ export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle}) {
       row.review.setAttribute('aria-label',row.review.textContent+'，'+person.name+'，'+(person.selected?'从'+pool+'移除':'加入'+pool));
       row.review.disabled=!person.draggable;
       row.review.title=row.review.disabled?'请在左侧复核卡选择可用成果和平台':person.selected?'再次点击可移出'+pool:'加入'+pool;
+      if(snapshot.managedHub){
+        const channels=(snapshot.channels||[]).filter(c=>c.members.some(m=>m.id===person.id&&m.selected));
+        row.review.textContent=channels.length?channels.map(c=>c.label).join(' / ')+' 已选':'选择复核平台';
+        row.review.dataset.selected=String(channels.length>0);
+        row.review.disabled=!snapshot.enabled;
+        row.review.title=row.review.disabled?'当前尚无可复核成果':'选择这位同事，再点击右侧平台';
+        row.review.setAttribute('aria-label','为'+person.name+'选择复核平台');
+      }
       row.card.hidden = !matches || (filters.scope === 'active' && !live.length) || (filters.scope === 'idle' && (incomplete || !!live.length)) || (filters.scope === 'demo' && !examples.length);
       if (!row.card.hidden) visible++;
       const next = list.children[index] || null;
