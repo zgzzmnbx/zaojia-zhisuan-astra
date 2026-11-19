@@ -1,5 +1,5 @@
 import {TaskProgress} from './TaskProgress';
-import type {ReactNode} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState,type ReactNode} from 'react';
 import {FeeSummary} from './FeeSummary';
 import {Prose,sourceExcerpt} from './Prose';
 import {Gork,Icon} from './ui';
@@ -39,5 +39,20 @@ export function ConversationCard({message,onAction,unavailable,inputSettings,onC
 }
 
 export function WorkingCard({label,detail,showAvatar=true}:{label:string;detail?:string;showAvatar?:boolean}){
-  return <div className="cc-working task-working"><TaskProgress label={label} detail={detail} leading={showAvatar?<Gork state="thinking" size={30} still/>:undefined}/></div>;
+  const busy=Boolean(label);
+  const [shown,setShown]=useState(busy);
+  const busyNow=useRef(busy);busyNow.current=busy;
+  const done=()=>{if(!busyNow.current)setShown(false);};
+  useLayoutEffect(()=>{if(busy)setShown(true);},[busy]);
+  useEffect(()=>{
+    if(busy||!shown)return;
+    if(document.hidden){done();return;}
+    const visibility=()=>{if(document.hidden)done();};
+    document.addEventListener('visibilitychange',visibility);
+    // A stalled GPU must not leave a completed operation on screen.
+    const timeout=window.setTimeout(done,5000);
+    return()=>{clearTimeout(timeout);document.removeEventListener('visibilitychange',visibility);};
+  },[busy,shown]);
+  if(!busy&&!shown)return null;
+  return <div className="cc-working task-working"><TaskProgress conversation finishing={!busy} onSettled={done} label={label||'处理已结束'} detail={busy?detail:undefined} leading={busy&&showAvatar?<Gork state="thinking" size={30} still/>:undefined}/></div>;
 }

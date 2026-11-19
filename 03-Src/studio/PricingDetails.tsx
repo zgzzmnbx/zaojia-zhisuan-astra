@@ -1,4 +1,5 @@
 import {LoadingLogo} from './brand/LoadingLogo';
+import {PageLoading} from './brand/PageLoading';
 import {lazy,Suspense,useEffect,useId,useRef,useState} from 'react';
 import {api,json} from './api';
 import {Button,Icon,Modal} from './ui';
@@ -53,7 +54,7 @@ function PricingDetailsView({data,state,active,blocked,close,professional,retry,
  const heading=<div className="pricing-map-heading"><div className="pricing-map-identity"><h2>{title} <span>第 {data.row_context.row_number} 行</span></h2><small title={data.row_context.sheet_name}>{data.row_context.sheet_name} · {data.row_context.target_header}{unit&&` · ${unit}`}</small></div><div className="pricing-map-conditions" aria-label="当前清单条件">{conditions.map(([key,value])=><span key={key} title={`${key}：${String(value)}`}><small>{key}</small>{String(value)}</span>)}</div></div>;
  return <Modal title={`${title} · 第 ${data.row_context.row_number} 行`} heading={heading} close={close}><div className={`pricing-map${expanded?' report-expanded':''}`} onKeyDown={event=>{if(event.key==='Escape'&&expanded){event.preventDefault();event.stopPropagation();collapse();}}}>
   <div className={`pricing-map-scroll${details?' pricing-map-columns':!error?' pricing-map-scroll--loading':''}`}>
-   {error?<div className="pricing-map-empty" role="alert"><p>{error}</p><Button onClick={()=>setRequestVersion(v=>v+1)}>重新读取依据</Button></div>:!details?<div className="pricing-map-loading" role="status"><LoadingLogo size={200}/><span>正在读取具体样本与规则</span></div>:<>
+   {error?<div className="pricing-map-empty" role="alert"><p>{error}</p><Button onClick={()=>setRequestVersion(v=>v+1)}>重新读取依据</Button></div>:!details?<div className="pricing-map-loading" role="status"><PageLoading label="正在读取具体样本与规则"/></div>:<>
     <div className="pricing-map-main" ref={scroll}><section className="pricing-map-path" ref={playbackPath} aria-label="匹配路径">
      <Suspense fallback={<div className="pricing-flow-loading" role="status">正在载入交互路径，下方仍可查看完整依据。</div>}><PricingFlow conditions={conditions} candidates={candidates} selected={selected} select={select} unit={unit} current={data.row_context.current_value} saved={state.phase==='saved'} savedValue={state.savedValue} step={step} showBasis={showBasis} returnToChat={close} experienceCount={details.experience.total} experienceMean={details.experience.distribution.count>0?details.experience.distribution.mean:undefined} visible={!expanded}/></Suspense>
      <div className="pricing-map-playback" role="status">{step>=0?['读取本行要素与计价单位。','按规则返回的要素一致程度比较候选。','查看所选候选来源、差异和经验样本。','由你核对条件，返回聊天确认填写。'][step]:'点击候选数值，查看与本行的关系。'}</div>

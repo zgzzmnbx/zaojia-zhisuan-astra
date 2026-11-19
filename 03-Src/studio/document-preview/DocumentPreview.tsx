@@ -35,7 +35,7 @@ import "./DocumentPreview.css";
 const FETCH_TIMEOUT_MS = 30_000;
 const RENDER_TIMEOUT_MS = 45_000;
 const FALLBACK_BASE_URL = "/";
-import {TaskProgress} from '../TaskProgress';
+import {PagePending} from '../brand/PageLoading';
 
 export type DocumentPreviewStatus = "idle" | "loading" | "ready" | "error";
 export type DocumentPreviewSource =
@@ -387,14 +387,7 @@ export default function DocumentPreview({
           />
         </RendererBoundary>
       )}
-      {status === "loading" && (
-        <div
-          className="document-preview__loading"
-
-        >
-          <TaskProgress label="正在读取 Word 文档" detail="解析文档与分页排版"/>
-        </div>
-      )}
+      {(status === "loading" || (status === "idle" && documentId)) && <PagePending label="正在读取 Word 文档"/>}
     </div>
   );
 }

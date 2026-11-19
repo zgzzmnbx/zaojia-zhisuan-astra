@@ -9,9 +9,8 @@ import {readBakedSettings,type BakedSettings} from './baked-settings';
 import {useTaskDisclosure} from './useTaskDisclosure';
 import {NodeDisclosureSlot} from './NodeDisclosureSlot';
 import {WorkbenchModeSwitch} from './WorkbenchModeSwitch';
-import {useEffect,useRef,useState,type CSSProperties,type ReactNode} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState,type CSSProperties,type ReactNode} from 'react';
 import {Icon} from '../ui';
-import {LoadingLogo} from '../brand/LoadingLogo';
 import {api} from '../api';
 import {sandboxNodes,completedSandboxZones,runningZone,type SandboxInput,type ZoneId} from './node-state';
 import {mountVisualSandbox as mountSandbox} from './visual-mode-scene.mjs';
@@ -24,7 +23,7 @@ import {nextTaskActivity,type TaskActivity} from './task-activity';
 import type {ReviewProgressTask} from '../../professional/components/agent-workspace/reviewProgress';
 
 
-type Props={parcelName?:string;demoSettings?:import('../demo-settings').DemoSettings;chatTransparency?:number;setChatTransparency?:(value:number)=>void;overview?:ReactNode;simple?:()=>void;roofLabels:boolean;setRoofLabels:(value:boolean)=>void;autoOrbit:boolean;setAutoOrbit?:(value:boolean)=>void;orbitDelay:number;setOrbitDelay?:(value:number)=>void;orbitSettings:()=>void;variant:'immersive'|'card';immersive:()=>void;context:string;active:boolean;dark:boolean;title:string;taskId:string;tasks:{id:string;title:string}[];input:Omit<SandboxInput,'reviewTasks'|'reviewError'>;chatCollapsed:boolean;classic:()=>void;toggleDark:()=>void;selectTask:(id:string)=>void;enter:(action:string)=>void};
+type Props={onLoadingChange:(pending:boolean,infoOpen:boolean)=>void;parcelName?:string;demoSettings?:import('../demo-settings').DemoSettings;chatTransparency?:number;setChatTransparency?:(value:number)=>void;overview?:ReactNode;simple?:()=>void;roofLabels:boolean;setRoofLabels:(value:boolean)=>void;autoOrbit:boolean;setAutoOrbit?:(value:boolean)=>void;orbitDelay:number;setOrbitDelay?:(value:number)=>void;orbitSettings:()=>void;variant:'immersive'|'card';immersive:()=>void;context:string;active:boolean;dark:boolean;title:string;taskId:string;tasks:{id:string;title:string}[];input:Omit<SandboxInput,'reviewTasks'|'reviewError'>;chatCollapsed:boolean;classic:()=>void;toggleDark:()=>void;selectTask:(id:string)=>void;enter:(action:string)=>void};
 export default function ProjectSandbox(props:Props){
  const [visualSettings,setVisualSettings]=useState(readVisualMode);
  const [visualStatus,setVisualStatus]=useState({mode:'baked',reason:'',loading:false,error:''});
@@ -66,6 +65,7 @@ export default function ProjectSandbox(props:Props){
  const [taskFocus,setTaskFocus]=useState<ZoneId|null>(null),focusedActivity=useRef('');
  const controlsRef=useRef<HTMLDivElement>(null),controlsButton=useRef<HTMLButtonElement>(null);
  const [controlsOpen,setControlsOpen]=useState(false);
+ useLayoutEffect(()=>props.onLoadingChange(!ready&&!error,infoVisible),[ready,error,infoVisible,props.onLoadingChange]);
  const [pageVisible,setPageVisible]=useState(()=>!document.hidden);
  const disclosure=useTaskDisclosure(activity,props.context,props.active&&pageVisible,reduced);
  const progressOpen=!!activity&&disclosure==='progress';
@@ -138,7 +138,6 @@ export default function ProjectSandbox(props:Props){
   </div>{props.variant!=='card'&&props.overview&&<button type="button" className="btn btn-ghost btn-square btn-sm sandbox-all sandbox-info-toggle" aria-label="项目信息卡片" aria-pressed={infoVisible} title={infoVisible?'收起项目信息卡片':'显示项目信息卡片'} onClick={()=>toggleInfo(!infoVisible)}><Icon name="sidebar-simple"/></button>}<WorkbenchModeSwitch value={props.variant==='card'?'classic':'sandbox'} change={mode=>{setControlsOpen(false);setMenu(false);if(mode==='sandbox')props.immersive();else if(mode==='classic')props.classic();else props.simple?.()}}/></div>
   </header>
   {menu&&<nav className="sandbox-all-menu" id="sandbox-all-menu" aria-label="沙盘全部模块">{nodes.map((n,i)=><button className="btn btn-ghost" key={n.id} aria-label={`聚焦${n.title}`} aria-pressed={selected===n.id} title={`聚焦${n.title}`} onClick={()=>{focusZone(n.id)}}><span>{String(i+1).padStart(2,'0')}</span>{n.title}</button>)}</nav>}
-  {!ready&&!error&&<div className="sandbox-loading" role="status" data-chat-open={props.variant!=='card'&&!props.chatCollapsed} data-info-open={props.variant!=='card'&&!!props.overview&&infoVisible}><div className="sandbox-loading-content"><LoadingLogo size={200} active={props.active} paused={!pageVisible}/><span>正在加载沙盘…</span></div></div>}
   {error&&<div className="sandbox-load-error" role="status"><p>{error}</p><button className="btn btn-sm btn-ghost" onClick={()=>setRetry(n=>n+1)}>重试画面</button><button className="btn btn-sm btn-primary" onClick={props.classic}>使用经典界面</button></div>}
   <div className="sandbox-markers" aria-label="项目功能节点">{nodes.map((node,i)=><div key={node.id} ref={el=>{if(el)markers.current.set(node.id,el);else markers.current.delete(node.id)}} className="sandbox-marker" data-zone={node.id} data-tone={node.tone} data-progress-open={activity?.zone===node.id&&progressOpen}>
    <button className="sandbox-marker-title" aria-label={`定位${node.title}`} aria-pressed={selected===node.id} aria-expanded={selected===node.id} aria-controls={`sandbox-node-info-${node.id}`} title={selected===node.id?'再次点击返回鸟瞰视角':`聚焦${node.title}`} onClick={()=>selected===node.id?resetView():focusZone(node.id)}><small>{String(i+1).padStart(2,'0')}</small><span>{node.title}</span></button>

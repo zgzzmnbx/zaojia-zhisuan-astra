@@ -1,4 +1,5 @@
 import {LoadingLogo} from '../brand/LoadingLogo';
+import {PagePending} from "../brand/PageLoading";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -321,7 +322,7 @@ export default function KnowledgeArticlesModule({
         </div>
       ) : (
         <div className="knowledge-network-view">
-          {graphError ? <ErrorState message={graphError} onRetry={retryGraph} /> : graph === null ? <LoadingState label="正在读取关系网络" /> : (
+          {graphError ? <ErrorState message={graphError} onRetry={retryGraph} /> : graph === null ? <PagePending label="正在读取关系网络" /> : (
             <div className="knowledge-network-stage-shell">
               <label className="knowledge-articles-search knowledge-network-search">
                 <Search size={16} aria-hidden="true" />
@@ -332,7 +333,7 @@ export default function KnowledgeArticlesModule({
                   placeholder="搜索网络节点"
                 />
               </label>
-              {networkVisible && <Suspense fallback={<LoadingState label="正在加载网络视图" />}>
+              {networkVisible && <Suspense fallback={<PagePending label="正在加载网络视图" />}>
                 <KnowledgeNetworkGraph
                   data={graph}
                   query={networkQuery}

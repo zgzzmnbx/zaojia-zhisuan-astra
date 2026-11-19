@@ -1,4 +1,3 @@
-import {ProjectDashboardLoading} from "./ProjectDashboardLoading";
 import {TaskProgress} from "../TaskProgress";
 import {
   AlertTriangle,
@@ -6,7 +5,7 @@ import {
   History,
   Loader2,
 } from "../../PhosphorIcons";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ProjectCharts from "./ProjectCharts";
 import ProjectDashboardToolbar from "./ProjectDashboardToolbar";
 import ProjectDetailDrawer from "./ProjectDetailDrawer";
@@ -28,6 +27,7 @@ import "./astra-dashboard.css";
 
 type Props = {
   active: boolean;
+  onInitialLoading: (pending: boolean) => void;
   apiBase: string;
   onOpenRun: (
     projectId: string,
@@ -46,6 +46,7 @@ const EMPTY_LIST: ProjectListPayload = {
 
 export default function ProjectDashboard({
   active,
+  onInitialLoading,
   apiBase,
   onOpenRun,
 }: Props) {
@@ -58,6 +59,8 @@ export default function ProjectDashboard({
   const [selectedItem, setSelectedItem] = useState<ProjectListItem | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const initialLoading = isLoading && !dashboard && !error;
+  useLayoutEffect(() => onInitialLoading(initialLoading), [initialLoading, onInitialLoading]);
   const [isBackfilling, setIsBackfilling] = useState(false);
   const [backfillMessage, setBackfillMessage] = useState("");
   const [openError, setOpenError] = useState("");
@@ -240,7 +243,6 @@ export default function ProjectDashboard({
         </div>
       ) : null}
 
-      {isLoading && !dashboard ? <ProjectDashboardLoading active={active}/> : null}
       {dashboard ? (
         <>
           <ProjectMetricGrid dashboard={dashboard} onSelect={onMetric} />

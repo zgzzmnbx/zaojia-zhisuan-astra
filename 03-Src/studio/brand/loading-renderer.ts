@@ -1,11 +1,11 @@
-export type LoadingOptions={mode:string;paused:boolean;dark:boolean;active:boolean};
+export type LoadingOptions={mode:string;paused:boolean;dark:boolean;active:boolean;finishAtRest?:boolean};
 export type LoadingRenderer={update:(options:LoadingOptions)=>void;inspect:()=>unknown;dispose:()=>void};
 
 /** Start the worker immediately; fall back to the existing renderer on unsupported devices. */
-export function mountLoadingLogo(host:HTMLElement,onReady:()=>void,onError:()=>void):LoadingRenderer{
+export function mountLoadingLogo(host:HTMLElement,initial:LoadingOptions,onReady:()=>void,onError:()=>void,onSettled?:()=>void):LoadingRenderer{
  let disposed=false,worker:Worker|null=null,canvas:HTMLCanvasElement|null=null,timeout=0,fallbackStarted=false;
  let fallback:import('./LogoPreview').LogoController|null=null;
- let options:LoadingOptions={mode:'ring',paused:false,dark:false,active:true},stats:unknown=null;
+ let options=initial,stats:unknown=null;
  const effective=()=>({...options,active:options.active&&!document.hidden});
  const update=()=>{
   if(disposed)return;
@@ -18,7 +18,7 @@ export function mountLoadingLogo(host:HTMLElement,onReady:()=>void,onError:()=>v
   fallbackStarted=true;stopWorker();
   import('./logo-renderer.mjs').then(({mountLogo})=>{
    if(disposed)return;
-   try{fallback=mountLogo(host,onError);update();onReady();}catch{onError();}
+   try{fallback=mountLogo(host,onError,onReady,onSettled);update();}catch{onError();}
   }).catch(()=>{if(!disposed)onError();});
  };
  const resize=()=>{
@@ -35,6 +35,7 @@ export function mountLoadingLogo(host:HTMLElement,onReady:()=>void,onError:()=>v
   worker.onmessage=({data})=>{
    if(disposed)return;
    if(data.type==='ready'){clearTimeout(timeout);onReady();}
+   else if(data.type==='settled')onSettled?.();
    else if(data.type==='stats')stats=data.value;
    else if(data.type==='error')fail();
   };

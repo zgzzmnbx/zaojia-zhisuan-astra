@@ -1,4 +1,5 @@
 import {TaskProgress} from './TaskProgress';
+import {PageLoadingBoundary} from './brand/PageLoading';
 import {ChevronLeft,ChevronRight} from '../PhosphorIcons';
 import {lazy,Suspense,useEffect,useState,type CSSProperties,type KeyboardEvent} from 'react';
 import {api} from './api';
@@ -46,9 +47,9 @@ export function KnowledgeWorkspace({tab,select,active,fullScreen=false,present,o
    <div className="kw-bottom"><button className="text-button" onClick={()=>select('articles')}><Icon name="book"/>阅读文章</button><button className="text-button" onClick={memory}>知识记忆<Icon name="arrow-right"/></button></div>
   </section>
   <section id={`knowledge-panel-${articleTab}`} role="tabpanel" aria-labelledby={`knowledge-tab-${articleTab}`} hidden={tab==='ask'||tab==='weknora'} className={`kw-articles migrated-articles ${articleTab==='network'?'is-network':''}`}>
-   <div className={`knowledge-articles-module ${articleTab==='network'?'is-network':''}`}><Suspense fallback={<TaskProgress label="正在打开文章库"/>}><Articles fullScreen={fullScreen} networkVisible={active&&tab==='network'} apiBase="" activeTab={articleTab} onTabChange={t=>{setArticleTab(t);select(t);}} networkQuery={query} onNetworkQueryChange={setQuery} onArticleCountChange={articles=>setCounts(c=>({...c,articles}))} onRelationshipCountChange={relations=>setCounts(c=>({...c,relations}))} onPresentArticle={present}/></Suspense></div>
+   <div className={`knowledge-articles-module page-loading-host ${articleTab==='network'?'is-network':''}`}><PageLoadingBoundary active={active&&tab!=='ask'&&tab!=='weknora'} label={articleTab==='network'?'正在读取关系网络':'正在打开文章库'}><Articles fullScreen={fullScreen} networkVisible={active&&tab==='network'} apiBase="" activeTab={articleTab} onTabChange={t=>{setArticleTab(t);select(t);}} networkQuery={query} onNetworkQueryChange={setQuery} onArticleCountChange={articles=>setCounts(c=>({...c,articles}))} onRelationshipCountChange={relations=>setCounts(c=>({...c,relations}))} onPresentArticle={present}/></PageLoadingBoundary></div>
    <footer className="kw-library-footer"><span>{counts.articles||'—'} 篇文章 · {counts.relations||'—'} 条关系</span><span>来源可追溯</span></footer>
   </section>
-  <section id="knowledge-panel-weknora" role="tabpanel" aria-labelledby="knowledge-tab-weknora" hidden={tab!=='weknora'} className="kw-weknora"><Suspense fallback={<TaskProgress label="正在打开 WeKnora 试验区"/>}><WeKnoraLab active={active&&tab==='weknora'} fullScreen={fullScreen} prepareQuestion={prepareQuestion} onGraphVisible={onGraphVisible} settings={settings}/></Suspense></section>
+  <section id="knowledge-panel-weknora" role="tabpanel" aria-labelledby="knowledge-tab-weknora" hidden={tab!=='weknora'} className="kw-weknora page-loading-host"><PageLoadingBoundary active={active&&tab==='weknora'} label="正在打开 WeKnora 试验区"><WeKnoraLab active={active&&tab==='weknora'} fullScreen={fullScreen} prepareQuestion={prepareQuestion} onGraphVisible={onGraphVisible} settings={settings}/></PageLoadingBoundary></section>
  </div>;
 }

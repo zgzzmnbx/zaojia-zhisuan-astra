@@ -5,7 +5,7 @@ import {toolbarProtocol,readToolbarPacket,type ToolbarPacket} from "./toolbar";
 import {useEffect,useRef,useState} from 'react';
 import {DEBUG_MODE} from '../../frontend-debug/mock-adapter';
 import {Button,Note} from '../../studio/ui';
-import {LoadingLogo} from '../../studio/brand/LoadingLogo';
+import {PageLoading} from '../../studio/brand/PageLoading';
 import './digital-cost.css';
 
 const protocol='digital-cost-host/1';
@@ -84,7 +84,7 @@ export function DigitalAssistant({dark=false,palette='astra',active=true,onExpan
  if(DEBUG_MODE)return <div className="panel-content"><Note>前端调试版不连接数字化造价服务。</Note></div>;
  return <div className="digital-cost-module">
   {toolbarTarget&&toolbar&&createPortal(<div style={{display:'contents',visibility:pageReady?'visible':'hidden'}}><DigitalToolbar state={toolbar.state} send={command} disabled={!active||!pageReady||!!error||checking||toolbar.state.blocked}/></div>,toolbarTarget)}
-  {!pageReady&&<div className="digital-cost-loading" role={error?'alert':'status'}><div className="digital-cost-loading-brand"><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><div><span>{error||'正在加载数字化造价助手…'}</span>{error&&<Button primary disabled={checking} onClick={()=>void connect()}>重新连接</Button>}</div></div></div>}
+  {!pageReady&&<div className="digital-cost-loading" role={error?'alert':'status'}><PageLoading active={active} paused={!!error} label={error||'正在加载数字化造价助手…'} action={error&&<Button primary disabled={checking} onClick={()=>void connect()}>重新连接</Button>}/></div>}
   {health?.available&&!checking?<>
    {error&&pageReady&&<div className="digital-cost-status" role="alert"><span>{error}</span><Button disabled={checking} onClick={()=>void connect()}>重新连接</Button></div>}
    <iframe key={epoch} ref={frame} data-ready={pageReady} aria-hidden={!pageReady} inert={!pageReady} src={"/modules/digital-cost/?embed=1&presentation="+encodeURIComponent(presentation)+(initial.current?"&guided=1"+(initial.current.taskId?"&task="+encodeURIComponent(initial.current.taskId):""):"")} title="数字化造价工作台" onLoad={()=>{setToolbar(null);sync();}} sandbox="allow-scripts allow-same-origin allow-downloads allow-forms"/>

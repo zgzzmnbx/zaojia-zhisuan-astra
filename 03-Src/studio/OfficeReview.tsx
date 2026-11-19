@@ -1,15 +1,16 @@
-import {useEffect,useRef,useState,useSyncExternalStore} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState,useSyncExternalStore} from 'react';
 import {api} from './api';
 import {officeDirectory,officeTasks,pendingOfficeTask,type PendingOfficeReview,type OfficeBridge,type OfficePerson,type OfficeTask} from './office-review';
 import type {ReviewOptions,ReviewTask} from './review-flow';
 import {latestReviewTasksByPlatform} from '../professional/components/agent-workspace/reviewProgress';
 import './office-review.css';
-import {LoadingLogo} from './brand/LoadingLogo';
+import {PageLoading} from './brand/PageLoading';
 import {mountOfficeDropTarget} from './office-review-drop';
 
 const namespace='astra-office-selection:v1';
 export default function OfficeReview({bridge,active,dark,palette,context,prepare,chatVisible,close}:{bridge:OfficeBridge;active:boolean;dark:boolean;palette:string;context:string;prepare:()=>void;chatVisible:boolean;close:()=>void}) {
   const frame=useRef<HTMLIFrameElement>(null);
+  const host=useRef<HTMLDivElement>(null);
   const actions=useRef({prepare,close});actions.current={prepare,close};
   const [ready,setReady]=useState(false),[error,setError]=useState(''),[generation,setGeneration]=useState(0);
   const [sceneReady,setSceneReady]=useState(0);
@@ -71,17 +72,16 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
     if(!ready||!active||!chatVisible||!frame.current||!chat)return;
     return mountOfficeDropTarget({frame:frame.current,chat,current:()=>latest.current,active:()=>visible.current});
   },[ready,active,chatVisible,generation,current?.context,current?.revision]);
-  useEffect(()=>{
-    if(!ready||!active)return;
+  useLayoutEffect(()=>{
+    const panel=host.current;if(!panel||!active)return;
     const chat=document.querySelector('#astra-conversation');
     const measure=()=>{
-      const host=frame.current;if(!host)return;
-      const left=chatVisible&&chat?Math.max(0,chat.getBoundingClientRect().right-host.getBoundingClientRect().left+16):0;
-      host.parentElement?.style.setProperty('--office-chat-width',`${left}px`);
-      const f=host.getBoundingClientRect(),r=chatVisible?chat?.getBoundingClientRect():null;
-      send('layout',{left,bottomInset:Math.max(0,f.bottom-window.innerHeight),chatRect:r?{left:r.left-f.left,top:r.top-f.top,right:r.right-f.left,bottom:r.bottom-f.top}:null});
+      const f=panel.getBoundingClientRect(),r=chatVisible?chat?.getBoundingClientRect():null;
+      const left=r&&r.width?Math.max(0,Math.min(f.width,r.right-f.left+16)):0;
+      panel.style.setProperty('--office-chat-width',`${left}px`);
+      if(ready)send('layout',{left,bottomInset:Math.max(0,f.bottom-window.innerHeight),chatRect:r?{left:r.left-f.left,top:r.top-f.top,right:r.right-f.left,bottom:r.bottom-f.top}:null});
     };
-    const observer=new ResizeObserver(measure);if(chat)observer.observe(chat);if(frame.current)observer.observe(frame.current);
+    const observer=new ResizeObserver(measure);if(chat)observer.observe(chat);observer.observe(panel);
     window.addEventListener('resize',measure);window.addEventListener('scroll',measure,true);
     measure();return()=>{observer.disconnect();window.removeEventListener('resize',measure);window.removeEventListener('scroll',measure,true);};
   },[ready,active,chatVisible]);
@@ -121,8 +121,8 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'visibility',visible:active},location.origin);
     frame.current?.contentWindow?.postMessage({namespace:'astra-office-twin:v1',type:'theme',theme:{palette,scheme:dark?'dark':'light'}},location.origin);
   },[ready,active,dark,palette,sceneReady]);
-  return <div className="office-review-host" data-settings-open={settingsOpen&&active} aria-busy={!rendered&&!error}>
-    {!rendered&&<div className="office-review-loading" role="status"><div><LoadingLogo size={200} active={active} paused={!!error} solidFallback/><span>{error?'办公室尚未载入':'正在加载办公室沙盘…'}</span></div></div>}
+  return <div ref={host} className="office-review-host" data-settings-open={settingsOpen&&active} aria-busy={!rendered&&!error}>
+    {!rendered&&<div className="office-review-loading" role="status"><PageLoading active={active} paused={!!error} label={error?'办公室尚未载入':'正在加载办公室沙盘…'}/></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
     {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.52.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;

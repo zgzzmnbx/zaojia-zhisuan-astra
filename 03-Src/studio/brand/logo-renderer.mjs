@@ -6,10 +6,16 @@ import {applyPalette} from './palettes.mjs';
 import {sampleSequence} from './sequences.mjs';
 import {sampleLoadingWave,LOADING_DURATION,MOTION_DURATION} from './loading-wave.mjs';
 import {sampleLoadingRing,RING_LOADING_DURATION} from './loading-ring.mjs';
+import {sampleConversationLoading,advanceConversationTime,CONVERSATION_CYCLE,CONVERSATION_SETTLED,CONVERSATION_FINISH} from './conversation-loading.mjs';
 
-/** @typedef {{mode:string,paused:boolean,seed:string,dark:boolean,palette?:string,speed?:number,active?:boolean,sequence?:string,loading?:boolean}} Options */
-/** Each preview owns its renderer; no business reads or shared mutable scenes. */
-export function mountLogo(host,onError){
+/** @typedef {{mode:string,paused:boolean,seed:string,dark:boolean,palette?:string,speed?:number,active?:boolean,sequence?:string,loading?:boolean,finishAtRest?:boolean}} Options */
+/** Each preview owns its renderer.
+ * @param {HTMLElement} host
+ * @param {()=>void} onError
+ * @param {()=>void} [onFirstFrame]
+ * @param {()=>void} [onSettled]
+ */
+export function mountLogo(host,onError,onFirstFrame,onSettled){
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
  renderer.setClearColor(0,0);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.94;
@@ -27,11 +33,11 @@ export function mountLogo(host,onError){
  const currentTime=()=>time+(waitingSince?(performance.now()-waitingSince)/1000:0);
  const sequence=()=>manual?null:sampleSequence(options.sequence,currentTime(),options.speed);
  const loadingRest=()=>{
-  if(!options.loading||manual||!['wave','ring'].includes(options.mode))return null;
-  const duration=options.mode==='wave'?LOADING_DURATION:RING_LOADING_DURATION;
-  const end=options.mode==='wave'?MOTION_DURATION:RING_LOADING_DURATION-.4;
+  if(!options.loading||manual)return null;
+  const duration=options.mode==='conversation'?CONVERSATION_CYCLE:options.mode==='wave'?LOADING_DURATION:RING_LOADING_DURATION;
+  const end=options.mode==='conversation'?(options.finishAtRest?CONVERSATION_FINISH:CONVERSATION_SETTLED):options.mode==='wave'?MOTION_DURATION:RING_LOADING_DURATION-.4;
   const elapsed=currentTime()%duration;
-  return elapsed>=end?{phase:'rest',remaining:duration-elapsed}:null;
+  return elapsed>=end-1e-6?{phase:'rest',remaining:duration-elapsed}:null;
  };
  const setColor=()=>{
   // Consume the actual theme primary, including its dark variant.
@@ -43,7 +49,7 @@ export function mountLogo(host,onError){
   scene.environmentIntensity=options.dark?1.05:.75;
  };
  function paint(){
-  const step=sequence();let pose=options.loading&&options.mode==='wave'?sampleLoadingWave(time):options.loading&&options.mode==='ring'?sampleLoadingRing(time):sampleMotion(step?.mode??options.mode,step?.sampleTime??time);
+  const step=sequence();let pose=options.loading&&options.mode==='conversation'?sampleConversationLoading(time):options.loading&&options.mode==='wave'?sampleLoadingWave(time):options.loading&&options.mode==='ring'?sampleLoadingRing(time):sampleMotion(step?.mode??options.mode,step?.sampleTime??time);
   if(manual){
    const parts=manual.kind==='spin'?soloPose(manual.from,manual.index,manual.time):transitionPose(manual.from,manual.kind==='explode',manual.time);
    pose={parts,rotation:[0,0,0]};
@@ -53,13 +59,19 @@ export function mountLogo(host,onError){
   // Presentation zoom makes room for expanded poses, without resizing any cube.
   holder.scale.setScalar(manual?(.64):!step&&['scatter','assembly'].includes(options.mode)?.64:pose.viewScale??1);
   renderer.render(scene,camera);draws++;
+  if(draws===1)onFirstFrame?.();
  }
  function schedule(){if(!disposed&&!frame&&!timer&&visible&&!document.hidden&&options.active)frame=requestAnimationFrame(tick);}
  function moving(){return !options.paused&&(manual?manual.time<manual.duration:!!options.sequence||options.mode!=='static');}
  function tick(now){frame=0;if(disposed||!visible||document.hidden)return;
   const dt=last?(now-last)/1000:0;last=now;
-  if(moving()){if(manual)manual.time=Math.min(manual.duration,manual.time+Math.min(dt,.05)*options.speed);else time+=options.sequence?dt:Math.min(dt,.05)*options.speed;}
+  if(moving()){
+   if(manual)manual.time=Math.min(manual.duration,manual.time+Math.min(dt,.05)*options.speed);
+   else if(options.loading&&options.mode==='conversation')time=advanceConversationTime(time,dt,options.finishAtRest);
+   else time+=options.sequence?dt:Math.min(dt,.05)*options.speed;
+  }
   paint();const step=sequence()??loadingRest();
+  if(options.finishAtRest&&(options.paused||step?.phase==='rest')){last=0;onSettled?.();return;}
   if(moving()&&step?.phase==='rest'){
    // A static interval consumes one timer, not a continuous WebGL render loop.
    last=0;waitingSince=performance.now();timer=setTimeout(()=>{time=currentTime();waitingSince=0;timer=0;schedule();},step.remaining*1000);
@@ -73,7 +85,7 @@ export function mountLogo(host,onError){
  const lost=(event)=>{event.preventDefault();stop();onError();};renderer.domElement.addEventListener('webglcontextlost',lost);
  setColor();resize();
  return {
-  update(next){if(disposed)return;stop();const mode=normalizeMotion(next.mode);if(mode!==options.mode||next.sequence!==options.sequence||next.speed!==undefined&&next.speed!==options.speed&&next.sequence){time=0;manual=null;spread=false;}options={...options,...next,mode};setColor();schedule();},
+  update(next){if(disposed)return;stop();const mode=next.loading&&next.mode==='conversation'?'conversation':normalizeMotion(next.mode);if(mode!==options.mode||next.sequence!==options.sequence||next.speed!==undefined&&next.speed!==options.speed&&next.sequence){time=0;manual=null;spread=false;}options={...options,...next,mode};setColor();schedule();},
   restart(){if(disposed)return;stop();time=0;manual=null;spread=false;schedule();},
   playOnce(kind,index=4){if(disposed||!['explode','assemble','spin'].includes(kind))return;
    const from=manual?logo.children.map(o=>({position:o.position.clone(),quaternion:o.quaternion.clone(),scale:o.scale.clone()})):basePose();

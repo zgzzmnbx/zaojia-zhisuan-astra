@@ -4,6 +4,7 @@ import {createLogo} from './model.mjs';
 import {applyPalette} from './palettes.mjs';
 import {sampleLoadingWave,LOADING_DURATION,MOTION_DURATION} from './loading-wave.mjs';
 import {sampleLoadingRing,RING_LOADING_DURATION} from './loading-ring.mjs';
+import {sampleConversationLoading,advanceConversationTime,CONVERSATION_CYCLE,CONVERSATION_SETTLED,CONVERSATION_FINISH} from './conversation-loading.mjs';
 
 // Loading-only renderer. The approved geometry, lighting and motion samplers are
 // unchanged; frame scheduling no longer shares the application's main thread.
@@ -21,7 +22,7 @@ function stop(){
 }
 function schedule(){if(options.active&&!frame&&!timer)frame=requestAnimationFrame(tick);}
 function paint(){
- const pose=options.mode==='wave'?sampleLoadingWave(time):sampleLoadingRing(time);
+ const pose=options.mode==='conversation'?sampleConversationLoading(time):options.mode==='wave'?sampleLoadingWave(time):sampleLoadingRing(time);
  logo.children.forEach((child,i)=>{child.position.copy(pose.parts[i].position);child.quaternion.copy(pose.parts[i].quaternion);});
  logo.rotation.set(...pose.rotation);holder.scale.setScalar(pose.viewScale??1);
  renderer.render(scene,camera);draws++;
@@ -33,13 +34,14 @@ function tick(now){
  const dt=last?(now-last)/1000:0;
  if(!options.paused){
   if(last){gaps.push(dt*1000);if(gaps.length>120)gaps.shift();}
-  time+=Math.min(dt,.05);
+  time=options.mode==='conversation'?advanceConversationTime(time,dt,options.finishAtRest):time+Math.min(dt,.05);
  }
  last=now;paint();
- if(options.paused){last=0;report();return;}
- const duration=options.mode==='wave'?LOADING_DURATION:RING_LOADING_DURATION;
- const restAt=options.mode==='wave'?MOTION_DURATION:RING_LOADING_DURATION-.4;
+ const duration=options.mode==='conversation'?CONVERSATION_CYCLE:options.mode==='wave'?LOADING_DURATION:RING_LOADING_DURATION;
+ const restAt=options.mode==='conversation'?(options.finishAtRest?CONVERSATION_FINISH:CONVERSATION_SETTLED):options.mode==='wave'?MOTION_DURATION:RING_LOADING_DURATION-.4;
  const elapsed=time%duration;
+ if(options.finishAtRest&&(elapsed>=restAt-1e-6||options.paused)){last=0;self.postMessage({type:'settled'});return;}
+ if(options.paused){last=0;report();return;}
  if(elapsed>=restAt){
   last=0;waitingSince=performance.now();timer=setTimeout(()=>{time+=(performance.now()-waitingSince)/1000;waitingSince=0;timer=0;schedule();},(duration-elapsed)*1000);
  }else schedule();
