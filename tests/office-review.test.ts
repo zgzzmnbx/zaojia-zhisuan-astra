@@ -14,8 +14,38 @@ import * as THREE from 'three';
 import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.js';
 import {collectMonitorLighting} from '../public/office-twin/viewer/monitor-lighting.js';
 import {createFrameMeter} from '../public/office-twin/viewer/frame-meter.js';
+import {placeFloorLabel} from '../public/office-twin/viewer/floor-label-layout.js';
 import {createFloorFocusTiming,createVisibilityBlend} from '../public/office-twin/viewer/navigation-motion.js';
 import {summarizeOfficeBoard,hideBoardCore} from '../public/office-twin/viewer/office-board.js';
+
+test('9F callout stays next to the facade with the hub on either side',()=>{
+ const corners=[[500,280],[710,340],[810,420],[600,360]].map(([x,y])=>({x,y,z:0}));
+ const area={left:390,top:8,right:1314,bottom:926};
+ const hub={left:16,right:366,top:60,bottom:918},dock={left:1096,right:1306,top:16,bottom:359};
+ const normal=placeFloorLabel(corners,area,[hub,dock],101,36);
+ assert.ok(normal);assert.equal(normal.y,350);assert.equal(normal.x,normal.anchorX+22);
+ // The dock only blocks the projection at overlapping heights.
+ const rightPanel={left:740,right:1080,top:300,bottom:800};
+ const flipped=placeFloorLabel(corners,area,[rightPanel],101,36);
+ assert.ok(flipped);assert.equal(flipped.x+101,flipped.anchorX-22);assert.ok(flipped.anchorX<normal.anchorX);
+ assert.deepEqual(placeFloorLabel(corners,area,[{...rightPanel,bottom:320}],101,36),normal);
+ assert.equal(placeFloorLabel(corners,{...area,left:535},[rightPanel],101,36),null);
+ assert.equal(placeFloorLabel(corners.map(p=>({...p,x:p.x-1400})),area,[],101,36),null);
+ assert.equal(placeFloorLabel(corners.map(p=>({...p,z:2})),area,[],101,36),null);
+});
+
+test('9F anchor moves continuously as the camera crosses a face-on view',()=>{
+ const camera=new THREE.OrthographicCamera(-80,80,60,-60,.1,400);
+ const points=[[-20,-12],[20,-12],[20,12],[-20,12]].map(([x,z])=>new THREE.Vector3(x,0,z));
+ const area={left:0,right:1000,top:0,bottom:800};
+ function pose(angle:number){
+  camera.position.set(100*Math.sin(angle),60,100*Math.cos(angle));camera.lookAt(0,0,0);camera.updateMatrixWorld();
+  const corners=points.map(p=>{const v=p.clone().project(camera);return {x:(1+v.x)*500,y:(1-v.y)*400,z:v.z};});
+  return placeFloorLabel(corners,area,[],101,36);
+ }
+ const a=pose(-.001),b=pose(.001);assert.ok(a&&b);
+ assert.ok(Math.hypot(b.anchorX-a.anchorX,b.y-a.y)<1);
+});
 
 test('office board separates live review outcomes from demo assignments and unknown context',()=>{
  const task=(id:string,status:string,demo=false)=>({id,status,demo});

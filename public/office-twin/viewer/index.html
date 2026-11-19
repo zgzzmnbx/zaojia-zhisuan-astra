@@ -212,7 +212,7 @@
   officeClient.start();
   window.addEventListener('office-disposed',()=>{rail.dispose();desk.dispose();officeClient.dispose();},{once:true});
   window.addEventListener('pagehide',event=>{if(!event.persisted){rail.dispose();desk.dispose();officeClient.dispose();}});
-  import('./viewer.js?v='+VERSION+'&ui=office-0.54.0').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
+  import('./viewer.js?v='+VERSION+'&ui=office-0.54.1').then(({mountOfficeViewer}) => mountOfficeViewer()).catch(error => {
     document.querySelector('#fallback-message').textContent='查看器启动失败：'+error.message+'。当前只是静态预览，请刷新重试。';
     document.querySelector('#render-status').textContent='静态预览';
     document.documentElement.dataset.viewerStatus='module-error';
