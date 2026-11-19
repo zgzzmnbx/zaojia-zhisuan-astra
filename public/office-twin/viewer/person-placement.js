@@ -5,7 +5,13 @@ export const REVIEW_ROOM_ID='R_N';
 export function pointInBounds(point,bounds,margin=0){return point.x>=bounds[0]+margin&&point.x<=bounds[2]-margin&&point.z>=bounds[1]+margin&&point.z<=bounds[3]-margin;}
 export function nearestFreePoint(points,point,occupied=[],clearance=.72){
   let result=null,distance=Infinity;
-  for(const p of points){if(occupied.some(o=>Math.hypot(o.x-p.x,o.z-p.z)<clearance))continue;const d=Math.hypot(p.x-point.x,p.z-point.z);if(d<distance){result=p;distance=d;}}
+  const radius2=Math.max(0,clearance)**2;
+  for(const p of points){
+    const dx=p.x-point.x,dz=p.z-point.z,d=dx*dx+dz*dz;
+    if(d>=distance)continue;
+    if(occupied.some(o=>(o.x-p.x)**2+(o.z-p.z)**2<radius2))continue;
+    result=p;distance=d;
+  }
   return result;
 }
 

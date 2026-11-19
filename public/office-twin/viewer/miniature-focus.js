@@ -104,6 +104,11 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
     depthTest:false, depthWrite:false, toneMapped:false});
   const composite = new ShaderMaterial({uniforms, vertexShader, fragmentShader:compositeShader,
     depthTest:true, depthWrite:true, depthFunc:AlwaysDepth});
+  const nightBlur = material.clone(), nightComposite = composite.clone();
+  for (const pass of [nightBlur, nightComposite]) {
+    pass.uniforms = uniforms;
+    pass.defines = {FOCUS_EMISSION:1};
+  }
   const quad = new FullScreenQuad(material);
   let raw = null, horizontal = null, blurred = null, frames = 0;
 
@@ -131,9 +136,6 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
       depthTexture:new DepthTexture(size.x, size.y, UnsignedIntType)});
     horizontal = new WebGLRenderTarget(w, h, {...options, depthBuffer:false});
     blurred = new WebGLRenderTarget(w, h, {...options, depthBuffer:false});
-    material.defines = emission ? {FOCUS_EMISSION:1} : {};
-    composite.defines = {...material.defines};
-    material.needsUpdate = composite.needsUpdate = true;
   }
 
   function drawBlur(source, output, x, y) {
@@ -144,7 +146,7 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
     quad.render(renderer);
   }
 
-  function render(strength, emission, reveal = 1) {
+  function render(strength, emission, reveal = 1, countFrame = true) {
     prepare(emission);
     const destination = renderer.getRenderTarget(), mask = camera.layers.mask;
     const background = scene.background, autoClear = renderer.autoClear;
@@ -165,10 +167,10 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
       uniforms.sharpColorMap.value = raw.textures[0];
       uniforms.sharpEmissionMap.value = raw.textures[1] ?? null;
       uniforms.hazeColor.value.copy(background);
-      quad.material = material;
+      quad.material = emission ? nightBlur : material;
       drawBlur(raw, horizontal, size.y / size.x / 900, 0);
       drawBlur(horizontal, blurred, 0, 1 / 900);
-      quad.material = composite;
+      quad.material = emission ? nightComposite : composite;
       drawBlur(blurred, destination, 0, 0);
 
       camera.layers.mask = mask;
@@ -176,7 +178,7 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
       scene.background = null;
       renderer.autoClear = false;
       renderer.render(scene, camera);
-      frames++;
+      if(countFrame)frames++;
     } finally {
       for (let i = 0; i < backgroundRoots.length; i++) backgroundRoots[i].visible = visible[i];
       camera.layers.mask = mask;
@@ -186,10 +188,10 @@ export function createMiniatureFocus(renderer, scene, camera, model, floor) {
     }
   }
 
-  return {render, release, state:() => ({frames, allocated:!!raw,
+  return {render, release, screenMaterials:[composite], linearMaterials:[material, nightBlur, nightComposite], state:() => ({frames, allocated:!!raw,
     strength:raw ? uniforms.strength.value : 0, reveal:raw ? uniforms.reveal.value : 0,
     backgroundSize:blurred ? [blurred.width, blurred.height] : null,
     depthSize:raw ? [raw.width, raw.height] : null, emission:raw?.textures.length === 2}),
-    dispose() { release(); material.dispose(); composite.dispose(); quad.dispose(); },
+    dispose() { release(); for (const pass of [material, composite, nightBlur, nightComposite]) pass.dispose(); quad.dispose(); },
   };
 }

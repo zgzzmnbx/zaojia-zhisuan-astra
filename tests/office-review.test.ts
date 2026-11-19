@@ -348,6 +348,30 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {preparePolyforkTemplate,createPolyforkPerson,normalizePersonStyle} from '../public/office-twin/viewer/people/polyfork-person.js';
 import {normalizePersonColors,personColorDefaults} from '../public/office-twin/viewer/people/person-colors.js';
 import {personScreenBounds} from '../public/office-twin/viewer/person-drag-overlay.js';
+import {createPersonHitShape} from '../public/office-twin/viewer/person-hit-shape.js';
+import {warmOfficeSurfaces} from '../public/office-twin/viewer/prepare-renderer.js';
+
+test('office warmup restores hidden floors, culling, buffers and shadow settings',()=>{
+ for(const mode of ['hdr','daylight-only','failure']){
+  const scene=new THREE.Scene(),floor=new THREE.Group(),mesh=new THREE.Mesh();
+  scene.add(floor);floor.add(mesh);floor.visible=false;
+  const original=new THREE.WebGLRenderTarget(1,1);let current=original,size=[800,600,1.5],passes=0,released=false;
+  const renderer={
+   getSize:(v:THREE.Vector2)=>v.set(size[0],size[1]),getPixelRatio:()=>size[2],
+   setDrawingBufferSize:(w:number,h:number,dpr:number)=>{size=[w,h,dpr];},
+   getRenderTarget:()=>current,setRenderTarget:(v:THREE.WebGLRenderTarget)=>{current=v;},
+   shadowMap:{autoUpdate:true,needsUpdate:true},extensions:{has:()=>mode!=='daylight-only'},
+   render:()=>{assert.equal(floor.visible,true);assert.equal(mesh.frustumCulled,false);},
+  };
+  const focus={release:()=>{released=true;},render:()=>{passes++;if(mode==='failure')throw Error('framebuffer');}};
+  const warm=()=>warmOfficeSurfaces(renderer,scene,new THREE.Camera(),[floor],{warm:(draw:()=>void)=>draw()},focus);
+  if(mode==='failure')assert.throws(warm,/framebuffer/);else warm();
+  assert.equal(passes,mode==='daylight-only'?0:1);assert.equal(released,true);
+  assert.equal(floor.visible,false);assert.equal(mesh.frustumCulled,true);assert.equal(current,original);
+  assert.deepEqual(size,[800,600,1.5]);assert.deepEqual(renderer.shadowMap,{autoUpdate:true,needsUpdate:true});
+  original.dispose();mesh.geometry.dispose();mesh.material.dispose();
+ }
+});
 
 test('physical placement keeps review permission and context checks independent',()=>{
  const start={context:'a',revision:1},snapshot={...start,enabled:false,employees:[{id:'owner',selectable:false}]};
@@ -367,6 +391,10 @@ test('floor placement excludes furniture, walls, core and void; meeting drops ch
  const first=drop(5,5),second=drop(5,5,[first]);assert.ok(first.valid&&first.meeting&&second.valid&&second.meeting);assert.ok(Math.hypot(first.x-second.x,first.z-second.z)>=.72);assert.ok(Math.abs(first.x-5)>1.3||Math.abs(first.z-5)>1.3);
  floor.position.y+=3;floor.position.z+=8;model.updateMatrixWorld(true);const moved=surface.resolve(new THREE.Raycaster(new THREE.Vector3(-7,45,33),new THREE.Vector3(0,-1,0)));assert.equal(moved.valid,true);assert.ok(Math.abs(moved.z+7)<.001);
  assert.equal(nearestFreePoint([{x:1,z:1}],{x:0,z:0},[{x:1,z:1}]),null);
+ const left={x:-1,z:0},right={x:1,z:0};
+ assert.equal(nearestFreePoint([left,right],{x:0,z:0}),left);
+ assert.equal(nearestFreePoint([left,right],{x:0,z:0},[left]),right);
+ assert.equal(nearestFreePoint([left],left,[left],0),left);
  office.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});
 });
 
@@ -381,7 +409,14 @@ test('Polyfork styles keep independent skeletons, keyboard contact, lifted feet 
   const bone=a.group.getObjectByName('LeftLeg')!,length=bone.position.length();a.pose(1,true);
   assert.equal(a.group.userData.visualMotion,'lifted');assert.ok(a.footPositions().every(p=>p[1]>0));assert.equal(bone.position.length(),length);assert.deepEqual(b.footPositions(),bFeet);
   const camera=new THREE.OrthographicCamera(-2,2,2,-2,.1,30);camera.position.set(3,2,4);camera.lookAt(0,1,0);camera.setViewOffset(800,600,80,0,800,600);camera.updateMatrixWorld();
-  a.group.position.set(2,0,0);const bounds=personScreenBounds(a.group,camera,800,600)!;
+  a.group.position.set(2,0,0);
+  const hitShape=createPersonHitShape(a.group),bounds=personScreenBounds(a.group,camera,800,600,hitShape)!;
+  const skinBounds=new THREE.Box3().setFromObject(a.group,true);
+  assert.ok(hitShape.worldBounds(new THREE.Box3()).expandByScalar(.0001).containsBox(skinBounds));
+  const headRay=new THREE.Raycaster(a.head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0,0,3)),new THREE.Vector3(0,0,-1));
+  assert.ok(Number.isFinite(hitShape.hitDistance(headRay)));
+  headRay.ray.origin.x+=4;
+  assert.equal(hitShape.hitDistance(headRay),Infinity);
   for(const p of [a.head.getWorldPosition(new THREE.Vector3()),...a.footPositions().map(p=>a.group.localToWorld(new THREE.Vector3(...p)))]){
    p.project(camera);const x=(p.x+1)*400,y=(1-p.y)*300;assert.ok(x>=bounds.x&&x<=bounds.x+bounds.width);assert.ok(y>=bounds.y&&y<=bounds.y+bounds.height);
   }
@@ -497,12 +532,17 @@ test('3D drag accepts demo people but requires the same current review context a
 
 test('batched reference character remains ray-pickable after every pose and disposes its GPU resources',()=>{
  const rig=createSeatedPerson(createPersonAssets(),0);let disposed=0,buffers=0;
+ const shape=createPersonHitShape(rig.group);
  rig.group.traverse(o=>{if((o as THREE.Mesh).isMesh){buffers++;(o as THREE.Mesh).geometry.addEventListener('dispose',()=>disposed++);}});
  for(const mode of ['seated','held','walking']){
   rig.pose(3,mode==='held',mode==='walking'?{phase:1,moving:true}:null);
   const center=rig.head.getWorldPosition(new THREE.Vector3()),origin=center.clone().add(new THREE.Vector3(0,0,3));
   const ray=new THREE.Raycaster(origin,center.clone().sub(origin).normalize());
   assert.ok(ray.intersectObject(rig.group,true).length>0,mode);
+  assert.ok(Number.isFinite(shape.hitDistance(ray)),mode);
+  const envelope=shape.worldBounds(new THREE.Box3()).expandByScalar(1e-5);
+  assert.ok(envelope.containsBox(new THREE.Box3().setFromObject(rig.group,true)),mode);
+  ray.ray.origin.x+=10;assert.equal(shape.hitDistance(ray),Infinity,mode);
  }
  rig.dispose();assert.equal(disposed,buffers);
 });

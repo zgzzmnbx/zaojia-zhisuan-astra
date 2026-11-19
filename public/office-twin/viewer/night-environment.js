@@ -305,7 +305,7 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
     lightPositions:{value:Array.from({length:MAX_OFFICE_LIGHTS},(_,i)=>new THREE.Vector4(...(lightPlan[i]?[...lightPlan[i].position,lightPlan[i].radius]:[0,0,0,1])))},
     lightColors:{value:Array.from({length:MAX_OFFICE_LIGHTS},(_,i)=>new THREE.Vector3(...(lightPlan[i]?.color??[0,0,0])))},
     lightBounds:{value:Array.from({length:MAX_OFFICE_LIGHTS},(_,i)=>new THREE.Vector4(...(lightPlan[i]?.bounds??[0,0,0,0])))}});
-  let settings={...LIGHTING_DEFAULTS},backgroundKey='',bloomKey='';
+  let settings={...LIGHTING_DEFAULTS},lastSettings,backgroundKey='',bloomKey='';
   const roomLighting=new Map();
   for(const roomId of new Set(lightPlan.map(l=>l.roomId))){
     const indices=lightPlan.map((l,i)=>l.roomId===roomId?i:-1).filter(i=>i>=0);
@@ -316,8 +316,10 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
   const materials=new Set(),restores=[],colorSources=[],counts={};let dark=false,disposed=false,floorRoot=null,accentRoot=null,screenCount=0;
   const bloom=createNightBloom(renderer,scene,camera,null);
   const compositor=createNightCompositor(renderer,scene,camera,bloom);
-  function syncSettings(){
-    settings=normalizeLighting(getSettings?.());
+  function syncSettings(force=false){
+    const input=getSettings?.();
+    if(!force&&lastSettings===input)return;
+    lastSettings=input;settings=normalizeLighting(input);
     shared.windowBlue.value=settings.windowStyle==='astra-blue'?1:0;shared.windowStrength.value=settings.windowBlueStrength/100;shared.groundTint.value.set(settings.groundColor);
     shared.floorGain.value=settings.floorBrightness/100;
     shared.dayGains.value.set(settings.buildingBrightness,settings.officeBrightness,settings.contextBrightness,settings.groundBrightness).multiplyScalar(.01);
@@ -355,6 +357,21 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
   }
   return {
     async prepare(){await floorBake.ready;if(disposed)return;renderer.initTexture(shared.floorBake.map.value);compositor.prepare();},
+    passMaterials(){const passes=bloom.materials();return {screen:[compositor.screenMaterial,...passes.screen],linear:passes.linear};},
+    warm(draw){
+      const visible=accentRoot?.visible,oldNight=shared.night.value;
+      try{
+        if(accentRoot)accentRoot.visible=true;
+        shared.night.value=1;
+        bloom.configure(true,110,{studio:true,tint:porcelainPalette?.haloTint});
+        compositor.render(draw,false);
+      }finally{
+        if(accentRoot)accentRoot.visible=visible;
+        shared.night.value=oldNight;
+        compositor.release();bloom.configure(false,0);bloomKey='';syncSettings(true);
+      }
+    },
+    prepareObject:compositor.prepare,
     attach(model){
       addAccentLights(model);
       model.updateMatrixWorld(true);
@@ -391,9 +408,9 @@ export function createNightEnvironment({scene,renderer,camera,layout,requestFram
       for(const m of materials)m.dispose();
       restores.length=0;colorSources.length=0;materials.clear();removeAccentLights();
       for(const key of Object.keys(counts))delete counts[key];
-      this.attach(root);requestFrame();
+      this.attach(root);compositor.prepare(root);requestFrame();
     },
-    setTheme(scheme){dark=scheme==='dark';if(!dark)compositor.release();if(accentRoot)accentRoot.visible=dark;shared.night.value=dark?1:0;syncSettings();requestFrame();},
+    setTheme(scheme){dark=scheme==='dark';if(!dark)compositor.release();if(accentRoot)accentRoot.visible=dark;shared.night.value=dark?1:0;syncSettings(true);requestFrame();},
     update(){syncSettings();if(floorRoot){floorRoot.updateWorldMatrix(true,false);shared.floorInverse.value.copy(floorRoot.matrixWorld).invert();}shared.exposure.value=2**(getExposure?.()??0);shared.blue.value=getBlue?.()??1;for(const {copy,source} of colorSources)if(copy.color&&source.color)copy.color.copy(source.color);},
     render(drawScene = () => renderer.render(scene,camera)){
       if(!dark||disposed)return false;

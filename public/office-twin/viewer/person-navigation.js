@@ -23,13 +23,21 @@ export function connectedWalkArea(graph){
 }
 
 export function findWalkRoute(graph,start,home,ownBounds=null,occupied=[]){
-  const cells=graph.cells,free=p=>occupied.every(o=>distance(p,o)>.52);
-  const nearest=(point,seat)=>cells.map((p,i)=>({p,i,d:distance(p,point)})).filter(x=>x.p.links.length&&free(x.p)).sort((a,b)=>a.d-b.d).find(x=>x.d<3&&graph.clearSegment(point,x.p,seat));
-  const from=nearest(start,distance(start,home)<.05?ownBounds:null),to=nearest(home,ownBounds);if(!from||!to)return null;
-  const queue=[from.i],parents=new Map([[from.i,null]]);
-  for(let i=0;i<queue.length&&!parents.has(to.i);i++)for(const n of cells[queue[i]].links)if(!parents.has(n)&&free(cells[n])){parents.set(n,queue[i]);queue.push(n);}
-  if(!parents.has(to.i))return null;
-  const route=[{x:home.x,z:home.z}];for(let n=to.i;n!==null;n=parents.get(n))route.unshift(cells[n]);
+  const cells=graph.cells,free=p=>occupied.every(o=>(o.x-p.x)**2+(o.z-p.z)**2>.52**2);
+  function nearest(point,seat){
+    let best=-1,radius2=9;
+    for(let i=0;i<cells.length;i++){
+      const p=cells[i],d=(p.x-point.x)**2+(p.z-point.z)**2;
+      if(d>=radius2||!p.links.length||!free(p)||!graph.clearSegment(point,p,seat))continue;
+      best=i;radius2=d;
+    }
+    return best;
+  }
+  const from=nearest(start,distance(start,home)<.05?ownBounds:null),to=nearest(home,ownBounds);if(from<0||to<0)return null;
+  const queue=[from],parents=new Map([[from,null]]);
+  for(let i=0;i<queue.length&&!parents.has(to);i++)for(const n of cells[queue[i]].links)if(!parents.has(n)&&free(cells[n])){parents.set(n,queue[i]);queue.push(n);}
+  if(!parents.has(to))return null;
+  const route=[{x:home.x,z:home.z}];for(let n=to;n!==null;n=parents.get(n))route.push(cells[n]);route.reverse();
   return route.filter((p,i)=>i===0||i===route.length-1||Math.abs((p.x-route[i-1].x)*(route[i+1].z-p.z)-(p.z-route[i-1].z)*(route[i+1].x-p.x))>1e-6);
 }
 

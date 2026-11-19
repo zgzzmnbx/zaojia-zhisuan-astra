@@ -6,7 +6,8 @@ import {createPersonClock,seatFacing} from './person-motion.js';
 import {personLabelLevel,createPersonWander} from './person-presentation.js';
 import {createReturnWalk} from './person-navigation.js';
 import {personStyles,normalizePersonStyle,createPolyforkAssets,createPolyforkPerson} from './people/polyfork-person.js';
-import {createPersonPlacement} from './person-placement.js?v=0.44.1';
+import {createPersonPlacement} from './person-placement.js';
+import {createPersonHitShape} from './person-hit-shape.js';
 import {assignmentRoute} from './person-assignment.js';
 import {normalizeAppearance} from './people/appearances.js';
 import {personTaskSummary,taskState,exampleLabel,emptyDutyLabel,mountPeopleDirectory} from './duty-board.js';
@@ -63,10 +64,10 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
     rigRevision++;
     actors.forEach(a=>a.rig.dispose());
     root.clear();actors.clear();markers.replaceChildren();
+    model.updateMatrixWorld(true);
     business.employees.forEach((person,index)=>{
       const seatId=person.seatId??seats[index]?.seat_id,anchor=model.getObjectByName(`PersonAnchor_${seatId}`);
       if(!anchor)return;
-      model.updateMatrixWorld(true);
       const origin=anchor?.getWorldPosition(new THREE.Vector3())??new THREE.Vector3();
       const monitor=model.getObjectByName(`Furniture_${seatId}_MONITOR`),keyboard=model.getObjectByName(`Furniture_${seatId}_KEYBOARD`),chair=model.getObjectByName(`${seatId}_chair_seat`);
       const target=monitor?.getWorldPosition(new THREE.Vector3());
@@ -84,7 +85,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY}));
       const seat=seats.find(s=>s.seat_id===seatId),local=floor?floor.worldToLocal(origin.clone()):origin.clone();
       if(placements.get(person.id)?.seatId!==seatId)placements.delete(person.id);
-      const item={person,anchor,group,marker,rig,yaw,seatId,seat,local,index,held:false,idle:false,wander:null,walk:null,returnWalk:null,labelLevel:'hidden',dragPosition:null,screenPoint:null,reactionAt:-Infinity};
+      const item={person,anchor,group,marker,rig,hitShape:createPersonHitShape(group),yaw,seatId,seat,local,index,held:false,idle:false,wander:null,walk:null,returnWalk:null,labelLevel:'hidden',dragPosition:null,screenPoint:null,reactionAt:-Infinity};
       actors.set(person.id,item);if(placements.has(person.id)&&!placements.get(person.id).meeting)startReturn(item);
     });
     onRebuild();
@@ -212,7 +213,16 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       if(!item.marker.hidden){boxes.push(box);item.marker.style.left=`${x}px`;item.marker.style.top=`${y}px`;}
     }
   }
-  function hit(ray){if(!root.visible)return null;for(const hit of ray.intersectObject(root,true)){let node=hit.object;while(node&&node!==root){if(node.userData.demoPersonId)return node.userData.demoPersonId;node=node.parent;}}return null;}
+  function hit(ray){
+    if(!root.visible)return null;
+    let nearest=Infinity,id=null;
+    for(const item of actors.values()){
+      if(!item.group.visible)continue;
+      const distance=item.hitShape.hitDistance(ray);
+      if(distance<nearest){nearest=distance;id=item.person.id;}
+    }
+    return id;
+  }
   function pick(ray,point){const id=hit(ray);return id?select(id,point):false;}
   function standing(item,seconds){return placements.has(item.person.id)?item.returnWalk?.state()??{rise:1,moving:false,phase:0,stage:'activity',activity:'look',activityTime:seconds}:null;}
   function occupied(id){return [...actors].filter(([other])=>other!==id).map(([other,a])=>{const p=placements.get(other)??a.walk??a.local;return {x:p.x,z:p.z};});}
@@ -229,12 +239,18 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   }
   syncBusiness();
   try{const saved=normalizePersonStyle(localStorage.getItem(styleKey));if(saved!=='classic')switchStyle(saved);}catch{}
-  return {select,update,pick,hit,syncBusiness,closeMenu,suspend:()=>clock.suspend(),react:()=>false,
+  return {root,select,update,pick,hit,syncBusiness,closeMenu,suspend:()=>clock.suspend(),react:()=>false,
     dropTarget:(ray,id)=>placement.resolve(ray,occupied(id)),dropHint:(target,canReview)=>placement.hint(target,canReview),place,
     object:id=>actors.get(id)?.group,
-    dragOverlay:(id,value)=>{const item=actors.get(id);if(item){item.dragOverlay=value;item.marker.style.opacity=value?'0':'';syncPositions();requestFrame();}},
+    hitShape:id=>actors.get(id)?.hitShape,
+    dragOverlay:(id,value)=>{const item=actors.get(id);if(item&&!!item.dragOverlay!==value){item.dragOverlay=value;item.marker.style.opacity=value?'0':'';item.group.visible=!value;requestFrame();}},
     hold:(id,value)=>{const item=actors.get(id);if(item)item.held=value;},
-    dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;item.dragPosition=position?.clone()??null;item.rig.pose(clock.value(),!!item.dragPosition,standing(item,clock.value())??item.walk);syncPositions();requestFrame();},
+    dragPosition:(id,position)=>{const item=actors.get(id);if(!item)return;
+      const wasHeld=!!item.dragPosition;
+      item.dragPosition=position?(item.dragPosition||new THREE.Vector3()).copy(position):null;
+      if(position)item.group.position.copy(position);else syncPositions();
+      if(wasHeld!==!!position)item.rig.pose(clock.value(),!!position,standing(item,clock.value())??item.walk);
+      requestFrame();},
     position:id=>actors.get(id)?.group.position.clone(),
     isAnimating:()=>!disposed&&root.visible&&motionEnabled&&!reduced.matches&&actors.size>0,
     getState:()=>({placement:placement.state(),placements:Object.fromEntries(placements),count:actors.size,rigRevision,personStyle,styleLoading,styleError,personDrawCalls:[...actors.values()].reduce((n,a)=>n+a.rig.drawCalls,0),selectedPersonId:current,reviewCandidateIds:business.employees.filter(p=>p.selected).map(p=>p.id),motionEnabled:motionEnabled&&!reduced.matches,motionTime:clock.value(),actors:[...actors].map(([id,a])=>({id,seatId:a.seatId,yaw:a.group.rotation.y,screenPoint:a.screenPoint,position:a.group.position.toArray(),hands:a.rig.handPositions(),motion:a.group.userData.visualMotion,routine:a.walk?{stage:a.walk.stage,activity:a.walk.activity,rise:a.walk.rise}:null,dragging:!!a.dragPosition,idle:a.idle,labelLevel:a.labelLevel,labelPixels:a.labelPixels,labelVisible:!a.marker.hidden}))}),

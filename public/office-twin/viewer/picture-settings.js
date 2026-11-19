@@ -87,7 +87,7 @@ export function createPictureSettings({listen, requestFrame, getRenderer,allowTr
   listen(document.querySelector('#picture-reset'),'click',()=>{current={...DEFAULTS};paint();apply();});
   paint();
   return {
-    trafficEnabled,getState:()=>({...current}),
+    trafficEnabled,getState:()=>({...current}),getRenderSettings:()=>current,
     getRecord:()=>({defaults:LIGHTING_DEFAULTS_VERSION,values:{...current},dirty:JSON.stringify(current)!==saved}),
     setTheme(value){scheme=value;paint();},
     bakedMaterialCount:()=>materials.filter(item=>item.baked).length,

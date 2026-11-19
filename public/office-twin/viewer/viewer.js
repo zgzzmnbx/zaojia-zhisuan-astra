@@ -6,7 +6,7 @@ import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
-import {prepareRenderer,yieldToBrowser} from './prepare-renderer.js';
+import {prepareRenderer,warmOfficeSurfaces,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js?v=office-0.51.1';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
@@ -251,7 +251,7 @@ export async function mountOfficeViewer() {
     frame = 0;
     if (!active() || !renderReady) return;
     const delta=lastFrameTime===null?0:Math.max(0,Math.min(100,now-lastFrameTime));lastFrameTime=now;
-    const blurLevel = picture.getState().miniatureBlur / 100;
+    const blurLevel = picture.getRenderSettings().miniatureBlur / 100;
     const reduced = motionPreference.matches;
     const hadTransition = !!transition;
     const clearing = transition?.toOpen === 0 && blurLevel > 0 && !reduced && floorFocus.clearBeforeMove(delta);
@@ -493,7 +493,7 @@ export async function mountOfficeViewer() {
       roomOutline = new THREE.BoxHelper(rooms.get(id), new THREE.Color(color));
       roomOutline.material.depthTest = false;
       roomOutline.renderOrder = 10;
-      scene.add(roomOutline); requestFrame();
+      nightEnvironment?.prepareObject(roomOutline);scene.add(roomOutline);requestFrame();
     }
     notify('room-selected', { floorId: 'H1-F09', roomId: id }); return true;
   }
@@ -778,16 +778,18 @@ export async function mountOfficeViewer() {
     }});
     people.syncBusiness(business);
     seatLabels=createWorkstationLabels({model,layout,viewport,listen,requestFrame});
-    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,porcelainPalette,streetTraffic,requestFrame,getExposure:()=>picture.getState().exposure,getBlue:()=>picture.getState().blue,getSettings:()=>picture.getState()});
+    nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,porcelainPalette,streetTraffic,requestFrame,getExposure:()=>picture.getRenderSettings().exposure,getBlue:()=>picture.getRenderSettings().blue,getSettings:picture.getRenderSettings});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
-    officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});officeBoard.setView(view);
+    officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});
     await nightEnvironment.prepare();if(disposed)return api;
     const gpuStarted=performance.now();
-    await prepareRenderer(renderer,scene,camera,()=>disposed);
+    miniatureFocus=createMiniatureFocus(renderer,scene,camera,model,floors.get(DETAILED_FLOOR));
+    await prepareRenderer(renderer,scene,camera,()=>disposed,nightEnvironment.passMaterials(),miniatureFocus);
     if(disposed)return api;
+    warmOfficeSurfaces(renderer,scene,camera,[officeRoot,people.root],nightEnvironment,miniatureFocus);
+    officeBoard.setView(view);
     loadReport.gpuPrepareMs=Math.round(performance.now()-gpuStarted);
     gpuPrepared=true;
-    miniatureFocus=createMiniatureFocus(renderer,scene,camera,model,floors.get(DETAILED_FLOOR));
     floorLabel=createFloorLabel({viewport,floor:floors.get(9),camera,listen,getView:()=>view,canPreview:()=>active()&&renderStatus==='ready'&&view==='building',requestFrame,
       beginPreview:()=>{previewCamera=cameraPose();setView('exploded',{labelPreview:true});},
       endPreview:()=>{setView('building',{labelPreview:true,cameraTarget:previewCamera,animate:active()});previewCamera=null;},
@@ -830,7 +832,7 @@ export async function mountOfficeViewer() {
         while (node && node !== officeRoot) { if (rooms.get(node.userData.room_id) === node) { focusRoom(node.userData.room_id); return; } node = node.parent; }
       }
     });
-    const dragVisual=createPersonDragOverlay({renderer,scene,camera,getPerson:id=>people.object(id)});
+    const dragVisual=createPersonDragOverlay({renderer,scene,camera,getPerson:people.object,getShape:people.hitShape,setOverlay:people.dragOverlay});
     const pointer=bindPersonPointer({canvas:renderer.domElement,camera,controls,people,listen,canInteract:()=>!getWorkstationEditState().open&&active()&&view==='exploded',takeCameraControl,dragVisual});
     listenerRemovers.push(()=>pointer.dispose());
     loadingStage('first-frame','场景已就绪，正在绘制第一帧');

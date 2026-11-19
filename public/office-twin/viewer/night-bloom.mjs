@@ -8,28 +8,44 @@ export function createNightBloom(renderer,scene,initialCamera,flowRoot,excluded=
  let camera=initialCamera,target=null,bloom=null,quad=null,copy=null,enabled=false,strength=0,flowStrength=0,studio=false,draws=0,extractions=0;
  const defaultTint=new Color(.055,.36,1), studioTint={value:defaultTint};
  const mask=flowRoot?createNightBloomMask(scene,flowRoot):null;
- function release(){target?.dispose();bloom?.dispose();quad?.material.dispose();quad?.dispose();copy?.material.dispose();copy?.dispose();target=bloom=quad=copy=null}
+ // Keep compiled materials across theme switches; release all full-size GPU buffers in daylight.
+ function release(){
+  if(!target)return;
+  target.dispose();target=null;copy.material.uniforms.map.value=null;bloom.renderTargetBright.dispose();
+  for(const buffer of [...bloom.renderTargetsHorizontal,...bloom.renderTargetsVertical])buffer.dispose();
+ }
+ function initPasses(){
+  if(bloom)return;
+  bloom=new UnrealBloomPass(new Vector2(1,1),.6,.35,.36);
+    quad=new FullScreenQuad(new ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,toneMapped:false,uniforms:{studio:{value:0},studioTint,light:{value:bloom.renderTargetsHorizontal[0].texture}},vertexShader:'varying vec2 uv0;void main(){uv0=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:`uniform float studio;uniform vec3 studioTint;uniform sampler2D light;varying vec2 uv0;void main(){vec3 c=texture2D(light,uv0).rgb;if(any(isnan(c))||any(isinf(c)))discard;if(studio>.5){float p=max(c.r,max(c.g,c.b));vec3 halo=mix(c,studioTint*p,.72);gl_FragColor=vec4(vec3(1.)-exp(-halo*.85),1.);return;}float peak=max(c.r,max(c.g,c.b));float a=1.-exp(-peak*.8);if(a<.001)discard;gl_FragColor=vec4(c/max(peak,.001),min(a,.78));#include <colorspace_fragment>}`.replace(';#include',';\n#include')}));
+  copy=new FullScreenQuad(new ShaderMaterial({depthTest:false,depthWrite:false,toneMapped:false,uniforms:{map:{value:null}},vertexShader:'varying vec2 uv0;void main(){uv0=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:'uniform sampler2D map;varying vec2 uv0;void main(){gl_FragColor=texture2D(map,uv0);}'}));
+ }
  return {
+  materials(){
+   initPasses();
+   return {screen:[quad.material],linear:[copy.material,bloom.materialHighPassFilter,...bloom.separableBlurMaterials,bloom.compositeMaterial,bloom.blendMaterial]};
+  },
   configure(show,amount,options={}){strength=amount/100;flowStrength=(options.flowAmount??amount)/100;studio=!!options.studio;studioTint.value=options.tint??defaultTint;enabled=show&&(strength>0||flowStrength>0);if(!enabled)release()},
   setCamera(value){camera=value},
-  render(emissionTexture=null){if(!enabled)return;const size=renderer.getDrawingBufferSize(new Vector2()),scale=Math.min(.65,1280/size.x),w=Math.round(size.x*scale),h=Math.round(size.y*scale);
-   if(!target||target.width!==w||target.height!==h){release();target=new WebGLRenderTarget(w,h,{type:HalfFloatType});bloom=new UnrealBloomPass(new Vector2(w,h),.6,.35,.36);
-    quad=new FullScreenQuad(new ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,toneMapped:false,uniforms:{studio:{value:0},studioTint,light:{value:bloom.renderTargetsHorizontal[0].texture}},vertexShader:'varying vec2 uv0;void main(){uv0=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:`uniform float studio;uniform vec3 studioTint;uniform sampler2D light;varying vec2 uv0;void main(){vec3 c=texture2D(light,uv0).rgb;if(any(isnan(c))||any(isinf(c)))discard;if(studio>.5){float p=max(c.r,max(c.g,c.b));vec3 halo=mix(c,studioTint*p,.72);gl_FragColor=vec4(vec3(1.)-exp(-halo*.85),1.);return;}float peak=max(c.r,max(c.g,c.b));float a=1.-exp(-peak*.8);if(a<.001)discard;gl_FragColor=vec4(c/max(peak,.001),min(a,.78));#include <colorspace_fragment>}`.replace(';#include',';\n#include')}));
+  render(emissionTexture=null,countFrame=true){if(!enabled)return;const size=renderer.getDrawingBufferSize(new Vector2()),scale=Math.min(.65,1280/size.x),w=Math.round(size.x*scale),h=Math.round(size.y*scale);
+   if(!target||target.width!==w||target.height!==h){
+    initPasses();
+    if(target)target.setSize(w,h);else target=new WebGLRenderTarget(w,h,{type:HalfFloatType});
+    bloom.setSize(w,h);
    }
    const previous=renderer.getRenderTarget(),auto=renderer.autoClear,color=renderer.getClearColor(new Color()),alpha=renderer.getClearAlpha(),shadow=renderer.shadowMap.autoUpdate;
-   const pass=(gain,draw)=>{if(gain<=0)return;renderer.autoClear=true;renderer.setRenderTarget(target);draw();bloom.strength=.65*gain;bloom.render(renderer,null,target,0,false);renderer.setRenderTarget(previous);renderer.autoClear=false;quad.render(renderer);extractions++};
+   const pass=(gain,draw)=>{if(gain<=0)return;renderer.autoClear=true;renderer.setRenderTarget(target);draw();bloom.strength=.65*gain;bloom.render(renderer,null,target,0,false);renderer.setRenderTarget(previous);renderer.autoClear=false;quad.render(renderer);if(countFrame)extractions++};
    const visibility=excluded.map(object=>[object,object.visible]);
    try{for(const [object] of visibility)object.visible=false;renderer.shadowMap.autoUpdate=false;quad.material.uniforms.studio.value=studio?1:0;quad.material.blending=studio?CustomBlending:NormalBlending;quad.material.blendSrc=OneFactor;quad.material.blendDst=OneMinusSrcColorFactor;
     if(emissionTexture){
-     if(!copy)copy=new FullScreenQuad(new ShaderMaterial({depthTest:false,depthWrite:false,toneMapped:false,uniforms:{map:{value:null}},vertexShader:'varying vec2 uv0;void main(){uv0=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:'uniform sampler2D map;varying vec2 uv0;void main(){gl_FragColor=texture2D(map,uv0);}'}));
      copy.material.uniforms.map.value=emissionTexture;pass(strength,()=>copy.render(renderer));
     }
     else if(!mask||!flowRoot.visible||Math.abs(strength-flowStrength)<1e-6)pass(strength,()=>renderer.render(scene,camera));
     else{pass(strength,()=>mask.withoutFlow(()=>renderer.render(scene,camera)));pass(flowStrength,()=>mask.flowOnly(()=>renderer.render(scene,camera)))}
-    draws++;
+    if(countFrame)draws++;
    }
    finally{for(const [object,visible] of visibility)object.visible=visible;renderer.setRenderTarget(previous);renderer.autoClear=auto;renderer.setClearColor(color,alpha);renderer.shadowMap.autoUpdate=shadow}
   },
-  state:()=>({enabled,allocated:!!target,draws,extractions,studio,strength,flowStrength,resolution:target?[target.width,target.height]:null}),dispose(){release();mask?.dispose()},
+  state:()=>({enabled,allocated:!!target,draws,extractions,studio,strength,flowStrength,resolution:target?[target.width,target.height]:null}),dispose(){release();bloom?.materialHighPassFilter.dispose();bloom?.dispose();quad?.material.dispose();quad?.dispose();copy?.material.dispose();copy?.dispose();mask?.dispose()},
  };
 }
