@@ -199,7 +199,8 @@ export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle, pi
     grip.title = '拖动同事';
     grip.setAttribute('aria-hidden','true');
     button.append(initial, body, grip, title, action, skills);
-    button.onclick = () => select(id);
+    button.setAttribute('aria-controls','person-detail-pane');
+    button.onclick = () => select(id,button);
     bindDrag(button, id);
     const actions = node('div','directory-actions');
     const add = node('button','btn btn-ghost btn-xs directory-assign');

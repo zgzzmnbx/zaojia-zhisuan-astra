@@ -16,7 +16,7 @@ import {icon} from '../astra_ui/icons.js';
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,getPicture,layout,onSelect=()=>{},onRebuild=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
   const markers=document.querySelector('#people-markers'),list=document.querySelector('#people-list');
-  const directory=mountPeopleDirectory(list,{select,bindDrag:draggable,assign:id=>openPersonTasks(id,true),toggle:togglePerson,pickForReview});
+  const directory=mountPeopleDirectory(list,{select:(id,button)=>select(id,undefined,button),bindDrag:draggable,assign:id=>openPersonTasks(id,true),toggle:togglePerson,pickForReview});
   const candidates=document.querySelector('#review-candidates');
   const message=document.querySelector('#review-status');
   const actors=new Map(),assets=createPersonAssets(),clock=createPersonClock(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -82,7 +82,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const marker=el('button','','office-person-marker host-person-marker');marker.type='button';marker.dataset.personId=person.id;
       const heading=el('span','','host-person-marker-heading'),dot=el('span','','host-person-status-dot');dot.setAttribute('aria-hidden','true');
       heading.append(dot,el('strong',person.name));marker.append(heading,el('small',''),el('span','','host-person-activity'));markers.append(marker);
-      marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY}));
+      marker.addEventListener('click',event=>select(person.id,{x:event.clientX,y:event.clientY},marker));
       const seat=seats.find(s=>s.seat_id===seatId),local=floor?floor.worldToLocal(origin.clone()):origin.clone();
       if(placements.get(person.id)?.seatId!==seatId)placements.delete(person.id);
       const item={person,anchor,group,marker,rig,hitShape:createPersonHitShape(group),yaw,seatId,seat,local,index,held:false,idle:false,wander:null,walk:null,returnWalk:null,labelLevel:'hidden',dragPosition:null,screenPoint:null,reactionAt:-Infinity};
@@ -146,17 +146,20 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       closeMenu(true);event.preventDefault();event.stopPropagation();
     }
   });
-  function select(id,point){
+  function select(id,point,trigger){
     if(disposed||!business.employees.some(p=>p.id===id))return false;
     const item=actors.get(id);
-    const from=document.activeElement;
+    const from=trigger || document.activeElement;
     current=id;
     if(item){
       if(motionEnabled&&!reduced.matches&&clock.value()-item.reactionAt>1.6)item.reactionAt=clock.value();
-      syncPositions();if(!point)focusPerson(item.group);
+      syncPositions();if(!point || business.managedHub)focusPerson(item.group);
     }else window.officeTwin?.setView('exploded');
     paint();window.dispatchEvent(new CustomEvent('office-person-menu',{detail:{open:true,from,id}}));
-    paintMenu();detail.focus();onSelect(id);requestFrame();return true;
+    paintMenu();
+    if(business.managedHub && list.contains(from))from.focus({preventScroll:true});
+    else detail.focus();
+    onSelect(id);requestFrame();return true;
   }
   function syncPositions(){floor.updateWorldMatrix(true,false);for(const item of actors.values()){
     item.group.visible=!!item.anchor&&!item.dragOverlay;
@@ -175,7 +178,8 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
   function update(camera,view,now=performance.now()){
     const rect=viewport.getBoundingClientRect(),width=viewport.clientWidth,height=viewport.clientHeight;
     placement.update(camera,view,{width,height});
-    if(disposed)return;root.visible=['office','exploded'].includes(view);markers.hidden=!root.visible;if(!root.visible){clock.suspend();closeMenu();return;}
+    if(disposed)return;root.visible=['office','exploded'].includes(view);markers.hidden=!root.visible;
+    if(!root.visible){clock.suspend();if(!business.managedHub)closeMenu();return;}
     const seconds=clock.step(now,motionEnabled&&!reduced.matches);
     const delta=seconds-lastMotionTime;lastMotionTime=seconds;
     let arrived=false;

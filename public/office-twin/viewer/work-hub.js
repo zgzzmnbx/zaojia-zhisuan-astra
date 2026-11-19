@@ -16,6 +16,16 @@ function mark(name){
 }
 
 export function mountWorkHub({artifact,getState,getDrag,post,onSaved}){
+  const personPane=document.getElementById('person-detail-pane');
+  const heading=node('header','','hub-person-heading');
+  const navigation=personPane.querySelector('.pd-navigation');
+  const close=personPane.querySelector('#person-detail-back');
+  close.replaceChildren(mark('x'));
+  close.title='关闭人员任务';close.setAttribute('aria-label',close.title);
+  navigation.append(close);
+  heading.append(personPane.querySelector('.pd-identity'),navigation);
+  personPane.prepend(heading);
+  artifact.prepend(personPane);
   let picked='',context='',quickTab='people';
   const dock=node('section','','hub-dock'),notice=node('p','','hub-notice'),routes=new Map();
   notice.setAttribute('role','status');

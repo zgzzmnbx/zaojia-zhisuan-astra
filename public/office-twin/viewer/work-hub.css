@@ -10,6 +10,23 @@ html[data-hub-left] body.studio.office-embed .office-workspace>#space-cards-pane
 }
 html[data-hub-left] #space-cards-panel .host-browser-card {height:100%;max-height:100%;border-top:0;border-radius:0 0 14px 14px}
 html[data-hub-left] #space-cards-panel #space-card-close {display:none}
+#host-artifact #person-detail-pane {min-height:0;padding-bottom:8px;border-bottom:1px solid var(--astra-line)}
+.hub-person-heading {display:flex;align-items:start;justify-content:space-between;gap:4px}
+.hub-person-heading .pd-identity {justify-content:start;gap:4px 6px;min-height:28px}
+.hub-person-heading #person-detail-name {font-size:17px}
+.hub-person-heading .pd-navigation {gap:0;padding:0;border:0}
+.hub-person-heading .pd-navigation button {width:25px;min-height:26px;justify-content:center;padding:2px}
+#host-artifact .pd-scroll {max-height:clamp(135px,35vh,350px);padding:4px 1px 7px;overscroll-behavior-y:auto}
+#host-artifact .pd-metadata {margin:0;gap:4px 6px}
+#host-artifact .pd-profile {gap:3px 6px;padding-inline-start:6px}
+#host-artifact .pd-stats {margin:6px 0 8px;padding:5px 0}
+#host-artifact .pd-stat strong {font-size:15px}
+#host-artifact .pd-current {padding:0;border:0;background:transparent}
+#host-artifact .pd-current-title {font-size:14px;margin:4px 0}
+#host-artifact .pd-queue:not(:empty) {margin-top:9px}
+#host-artifact .pd-actions {padding:3px 0 0;border:0;gap:3px}
+#host-artifact #person-detail-pane .pd-actions button {padding:3px;min-height:26px;font-size:12px}
+html[data-office-hub]:not([data-hub-left]) .office-workspace:has(#space-cards-panel:not([hidden])) #host-artifact .pd-scroll {max-height:20vh}
 .hub-dock {display:grid;gap:8px;margin-top:4px}
 .hub-zone {border:1px dashed var(--astra-line);border-radius:9px;overflow:hidden;background:var(--astra-canvas)}
 .hub-zone:is(:focus-within,:hover),.hub-zone.hub-over {border-color:var(--astra-primary);background:var(--astra-soft)}

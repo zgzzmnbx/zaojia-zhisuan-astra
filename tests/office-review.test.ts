@@ -968,7 +968,7 @@ test('a scene target must resolve uniquely in the current platform and group und
  assert.ok(officeChannel(ambiguous,true).reason);
 });
 import {applyTaskPlan,emptyMember,memberEntries,olderProjectReviewKeys} from '../public/office-twin/viewer/task-plan.js';
-import {officeCameraKey,readOfficeCamera} from '../public/office-twin/viewer/office-camera.js';
+import {officeCameraKey,readOfficeCamera,normalizeOfficeCamera} from '../public/office-twin/viewer/office-camera.js';
 
 test('office orbit inherits once, then reads and writes only its own preferences',()=>{
   const saved=new Map<string,string>();
@@ -978,13 +978,25 @@ test('office orbit inherits once, then reads and writes only its own preferences
   saved.set(parameters,JSON.stringify({version:1,baked:{orbitMotion:{speed:150,acceleration:175}},visual:{},display:{autoOrbit:true,orbitDelay:30}}));
   const legacyValues=[saved.get(legacy),saved.get(parameters)];
   const settings=readOfficeCamera(storage);
-  assert.deepEqual(settings,{enabled:false,delay:15,motion:{speed:150,acceleration:175}});
+  assert.deepEqual(settings,{enabled:false,delay:15,motion:{speed:150,acceleration:175},personFocusDistance:125});
   assert.deepEqual([saved.get(legacy),saved.get(parameters)],legacyValues);
   saved.set(legacy,'{}');
   assert.deepEqual(readOfficeCamera(storage),settings);
   saved.set(officeCameraKey,JSON.stringify({...settings,delay:5}));
   assert.equal(readOfficeCamera(storage).delay,5);
   assert.equal(saved.get(legacy),'{}');
+});
+
+test('person framing defaults for existing office preferences and clamps saved distances to the slider',()=>{
+  const read=(value:unknown)=>normalizeOfficeCamera({enabled:false,personFocusDistance:value}).personFocusDistance;
+  assert.equal(read(undefined),125);
+  assert.equal(read(null),125);
+  assert.equal(read(NaN),125);
+  assert.equal(read(50),75);
+  assert.equal(read(144),145);
+  assert.equal(read(250),200);
+  const storage={getItem:()=>JSON.stringify({enabled:false,delay:5,motion:{speed:90},personFocusDistance:160})};
+  assert.equal(readOfficeCamera(storage).personFocusDistance,160);
 });
 
 test('sandbox changes apply by person and review round without editing shared receipts',()=>{

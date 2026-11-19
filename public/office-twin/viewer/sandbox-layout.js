@@ -3,7 +3,8 @@ export function mountSandboxLayout(root=document) {
   const $=s=>root.querySelector(s), workspace=$('.office-workspace'), rail=$('#space-cards-panel');
   const toggle=$('#space-card-toggle'), controller=new AbortController(), options={signal:controller.signal};
   const header=$('.office-rail-header'),body=$('.office-inspector-body'),detail=$('#person-detail-pane');
-  let previous=null;
+  const hubMode=new URLSearchParams(location.search).get('desk')==='hub';
+  let previous=null,detailOpener=null;
   const tablist=header.querySelector('[role=tablist]'), railTabs=[...tablist.querySelectorAll('[data-rail-tab]')];
   const nativeTabFocus='focusGroup' in HTMLElement.prototype;
   let selected='people';
@@ -39,6 +40,20 @@ export function mountSandboxLayout(root=document) {
   }
   function dismissPerson(restoreFocus=false){window.dispatchEvent(new CustomEvent('office-person-dismiss',{detail:{restoreFocus}}));}
   window.addEventListener('office-person-menu',e=>{
+    if(hubMode){
+      detail.hidden=!e.detail.open;
+      if(e.detail.open){
+        const from=e.detail.from,quick=from?.closest('.hub-quick');
+        detailOpener=quick?.querySelector('summary') || from;
+        if(quick)quick.open=false;
+        detail.parentElement.scrollTop=0;
+      }else if(e.detail.restoreFocus){
+        const fallback=rail.hidden ? toggle : header.querySelector('[aria-selected=true]');
+        const target=detailOpener && detailOpener!==root.body && detailOpener.getClientRects().length ? detailOpener : fallback;
+        target?.focus({preventScroll:true});
+      }
+      return;
+    }
     if(e.detail.open){
       if(!previous){
         const from=e.detail.from;
@@ -59,10 +74,10 @@ export function mountSandboxLayout(root=document) {
       target?.focus({preventScroll:true});
     }
   },options);
-  toggle.addEventListener('click',()=>{const next=rail.hidden;if(!detail.hidden)dismissPerson();open(next);},options);
+  toggle.addEventListener('click',()=>{const next=rail.hidden;if(!hubMode&&!detail.hidden)dismissPerson();open(next);},options);
   $('#space-card-close').addEventListener('click',()=>{open(false);toggle.focus();},options);
   rail.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(!detail.hidden)dismissPerson(true);else if(root.documentElement.hasAttribute('data-hub-left'))tablist.querySelector('[aria-selected=true]')?.focus();else{open(false);toggle.focus();}}},options);
-  window.addEventListener('office-panel',e=>{if(!detail.hidden)dismissPerson();tab(e.detail?.tab);},options);
+  window.addEventListener('office-panel',e=>{if(!hubMode&&!detail.hidden)dismissPerson();tab(e.detail?.tab);},options);
   const tools=$('#office-tools'),more=$('#office-tools-toggle');
   const bar=$('.office-modebar');
   if(!('focusGroup' in HTMLElement.prototype)){
@@ -122,7 +137,7 @@ export function mountSandboxLayout(root=document) {
   form.addEventListener('submit',e=>{e.preventDefault();if(!input.value.trim())return;list.querySelector('.office-empty-note')?.remove();const p=root.createElement('p');p.textContent=input.value.trim();list.append(p);input.value='';clear.disabled=false;$('#local-note-status').textContent='已保存本页备注';},options);
   clear.addEventListener('click',()=>{list.replaceChildren();clear.disabled=true;},options);
   tab('people');
-  if(new URLSearchParams(location.search).get('desk')==='hub'){
+  if(hubMode){
     open(false);
     let leftOpen=false;
     function syncQuick(){
@@ -139,7 +154,6 @@ export function mountSandboxLayout(root=document) {
       document.documentElement.toggleAttribute('data-hub-left',!!valid);
       if(leftOpen===!!valid)return;
       leftOpen=!!valid;
-      if(!detail.hidden)dismissPerson();
       open(leftOpen);
       toggle.setAttribute('aria-controls',leftOpen?'office-hub-quick':'space-cards-panel');
       syncQuick();

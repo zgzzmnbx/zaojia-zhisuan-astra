@@ -2,7 +2,12 @@ import {normalizeOrbitMotion} from './astra-orbit-motion.js';
 
 export const officeCameraKey='astra.office.camera.v1';
 const delays=[0,2,5,10,15,30,60];
-export const normalizeOfficeCamera=value=>({enabled:value?.enabled!==false,delay:delays.includes(value?.delay)?value.delay:0,motion:normalizeOrbitMotion(value?.motion)});
+export const defaultPersonFocusDistance=125;
+export function normalizeOfficeCamera(value){
+  const distance=value?.personFocusDistance;
+  return {enabled:value?.enabled!==false,delay:delays.includes(value?.delay)?value.delay:0,motion:normalizeOrbitMotion(value?.motion),
+    personFocusDistance:Number.isFinite(distance)?Math.min(200,Math.max(75,Math.round(distance/5)*5)):defaultPersonFocusDistance};
+}
 function read(storage,key){
   try{return JSON.parse(storage?.getItem(key)||'null');}catch{return null;}
 }
@@ -23,6 +28,7 @@ export function bindOfficeCamera({listen,configure}){
   let storage;try{storage=window.localStorage;}catch{/* Storage may be disabled. */}
   const root=document.querySelector('#office-camera-controls'),enabled=root.querySelector('[name=enabled]'),delay=root.querySelector('[name=delay]');
   const speed=root.querySelector('[name=speed]'),acceleration=root.querySelector('[name=acceleration]');
+  const distance=root.querySelector('[name=personFocusDistance]'),distanceValue=root.querySelector('output[for="'+distance.id+'"]');
   const status=root.querySelector('[role=status]');
   function apply(value){
     enabled.checked=value.enabled;delay.value=String(value.delay);
@@ -31,9 +37,12 @@ export function bindOfficeCamera({listen,configure}){
       root.querySelector('output[for="'+input.id+'"]').value=input.value+'%';
     }
     for(const control of [delay,speed,acceleration])control.disabled=!value.enabled;
+    distance.value=String(value.personFocusDistance);
+    distanceValue.value=distance.value+'%';
+    distance.setAttribute('aria-valuetext',distanceValue.value);
     configure(value);
   }
-  function fields(){return normalizeOfficeCamera({enabled:enabled.checked,delay:Number(delay.value),motion:{speed:Number(speed.value),acceleration:Number(acceleration.value)}});}
+  function fields(){return normalizeOfficeCamera({enabled:enabled.checked,delay:Number(delay.value),motion:{speed:Number(speed.value),acceleration:Number(acceleration.value)},personFocusDistance:distance.valueAsNumber});}
   listen(root,'input',()=>apply(fields()));
   listen(root,'change',()=>{
     try{
@@ -42,6 +51,6 @@ export function bindOfficeCamera({listen,configure}){
     }catch{status.textContent='当前浏览器仅本次有效';}
   });
   listen(window,'storage',e=>{if(e.key===officeCameraKey&&e.newValue){apply(readOfficeCamera(storage));status.textContent='已同步';}});
-  listen(window,'office-camera-preference',e=>apply(normalizeOfficeCamera(e.detail)));
+  listen(window,'office-camera-preference',e=>apply(normalizeOfficeCamera({...fields(),...e.detail})));
   apply(readOfficeCamera(storage));
 }

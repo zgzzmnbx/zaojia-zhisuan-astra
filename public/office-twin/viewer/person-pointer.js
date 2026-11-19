@@ -63,7 +63,10 @@ export function bindPersonPointer({canvas,camera,controls,people,listen,canInter
     if(!g.dragging&&Math.hypot(event.clientX-g.x,event.clientY-g.y)<7)return;
     if(!g.dragging){
       if(!canInteract()||!canPlacePerson(g.start,officeClient.getState(),g.id)){finish();return;}
-      g.dragging=true;g.capture.classList.add('is-person-dragging');canvas.style.cursor='grabbing';people.closeMenu();setDraggingPerson(g.id);
+      g.dragging=true;g.capture.classList.add('is-person-dragging');canvas.style.cursor='grabbing';
+      // The office task card and the drop targets share a dock. Keep its targets in place for the entire drag.
+      if(target?.dataset.managedDock!=='true')people.closeMenu();
+      setDraggingPerson(g.id);
     }
     g.latest={x:event.clientX,y:event.clientY};
     if(!g.frame)g.frame=requestAnimationFrame(()=>drawMove(g));

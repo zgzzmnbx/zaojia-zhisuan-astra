@@ -1,6 +1,6 @@
 import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
-import {bindOfficeCamera} from './office-camera.js';
+import {bindOfficeCamera,defaultPersonFocusDistance} from './office-camera.js';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
 import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.0';
 import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
@@ -81,6 +81,7 @@ export async function mountOfficeViewer() {
   let layout, buildingMetadata, officeMetadata, furnitureIntegration;
   let officeName='H1 办公室';
   let fitHeight = 100, selectedFloor = null, selectedRoom = null;
+  let personFocusDistance=defaultPersonFocusDistance,personFrameHeight=0;
   let campusProjection=null;
   const floors = new Map(), rooms = new Map(), movingFloors = [];
 
@@ -410,6 +411,8 @@ export async function mountOfficeViewer() {
     fitHeight = campusProjection?campusHeight(size):Math.max(6, size.y, size.x/aspect)*margin;
     // Preserve the established expanded tray framing at every viewport size.
     if(view==='exploded'&&object===officeRoot)fitHeight*=1.3;
+    personFrameHeight=object.userData.demoPersonId ? fitHeight : 0;
+    if(personFrameHeight)fitHeight=personFrameHeight*personFocusDistance/100;
     camera.zoom = 1; camera.far = Math.max(600, distance*4);
     resize(); controls.update(); requestFrame();
   }
@@ -434,6 +437,7 @@ export async function mountOfficeViewer() {
   function setView(next, { animate = true, focus = null, automatic = false, labelPreview = false, cameraTarget = null } = {}) {
     next = resolveView(next);
     if (!next) throw new TypeError('Unknown view');
+    if(next==='building' && !labelPreview)people?.closeMenu();
     if(!labelPreview)floorLabel?.cancel();
     if(!automatic)entrance.cancel();
     orbit?.focus(false);
@@ -563,7 +567,16 @@ export async function mountOfficeViewer() {
     orbitButton.querySelector('svg').style.pointerEvents='none';
   };
   orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!entrance.state().running&&!motionPreference.matches&&!transition});
-  bindOfficeCamera({listen,configure:value=>orbit.configure(value)});
+  bindOfficeCamera({listen,configure:value=>{
+    orbit.configure(value);
+    if(value.personFocusDistance===personFocusDistance)return;
+    personFocusDistance=value.personFocusDistance;
+    if(!personFrameHeight)return;
+    // This orthographic camera frames a person by its visible height.
+    const height=personFrameHeight*personFocusDistance/100;
+    if(transition?.camera)transition.camera.to.height=height;
+    else {fitHeight=height;resize();}
+  }});
   function editWorkstations(event){
     const state=event.detail;people?.closeMenu();orbit.sync();resize();
     if(state.open&&(state.action==='all'||state.action==='focus'||view!=='exploded')){
