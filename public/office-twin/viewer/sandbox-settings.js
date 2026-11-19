@@ -4,11 +4,16 @@ export function createSandboxSettings({workstations,getTasks,onSaved}){
   const side=document.querySelector('#office-sandbox-settings'),admin=document.querySelector('#office-admin-settings');
   const manage=document.querySelector('#picture-toggle'),preview=document.querySelector('#office-preview-toggle');
   const tabs=[...side.querySelectorAll('[role=tab]')],controller=new AbortController(),opts={signal:controller.signal};
-  let active='picture',frame=null,busy=false,returnTo=null,destination={tab:'tasks',person:''};
+  let active='picture',frame=null,ready=false,busy=false,returnTo=null,destination={tab:'tasks',person:''};
   const sideOpen=()=>side.hasAttribute('open')||side.matches(':popover-open');
   function send(type,data={}){frame?.contentWindow?.postMessage({namespace,type,...data},location.origin);}
   function syncTheme(){const {astraScheme:scheme,astraPalette:palette}=document.documentElement.dataset;send('theme',{scheme,palette});}
   function syncTasks(){if(frame)send('context',{tasks:getTasks()});}
+  function navigate(){
+    if(!ready)return;
+    send('navigate',destination);
+    delete destination.createTask;
+  }
   const theme=new MutationObserver(syncTheme);theme.observe(document.documentElement,{attributes:true,attributeFilter:['data-astra-scheme','data-astra-palette']});
   function changeVisibility(){
     window.dispatchEvent(new Event('office-admin-visibility'));
@@ -38,7 +43,7 @@ export function createSandboxSettings({workstations,getTasks,onSaved}){
     }
     if(name==='seats')void workstations.activate();
   }
-  function open(name,personId){
+  function open(name,personId,createTask=false){
     if(busy||workstations.isSaving())return;
     if(!sideOpen()&&!admin.open)returnTo=document.activeElement;
     if(name==='picture'||name==='seats'||name==='camera'){
@@ -51,12 +56,12 @@ export function createSandboxSettings({workstations,getTasks,onSaved}){
       return;
     }
     closeSide();
-    if(adminTabs.includes(name))destination={tab:name,person:personId||''};
+    if(adminTabs.includes(name))destination={tab:name,person:personId||'',createTask:name==='tasks'&&createTask};
     if(!frame){
       frame=document.createElement('iframe');frame.title='办公室沙盘设置';const url=new URL('/office-settings.html',location.origin);
       url.searchParams.set('tab',destination.tab);if(destination.person)url.searchParams.set('person',destination.person);
       frame.src=url.href;admin.append(frame);
-    }else if(adminTabs.includes(name))send('navigate',destination);
+    }else if(adminTabs.includes(name))navigate();
     if(!admin.open){admin.showModal();changeVisibility();}
     manage.setAttribute('aria-expanded','true');frame.focus();
   }
@@ -79,7 +84,7 @@ export function createSandboxSettings({workstations,getTasks,onSaved}){
     if(!frame||e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.namespace!==namespace)return;
     const d=e.data;
     switch(d.type){
-      case 'ready':syncTheme();syncTasks();send('navigate',destination);break;
+      case 'ready':ready=true;syncTheme();syncTasks();navigate();break;
       case 'busy':busy=!!d.busy;break;
       case 'saved':onSaved(d.value);break;
       case 'roster-saved':void workstations.refresh();break;

@@ -7,6 +7,7 @@ import Icon from './OfficeSettingsIcon';
 import './office-task-settings.css';
 
 type Person={id:string;name:string};
+export type TaskNavigation={person:string;createTask:boolean};
 type Manual={id:string;title:string;status:string;description:string};
 type Adjustment={title?:string;status?:string;description?:string;hidden?:boolean};
 type Member={revision:number;tasks:Manual[];adjustments:Record<string,Adjustment>};
@@ -48,12 +49,13 @@ function TaskGroup({name,count,reveal,initiallyOpen,children}:{name:string;count
   </details>;
 }
 
-export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,onSaved}:{currentTasks:OfficeTask[];initialPerson:string;onBusy:(value:string)=>void;onSaved:(value:Plan)=>void}){
+export default function OfficeTaskSettings({currentTasks,initialPerson,navigation,onBusy,onSaved}:{currentTasks:OfficeTask[];initialPerson:string;navigation?:TaskNavigation;onBusy:(value:string)=>void;onSaved:(value:Plan)=>void}){
   const [data,setData]=useState<Resources|null>(null),[reload,setReload]=useState(0);
   const [person,setPerson]=useState(initialPerson||'owner'),[removed,setRemoved]=useState(false),[query,setQuery]=useState('');
   const [drafts,setDrafts]=useState<Record<string,Member>>({}),[editKey,setEditKey]=useState(''),[selected,setSelected]=useState<Set<string>>(new Set());
   const [notice,setNotice]=useState(''),[error,setError]=useState(''),[saving,setSaving]=useState(false),[conflict,setConflict]=useState(false);
   const titleInput=useRef<HTMLInputElement>(null);
+  const handled=useRef<TaskNavigation|undefined>(undefined);
   useEffect(()=>{if(initialPerson)setPerson(initialPerson);},[initialPerson]);
   useEffect(()=>{
     const controller=new AbortController();
@@ -71,6 +73,17 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
     return ()=>controller.abort();
   },[reload]);
   useEffect(()=>{if(editKey)titleInput.current?.focus();},[editKey]);
+  // The office can reuse this dialog. Apply each card action once, after the
+  // roster arrives, even when the same person is opened twice in a row.
+  useEffect(()=>{
+    if(!data||!navigation||handled.current===navigation)return;
+    handled.current=navigation;
+    if(!data.people.some(p=>p.id===navigation.person)){
+      setError('这位同事已不在名册中，请重新选择');return;
+    }
+    choosePerson(navigation.person);
+    if(navigation.createTask)add(navigation.person,true);
+  },[data,navigation]);
   if(!data)return <p role="status">{error||'正在读取人员任务…'} {error&&<button className="btn btn-sm" onClick={()=>setReload(n=>n+1)}>重试</button>}</p>;
 
   const {model,people,plan}=data, who=people.find(p=>p.id===person)||people[0], personId=who?.id||'';
@@ -90,12 +103,12 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
   const dirty=Object.keys(drafts).length>0;
   function resetList(){setSelected(new Set());setEditKey('');setQuery('');}
   function choosePerson(id:string){setPerson(id);resetList();setRemoved(false);}
-  function modify(change:(member:Member)=>void){
+  function modify(change:(member:Member)=>void,target=personId){
     setDrafts(previous=>{
-      const base=plan.members[personId]||model.emptyMember();
-      const next=structuredClone(previous[personId]||base);change(next);
+      const base=plan.members[target]||model.emptyMember();
+      const next=structuredClone(previous[target]||base);change(next);
       const result={...previous};
-      if(JSON.stringify(next)===JSON.stringify(base))delete result[personId];else result[personId]=next;
+      if(JSON.stringify(next)===JSON.stringify(base))delete result[target];else result[target]=next;
       return result;
     });
     setNotice('');setError('');
@@ -130,10 +143,12 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
       clean(m,t.key);
     });
   }
-  function add(){
-    const id='manual:'+crypto.randomUUID();
-    modify(m=>m.tasks.unshift({id,title:'',description:'',status:'待处理'}));
+  function add(target:string,resumeBlank=false){
+    const blank=resumeBlank?drafts[target]?.tasks.find(t=>!t.title.trim()&&!drafts[target].adjustments[t.id]?.hidden):undefined;
+    const id=blank?.id||'manual:'+crypto.randomUUID();
+    if(!blank)modify(m=>m.tasks.unshift({id,title:'',description:'',status:'待处理'}),target);
     resetList();setRemoved(false);setEditKey(id);
+    if(blank&&id===editKey)titleInput.current?.focus();
   }
   function discard(){
     setDrafts({});resetList();setNotice('');setError('');setConflict(false);
@@ -177,7 +192,7 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
         {directory.map(({person:p})=><option key={p.id} value={p.id}>{p.name}{drafts[p.id]?' · 未保存':''}</option>)}
       </select><Icon name="caret-down"/></label>
       <label className="office-plan-search"><Icon name="search"/><input type="search" aria-label="搜索任务" placeholder="搜索项目或任务" value={query} onChange={e=>{setQuery(e.target.value);setSelected(new Set());}}/></label>
-      <button type="button" className="btn office-add" onClick={add} disabled={!who}><Icon name="plus"/>新建任务</button>
+      <button type="button" className="btn office-add" onClick={()=>add(personId)} disabled={!who}><Icon name="plus"/>新建任务</button>
     </div>
     {data.pendingError&&<p role="status">平台待办暂未刷新。<button type="button" className="btn btn-ghost btn-xs" onClick={()=>setReload(n=>n+1)}>重试读取</button></p>}
     <div className="office-plan-filters">
@@ -202,7 +217,7 @@ export default function OfficeTaskSettings({currentTasks,initialPerson,onBusy,on
       </div>
       {editKey===t.key&&!removed&&<div className="office-plan-edit">
         <label>任务名称<input ref={titleInput} className="input input-bordered" maxLength={200} value={t.title} onChange={e=>changeField(t,'title',e.target.value)}/></label>
-        <label>沙盘状态<select className="select select-bordered" value={model.taskState(t).label} onChange={e=>changeField(t,'status',e.target.value)}>{[...new Set([model.taskState(t).label,...statuses])].map(s=><option key={s}>{s}</option>)}</select></label>
+        <label>沙盘状态<select aria-label="沙盘状态" className="select select-bordered" value={model.taskState(t).label} onChange={e=>changeField(t,'status',e.target.value)}>{[...new Set([model.taskState(t).label,...statuses])].map(s=><option key={s}>{s}</option>)}</select></label>
         <label>任务备注<textarea className="textarea textarea-bordered" maxLength={1200} value={t.description||''} onChange={e=>changeField(t,'description',e.target.value)}/></label>
         {t.dispatchId&&<small>平台原记录 · {t.originalStatus} · {t.originalTitle}</small>}
         <div>{t.adjusted&&!t.manual&&<button className="btn btn-ghost btn-sm" type="button" onClick={()=>modify(m=>{delete m.adjustments[t.key];})}>恢复原内容</button>}<button className="btn btn-ghost btn-sm" type="button" onClick={()=>hide([t.key],true)}>从沙盘移除</button></div>

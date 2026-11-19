@@ -4,10 +4,39 @@ export function mountSandboxLayout(root=document) {
   const toggle=$('#space-card-toggle'), controller=new AbortController(), options={signal:controller.signal};
   const header=$('.office-rail-header'),body=$('.office-inspector-body'),detail=$('#person-detail-pane');
   let previous=null;
-  let selected='tasks';
+  const tablist=header.querySelector('[role=tablist]'), railTabs=[...tablist.querySelectorAll('[data-rail-tab]')];
+  const nativeTabFocus='focusGroup' in HTMLElement.prototype;
+  let selected='people';
   function open(value){workspace.dataset.cardsOpen=String(value);workspace.dataset.informationOpen='false';rail.hidden=!value;toggle.setAttribute('aria-expanded',String(value));toggle.title=value?'收起工作栏':'展开工作栏';toggle.setAttribute('aria-label',toggle.title);}
-  function tab(name){if(!['tasks','people','messages','space'].includes(name))return;selected=name;for(const b of root.querySelectorAll('[data-rail-tab]')){const active=b.dataset.railTab===name;b.setAttribute('aria-pressed',String(active));b.classList.toggle('btn-primary',active);b.classList.toggle('btn-ghost',!active);$('#rail-'+b.dataset.railTab).hidden=!active;}if(name==='space')$('#tab-floors').click();open(true);}
-  for(const b of root.querySelectorAll('[data-rail-tab]'))b.addEventListener('click',()=>{tab(b.dataset.railTab);if(selected==='people')$('#tab-people').click();},options);
+  function tab(name){
+    if(!railTabs.some(b=>b.dataset.railTab===name&&!b.hidden))return;
+    selected=name;
+    for(const b of railTabs){
+      const active=b.dataset.railTab===name;
+      b.setAttribute('aria-selected',String(active));b.toggleAttribute('focusgroupstart',active);
+      if(!nativeTabFocus)b.tabIndex=active?0:-1;
+      b.classList.toggle('btn-primary',active);b.classList.toggle('btn-ghost',!active);
+      $('#rail-'+b.dataset.railTab).hidden=!active;
+    }
+    if(name==='space')$('#tab-floors').click();
+    open(true);
+  }
+  for(const b of railTabs)b.addEventListener('click',()=>{tab(b.dataset.railTab);if(selected==='people')$('#tab-people').click();},options);
+  if(!nativeTabFocus){
+    tablist.addEventListener('keydown',event=>{
+      const visible=railTabs.filter(b=>!b.hidden),i=visible.indexOf(event.target);
+      if(i<0)return;
+      const end=visible.length-1;
+      const next={ArrowRight:(i+1)%visible.length,ArrowLeft:(i+end)%visible.length,Home:0,End:end}[event.key];
+      if(next===undefined)return;
+      event.preventDefault();
+      for(const b of visible)b.tabIndex=b===visible[next]?0:-1;
+      visible[next].focus();
+    },options);
+    tablist.addEventListener('focusout',event=>{
+      if(!tablist.contains(event.relatedTarget))for(const b of railTabs)b.tabIndex=b.dataset.railTab===selected?0:-1;
+    },options);
+  }
   function dismissPerson(restoreFocus=false){window.dispatchEvent(new CustomEvent('office-person-dismiss',{detail:{restoreFocus}}));}
   window.addEventListener('office-person-menu',e=>{
     if(e.detail.open){
@@ -25,7 +54,7 @@ export function mountSandboxLayout(root=document) {
       const card=saved.taskKey?body.querySelector('[data-task-key="'+CSS.escape(saved.taskKey)+'"]'):null;
       const list=card||$('#rail-'+selected);
       const row=saved.id?list?.querySelector('[data-person-id="'+CSS.escape(saved.id)+'"]'):null;
-      const target=[saved.from,row,card?.querySelector('summary'),header.querySelector('[aria-pressed="true"]'),toggle]
+      const target=[saved.from,row,card?.querySelector('summary'),header.querySelector('[aria-selected="true"]'),toggle]
         .find(el=>el?.isConnected&&el!==document.body&&el.getClientRects().length);
       target?.focus({preventScroll:true});
     }
@@ -92,6 +121,6 @@ export function mountSandboxLayout(root=document) {
   const form=$('#local-note-form'),input=$('#local-note-input'),list=$('#local-notes'),clear=$('#clear-local-notes');
   form.addEventListener('submit',e=>{e.preventDefault();if(!input.value.trim())return;list.querySelector('.office-empty-note')?.remove();const p=root.createElement('p');p.textContent=input.value.trim();list.append(p);input.value='';clear.disabled=false;$('#local-note-status').textContent='已保存本页备注';},options);
   clear.addEventListener('click',()=>{list.replaceChildren();clear.disabled=true;},options);
-  tab('tasks');
+  tab('people');
   return {dispose(){controller.abort();}};
 }

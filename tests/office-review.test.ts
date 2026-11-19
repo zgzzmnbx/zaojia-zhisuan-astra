@@ -888,7 +888,23 @@ test('return walker waits for a blocked doorway and retries after it clears',()=
  for(let i=0;i<1500&&!walk.state().done;i++)walk.step(.05,true,[]);assert.equal(walk.state().done,true);
 });
 import {cacheStaticTransforms} from '../public/office-twin/viewer/static-batches.js';
-import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority,dutyCountLabel} from '../public/office-twin/viewer/duty-board.js';
+import {personTaskSummary,taskState,officeExamples,indexPersonTasks,taskPriority,dutyCountLabel,directoryWork} from '../public/office-twin/viewer/duty-board.js';
+
+test('allocation directory searches across a person’s projects and keeps their full workload',()=>{
+  const person={id:'p',name:'刘君',seatId:'SEAT_NW_04',trade:'造价',expertise:'测量工程量'};
+  const tasks=[{projectName:'甲支线',title:'甲支线 · 清单复核',status:'审核中'},
+    {projectName:'乙标段',title:'乙标段 · 数量校核',status:'待复核',demo:true},
+    {title:'往期报告',status:'已完成'}];
+  const current=directoryWork(person,tasks,'all','nw_04');
+  assert.equal(current.project,'甲支线');assert.equal(current.action,'清单复核');assert.equal(current.matches,true);
+  for(const keyword of ['刘君','测量工程量','造价'])assert.equal(directoryWork(person,tasks,'all',keyword).matches,true);
+  const other=directoryWork(person,tasks,'all','数量');
+  assert.equal(other.project,'乙标段');assert.equal(other.live.length,2);assert.equal(other.closed,1);
+  assert.equal(directoryWork(person,tasks,'all','往期').project,'往期报告');
+  assert.equal(directoryWork(person,tasks,'demo','甲支线').matches,false);
+  assert.equal(directoryWork(person,tasks,'demo','').shown,tasks[1]);
+  assert.equal(directoryWork(person,[tasks[2]],'all','').shown,undefined);
+});
 import {officeTaskGroups} from '../public/office-twin/viewer/task-board.js';
 import {pendingOfficeTask} from '../03-Src/studio/office-review.ts';
 import {applyTaskPlan,emptyMember,memberEntries,olderProjectReviewKeys} from '../public/office-twin/viewer/task-plan.js';

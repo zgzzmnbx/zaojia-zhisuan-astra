@@ -31,8 +31,8 @@ async function refreshPlan(){
   }catch{/* Keep the last applied worklist until a later refresh. */}
 }
 function onPlanStorage(event){if(event.key===planNotice)void refreshPlan();}
-export function openPersonTasks(personId=''){
-  sandboxSettings?.open('tasks',personId||'owner');
+export function openPersonTasks(personId='',createTask=false){
+  sandboxSettings?.open('tasks',personId||'owner',createTask);
 }
 function applyHostSnapshot(){
   if(!hostSnapshot)return;
@@ -163,7 +163,7 @@ export const officeClient={
     artifact.addEventListener('dragleave',event=>{if(!artifact.contains(event.relatedTarget)){artifact.classList.remove('is-dragover');if(draggingPerson)hint.textContent=`把 ${draggingPerson.name} 拖到这里`;}});
     artifact.addEventListener('drop',event=>{event.preventDefault();const id=event.dataTransfer.getData('text/plain');if(draggingPerson?.id===id)togglePerson(id,true);setDraggingPerson(null);});
     const rail=$('.office-inspector'),browser=element('article','','host-browser-card');
-    browser.setAttribute('aria-label','任务、人员与空间');
+    browser.setAttribute('aria-label','人员、任务与空间');
     while(rail.firstChild)browser.append(rail.firstChild);
     rail.append(browser);
     const workspace=rail.parentElement;

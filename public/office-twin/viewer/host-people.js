@@ -16,7 +16,7 @@ import {icon} from '../astra_ui/icons.js';
 export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focusPerson,getPicture,layout,onSelect=()=>{},onRebuild=()=>{}}) {
   const root=new THREE.Group();root.name='Astra review people - indicative seating';scene.add(root);
   const markers=document.querySelector('#people-markers'),list=document.querySelector('#people-list');
-  const directory=mountPeopleDirectory(list,{select,bindDrag:draggable});
+  const directory=mountPeopleDirectory(list,{select,bindDrag:draggable,assign:id=>openPersonTasks(id,true),toggle:togglePerson});
   const candidates=document.querySelector('#review-candidates');
   const message=document.querySelector('#review-status');
   const actors=new Map(),assets=createPersonAssets(),clock=createPersonClock(),reduced=matchMedia('(prefers-reduced-motion: reduce)');

@@ -1,4 +1,5 @@
 // Read-only task presentation for the office. Review selection belongs to the host.
+import {icon} from '../astra_ui/icons.js';
 const completed = new Set([
   '已通过',
   '已完成',
@@ -150,14 +151,36 @@ export function mountDutyFilters(list, label, options, refresh) {
   };
 }
 
-export function mountPeopleDirectory(list, {select, bindDrag}) {
+export function directoryWork(person, tasks, scope, query) {
+  const {live, current} = personTaskSummary(tasks);
+  const examples = tasks.filter(t => t.demo);
+  const pool = scope === 'demo' ? examples : tasks;
+  const includes = value => String(value || '').toLocaleLowerCase().includes(query);
+  const profileMatch = !query || [person.name, person.seatId, person.trade, person.expertise].some(includes);
+  const matched = profileMatch ? pool : pool.filter(t => [t.projectName, t.title, taskState(t).label].some(includes));
+  const shown = scope === 'demo' || !profileMatch ? personTaskSummary(matched).latest : current;
+  const project = displayTitle(shown?.projectName?.trim());
+  const title = displayTitle(shown?.title);
+  const action = project && title.startsWith(project) ? title.slice(project.length).replace(/^[\s·：:]+/u, '') : title;
+  return {person, live, examples, shown, project:project || title, action:project ? action : '',
+    closed:tasks.length-live.length, matches:profileMatch || matched.length>0};
+}
+
+export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle}) {
   const rows = new Map();
   let snapshot, selectedId;
-  const filters = mountDutyFilters(list, '筛选人员', [['all','全部'], ['active','有待办'], ['demo','演示']], render);
-  const empty = node('p', 'duty-empty');
-  list.after(empty);
+  const search = node('label','directory-search');
+  search.innerHTML = icon('magnifying-glass');
+  const input = node('input');
+  input.type = 'search'; input.placeholder = '搜姓名、项目或专长';
+  input.setAttribute('aria-label','搜索姓名、项目、任务、工位或专长');
+  input.addEventListener('input',render);
+  search.append(input); list.before(search);
+  const filters = mountDutyFilters(list, '筛选人员', [['all','全部'], ['active','有待办'], ['idle','无待办'], ['demo','演示']], render);
+  const empty = document.getElementById('people-empty');
 
   function makeRow(id) {
+    const card = node('article','directory-card');
     const button = node('button','btn btn-ghost host-person-row');
     button.type = 'button';
     button.dataset.personId = id;
@@ -166,68 +189,87 @@ export function mountPeopleDirectory(list, {select, bindDrag}) {
     const name = node('strong'), state = tag('', 'pending'), source = tag('', 'demo');
     const identity = node('span','duty-line');
     identity.append(name, state, source);
-    const title = node('span','duty-title'), count = node('small','duty-extra');
+    const title = node('span','duty-title'), action = node('span','directory-task-action');
+    const seat = node('span'), count = node('span'), meta = node('small','duty-extra');
+    meta.append(count,seat);
+    const skills = node('span','directory-skills');
     const body = node('span','duty-body');
-    body.append(identity, title, count);
+    body.append(identity,meta);
     const grip = node('span','host-drag-grip');
     grip.title = '拖动同事';
     grip.setAttribute('aria-hidden','true');
-    button.append(initial, body, grip);
+    button.append(initial, body, grip, title, action, skills);
     button.onclick = () => select(id);
     bindDrag(button, id);
-    return {button, initial, name, state, source, title, count, grip};
+    const actions = node('div','directory-actions');
+    const add = node('button','btn btn-ghost btn-xs directory-assign');
+    add.type='button'; add.innerHTML=icon('plus'); add.append('分配任务');
+    add.onclick=()=>assign(id);
+    const review = node('button','btn btn-ghost btn-xs directory-review');
+    review.type='button';
+    review.onclick=()=>{
+      const person=snapshot.employees.find(p=>p.id===id);
+      if(person?.draggable)toggle(id,!person.selected);
+    };
+    actions.append(add,review); card.append(button,actions);
+    return {card, button, initial, name, state, source, title, action, skills, count, seat, grip, add, review};
   }
 
   function render() {
     if (!snapshot) return;
-    const profiles = snapshot.employees.map(person => {
-      const tasks = snapshot.personTasks?.get(person.id) || [];
-      const {live, current} = personTaskSummary(tasks);
-      const examples = tasks.filter(t => t.demo);
-      const shown = filters.scope === 'demo' ? personTaskSummary(examples).latest : current;
-      return {person, tasks, live, shown, examples};
-    });
+    const query = input.value.trim().toLocaleLowerCase();
+    const profiles = snapshot.employees.map(person => directoryWork(person,snapshot.personTasks?.get(person.id) || [],filters.scope,query));
+    const incomplete = snapshot.inboxLoading || snapshot.inboxError || snapshot.receiptError;
     const ids = new Set(profiles.map(p => p.person.id));
-    for (const [id, row] of rows) if (!ids.has(id)) { row.button.remove(); rows.delete(id); }
+    for (const [id, row] of rows) if (!ids.has(id)) { row.card.remove(); rows.delete(id); }
     const active = profiles.filter(p => p.live.length).length;
-    filters.update({all:profiles.length, active});
+    filters.update({all:profiles.length, active, idle:incomplete ? null : profiles.length-active});
     const focus = list.contains(document.activeElement) ? document.activeElement : null;
     let visible = 0;
-    profiles.sort((a,b) => taskPriority(a.shown)-taskPriority(b.shown));
-    profiles.forEach(({person, live, tasks, shown, examples}, index) => {
+    profiles.sort((a,b) => Number(!a.live.length)-Number(!b.live.length) || taskPriority(a.shown)-taskPriority(b.shown));
+    profiles.forEach(({person, live, closed, shown, examples, project, action, matches}, index) => {
       if (!rows.has(person.id)) rows.set(person.id, makeRow(person.id));
       const row = rows.get(person.id), button = row.button;
       row.initial.textContent = Array.from((person.name || '').trim())[0] || '·';
       row.name.textContent = person.name;
       const status = shown && taskState(shown);
-      row.state.hidden = status == null && !person.selected;
-      row.state.dataset.tone = status?.tone || 'selected';
-      row.state.textContent = status?.label || '已选';
-      row.source.textContent = shown?.demo ? exampleLabel(shown) : shown?.manual ? '自建' : shown?.adjusted ? '沙盘已调整' : '';
+      row.state.dataset.tone = status?.tone || 'closed';
+      row.state.textContent = status?.label || emptyDutyLabel(snapshot);
+      row.source.textContent = status?.platform || (shown?.demo ? exampleLabel(shown) : shown?.manual ? '自建' : shown?.adjusted ? '沙盘已调整' : '');
       row.source.hidden = !row.source.textContent;
-      row.title.textContent = displayTitle(shown?.title) || emptyDutyLabel(snapshot);
-      row.title.title = shown?.title || row.title.textContent;
-      row.count.textContent = live.length ? dutyCountLabel(live) : tasks.length ? tasks.length + ' 项已结束' : '';
+      row.title.textContent = project; row.title.title=project; row.title.hidden=!project;
+      row.action.textContent=action; row.action.title=action; row.action.hidden=!action;
+      const skills=[...new Set([person.trade,person.expertise].filter(Boolean))].join(' · ');
+      row.skills.textContent=skills; row.skills.title=skills; row.skills.hidden=!skills;
+      row.count.textContent = live.length ? dutyCountLabel(live) : closed ? closed + ' 项已结束' : '';
       row.count.hidden = !row.count.textContent;
+      row.seat.textContent=person.seatId ? '工位 '+person.seatId.replace(/^SEAT_/,'') : ''; row.seat.hidden=!row.seat.textContent;
       button.draggable = !!person.draggable;
       row.grip.hidden = !button.draggable;
       button.dataset.idle = String(!live.length);
-      button.classList.toggle('selected', !!person.selected);
+      row.card.classList.toggle('is-chosen', !!person.selected);
       button.setAttribute('aria-pressed', String(person.id === selectedId));
-      button.hidden = (filters.scope === 'active' && !live.length) || (filters.scope === 'demo' && !examples.length);
-      if (!button.hidden) visible++;
+      row.add.setAttribute('aria-label','给'+person.name+'分配任务');
+      const pool=person.demoAssignment?'演示复核':'本次复核';
+      row.review.textContent=person.selected?'已选入':person.demoAssignment?'选入演示':'选入复核';
+      row.review.dataset.selected=String(!!person.selected);
+      row.review.setAttribute('aria-label',row.review.textContent+'，'+person.name+'，'+(person.selected?'从'+pool+'移除':'加入'+pool));
+      row.review.disabled=!person.draggable;
+      row.review.title=row.review.disabled?'请在左侧复核卡选择可用成果和平台':person.selected?'再次点击可移出'+pool:'加入'+pool;
+      row.card.hidden = !matches || (filters.scope === 'active' && !live.length) || (filters.scope === 'idle' && (incomplete || !!live.length)) || (filters.scope === 'demo' && !examples.length);
+      if (!row.card.hidden) visible++;
       const next = list.children[index] || null;
-      if (next !== button) {
-        if (list.moveBefore && button.isConnected) list.moveBefore(button,next);
-        else list.insertBefore(button,next);
+      if (next !== row.card) {
+        if (list.moveBefore && row.card.isConnected) list.moveBefore(row.card,next);
+        else list.insertBefore(row.card,next);
       }
     });
-    if (focus?.isConnected && !focus.hidden && document.activeElement !== focus) focus.focus({preventScroll:true});
+    if (focus?.isConnected && !focus.closest('[hidden]') && document.activeElement !== focus) focus.focus({preventScroll:true});
     empty.hidden = visible > 0;
-    empty.textContent = filters.scope === 'active' ? emptyDutyLabel(snapshot) : filters.scope === 'demo' ? '暂无演示任务' : '暂无人员记录';
+    empty.textContent = query ? '没有匹配的人员或任务' : filters.scope === 'idle' ? incomplete ? emptyDutyLabel(snapshot) : '所有同事都有待办' : filters.scope === 'active' ? emptyDutyLabel(snapshot) : filters.scope === 'demo' ? '暂无演示任务' : '暂无人员记录';
   }
   return {
     update(next,id) { snapshot = next; selectedId = id; render(); },
-    dispose() { filters.remove(); empty.remove(); rows.clear(); list.replaceChildren(); },
+    dispose() { filters.remove(); search.remove(); rows.clear(); list.replaceChildren(); },
   };
 }

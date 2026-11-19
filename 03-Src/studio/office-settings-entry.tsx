@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import Icon from './OfficeSettingsIcon';
-import OfficeTaskSettings from './OfficeTaskSettings';
+import OfficeTaskSettings,{type TaskNavigation} from './OfficeTaskSettings';
 import OfficeChatSettings from './OfficeChatSettings';
 import OfficeProfileSettings from './OfficeProfileSettings';
 import type {OfficeTask} from './office-review';
@@ -20,7 +20,7 @@ function back(){if(embedded)send('close');else location.assign('/office-twin/vie
 function OfficeSettings(){
   const first=query.get('tab'),initial=isTab(first)?first:'tasks';
   const [tab,choose]=useState<Tab>(initial),[visited,setVisited]=useState<Set<Tab>>(()=>new Set([initial]));
-  const [person,setPerson]=useState(query.get('person')||'owner'),[tasks,setTasks]=useState<OfficeTask[]>([]),[busy,setBusy]=useState(false);
+  const [destination,setDestination]=useState<TaskNavigation>(),[tasks,setTasks]=useState<OfficeTask[]>([]),[busy,setBusy]=useState(false);
   const buttons=useRef<Array<HTMLButtonElement|null>>([]);
   function navigate(t:Tab){choose(t);setVisited(old=>old.has(t)?old:new Set([...old,t]));const url=new URL(location.href);url.searchParams.set('tab',t);history.replaceState(null,'',url);}
   function saving(value:boolean){setBusy(value);send('busy',{busy:value});}
@@ -33,7 +33,10 @@ function OfficeSettings(){
       if(e.origin!==location.origin||e.source!==parent||e.data?.namespace!==namespace)return;
       const {type,tasks,person,scheme,palette,tab}=e.data;
       if(type==='context'&&Array.isArray(tasks))setTasks(tasks);
-      if(type==='navigate'){if(isTab(tab))navigate(tab);if(typeof person==='string'&&person)setPerson(person);}
+      if(type==='navigate'&&isTab(tab)){
+        navigate(tab);
+        if(tab==='tasks'&&typeof person==='string'&&person)setDestination({person,createTask:e.data.createTask===true});
+      }
       if(type==='theme'){
         const page=document.documentElement;page.dataset.theme=page.dataset.astraScheme=scheme==='dark'?'dark':'light';page.dataset.astraPalette=palette||'astra';
       }
@@ -55,7 +58,7 @@ function OfficeSettings(){
     }}>{tabs.map(({id,label,icon},i)=><button key={id} className={tab===id?'is-active':''} role="tab" id={'tab-'+id} aria-selected={tab===id} aria-controls={'panel-'+id} tabIndex={tab===id?0:-1} disabled={busy} ref={el=>{buttons.current[i]=el;}} onClick={()=>navigate(id)}><Icon name={icon}/>{label}</button>)}</nav>
       <nav className="settings-navigation office-preview-links" aria-label="现场调节"><button aria-label="人员工位" title="人员工位" disabled={busy} onClick={()=>preview('seats')}><Icon name="pin"/><span>人员工位</span></button><button aria-label="建筑外观" title="建筑外观" disabled={busy} onClick={()=>preview('picture')}><Icon name="buildings"/><span>建筑外观</span></button></nav>
     </aside><div className="settings-content">{tabs.map(({id})=><section key={id} role="tabpanel" className="settings-section" id={'panel-'+id} aria-labelledby={'tab-'+id} tabIndex={0} hidden={tab!==id}>
-      {visited.has(id)&&(id==='tasks'?<OfficeTaskSettings currentTasks={tasks} initialPerson={person} onBusy={s=>saving(!!s)} onSaved={value=>send('saved',{value})}/>:id==='profiles'?<OfficeProfileSettings onBusy={saving} onSave={()=>send('roster-saved')}/>:<OfficeChatSettings onBusy={saving} onSave={value=>send('chat-saved',{value})}/>)}
+      {visited.has(id)&&(id==='tasks'?<OfficeTaskSettings currentTasks={tasks} initialPerson={query.get('person')||'owner'} navigation={destination} onBusy={s=>saving(!!s)} onSaved={value=>send('saved',{value})}/>:id==='profiles'?<OfficeProfileSettings onBusy={saving} onSave={()=>send('roster-saved')}/>:<OfficeChatSettings onBusy={saving} onSave={value=>send('chat-saved',{value})}/>)}
     </section>)}</div></div></main>;
 }
 createRoot(document.getElementById('office-task-root')!).render(<OfficeSettings/>);
