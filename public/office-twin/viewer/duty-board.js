@@ -40,12 +40,12 @@ export function taskState(task) {
 }
 // Preserve the earlier office's six sample assignments by identity across directory reordering.
 const legacyCases = [
-  ['石萌', '某支线工程控制价复核', '待复核'],
-  ['刘君', '某站场改造结算复核', '审核中'],
-  ['安冉', '某研发基地勘察测量复核', '审核中'],
-  ['康亚光', '某数字化项目投资复核', '待复核'],
-  ['李洪全', '某支线工程控制价复核', '审核中'],
-  ['王军', '某站场改造结算复核', '审核中'],
+  ['石萌', '某支线工程', '控制价复核', '待复核'],
+  ['刘君', '某站场改造', '结算复核', '审核中'],
+  ['安冉', '某研发基地', '勘察测量复核', '审核中'],
+  ['康亚光', '某数字化项目', '投资复核', '待复核'],
+  ['李洪全', '某支线工程', '控制价复核', '审核中'],
+  ['王军', '某站场改造', '结算复核', '审核中'],
 ];
 const surveyCases = [
   ['鹿学文','dehua-scope','德化—大田—永安支线','核对调整后的勘察范围','审核中','对照范围调整确认函和技术要求，列出新增、取消的测段。'],
@@ -57,9 +57,9 @@ const surveyCases = [
 export function officeExamples(employees) {
   const matches = name => employees.filter(p => p.name === name || p.accounts?.some(a => a.name === name));
   const examples = [];
-  for (const [name,title,status] of legacyCases) {
+  for (const [name,projectName,action,status] of legacyCases) {
     const people = matches(name);
-    if (people.length === 1) examples.push({id:'sample:'+people[0].id,employeeId:people[0].id,title,status,demo:true,example:'legacy'});
+    if (people.length === 1) examples.push({id:'sample:'+people[0].id,employeeId:people[0].id,projectName,title:projectName+action,status,demo:true,example:'legacy'});
   }
   for (const [name,key,project,action,status,description] of surveyCases) {
     const people = matches(name);
@@ -161,6 +161,8 @@ export function mountPeopleDirectory(list, {select, bindDrag}) {
     const button = node('button','btn btn-ghost host-person-row');
     button.type = 'button';
     button.dataset.personId = id;
+    const initial = node('span','duty-avatar');
+    initial.setAttribute('aria-hidden','true');
     const name = node('strong'), state = tag('', 'pending'), source = tag('', 'demo');
     const identity = node('span','duty-line');
     identity.append(name, state, source);
@@ -170,10 +172,10 @@ export function mountPeopleDirectory(list, {select, bindDrag}) {
     const grip = node('span','host-drag-grip');
     grip.title = '拖动同事';
     grip.setAttribute('aria-hidden','true');
-    button.append(body, grip);
+    button.append(initial, body, grip);
     button.onclick = () => select(id);
     bindDrag(button, id);
-    return {button, name, state, source, title, count, grip};
+    return {button, initial, name, state, source, title, count, grip};
   }
 
   function render() {
@@ -195,6 +197,7 @@ export function mountPeopleDirectory(list, {select, bindDrag}) {
     profiles.forEach(({person, live, tasks, shown, examples}, index) => {
       if (!rows.has(person.id)) rows.set(person.id, makeRow(person.id));
       const row = rows.get(person.id), button = row.button;
+      row.initial.textContent = Array.from((person.name || '').trim())[0] || '·';
       row.name.textContent = person.name;
       const status = shown && taskState(shown);
       row.state.hidden = status == null && !person.selected;

@@ -130,6 +130,7 @@ function receive(event) {
   const data=event.data;
   if(!Array.isArray(data.people)||!Array.isArray(data.tasks)||typeof data.context!=='string')return;
   hostSnapshot={employees:data.people,messages:[],context:data.context,revision:data.revision,title:String(data.title),enabled:!!data.enabled,receiptError:!!data.receiptError,
+    projectName:typeof data.projectName==='string'?data.projectName:'',
     tasks:data.tasks,pendingTasks:Array.isArray(data.pendingTasks)?data.pendingTasks:[],inboxError:!!data.inboxError,inboxLoading:!!data.inboxLoading};
   applyHostSnapshot();
 }

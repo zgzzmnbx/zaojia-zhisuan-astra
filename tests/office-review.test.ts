@@ -538,7 +538,7 @@ test('drag-out removal needs a completed drag outside the frame but inside the p
  assert.equal(releasedOutsideSelection({dragging:true},{x:350,y:601},rect,viewport),false);
 });
 test('only owner routes to real review; other people remain context-local demo assignments',()=>{
- const raw={context:'one',revision:1,enabled:true,title:'Current.xlsx',employees:[{id:'owner',selectable:true,selected:false},{id:'other',selectable:false,selected:false}],tasks:[]};
+ const raw={context:'one',revision:1,enabled:true,projectName:'支线工程',title:'Current.xlsx',employees:[{id:'owner',selectable:true,selected:false},{id:'other',selectable:false,selected:false}],tasks:[]};
  const demos=createDemoAssignments();demos.apply(raw);demos.set('other',true);demos.set('owner',true);
  const selected=demos.apply(raw);
  assert.equal(assignmentRoute(selected,'owner'),'review');assert.equal(assignmentRoute(selected,'other'),'demo');
@@ -546,6 +546,7 @@ test('only owner routes to real review; other people remain context-local demo a
  assert.equal(assignmentRoute({...raw,employees:[{id:'owner',selectable:false}]},'owner'),null);
  assert.equal(selected.employees[0].selected,false);assert.equal(selected.employees[1].selected,true);
  assert.equal(selected.tasks[0].demo,true);assert.equal(selected.tasks[0].title,raw.title);
+ assert.equal(selected.tasks[0].projectName,raw.projectName);
  assert.equal(raw.employees[1].selected,false);assert.equal(raw.tasks.length,0);
  assert.equal(demos.apply({...raw,revision:2}).employees[1].selected,true);
  assert.equal(demos.apply({...raw,context:'two'}).employees[1].selected,false);
@@ -902,6 +903,9 @@ test('legacy and survey examples remain assigned to the same people across roste
   assert.equal(examples.filter(t=>t.example==='legacy').length,6);
   assert.equal(examples.filter(t=>t.example==='survey').length,5);
   assert.ok(examples.every(t=>t.demo));
+  assert.ok(examples.every(t=>t.projectName && t.title.startsWith(t.projectName)));
+  assert.equal(examples.find(t=>t.id==='sample:1').title,'某站场改造结算复核');
+  assert.equal(examples.find(t=>t.id==='survey:tongliang-sections').projectName,'铜梁江津—遵义—贵阳');
   assert.deepEqual(examples.filter(t=>t.employeeId==='7').map(t=>t.status),['审核中','待复核']);
   assert.ok(!examples.some(t=>t.employeeId==='10'));
 });
@@ -923,7 +927,7 @@ test('personal pending totals include each visible assignment regardless of its 
 test('the office task list groups a review round across people and keeps independent same-title work separate',()=>{
   const people=[{id:'a',name:'甲'},{id:'b',name:'乙'}];
   const a={id:'ra',dispatchId:'dispatch',reviewRound:2,employeeId:'a',title:'控制价复核',status:'已通过'};
-  const b={...a,id:'rb',employeeId:'b',reviewRound:undefined,status:'待复核'};
+  const b={...a,id:'rb',employeeId:'b',reviewRound:undefined,status:'待复核',projectName:'管线改造项目'};
   const outsider={...b,id:'rc',dispatchId:'prior',employeeId:'archived',employeeName:'外部复核人',status:'已退回'};
   const unassigned={id:'incoming',employeeId:'',title:'待分派事项',status:'待处理'};
   const personTasks=indexPersonTasks({tasks:[a,b,outsider,unassigned],pendingTasks:[b]});
@@ -933,6 +937,9 @@ test('the office task list groups a review round across people and keeps indepen
   const shared=all.find(t=>t.receipts.length===2);
   assert.equal(shared.state.label,'进行中');
   assert.equal(shared.round,2);
+  assert.equal(shared.project,'管线改造项目');
+  assert.equal(shared.title,'控制价复核');
+  assert.equal(all.find(t=>t.receipts[0].personId==='').project,'');
   assert.deepEqual(shared.receipts.map(r=>[r.name,r.state.label]),[['甲','已通过'],['乙','待复核']]);
   assert.ok(all.some(t=>t.receipts[0].name==='外部复核人'&&!t.receipts[0].canLocate));
   assert.ok(all.some(t=>t.receipts[0].name==='待分派'));

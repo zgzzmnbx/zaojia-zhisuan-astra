@@ -13,7 +13,7 @@ export function createDemoAssignments(){
       for(const id of ids)if(!snapshot.employees.some(p=>p.id===id))ids.delete(id);
       return {...snapshot,employees:snapshot.employees.map(p=>({...p,draggable:!!assignmentRoute(snapshot,p.id),
         ...(p.id==='owner'?{}:{selected:ids.has(p.id),demoAssignment:true})})),
-        tasks:[...snapshot.tasks,...[...ids].map(id=>({id:`assignment:${id}`,employeeId:id,title:snapshot.title,status:'待复核',demo:true}))]};
+        tasks:[...snapshot.tasks,...[...ids].map(id=>({id:`assignment:${id}`,employeeId:id,projectName:snapshot.projectName,title:snapshot.title,status:'待复核',demo:true}))]};
     },
   };
 }

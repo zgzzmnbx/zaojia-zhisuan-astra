@@ -114,6 +114,7 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   useEffect(()=>{
     if(!ready)return;
     send('snapshot',{context:current?.context||context,revision:current?.revision||0,people:current?.people.length?current.people:directory,
+      projectName:current?.request.projectName || '',
       tasks:receipt&&current&&receipt.context===current.context?receipt.tasks:current?.tasks||[],pendingTasks:inbox.tasks,inboxError:inbox.error,inboxLoading:!inbox.loaded&&!inbox.error,title:current?.request.fileName||'当前尚无可复核成果',enabled:!!current,receiptError});
   },[ready,current,directory,context,receipt,receiptError,inbox]);
   useEffect(()=>{
@@ -124,6 +125,6 @@ export default function OfficeReview({bridge,active,dark,palette,context,prepare
   return <div ref={host} className="office-review-host" data-settings-open={settingsOpen&&active} aria-busy={!rendered&&!error}>
     {!rendered&&<div className="office-review-loading" role="status"><PageLoading active={active} paused={!!error} label={error?'办公室尚未载入':'正在加载办公室沙盘…'}/></div>}
     {error&&<div className="alert" role="status">{error}<button className="btn btn-sm" onClick={()=>{setError('');setReady(false);setRendered(false);setMounted(false);setGeneration(v=>v+1);}}>重试</button></div>}
-    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.52.0" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
+    {mounted&&<iframe key={generation} ref={frame} src="/office-twin/viewer/index.html?mode=embed&view=building&entrance=office&host=astra&ui=office-0.52.3" title="办公室多人复核沙盘" onError={()=>setError('办公室载入失败，左侧复核卡仍可使用。')}/>}
   </div>;
 }

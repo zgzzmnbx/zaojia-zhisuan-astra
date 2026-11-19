@@ -43,7 +43,8 @@ export function officeTaskGroups(snapshot) {
     const {receipts} = group;
     const task = (receipts.find(r => !r.task.adjusted) || receipts[0]).task;
     const fullTitle = task.title || task.projectName || task.artifactName || '未命名任务';
-    const project = displayTitle(task.projectName), label = displayTitle(fullTitle);
+    const project = displayTitle(task.projectName?.trim() || receipts.find(r => r.task.projectName?.trim())?.task.projectName);
+    const label = displayTitle(fullTitle);
     const suffix = project && label.startsWith(project) ? label.slice(project.length) : '';
     const action = /^[\s·：:]/u.test(suffix) || suffix === '填价成果复核' ? suffix.replace(/^[\s·：:]+/u,'').trim() : '';
     result.push({...group, title:action || label, fullTitle, project, state:groupStatus(receipts),
@@ -62,6 +63,12 @@ function glyph(name) {
 
 function receiptList(group, focusPerson) {
   const content = el('div','office-ledger-receipts');
+  if (group.title !== group.project) content.append(el('p','office-ledger-action',group.title));
+  const sources = new Set(group.receipts.map(r => r.state.platform || (r.task.demo ? exampleLabel(r.task) : r.task.manual ? '自建' : '')).filter(Boolean));
+  const meta = [...sources];
+  if (group.round) meta.push('第 ' + group.round + ' 轮');
+  if (group.receipts.length > 1) meta.push(group.receipts.filter(r => r.state.done).length + '/' + group.receipts.length + ' 人已结束');
+  if (meta.length) content.append(el('p','office-ledger-meta',meta.join(' · ')));
   for (const r of group.receipts) {
     const receipt = el('div','office-ledger-receipt');
     const line = el('div','office-ledger-person');
@@ -113,13 +120,8 @@ function taskCard(group, focusPerson) {
     signature = key;
     const who = el('span','office-ledger-who');
     who.append(glyph('users-three'), el('span','',next.receipts.map(r => r.name).join('、')));
-    const platforms = new Set(next.receipts.map(r => r.state.platform || (r.task.demo ? exampleLabel(r.task) : r.task.manual ? '自建' : '')).filter(Boolean));
-    const meta = [next.project !== next.title && next.project, ...platforms, next.round && '第 ' + next.round + ' 轮'].filter(Boolean);
-    if (next.receipts.length > 1) meta.push(next.receipts.filter(r => r.state.done).length + '/' + next.receipts.length + ' 人已结束');
-    summary.replaceChildren(el('strong','office-ledger-title',next.title),dutyTag(next.state.label,next.state.tone),who);
-    summary.title = next.fullTitle;
-    if (meta.length) summary.append(el('small','office-ledger-meta',meta.join(' · ')));
-    summary.append(glyph('caret-down'));
+    summary.replaceChildren(el('strong','office-ledger-title',next.project || '未关联项目'),
+      dutyTag(next.state.label,next.state.tone),who,glyph('caret-down'));
     const focused = content?.contains(document.activeElement) ? document.activeElement.dataset.personId : undefined;
     content?.remove(); content = null;
     populate();

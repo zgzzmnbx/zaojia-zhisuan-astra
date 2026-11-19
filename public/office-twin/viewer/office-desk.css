@@ -311,6 +311,19 @@ html[data-astra-scheme='dark']
   }
 }
 body.studio #people-list .host-person-row { align-items: center; white-space: normal; }
+body.studio #people-list .duty-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 31px;
+  height: 31px;
+  border-radius: 10px;
+  background: var(--astra-soft);
+  color: color-mix(in srgb, var(--astra-accent, var(--astra-primary)) 85%, var(--astra-ink));
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1;
+}
+body.studio #people-list [data-idle='true'] .duty-avatar { background: var(--astra-canvas); color: var(--astra-muted); }
 body.studio #people-list .duty-body { display: grid; gap: 4px; text-align: start; }
 body.studio #people-list .duty-line { justify-content: flex-start; gap: 6px; }
 body.studio #people-list .duty-line strong { flex: none; }
@@ -374,7 +387,8 @@ body.studio #people-list [hidden] { display: none !important; }
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
-#rail-tasks .office-ledger-meta { grid-column: 1/-1; }
+#rail-tasks .office-ledger-action { margin: 8px 0 0; color: var(--astra-ink); font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+#rail-tasks .office-ledger-meta { margin: 6px 0 0; }
 #rail-tasks .office-ledger-receipts { border-top: 1px solid var(--astra-line); padding: 0 11px; }
 #rail-tasks .office-ledger-receipt { padding: 8px 0; }
 #rail-tasks .office-ledger-receipt + .office-ledger-receipt { border-top: 1px solid var(--astra-line); }
