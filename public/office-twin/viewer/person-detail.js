@@ -130,6 +130,126 @@ function groupedQueue(tasks, current) {
   return queue;
 }
 
+function detailButton(label, iconName) {
+  const button = node('button', 'hub-detail-icon');
+  button.type = 'button';
+  button.title = label;
+  button.setAttribute('aria-label', label);
+  button.append(glyph(iconName));
+  return button;
+}
+
+function mountHubPersonCard(pane, actions) {
+  const work = pane.querySelector('.pd-work');
+  const openProfile = detailButton('查看人物详情', 'info');
+  const edit = pane.querySelector('#person-detail-edit');
+  edit.before(openProfile);
+  const dialog = node('dialog', 'hub-person-dialog');
+  dialog.id = 'hub-person-dialog';
+  dialog.setAttribute('aria-labelledby', 'hub-person-dialog-title');
+  const header = node('header'), title = node('h2');
+  title.id = 'hub-person-dialog-title';
+  const close = detailButton('关闭人物详情', 'x');
+  close.autofocus = true;
+  header.append(title, close);
+  const content = node('div', 'hub-person-dialog-body');
+  const footer = pane.querySelector('.pd-actions');
+  pane.querySelector('#person-detail-join').remove();
+  pane.querySelector('#person-detail-move').remove();
+  edit.append(document.createTextNode('编辑此人任务'));
+  edit.classList.add('btn', 'btn-ghost', 'btn-sm');
+  footer.prepend(edit);
+  dialog.append(header, content, footer);
+  document.body.append(dialog);
+
+  let rows = [], emptyText = '', lastTrigger = null, dialogRevision = '';
+  function renderDialog() {
+    title.textContent = pane.querySelector('#person-detail-name').textContent + ' · 人物详情';
+    const overview = node('div', 'hub-person-overview');
+    for (const selector of ['.pd-status', '.pd-metadata', '.pd-stats']) {
+      overview.append(pane.querySelector(selector).cloneNode(true));
+    }
+    const items = rows.map(({task, key}) => {
+      const card = node('article', 'hub-task-full');
+      card.dataset.taskKey = key;
+      card.append(node('h3', '', displayTitle(task.title || task.projectName || task.artifactName)), taskBadges(task));
+      const timing = taskTiming(task);
+      if (timing) card.append(node('p', 'pd-time', timing));
+      card.append(taskNotes(task, !displayTitle(task.title).startsWith(displayTitle(task.projectName))));
+      return card;
+    });
+    content.replaceChildren(overview, ...(items.length ? items : [node('p', 'pd-empty', emptyText)]));
+  }
+  function open(trigger) {
+    const key = trigger.dataset.taskKey;
+    lastTrigger = trigger;
+    dialogRevision = '';
+    renderDialog();
+    dialog.showModal();
+    if (parent !== window) parent.postMessage({namespace:'astra-office-selection:v1',type:'settings-visibility',open:true}, location.origin);
+    content.scrollTop = 0;
+    if (key) {
+      const card = [...content.querySelectorAll('.hub-task-full')].find(item => item.dataset.taskKey === key);
+      if (card) {
+        card.dataset.focused = 'true';
+        card.scrollIntoView({block:'nearest'});
+      }
+    }
+  }
+  openProfile.setAttribute('aria-haspopup', 'dialog');
+  openProfile.setAttribute('aria-controls', dialog.id);
+  openProfile.onclick = () => open(openProfile);
+  close.onclick = () => dialog.close();
+  edit.onclick = () => dialog.close('edit');
+  dialog.addEventListener('close', () => {
+    if (parent !== window) parent.postMessage({namespace:'astra-office-selection:v1',type:'settings-visibility',open:false}, location.origin);
+    if (dialog.returnValue === 'edit') {
+      dialog.returnValue = '';
+      actions.edit();
+    } else if (!pane.hidden && lastTrigger && !lastTrigger.isConnected) {
+      ([...work.querySelectorAll('button')].find(b => b.dataset.taskKey === lastTrigger.dataset.taskKey) || openProfile).focus({preventScroll:true});
+    }
+    lastTrigger = null;
+  });
+  function render(tasks, current, empty) {
+    const focused = work.contains(document.activeElement) ? document.activeElement.dataset.taskKey : '';
+    emptyText = empty;
+    rows = tasks.map((task, index) => ({task, key:String(task.key || task.id || task.dispatchId || index)}));
+    rows.sort((a,b) => Number(b.task === current) - Number(a.task === current) || Number(taskState(a.task).done) - Number(taskState(b.task).done));
+    const cards = rows.map(({task, key}) => {
+      const project = displayTitle(task.projectName);
+      const fullTitle = displayTitle(task.title || task.artifactName || '未命名任务');
+      const card = node('article', 'hub-task-card');
+      const heading = node('div', 'hub-task-heading');
+      const more = detailButton('查看任务详情 · ' + fullTitle, 'arrow-square-out');
+      more.dataset.taskKey = key;
+      more.setAttribute('aria-haspopup', 'dialog');
+      more.setAttribute('aria-controls', dialog.id);
+      more.onclick = () => open(more);
+      heading.append(node('h3', '', project || fullTitle), more);
+      card.append(heading);
+      const action = project && fullTitle.startsWith(project) ? fullTitle.slice(project.length).replace(/^[\s·：:—-]+/u, '') : project && fullTitle;
+      if (action) card.append(node('p', 'hub-task-action', action));
+      card.append(taskBadges(task));
+      return card;
+    });
+    work.replaceChildren(...(cards.length ? cards : [node('p', 'pd-empty', empty)]));
+    if (focused) ([...work.querySelectorAll('button')].find(b => b.dataset.taskKey === focused) || openProfile).focus({preventScroll:true});
+  }
+  function refreshDialog(workKey) {
+    if (!dialog.open) return;
+    const revision = JSON.stringify([workKey, pane.querySelector('.hub-person-heading').textContent, pane.querySelector('.pd-metadata').textContent]);
+    if (revision === dialogRevision) return;
+    dialogRevision = revision;
+    const scroll = content.scrollTop, key = content.querySelector('[data-focused]')?.dataset.taskKey;
+    renderDialog();
+    const selected = [...content.querySelectorAll('.hub-task-full')].find(item => item.dataset.taskKey === key);
+    if (selected) selected.dataset.focused = 'true';
+    content.scrollTop = scroll;
+  }
+  return {render, refreshDialog, close:() => { if (dialog.open) dialog.close(); }, destroy:() => dialog.remove()};
+}
+
 export function mountPersonDetail(pane, actions) {
   const get = selector => pane.querySelector(selector);
   const back = get('#person-detail-back'), edit = get('#person-detail-edit');
@@ -138,6 +258,7 @@ export function mountPersonDetail(pane, actions) {
   let personId = null, workKey = '';
   back.onclick = actions.back; edit.onclick = actions.edit; join.onclick = actions.join; move.onclick = actions.move; home.onclick = actions.home;
   move.append(glyph('users-three'),document.createTextNode('移入复核区'));
+  const hubCard = pane.classList.contains('hub-person-card') ? mountHubPersonCard(pane, actions) : null;
   function update({person, seatId, tasks, business, inMeeting, canMove, canGoHome}) {
     const same = personId === person.id;
     personId = person.id;
@@ -169,6 +290,17 @@ export function mountPersonDetail(pane, actions) {
       return cell;
     }));
     const nextKey = JSON.stringify([person.id,tasks,empty]);
+    if (hubCard) {
+      if (nextKey !== workKey) {
+        const scroll = same ? scroller.scrollTop : 0;
+        hubCard.render(tasks, current, empty);
+        workKey = nextKey;
+        scroller.scrollTop = scroll;
+      }
+      home.hidden = !canGoHome;
+      hubCard.refreshDialog(workKey);
+      return;
+    }
     if (nextKey !== workKey) {
       const open = new Set(same ? [...work.querySelectorAll('details[open]')].map(d=>d.dataset.pdKey) : []);
       const focusKey = same && work.contains(document.activeElement) ? document.activeElement.closest('details')?.dataset.pdKey : null;
@@ -185,10 +317,6 @@ export function mountPersonDetail(pane, actions) {
     join.disabled = !person.draggable;
     join.title = join.disabled ? '请在 Astra 复核卡中确认当前成果与复核平台' : '';
     join.replaceChildren(glyph(person.selected?'user-check':'user'),document.createTextNode(person.selected?'移出本次复核':person.demoAssignment?'加入演示复核':'加入本次复核'));
-    if(business.managedHub){
-      join.disabled=!business.enabled;join.title='在右侧选择接收平台';
-      join.replaceChildren(glyph('user'),document.createTextNode('选择复核平台'));
-    }
     move.disabled = !canMove || inMeeting;
     move.hidden = inMeeting;
     home.hidden = !canGoHome;
@@ -196,7 +324,7 @@ export function mountPersonDetail(pane, actions) {
   return {
     update,
     focus:()=>back.focus({preventScroll:true}),
-    clear(){personId=null;workKey='';work.replaceChildren();},
-    destroy(){for (const button of [back,edit,join,move,home]) button.onclick=null;},
+    clear(){hubCard?.close();personId=null;workKey='';work.replaceChildren();},
+    destroy(){hubCard?.close();hubCard?.destroy();for (const button of [back,edit,join,move,home]) button.onclick=null;},
   };
 }

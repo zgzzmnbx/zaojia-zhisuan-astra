@@ -45,8 +45,6 @@ export function mountSandboxLayout(root=document) {
       if(e.detail.open){
         const from=e.detail.from,quick=from?.closest('.hub-quick');
         detailOpener=quick?.querySelector('summary') || from;
-        if(quick)quick.open=false;
-        detail.parentElement.scrollTop=0;
       }else if(e.detail.restoreFocus){
         const fallback=rail.hidden ? toggle : header.querySelector('[aria-selected=true]');
         const target=detailOpener && detailOpener!==root.body && detailOpener.getClientRects().length ? detailOpener : fallback;

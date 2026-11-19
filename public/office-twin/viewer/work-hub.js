@@ -25,7 +25,10 @@ export function mountWorkHub({artifact,getState,getDrag,post,onSaved}){
   navigation.append(close);
   heading.append(personPane.querySelector('.pd-identity'),navigation);
   personPane.prepend(heading);
-  artifact.prepend(personPane);
+  personPane.classList.add('hub-person-card');
+  const stack=node('div','','hub-right-stack');
+  artifact.before(stack);
+  stack.append(artifact,personPane);
   let picked='',context='',quickTab='people';
   const dock=node('section','','hub-dock'),notice=node('p','','hub-notice'),routes=new Map();
   notice.setAttribute('role','status');
@@ -35,12 +38,11 @@ export function mountWorkHub({artifact,getState,getDrag,post,onSaved}){
   quick.id='office-hub-quick';
   const assignment=mountAssignment({getState,onSaved,visibility:open=>post('settings-visibility',{open})});
   quick.append(summary,filters,list);
-  const names={default:'飞书复核',weact_cost:'WeAct 复核',task:'派任务'};
+  const names={default:'飞书复核',weact_cost:'WeAct 复核'};
   function describe(text){notice.textContent=text;}
   function place(route,id,selected=true){
     const state=getState(),p=state.employees.find(person=>person.id===id);
     if(!p){describe('请先点选或拖入一位同事');return;}
-    if(route==='task'){assignment.open(id);return;}
     const channel=state.channels?.find(c=>c.id===route);
     if(!channel||channel.reason){describe(channel?.reason||'请先打开当前成果的复核卡');return;}
     const members=channel.members.filter(m=>m.id===id);
@@ -58,7 +60,7 @@ export function mountWorkHub({artifact,getState,getDrag,post,onSaved}){
   for(const [key,title] of Object.entries(names)){
     const zone=node('div','','hub-zone');zone.dataset.officeRoute=key;
     const button=node('button','','hub-target'),label=node('strong',title),meta=node('small');
-    button.append(mark(key==='task'?'list-checks':key==='default'?'paper-plane-tilt':'chat-circle-dots'),label,meta);
+    button.append(mark(key==='default'?'paper-plane-tilt':'chat-circle-dots'),label,meta);
     button.setAttribute('aria-label',title);button.onclick=()=>place(key,picked);
     const chips=node('div','','hub-chips');
     zone.append(button,chips);dock.append(zone);routes.set(key,{meta,chips,button,zone});
@@ -93,7 +95,6 @@ export function mountWorkHub({artifact,getState,getDrag,post,onSaved}){
     const who=state.employees.find(p=>p.id===picked);
     let count=0;
     for(const [key,{meta,chips,button}] of routes){
-      if(key==='task'){meta.textContent=who?'给 '+who.name+' 分配':'个人待办';continue;}
       const channel=state.channels?.find(c=>c.id===key),members=channel?.members.filter(m=>m.selected)||[];
       count+=members.length;meta.textContent=channel?.reason||(!channel?'待准备':members.length+' 人');
       button.title=channel?.reason||(who?'选入 '+who.name:'拖入人员，或先点姓名再选平台');

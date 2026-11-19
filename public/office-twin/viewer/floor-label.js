@@ -25,7 +25,7 @@ export function createFloorLabel({viewport,facade,camera,listen,getView,canPrevi
   const points=[[bounds.min.x,bounds.min.z],[bounds.max.x,bounds.min.z],[bounds.max.x,bounds.max.z],[bounds.min.x,bounds.max.z]]
     .map(([x,z])=>new THREE.Vector3(x,midY,z));
   const projected=points.map(()=>new THREE.Vector3());
-  const panels=[...document.querySelectorAll('#space-cards-panel, #host-artifact, .office-modebar, #office-workstations')];
+  const panels=[...document.querySelectorAll('#space-cards-panel, #host-artifact, .hub-person-card, .office-modebar, #office-workstations')];
   function cancel(){preview=false;returning=false;button.setAttribute('aria-expanded','false');}
   function restore(){if(!preview)return;cancel();returning=true;endPreview();requestFrame();}
   listen(target,'interest',event=>{

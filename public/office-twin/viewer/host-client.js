@@ -179,10 +179,11 @@ export const officeClient={
     const workspace=rail.parentElement;
     workspace.insertBefore(artifact,rail);
     if(managedHub)hub=mountWorkHub({artifact,getState:()=>snapshot,getDrag:()=>dragStart,post,onSaved:acceptPlan});
+    const upperCards=managedHub ? artifact.parentElement : artifact;
     artifactObserver=new ResizeObserver(()=>{
-      workspace.style.setProperty('--host-artifact-height',`${artifact.getBoundingClientRect().height}px`);
+      workspace.style.setProperty('--host-artifact-height',`${upperCards.getBoundingClientRect().height}px`);
     });
-    artifactObserver.observe(artifact);
+    artifactObserver.observe(upperCards);
     for(const selector of ['[data-rail-tab="messages"]','#task-person-filter','#task-metrics','#task-focus-card','#office-settings-link','.office-business-note','.office-scene-caption','#viewer-version','#review-status','#people-panel>.office-description'])$(selector)?.setAttribute('hidden','');
     $('label[for="task-person-filter"]')?.setAttribute('hidden','');
     document.documentElement.dataset.hostReady='true';

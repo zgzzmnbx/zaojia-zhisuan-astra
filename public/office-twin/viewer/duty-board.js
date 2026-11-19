@@ -166,7 +166,7 @@ export function directoryWork(person, tasks, scope, query) {
     closed:tasks.length-live.length, matches:profileMatch || matched.length>0};
 }
 
-export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle, pickForReview}) {
+export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle}) {
   const rows = new Map();
   let snapshot, selectedId;
   const search = node('label','directory-search');
@@ -189,16 +189,15 @@ export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle, pi
     const name = node('strong'), state = tag('', 'pending'), source = tag('', 'demo');
     const identity = node('span','duty-line');
     identity.append(name, state, source);
-    const title = node('span','duty-title'), action = node('span','directory-task-action');
+    const title = node('span','duty-title');
     const seat = node('span'), count = node('span'), meta = node('small','duty-extra');
     meta.append(count,seat);
-    const skills = node('span','directory-skills');
     const body = node('span','duty-body');
     body.append(identity,meta);
     const grip = node('span','host-drag-grip');
     grip.title = '拖动同事';
     grip.setAttribute('aria-hidden','true');
-    button.append(initial, body, grip, title, action, skills);
+    button.append(initial, body, grip, title);
     button.setAttribute('aria-controls','person-detail-pane');
     button.onclick = () => select(id,button);
     bindDrag(button, id);
@@ -206,15 +205,21 @@ export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle, pi
     const add = node('button','btn btn-ghost btn-xs directory-assign');
     add.type='button'; add.innerHTML=icon('plus'); add.append('分配任务');
     add.onclick=()=>assign(id);
-    const review = node('button','btn btn-ghost btn-xs directory-review');
-    review.type='button';
-    review.onclick=()=>{
-      if(snapshot.managedHub){pickForReview(id);return;}
-      const person=snapshot.employees.find(p=>p.id===id);
-      if(person?.draggable)toggle(id,!person.selected);
-    };
-    actions.append(add,review); card.append(button,actions);
-    return {card, button, initial, name, state, source, title, action, skills, count, seat, grip, add, review};
+    actions.append(add);
+    let extras;
+    if (!snapshot.managedHub) {
+      const review = node('button','btn btn-ghost btn-xs directory-review');
+      review.type='button';
+      review.onclick=()=>{
+        const person=snapshot.employees.find(p=>p.id===id);
+        if(person?.draggable)toggle(id,!person.selected);
+      };
+      extras={review,action:node('span','directory-task-action'),skills:node('span','directory-skills')};
+      button.append(extras.action,extras.skills);
+      actions.append(review);
+    }
+    card.append(button,actions);
+    return {card, button, initial, name, state, source, title, count, seat, grip, add, extras};
   }
 
   function render() {
@@ -240,9 +245,6 @@ export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle, pi
       row.source.textContent = status?.platform || (shown?.demo ? exampleLabel(shown) : shown?.manual ? '自建' : shown?.adjusted ? '沙盘已调整' : '');
       row.source.hidden = !row.source.textContent;
       row.title.textContent = project; row.title.title=project; row.title.hidden=!project;
-      row.action.textContent=action; row.action.title=action; row.action.hidden=!action;
-      const skills=[...new Set([person.trade,person.expertise].filter(Boolean))].join(' · ');
-      row.skills.textContent=skills; row.skills.title=skills; row.skills.hidden=!skills;
       row.count.textContent = live.length ? dutyCountLabel(live) : closed ? closed + ' 项已结束' : '';
       row.count.hidden = !row.count.textContent;
       row.seat.textContent=person.seatId ? '工位 '+person.seatId.replace(/^SEAT_/,'') : ''; row.seat.hidden=!row.seat.textContent;
@@ -252,19 +254,17 @@ export function mountPeopleDirectory(list, {select, bindDrag, assign, toggle, pi
       row.card.classList.toggle('is-chosen', !!person.selected);
       button.setAttribute('aria-pressed', String(person.id === selectedId));
       row.add.setAttribute('aria-label','给'+person.name+'分配任务');
-      const pool=person.demoAssignment?'演示复核':'本次复核';
-      row.review.textContent=person.selected?'已选入':person.demoAssignment?'选入演示':'选入复核';
-      row.review.dataset.selected=String(!!person.selected);
-      row.review.setAttribute('aria-label',row.review.textContent+'，'+person.name+'，'+(person.selected?'从'+pool+'移除':'加入'+pool));
-      row.review.disabled=!person.draggable;
-      row.review.title=row.review.disabled?'请在左侧复核卡选择可用成果和平台':person.selected?'再次点击可移出'+pool:'加入'+pool;
-      if(snapshot.managedHub){
-        const channels=(snapshot.channels||[]).filter(c=>c.members.some(m=>m.id===person.id&&m.selected));
-        row.review.textContent=channels.length?channels.map(c=>c.label).join(' / ')+' 已选':'选择复核平台';
-        row.review.dataset.selected=String(channels.length>0);
-        row.review.disabled=!snapshot.enabled;
-        row.review.title=row.review.disabled?'当前尚无可复核成果':'选择这位同事，再点击右侧平台';
-        row.review.setAttribute('aria-label','为'+person.name+'选择复核平台');
+      if (row.extras) {
+        const {action:line, skills, review} = row.extras;
+        line.textContent=action; line.title=action; line.hidden=!action;
+        const specialty=[...new Set([person.trade,person.expertise].filter(Boolean))].join(' · ');
+        skills.textContent=specialty; skills.title=specialty; skills.hidden=!specialty;
+        const pool=person.demoAssignment?'演示复核':'本次复核';
+        review.textContent=person.selected?'已选入':person.demoAssignment?'选入演示':'选入复核';
+        review.dataset.selected=String(!!person.selected);
+        review.setAttribute('aria-label',review.textContent+'，'+person.name+'，'+(person.selected?'从'+pool+'移除':'加入'+pool));
+        review.disabled=!person.draggable;
+        review.title=review.disabled?'请在左侧复核卡选择可用成果和平台':person.selected?'再次点击可移出'+pool:'加入'+pool;
       }
       row.card.hidden = !matches || (filters.scope === 'active' && !live.length) || (filters.scope === 'idle' && (incomplete || !!live.length)) || (filters.scope === 'demo' && !examples.length);
       if (!row.card.hidden) visible++;
