@@ -336,7 +336,7 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
         projectBubbleLayer
           .source(projectBubbleData, { parser: { type: "json", x: "longitude", y: "latitude" } })
           .shape("circle")
-          .size("bubble_size", [10, 28])
+          .size("bubble_size", [8, 22])
           .color("#1677ff")
           .style({ opacity: 0.82, stroke: "#ffffff", strokeOpacity: 0.98, strokeWidth: 2 });
         projectBubbleLayer.on?.("click", (event: any) => {
@@ -347,7 +347,7 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
         selectedProjectBubbleLayer
           .source(selectedProjectBubbleData, { parser: { type: "json", x: "longitude", y: "latitude" } })
           .shape("circle")
-          .size("bubble_size", [18, 36])
+          .size("bubble_size", [15, 30])
           .color("#f79009")
           .style({ opacity: 0.14, stroke: "#f79009", strokeOpacity: 1, strokeWidth: 3 });
         selectedProjectBubbleLayerRef.current = selectedProjectBubbleLayer;
@@ -426,10 +426,12 @@ export default function ProjectMapCanvas({ items, selectedProjectId, onSelect, o
             stroke: "#ffffff",
             strokeOpacity: 0.96,
             strokeWidth: 1.3,
-            textAllowOverlap: true,
-            backgroundColor: "rgba(255, 255, 255, 0.72)",
-            backgroundPadding: [3, 2],
-            backgroundRadius: 3,
+            textAllowOverlap: false,
+            textOffset: [0, 14],
+            padding: [4, 4],
+            backgroundColor: "rgba(255, 255, 255, 0.82)",
+            backgroundPadding: [4, 2],
+            backgroundRadius: 4,
             fontWeight: "600",
           });
         const projectProvinceKeys = getProjectProvinceKeys(items);

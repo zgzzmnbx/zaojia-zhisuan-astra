@@ -9,13 +9,24 @@ import {BrandMark} from './brand/BrandMark';
 
 type Workspace=ReturnType<typeof useWorkspace>;
 type RailPanel='projects'|'history';
+function formatSessionTime(iso?:string){
+ if(!iso)return '';
+ const d=new Date(iso);
+ if(Number.isNaN(d.getTime()))return '';
+ const pad=(n:number)=>String(n).padStart(2,'0');
+ return `${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 export function RailButton({label,icon,active=false,expanded,controls,disabled=false,onClick}:{label:string;icon:string;active?:boolean;expanded?:boolean;controls?:string;disabled?:boolean;onClick:(event:MouseEvent<HTMLButtonElement>)=>void}){
  return <div className="tooltip tooltip-right rail-tip" data-tip={label}><button type="button" className={`btn btn-ghost btn-square rail-button ${active?'is-active':''}`} aria-label={label} title={label} aria-current={active&&expanded===undefined?'page':undefined} aria-expanded={expanded} aria-controls={controls} disabled={disabled} onClick={onClick}><Icon name={icon}/></button></div>;
 }
 export function WorkspaceRailPanel({mode,workspace:w,busy,select,showProject,newProject,open,close,search}:{mode:RailPanel;workspace:Workspace;busy:boolean;select:(id:string)=>void;showProject:(id:string)=>void;newProject:()=>void;open:(view:string)=>void;close:()=>void;search:()=>void}){
+ const renderSession=(c:Conversation)=>{
+  const stamp=formatSessionTime(c.updated_at);
+  return <button type="button" key={c.id} className={`session ${w.active?.id===c.id?'active':''}`} disabled={busy} title={stamp?`${c.title} · ${stamp}`:c.title} onClick={()=>select(c.id)}><Icon name="message"/><span className="session-copy"><span className="session-title">{c.title}</span>{stamp&&<small className="session-meta">{stamp}</small>}</span></button>;
+ };
  return <section className="rail-panel card" id="workspace-rail-panel" aria-label={mode==='projects'?'项目与项目对话':'最近对话'}>
   <header className="rail-panel-heading"><h2>{mode==='projects'?'项目':'最近对话'}</h2><button type="button" className="btn btn-ghost btn-square" data-rail-panel-close aria-label="关闭导航详情" onClick={close}><Icon name="close"/></button></header>
-  {mode==='projects'?<><div className="rail-panel-tools"><button type="button" className="btn btn-ghost btn-sm" onClick={()=>open('projects')}><Icon name="grid"/>项目看板</button><button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={newProject}><Icon name="plus"/>新建项目</button></div><div className="workspace-scroll">{w.projects.map(p=><details className="workspace-project" key={p.id} open={w.active?.project_id===p.id||undefined}><summary><Icon name="folder"/><span>{p.name}</span></summary><button type="button" className="project-overview" onClick={()=>showProject(p.id)}>项目概览与资料<Icon name="arrow-up-right"/></button>{w.conversations.filter(c=>c.project_id===p.id).map(c=><button type="button" key={c.id} className={`session ${w.active?.id===c.id?'active':''}`} disabled={busy} onClick={()=>select(c.id)}><Icon name="message"/><span>{c.title}</span></button>)}</details>)}{!w.projects.length&&<p className="workspace-empty">用项目归拢对话与资料</p>}</div></>:<><div className="rail-panel-tools"><button type="button" className="btn btn-ghost btn-sm" onClick={search}><Icon name="search"/>搜索对话</button></div><div className="workspace-scroll live-history">{w.conversations.slice(0,15).map(c=><button type="button" key={c.id} className={`session ${w.active?.id===c.id?'active':''}`} disabled={busy} onClick={()=>select(c.id)}><Icon name="message"/><span>{c.title}</span></button>)}{!w.conversations.length&&<p className="workspace-empty">还没有对话，点击加号开始。</p>}</div></>}
+  {mode==='projects'?<><div className="rail-panel-tools"><button type="button" className="btn btn-ghost btn-sm" onClick={()=>open('projects')}><Icon name="grid"/>项目看板</button><button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={newProject}><Icon name="plus"/>新建项目</button></div><div className="workspace-scroll">{w.projects.map(p=><details className="workspace-project" key={p.id} open={w.active?.project_id===p.id||undefined}><summary title={p.name}><Icon name="folder"/><span>{p.name}</span></summary><button type="button" className="project-overview" onClick={()=>showProject(p.id)}>项目概览与资料<Icon name="arrow-up-right"/></button>{w.conversations.filter(c=>c.project_id===p.id).map(renderSession)}</details>)}{!w.projects.length&&<p className="workspace-empty">用项目归拢对话与资料</p>}</div></>:<><div className="rail-panel-tools"><button type="button" className="btn btn-ghost btn-sm" onClick={search}><Icon name="search"/>搜索对话</button></div><div className="workspace-scroll live-history">{w.conversations.slice(0,15).map(renderSession)}{!w.conversations.length&&<p className="workspace-empty">还没有对话，点击加号开始。</p>}</div></>}
  </section>;
 }
 export function WorkspaceSidebar({workspace:w,navigation:n,busy,newChat,select,showProject,open,settings,search,newProject,activeView='chat',active=true,settingsActive=false}:{workspace:Workspace;navigation:ReturnType<typeof useSidebar>;busy:boolean;newChat:()=>void;select:(id:string)=>void;showProject:(id:string)=>void;open:(view:string)=>void;settings:()=>void;search:()=>void;newProject:()=>void;activeView?:string;active?:boolean;settingsActive?:boolean}){
@@ -31,7 +42,7 @@ export function WorkspaceSidebar({workspace:w,navigation:n,busy,newChat,select,s
    <RailButton label="聊天" icon="message" active={!panel&&activeView==='chat'&&!settingsActive} onClick={()=>go(()=>open('chat'))}/>
    <RailButton label="新对话" icon="new-chat" disabled={busy||!w.ready} onClick={()=>go(newChat)}/>
    <RailButton label="项目" icon="folder" active={panel==='projects'} expanded={panel==='projects'} controls="workspace-rail-panel" onClick={e=>toggle('projects',e.currentTarget)}/>
-   <RailButton label="最近对话" icon="history" active={panel==='history'||(!panel&&activeView==='chat'&&!settingsActive)} expanded={panel==='history'} controls="workspace-rail-panel" onClick={e=>toggle('history',e.currentTarget)}/>
+   <RailButton label="最近对话" icon="history" active={panel==='history'} expanded={panel==='history'} controls="workspace-rail-panel" onClick={e=>toggle('history',e.currentTarget)}/>
    <RailButton label="表格" icon="sheet" active={!panel&&activeView==='table'} onClick={()=>go(()=>open('table'))}/>
    <RailButton label="风险" icon="shield" active={!panel&&activeView==='risk'} onClick={()=>go(()=>open('risk'))}/>
    <RailButton label="文字报告" icon="report" active={!panel&&activeView==='report'} onClick={()=>go(()=>open('report'))}/>

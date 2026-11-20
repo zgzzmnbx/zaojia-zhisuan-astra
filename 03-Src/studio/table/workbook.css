@@ -24,7 +24,7 @@
 .astra-legacy-table .preview-column-resize-handle{position:absolute;right:-4px;top:0;height:100%;width:8px;cursor:col-resize;touch-action:none;z-index:3}
 .astra-legacy-table .preview-column-resize-handle:after{content:'';position:absolute;left:3px;top:18%;height:64%;width:1px;background:var(--line)}
 .astra-legacy-table .preview-column-resize-handle:is(:hover,:focus-visible):after{background:var(--blue);width:2px}
-.studio .astra-legacy-table .row-number{position:sticky;left:0;width:44px;min-width:44px;max-width:44px;text-align:center;color:var(--muted);background:var(--paper);font-size:var(--dws-font-size-12);font-weight:400;border-right:1px solid var(--line);z-index:1}
+.studio .astra-legacy-table .row-number{position:sticky;left:0;width:44px;min-width:44px;max-width:44px;text-align:center;color:var(--muted);background:var(--paper);font-size:var(--dws-font-size-12);font-weight:400;border-right:1px solid var(--line);box-shadow:8px 0 12px -10px rgba(23,61,89,.16);z-index:1}
 .studio .astra-legacy-table thead .row-number{background:var(--canvas);z-index:4}
 .astra-legacy-table .preview-cell-content{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;line-height:1.6;min-height:21px}
 .astra-legacy-table .preview-cell-edit{font:inherit;border:0;background:none;width:100%;padding:0;text-align:inherit;color:inherit;border-radius:2px}
@@ -38,7 +38,8 @@
 .astra-legacy-table .preview-cell-content>.astra-icon{display:inline-flex;vertical-align:middle;margin-right:4px}
 .astra-legacy-table .preview-cell-content>.astra-icon svg{height:14px;width:14px}
 .studio .astra-legacy-table .preview-total-row>td{font-weight:600;border-top:1px solid var(--line)}
-.studio .astra-legacy-table :is(.action-th,.row-ai-cell){position:sticky;right:0;width:68px;min-width:68px;max-width:68px;padding:6px;white-space:nowrap;background:var(--paper);border-left:1px solid var(--line);z-index:1;text-align:center;box-shadow:-5px 0 10px -8px #172b5040}
+.studio .astra-legacy-table :is(.action-th,.row-ai-cell){position:sticky;right:0;width:68px;min-width:68px;max-width:68px;padding:6px;white-space:nowrap;background:var(--paper);border-left:1px solid var(--line);z-index:1;text-align:center;box-shadow:-12px 0 18px -10px rgba(23,61,89,.24),-1px 0 0 var(--line)}
+:root[data-astra-scheme="dark"] .studio .astra-legacy-table :is(.action-th,.row-ai-cell),.studio[data-dark] .astra-legacy-table :is(.action-th,.row-ai-cell){box-shadow:-14px 0 22px -8px rgba(0,0,0,.58),-1px 0 0 var(--line)}
 .studio .astra-legacy-table .action-th{z-index:4;background:var(--canvas)}
 .astra-legacy-table .row-ai-actions{display:flex;justify-content:center;gap:4px}
 .studio .astra-legacy-table .row-ai-actions .btn{border-radius:8px;width:32px;height:32px;min-height:32px;padding:0;gap:0;font-size:var(--dws-font-size-12);color:var(--blue);white-space:nowrap}

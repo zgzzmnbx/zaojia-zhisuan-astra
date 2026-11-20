@@ -17,7 +17,7 @@ function initialCorner(){try{return readGorkCorner(localStorage.getItem(storageK
 export function FloatingGork({stage,active,sourceActive=false,state,completion=0,onPresented}: {stage?:WebGorkStage;active:boolean;sourceActive?:boolean;state:string;completion?:number;onPresented?:GorkPresented}){
  const {preferences}=useGorkSettings(),size=preferences.floatingSize+8;
  const [corner,setCorner]=useState(initialCorner),[position,setPosition]=useState<Point|null>(null),[host,setHost]=useState<Element>(document.body);
- const readViewport=()=>({width:innerWidth,height:innerHeight,left:innerWidth>1024?(document.getElementById('project-sidebar')?.getBoundingClientRect().right||0):0,top:document.querySelector('.four-surface-topbar')?.getBoundingClientRect().bottom||58,bottom:48});
+ const readViewport=()=>{const hasFooter=Boolean(document.querySelector('#astra-preview .preview-downloads, #astra-preview .artifact-footer')?.getClientRects().length);return {width:innerWidth,height:innerHeight,left:innerWidth>1024?(document.getElementById('project-sidebar')?.getBoundingClientRect().right||0):0,top:document.querySelector('.four-surface-topbar')?.getBoundingClientRect().bottom||58,bottom:hasFooter?48:6};};
  const [viewport,setViewport]=useState(readViewport);
  const dockNode=useRef<HTMLDivElement>(null);
  const layer=useRef<HTMLDivElement>(null),drag=useRef<{id:number;node:HTMLButtonElement;start:Point;offset:Point;last:Point;moved:boolean}|null>(null);
