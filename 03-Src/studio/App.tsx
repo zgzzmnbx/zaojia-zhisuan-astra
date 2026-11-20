@@ -423,9 +423,16 @@ function App(){
   }
   async function prepareReview(kind:'setup'|'progress'='setup',office=false){
     if(busyRef.current||!workspace.ready)return;
-    if(!office)presentation.prepareInput();
+    const officeProgress=officeActive&&kind==='progress';
+    if(officeProgress){
+      setOfficePane('chat');
+      setConversationCollapsed(false);
+    }else if(!office)presentation.prepareInput();
     setSidebar(false);
-    if(!result||result.summary.matching_status!=='completed'||!result.downloads.excel){add('请先完成批量匹配并生成 Excel 成果，再发起同事复核。');return;}
+    if(!result||result.summary.matching_status!=='completed'||!result.downloads.excel){
+      add(officeProgress?'当前对话还没有可查看复核进度的 Excel 成果。':'请先完成批量匹配并生成 Excel 成果，再发起同事复核。');
+      return;
+    }
     const job=result.job_id,context=conversationContext.current;
     const showCard=(current:Result)=>{
     signalDemoCue(kind==='progress'?'review-progress':'review');
