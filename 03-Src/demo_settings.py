@@ -7,9 +7,15 @@ from fastapi import APIRouter, Body, HTTPException
 
 router = APIRouter(prefix='/api/astra/demo-settings')
 DEFAULT = {'revision': 0, 'enabled': True, 'rowPreset': True, 'matchPreset': True, 'reportPreset': True, 'knowledgePreset': True,
-           'cuePrompts': True, 'parkedProject': True, 'parkedName': '德化-永安支线', 'parkedStation': 'report'}
+           'cuePrompts': True, 'cueFontSize': 10, 'parkedProject': True, 'parkedName': '德化-永安支线', 'parkedStation': 'report'}
 LEGACY = {'revision', 'enabled', 'rowPreset', 'reportPreset', 'knowledgePreset'}
 STATIONS = {'import', 'price', 'risk', 'report', 'review', 'table', 'knowledge'}
+CUE_FONT_SIZES = (10, 12, 14, 16, 20, 28)
+
+
+def valid_cue_font_size(size):
+    return type(size) is int and size in CUE_FONT_SIZES
+
 
 def validate(value):
     if any(type(value.get(key)) is not bool for key in ['enabled', 'rowPreset', 'reportPreset', 'knowledgePreset', 'parkedProject', 'matchPreset', 'cuePrompts']):
@@ -19,6 +25,8 @@ def validate(value):
         raise ValueError('项目简称须为 1–12 个字符')
     if value.get('parkedStation') not in STATIONS:
         raise ValueError('无效的停靠站点')
+    if not valid_cue_font_size(value.get('cueFontSize')):
+        raise ValueError('请选择有效的提词字号')
     return {**value, 'parkedName': name.strip()}
 _lock = RLock()
 
@@ -36,7 +44,10 @@ def read():
             raise ValueError('invalid revision')
         if not LEGACY <= set(value):
             raise ValueError('missing switches')
-        return validate({key: value.get(key, default) for key, default in DEFAULT.items()})
+        settings = {key: value.get(key, default) for key, default in DEFAULT.items()}
+        if not valid_cue_font_size(settings['cueFontSize']):
+            settings['cueFontSize'] = DEFAULT['cueFontSize']
+        return validate(settings)
     except FileNotFoundError:
         return dict(DEFAULT)
     except (OSError, ValueError, TypeError):

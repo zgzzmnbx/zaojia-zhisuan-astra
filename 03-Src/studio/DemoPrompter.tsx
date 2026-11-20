@@ -6,7 +6,7 @@ import {Button,Modal} from './ui';
 import './demo-cues.css';
 
 const endpoint='/api/astra/demo-cues';
-export function DemoPrompter({enabled,pageCue}:{enabled:boolean;pageCue:string|undefined}){
+export function DemoPrompter({enabled,pageCue,fontSize}:{enabled:boolean;pageCue:string|undefined;fontSize?:number}){
  const [documentData,setDocumentData]=useState<CueDocument>(),[selected,setSelected]=useState(pageCue||'intro');
  const [error,setError]=useState(''),[nativePopover,setNativePopover]=useState(()=>typeof HTMLElement!=='undefined'&&'popover' in HTMLElement.prototype&&typeof HTMLElement.prototype.showPopover==='function');
  const lastDisplayed=useRef<string>(undefined);
@@ -53,7 +53,7 @@ export function DemoPrompter({enabled,pageCue}:{enabled:boolean;pageCue:string|u
    <button type="button" aria-label="下一段提词" disabled={index===entries.length-1} onClick={()=>setSelected(entries[index+1].id)}>›</button>
    {error&&<span tabIndex={0} aria-label={error} title={error}>ⓘ</span>}
   </div>}
-  <p>{entry?.text||'提词暂时无法读取，正在自动重试'}</p>
+  <p style={{fontSize}}>{entry?.text||'提词暂时无法读取，正在自动重试'}</p>
  </div>,host);
 }
 

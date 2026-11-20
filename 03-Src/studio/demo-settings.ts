@@ -1,7 +1,8 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {api,json} from './api';
 
-export type DemoSettings={revision:number;enabled:boolean;rowPreset:boolean;matchPreset:boolean;reportPreset:boolean;knowledgePreset:boolean;cuePrompts:boolean;parkedProject:boolean;parkedName:string;parkedStation:string};
+export type DemoSettings={revision:number;enabled:boolean;rowPreset:boolean;matchPreset:boolean;reportPreset:boolean;knowledgePreset:boolean;cuePrompts:boolean;cueFontSize:number;parkedProject:boolean;parkedName:string;parkedStation:string};
+export const cueFontSizes=[10,12,14,16,20,28] as const;
 const endpoint='/api/astra/demo-settings',signalKey='astra.demo-settings.changed';
 export const readDemoSettings=()=>api<DemoSettings>(endpoint);
 export const saveDemoSettings=(value:DemoSettings)=>api<DemoSettings>(endpoint,{...json(value),method:'PUT'});

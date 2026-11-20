@@ -1,6 +1,6 @@
 {
   "name": "zhisuan-astra",
-  "version": "0.54.10",
+  "version": "0.55.0",
   "private": true,
   "type": "module",
   "scripts": {
