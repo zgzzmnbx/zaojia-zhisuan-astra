@@ -2,7 +2,7 @@ import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
 import {bindOfficeCamera,defaultPersonFocusDistance} from './office-camera.js';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
-import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.0';
+import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.1';
 import {officeCameraLimits,officeSweepDirection,minimumOfficeZoom} from './office-camera-limits.js?v=office-0.54.7';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
@@ -433,12 +433,12 @@ export async function mountOfficeViewer() {
     for (const {object, original, offset} of movingFloors) {
       object.position.copy(original).addScaledVector(offset, value);
       object.updateMatrix();
+      object.updateMatrixWorld();
     }
     // Refit the cover only after docking, including when a hover reverses.
     facade9.visible = value === 0;
     officeRoot.visible = value > 0;
     interiorLabels = value >= .9;
-    model.updateMatrixWorld(true);
   }
 
   function setView(next, { animate = true, focus = null, automatic = false, labelPreview = false, cameraTarget = null } = {}) {
@@ -466,7 +466,7 @@ export async function mountOfficeViewer() {
     const fromOpen = openness ?? 0, toOpen = next === 'exploded' ? 1 : 0;
     setAssembly(toOpen);
     if(contextRoot)contextRoot.visible=contextVisibleForView(next);
-    people?.update(camera,view); // Resolve actor anchors at the destination before fitting.
+    if(focus?.userData.demoPersonId)people?.update(camera,view);
     // Follow the projecting ninth floor, rather than fitting the enlarged whole tower.
     fitObject(focus ?? (next==='exploded' ? officeRoot : useHeroPriorityFraming(next)&&contextRoot ? model : buildingRoot), next==='exploded' ? ROOM_DIRECTION : VIEW_DIRECTION);
     if(cameraTarget)applyCameraPose(cameraTarget);
@@ -478,7 +478,7 @@ export async function mountOfficeViewer() {
       transition = {elapsed:0, duration:1050, fromOpen, toOpen, camera:{from:cameraFrom,to:cameraTo}};
     } else floorFocus.snap(toOpen === 1);
     people?.update(camera,interiorLabels ? 'exploded' : 'building');
-    requestFrame(); notify('view-changed', getState()); return getState();
+    const state=getState();requestFrame();notify('view-changed',state);return state;
   }
   function cameraPose() {
     return {position:camera.position.clone(),target:controls.target.clone(),height:fitHeight,zoom:camera.zoom};

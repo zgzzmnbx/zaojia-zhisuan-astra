@@ -393,10 +393,10 @@ import {createPersonHitShape} from '../public/office-twin/viewer/person-hit-shap
 import {warmOfficeSurfaces} from '../public/office-twin/viewer/prepare-renderer.js';
 
 test('office warmup restores hidden floors, culling, buffers and shadow settings',()=>{
- for(const mode of ['hdr','daylight-only','failure']){
+ for(const mode of ['hdr','daylight-only','day-failure','night-failure']){
   const scene=new THREE.Scene(),floor=new THREE.Group(),mesh=new THREE.Mesh();
   scene.add(floor);floor.add(mesh);floor.visible=false;
-  const original=new THREE.WebGLRenderTarget(1,1);let current=original,size=[800,600,1.5],passes=0,released=false;
+  const original=new THREE.WebGLRenderTarget(1,1);let current=original,size=[800,600,1.5],released=false;
   const renderer={
    getSize:(v:THREE.Vector2)=>v.set(size[0],size[1]),getPixelRatio:()=>size[2],
    setDrawingBufferSize:(w:number,h:number,dpr:number)=>{size=[w,h,dpr];},
@@ -404,10 +404,14 @@ test('office warmup restores hidden floors, culling, buffers and shadow settings
    shadowMap:{autoUpdate:true,needsUpdate:true},extensions:{has:()=>mode!=='daylight-only'},
    render:()=>{assert.equal(floor.visible,true);assert.equal(mesh.frustumCulled,false);},
   };
-  const focus={release:()=>{released=true;},render:()=>{passes++;if(mode==='failure')throw Error('framebuffer');}};
+  const emissions:boolean[]=[];
+  const focus={release:()=>{released=true;},render:(_strength:number,emission:boolean,_reveal:number,countFrame:boolean)=>{
+   assert.equal(current,original);assert.equal(countFrame,false);emissions.push(emission);
+   if(mode===(emission?'night-failure':'day-failure'))throw Error('framebuffer');
+  }};
   const warm=()=>warmOfficeSurfaces(renderer,scene,new THREE.Camera(),[floor],{warm:(draw:()=>void)=>draw()},focus);
-  if(mode==='failure')assert.throws(warm,/framebuffer/);else warm();
-  assert.equal(passes,mode==='daylight-only'?0:1);assert.equal(released,true);
+  if(mode.endsWith('failure'))assert.throws(warm,/framebuffer/);else warm();
+  assert.deepEqual(emissions,mode==='hdr'||mode==='night-failure'?[false,true]:[false]);assert.equal(released,true);
   assert.equal(floor.visible,false);assert.equal(mesh.frustumCulled,true);assert.equal(current,original);
   assert.deepEqual(size,[800,600,1.5]);assert.deepEqual(renderer.shadowMap,{autoUpdate:true,needsUpdate:true});
   original.dispose();mesh.geometry.dispose();mesh.material.dispose();

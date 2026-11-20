@@ -20,6 +20,8 @@ export function warmOfficeSurfaces(renderer,scene,camera,interiorRoots,night,foc
     });
     renderer.setRenderTarget(cutout);renderer.render(scene,camera);
     renderer.setRenderTarget(target);
+    renderer.render(scene,camera);
+    focus.render(1,false,1,false);
     if(renderer.extensions.has('EXT_color_buffer_float')){
       night.warm(()=>{renderer.render(scene,camera);focus.render(1,true,1,false);});
     }

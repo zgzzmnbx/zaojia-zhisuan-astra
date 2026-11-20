@@ -191,7 +191,7 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       }else if(item.wander&&!placements.has(item.person.id))item.walk=item.wander.step(delta,enabled,occupied(item.person.id),item.idle);
     }
     if(arrived)paint();
-    syncPositions();const boxes=[];
+    syncPositions();const boxes=[],labels=[],measure=[];
     const labelPriority=item=>item.person.id===speaker?2:Number(item.person.id===current);
     for(const item of [...actors.values()].sort((a,b)=>labelPriority(b)-labelPriority(a))){
       const reactionAge=seconds-item.reactionAt,reaction=reactionAge<1.6?Math.sin(Math.PI*Math.max(0,reactionAge)/1.6):0;
@@ -204,16 +204,19 @@ export function createPeopleDemo({scene,model,viewport,listen,requestFrame,focus
       const level=normalLevel==='hidden'&&item.person.id===speaker?'name':normalLevel;
       if(level!==item.labelLevel){
         item.labelLevel=level;item.marker.dataset.detail=level;
-        // Measure only at a label-level transition, not during every animation frame.
-        if(level!=='hidden'){item.marker.hidden=false;item.labelWidth=item.marker.offsetWidth;item.labelHeight=item.marker.offsetHeight;}
+        if(level!=='hidden'){item.marker.hidden=false;measure.push(item);}
       }
       const active=item.pending,activity=item.dragPosition?'拖动中':placements.has(item.person.id)?(placements.get(item.person.id).meeting?'位于多人复核区':item.walk?.moving?'返回工位':'准备返回工位'):item.idle?`空闲 · ${{look:'远眺休息',stretch:'舒展肩臂',think:'走动思考'}[item.walk?.activity]||(item.walk?.moving?'走动':'休息')}`:`${active[0]?.personStatus||active[0]?.status||'待复核'} · ${item.group.userData.visualMotion==='typing'?'打字':'看屏幕'}`;
       const status=item.marker.querySelector('.host-person-activity');if(status.textContent!==activity)status.textContent=activity;
       const pos=item.group.position.clone().add(new THREE.Vector3(0,1.9,0)).project(camera);
       const x=(head.x*.5+.5)*width,y=(-head.y*.5+.5)*height-item.labelPixels*.15-(level==='detail'?43:24);
+      labels.push({item,x,y,depth:pos.z});
+    }
+    for(const item of measure){item.labelWidth=item.marker.offsetWidth;item.labelHeight=item.marker.offsetHeight;}
+    for(const {item,x,y,depth} of labels){
       const w=item.labelWidth||60,h=item.labelHeight||26,box={x:x-w/2,y:y-h/2,w,h};
       const overlap=boxes.some(b=>box.x<b.x+b.w&&box.x+box.w>b.x&&box.y<b.y+b.h&&box.y+box.h>b.y);
-      item.marker.hidden=level==='hidden'||!item.anchor||pos.z < -1||pos.z>1||x<w/2||x>width-w/2||y<50||y>height-30||overlap;
+      item.marker.hidden=item.labelLevel==='hidden'||!item.anchor||depth < -1||depth>1||x<w/2||x>width-w/2||y<50||y>height-30||overlap;
       if(!item.marker.hidden){boxes.push(box);item.marker.style.left=`${x}px`;item.marker.style.top=`${y}px`;}
     }
   }
