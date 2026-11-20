@@ -1,5 +1,8 @@
 export type DemoCue={id:string;title:string;text:string};
-export type CueDocument={revision:string;path:string;entries:DemoCue[]};
+export type CueDocument={revision:string;path:string;entries:DemoCue[];stale?:boolean;warning?:string};
+export function resolveDemoCue(entries:DemoCue[],requested:string,previous?:string){
+ return entries.find(entry=>entry.id===requested)||entries.find(entry=>entry.id===previous)||entries[0];
+}
 export const cueEvent='astra:demo-cue';
 /** Display-only signal. Never dispatch a business action from the prompter. */
 export function signalDemoCue(id:string|undefined){
