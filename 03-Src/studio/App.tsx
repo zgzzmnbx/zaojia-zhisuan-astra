@@ -106,6 +106,7 @@ import '../style.css';
 import '../astra.css';
 import './studio.css';
 import './appearance.css';
+import './workbench/rounded-cards.css';
 import {useSidebar} from './useSidebar';
 import {TaskProgress} from './TaskProgress';
 import {ConversationCard,WorkingCard} from './ConversationCard';

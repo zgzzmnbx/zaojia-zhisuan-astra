@@ -1,0 +1,313 @@
+/* Modern rounded-card workspace shell (desktop >= 1025px).
+   Frames the retained conversation and right work surface as paired 20px cards
+   on a unified soft outer canvas, echoing the floating chat card in sandbox view. */
+
+.studio {
+  --astra-card-radius: 20px;
+  --astra-card-edge-top: 4px;
+  --astra-card-edge-right: 16px;
+  --astra-card-edge-bottom: 16px;
+  --astra-card-edge-left: 10px;
+  --astra-card-shell: color-mix(in srgb, var(--rail) 78%, var(--line));
+  --astra-card-border: color-mix(in srgb, var(--line) 92%, rgba(23, 61, 89, 0.12));
+  --astra-card-divider: color-mix(in srgb, var(--line) 75%, transparent);
+  --astra-card-shadow:
+    0 12px 32px -10px rgba(23, 61, 89, 0.12),
+    0 2px 8px -2px rgba(23, 61, 89, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  --astra-card-rail-active-shadow:
+    0 2px 8px -2px rgba(23, 61, 89, 0.14),
+    0 1px 2px rgba(23, 61, 89, 0.06);
+}
+
+:root[data-astra-scheme="dark"] .studio,
+.studio[data-dark] {
+  --astra-card-shell: var(--rail);
+  --astra-card-border: color-mix(in srgb, var(--line) 94%, rgba(255, 255, 255, 0.10));
+  --astra-card-divider: color-mix(in srgb, var(--line) 82%, transparent);
+  --astra-card-shadow:
+    0 16px 40px -12px rgba(0, 0, 0, 0.50),
+    0 3px 10px -2px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --astra-card-rail-active-shadow:
+    0 4px 12px -2px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@media (min-width: 1025px) {
+  /* Unified outer canvas shared by icon rail, topbar and card stage. */
+  .studio #shell.live-shell {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell.sidebar-collapsed {
+    --astra-card-edge-left: 16px;
+  }
+
+  .studio #shell.live-shell > .main {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell .sidebar.icon-rail {
+    background: var(--astra-card-shell);
+    border-right-color: transparent;
+  }
+
+  .studio #shell.live-shell .icon-rail .rail-button:hover {
+    background: color-mix(in srgb, var(--paper) 72%, transparent);
+    color: var(--ink);
+  }
+
+  .studio #shell.live-shell .icon-rail .rail-button.is-active {
+    background: var(--paper);
+    border-color: var(--astra-card-border);
+    color: var(--blue);
+    box-shadow: var(--astra-card-rail-active-shadow);
+  }
+
+  .studio #shell.live-shell .icon-rail .rail-panel {
+    border-radius: 18px;
+    border-color: var(--astra-card-border);
+    box-shadow:
+      0 20px 52px -14px rgba(16, 33, 58, 0.24),
+      0 4px 14px -2px rgba(16, 33, 58, 0.08);
+  }
+
+  .studio #shell.live-shell .four-surface-topbar {
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    padding: 8px 16px 6px 10px;
+  }
+
+  .studio #shell.live-shell.sidebar-collapsed .four-surface-topbar {
+    padding-left: 16px;
+  }
+
+  .studio #shell.live-shell .four-surface-topbar .btn-ghost:hover {
+    background: color-mix(in srgb, var(--paper) 78%, transparent);
+  }
+
+  /* Immersive 3D sandbox & office keep their exact geometry and coordinate frame,
+     with a crisp rounded top-left junction where they meet the outer shell. */
+  .studio #shell.live-shell:not(.sidebar-collapsed) .adjustable-workbench.four-surface:is(.sandbox-workbench, .office-workbench) {
+    border-top-left-radius: 18px;
+    border-top: 1px solid var(--astra-card-border);
+    border-left: 1px solid var(--astra-card-border);
+  }
+
+  .studio #shell.live-shell.sidebar-collapsed .adjustable-workbench.four-surface:is(.sandbox-workbench, .office-workbench) {
+    border-top: 1px solid var(--astra-card-border);
+  }
+
+  /* 1. Split Content Mode: paired rounded cards (left chat + right window). */
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) > .conversation {
+    margin: var(--astra-card-edge-top) 0 var(--astra-card-edge-bottom) var(--astra-card-edge-left);
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) > .content-artifact {
+    height: auto;
+    align-self: stretch;
+    margin: var(--astra-card-edge-top) var(--astra-card-edge-right) var(--astra-card-edge-bottom) 0;
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+  }
+
+  /* When conversation is collapsed in split content mode, right card spans cleanly. */
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.conversation-collapsed:not(.sandbox-workbench):not(.office-workbench) > .content-artifact {
+    grid-column: 1;
+    grid-row: 1;
+    margin: var(--astra-card-edge-top) var(--astra-card-edge-right) var(--astra-card-edge-bottom) var(--astra-card-edge-left);
+  }
+
+  /* Transparent 12px gutter between paired cards with a quiet pill drag handle. */
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) > .workbench-separator {
+    background: transparent;
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) > .workbench-separator::before,
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) > .workbench-separator::after {
+    display: none;
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) > .workbench-separator > span:first-child {
+    width: 4px;
+    height: 36px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--muted) 38%, transparent);
+    box-shadow: none;
+    opacity: 0.6;
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split:not(.sandbox-workbench):not(.office-workbench) > .workbench-separator:is(:hover, :focus-visible) > span:first-child,
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-content.surface-split.is-resizing:not(.sandbox-workbench):not(.office-workbench) > .workbench-separator > span:first-child {
+    height: 68px;
+    background: var(--blue);
+    opacity: 1;
+  }
+
+  /* 2. Fullscreen Content Mode: single elevated rounded card. */
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-fullscreen {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-fullscreen > .content-artifact {
+    grid-column: 1;
+    grid-row: 1;
+    height: auto;
+    max-height: none;
+    align-self: stretch;
+    margin: var(--astra-card-edge-top) var(--astra-card-edge-right) var(--astra-card-edge-bottom) var(--astra-card-edge-left);
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+  }
+
+  /* 3. Chat + Floating Summary Mode: paired left chat card + right summary card. */
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-summary.surface-floating {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-summary.surface-floating:not(.summary-fallback) > .conversation {
+    margin: var(--astra-card-edge-top) 0 var(--astra-card-edge-bottom) var(--astra-card-edge-left);
+    width: calc(100% - var(--float-width, 380px) - var(--astra-card-edge-left) - var(--astra-card-edge-right) - 12px);
+    height: calc(100% - var(--astra-card-edge-top) - var(--astra-card-edge-bottom));
+    padding-right: 0;
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+    transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-summary.surface-floating:is(.floating-minimized, .floating-unavailable):not(.summary-fallback) > .conversation {
+    width: calc(100% - var(--astra-card-edge-left) - var(--astra-card-edge-right));
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-summary.surface-floating:not(.summary-fallback) > .summary-artifact {
+    top: var(--astra-card-edge-top);
+    right: var(--astra-card-edge-right);
+    bottom: var(--astra-card-edge-bottom);
+    height: auto;
+    max-height: calc(100% - var(--astra-card-edge-top) - var(--astra-card-edge-bottom));
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-summary.surface-floating:not(.summary-fallback) > .project-summary-surface {
+    top: var(--astra-card-edge-top);
+    right: var(--astra-card-edge-right);
+    bottom: auto;
+    height: auto;
+    max-height: calc(100% - var(--astra-card-edge-top) - var(--astra-card-edge-bottom));
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    box-shadow: var(--astra-card-shadow);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.summary-fallback {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.summary-fallback > .summary-artifact {
+    inset: var(--astra-card-edge-top) var(--astra-card-edge-right) var(--astra-card-edge-bottom) var(--astra-card-edge-left);
+    width: auto;
+    height: auto;
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+  }
+
+  /* 4. Pure Chat Mode: full-width elevated rounded card with centered reading column. */
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-chat.no-artifact:not(.sandbox-classic) {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-chat.no-artifact:not(.sandbox-classic) > .conversation {
+    margin: var(--astra-card-edge-top) var(--astra-card-edge-right) var(--astra-card-edge-bottom) var(--astra-card-edge-left);
+    width: auto;
+    max-width: none;
+    height: calc(100% - var(--astra-card-edge-top) - var(--astra-card-edge-bottom));
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+  }
+
+  /* 5. Classic Sandbox Mode: paired left chat card + right sandbox card. */
+  .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic {
+    background: var(--astra-card-shell);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic > .conversation {
+    margin: var(--astra-card-edge-top) 0 var(--astra-card-edge-bottom) var(--astra-card-edge-left);
+    width: calc(100% - var(--sandbox-card-width) - var(--astra-card-edge-left) - var(--astra-card-edge-right) - 12px);
+    height: calc(100% - var(--astra-card-edge-top) - var(--astra-card-edge-bottom));
+    padding-right: 0;
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    background: var(--paper);
+    box-shadow: var(--astra-card-shadow);
+    overflow: hidden;
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic > .sandbox-surface {
+    top: var(--astra-card-edge-top);
+    right: var(--astra-card-edge-right);
+    bottom: var(--astra-card-edge-bottom);
+    border: 1px solid var(--astra-card-border);
+    border-radius: var(--astra-card-radius);
+    box-shadow: var(--astra-card-shadow);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface.sandbox-classic.conversation-collapsed > .sandbox-surface {
+    left: var(--astra-card-edge-left);
+    right: var(--astra-card-edge-right);
+    top: var(--astra-card-edge-top);
+    bottom: var(--astra-card-edge-bottom);
+    width: auto;
+  }
+
+  /* Concentric interior polish inside rounded cards. */
+  .studio #shell.live-shell .adjustable-workbench.four-surface:not(.sandbox-workbench):not(.office-workbench) > .conversation > .conversation-heading,
+  .studio #shell.live-shell .adjustable-workbench.four-surface > .content-artifact > .artifact-heading {
+    border-bottom-color: var(--astra-card-divider);
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface > .conversation .composer {
+    border-radius: 14px;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .studio #shell.live-shell .adjustable-workbench.four-surface > .conversation .composer:focus-within {
+    border-color: color-mix(in srgb, var(--astra-primary) 55%, var(--line));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--astra-primary) 12%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio #shell.live-shell .adjustable-workbench.four-surface.mode-summary.surface-floating:not(.summary-fallback) > .conversation,
+  .studio #shell.live-shell .adjustable-workbench.four-surface > .conversation .composer {
+    transition: none;
+  }
+}
