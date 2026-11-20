@@ -34,7 +34,7 @@ test('old review cards stay read-only across artifact, job and conversation chan
 });
 const request:ReviewRequest={kind:'setup',jobId:'job-a',fileName:'成果.xlsx',projectName:'当前项目',version:2,reviewRows:3};
 function platform(id='default'):ReviewPlatform{return {profileId:id,label:id==='default'?'飞书':'WeAct',configurationOk:true,enabled:true,expanded:true,deliveryChannels:['direct'],group:'group-a',selectedReviewers:['one'],task:null,loading:false,feedback:'',options:{active_profile:id,platforms:[{profile_id:id,configuration_ok:true}],direct_delivery:{status:'available'},directory:{people:[{person_ref:'one',display_name:'复核甲'}],groups:[{group_ref:'group-a',name:'项目群',member_count:2,authorized:true,members_available:true,people:[{person_ref:'two',display_name:'复核乙'}]}]}}};}
-const validate=(items:ReviewPlatform[],confirmed=true)=>reviewProblem(items,confirmed,'请复核','2026-12-01T18:00');
+const validate=(items:ReviewPlatform[])=>reviewProblem(items,'请复核','2026-12-01T18:00');
 const setup=(id='default'):ReviewSetupPlatform=>({...platform(id),directDeliveryAvailable:true,groups:platform(id).options!.directory.groups});
 
 test('both platforms finish against the host single-writer guard without a 409 or duplicate send',async()=>{
@@ -71,10 +71,13 @@ test('confirmation explains unavailable methods and active rounds without releas
  p.groups[0].authorized=true;p.task={status:'reviewing',status_label:'复核中'};assert.match(reviewConfirmationProblem([p]),/进行中的复核/);
  p.task.status='completed';assert.equal(reviewConfirmationProblem([p]),'');
 });
-test('no platform, no confirmation, unavailable configuration or empty recipient list cannot send',()=>{
- assert.ok(validate([]));assert.ok(validate([platform()],false));assert.equal(validate([platform()]),'');
+test('send is ready as soon as every enabled platform has a valid recipient and complete requirements',()=>{
+ const a=platform(),b=platform('weact_cost');
+ assert.ok(validate([]));assert.equal(validate([a,b]),'');
+ b.selectedReviewers=[];assert.match(validate([a,b]),/WeAct/);
+ b.enabled=false;assert.equal(validate([a,b]),'');
  for(const patch of [{configurationOk:false},{loading:true},{selectedReviewers:[]},{options:null},{deliveryChannels:[]}])assert.ok(validate([{...platform(),...patch}]));
- assert.ok(reviewProblem([platform()],true,'','2026-12-01'));assert.ok(reviewProblem([platform()],true,'review','invalid'));
+ assert.ok(reviewProblem([a],'','2026-12-01'));assert.ok(reviewProblem([a],'review','invalid'));
 });
 test('group and mixed modes use exact authorized group members, never union directory audiences',()=>{
  const p=platform();p.deliveryChannels=['direct','group'];assert.deepEqual(reviewPeople(p).map(p=>p.person_ref),['two']);assert.ok(validate([p]));p.selectedReviewers=['two'];assert.equal(validate([p]),'');

@@ -66,7 +66,6 @@ type Props = {
   platforms: InlineReviewPlatformSetup[];
   deadline: string;
   instructions: string;
-  audienceConfirmed: boolean;
   feedback: string;
   loading: boolean;
   sending: boolean;
@@ -78,7 +77,6 @@ type Props = {
   onReviewerChange: (profileId: string, personRef: string, checked: boolean) => void;
   onDeadlineChange: (deadline: string) => void;
   onInstructionsChange: (instructions: string) => void;
-  onAudienceConfirmedChange: (confirmed: boolean) => void;
   onRefresh: (profileId?: string) => void;
   onCancel: () => void;
   onSubmit: () => void;
@@ -108,7 +106,6 @@ export default function InlineReviewSetupCard({
   platforms,
   deadline,
   instructions,
-  audienceConfirmed,
   feedback,
   loading,
   sending,
@@ -120,7 +117,6 @@ export default function InlineReviewSetupCard({
   onReviewerChange,
   onDeadlineChange,
   onInstructionsChange,
-  onAudienceConfirmedChange,
   onRefresh,
   onCancel,
   onSubmit,
@@ -131,10 +127,12 @@ export default function InlineReviewSetupCard({
 }: Props) {
   const enabledPlatforms = platforms.filter((platform) => platform.enabled);
   const enabledTasks = enabledPlatforms.filter((platform) => platform.task);
-  const confirmationHintId=useId();
-  const confirmationProblem=loading?'正在读取平台目录。':sending?'正在发送，请稍候。':reviewConfirmationProblem(platforms);
-  const allEnabledReady = !confirmationProblem;
-  const canSubmit = !loading && !sending && audienceConfirmed && allEnabledReady && Boolean(instructions.trim());
+  const submitHintId = useId();
+  const requirementsProblem = !instructions.trim() ? "请填写复核说明。"
+    : !Number.isFinite(Date.parse(deadline)) ? "请设置有效的截止时间。" : "";
+  const submitProblem = loading ? "正在读取平台目录。" : sending ? "正在发送，请稍候。"
+    : reviewConfirmationProblem(platforms) || requirementsProblem;
+  const canSubmit = !submitProblem;
   const selectedPeopleCount = enabledPlatforms.reduce((total, platform) => total + platform.selectedReviewers.length, 0);
   const methodsReady = enabledPlatforms.length > 0 && enabledPlatforms.every(platformMethodReady);
   const peopleReady = methodsReady && enabledPlatforms.every((platform) => platform.selectedReviewers.length > 0);
@@ -260,8 +258,7 @@ export default function InlineReviewSetupCard({
         <section className={`inline-review-setup__step-card inline-review-setup__final ${canSubmit ? "is-complete" : peopleReady ? "is-current" : "is-locked"}`} aria-labelledby="inline-review-step-3">
           <header className="inline-review-setup__step-card-header">
             <i aria-hidden="true"><ShieldCheck size={18} /></i>
-            <span><small>步骤 3</small><strong id="inline-review-step-3">最后确认</strong></span>
-            <em>{audienceConfirmed ? "范围已核对" : "发送前最终确认"}</em>
+            <span><small>步骤 3</small><strong id="inline-review-step-3">发送范围</strong></span>
           </header>
           <div className="inline-review-setup__step-card-body">
             {enabledPlatforms.length>0&&<div className="inline-review-setup__send-summary" aria-label="本次发送范围">{enabledPlatforms.map(platform=><div key={platform.profileId}><span><strong>{platform.label}</strong><small>{platform.deliveryChannels.map(channel=>channel==='group'?'工作群':'个人私聊').join(' + ')||'未选择方式'}{platform.deliveryChannels.includes('group')?` · ${selectedGroup(platform)?.name||'未选择群'}`:''}</small></span><span>{platform.selectedReviewers.length?platform.people.filter(person=>platform.selectedReviewers.includes(person.person_ref)).map(person=><b key={person.person_ref}>{person.display_name}</b>):<small>未选人员</small>}</span></div>)}</div>}
@@ -272,15 +269,14 @@ export default function InlineReviewSetupCard({
                 <label className="inline-review-setup__field is-wide"><span>复核说明</span><textarea rows={3} value={instructions} disabled={sending} onChange={(event) => onInstructionsChange(event.target.value)} /></label>
               </div>
             </details>
-            <label className={`inline-review-setup__confirmation ${audienceConfirmed ? "is-confirmed" : ""}`}><input type="checkbox" checked={audienceConfirmed} disabled={!allEnabledReady || sending} aria-describedby={confirmationProblem?confirmationHintId:undefined} onChange={(event) => onAudienceConfirmedChange(event.target.checked)} /><span><strong>我已核对本次复核范围</strong><small>每个平台只向本卡片中勾选的人员发送；工作群与个人私聊可同时启用。</small></span><ShieldCheck size={18} aria-hidden="true" /></label>
-            {confirmationProblem&&<p id={confirmationHintId} className="inline-review-setup__platform-feedback" role="status">{confirmationProblem}</p>}
+            {submitProblem && <p id={submitHintId} className="inline-review-setup__platform-feedback" role="status">{submitProblem}</p>}
             {newRoundConfirmationOpen && <section className="inline-review-setup__round-confirm" role="alertdialog" aria-label="确认发起复核"><span><RefreshCw size={17} /><strong>确认按当前平台设置发起复核？</strong></span><p>已有已完成任务的平台将续开下一轮；尚无任务的平台将新建首轮，历史快照和复核记录不会覆盖。</p><div><button type="button" disabled={sending} onClick={onCloseNewRoundConfirmation}>返回检查</button><button type="button" disabled={sending} onClick={onConfirmNewRound}>{sending ? <Loader2 size={14} className="spin" /> : <Send size={14} />}确认发起</button></div></section>}
             {feedback ? <p className={`inline-review-setup__feedback ${feedbackIsError ? "is-error" : ""}`} aria-live="polite">{feedback}</p> : null}
           </div>
           <footer className="inline-review-setup__actions">
             <button className="inline-review-setup__cancel" type="button" disabled={sending} onClick={onCancel}><X size={15} />取消</button>
             <button className="inline-review-setup__refresh" type="button" disabled={loading || sending} onClick={() => onRefresh()}>{loading ? <Loader2 size={15} className="spin" /> : <RefreshCw size={15} />}读取全部平台目录</button>
-            <button className="inline-review-setup__submit" type="button" disabled={!canSubmit} onClick={hasExistingTask ? onOpenNewRoundConfirmation : onSubmit}>{sending ? <Loader2 size={15} className="spin" /> : <Send size={15} />}{sending?'正在发送…':hasExistingTask ? "确认发起或续开复核" : `确认发送 · ${enabledPlatforms.length} 平台`}</button>
+            <button className="inline-review-setup__submit" type="button" disabled={!canSubmit} aria-describedby={submitProblem ? submitHintId : undefined} onClick={hasExistingTask ? onOpenNewRoundConfirmation : onSubmit}>{sending ? <Loader2 size={15} className="spin" /> : <Send size={15} />}{sending?'正在发送…':hasExistingTask ? "确认发起或续开复核" : `确认发送 · ${enabledPlatforms.length} 平台`}</button>
           </footer>
         </section>
       </div>

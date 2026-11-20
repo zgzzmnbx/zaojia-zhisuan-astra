@@ -39,7 +39,7 @@ export function initialReviewEnabled(available:boolean,task:ReviewTask|null,prev
 export function reviewPeople(p:ReviewPlatform){return p.deliveryChannels.includes('group')?p.options?.directory.groups.find(g=>g.group_ref===p.group)?.people||[]:p.options?.directory.people||[];}
 export function nextRound(task:ReviewTask|null){return !!task&&['completed','returned'].includes(task.status);}
 /** Original 2.0 recipient and round rules, checked again immediately before POST. */
-export function reviewProblem(platforms:ReviewPlatform[],confirmed:boolean,instructions:string,deadline:string){
+export function reviewProblem(platforms:ReviewPlatform[],instructions:string,deadline:string){
  const selected=platforms.filter(p=>p.enabled);
  if(!selected.length)return '请至少选择飞书或 WeAct。';
  for(const p of selected){
@@ -52,7 +52,6 @@ export function reviewProblem(platforms:ReviewPlatform[],confirmed:boolean,instr
   if(!refs.length||refs.length>10||refs.some(ref=>!reviewPeople(p).some(person=>person.person_ref===ref)))return `请重新选择 ${p.label} 的 1 至 10 名复核人。`;
   if(p.task&&!nextRound(p.task))return `${p.label} 已有进行中的复核，请查看进度或仅重试失败步骤。`;
  }
- if(!confirmed)return '请先核对并确认本次发送范围。';
  if(!instructions.trim())return '请填写复核说明。';
  if(!Number.isFinite(new Date(deadline).getTime()))return '请设置有效的截止时间。';
  return '';

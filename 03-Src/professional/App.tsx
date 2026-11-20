@@ -6055,10 +6055,6 @@ function DaweibaApp() {
         return;
       }
     }
-    if (!webReviewAudienceConfirmed) {
-      setWebReviewFeedback("请先确认两个平台各自的人员和投递范围。");
-      return;
-    }
     if (!webReviewInstructions.trim()) {
       setWebReviewFeedback("请填写复核说明。");
       return;
@@ -10401,7 +10397,6 @@ function DaweibaApp() {
         } satisfies InlineReviewPlatformSetup))}
         deadline={webReviewDeadline}
         instructions={webReviewInstructions}
-        audienceConfirmed={webReviewAudienceConfirmed}
         feedback={webReviewFeedback}
         loading={isLoadingWebReview}
         sending={isSendingWebReview}
@@ -10413,7 +10408,6 @@ function DaweibaApp() {
         onReviewerChange={toggleInlineWebReviewReviewer}
         onDeadlineChange={setWebReviewDeadline}
         onInstructionsChange={setWebReviewInstructions}
-        onAudienceConfirmedChange={setWebReviewAudienceConfirmed}
         onRefresh={(profileId) => void loadInlineWebReviewOptions(profileId, true)}
         onCancel={closeInlineWebReviewSetup}
         onSubmit={() => void sendInlineWebResultReview()}
