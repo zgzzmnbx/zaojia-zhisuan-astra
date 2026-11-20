@@ -2,6 +2,20 @@
    Frames the retained conversation and right work surface as paired 20px cards
    on a unified soft outer canvas, echoing the floating chat card in sandbox view. */
 
+/* Lock outer viewport so DaisyUI root scrollbar-gutter and subpixel 100dvh
+   rounding never produce a redundant page-level scrollbar beside inner panels. */
+html:has(> body.studio #root),
+body.studio:has(> #root) {
+  height: 100%;
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+
+.studio #root {
+  height: 100%;
+  overflow: hidden;
+}
+
 .studio {
   --astra-card-radius: 20px;
   --astra-card-edge-top: 4px;
