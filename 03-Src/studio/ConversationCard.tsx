@@ -54,5 +54,5 @@ export function WorkingCard({label,detail,showAvatar=true}:{label:string;detail?
     return()=>{clearTimeout(timeout);document.removeEventListener('visibilitychange',visibility);};
   },[busy,shown]);
   if(!busy&&!shown)return null;
-  return <div className="cc-working task-working"><TaskProgress conversation finishing={!busy} onSettled={done} label={label||'处理已结束'} detail={busy?detail:undefined} leading={busy&&showAvatar?<Gork state="thinking" size={30} still/>:undefined}/></div>;
+  return <div className="cc-working task-working"><TaskProgress finishing={!busy} onSettled={done} label={label||'处理已结束'} detail={busy?detail:undefined} leading={busy&&showAvatar?<Gork state="thinking" size={30} still/>:undefined}/></div>;
 }

@@ -3,7 +3,7 @@ import {LoadingLogo} from './brand/LoadingLogo';
 import {Icon} from './ui';
 import './task-progress.css';
 
-export function TaskProgress({label,detail,compact=false,leading,indicator='logo',conversation=false,finishing=false,onSettled}:{label:string;detail?:string;compact?:boolean;leading?:ReactNode;indicator?:'logo'|'spinner';conversation?:boolean;finishing?:boolean;onSettled?:()=>void}){
+export function TaskProgress({label,detail,compact=false,leading,indicator='logo',finishing=false,onSettled}:{label:string;detail?:string;compact?:boolean;leading?:ReactNode;indicator?:'logo'|'spinner';finishing?:boolean;onSettled?:()=>void}){
  const ref=useRef<HTMLDivElement>(null),[animate,setAnimate]=useState(false);
  useEffect(()=>{
   const host=ref.current;if(!host)return;
@@ -13,8 +13,8 @@ export function TaskProgress({label,detail,compact=false,leading,indicator='logo
   observer.observe(host);document.addEventListener('visibilitychange',update);reduced.addEventListener('change',update);
   return()=>{observer.disconnect();document.removeEventListener('visibilitychange',update);reduced.removeEventListener('change',update);};
  },[]);
- return <div ref={ref} className={`task-progress ${compact?'task-progress--compact':''} ${indicator==='logo'?'task-progress--logo':''}`} data-conversation={conversation||undefined} data-animate={animate&&!finishing} aria-busy={!finishing}>
-  {indicator==='logo'&&<span className="task-progress__spinner"><LoadingLogo size={conversation?96:80} conversation={conversation} finishAtRest={finishing} onSettled={onSettled}/></span>}
+ return <div ref={ref} className={`task-progress ${compact?'task-progress--compact':''} ${indicator==='logo'?'task-progress--logo':''}`} data-animate={animate&&!finishing} aria-busy={!finishing}>
+  {indicator==='logo'&&<span className="task-progress__spinner"><LoadingLogo size={80} finishAtRest={finishing} onSettled={onSettled}/></span>}
   <div className="task-progress__heading">
    {leading}
    {indicator==='spinner'&&<span className="task-progress__spinner"><Icon name="spinner-gap"/></span>}

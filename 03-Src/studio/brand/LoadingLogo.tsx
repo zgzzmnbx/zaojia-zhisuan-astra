@@ -4,10 +4,9 @@ import {useLoadingMotion} from './useLoadingMotion';
 import './loading-logo.css';
 
 /** Decorative only: the owning request supplies its own unchanged status text. */
-export function LoadingLogo({size=32,active=true,paused=false,allowMotion=false,conversation=false,finishAtRest=false,onSettled}:{size?:number;active?:boolean;paused?:boolean;allowMotion?:boolean;conversation?:boolean;finishAtRest?:boolean;onSettled?:()=>void}){
+export function LoadingLogo({size=32,active=true,paused=false,allowMotion=false,finishAtRest=false,onSettled}:{size?:number;active?:boolean;paused?:boolean;allowMotion?:boolean;finishAtRest?:boolean;onSettled?:()=>void}){
  const host=useRef<HTMLSpanElement>(null),controller=useRef<LoadingRenderer|null>(null);
- const [preference]=useLoadingMotion(),[visible,setVisible]=useState(false),[started,setStarted]=useState(false),[phase,setPhase]=useState<'starting'|'ready'|'failed'>('starting');
- const motion=conversation?'conversation':preference;
+ const [motion]=useLoadingMotion(),[visible,setVisible]=useState(false),[started,setStarted]=useState(false),[phase,setPhase]=useState<'starting'|'ready'|'failed'>('starting');
  const [reduced,setReduced]=useState(()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches);
  const options={motion,paused,reduced,allowMotion,finishAtRest,onSettled,active:active&&visible};
  const latest=useRef(options);latest.current=options;
