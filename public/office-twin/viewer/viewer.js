@@ -3,7 +3,7 @@ import {getWorkstationEditState} from './workstation-settings.js';
 import {bindOfficeCamera,defaultPersonFocusDistance} from './office-camera.js';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
 import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.0';
-import {officeCameraLimits,officeSweepDirection} from './office-camera-limits.js';
+import {officeCameraLimits,officeSweepDirection,minimumOfficeZoom} from './office-camera-limits.js?v=office-0.54.7';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,warmOfficeSurfaces,yieldToBrowser} from './prepare-renderer.js';
@@ -81,6 +81,7 @@ export async function mountOfficeViewer() {
   let layout, buildingMetadata, officeMetadata, furnitureIntegration;
   let officeName='H1 办公室';
   let fitHeight = 100, selectedFloor = null, selectedRoom = null;
+  let overviewHeight = fitHeight, focusOrigin = null;
   let personFocusDistance=defaultPersonFocusDistance,personFrameHeight=0;
   let campusProjection=null;
   const floors = new Map(), rooms = new Map(), movingFloors = [];
@@ -345,6 +346,7 @@ export async function mountOfficeViewer() {
   function resizeLayout(){
     if(campusProjection&&view==='building'&&viewport.clientWidth&&viewport.clientHeight){
       const height=campusHeight(campusProjection);
+      if(!focusOrigin)overviewHeight=height;
       if(transition?.camera)transition.camera.to.height=height;
       else fitHeight=height;
     }
@@ -358,6 +360,7 @@ export async function mountOfficeViewer() {
     const aspect = width/height;
     camera.left = -fitHeight*aspect/2; camera.right = fitHeight*aspect/2;
     camera.top = fitHeight/2; camera.bottom = -fitHeight/2;
+    controls.minZoom = minimumOfficeZoom(fitHeight,overviewHeight);
     const {left,right}=panelInsets();
     camera.setViewOffset(width,height,-(left-right)/2,0,width,height);
     camera.updateProjectionMatrix(); requestFrame();
@@ -392,7 +395,10 @@ export async function mountOfficeViewer() {
     if (bounds.isEmpty()) return;
     const center = bounds.getCenter(new THREE.Vector3());
     if(towerBoxes)center.y-=5.5; // Include the entry squares and their shared street in the overview.
-    const distance = Math.max(30, bounds.getSize(new THREE.Vector3()).length()*2);
+    // Orthographic scale is independent of eye distance. Keep surrounding
+    // buildings in front of the near plane when pulling back from a detail.
+    const overviewDistance = focusOrigin ? focusOrigin.pose.position.distanceTo(focusOrigin.pose.target) : 0;
+    const distance = Math.max(30, overviewDistance, bounds.getSize(new THREE.Vector3()).length()*2);
     controls.target.copy(center);
     camera.position.copy(center).addScaledVector(direction, distance);
     camera.up.set(0, 1, 0);
@@ -413,6 +419,7 @@ export async function mountOfficeViewer() {
     if(view==='exploded'&&object===officeRoot)fitHeight*=1.3;
     personFrameHeight=object.userData.demoPersonId ? fitHeight : 0;
     if(personFrameHeight)fitHeight=personFrameHeight*personFocusDistance/100;
+    if(!focusOrigin)overviewHeight=fitHeight;
     camera.zoom = 1; camera.far = Math.max(600, distance*4);
     resize(); controls.update(); requestFrame();
   }
@@ -437,6 +444,11 @@ export async function mountOfficeViewer() {
   function setView(next, { animate = true, focus = null, automatic = false, labelPreview = false, cameraTarget = null } = {}) {
     next = resolveView(next);
     if (!next) throw new TypeError('Unknown view');
+    if (focus && renderReady && !focusOrigin) {
+      focusOrigin = {view, pose:transition?.camera?.to ?? cameraPose()};
+    } else if (!focus && !labelPreview) {
+      focusOrigin = null;
+    }
     if(next==='building' && !labelPreview)people?.closeMenu();
     if(!labelPreview)floorLabel?.cancel();
     if(!automatic)entrance.cancel();
@@ -504,13 +516,17 @@ export async function mountOfficeViewer() {
   function zoom(factor) {
     if (!renderReady) return;
     takeCameraControl();
-    camera.zoom = THREE.MathUtils.clamp(camera.zoom*factor, .35, 15);
+    camera.zoom = THREE.MathUtils.clamp(camera.zoom*factor, controls.minZoom, controls.maxZoom);
     camera.updateProjectionMatrix(); requestFrame();
   }
   function resetCamera(top = false) {
     orbit?.focus(false);
     if (!renderReady) return;
     takeCameraControl();
+    if (!top && focusOrigin) {
+      setView(focusOrigin.view, {cameraTarget:focusOrigin.pose});
+      return;
+    }
     const target = selectedRoom && rooms.has(selectedRoom) ? rooms.get(selectedRoom) : view==='exploded' ? officeRoot : selectedFloor && view === 'building' ? floors.get(selectedFloor) : useHeroPriorityFraming(view)&&contextRoot ? model : buildingRoot;
     fitObject(target, top ? new THREE.Vector3(.001, 1, .001).normalize() : view==='exploded' ? ROOM_DIRECTION : VIEW_DIRECTION);
   }
@@ -614,7 +630,11 @@ export async function mountOfficeViewer() {
   listen($('#top-camera'), 'click', () => resetCamera(true));
   listen($('#tab-floors'), 'click', () => selectTab('floors'));
   listen($('#tab-rooms'), 'click', () => selectTab('rooms'));
-  listen($('#tab-people'), 'click', () => {selectTab('people');setView('exploded');window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));});
+  listen($('#tab-people'), 'click', () => {
+    selectTab('people');
+    if(view!=='exploded')setView('exploded');
+    window.dispatchEvent(new CustomEvent('office-panel',{detail:{tab:'people'}}));
+  });
   listen(viewport, 'keydown', event => {
     if (['+','=','-','Home','Escape'].includes(event.key)) {
       event.preventDefault();
@@ -690,7 +710,7 @@ export async function mountOfficeViewer() {
     canvasHost.append(renderer.domElement);
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.dampingFactor = .12;controls.autoRotateSpeed=.22;
-    controls.minZoom = .35; controls.maxZoom = 15;
+    controls.maxZoom = 15;
     Object.assign(controls,officeCameraLimits(view));
     listen(controls, 'change', requestFrame);
     listen(controls, 'start', takeCameraControl);

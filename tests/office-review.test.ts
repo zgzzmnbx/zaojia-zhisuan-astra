@@ -228,8 +228,19 @@ test('old card cleanup cannot clear a newer office context and revisions are mon
 import fs from 'node:fs';
 import ts from 'typescript';
 import {createOfficeOrbit,bindOfficeOrbitHold} from '../public/office-twin/viewer/office-orbit.js';
-import {officeCameraLimits,officeSweepDirection} from '../public/office-twin/viewer/office-camera-limits.js';
+import {officeCameraLimits,officeSweepDirection,minimumOfficeZoom} from '../public/office-twin/viewer/office-camera-limits.js';
 import {orbitSweepAngle} from '../03-Src/studio/project-sandbox/orbit-motion.ts';
+test('office details can zoom out to the same world extent as their overview',()=>{
+ for(const overviewHeight of [56,224]){
+  const overviewLimit=minimumOfficeZoom(overviewHeight,overviewHeight);
+  assert.equal(overviewLimit,.35);
+  for(const detailHeight of [8.85,11.38,overviewHeight/2]){
+   const limit=minimumOfficeZoom(detailHeight,overviewHeight);
+   assert.ok(Math.abs(detailHeight/limit-overviewHeight/overviewLimit)<1e-8);
+  }
+ }
+ assert.equal(minimumOfficeZoom(224,56),.35);
+});
 test('office generated motion matches Astra implementations across checkout line endings',()=>{
  for(const name of ['orbit-motion','idle-orbit']){
   const source=`03-Src/studio/project-sandbox/${name}.ts`;
