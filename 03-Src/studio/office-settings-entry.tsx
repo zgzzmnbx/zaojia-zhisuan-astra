@@ -16,7 +16,7 @@ function isTab(v:unknown):v is Tab{return tabs.some(t=>t.id===v);}
 function send(type:string,data:Record<string,unknown>={}){
   if(embedded)parent.postMessage({namespace,type,...data},location.origin);
 }
-function back(){if(embedded)send('close');else location.assign('/office-twin/viewer/index.html?mode=embed&view=exploded&host=astra');}
+function back(){if(embedded)send('close');else location.assign('/office-twin/viewer/index.html?mode=embed&view=building&host=astra');}
 function OfficeSettings(){
   const first=query.get('tab'),initial=isTab(first)?first:'tasks';
   const [tab,choose]=useState<Tab>(initial),[visited,setVisited]=useState<Set<Tab>>(()=>new Set([initial]));

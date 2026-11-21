@@ -28,6 +28,7 @@ test('a roof title inherits its storey and facade direction, including on a rota
  const sign=attachRoofSign(roof,'H3',new THREE.PlaneGeometry(1,.25),new THREE.MeshBasicMaterial());
  storey.updateMatrixWorld(true);
  assert.equal(sign.parent,storey);
+ assert.ok(sign.scale.x > 39 * .9 && sign.scale.x <= 39);
  const axis=new THREE.Vector3(0,0,1);
  assert.ok(axis.clone().transformDirection(sign.matrixWorld).distanceTo(axis.clone().transformDirection(roof.matrixWorld))<1e-8);
  const position=sign.getWorldPosition(new THREE.Vector3());

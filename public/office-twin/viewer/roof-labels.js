@@ -9,7 +9,7 @@ export function attachRoofSign(roof, code, geometry, material) {
   if (!roof.geometry.boundingBox) roof.geometry.computeBoundingBox();
   const {min, max} = roof.geometry.boundingBox;
   const span = max.x - min.x;
-  const width = span * .70;
+  const width = span * .98;
   const sign = new Mesh(geometry, material);
   sign.name = 'OfficeRoofSign_' + code;
   sign.userData.officeBoard = true;
@@ -27,24 +27,38 @@ export function attachRoofSign(roof, code, geometry, material) {
   return sign;
 }
 
-function paintSign(canvas, code, ink, accent) {
+function paintSign(canvas, code, ink, accent, paper) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.font = '800 204px ' + font;
+  const codeFont = '800 202px ' + font;
+  ctx.font = codeFont;
   const number = ctx.measureText(code);
-  ctx.font = '650 90px ' + font;
+  ctx.font = '700 96px ' + font;
   const name = ctx.measureText(campus);
-  const gap = 32, left = (canvas.width - number.width - gap - name.width) / 2;
-  const nameX = left + number.width + gap;
+  const pad = 26, tabWidth = number.width + 2 * pad, gap = 32;
+  const left = (canvas.width - tabWidth - gap - name.width) / 2;
+  const tabEnd = left + tabWidth, nameX = tabEnd + gap;
+
+  ctx.fillStyle = accent;
+  ctx.beginPath();
+  ctx.moveTo(left, 21);
+  ctx.lineTo(tabEnd, 21);
+  ctx.lineTo(tabEnd, 198);
+  ctx.lineTo(tabEnd - 33, 231);
+  ctx.lineTo(left, 231);
+  ctx.closePath();
+  ctx.fill();
+
   ctx.fillStyle = ink;
-  ctx.fillText(campus, nameX, 148);
-  ctx.font = '800 204px ' + font;
-  ctx.fillText(code, left, 128 + (number.actualBoundingBoxAscent - number.actualBoundingBoxDescent) / 2);
+  ctx.fillText(campus, nameX, 151);
   ctx.fillStyle = accent;
   ctx.globalAlpha = .32;
-  ctx.fillRect(nameX, 169, name.width, 9);
+  ctx.fillRect(nameX, 177, name.width, 4);
   ctx.globalAlpha = 1;
-  ctx.fillRect(nameX, 169, name.width * .26, 9);
+  ctx.fillRect(nameX, 174, name.width * .25, 10);
+  ctx.font = codeFont;
+  ctx.fillStyle = paper;
+  ctx.fillText(code, left + pad, 126 + (number.actualBoundingBoxAscent - number.actualBoundingBoxDescent) / 2);
 }
 
 export function createRoofLabels(model, viewport, requestFrame) {
@@ -79,12 +93,13 @@ export function createRoofLabels(model, viewport, requestFrame) {
     if (!signs.length) return;
     const style = getComputedStyle(document.documentElement);
     const ink = style.getPropertyValue('--astra-ink').trim();
-    const accent = style.getPropertyValue('--astra-primary').trim();
-    const colors = ink + '/' + accent;
+    const accent = style.getPropertyValue('--astra-accent').trim();
+    const paper = style.getPropertyValue('--astra-paper').trim();
+    const colors = [ink, accent, paper].join('/');
     if (!force && colors === lastColors) return;
     lastColors = colors;
     for (const {canvas, code, texture} of signs) {
-      paintSign(canvas, code, ink, accent);
+      paintSign(canvas, code, ink, accent, paper);
       texture.needsUpdate = true;
     }
     requestFrame();

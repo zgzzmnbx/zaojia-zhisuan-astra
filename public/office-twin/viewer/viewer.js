@@ -2,13 +2,12 @@ import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
 import {bindOfficeCamera,defaultPersonFocusDistance} from './office-camera.js';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
-import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.2';
+import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.3';
 import {officeCameraLimits,officeSweepDirection,minimumOfficeZoom} from './office-camera-limits.js?v=office-0.54.7';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
-import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,warmOfficeSurfaces,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js?v=office-0.54.1';
-import {createRoofLabels} from './roof-labels.js?v=0.7.2';
+import {createRoofLabels} from './roof-labels.js?v=0.7.3';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
 import {createStreetTraffic} from './street-traffic.js';
@@ -53,12 +52,12 @@ export async function mountOfficeViewer() {
   const listenerRemovers = [];
   const params = new URLSearchParams(location.search);
   const embedded = params.get('mode') === 'embed';
-  const entrance=createOfficeEntrance(params.get('entrance')==='office');
+  const entryView = resolveView(params.get('view')) ?? 'building';
   const floorFocus = createFloorFocusTiming();
   const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
   document.body.classList.toggle('office-embed', embedded);
   let theme = { palette: 'astra', scheme: 'light' };
-  let view = resolveView(params.get('view')) ?? 'exploded';
+  let view = entryView;
   let disposed = false, requestedVisible = true, inView = true, pageSuspended = false;
   let renderReady = false, renderStatus = 'loading', frame = 0, transition = null;
   let gpuPrepared=false,lastFrameTime=null;
@@ -97,7 +96,8 @@ export async function mountOfficeViewer() {
   }
   function getState() {
     return { version: VERSION, presentationVersion:PRESENTATION_VERSION, assemblyOpenness:openness,traffic:{running:!!streetTraffic&&picture.trafficEnabled()&&active(),positions:streetTraffic?.positions()??[]}, miniatureFocus:miniatureFocus?.state()??null, porcelainBlue:porcelainPalette?.id??null,assetVersion:PRESENTATION_VERSION, eventService:{connection:officeClient.getState().connection,cursor:business.cursor??0,taskCount:business.tasks?.length??0,messageCount:business.messages?.length??0,demo:true}, context:{...bridgeContext},renderMode:'porcelain', bakedMaterialCount:picture.bakedMaterialCount(), mode: embedded ? 'embed' : 'standalone', view, floorId: selectedFloor ? `H1-F${String(selectedFloor).padStart(2,'0')}` : null,
-      officeBoard:officeBoard?.state()??null,performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus, entrance:entrance.state(), theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
+      officeBoard:officeBoard?.state()??null,performance:{...frameMeter.state(),staticBatches,drawCalls:renderer?.info.render.calls??0,triangles:renderer?.info.render.triangles??0},roomId: selectedRoom, visible: requestedVisible, active: active(), status: renderStatus,
+      entrance:{phase:loadReport.webglRendered?'complete':'waiting',elapsed:0,running:false}, theme: { ...theme }, picture:picture.getState(),pictureRecord:picture.getRecord(),cameraLimits:officeCameraLimits(view), people:people?.getState()??null, nightEnvironment:nightEnvironment?.state()??null, orbit:orbit?.state()??null,camera:camera&&controls?{position:camera.position.toArray(),target:controls.target.toArray()}:null,businessConnected: false, loadReport:structuredClone(loadReport) };
   }
   let loadingMessage='正在读取办公室资料', loadingTimer=null;
   const formatMB=n=>(n/1024/1024).toFixed(1)+' MiB';
@@ -237,10 +237,10 @@ export async function mountOfficeViewer() {
   }
   function setVisible(visible) {
     if (typeof visible !== 'boolean') throw new TypeError('visible must be boolean');
-    const returning=visible&&!requestedVisible&&loadReport.webglRendered&&!entrance.state().running;
+    const returning=visible&&!requestedVisible&&loadReport.webglRendered;
     requestedVisible = visible;window.dispatchEvent(new CustomEvent('office-scene-visibility',{detail:visible}));if(!visible)releaseOrbitHold?.();orbit?.sync();
-    if(!visible){frameMeter.suspend();floorLabel?.restore();people?.suspend();people?.closeMenu();entrance.suspend();suspendMotion();}
-    if(returning&&params.get('entrance')==='office'){setView('building',{animate:false,automatic:true});entrance.start();}
+    if(!visible){frameMeter.suspend();floorLabel?.restore();people?.suspend();people?.closeMenu();suspendMotion();}
+    if(returning&&params.get('entrance')==='office')setView(entryView,{animate:false});
     if (!active() && frame) { cancelAnimationFrame(frame); frame = 0; }
     if (active()) requestFrame();
     return getState();
@@ -322,12 +322,9 @@ export async function mountOfficeViewer() {
       loadReport.firstRenderMs=Math.round((performance.now()-loadStarted)*10)/10;refreshDiagnostic();
       console.info('Office viewer load report',structuredClone(loadReport));
       notify('ready', { ...getState(), capabilities: ['theme','visibility','view','focus-room','focus-person','set-context','office-event','dispose'], rendererAvailable: true, model: buildingMetadata?.asset_id ?? 'h1-building-office-v0.3' });
-      entrance.start();
     }
-    const next=entrance.step(now,!!transition,motionPreference.matches);
-    if(next)setView(next,{automatic:true});
     const revealing = expanded && blurLevel > 0 && floorFocus.pending;
-    if (transition || revealing || entrance.state().running || moving || controlsChanged || people?.isAnimating() || orbit.state().running) requestFrame();
+    if (transition || revealing || moving || controlsChanged || people?.isAnimating() || orbit.state().running) requestFrame();
     else if(runTraffic)trafficWake=setTimeout(requestFrame,30);
     else frameMeter.idle();
   }
@@ -447,7 +444,7 @@ export async function mountOfficeViewer() {
     interiorLabels = value >= .9;
   }
 
-  function setView(next, { animate = true, focus = null, automatic = false, labelPreview = false, cameraTarget = null } = {}) {
+  function setView(next, { animate = true, focus = null, labelPreview = false, cameraTarget = null } = {}) {
     next = resolveView(next);
     if (!next) throw new TypeError('Unknown view');
     if (focus && renderReady && !focusOrigin) {
@@ -457,7 +454,6 @@ export async function mountOfficeViewer() {
     }
     if(next==='building' && !labelPreview)people?.closeMenu();
     if(!labelPreview)floorLabel?.cancel();
-    if(!automatic)entrance.cancel();
     orbit?.focus(false);
     view = next;officeBoard?.setView(next);if(controls)Object.assign(controls,officeCameraLimits(view)); selectedRoom = null; selectedFloor = next==='exploded' ? 9 : null;
     clearOutline(); paintState();
@@ -494,7 +490,7 @@ export async function mountOfficeViewer() {
     fitHeight=pose.height; camera.zoom=pose.zoom; camera.lookAt(controls.target); resize();
   }
   // A drag/wheel gives the user camera control while assembly movement finishes.
-  function takeCameraControl() { floorLabel?.cancel();entrance.cancel();if (transition) transition.camera=null; }
+  function takeCameraControl() { floorLabel?.cancel();if (transition) transition.camera=null; }
   function selectFloor(number) {
     if (!Number.isInteger(number) || number < 1 || number > FLOOR_COUNT) return;
     if (number === DETAILED_FLOOR) { setView('exploded'); selectTab('rooms'); }
@@ -589,7 +585,7 @@ export async function mountOfficeViewer() {
     orbitButton.innerHTML=icon(paused?'play':'pause');
     orbitButton.querySelector('svg').style.pointerEvents='none';
   };
-  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!entrance.state().running&&!motionPreference.matches&&!transition});
+  orbit=createOfficeOrbit({requestFrame,change:paintOrbit,canRun:()=>!getWorkstationEditState().open&&active()&&renderReady&&!motionPreference.matches&&!transition});
   bindOfficeCamera({listen,configure:value=>{
     orbit.configure(value);
     if(value.personFocusDistance===personFocusDistance)return;
@@ -610,7 +606,7 @@ export async function mountOfficeViewer() {
   }
   listen(window,'office-workstations-change',editWorkstations);
   listen(window,'office-person-menu',event=>orbit.focus(event.detail.open));
-  listen(orbitButton,'click',()=>{entrance.cancel();orbit.toggle();});
+  listen(orbitButton,'click',()=>orbit.toggle());
   releaseOrbitHold=bindOfficeOrbitHold({listen,document,window,orbit});
   for(const type of ['wheel','keydown'])listen(document,type,()=>orbit.activity(),{capture:true,passive:true});
   listen(document,'click',()=>{orbit.sync();orbit.activity();requestFrame();});
@@ -649,7 +645,7 @@ export async function mountOfficeViewer() {
     }
   });
   listen(window,'office-admin-visibility',()=>{orbit.sync();if(active()){requestFrame();}else{frameMeter.suspend();people?.suspend();suspendMotion();if(frame){cancelAnimationFrame(frame);frame=0;}}});
-  listen(document, 'visibilitychange', () => { orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();suspendMotion();} if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; } });
+  listen(document, 'visibilitychange', () => { orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();suspendMotion();} if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; } });
   listen(window, 'pagehide', event => {
     if (event.persisted) {
       pageSuspended = true;frameMeter.suspend();suspendMotion();orbit.sync();
@@ -837,12 +833,12 @@ export async function mountOfficeViewer() {
       enter:()=>{
         previewCamera=null;
         if(view!=='exploded')setView('exploded');
-        else {entrance.cancel();requestFrame();}
+        else requestFrame();
       }});
     resizeObserver = new ResizeObserver(resizeLayout);
     for(const panel of [viewport,$('#space-cards-panel'),$('#host-artifact')])if(panel)resizeObserver.observe(panel);
     intersectionObserver = new IntersectionObserver(entries => {
-      inView = entries.some(entry => entry.isIntersecting);if(!inView)releaseOrbitHold?.();orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();entrance.suspend();suspendMotion();}
+      inView = entries.some(entry => entry.isIntersecting);if(!inView)releaseOrbitHold?.();orbit.sync();if(!active()){frameMeter.suspend();people?.suspend();suspendMotion();}
       if (active()) requestFrame(); else if (frame) { cancelAnimationFrame(frame); frame = 0; }
     });
     intersectionObserver.observe(viewport);
@@ -877,7 +873,7 @@ export async function mountOfficeViewer() {
     const pointer=bindPersonPointer({canvas:renderer.domElement,camera,controls,people,listen,canInteract:()=>!getWorkstationEditState().open&&active()&&view==='exploded',takeCameraControl,dragVisual});
     listenerRemovers.push(()=>pointer.dispose());
     loadingStage('first-frame','场景已就绪，正在绘制第一帧');
-    setView(view, { animate:false,automatic:true });
+    setView(view, {animate:false});
     selectTab('people');
 
   } catch (error) { fail(error); }
