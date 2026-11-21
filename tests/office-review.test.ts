@@ -15,8 +15,26 @@ import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.j
 import {collectMonitorLighting} from '../public/office-twin/viewer/monitor-lighting.js';
 import {createFrameMeter} from '../public/office-twin/viewer/frame-meter.js';
 import {placeFloorLabel} from '../public/office-twin/viewer/floor-label-layout.js';
+import {attachRoofSign} from '../public/office-twin/viewer/roof-labels.js';
 import {createFloorFocusTiming,createVisibilityBlend} from '../public/office-twin/viewer/navigation-motion.js';
 import {summarizeOfficeBoard,hideBoardCore} from '../public/office-twin/viewer/office-board.js';
+
+test('a roof title inherits its storey and facade direction, including on a rotated tower',()=>{
+ const storey=new THREE.Group();
+ storey.position.set(64,70,-48);storey.rotation.y=.8;
+ const roof=new THREE.Mesh(new THREE.BoxGeometry(39,6,39));
+ roof.position.set(1,4,2);roof.rotation.y=-.22;storey.add(roof);storey.updateMatrixWorld(true);
+ roof.visible=false; // Original batching sources still provide the model anchors.
+ const sign=attachRoofSign(roof,'H3',new THREE.PlaneGeometry(1,.25),new THREE.MeshBasicMaterial());
+ storey.updateMatrixWorld(true);
+ assert.equal(sign.parent,storey);
+ const axis=new THREE.Vector3(0,0,1);
+ assert.ok(axis.clone().transformDirection(sign.matrixWorld).distanceTo(axis.clone().transformDirection(roof.matrixWorld))<1e-8);
+ const position=sign.getWorldPosition(new THREE.Vector3());
+ assert.ok(roof.worldToLocal(position.clone()).y>roof.geometry.boundingBox.max.y);
+ storey.position.y+=14;storey.updateMatrixWorld(true);
+ assert.equal(sign.getWorldPosition(new THREE.Vector3()).y-position.y,14);
+});
 
 test('9F callout stays next to the facade with the hub on either side',()=>{
  const corners=[[500,280],[710,340],[810,420],[600,360]].map(([x,y])=>({x,y,z:0}));

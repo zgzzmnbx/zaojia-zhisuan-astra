@@ -109,6 +109,14 @@ html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
 .office-inspector-body { padding:12px; }
 .office-inspector .office-business-note { margin-bottom:12px; }
 .office-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+/* The standalone right rail lives beside the canvas. Keep its result card
+   inside that column so it cannot cover the roof signs and orbit controls. */
+body.studio:not(.office-embed) .office-workspace > #host-artifact {
+  position:absolute; top:84px; right:12px; width:var(--cards-width); max-height:32%; overflow:auto;
+}
+body.studio:not(.office-embed) .office-workspace > #host-artifact ~ #space-cards-panel {
+  top:calc(96px + var(--host-artifact-height,140px));
+}
 [data-astra-scheme="dark"] .office-conversation,[data-astra-scheme="dark"] .office-inspector { border-color:color-mix(in srgb,var(--astra-primary) 18%,var(--astra-line)); }
 
 /* Immersive v0.6 correction: one full-viewport sandbox underneath floating UI.

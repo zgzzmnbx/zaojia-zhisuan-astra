@@ -2,12 +2,13 @@ import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
 import {bindOfficeCamera,defaultPersonFocusDistance} from './office-camera.js';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
-import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.1';
+import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.2';
 import {officeCameraLimits,officeSweepDirection,minimumOfficeZoom} from './office-camera-limits.js?v=office-0.54.7';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {createOfficeEntrance} from './office-entrance.js';
 import {prepareRenderer,warmOfficeSurfaces,yieldToBrowser} from './prepare-renderer.js';
 import {createFloorLabel} from './floor-label.js?v=office-0.54.1';
+import {createRoofLabels} from './roof-labels.js?v=0.7.2';
 import {batchStaticGeometry,cacheStaticTransforms} from './static-batches.js?v=0.44.2';
 import {createFrameMeter} from './frame-meter.js';
 import {createStreetTraffic} from './street-traffic.js';
@@ -66,7 +67,7 @@ export async function mountOfficeViewer() {
   let renderer, scene, camera, controls, model, buildingRoot, contextRoot, twinRoot, officeRoot, facade9, roomOutline;
   let resizeObserver, intersectionObserver;
   let people, nightEnvironment, orbit, releaseOrbitHold;
-  let floorLabel,previewCamera,officeBoard,seatLabels;
+  let floorLabel,roofLabels,previewCamera,officeBoard,seatLabels;
   let orbitDirection=1,wasOrbitRunning=false;
   let business=officeClient.getState(),bridgeContext={id:null,revision:0};
   const unsubscribeBusiness=officeClient.subscribe((kind,value)=>{
@@ -201,6 +202,7 @@ export async function mountOfficeViewer() {
     officeBoard?.dispose();officeBoard=null;
     people?.dispose();seatLabels?.dispose();seatLabels=null;
     floorLabel?.dispose();floorLabel=null;
+    roofLabels?.dispose();roofLabels=null;
     if (frame) cancelAnimationFrame(frame);
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
@@ -229,6 +231,7 @@ export async function mountOfficeViewer() {
     picture.setTheme(theme.scheme);
     nightEnvironment?.setTheme(theme.scheme);
     officeBoard?.setTheme(theme.scheme);
+    roofLabels?.setTheme();
     if (roomOutline) roomOutline.material.color.set(styles.getPropertyValue('--astra-primary').trim() || '#284bd4');
     requestFrame(); return { ...theme };
   }
@@ -334,7 +337,9 @@ export async function mountOfficeViewer() {
     const left=parseFloat(document.documentElement.style.getPropertyValue('--host-chat-width'))||hostLeft;
     const rail=$('#space-cards-panel'),artifact=$('#host-artifact');
     let right=artifact?.offsetWidth||!rail?.hidden?300:0;
-    if(twinRoot&&view==='building')right=Math.max(rail?.offsetWidth||0,artifact?.offsetWidth||0);
+    // Standalone already dedicates a grid column to the rail. Only the embedded
+    // cards overlay the campus viewport and need additional camera clearance.
+    if(twinRoot&&view==='building')right=embedded ? Math.max(rail?.offsetWidth||0,artifact?.offsetWidth||0) : 0;
     if(getWorkstationEditState().open)right=($('#office-workstations')?.getBoundingClientRect().width||380)+24;
     return {left,right};
   }
@@ -369,7 +374,7 @@ export async function mountOfficeViewer() {
     const bounds = new THREE.Box3();
     object.updateWorldMatrix(true, true);
     object.traverseVisible(child => {
-      if (!child.isMesh || !child.geometry) return;
+      if (!child.isMesh || !child.geometry || child.userData.roofSign) return;
       if(!child.geometry.boundingBox)child.geometry.computeBoundingBox();
       if (child.geometry.boundingBox) bounds.union(child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld));
     });
@@ -428,6 +433,7 @@ export async function mountOfficeViewer() {
     scene.remove(roomOutline); roomOutline.geometry.dispose(); roomOutline.material.dispose(); roomOutline = null;
   }
   function setAssembly(value) {
+    roofLabels?.setVisible(view==='building' && value===0);
     if (value === openness) return;
     openness = value;
     for (const {object, original, offset} of movingFloors) {
@@ -554,6 +560,7 @@ export async function mountOfficeViewer() {
     officeBoard?.dispose();officeBoard=null;
     people?.dispose();seatLabels?.dispose();seatLabels=null;
     floorLabel?.dispose();
+    roofLabels?.dispose();
     if (frame) cancelAnimationFrame(frame);
     frame = 0; transition = null;
     resizeObserver?.disconnect(); intersectionObserver?.disconnect();
@@ -814,6 +821,7 @@ export async function mountOfficeViewer() {
     nightEnvironment=createNightEnvironment({scene,renderer,camera,layout,porcelainPalette,streetTraffic,requestFrame,getExposure:()=>picture.getRenderSettings().exposure,getBlue:()=>picture.getRenderSettings().blue,getSettings:picture.getRenderSettings});
     nightEnvironment.attach(scene);nightEnvironment.setTheme(theme.scheme);
     officeBoard=createOfficeBoard({office:officeRoot,viewport,requestFrame,scheme:theme.scheme,snapshot:business});
+    roofLabels=createRoofLabels(model,viewport,requestFrame);
     await nightEnvironment.prepare();if(disposed)return api;
     const gpuStarted=performance.now();
     miniatureFocus=createMiniatureFocus(renderer,scene,camera,model,floors.get(DETAILED_FLOOR));
