@@ -113,6 +113,34 @@ class WorkstationsTest(unittest.TestCase):
             self.assertEqual(self.client.put(self.url, json=data).status_code, 400)
             self.assertEqual(self.path.read_bytes(), before)
 
+    def test_visibility_is_individual_and_survives_legacy_edits(self):
+        legacy = self.payload()
+        self.path.parent.mkdir()
+        self.path.write_text(json.dumps(legacy), 'utf-8')
+        before = self.path.read_bytes()
+        people = self.client.get(self.url).json()['people']
+        self.assertEqual([p['hiddenInScene'] for p in people], [False, False])
+        self.assertEqual(self.path.read_bytes(), before)
+
+        data = self.payload()
+        data['people'][0]['hiddenInScene'] = True
+        saved = self.client.put(self.url, json=data).json()
+        expected = [dict(people[0], hiddenInScene=True), people[1]]
+        self.assertEqual(saved['people'], expected)
+        legacy['revision'] = saved['revision']
+        legacy['people'].reverse()
+        self.assertEqual(self.client.put(self.url, json=legacy).json()['people'], expected[::-1])
+
+        data = self.client.get(self.url).json()
+        data.pop('seats')
+        before = self.path.read_bytes()
+        for invalid in ('false', 1, 0, None):
+            data['people'][1]['hiddenInScene'] = invalid
+            self.assertEqual(self.client.put(self.url, json=data).status_code, 400)
+            self.assertEqual(self.path.read_bytes(), before)
+        data['people'][1]['hiddenInScene'] = False
+        self.assertEqual(self.client.put(self.url, json=data).json()['people'], people[::-1])
+
     def test_colors_save_reload_legacy_preservation_and_reset(self):
         data = self.payload()
         data['people'][0]['colors'] = {'hair': '#abcdef', 'shirt': '#123456', 'skin': '#ffe4d3'}

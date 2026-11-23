@@ -40,6 +40,15 @@ export function createWorkstationSettings({panel,getPeople,onChange,onClose}){
     row.append(labelNode,input);fields.append(row);controls[key]=input;
     if(key==='appearance'){input.title='单独设置后使用此卡通扮相；跟随画面风格则沿用全局人物风格';fields.append(previewNode);}
   }
+  const visibilityRow=el('label','','workstations-visibility'),hideCharacter=el('input');
+  hideCharacter.type='checkbox';hideCharacter.name='hiddenInScene';hideCharacter.setAttribute('role','switch');
+  hideCharacter.className='toggle toggle-sm';hideCharacter.setAttribute('switch','');
+  visibilityRow.append(el('span','隐藏角色'),hideCharacter);previewNode.before(visibilityRow);
+  hideCharacter.addEventListener('change',()=>{
+    const person=draft.find(p=>p.id===current);if(!person||saving)return;
+    person.hiddenInScene=hideCharacter.checked;
+    status.textContent='有未保存的修改';renderList();showPreview(person);publish();
+  });
   const colorsPanel=el('div','','workstations-colors'),colorInputs={};
   for(const [key,label] of colorFields){
     const row=el('label','','workstations-color'),input=el('input');input.type='color';input.name=key;input.setAttribute('aria-label',label);
@@ -54,7 +63,10 @@ export function createWorkstationSettings({panel,getPeople,onChange,onClose}){
   resetColors.onclick=()=>{const person=draft.find(p=>p.id===current);if(!person||saving)return;person.colors={};renderColors(person);status.textContent='有未保存的修改';};
   colorsPanel.append(resetColors);previewNode.after(colorsPanel);
   function previewStyle(){try{return localStorage.getItem('astra.office.people-style.v1')||'classic';}catch{return 'classic';}}
-  function showPreview(person){preview.show(person,{index:draft.indexOf(person),style:previewStyle()});}
+  function showPreview(person){
+    if(person.hiddenInScene){preview.dispose();previewNode.hidden=true;return;}
+    preview.show(person,{index:draft.indexOf(person),style:previewStyle()});
+  }
   function renderColors(person){
     const colors={...personColorDefaults(person,draft.indexOf(person),previewStyle()),...normalizePersonColors(person.colors)};
     for(const [key,input] of Object.entries(colorInputs))input.value=colors[key];showPreview(person);
@@ -65,7 +77,7 @@ export function createWorkstationSettings({panel,getPeople,onChange,onClose}){
   const save=el('button','保存设置','btn btn-primary');save.type='submit';save.title='保存到项目 config/office-workstations.json';
   footer.append(status,cancel,save);form.append(header,body,footer);form.setAttribute('aria-label','人员与工位');panel.append(form);
   function publish(action=null){
-    editState={open:opened,seatId:draft.find(p=>p.id===current)?.seatId||'',people:draft.map(p=>({id:p.id,name:p.name,seatId:p.seatId})),action};
+    editState={open:opened,seatId:draft.find(p=>p.id===current)?.seatId||'',people:draft.map(p=>({id:p.id,name:p.name,seatId:p.seatId,hiddenInScene:p.hiddenInScene})),action};
     document.body.dataset.workstationsOpen=String(opened);
     window.dispatchEvent(new CustomEvent('office-workstations-change',{detail:editState}));
   }
@@ -82,15 +94,17 @@ export function createWorkstationSettings({panel,getPeople,onChange,onClose}){
     list.replaceChildren();
     for(const person of draft){
       const button=el('button','','workstations-person');button.type='button';button.setAttribute('aria-pressed',String(person.id===current));
-      button.append(el('strong',person.name||'新人员'),el('small',person.seatId.replace('SEAT_','')||'未分配'));
+      const seat=person.seatId.replace('SEAT_','')||'未分配';
+      button.append(el('strong',person.name||'新人员'),el('small',person.hiddenInScene?'已隐藏 · '+seat:seat));
       button.onclick=()=>select(person.id);list.append(button);
     }
   }
   function select(id){
     current=id;const person=draft.find(p=>p.id===id);fields.hidden=!person;renderList();if(!person)return;
+    hideCharacter.checked=person.hiddenInScene;
     for(const [key,input] of Object.entries(controls)){input.value=person[key];input.setCustomValidity('');}renderColors(person);publish('focus');
   }
-  function busy(value){saving=value;resetColors.disabled=value;for(const input of Object.values(colorInputs))input.disabled=value;for(const input of Object.values(controls))input.disabled=value;save.disabled=value||loading;list.inert=value;}
+  function busy(value){saving=value;hideCharacter.disabled=value;resetColors.disabled=value;for(const input of Object.values(colorInputs))input.disabled=value;for(const input of Object.values(controls))input.disabled=value;save.disabled=value||loading;list.inert=value;}
   async function load(){
     config=await request();onChange(config);return config;
   }

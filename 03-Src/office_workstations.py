@@ -77,7 +77,7 @@ def validate(value, available):
     ids, occupied, result = set(), set(), []
     for person in people:
         required = {'id', 'name', 'gender', 'trade', 'expertise', 'seatId'}
-        if not isinstance(person, dict) or not required <= set(person) or set(person) - required - {'appearance', 'colors'}:
+        if not isinstance(person, dict) or not required <= set(person) or set(person) - required - {'appearance', 'colors', 'hiddenInScene'}:
             raise ValueError('人员字段无效')
         clean = {}
         for key, limit in [('id', 240), ('name', 40), ('trade', 80), ('expertise', 240), ('seatId', 80), ('gender', 16)]:
@@ -93,6 +93,10 @@ def validate(value, available):
         if not isinstance(appearance, str) or appearance not in APPEARANCES:
             raise ValueError('请选择有效人物扮相')
         clean['appearance'] = appearance
+        hidden = person.get('hiddenInScene', False)
+        if type(hidden) is not bool:
+            raise ValueError('隐藏角色须为开或关')
+        clean['hiddenInScene'] = hidden
         colors = person.get('colors', {})
         if not isinstance(colors, dict) or set(colors) - {'hair', 'shirt', 'skin'}:
             raise ValueError('人物颜色字段无效')
@@ -133,13 +137,15 @@ def save(payload: dict = Body(...)):
             raise HTTPException(409, '设置已被其他窗口修改，请关闭后重新打开工位设置')
         try:
             value = validate(payload, available)
-            # An older open page does not know this optional display field.
+            # Older clients may omit newer display preferences when editing profiles.
             previous = {p['id']: p for p in current['people']}
             for incoming, person in zip(payload['people'], value['people']):
                 if 'appearance' not in incoming:
                     person['appearance'] = previous.get(person['id'], {}).get('appearance', 'inherit')
                 if 'colors' not in incoming:
                     person['colors'] = previous.get(person['id'], {}).get('colors', {})
+                if 'hiddenInScene' not in incoming:
+                    person['hiddenInScene'] = previous.get(person['id'], {}).get('hiddenInScene', False)
         except (ValueError, TypeError) as error:
             raise HTTPException(400, str(error)) from None
         value['revision'] += 1

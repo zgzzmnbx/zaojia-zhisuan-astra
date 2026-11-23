@@ -2,7 +2,7 @@ import {createWorkstationLabels} from './workstation-labels.js';
 import {getWorkstationEditState} from './workstation-settings.js';
 import {bindOfficeCamera,defaultPersonFocusDistance} from './office-camera.js';
 import { createFloorFocusTiming, motionProgress } from './navigation-motion.js?v=office-0.46.2';
-import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.7.3';
+import {VERSION,OFFICE_MODEL,PRESENTATION_VERSION} from './release.js?v=0.8.0';
 import {officeCameraLimits,officeSweepDirection,minimumOfficeZoom} from './office-camera-limits.js?v=office-0.54.7';
 import {createOfficeOrbit,bindOfficeOrbitHold} from './office-orbit.js';
 import {prepareRenderer,warmOfficeSurfaces,yieldToBrowser} from './prepare-renderer.js';

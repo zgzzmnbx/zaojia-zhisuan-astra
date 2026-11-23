@@ -10,6 +10,15 @@ test('workstation overrides preserve host authority and make new people demo-onl
  assert.equal(result[1].seatId,'C');assert.equal(result[2].seatId,'A');assert.equal(result[2].selectable,false);assert.equal(result[2].selected,false);assert.deepEqual(result[2].accounts,[]);
  assert.equal(directory[0].name,'石萌');assert.equal(profile(result[2]).gender,'female');assert.equal('accounts' in profile(result[0]),false);
 });
+test('hiding one character preserves their seat, tasks and review selection',()=>{
+ const directory=[{id:'owner',name:'石萌',selected:true,selectable:true,accounts:[{platform:'weact'}],tasks:['复核']},{id:'peer',name:'同事'}];
+ const seats=[{id:'A'},{id:'B'}];
+ const people=[{...profile(directory[0]),seatId:'A',hiddenInScene:true},{...profile(directory[1]),seatId:'B'}];
+ const merged=workstationRoster(directory,{seats,people});
+ assert.equal(merged.length,2);
+ assert.deepEqual(merged[0],{...directory[0],...people[0]});
+ assert.equal(merged[1].hiddenInScene,false);
+});
 import * as THREE from 'three';
 import {batchStaticGeometry} from '../public/office-twin/viewer/static-batches.js';
 import {collectMonitorLighting} from '../public/office-twin/viewer/monitor-lighting.js';
